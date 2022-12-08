@@ -23,10 +23,10 @@
 - license
 - etc.
 
-[![Build Status](https://img.shields.io/travis/ita-social-projects/GreenCity/master?style=flat-square)](https://travis-ci.org/github/ita-social-projects/GreenCity)
-[![Coverage Status](https://img.shields.io/gitlab/coverage/ita-social-projects/GreenCity/master?style=flat-square)](https://coveralls.io)
-[![Github Issues](https://img.shields.io/github/issues/ita-social-projects/GreenCity?style=flat-square)](https://github.com/ita-social-projects/GreenCity/issues)
-[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/GreenCity?style=flat-square)](https://github.com/ita-social-projects/GreenCity/pulls)
+[![Build Status](https://img.shields.io/travis/ita-social-projects/StreetCode/master?style=flat-square)](https://travis-ci.org/github/ita-social-projects/StreetCode)
+[![Coverage Status](https://img.shields.io/gitlab/coverage/ita-social-projects/StreetCode/master?style=flat-square)](https://coveralls.io)
+[![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues)
+[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - For more on these wonderful  badges, refer to <a href="https://shields.io/" target="_blank">shields.io</a>.
@@ -85,7 +85,7 @@ api.secret=${API_SECRET}
 
 ### Clone
 
-- Clone this repo to your local machine using `https://github.com/ita-social-projects/SOMEREPO`
+- Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode`
 
 ### Setup
 
@@ -134,7 +134,7 @@ $ bower install
     - 🍴 Fork this repo!
 
 - **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/SOMEREPO.git`
+    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode.git`
 
 #### Step 2
 
@@ -142,7 +142,7 @@ $ bower install
 
 #### Step 3
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/SOMEREPO/compare/" target="_blank">github.com/ita-social-projects/SOMEREPO</a>.
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode/compare/" target="_blank">github.com/ita-social-projects/StreetCode</a>.
 
 ### Issue flow
 

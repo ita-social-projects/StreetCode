@@ -1,8 +1,7 @@
 
-namespace Repositories.Interfaces
-{
-    public interface ISubtitleRepository 
-    {
+namespace Repositories.Interfaces;
 
-    }
+public interface ISubtitleRepository 
+{
+    public string GetSubtitlesByStreetcode();
 }

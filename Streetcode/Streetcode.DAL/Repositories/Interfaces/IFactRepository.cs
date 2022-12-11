@@ -1,8 +1,7 @@
 
-namespace Repositories.Interfaces
+namespace Repositories.Interfaces;
+
+public interface IFactRepository
 {
-    public interface IFactRepository 
-    {
-        public string GetFactsByStreetcode();
-    }
+    public string GetFactsByStreetcode();
 }

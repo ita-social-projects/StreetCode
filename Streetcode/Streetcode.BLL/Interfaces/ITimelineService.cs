@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ITimelineService 
 {
-    public interface ITimelineService 
-    {
-        public string GetTimelineItemsAsync();
-    }
+    public string GetTimelineItemsAsync();
 }

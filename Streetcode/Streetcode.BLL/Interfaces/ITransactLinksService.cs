@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ITransactLinksService 
 {
-    public interface ITransactLinksService 
-    {
-        public string GetTransactLinkAsync();
-    }
+    public string GetTransactLinkAsync();
 }

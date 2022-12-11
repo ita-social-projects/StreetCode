@@ -1,8 +1,8 @@
 
-namespace Repositories.Interfaces
-{
-    public interface ITermRepository 
-    {
+namespace Repositories.Interfaces;
 
-    }
+public interface ITermRepository 
+{
+    public string GetTermAsync();
+   
 }

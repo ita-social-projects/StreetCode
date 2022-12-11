@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface IPartnersService
 {
-    public interface IPartnersService
-    {
-        public string GetSponsorsAsync();
-    }
+    public string GetSponsorsAsync();
 }

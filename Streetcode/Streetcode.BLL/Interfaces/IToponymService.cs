@@ -1,9 +1,8 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface IToponymService 
 {
-    public interface IToponymService 
-    {
-        public string GetToponymByNameAsync();
-        public void GetStreetcodesByToponymAsync();
-    }
+    public string GetToponymByNameAsync();
+    public void GetStreetcodesByToponymAsync();
 }

@@ -1,9 +1,8 @@
 
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ITagService 
 {
-    public interface ITagService 
-    {
-        public string GetTagByNameAsync();
-    }
+    public string GetTagByNameAsync();
 }

@@ -1,49 +1,48 @@
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
-namespace Repositories.Realizations
+namespace Repositories.Realizations;
+
+public class RepositoryBase : IRepositoryBase 
 {
-    public class RepositoryBase : IRepositoryBase 
+
+    public RepositoryBase() 
     {
+    }
 
-        public RepositoryBase() 
-        {
-        }
+    protected StreetcodeDBContext StreetcodeDBContext;
 
-        protected StreetcodeDBContext StreetcodeDBContext;
+    public void Create()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void Create()
-        {
-            throw new NotImplementedException();
-        }
+    public void CreateAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void CreateAsync()
-        {
-            throw new NotImplementedException();
-        }
+    public void GetById()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void GetById()
-        {
-            throw new NotImplementedException();
-        }
+    public void GetAll()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void GetAll()
-        {
-            throw new NotImplementedException();
-        }
+    public void GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+    public void Update()
+    {
+        throw new NotImplementedException();
+    }
 
-        public void Update()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete()
-        {
-            throw new NotImplementedException();
-        }
+    public void Delete()
+    {
+        throw new NotImplementedException();
     }
 }

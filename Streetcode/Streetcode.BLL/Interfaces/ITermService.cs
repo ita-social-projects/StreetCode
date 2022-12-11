@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ITermService 
 {
-    public interface ITermService 
-    {
-        public string GetTermAsync();
-    }
+    public string GetTermAsync();
 }

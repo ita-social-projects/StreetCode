@@ -1,26 +1,26 @@
 
 using Repositories.Realizations;
 using Services.Interfaces;
+using StreetCode.DAL.Repositories.Interfaces.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Services.Services
+namespace Services.Services;
+
+public class PartnersService : IPartnersService 
 {
-    public class PartnersService : IPartnersService 
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    public PartnersService(IRepositoryWrapper repositoryWrapper) 
     {
-        public PartnersService() 
-        {
-        }
-
-        private RepositoryWrapper RepositoryWrapper;
-
-        public string GetSponsorsAsync() 
-        {
-            return "GetSponsorsAsync";
-            // TODO implement here
-        }
-
+        _repositoryWrapper= repositoryWrapper;
     }
+
+    public string GetSponsorsAsync() 
+    {
+        return _repositoryWrapper.PartnersRepository.GetSponsorsAsync();
+        // TODO implement here
+    }
+
 }

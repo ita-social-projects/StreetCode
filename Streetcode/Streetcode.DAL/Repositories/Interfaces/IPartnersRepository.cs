@@ -1,8 +1,7 @@
 
-namespace Repositories.Interfaces
-{
-    public interface IPartnersRepository 
-    {
+namespace Repositories.Interfaces;
 
-    }
+public interface IPartnersRepository 
+{
+    public string GetSponsorsAsync();
 }

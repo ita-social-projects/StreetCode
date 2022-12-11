@@ -1,8 +1,10 @@
 
-namespace Repositories.Interfaces
-{
-    public interface IToponymRepository 
-    {
+namespace Repositories.Interfaces;
 
-    }
+public interface IToponymRepository 
+{
+    public string GetToponymByNameAsync();
+
+    public void GetStreetcodesByToponymAsync();
+   
 }

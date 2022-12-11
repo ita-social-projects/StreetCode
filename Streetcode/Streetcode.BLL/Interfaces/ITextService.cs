@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ITextService 
 {
-    public interface ITextService 
-    {
-        public string GetTextAsync();
-    }
+    public string GetTextAsync();
 }

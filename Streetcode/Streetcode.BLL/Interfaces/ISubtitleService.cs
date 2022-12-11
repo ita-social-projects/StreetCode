@@ -1,8 +1,7 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface ISubtitleService 
 {
-    public interface ISubtitleService 
-    {
-        public string GetSubtitlesByStreetcode();
-    }
+    public string GetSubtitlesByStreetcode();
 }

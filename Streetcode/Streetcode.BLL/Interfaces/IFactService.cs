@@ -1,9 +1,8 @@
 
-namespace Services.Interfaces
+namespace Services.Interfaces;
+
+public interface IFactService 
 {
-    public interface IFactService 
-    {
-        public string GetFactsByStreetcode();
-        
-    }
+    public string GetFactsByStreetcode();
+    
 }

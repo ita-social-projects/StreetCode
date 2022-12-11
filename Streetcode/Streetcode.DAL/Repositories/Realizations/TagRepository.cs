@@ -2,14 +2,16 @@
 using Repositories.Interfaces;
 
 
-namespace Repositories.Realizations
+namespace Repositories.Realizations;
+
+public class TagRepository : RepositoryBase , ITagRepository 
 {
-    public class TagRepository : RepositoryBase , ITagRepository 
+
+    public TagRepository(StreetcodeDBContext _streetcodeDBContext) 
     {
-
-        public TagRepository(StreetcodeDBContext _streetcodeDBContext) 
-        {
-        }
-
+    }
+    public string GetTagByNameAsync()
+    {
+        return "GetTagByNameAsync";
     }
 }

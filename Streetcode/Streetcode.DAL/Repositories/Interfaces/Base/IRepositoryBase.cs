@@ -1,22 +1,21 @@
 
-namespace StreetCode.DAL.Repositories.Interfaces.Base
+namespace StreetCode.DAL.Repositories.Interfaces.Base;
+
+public interface IRepositoryBase
 {
-    public interface IRepositoryBase
-    {
 
-        public void Create();
+    public void Create();
 
-        public void CreateAsync();
+    public void CreateAsync();
 
-        public void GetById();
+    public void GetById();
 
-        public void GetAll();
+    public void GetAll();
 
-        public void GetAllAsync();
+    public void GetAllAsync();
 
-        public void Update();
+    public void Update();
 
-        public void Delete();
+    public void Delete();
 
-    }
 }

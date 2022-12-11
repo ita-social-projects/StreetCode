@@ -2,19 +2,19 @@
 using Repositories.Interfaces;
 
 
-namespace Repositories.Realizations
+namespace Repositories.Realizations;
+
+public class TimelineRepository : RepositoryBase , ITimelineRepository 
 {
-    public class TimelineRepository : RepositoryBase , ITimelineRepository 
+
+    public TimelineRepository(StreetcodeDBContext _streetcodeDBContext) 
     {
-
-        public TimelineRepository(StreetcodeDBContext _streetcodeDBContext) 
-        {
-        }
-
-        public void GetTimeItemsByStreetcode()
-        {
-            // TODO implement here
-        }
-
     }
+
+    public string GetTimeItemsByStreetcode()
+    {
+        return "GetTimeItemsByStreetcode";
+        // TODO implement here
+    }
+
 }

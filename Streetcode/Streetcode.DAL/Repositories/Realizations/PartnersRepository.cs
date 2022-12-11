@@ -1,19 +1,19 @@
 
 using Repositories.Interfaces;
 
-namespace Repositories.Realizations
+namespace Repositories.Realizations;
+
+public class PartnersRepository : RepositoryBase , IPartnersRepository 
 {
-    public class PartnersRepository : RepositoryBase , IPartnersRepository 
+
+    public PartnersRepository(StreetcodeDBContext _streetcodeDBContext) 
     {
-
-        public PartnersRepository(StreetcodeDBContext _streetcodeDBContext) 
-        {
-        }
-
-        public void GetSponsorsAsync() 
-        {
-            // TODO implement here
-        }
-
     }
+
+    public string GetSponsorsAsync() 
+    {
+        return "GetSponsorsAsync";
+        // TODO implement here
+    }
+
 }

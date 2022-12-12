@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 namespace Repositories.Realizations;
@@ -6,7 +7,7 @@ namespace Repositories.Realizations;
 public class PartnersRepository : RepositoryBase , IPartnersRepository 
 {
 
-    public PartnersRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public PartnersRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

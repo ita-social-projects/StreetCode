@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 namespace Repositories.Realizations;
@@ -6,7 +7,7 @@ namespace Repositories.Realizations;
 public class SubtitleRepository : RepositoryBase , ISubtitleRepository 
 {
 
-    public SubtitleRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public SubtitleRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

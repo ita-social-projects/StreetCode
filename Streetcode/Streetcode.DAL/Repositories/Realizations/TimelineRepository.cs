@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 
@@ -7,7 +8,7 @@ namespace Repositories.Realizations;
 public class TimelineRepository : RepositoryBase , ITimelineRepository 
 {
 
-    public TimelineRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public TimelineRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

@@ -1,3 +1,4 @@
+using EFTask.Persistence;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;
@@ -9,7 +10,7 @@ public class RepositoryBase : IRepositoryBase
     {
     }
 
-    protected StreetcodeDBContext StreetcodeDBContext;
+    protected StreetcodeDbContext StreetcodeDBContext;
 
     public void Create()
     {

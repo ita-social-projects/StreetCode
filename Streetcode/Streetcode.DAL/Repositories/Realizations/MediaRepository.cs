@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 using System.Globalization;
 
@@ -7,7 +8,7 @@ namespace Repositories.Realizations;
 public class MediaRepository : RepositoryBase , IMediaRepository 
 {
 
-    public MediaRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public MediaRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 namespace Repositories.Realizations;
@@ -6,7 +7,7 @@ namespace Repositories.Realizations;
 public class FactRepository : RepositoryBase , IFactRepository 
 {
 
-    public FactRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public FactRepository(StreetcodeDbContext _streetcodeDbContext) 
     {
     }
 

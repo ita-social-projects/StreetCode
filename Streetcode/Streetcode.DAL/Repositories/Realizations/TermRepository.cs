@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 
@@ -7,7 +8,7 @@ namespace Repositories.Realizations;
 public class TermRepository : RepositoryBase , ITermRepository 
 {
 
-    public TermRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public TermRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
 
     }

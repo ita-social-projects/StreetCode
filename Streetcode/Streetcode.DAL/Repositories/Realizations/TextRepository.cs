@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 
@@ -7,7 +8,7 @@ namespace Repositories.Realizations;
 public class TextRepository : RepositoryBase , ITextRepository 
 {
 
-    public TextRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public TextRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

@@ -1,4 +1,5 @@
 
+using EFTask.Persistence;
 using Repositories.Interfaces;
 
 namespace Repositories.Realizations;
@@ -6,7 +7,7 @@ namespace Repositories.Realizations;
 public class ToponymRepository : RepositoryBase , IToponymRepository 
 {
 
-    public ToponymRepository(StreetcodeDBContext _streetcodeDBContext) 
+    public ToponymRepository(StreetcodeDbContext _streetcodeDBContext) 
     {
     }
 

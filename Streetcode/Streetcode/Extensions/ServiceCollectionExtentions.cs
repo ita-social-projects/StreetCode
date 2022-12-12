@@ -1,11 +1,13 @@
-﻿using Repositories;
+﻿using EFTask.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
 using Repositories.Interfaces;
 using Repositories.Realizations;
 using Services.Interfaces;
 using Services.Services;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
-public static class ProgramExtentions
+public static class ServiceCollectionExtentions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
@@ -24,6 +26,13 @@ public static class ProgramExtentions
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
         return services;
+    }
+
+    public static void AddCustomServices(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddDbContext<StreetcodeDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DmytroBConnection"))
+        );
     }
 }
 

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.AdditionalContent;
+namespace Streetcode.DAL.Entities.AdditionalContent;
 
 [Table("tags", Schema = "add_content")]
 public class Tag

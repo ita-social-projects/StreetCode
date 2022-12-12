@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Streetcode;
+namespace Streetcode.DAL.Entities.Streetcode;
 
 [Table("related_figures", Schema = "streetcode")]
 public class RelatedFigure

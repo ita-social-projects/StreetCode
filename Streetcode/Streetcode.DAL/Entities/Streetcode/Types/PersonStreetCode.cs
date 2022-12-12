@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EFTask.Entities.Streetcode.Types;
+namespace Streetcode.DAL.Entities.Streetcode.Types;
 
-public class PersonStreetcode : Streetcode
+public class PersonStreetCode : Streetcode
 {
     [MaxLength(50)]
     public string FirstName { get; set; }

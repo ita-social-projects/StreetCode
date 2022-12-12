@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFTask.Entities.AdditionalContent.Coordinates;
 
-namespace EFTask.Entities.Toponyms;
+namespace Streetcode.DAL.Entities.Toponyms;
 
 [Table("toponyms", Schema = "toponyms")]
 public class Toponym

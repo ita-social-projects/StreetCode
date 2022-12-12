@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFTask.Entities.Sources;
 
-namespace EFTask.Entities.Sources;
+namespace Streetcode.DAL.Entities.Sources;
 
 [Table("source_links", Schema = "sources")]
 public class SourceLink

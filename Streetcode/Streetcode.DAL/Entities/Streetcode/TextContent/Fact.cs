@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.Media.Images;
+using Streetcode.DAL.Entities.Media.Images;
 
-namespace EFTask.Entities.Streetcode.TextContent;
+namespace Streetcode.DAL.Entities.Streetcode.TextContent;
 
 [Table("facts", Schema = "streetcode")]
 public class Fact

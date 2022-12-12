@@ -1,19 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFTask.Entities.AdditionalContent;
 using EFTask.Entities.AdditionalContent.Coordinates;
-using EFTask.Entities.Media;
-using EFTask.Entities.Media.Images;
 using EFTask.Entities.Partners;
 using EFTask.Entities.Sources;
+using EFTask.Entities.Streetcode;
 using EFTask.Entities.Streetcode.TextContent;
 using EFTask.Entities.Timeline;
-using EFTask.Entities.Toponyms;
-using EFTask.Entities.Transactions;
+using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Entities.Transactions;
 
-namespace EFTask.Entities.Streetcode;
+namespace Streetcode.DAL.Entities.Streetcode;
 
 [Table("streetcodes", Schema = "streetcode")]
 public class Streetcode

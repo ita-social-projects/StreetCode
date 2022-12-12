@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Transactions;
+namespace Streetcode.DAL.Entities.Transactions;
 
 [Table("transaction_links", Schema = "transactions")]
 public class TransactionLink

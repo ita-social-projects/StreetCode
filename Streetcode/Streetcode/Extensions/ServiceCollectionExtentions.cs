@@ -1,10 +1,10 @@
-﻿using EFTask.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Repositories.Interfaces;
 using Repositories.Realizations;
 using Services.Interfaces;
 using Services.Services;
+using Streetcode.DAL.Persistence;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
 public static class ServiceCollectionExtentions
@@ -31,7 +31,7 @@ public static class ServiceCollectionExtentions
     public static void AddCustomServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DmytroBConnection"))
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
         );
     }
 }

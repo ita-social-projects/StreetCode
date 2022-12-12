@@ -1,16 +1,22 @@
 ﻿using EFTask.Entities.AdditionalContent;
 using EFTask.Entities.AdditionalContent.Coordinates;
 using EFTask.Entities.Feedback;
-using EFTask.Entities.Media;
-using EFTask.Entities.Media.Images;
 using EFTask.Entities.Partners;
 using EFTask.Entities.Sources;
 using EFTask.Entities.Streetcode.TextContent;
-using EFTask.Entities.Streetcode.Types;
 using EFTask.Entities.Timeline;
-using EFTask.Entities.Toponyms;
-using EFTask.Entities.Transactions;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Streetcode.Types;
+using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Entities.Transactions;
 
 namespace EFTask.Extensions;
 
@@ -621,8 +627,8 @@ public static class ModelBuilderExtensions
                 StreetcodeId = 4
             }
         );
-        modelBuilder.Entity<PersonStreetcode>().HasData(
-            new PersonStreetcode
+        modelBuilder.Entity<PersonStreetCode>().HasData(
+            new PersonStreetCode
             {
                 Id = 1,
                 Index = 1,
@@ -639,7 +645,7 @@ public static class ModelBuilderExtensions
                 MiddleName = "Григорович",
                 LastName = "Шевченко"
             },
-            new PersonStreetcode
+            new PersonStreetCode
             {
                 Id = 2,
                 Index = 2,
@@ -655,7 +661,7 @@ public static class ModelBuilderExtensions
                 MiddleName = "Іва́нович",
                 LastName = "Костома́ров"
             },
-            new PersonStreetcode
+            new PersonStreetCode
             {
                 Id = 3,
                 Index = 3,
@@ -670,8 +676,8 @@ public static class ModelBuilderExtensions
                 LastName = "Білозерський"
             }
         );
-        modelBuilder.Entity<EventStreetcode>().HasData(
-            new EventStreetcode
+        modelBuilder.Entity<EventStreetCode>().HasData(
+            new EventStreetCode
             {
                 Id = 4,
                 Index = 4,

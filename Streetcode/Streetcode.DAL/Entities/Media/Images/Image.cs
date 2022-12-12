@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EFTask.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 
-namespace EFTask.Entities.Media.Images;
+namespace Streetcode.DAL.Entities.Media.Images;
 
 [Table("images", Schema = "media")]
 public class Image

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using EFTask.Entities.Toponyms;
+using Streetcode.DAL.Entities.Toponyms;
 
 namespace EFTask.Entities.AdditionalContent.Coordinates;
 

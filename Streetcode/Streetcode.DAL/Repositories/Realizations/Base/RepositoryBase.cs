@@ -1,4 +1,4 @@
-using EFTask.Persistence;
+using Streetcode.DAL.Persistence;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;

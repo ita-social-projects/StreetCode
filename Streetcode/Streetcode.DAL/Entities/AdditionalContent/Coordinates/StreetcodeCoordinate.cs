@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using EFTask.Entities.AdditionalContent.Coordinates;
 
-namespace EFTask.Entities.AdditionalContent.Coordinates;
+namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 
 public class StreetcodeCoordinate : Coordinate
 {

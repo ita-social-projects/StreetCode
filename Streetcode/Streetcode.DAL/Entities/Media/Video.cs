@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Media;
+namespace Streetcode.DAL.Entities.Media;
 
 [Table("videos", Schema = "media")]
 public class Video

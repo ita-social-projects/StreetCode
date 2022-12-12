@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using EFTask.Entities.Timeline;
 
-
-namespace EFTask.Entities.Timeline;
+namespace Streetcode.DAL.Entities.Timeline;
 
 [Table("timeline_items", Schema = "timeline")]
 public class TimelineItem

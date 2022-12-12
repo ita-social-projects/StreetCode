@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Streetcode.TextContent;
+namespace Streetcode.DAL.Entities.Streetcode.TextContent;
 
 [Table("texts", Schema = "streetcode")]
 public class Text

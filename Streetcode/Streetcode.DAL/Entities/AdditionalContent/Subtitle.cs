@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using DAL.Enums;
 
-namespace EFTask.Entities.AdditionalContent;
+namespace Streetcode.DAL.Entities.AdditionalContent;
 
 [Table("subtitles", Schema = "add_content")]
 public class Subtitle

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Feedback;
+namespace Streetcode.DAL.Entities.Feedback;
 
 [Table("responses", Schema = "feedback")]
 public class Response

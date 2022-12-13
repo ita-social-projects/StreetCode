@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DAL.Enums;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.AdditionalContent;
 
@@ -28,5 +28,5 @@ public class Subtitle
     [Required]
     public int StreetcodeId { get; set; }
 
-    public Streetcode.Streetcode? Streetcode { get; set; }
+    public Streetcode.StreetcodeContent? Streetcode { get; set; }
 }

@@ -12,7 +12,7 @@ public class Art
     
     public string? Description { get; set; }
 
-    public List<Streetcode.Streetcode> Streetcodes { get; set; } = new();
+    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new();
 
     public int ImageId { get; set; }
 

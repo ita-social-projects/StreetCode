@@ -13,5 +13,5 @@ public class Tag
     [Required, MaxLength(50)]
     public string Title { get; set; }
     
-    public List<Streetcode.Streetcode> Streetcodes { get; set; } = new();
+    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new();
 }

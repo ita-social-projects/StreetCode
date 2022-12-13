@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Toponyms;
 
@@ -16,7 +17,7 @@ public class Toponym
     
     public string? Description { get; set; }
 
-    public List<Streetcode.Streetcode> Streetcodes { get; set; } = new();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new();
 
     public List<ToponymCoordinate> Coordinates { get; set; } = new();
 }

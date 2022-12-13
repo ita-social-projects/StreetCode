@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.Sources;
 
-namespace EFTask.Entities.Sources;
+namespace Streetcode.DAL.Entities.Sources;
 
 [Table("source_link_categories", Schema = "sources")]
 public class SourceLinkCategory

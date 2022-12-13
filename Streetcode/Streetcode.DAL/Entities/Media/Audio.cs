@@ -20,5 +20,5 @@ public class Audio
 
     public int StreetcodeId { get; set; }
 
-    public Streetcode.Streetcode? Streetcode { get; set; }
+    public Streetcode.StreetcodeContent? Streetcode { get; set; }
 }

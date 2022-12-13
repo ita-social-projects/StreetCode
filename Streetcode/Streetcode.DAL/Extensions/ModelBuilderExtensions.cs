@@ -1,10 +1,10 @@
-﻿using EFTask.Entities.AdditionalContent;
-using EFTask.Entities.AdditionalContent.Coordinates;
-using EFTask.Entities.Feedback;
-using EFTask.Entities.Partners;
-using EFTask.Entities.Sources;
-using EFTask.Entities.Streetcode.TextContent;
-using EFTask.Entities.Timeline;
+﻿using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Feedback;
+using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Timeline;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
@@ -18,7 +18,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 
-namespace EFTask.Extensions;
+namespace Streetcode.DAL.Extensions;
 
 public static class ModelBuilderExtensions
 {

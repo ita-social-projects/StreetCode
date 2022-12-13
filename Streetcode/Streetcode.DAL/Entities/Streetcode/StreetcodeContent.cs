@@ -14,7 +14,7 @@ using Streetcode.DAL.Entities.Transactions;
 namespace Streetcode.DAL.Entities.Streetcode;
 
 [Table("streetcodes", Schema = "streetcode")]
-public class Streetcode
+public class StreetcodeContent
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

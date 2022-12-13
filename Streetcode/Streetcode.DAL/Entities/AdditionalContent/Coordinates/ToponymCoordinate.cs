@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Streetcode.DAL.Entities.Toponyms;
 
-namespace EFTask.Entities.AdditionalContent.Coordinates;
+namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 
 public class ToponymCoordinate : Coordinate
 {

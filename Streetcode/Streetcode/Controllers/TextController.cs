@@ -1,6 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 using System;
 using System.Collections.Generic;
 using System.Linq;

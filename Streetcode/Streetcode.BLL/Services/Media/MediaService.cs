@@ -1,64 +1,64 @@
 
 using Repositories.Realizations;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.Media;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Services.Services;
+namespace Streetcode.BLL.Services.Media;
 
-public class MediaService : IMediaService 
+public class MediaService : IMediaService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public MediaService(IRepositoryWrapper repositoryWrapper) 
+    public MediaService(IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public string GetPictureAsync() 
+    public string GetPictureAsync()
     {
         // return "GetPictureAsync";
-        return _repositoryWrapper.MediaRepository.GetPictureAsync();
+        return _repositoryWrapper.ImageRepository.GetPictureAsync();
     }
 
-    public void UploadPictureAsync() 
+    public void UploadPictureAsync()
     {
         // TODO implement here
     }
 
-    public void DeletePictureAsync() 
+    public void DeletePictureAsync()
     {
         // TODO implement here
     }
 
-    public void GetVideoAsync() 
+    public void GetVideoAsync()
     {
         // TODO implement here
     }
 
-    public void UploadVideoAsync() 
+    public void UploadVideoAsync()
     {
         // TODO implement here
     }
 
-    public void DeleteVideoAsync() 
+    public void DeleteVideoAsync()
     {
         // TODO implement here
     }
 
-    public void GetAudioAsync() 
+    public void GetAudioAsync()
     {
         // TODO implement here
     }
 
-    public void UploadAudioAsync() 
+    public void UploadAudioAsync()
     {
         // TODO implement here
     }
 
-    public void DeleteAudioAsync() 
+    public void DeleteAudioAsync()
     {
         // TODO implement here
     }

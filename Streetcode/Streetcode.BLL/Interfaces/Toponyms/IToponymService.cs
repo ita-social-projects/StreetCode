@@ -1,7 +1,6 @@
+namespace Streetcode.BLL.Interfaces.Toponyms;
 
-namespace Services.Interfaces;
-
-public interface IToponymService 
+public interface IToponymService
 {
     public string GetToponymByNameAsync();
     public void GetStreetcodesByToponymAsync();

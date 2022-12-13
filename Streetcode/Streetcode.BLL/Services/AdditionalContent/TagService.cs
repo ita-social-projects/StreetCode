@@ -1,20 +1,20 @@
 
 using Repositories.Realizations;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.AdditionalContent;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Services.Services;
+namespace Streetcode.BLL.Services.AdditionalContent;
 
-public class TagService : ITagService 
+public class TagService : ITagService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public TagService(IRepositoryWrapper repositoryWrapper) 
+    public TagService(IRepositoryWrapper repositoryWrapper)
     {
-        _repositoryWrapper= repositoryWrapper;
+        _repositoryWrapper = repositoryWrapper;
     }
 
     public string GetTagByNameAsync()

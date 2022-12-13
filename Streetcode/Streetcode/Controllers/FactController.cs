@@ -1,7 +1,7 @@
 
+using EPlast.BLL.Interfaces.Logging;
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
-
+using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 
 namespace Controllers;
 
@@ -11,10 +11,12 @@ public class FactController : ControllerBase
 {
 
     private readonly IFactService _factService;
+    private readonly ILoggerService<FactController> _loggerService;
 
-    public FactController(IFactService factService) 
+    public FactController(IFactService factService, ILoggerService<FactController> loggerService) 
     {
         _factService = factService;
+        _loggerService = loggerService;
     }
 
     [HttpGet("getFactById")]
@@ -23,8 +25,10 @@ public class FactController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getFactByStreetcode")]
-    public void GetFactsByStreetcode() 
+    public string GetFactsByStreetcode() 
     {
+        _loggerService.LogError("Error????????");
+        return _factService.GetFactsByStreetcode();
         // TODO implement here
     }
     [HttpPost("createFact")]
@@ -33,10 +37,10 @@ public class FactController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getFact")]
-    public string GetFact()
+    public void GetFact()
     {
         // TODO implement here
-        return _factService.GetFactsByStreetcode();
+      
     }
     [HttpPut("updateFact")]
     public void UpdateFact() 

@@ -1,5 +1,4 @@
-
-namespace Services.Interfaces;
+namespace Streetcode.BLL.Interfaces.Partners;
 
 public interface IPartnersService
 {

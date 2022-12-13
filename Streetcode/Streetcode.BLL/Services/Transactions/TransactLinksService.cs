@@ -1,20 +1,20 @@
 
 using Repositories.Realizations;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.Transactions;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Services.Services;
+namespace Streetcode.BLL.Services.Transactions;
 
 public class TransactLinksService : ITransactLinksService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public TransactLinksService(IRepositoryWrapper repositoryWrapper) 
+    public TransactLinksService(IRepositoryWrapper repositoryWrapper)
     {
-        _repositoryWrapper= repositoryWrapper;
+        _repositoryWrapper = repositoryWrapper;
     }
 
     private RepositoryWrapper RepositoryWrapper;

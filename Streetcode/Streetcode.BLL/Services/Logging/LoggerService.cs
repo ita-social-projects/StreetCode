@@ -1,7 +1,7 @@
-﻿using EPlast.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Streetcode.BLL.Interfaces.Logging;
 
-namespace EPlast.BLL.Services.Logging
+namespace Streetcode.BLL.Services.Logging
 {
     public class LoggerService<T> : ILoggerService<T>
     {

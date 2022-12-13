@@ -3,7 +3,7 @@ using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;
 
-public class RepositoryBase : IRepositoryBase 
+public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 {
 
     public RepositoryBase() 
@@ -17,7 +17,7 @@ public class RepositoryBase : IRepositoryBase
         throw new NotImplementedException();
     }
 
-    public void CreateAsync()
+    public Task CreateAsync()
     {
         throw new NotImplementedException();
     }
@@ -27,12 +27,12 @@ public class RepositoryBase : IRepositoryBase
         throw new NotImplementedException();
     }
 
-    public void GetAll()
+    public IQueryable<T> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public void GetAllAsync()
+    public Task<IEnumerable<T>> GetAllAsync()
     {
         throw new NotImplementedException();
     }

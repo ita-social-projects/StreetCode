@@ -1,10 +1,9 @@
+namespace Streetcode.DAL.Repositories.Interfaces.Toponyms;
 
-namespace Repositories.Interfaces;
-
-public interface IToponymRepository 
+public interface IToponymRepository
 {
     public string GetToponymByNameAsync();
 
     public void GetStreetcodesByToponymAsync();
-   
+
 }

@@ -1,5 +1,4 @@
-
-namespace Repositories.Interfaces;
+namespace Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 
 public interface IFactRepository
 {

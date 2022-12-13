@@ -1,9 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EPlast.BLL.Interfaces.Logging;
+using EPlast.BLL.Services.Logging;
+using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Repositories.Interfaces;
 using Repositories.Realizations;
-using Services.Interfaces;
-using Services.Services;
+using Streetcode.BLL.Interfaces.AdditionalContent;
+using Streetcode.BLL.Interfaces.Media;
+using Streetcode.BLL.Interfaces.Partners;
+using Streetcode.BLL.Interfaces.Streetcode;
+using Streetcode.BLL.Interfaces.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Timeline;
+using Streetcode.BLL.Interfaces.Toponyms;
+using Streetcode.BLL.Interfaces.Transactions;
+using Streetcode.BLL.Services.AdditionalContent;
+using Streetcode.BLL.Services.Media;
+using Streetcode.BLL.Services.Partners;
+using Streetcode.BLL.Services.Streetcode;
+using Streetcode.BLL.Services.Streetcode.TextContent;
+using Streetcode.BLL.Services.Timeline;
+using Streetcode.BLL.Services.Toponyms;
+using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
@@ -11,6 +27,7 @@ public static class ServiceCollectionExtentions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
+        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IFactService, FactService>();
         services.AddScoped<IMediaService, MediaService>();
         services.AddScoped<IPartnersService, PartnersService>();

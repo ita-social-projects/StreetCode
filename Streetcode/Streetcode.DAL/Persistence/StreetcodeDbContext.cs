@@ -148,10 +148,10 @@ public class StreetcodeDbContext : DbContext
 
         modelBuilder.Entity<Entities.Streetcode.Streetcode>(entity =>
         {
-            entity.Property(s => s.CreateDate)
+            entity.Property(s => s.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
                 
-            entity.Property(s => s.UpdateDate)
+            entity.Property(s => s.UpdatedAt)
                 .HasDefaultValueSql("GETDATE()");
                 
             entity.Property(s => s.ViewCount)

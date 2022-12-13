@@ -638,7 +638,7 @@ public static class ModelBuilderExtensions
                          "Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. " +
                          "Академік Імператорської академії мистецтв",
                 ViewCount = 0,
-                CreateDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
                 EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
                 FirstName = "Тарас",
@@ -654,7 +654,7 @@ public static class ModelBuilderExtensions
                     "\r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство»." +
                     " У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
                 ViewCount = 0,
-                CreateDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1817, 5, 4),
                 EventEndOrPersonDeathDate = new DateTime(1885, 4, 7),
                 FirstName = "Мико́ла",
@@ -668,7 +668,7 @@ public static class ModelBuilderExtensions
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
                     " і культурний діяч, журналіст.",
                 ViewCount = 0,
-                CreateDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Василь",
@@ -685,7 +685,7 @@ public static class ModelBuilderExtensions
                     " та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян" +
                     " з Херсона, 9–11 листопада 2022 р.).",
                 ViewCount = 1000,
-                CreateDate = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(2022, 11, 9),
                 EventEndOrPersonDeathDate = new DateTime(2022, 11, 11),
                 Title = "Звільнення Херсона"

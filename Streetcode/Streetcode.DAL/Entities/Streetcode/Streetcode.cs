@@ -1,12 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.AdditionalContent;
-using EFTask.Entities.AdditionalContent.Coordinates;
-using EFTask.Entities.Partners;
-using EFTask.Entities.Sources;
-using EFTask.Entities.Streetcode;
-using EFTask.Entities.Streetcode.TextContent;
-using EFTask.Entities.Timeline;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.Media;
@@ -26,7 +19,7 @@ public class Streetcode
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
+    
     [Required]
     public int Index { get; set; }
     
@@ -35,9 +28,9 @@ public class Streetcode
        
     public int ViewCount { get; set; }
 
-    public DateTime CreateDate { get; set; }
+    public DateTime CreatedAt { get; set; }
     
-    public DateTime UpdateDate { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }

@@ -26,9 +26,9 @@ public class FactController : ControllerBase
     [HttpGet("getFactByStreetcode")]
     public string GetFactsByStreetcode() 
     {
-        _loggerService.LogError("Error????????");
-        return _factService.GetFactsByStreetcode();
         // TODO implement here
+        _loggerService.LogError("Error????????");
+        return _factService.GetFactsByStreetcodeAsync();
     }
     [HttpPost("createFact")]
     public void CreateFact() 

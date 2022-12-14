@@ -2,7 +2,7 @@ namespace Streetcode.BLL.Interfaces.Media;
 
 public interface IMediaService
 {
-    public string GetPictureAsync();
+    public void GetPictureAsync();
     public void UploadPictureAsync();
     public void DeletePictureAsync();
     public void GetVideoAsync();

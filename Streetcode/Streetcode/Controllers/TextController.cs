@@ -1,10 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Controllers;
 
@@ -23,9 +19,9 @@ public class TextController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getText")]
-    public string GetText() 
+    public void GetText() 
     {
-        return _textService.GetTextAsync();
+        // TODO implement here
     }
     [HttpPut("updateText")]
     public void UpdateText() 

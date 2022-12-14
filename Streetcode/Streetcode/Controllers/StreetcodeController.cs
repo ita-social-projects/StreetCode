@@ -35,10 +35,9 @@ public class StreetcodeController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getStreetcodeByName")]
-    public string GetStreetcodeByName()
+    public void GetStreetcodeByName()
     {
-        return _streetcodeService.GetStreetcodeByNameAsync();
-        // TODO implement here
+         // TODO implement here
     }
     [HttpGet("getStreetcodesByTagA")]
     public void GetStreetcodesByTag()

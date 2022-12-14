@@ -1,9 +1,9 @@
-﻿namespace Repositories.Interfaces;
+﻿using Streetcode.DAL.Entities.Media.Images;
+using StreetCode.DAL.Repositories.Interfaces.Base;
 
-public interface IImageRepository
+namespace Repositories.Interfaces;
+
+public interface IImageRepository : IRepositoryBase<Image>
 {
-    public string GetPictureAsync();
-    public void UploadPictureAsync();
-    public void DeletePictureAsync();
-
+  
 }

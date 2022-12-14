@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Repositories;
-using Repositories.Interfaces;
 using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Media;
+using Streetcode.BLL.Interfaces.Media.Images;
 using Streetcode.BLL.Interfaces.Partners;
 using Streetcode.BLL.Interfaces.Streetcode;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
@@ -14,6 +13,7 @@ using Streetcode.BLL.Interfaces.Transactions;
 using Streetcode.BLL.Services.AdditionalContent;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.BLL.Services.Media;
+using Streetcode.BLL.Services.Media.Images;
 using Streetcode.BLL.Services.Partners;
 using Streetcode.BLL.Services.Streetcode;
 using Streetcode.BLL.Services.Streetcode.TextContent;
@@ -28,8 +28,12 @@ public static class ServiceCollectionExtentions
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+
         services.AddScoped<IFactService, FactService>();
-        services.AddScoped<IMediaService, MediaService>();
+        services.AddScoped<IAudioService, AudioService>();
+        services.AddScoped<IArtService, ArtService>();
+        services.AddScoped<IVideoService, VideoService>();
+        services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IPartnersService, PartnersService>();
         services.AddScoped<IStreetcodeService, StreetcodeService>();
         services.AddScoped<ISubtitleService, SubtitleService>();

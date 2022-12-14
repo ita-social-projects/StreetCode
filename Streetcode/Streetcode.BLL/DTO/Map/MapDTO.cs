@@ -6,11 +6,7 @@ namespace Streetcode.BLL.DTO.Map;
 
 public class MapDTO
 {
-
     public ImageDTO Background;
-
     public List<ToponymDTO> Toponyms;
-
     public List<StreetcodeDTO> Streetcodes;
-
 }

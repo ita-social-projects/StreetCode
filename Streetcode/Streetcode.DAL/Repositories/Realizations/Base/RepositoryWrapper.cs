@@ -224,34 +224,6 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    IFactRepository IRepositoryWrapper.FactRepository => throw new NotImplementedException();
-
-    IArtRepository IRepositoryWrapper.ArtRepository => throw new NotImplementedException();
-
-    IVideoRepository IRepositoryWrapper.VideoRepository => throw new NotImplementedException();
-
-    IImageRepository IRepositoryWrapper.ImageRepository => throw new NotImplementedException();
-
-    IAudioRepository IRepositoryWrapper.AudioRepository => throw new NotImplementedException();
-
-    IPartnersRepository IRepositoryWrapper.PartnersRepository => throw new NotImplementedException();
-
-    IStreetcodeRepository IRepositoryWrapper.StreetcodeRepository => throw new NotImplementedException();
-
-    ISubtitleRepository IRepositoryWrapper.SubtitleRepository => throw new NotImplementedException();
-
-    ITagRepository IRepositoryWrapper.TagRepository => throw new NotImplementedException();
-
-    ITermRepository IRepositoryWrapper.TermRepository => throw new NotImplementedException();
-
-    ITextRepository IRepositoryWrapper.TextRepository => throw new NotImplementedException();
-
-    ITimelineRepository IRepositoryWrapper.TimelineRepository => throw new NotImplementedException();
-
-    IToponymRepository IRepositoryWrapper.ToponymRepository => throw new NotImplementedException();
-
-    ITransactLinksRepository IRepositoryWrapper.TransactLinksRepository => throw new NotImplementedException();
-
 
     //private void All_Repoes;
 

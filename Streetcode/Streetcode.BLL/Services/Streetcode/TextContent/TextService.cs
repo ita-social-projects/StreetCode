@@ -1,11 +1,5 @@
-
-using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 using StreetCode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Streetcode.BLL.Services.Streetcode.TextContent;
 
@@ -17,13 +11,13 @@ public class TextService : ITextService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public void GetNext()
+    public void GetNextAsync()
     {
         // TODO implement here
     }
-    public string GetTextAsync()
+    public void GetTextAsync()
     {
-        return _repositoryWrapper.TextRepository.GetTextAsync();
+        // TODO implement here
     }
 
 }

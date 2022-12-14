@@ -1,26 +1,28 @@
 
-using Repositories.Realizations;
+using AutoMapper;
+using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.AdditionalContent;
+using Streetcode.DAL.Entities.AdditionalContent;
 using StreetCode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Streetcode.BLL.Services.AdditionalContent;
 
 public class SubtitleService : ISubtitleService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public SubtitleService(IRepositoryWrapper repositoryWrapper)
+    private readonly IMapper _mapper;
+    public SubtitleService(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
     }
 
-    public string GetSubtitlesByStreetcode()
+    public async Task<IEnumerable<SubtitleDTO>> GetSubtitlesByStreetcodeAsync()
     {
-        return _repositoryWrapper.SubtitleRepository.GetSubtitlesByStreetcode();
-        // TODO implement here
+        
+        var subtitle =await _repositoryWrapper.SubtitleRepository.GetAllAsync(c => c.StreetcodeId == 1);
+        return _mapper.Map<IEnumerable<Subtitle>, IEnumerable<SubtitleDTO>>(subtitle); ;
+        // TODO clean after merge
     }
 
 }

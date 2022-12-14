@@ -1,10 +1,9 @@
+using Streetcode.BLL.DTO.Identifier;
+
 namespace Streetcode.BLL.DTO.Timeline;
 
 public class HistoricalContextDTO
 {
-
-    public int Id;
-
-    public string Title;
-
+    public IdentifierDTO Identifier;
+    public List<TimelineItemDTO> TimelineItems;
 }

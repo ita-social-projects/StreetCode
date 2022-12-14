@@ -1,19 +1,13 @@
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.Identifier;
 using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.DTO.Partners;
 
 public class PartnerDTO
 {
-
-    public int Id;
-
+    public IdentifierDTO Identifier;
     public ImageDTO Image;
-
-    public string Title;
-
     public string Description;
-
-    public List<UrlDTO> Urls;
-
+    public UrlDTO TargetUrl;
 }

@@ -13,53 +13,29 @@ namespace Streetcode.BLL.DTO.Streetcode;
 
 public abstract class StreetcodeDTO
 {
-
     public int Id;
-
-    public List<ToponymDTO> Toponym;
-
-    public CoordinatesDTO Coordinates;
-
+    public int Index;
+    public List<ToponymDTO> Toponyms;
+    public CoordinatesDTO Coordinate;
     public List<ImageDTO> Images;
-
     public int Code;
-
-    public DateTime StartDate;
-
-    public DateTime EndDate;
-
-    public int NumberOfViews;
-
-    public DateTime CreateDate;
-
-    public DateTime UpdateDate;
-
+    public DateTime EventStartOrPersonBirthDate;
+    public DateTime EventEndOrPersonDeathDate;
+    public int ViewCount;
+    public DateTime CreatedAt;
+    public DateTime UpdatedAt;
     public List<TagDTO> Tags;
-
     public string Teaser;
-
     public AudioDTO Audio;
-
     public TransactLinkDTO TransactLink;
-
     public string MainText;
-
-    public VideoDTO Video;
-
+    public List<VideoDTO> Videos;
     public List<FactDTO> Facts;
-
-    public TimelineDTO Timeline;
-
+    public List<TimelineDTO> TimelineItems;
     public List<SourceLinkDTO> SourceLinks;
-
     public List<ArtDTO> Arts;
-
     public List<SubtitleDTO> Subtitles;
-
     public List<PartnerDTO> Sponsors;
-
-    public List<PartnerDTO> Partners;
-
+    public List<PartnerDTO> StreetcodePartners;
     public List<StreetcodeDTO> RelatedFugures;
-
 }

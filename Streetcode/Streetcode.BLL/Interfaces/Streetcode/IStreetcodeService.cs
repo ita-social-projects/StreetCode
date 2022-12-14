@@ -2,7 +2,7 @@ namespace Streetcode.BLL.Interfaces.Streetcode;
 
 public interface IStreetcodeService
 {
-    public string GetStreetcodeByNameAsync();
+    public void GetStreetcodeByNameAsync();
     public void GetStreetcodesByTagAsync();
     public void GetByCodeAsync();
     public void GetTagsByStreecodeIdAsync();

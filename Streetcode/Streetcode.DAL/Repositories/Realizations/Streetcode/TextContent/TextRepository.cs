@@ -1,4 +1,3 @@
-using Repositories.Interfaces;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Persistence;
 using Repositories.Realizations;
@@ -9,16 +8,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 public class TextRepository : RepositoryBase<Text>, ITextRepository
 {
 
-    public TextRepository(StreetcodeDbContext _streetcodeDBContext)
+    public TextRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
     {
-    }
-
-    public void GetNext()
-    {
-        // TODO implement here
-    }
-    public string GetTextAsync()
-    {
-        return "GetTextAsync";
     }
 }

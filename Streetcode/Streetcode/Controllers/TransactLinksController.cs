@@ -20,9 +20,8 @@ public class TransactLinksController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getTransactLink")]
-    public string GetTransactLink()
+    public void GetTransactLink()
     {
-        return _transactLinksService.GetTransactLinkAsync();
         // TODO implement here
     }
     [HttpPost("updateTransactLink")]

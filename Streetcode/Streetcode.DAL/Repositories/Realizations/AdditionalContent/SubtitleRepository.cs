@@ -1,4 +1,3 @@
-using Repositories.Interfaces;
 using Repositories.Realizations;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Persistence;
@@ -8,15 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 
 public class SubtitleRepository : RepositoryBase<Subtitle>, ISubtitleRepository
 {
-
-    public SubtitleRepository(StreetcodeDbContext _streetcodeDBContext)
+    public SubtitleRepository(StreetcodeDbContext _streetcodeDBContext): base(_streetcodeDBContext)
     {
     }
-
-    public string GetSubtitlesByStreetcode()
-    {
-        return "GetSubtitlesByStreetcode";
-        // TODO implement here
-    }
-
 }

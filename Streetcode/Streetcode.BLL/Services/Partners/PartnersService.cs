@@ -1,11 +1,5 @@
-
-using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.Partners;
 using StreetCode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Streetcode.BLL.Services.Partners;
 
@@ -17,9 +11,8 @@ public class PartnersService : IPartnersService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public string GetSponsorsAsync()
+    public void GetSponsorsAsync()
     {
-        return _repositoryWrapper.PartnersRepository.GetSponsorsAsync();
         // TODO implement here
     }
 

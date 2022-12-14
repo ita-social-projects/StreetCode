@@ -1,12 +1,11 @@
+using Streetcode.BLL.DTO.Identifier;
+
 namespace Streetcode.BLL.DTO.Streetcode.TextContent;
 
 public class MainTextDTO
 {
-
-    public int Id;
-
-    public string Title;
-
-    public string Text;
-
+    public IdentifierDTO Identifier;
+    public string TextContent;
+    public int StreetcodeId;
+    public StreetcodeDTO Streetcode;
 }

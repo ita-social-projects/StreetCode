@@ -1,10 +1,10 @@
+using Streetcode.BLL.DTO.Identifier;
+using Streetcode.BLL.DTO.Streetcode;
+
 namespace Streetcode.BLL.DTO.AdditionalContent;
 
 public class TagDTO
 {
-
-    public int Id;
-
-    public string Title;
-
+    public IdentifierDTO Identifier;
+    public List<StreetcodeDTO> Streetcodes;
 }

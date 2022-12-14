@@ -1,10 +1,9 @@
-﻿namespace Repositories.Interfaces;
+﻿using Streetcode.DAL.Entities.Media;
+using StreetCode.DAL.Repositories.Interfaces.Base;
 
-public interface IVideoRepository
+namespace Repositories.Interfaces;
+
+public interface IVideoRepository : IRepositoryBase<Video>
 {
-
-    public void GetVideoAsync();
-    public void UploadVideoAsync();
-    public void DeleteVideoAsync();
 
 }

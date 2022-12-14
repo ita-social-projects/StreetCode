@@ -14,10 +14,9 @@ public class MediaController : ControllerBase
         _mediaService = mediaService;
     }
     [HttpGet("getPicture")]
-    public string GetPicture() 
+    public void GetPicture() 
     {
         // TODO implement here
-        return _mediaService.GetPictureAsync();
     }
     [HttpPost("uploadPicture")]
     public void UploadPicture() 

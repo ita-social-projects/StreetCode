@@ -2,6 +2,6 @@ namespace Streetcode.BLL.Interfaces.Toponyms;
 
 public interface IToponymService
 {
-    public string GetToponymByNameAsync();
+    public void GetToponymByNameAsync();
     public void GetStreetcodesByToponymAsync();
 }

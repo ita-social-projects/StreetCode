@@ -1,9 +1,9 @@
-﻿namespace Repositories.Interfaces;
+﻿using Streetcode.DAL.Entities.Media.Images;
+using StreetCode.DAL.Repositories.Interfaces.Base;
 
-public interface IArtRepository
+namespace Repositories.Interfaces;
+
+public interface IArtRepository : IRepositoryBase<Art>
 {
-    public string GetPictureAsync();
-    public void UploadPictureAsync();
-    public void DeletePictureAsync();
 
 }

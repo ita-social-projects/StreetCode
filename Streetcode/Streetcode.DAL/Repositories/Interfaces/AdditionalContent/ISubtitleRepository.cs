@@ -1,6 +1,9 @@
+using Streetcode.DAL.Entities.AdditionalContent;
+using StreetCode.DAL.Repositories.Interfaces.Base;
+
 namespace Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 
-public interface ISubtitleRepository
+public interface ISubtitleRepository : IRepositoryBase<Subtitle>
 {
-    public string GetSubtitlesByStreetcode();
+
 }

@@ -1,12 +1,9 @@
+using Streetcode.BLL.DTO.Identifier;
+
 namespace Streetcode.BLL.DTO.Streetcode.TextContent;
 
 public class TermDTO
 {
-
-    public int Id;
-
-    public string Name;
-
+    public IdentifierDTO Identifier;
     public string Description;
-
 }

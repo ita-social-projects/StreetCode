@@ -19,9 +19,8 @@ public class TimelineController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getTimeLineItems")]
-    public string GetTimelineItems()
+    public void GetTimelineItems()
     {
-        return _timelineService.GetTimelineItemsAsync();
         // TODO implement here
     }
     [HttpPost("createTimeline")]

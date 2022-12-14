@@ -1,13 +1,9 @@
+using Streetcode.DAL.Entities.Streetcode;
+using StreetCode.DAL.Repositories.Interfaces.Base;
+
 namespace Streetcode.DAL.Repositories.Interfaces.Streetcode;
 
-public interface IStreetcodeRepository
+public interface IStreetcodeRepository : IRepositoryBase<StreetcodeContent>
 {
-    public string GetStreetcodeByNameAsync();
-    public void GetTagsByStreetcodeIdAsync();
-    public void GetByCodeAsync();
-    public void GetEventsAsync();
-    public void GetPersonsAsync();
-    public void GetRelatedStreetcodeAsync();
-    public void GetStreetcodeByTagAsync();
-
+  
 }

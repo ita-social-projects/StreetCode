@@ -7,15 +7,10 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
-using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 

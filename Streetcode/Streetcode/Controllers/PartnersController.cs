@@ -39,9 +39,8 @@ public class PartnersController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getSponsors")]
-    public string GetSponsors() 
+    public void GetSponsors() 
     {
-        return _partnesService.GetSponsorsAsync();
         // TODO implement here
     }
 

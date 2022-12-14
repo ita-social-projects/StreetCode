@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.Feedback;
 using Streetcode.DAL.Entities.Feedback;
 
 

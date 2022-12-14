@@ -39,9 +39,10 @@ public class SubtitleController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getSubtitlesByStreetcode")]
-    public string GetSubtitlesByStreetcode()
+    public async Task<IActionResult> GetSubtitlesByStreetcode()
     {
-        return _subtitleService.GetSubtitlesByStreetcode();
+        var subtitles = await _subtitleService.GetSubtitlesByStreetcodeAsync();
+        return Ok(subtitles);
         // TODO implement here
     }
 

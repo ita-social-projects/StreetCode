@@ -17,15 +17,15 @@ public class FactService : IFactService
         _mapper = mapper;
     }
 
-    public string GetFactsByStreetcode()
+    public string GetFactsByStreetcodeAsync()
     {
+        // TODO clean after merge
         Fact fact = new Fact();
         fact.Id = 1;
         fact.Title = "Test1";
         FactDTO factDTO = _mapper.Map<Fact, FactDTO>(fact);
 
         return factDTO.Title;
-        // return _repositoryWrapper.FactRepository.GetFactsByStreetcode();
     }
 
 }

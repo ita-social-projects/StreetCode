@@ -1,11 +1,5 @@
-
-using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.Streetcode;
 using StreetCode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Streetcode.BLL.Services.Streetcode;
 
@@ -17,9 +11,9 @@ public class StreetcodeService : IStreetcodeService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public string GetStreetcodeByNameAsync()
+    public void GetStreetcodeByNameAsync()
     {
-        return _repositoryWrapper.StreetcodeRepository.GetStreetcodeByNameAsync();
+        // TODO implement here
     }
 
     public void GetStreetcodesByTagAsync()

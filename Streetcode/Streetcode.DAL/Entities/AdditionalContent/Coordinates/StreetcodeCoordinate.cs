@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 
 namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 

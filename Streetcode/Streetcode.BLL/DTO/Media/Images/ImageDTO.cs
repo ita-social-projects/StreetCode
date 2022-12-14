@@ -10,7 +10,7 @@ public class ImageDTO
     public IdentifierDTO Identifier;
     public string Alt;
     public UrlDTO Url;
-    public List<StreetcodeDTO> Streetcodes;
-    public List<FactDTO> Facts;
+    public IEnumerable<StreetcodeDTO> Streetcodes;
+    public IEnumerable<FactDTO> Facts;
     public ArtDTO Art;
 }

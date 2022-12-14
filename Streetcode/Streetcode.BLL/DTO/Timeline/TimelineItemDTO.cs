@@ -10,6 +10,6 @@ public class TimelineItemDTO
     public string Description;
     public int Date;
     public ImageDTO Image;
-    public List<HistoricalContextDTO> HistoricalContext;
-    public List<StreetcodeDTO> Streetcodes;
+    public IEnumerable<HistoricalContextDTO> HistoricalContext;
+    public IEnumerable<StreetcodeDTO> Streetcodes;
 }

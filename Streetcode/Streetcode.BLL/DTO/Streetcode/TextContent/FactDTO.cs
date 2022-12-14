@@ -10,5 +10,5 @@ public class FactDTO
     public ImageDTO Image;
     public string FactContent;
     public string Text;
-    public List<StreetcodeDTO> Streetcodes;
+    public IEnumerable<StreetcodeDTO> Streetcodes;
 }

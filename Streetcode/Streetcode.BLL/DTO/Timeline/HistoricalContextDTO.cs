@@ -5,5 +5,5 @@ namespace Streetcode.BLL.DTO.Timeline;
 public class HistoricalContextDTO
 {
     public IdentifierDTO Identifier;
-    public List<TimelineItemDTO> TimelineItems;
+    public IEnumerable<TimelineItemDTO> TimelineItems;
 }

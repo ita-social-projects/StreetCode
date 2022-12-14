@@ -6,7 +6,7 @@ public class ArtDTO
 {
     public int Id;
     public string Description;
-    public List<StreetcodeDTO> Streetcodes;
+    public IEnumerable<StreetcodeDTO> Streetcodes;
     public int ImageId;
     public ImageDTO Image;
 }

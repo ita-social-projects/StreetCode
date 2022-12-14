@@ -6,5 +6,5 @@ namespace Streetcode.BLL.DTO.AdditionalContent;
 public class TagDTO
 {
     public IdentifierDTO Identifier;
-    public List<StreetcodeDTO> Streetcodes;
+    public IEnumerable<StreetcodeDTO> Streetcodes;
 }

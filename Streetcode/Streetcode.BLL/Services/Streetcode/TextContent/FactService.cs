@@ -25,7 +25,7 @@ public class FactService : IFactService
         fact.Title = "Test1";
         FactDTO factDTO = _mapper.Map<Fact, FactDTO>(fact);
 
-        return factDTO.Title;
+        return factDTO.Text;
     }
 
 }

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Streetcode.DAL.Entities.Partners;
 
-namespace EFTask.Entities.Partners;
+namespace Streetcode.DAL.Entities.Partners;
 
 [Table("partners", Schema = "partner_sponsors")]
 public class Partner

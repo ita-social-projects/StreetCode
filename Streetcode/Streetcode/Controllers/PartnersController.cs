@@ -1,6 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.Partners;
 
 namespace Controllers;
 
@@ -39,9 +39,8 @@ public class PartnersController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getSponsors")]
-    public string GetSponsors() 
+    public void GetSponsors() 
     {
-        return _partnesService.GetSponsorsAsync();
         // TODO implement here
     }
 

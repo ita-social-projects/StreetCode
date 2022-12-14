@@ -1,6 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 
 namespace Controllers;
 
@@ -19,9 +19,9 @@ public class TermController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getTerm")]
-    public string GetTerm() 
+    public void GetTerm() 
     {
-        return _termService.GetTermAsync();
+        // TODO implement here
     }
     [HttpPut("UpdateTerm")]
     public void UpdateTerm()

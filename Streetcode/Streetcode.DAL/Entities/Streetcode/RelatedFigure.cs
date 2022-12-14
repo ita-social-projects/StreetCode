@@ -9,10 +9,10 @@ public class RelatedFigure
     [Required]
     public int ObserverId { get; set; }
 
-    public Streetcode Observer { get; set; }
+    public StreetcodeContent Observer { get; set; }
     
     [Required]
     public int TargetId { get; set; }
     
-    public Streetcode Target { get; set; }
+    public StreetcodeContent Target { get; set; }
 }

@@ -1,21 +1,16 @@
-﻿using EFTask.Entities.AdditionalContent.Coordinates;
-using EFTask.Entities.Feedback;
-using EFTask.Entities.Partners;
-using EFTask.Entities.Sources;
-using EFTask.Entities.Streetcode.TextContent;
-using EFTask.Entities.Timeline;
-using EFTask.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
-using Streetcode.DAL.Entities.Media;
-using Streetcode.DAL.Entities.Media.Images;
+﻿using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
-using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 
@@ -57,7 +52,7 @@ public class StreetcodeDbContext : DbContext
         
     public virtual DbSet<SourceLink> SourceLinks { get; set; }
         
-    public virtual DbSet<Entities.Streetcode.Streetcode> Streetcodes { get; set; }
+    public virtual DbSet<Entities.Streetcode.StreetcodeContent> Streetcodes { get; set; }
         
     public virtual DbSet<Subtitle> Subtitles { get; set; }
         
@@ -146,7 +141,7 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(false);
         });
 
-        modelBuilder.Entity<Entities.Streetcode.Streetcode>(entity =>
+        modelBuilder.Entity<Entities.Streetcode.StreetcodeContent>(entity =>
         {
             entity.Property(s => s.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
@@ -158,7 +153,7 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(0);
                 
             entity.HasDiscriminator<string>("streetcode_type")
-                .HasValue<Entities.Streetcode.Streetcode>("streetcode_base")
+                .HasValue<Entities.Streetcode.StreetcodeContent>("streetcode_base")
                 .HasValue<PersonStreetCode>("streetcode_person")
                 .HasValue<EventStreetCode>("streetcode_event");
 

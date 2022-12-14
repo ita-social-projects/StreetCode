@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.Sources;
 
 namespace Streetcode.DAL.Entities.Sources;
 
@@ -19,7 +18,7 @@ public class SourceLink
     [Required]
     public int StreetcodeId { get; set; }
 
-    public Streetcode.Streetcode? Streetcode { get; set; }
+    public Streetcode.StreetcodeContent? Streetcode { get; set; }
 
     public List<SourceLinkCategory> Categories { get; set; } = new();
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Streetcode.DAL.Entities.Streetcode;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Streetcode.DAL.Entities.Transactions;
@@ -19,5 +20,5 @@ public class TransactionLink
     [Required]
     public int StreetcodeId { get; set; }
     
-    public Streetcode.Streetcode? Streetcode { get; set; }
+    public StreetcodeContent? Streetcode { get; set; }
 }

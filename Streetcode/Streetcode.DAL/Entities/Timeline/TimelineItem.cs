@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Streetcode.DAL.Entities.Streetcode;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.Timeline;
 
 namespace Streetcode.DAL.Entities.Timeline;
 
@@ -20,7 +20,7 @@ public class TimelineItem
     [Column(TypeName = "text")]
     public string? Description { get; set; }
     
-    public List<Streetcode.Streetcode> Streetcodes { get; set; } = new();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new();
 
     public List<HistoricalContext> HistoricalContexts { get; set; } = new();
 }

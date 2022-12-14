@@ -19,5 +19,5 @@ public class Text
     [Required]
     public int StreetcodeId { get; set; }
 
-    public Streetcode? Streetcode { get; set; }
+    public StreetcodeContent? Streetcode { get; set; }
 }

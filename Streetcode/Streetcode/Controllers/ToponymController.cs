@@ -1,10 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Streetcode.BLL.Interfaces.Toponyms;
 
 namespace Controllers;
 
@@ -38,9 +34,8 @@ public class ToponymController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getToponymByName")]
-    public string GetToponymByName()
+    public void GetToponymByName()
     {
-        return _toponymService.GetToponymByNameAsync();
         // TODO implement here
     }
     [HttpGet("getStreetcodesByToponym")]

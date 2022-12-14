@@ -1,7 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
-
+using Streetcode.BLL.Interfaces.Timeline;
 
 namespace Controllers;
 
@@ -20,9 +19,8 @@ public class TimelineController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getTimeLineItems")]
-    public string GetTimelineItems()
+    public void GetTimelineItems()
     {
-        return _timelineService.GetTimelineItemsAsync();
         // TODO implement here
     }
     [HttpPost("createTimeline")]

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.Partners;
+namespace Streetcode.DAL.Entities.Partners;
 
 [Table("partner_source_links", Schema = "partner_sponsors")]
 public class PartnerSourceLink

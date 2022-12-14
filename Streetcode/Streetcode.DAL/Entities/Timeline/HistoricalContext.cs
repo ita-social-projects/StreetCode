@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Streetcode.DAL.Entities.Timeline;
 
-namespace EFTask.Entities.Timeline;
+namespace Streetcode.DAL.Entities.Timeline;
 
 [Table("historical_contexts", Schema = "timeline")]
 public class HistoricalContext

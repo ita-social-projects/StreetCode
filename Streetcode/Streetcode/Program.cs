@@ -1,7 +1,3 @@
-using EFTask.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Repositories;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,10 +8,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAppServices();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
-var dbTask = app.MigrateToDatabaseAsync();
+//var dbTask = app.MigrateToDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -32,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await dbTask;
+//await dbTask;
 
 app.Run();

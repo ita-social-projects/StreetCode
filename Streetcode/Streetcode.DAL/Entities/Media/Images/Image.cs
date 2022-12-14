@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using EFTask.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 
 namespace Streetcode.DAL.Entities.Media.Images;
@@ -21,7 +20,7 @@ public class Image
     [Required] 
     public string Url { get; set; }
 
-    public List<Streetcode.Streetcode> Streetcodes { get; set; } = new();
+    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new();
 
     public List<Fact> Facts { get; set; } = new();
 

@@ -1,6 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
+using Streetcode.BLL.Interfaces.AdditionalContent;
 
 namespace Controllers;
 
@@ -34,9 +34,9 @@ public class TagController : ControllerBase
         // TODO implement here
     }
     [HttpGet("getTagByName")]
-    public string GetTagByName()
+    public void GetTagByName()
     {
-        return _tagService.GetTagByNameAsync();
+        // TODO implement here
     }
     [HttpGet("getTagsByStreetcode")]
     public void GetTagsByStreetcode() 

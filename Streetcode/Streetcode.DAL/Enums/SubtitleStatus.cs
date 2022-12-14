@@ -1,4 +1,4 @@
-﻿namespace DAL.Enums;
+﻿namespace Streetcode.DAL.Enums;
 
 public enum SubtitleStatus : byte
 {

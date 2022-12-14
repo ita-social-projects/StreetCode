@@ -1,5 +1,19 @@
 using Repositories.Interfaces;
 using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
+using Streetcode.DAL.Repositories.Interfaces.Partners;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
+using Streetcode.DAL.Repositories.Interfaces.Timeline;
+using Streetcode.DAL.Repositories.Interfaces.Toponyms;
+using Streetcode.DAL.Repositories.Interfaces.Transactions;
+using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
+using Streetcode.DAL.Repositories.Realizations.Partners;
+using Streetcode.DAL.Repositories.Realizations.Streetcode;
+using Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
+using Streetcode.DAL.Repositories.Realizations.Timeline;
+using Streetcode.DAL.Repositories.Realizations.Toponyms;
+using Streetcode.DAL.Repositories.Realizations.Transactions;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
 
@@ -15,9 +29,15 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private StreetcodeDbContext _streetcodeDbContext;
 
-    private IFactRepository _factRepository;
+    private IVideoRepository _videoRepository;
 
-    private IMediaRepository _mediaRepository;
+    private IAudioRepository _audioRepository;
+
+    private IImageRepository _imageRepository;
+
+    private IArtRepository _artRepository;
+
+    private IFactRepository _factRepository;
 
     private IPartnersRepository _partnersRepository;
 
@@ -49,15 +69,50 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IMediaRepository MediaRepository
+    public IImageRepository ImageRepository
     {
         get
         {
-            if (_mediaRepository == null)
+            if (_imageRepository == null)
             {
-                _mediaRepository = new MediaRepository(_streetcodeDbContext);
+                _imageRepository = new ImageRepository(_streetcodeDbContext);
             }
-            return _mediaRepository;
+            return _imageRepository;
+        }
+    }
+
+    public IAudioRepository AudioRepository
+    {
+        get
+        {
+            if (_audioRepository == null)
+            {
+                _audioRepository = new AudioRepository(_streetcodeDbContext);
+            }
+            return _audioRepository;
+        }
+    }
+    public IVideoRepository VideoRepository
+    {
+        get
+        {
+            if (_videoRepository == null)
+            {
+                _videoRepository = new VideoRepository(_streetcodeDbContext);
+            }
+            return _videoRepository;
+        }
+    }
+
+    public IArtRepository ArtRepository
+    {
+        get
+        {
+            if (_artRepository == null)
+            {
+                _artRepository = new ArtRepository(_streetcodeDbContext);
+            }
+            return _artRepository;
         }
     }
 

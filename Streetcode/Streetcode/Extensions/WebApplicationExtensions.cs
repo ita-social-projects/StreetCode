@@ -1,9 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Streetcode.DAL.Persistence;
 
 namespace EFTask.Extensions;
@@ -15,8 +10,8 @@ public static class WebApplicationExtensions
         using var scope = app.Services.CreateScope();
         try
         {
-            var productContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-            await productContext.Database.MigrateAsync();
+            var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
+            await streetcodeContext.Database.MigrateAsync();
         }
         catch (Exception ex)
         {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EFTask.Entities.AdditionalContent.Coordinates;
+namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 
 [Table("coordinates", Schema = "add_content")]
 public class Coordinate

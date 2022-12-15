@@ -136,7 +136,7 @@ public static class ModelBuilderExtensions
             new Response
             {
                 Id = 2,
-                FirstName = "Dmytro",
+                Name = "Dmytro",
                 Description = "Nice project",
                 Email = "mail@gmail.com"
             }

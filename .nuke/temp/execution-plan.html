@@ -198,6 +198,7 @@ window.addEventListener("load",function(){e.contentLoaded()},!1)}).call(e,n(9))}
 
     <script>
 $(document).ready(function() {
+  $("#Clean").addClass('highlight');
   $("#Restore").addClass('highlight');
   $("#Compile").addClass('highlight');
   $("#Clean").hover(
@@ -205,11 +206,13 @@ $(document).ready(function() {
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
         $("#Compile").removeClass('highlight');
-        $("#Test").removeClass('highlight');
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
         $("#Clean").addClass('highlight');
     },
     function() {
         $("#Clean").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
         $("#Compile").addClass('highlight');
     });
@@ -218,11 +221,15 @@ $(document).ready(function() {
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
         $("#Compile").removeClass('highlight');
-        $("#Test").removeClass('highlight');
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
     },
     function() {
+        $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
         $("#Compile").addClass('highlight');
     });
@@ -231,30 +238,49 @@ $(document).ready(function() {
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
         $("#Compile").removeClass('highlight');
-        $("#Test").removeClass('highlight');
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
         $("#Compile").addClass('highlight');
     },
-    function() {
-        $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-    });
-  $("#Test").hover(
     function() {
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
         $("#Compile").removeClass('highlight');
-        $("#Test").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
         $("#Compile").addClass('highlight');
-        $("#Test").addClass('highlight');
-    },
+    });
+  $("#CleanDevelopmentContainers").hover(
     function() {
+        $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
         $("#Compile").removeClass('highlight');
-        $("#Test").removeClass('highlight');
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
+        $("#CleanDevelopmentContainers").addClass('highlight');
+    },
+    function() {
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#Clean").addClass('highlight');
+        $("#Restore").addClass('highlight');
+        $("#Compile").addClass('highlight');
+    });
+  $("#StartDevelopmentContainers").hover(
+    function() {
+        $("#Clean").removeClass('highlight');
+        $("#Restore").removeClass('highlight');
+        $("#Compile").removeClass('highlight');
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
+        $("#CleanDevelopmentContainers").addClass('highlight');
+        $("#StartDevelopmentContainers").addClass('highlight');
+    },
+    function() {
+        $("#CleanDevelopmentContainers").removeClass('highlight');
+        $("#StartDevelopmentContainers").removeClass('highlight');
+        $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
         $("#Compile").addClass('highlight');
     });
@@ -302,10 +328,11 @@ $(document).ready(function() {
     
     <div class="mermaid">
 graph LR
-Clean -.-> Restore
+Clean --> Restore
 Restore --> Compile
-Compile --> Test
-Test
+Compile -.-> CleanDevelopmentContainers
+CleanDevelopmentContainers --> StartDevelopmentContainers
+StartDevelopmentContainers
 
 
 linkStyle default interpolate basis

@@ -1,6 +1,12 @@
-using Streetcode.DAL.Enums;
+using Xunit;
 
-namespace Streetcode.Tests;
+namespace Streetcode.XUnitTest;
+
+public enum SubtitleStatus : byte
+{
+    Editor,
+    Illustrator
+}
 
 public class UnitTest1
 {

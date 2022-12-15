@@ -11,7 +11,7 @@ public class Response
     public int Id { get; set; }
 
     [MaxLength(50)]
-    public string? FirstName { get; set; }
+    public string? Name { get; set; }
     
     [Required, MaxLength(50)]
     [EmailAddress]

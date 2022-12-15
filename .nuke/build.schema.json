@@ -18,6 +18,10 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
+        "DockerAtom": {
+          "type": "string",
+          "description": "docker atom"
+        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -43,6 +47,10 @@
             "VSCode"
           ]
         },
+        "MigrName": {
+          "type": "string",
+          "description": "Specifies migration name during its creation"
+        },
         "NoLogo": {
           "type": "boolean",
           "description": "Disables displaying the NUKE logo"
@@ -62,6 +70,10 @@
             "type": "string"
           }
         },
+        "RollbackMigration": {
+          "type": "boolean",
+          "description": "Specifies whether a migration rollback should be committed"
+        },
         "Root": {
           "type": "string",
           "description": "Root directory during build execution"
@@ -72,13 +84,17 @@
           "items": {
             "type": "string",
             "enum": [
-              "All",
-              "Backend_All",
-              "Backend_Clean",
-              "Backend_Compile",
-              "Backend_Restore",
-              "Backend_Test",
-              "Backend_UnitTest"
+              "A",
+              "AddMigration",
+              "Clean",
+              "CleanDevelopmentContainers",
+              "Compile",
+              "DropDatabase",
+              "IntegrationTest",
+              "MigrateDatabase",
+              "Restore",
+              "StartDevelopmentContainers",
+              "UnitTest"
             ]
           }
         },
@@ -92,15 +108,23 @@
           "items": {
             "type": "string",
             "enum": [
-              "All",
-              "Backend_All",
-              "Backend_Clean",
-              "Backend_Compile",
-              "Backend_Restore",
-              "Backend_Test",
-              "Backend_UnitTest"
+              "A",
+              "AddMigration",
+              "Clean",
+              "CleanDevelopmentContainers",
+              "Compile",
+              "DropDatabase",
+              "IntegrationTest",
+              "MigrateDatabase",
+              "Restore",
+              "StartDevelopmentContainers",
+              "UnitTest"
             ]
           }
+        },
+        "UpdMigrName": {
+          "type": "string",
+          "description": "Specifies migration name during db update"
         },
         "Verbosity": {
           "type": "string",

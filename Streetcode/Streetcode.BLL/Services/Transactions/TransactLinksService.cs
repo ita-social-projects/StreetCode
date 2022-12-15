@@ -1,11 +1,6 @@
-
 using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.Transactions;
 using StreetCode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Streetcode.BLL.Services.Transactions;
 
@@ -17,7 +12,9 @@ public class TransactLinksService : ITransactLinksService
         _repositoryWrapper = repositoryWrapper;
     }
 
-    private RepositoryWrapper RepositoryWrapper;
+#pragma warning disable IDE0051 // Remove unused private members
+    private readonly RepositoryWrapper RepositoryWrapper;
+#pragma warning restore IDE0051 // Remove unused private members
 
     public string GetTransactLinkAsync()
     {

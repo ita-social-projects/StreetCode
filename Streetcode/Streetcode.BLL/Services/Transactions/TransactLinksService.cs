@@ -12,10 +12,6 @@ public class TransactLinksService : ITransactLinksService
         _repositoryWrapper = repositoryWrapper;
     }
 
-#pragma warning disable IDE0051 // Remove unused private members
-    private readonly RepositoryWrapper RepositoryWrapper;
-#pragma warning restore IDE0051 // Remove unused private members
-
     public string GetTransactLinkAsync()
     {
         return _repositoryWrapper.TransactLinksRepository.GetTransactLinkAsync();

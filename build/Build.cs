@@ -196,15 +196,9 @@ class Build : NukeBuild
                  .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
                  .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")  
                  .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
-                 .SetConfiguration(Configuration));
+                 .SetConfiguration(Configuration)
+             );
          });
-
-     Target A => _ => _
-         .Executes(() =>
-             {
-                 Serilog.Log.Debug(new GitVersion().Major.ToString());
-             }
-         );
 
      Target DropDatabase => _ => _
          .Executes(() =>
@@ -215,15 +209,7 @@ class Build : NukeBuild
                  .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
                  .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")
                  .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                 .SetConfiguration(Configuration));
+                 .SetConfiguration(Configuration)
+             );
          });
-
-     /*
-     dotnet ef database drop
-         --project Streetcode.DAL\Streetcode.DAL.csproj
-         --startup-project Streetcode\Streetcode.WebApi.csproj
-         --context Streetcode.DAL.Persistence.StreetcodeDbContext
-         --configuration Debug
-         --force
-      */
 }

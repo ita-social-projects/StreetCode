@@ -12,11 +12,7 @@ public class ToponymService : IToponymService
     {
         _repositoryWrapper = repositoryWrapper;
     }
-
-#pragma warning disable IDE0051 // Remove unused private members
-    private readonly RepositoryWrapper RepositoryWrapper;
-#pragma warning restore IDE0051 // Remove unused private members
-
+    
     public string GetToponymByNameAsync()
     {
         // TODO implement here

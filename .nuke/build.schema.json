@@ -84,7 +84,6 @@
           "items": {
             "type": "string",
             "enum": [
-              "A",
               "AddMigration",
               "Clean",
               "CleanDevelopmentContainers",
@@ -108,7 +107,6 @@
           "items": {
             "type": "string",
             "enum": [
-              "A",
               "AddMigration",
               "Clean",
               "CleanDevelopmentContainers",

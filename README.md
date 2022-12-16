@@ -97,7 +97,7 @@ Run the Streetcode project than open your browser and enter https://localhost:70
 ---
 
 ## Documentation
-
+Learn more about our documentation <a href="https://github.com/ita-social-projects/StreetCode_Client/wiki" target="_blank">*here*</a>.
 ---
 
 ## Contributing

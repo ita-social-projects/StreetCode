@@ -1,140 +1,95 @@
-<a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreerCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
 
-***INSERT GRAPHIC HERE (include hyperlink in image)***
+<a href="https://softserve.academy/">
+  <img src="https://raw.githubusercontent.com/ita-social-projects/StreetCode/master/StreerCodeLogo.jpg" 
+  title="SoftServe IT Academy" 
+  alt="SoftServe IT Academy">
+</a>
 
-# Repository Title Goes Here
+# Streetcode
 
-> Subtitle or Short Description Goes Here
+This is a front-end part of our Streetcode project.
+Back-end part: https://github.com/ita-social-projects/StreetCode.git.
 
-> ideally one sentence
-
-> include terms/tags that can be searched
-
-**Badges will go here**
-
-- build status
-- coverage
-- issues (waffle.io maybe)
-- devDependencies
-- npm package
-- slack
-- downloads
-- gitter chat
-- license
-- etc.
-
-[![Build Status](https://img.shields.io/travis/ita-social-projects/StreetCode/master?style=flat-square)](https://travis-ci.org/github/ita-social-projects/StreetCode)
-[![Coverage Status](https://img.shields.io/gitlab/coverage/ita-social-projects/StreetCode/master?style=flat-square)](https://coveralls.io)
-[![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues)
-[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls)
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- For more on these wonderful  badges, refer to <a href="https://shields.io/" target="_blank">shields.io</a>.
+[![Build Status](https://img.shields.io/travis/ita-social-projects/StreetCode/master?style=flat-square)](https://travis-ci.org/github/ita-social-projects/StreetCode) [![Coverage Status](https://img.shields.io/gitlab/coverage/ita-social-projects/StreetCode/master?style=flat-square)](https://coveralls.io) [![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues) [![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls) [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 ---
 
-## Table of Contents (Optional)
-
-> If your `README` has a lot of info, section headers might be nice.
+## Table of Contents
 
 - [Installation](#installation)
-  - [Required to install](#Required-to-install)
-  - [Environment](#Environment)
-  - [Clone](#Clone)
-  - [Setup](#Setup)
-  - [How to run local](#How-to-run-local)
-  - [How to run Docker](#How-to-run-Docker)
-- [Usage](#Usage)
-  - [How to work with swagger UI](#How-to-work-with-swagger-UI)
-  - [How to run tests](#How-to-run-tests)
-  - [How to Checkstyle](#How-to-Checkstyle)
-- [Documentation](#Documentation))
+  - [Required to install](#required-to-install)
+  - [Clone](#clone)
+  - [Setup](#setup)
+  - [How to run local](#how-to-run-local)
+- [Usage](#usage)
+  - [How to run tests](#how-to-run-tests)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
-  - [git flow](#git-flow)
-  - [issue flow](#git-flow)
+  - [Git flow](#git-flow)
+  - [Issue flow](#git-flow)
+- [Team](#team)
 - [FAQ](#faq)
 - [Support](#support)
+- [About Us](#about-us)
 - [License](#license)
 
 ---
 
 ## Installation
 
-- All the `code` required to get started
-- Images of what it should look like
+First of all, make sure you have installed dependencies below and back-end part of project from: 
+https://github.com/ita-social-projects/StreetCode.git.
 
 ### Required to install
-* Python (3.6.3)
-* PostgreSQL (9.5.9)
-* Django (1.11.6)
-* NodeJS (6.11.4)
-* Redis (3.0.6)
-
-### Environment
-environmental variables
-```properties
-spring.datasource.url=${DATASOURCE_URL}
-spring.datasource.username=${DATASOURCE_USER}
-spring.datasource.password=${DATASOURCE_PASSWORD}
-spring.mail.username=${EMAIL_ADDRESS}
-spring.mail.password=${EMAIL_PASSWORD}
-cloud.name=${CLOUD_NAME}
-api.key=${API_KEY}
-api.secret=${API_SECRET}
-```
+* NodeJS (16.0.0) or higher
+* npm (7.10.0) or higher
+* npx (10.2.2) or higher
 
 ### Clone
 
-- Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode`
+Clone this repo to your local machine using: 
+```
+git clone https://github.com/ita-social-projects/StreetCode_Client.git
+```
 
 ### Setup
-
-- If you want more syntax highlighting, format your code like this:
-
-> update and install this package first
-
-```shell
-$ brew update
-$ brew install SOMEREPOproductions
+To setup this project use this command in project folder:
 ```
-
-> now install npm and bower packages
-
-```shell
-$ npm install
-$ bower install
+npm install
 ```
-
-- For all the possible languages that support syntax highlithing on GitHub (which is basically all of them), refer <a href="https://github.com/github/linguist/blob/master/lib/linguist/languages.yml" target="_blank">here</a>.
 
 ### How to run local
-
-### How to run Docker
+To start project locally, write following command:
+```
+npm start
+```
+Open your browser and enter http://localhost:3000 url.
+If you had this page already opened, just reload it. 
 
 ---
 
 ## Usage
-### How to work with swagger UI
 ### How to run tests
-### How to Checkstyle
+
 
 ---
 
 ## Documentation
+Learn more about our documentation <a href="https://github.com/ita-social-projects/StreetCode_Client/wiki" target="_blank">*here*</a>.
 
 ---
 
 ## Contributing
 
 ### Git flow
-> To get started...
+
 #### Step 1
 
 - **Option 1**
     - 🍴 Fork this repo!
 
 - **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode.git`
+    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode_Client.git`
 
 #### Step 2
 
@@ -142,46 +97,55 @@ $ bower install
 
 #### Step 3
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode/compare/" target="_blank">github.com/ita-social-projects/StreetCode</a>.
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode_Client/pulls" target="_blank">*this link*</a>.
 
 ### Issue flow
+Find issues to work on <a href="https://github.com/orgs/ita-social-projects/projects/21" target="_blank">*here*</a>.
 
 ---
 
 ## Team
 
-> Or Contributors/People
+<div align="center">
 
-[![@IrynaZavushchak](https://avatars.githubusercontent.com/u/45690640?s=100&v=4)](https://github.com/IrynaZavushchak)
-[![@LanchevychMaxym](https://avatars.githubusercontent.com/u/47561209?s=100&v=4)](https://github.com/LanchevychMaxym)
+***Project manager***
 
- 
+[![@IrynaZavushchak](https://avatars.githubusercontent.com/u/45690640?s=100&v=4)](https://github.com/IrynaZavushchak) 
 
-- You can just grab their GitHub profile image URL
-- You should probably resize their picture using `?s=200` at the end of the image URL.
+***Tech expert***
+
+[![@LanchevychMaxym](https://avatars.githubusercontent.com/u/47561209?s=100&v=4)](https://github.com/LanchevychMaxym) 
+
+***Dev team***
+
+[![@PingvinAustr](https://avatars.githubusercontent.com/u/94307620?size=100&v=4)](https://github.com/PingvinAustr) [![@EyR1oN](https://avatars.githubusercontent.com/u/91558615?s=100&v=4)](https://github.com/EyR1oN) [![@Tatiana2424](https://avatars.githubusercontent.com/u/92846322?s=100&v=4)](https://github.com/Tatiana2424) [![@AleXLaeR](https://avatars.githubusercontent.com/u/99609396?s=100&v=4)](https://github.com/AleXLaeR) [![@dimasster](https://avatars.githubusercontent.com/u/65833018?s=100&v=4)](https://github.com/dimasster) [![@grygorenkod](https://avatars.githubusercontent.com/u/113851742?s=100&v=4)](https://github.com/grygorenkod) [![@valllentine](https://avatars.githubusercontent.com/u/90246019?s=100&v=4)](https://github.com/valllentine)
+
+</div>
 
 ---
 
 ## FAQ
 
-- **How do I do *specifically* so and so?**
-    - No problem! Just do this.
+- **Project falls after *npm start* command?**
+    - Try to install exactly the same version of NodeJS specified in the requirements (16.0.0)
 
 ---
 
 ## Support
 
-Reach out to me at one of the following places!
+Reach out to us at one of the following places!
 
-- Website at <a href="http://Website.com" target="_blank">`Website.com`</a>
-- Facebook at <a href="https://www.facebook.com/LiubomyrHalamaha/" target="_blank">`Liubomyr Halamaha`</a>
-- Insert more social links here.
+- Telegram at <a href="https://t.me/ira_zavushchak" target="_blank">`Iryna Zavushchak`</a>
+
+---
+
+## About Us
+
+Visit our <a href="https://streetcode.com.ua" target="_blank">*site*</a>, we will be happy for everyone!
 
 ---
 
 ## License
-
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
 - Copyright 2022 © <a href="https://softserve.academy/" target="_blank"> SoftServe IT Academy</a>.

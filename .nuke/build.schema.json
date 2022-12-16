@@ -88,12 +88,20 @@
               "Clean",
               "CleanDevelopmentContainers",
               "Compile",
+              "CreateLocalDatabase",
               "DropDatabase",
+              "EndAll",
+              "InstallNuke",
               "IntegrationTest",
               "MigrateDatabase",
               "Restore",
+              "SetLocalEnvironmentVariables",
+              "SetupLocal",
+              "SetupLocalDockerContainer",
               "StartDevelopmentContainers",
-              "UnitTest"
+              "TestAll",
+              "UnitTest",
+              "UpdateLocalDatabase"
             ]
           }
         },
@@ -111,12 +119,20 @@
               "Clean",
               "CleanDevelopmentContainers",
               "Compile",
+              "CreateLocalDatabase",
               "DropDatabase",
+              "EndAll",
+              "InstallNuke",
               "IntegrationTest",
               "MigrateDatabase",
               "Restore",
+              "SetLocalEnvironmentVariables",
+              "SetupLocal",
+              "SetupLocalDockerContainer",
               "StartDevelopmentContainers",
-              "UnitTest"
+              "TestAll",
+              "UnitTest",
+              "UpdateLocalDatabase"
             ]
           }
         },

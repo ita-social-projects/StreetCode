@@ -57,18 +57,8 @@ class Build : NukeBuild
 
     [Parameter("docker atom")] const string DockerAtom = "Streetcode";
 
-    bool chechIfInstalled = default;
-
-    Target InstallNuke => _ => _
-        .OnlyWhenDynamic(() => chechIfInstalled)
-        .Executes(() =>
-        {
-            //dotnet tool install Nuke.GlobalTool --global
-            DotNet("tool install Nuke.GlobalTool --global");
-        });
-
     Target Clean => _ => _
-        .DependsOn(InstallNuke)
+        .DependsOn()
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);

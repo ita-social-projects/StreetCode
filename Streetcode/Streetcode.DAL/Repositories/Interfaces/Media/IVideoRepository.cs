@@ -5,5 +5,4 @@ namespace Repositories.Interfaces;
 
 public interface IVideoRepository : IRepositoryBase<Video>
 {
-
 }

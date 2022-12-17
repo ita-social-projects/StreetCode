@@ -5,5 +5,4 @@ namespace Repositories.Interfaces;
 
 public interface IImageRepository : IRepositoryBase<Image>
 {
-  
 }

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 
@@ -13,35 +12,40 @@ public class TagController : ControllerBase
     {
         _tagService = tagService;
     }
+
     [HttpPost("createTag")]
     public void CreateTag()
     {
         // TODO implement here
     }
+
     [HttpGet("getTag")]
-    public void GetTag() 
+    public void GetTag()
     {
         // TODO implement here
     }
+
     [HttpPut("updateTag")]
-    public void UpdateTag() 
+    public void UpdateTag()
     {
         // TODO implement here
     }
+
     [HttpDelete("deleteTag")]
     public void DeleteTag()
     {
         // TODO implement here
     }
+
     [HttpGet("getTagByName")]
     public void GetTagByName()
     {
         // TODO implement here
     }
+
     [HttpGet("getTagsByStreetcode")]
-    public void GetTagsByStreetcode() 
+    public void GetTagsByStreetcode()
     {
         // TODO implement here
     }
-
 }

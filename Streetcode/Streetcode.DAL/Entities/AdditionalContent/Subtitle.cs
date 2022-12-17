@@ -13,10 +13,12 @@ public class Subtitle
 
     public SubtitleStatus Status { get; set; } = default;
 
-    [Required, MaxLength(50)]
+    [Required]
+    [MaxLength(50)]
     public string FirstName { get; set; }
 
-    [Required, MaxLength(50)]
+    [Required]
+    [MaxLength(50)]
     public string LastName { get; set; }
 
     [Column(TypeName = "text")]

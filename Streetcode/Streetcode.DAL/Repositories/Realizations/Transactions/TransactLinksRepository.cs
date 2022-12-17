@@ -7,7 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Transactions;
 
 public class TransactLinksRepository : RepositoryBase<TransactionLink>, ITransactLinksRepository
 {
-    public TransactLinksRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
+    public TransactLinksRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
 }

@@ -5,30 +5,36 @@ namespace Streetcode.BLL.Services.Logging
 {
     public class LoggerService<T> : ILoggerService<T>
     {
-        public ILogger<T> Logger { get; }
+        private ILogger<T> _logger;
+
         public LoggerService(ILogger<T> logger)
         {
-            Logger = logger;
+            _logger = logger;
         }
+
         public void LogInformation(string msg)
         {
-            Logger.Log(LogLevel.Information, $"{msg}");
+            _logger.Log(LogLevel.Information, $"{msg}");
         }
+
         public void LogWarning(string msg)
         {
-            Logger.Log(LogLevel.Warning, $"{msg}");
+            _logger.Log(LogLevel.Warning, $"{msg}");
         }
+
         public void LogTrace(string msg)
         {
-            Logger.Log(LogLevel.Trace, $"{msg}");
+            _logger.Log(LogLevel.Trace, $"{msg}");
         }
+
         public void LogDebug(string msg)
         {
-            Logger.Log(LogLevel.Debug, $"{msg}");
+            _logger.Log(LogLevel.Debug, $"{msg}");
         }
+
         public void LogError(string msg)
         {
-            Logger.Log(LogLevel.Error, $"{msg}");
+            _logger.Log(LogLevel.Error, $"{msg}");
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 
@@ -9,41 +8,47 @@ namespace Controllers;
 public class SubtitleController : ControllerBase
 {
     private readonly ISubtitleService _subtitleService;
-    public SubtitleController(ISubtitleService subtitleService) 
+    public SubtitleController(ISubtitleService subtitleService)
     {
-        _subtitleService= subtitleService;
+        _subtitleService = subtitleService;
     }
+
     [HttpPost("createSubtitle")]
-    public void CreateSubtitle() 
+    public void CreateSubtitle()
     {
         // TODO implement here
     }
+
     [HttpGet("getSubtitle")]
     public void GetSubtitle()
     {
         // TODO implement here
     }
+
     [HttpPut("updateSubtitle")]
     public void UpdateSubtitle()
     {
         // TODO implement here
     }
+
     [HttpDelete("deleteSubtitle")]
-    public void DeleteSubtitle() 
+    public void DeleteSubtitle()
     {
         // TODO implement here
     }
+
     [HttpGet("getSubtitleById")]
-    public void GetSubtitleById() 
+    public void GetSubtitleById()
     {
         // TODO implement here
     }
+
     [HttpGet("getSubtitlesByStreetcode")]
     public async Task<IActionResult> GetSubtitlesByStreetcode()
     {
         var subtitles = await _subtitleService.GetSubtitlesByStreetcodeAsync();
         return Ok(subtitles);
+
         // TODO implement here
     }
-
 }

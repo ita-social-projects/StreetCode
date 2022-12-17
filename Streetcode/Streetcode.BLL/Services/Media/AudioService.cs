@@ -3,7 +3,7 @@ using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.Media;
 
-public class AudioService: IAudioService
+public class AudioService : IAudioService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     public AudioService(IRepositoryWrapper repositoryWrapper)

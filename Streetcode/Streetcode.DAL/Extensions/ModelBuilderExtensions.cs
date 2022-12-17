@@ -19,7 +19,8 @@ public static class ModelBuilderExtensions
     public static void SeedData(this ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Subtitle>().HasData(
-            new Subtitle {
+            new Subtitle
+            {
                 Id = 1,
                 Status = DAL.Enums.SubtitleStatus.Editor,
                 FirstName = "Dmytro",
@@ -56,7 +57,7 @@ public static class ModelBuilderExtensions
                 LastName = "Lazarenko",
                 Description = "description",
                 StreetcodeId = 1
-            }, 
+            },
             new Subtitle
             {
                 Id = 5,
@@ -64,7 +65,7 @@ public static class ModelBuilderExtensions
                 FirstName = "Oleksndr",
                 LastName = "Lazarenko",
                 StreetcodeId = 2
-            }, 
+            },
             new Subtitle
             {
                 Id = 6,
@@ -72,10 +73,10 @@ public static class ModelBuilderExtensions
                 FirstName = "Yaroslav",
                 LastName = "Chushenko",
                 StreetcodeId = 1
-            }, 
+            },
             new Subtitle
             {
-                Id =7,
+                Id = 7,
                 Status = DAL.Enums.SubtitleStatus.Illustrator,
                 FirstName = "Yaroslav",
                 LastName = "Chushenko",
@@ -96,16 +97,15 @@ public static class ModelBuilderExtensions
                 FirstName = "Tatiana",
                 LastName = "Shumylo",
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<Tag>().HasData(
-            new Tag 
-            { 
+            new Tag
+            {
                 Id = 1,
                 Title = "writer"
             },
             new Tag
-            { 
+            {
                 Id = 2,
                 Title = "artist"
             },
@@ -118,8 +118,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Title = "wictory"
-            }
-        );
+            });
         modelBuilder.Entity<Response>().HasData(
             new Response
             {
@@ -133,8 +132,7 @@ public static class ModelBuilderExtensions
                 FirstName = "Dmytro",
                 Description = "Nice project",
                 Email = "mail@gmail.com"
-            }
-        );
+            });
         modelBuilder.Entity<Art>().HasData(
             new Art
             {
@@ -152,8 +150,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 ImageId = 4
-            }
-        );
+            });
         modelBuilder.Entity<Image>().HasData(
             new Image
             {
@@ -210,15 +207,14 @@ public static class ModelBuilderExtensions
                 Title = "Звільнення Херсона",
                 Alt = "Звільнення Херсона",
                 Url = "https://www.bing.com/images/search?view=detailV2&ccid=F5o3vrW9&id=5409686EF1396243251CE5AF505766A0A2D0662E&thid=OIP.F5o3vrW9jZJ9ECMgkmevTwHaFj&mediaurl=https%3a%2f%2fstorage1.censor.net%2fimages%2f1%2f7%2f9%2fa%2f179a37beb5bd8d927d1023209267af4f%2foriginal.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.179a37beb5bd8d927d1023209267af4f%3frik%3dLmbQoqBmV1Cv5Q%26pid%3dImgRaw%26r%3d0&exph=720&expw=960&q=%d0%b2%d0%b8%d0%b7%d0%b2%d0%be%d0%bb%d0%b5%d0%bd%d0%bd%d1%8f+%d1%85%d0%b5%d1%80%d1%81%d0%be%d0%bd%d1%83&simid=608050323200235844&FORM=IRPRST&ck=C9A86B9D5EBBADF456F315DFD0BA990B&selectedIndex=3&ajaxhist=0&ajaxserp=0"
-            }
-        );
+            });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
             {
                 Id = 1,
                 Title = "audio1",
                 Description = "for streetcode1",
-                Url ="https://somelink1",
+                Url = "https://somelink1",
                 StreetcodeId = 1
             },
             new Audio
@@ -244,8 +240,7 @@ public static class ModelBuilderExtensions
                 Description = "for streetcode4",
                 Url = "https://somelink4",
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<ToponymCoordinate>().HasData(
             new ToponymCoordinate
             {
@@ -253,7 +248,7 @@ public static class ModelBuilderExtensions
                 Latitude = 49.8429M,
                 Longtitude = 24.0311M,
                 ToponymId = 1
-            }, 
+            },
             new ToponymCoordinate
             {
                 Id = 2,
@@ -288,8 +283,7 @@ public static class ModelBuilderExtensions
                 Latitude = 46.3950M,
                 Longtitude = 32.3738M,
                 ToponymId = 3
-            }
-        );
+            });
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
             new StreetcodeCoordinate
             {
@@ -318,8 +312,7 @@ public static class ModelBuilderExtensions
                 Latitude = 46.3950M,
                 Longtitude = 32.3738M,
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<HistoricalContext>().HasData(
             new HistoricalContext
             {
@@ -330,13 +323,12 @@ public static class ModelBuilderExtensions
             {
                 Id = 2,
                 Title = "Wideo"
-            }, 
+            },
             new HistoricalContext
             {
                 Id = 3,
                 Title = "Article"
-            }
-        );
+            });
         modelBuilder.Entity<Video>().HasData(
             new Video
             {
@@ -368,8 +360,7 @@ public static class ModelBuilderExtensions
                 Description = "За виконанням Богдана Ступки",
                 Url = "https://youtu.be/v3siIQi4nCQ",
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<Partner>().HasData(
             new Partner
             {
@@ -392,14 +383,13 @@ public static class ModelBuilderExtensions
                 Title = "comunity partner",
                 LogoUrl = "https://www.bing.com/images/search?view=detailV2&ccid=9TObzn%2ba&id=21D8755FE7846CE9660BC2365F5EE70417D31DA7&thid=OIP.9TObzn-a15MsLhdfHh1e_gHaE8&mediaurl=https%3a%2f%2fi2.wp.com%2feuropeangaming.eu%2fportal%2fwp-content%2fuploads%2f2020%2f02%2f5-10.jpg%3ffit%3d1200%252C800%26ssl%3d1&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.f5339bce7f9ad7932c2e175f1e1d5efe%3frik%3dpx3TFwTnXl82wg%26pid%3dImgRaw%26r%3d0&exph=800&expw=1200&q=parimatch&simid=607987165708116105&FORM=IRPRST&ck=BA1164F39CC2BBD1CE20F50A93602E5C&selectedIndex=1&ajaxhist=0&ajaxserp=0",
                 TargetUrl = "https://parimatch.com/"
-            }
-        );
+            });
         modelBuilder.Entity<PartnerSourceLink>().HasData(
             new PartnerSourceLink
             {
                 Id = 1,
                 Title = "LinkedIn",
-                LogoUrl = "",
+                LogoUrl = string.Empty,
                 TargetUrl = "https://www.linkedin.com/company/softserve/",
                 PartnerId = 1
             },
@@ -407,7 +397,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 2,
                 Title = "Instagram",
-                LogoUrl = "",
+                LogoUrl = string.Empty,
                 TargetUrl = "https://www.instagram.com/softserve_people/",
                 PartnerId = 1
             },
@@ -415,11 +405,10 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Title = "facebook",
-                LogoUrl = "",
+                LogoUrl = string.Empty,
                 TargetUrl = "https://www.facebook.com/SoftServeCompany",
                 PartnerId = 1
-            }
-        );
+            });
         modelBuilder.Entity<StreetcodePartner>().HasData(
             new StreetcodePartner
             {
@@ -468,8 +457,7 @@ public static class ModelBuilderExtensions
                 IsSponsor = true,
                 PartnerId = 2,
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<SourceLink>().HasData(
             new SourceLink
             {
@@ -491,8 +479,7 @@ public static class ModelBuilderExtensions
                 Title = "Св'яткування звільнення",
                 Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<SourceLinkCategory>().HasData(
             new SourceLinkCategory
             {
@@ -508,8 +495,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Title = "article"
-            }
-        );
+            });
         modelBuilder.Entity<Fact>().HasData(
             new Fact
             {
@@ -528,8 +514,7 @@ public static class ModelBuilderExtensions
                 FactContent = " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес." +
                     " Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».",
                 ImageId = 5
-            }
-        );
+            });
         modelBuilder.Entity<Term>().HasData(
             new Term
             {
@@ -551,8 +536,7 @@ public static class ModelBuilderExtensions
                 Title = "кріпак",
                 Description = "Кріпа́цтво, або кріпосне́ право, у вузькому сенсі — правова система, або система правових норм при феодалізмі, яка встановлювала" +
                     " залежність селянина від феодала й неповну власність феодала на селянина."
-            }
-        );
+            });
         modelBuilder.Entity<Text>().HasData(
             new Text
             {
@@ -572,7 +556,7 @@ public static class ModelBuilderExtensions
                     " Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого" +
                     " батькового шлюбу.",
                 StreetcodeId = 1
-            }, 
+            },
             new Text
             {
                 Id = 2,
@@ -619,8 +603,7 @@ public static class ModelBuilderExtensions
                     "\r\n\r\nНа тлі заяв окупантів про відведення військ та сил рф від Херсона та просування ЗСУ на херсонському напрямку українські бійці" +
                     " можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.",
                 StreetcodeId = 4
-            }
-        );
+            });
         modelBuilder.Entity<PersonStreetCode>().HasData(
             new PersonStreetCode
             {
@@ -668,8 +651,7 @@ public static class ModelBuilderExtensions
                 FirstName = "Василь",
                 MiddleName = "Михайлович",
                 LastName = "Білозерський"
-            }
-        );
+            });
         modelBuilder.Entity<EventStreetCode>().HasData(
             new EventStreetCode
             {
@@ -683,8 +665,7 @@ public static class ModelBuilderExtensions
                 EventStartOrPersonBirthDate = new DateTime(2022, 11, 9),
                 EventEndOrPersonDeathDate = new DateTime(2022, 11, 11),
                 Title = "Звільнення Херсона"
-            }
-        );
+            });
 
         modelBuilder.Entity<TimelineItem>().HasData(
             new TimelineItem
@@ -699,13 +680,12 @@ public static class ModelBuilderExtensions
             new TimelineItem
             {
                 Id = 2,
-                Date = new DateTime(1830,1,1),
+                Date = new DateTime(1830, 1, 1),
                 Title = "Учень Петербурзької академії мистецтв",
                 Description = "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв," +
                     " де його наставником став К. Брюллов. За словами Шевченка: «настала найсвітліша доба його життя, незабутні, золоті дні»" +
                     " навчання в Академії мистецтв, яким він присвятив у 1856 році автобіографічну повість «Художник»."
-            }
-        );
+            });
         modelBuilder.Entity<Toponym>().HasData(
             new Toponym
             {
@@ -721,8 +701,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Title = "місто Херсон"
-            }
-        );
+            });
         modelBuilder.Entity<TransactionLink>().HasData(
             new TransactionLink
             {
@@ -751,7 +730,6 @@ public static class ModelBuilderExtensions
                 Url = "https://streetcode/4",
                 QrCodeUrl = "https://qrcode/4",
                 StreetcodeId = 4
-            }
-        );
+            });
     }
-} 
+}

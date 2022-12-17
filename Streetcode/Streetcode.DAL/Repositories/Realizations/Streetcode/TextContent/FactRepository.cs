@@ -7,8 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 
 public class FactRepository : RepositoryBase<Fact>, IFactRepository
 {
-
-    public FactRepository(StreetcodeDbContext _streetcodeDbContext):base(_streetcodeDbContext)
+    public FactRepository(StreetcodeDbContext streetcodeDbContext) : base(streetcodeDbContext)
     {
     }
 }

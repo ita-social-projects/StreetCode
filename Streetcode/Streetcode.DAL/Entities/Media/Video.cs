@@ -10,12 +10,11 @@ public class Video
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [MaxLength(100)] 
+    [MaxLength(100)]
     public string? Title { get; set; }
-    
     public string? Description { get; set; }
 
-    [Required] 
+    [Required]
     public string Url { get; set; }
 
     [Required]

@@ -11,7 +11,6 @@ public class TermService : ITermService
         _repositoryWrapper = repositoryWrapper;
     }
 
-
     public void GetTermAsync()
     {
         // TODO implement here

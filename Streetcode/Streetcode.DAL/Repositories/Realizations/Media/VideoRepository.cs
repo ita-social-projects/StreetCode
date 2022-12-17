@@ -6,9 +6,7 @@ namespace Repositories.Realizations;
 
 public class VideoRepository : RepositoryBase<Video>, IVideoRepository
 {
-
-    public VideoRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
+    public VideoRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
-  
 }

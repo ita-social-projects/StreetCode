@@ -12,8 +12,9 @@ public class Response
 
     [MaxLength(50)]
     public string? FirstName { get; set; }
-    
-    [Required, MaxLength(50)]
+
+    [Required]
+    [MaxLength(50)]
     [EmailAddress]
     public string Email { get; set; }
 

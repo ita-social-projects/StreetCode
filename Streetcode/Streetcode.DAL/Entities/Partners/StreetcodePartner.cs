@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-
 namespace Streetcode.DAL.Entities.Partners;
 
 [Table("streetcode_partners", Schema = "partner_sponsors")]

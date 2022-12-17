@@ -15,5 +15,4 @@ public class PartnersService : IPartnersService
     {
         // TODO implement here
     }
-
 }

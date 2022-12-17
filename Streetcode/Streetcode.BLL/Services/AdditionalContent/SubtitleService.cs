@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.AdditionalContent;
@@ -19,10 +18,9 @@ public class SubtitleService : ISubtitleService
 
     public async Task<IEnumerable<SubtitleDTO>> GetSubtitlesByStreetcodeAsync()
     {
-        
-        var subtitle =await _repositoryWrapper.SubtitleRepository.GetAllAsync(c => c.StreetcodeId == 1);
-        return _mapper.Map<IEnumerable<Subtitle>, IEnumerable<SubtitleDTO>>(subtitle); ;
+        var subtitle = await _repositoryWrapper.SubtitleRepository.GetAllAsync(c => c.StreetcodeId == 1);
+        return _mapper.Map<IEnumerable<Subtitle>, IEnumerable<SubtitleDTO>>(subtitle);
+
         // TODO clean after merge
     }
-
 }

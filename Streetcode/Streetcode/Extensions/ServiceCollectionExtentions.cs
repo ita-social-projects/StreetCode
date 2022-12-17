@@ -52,8 +52,6 @@ public static class ServiceCollectionExtentions
     public static void AddCustomServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
-        );
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
     }
 }
-

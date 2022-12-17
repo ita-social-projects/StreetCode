@@ -11,15 +11,16 @@ public class Fact
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, MaxLength(100)]
+    [Required]
+    [MaxLength(100)]
     public string Title { get; set; }
 
     [Required]
     public string FactContent { get; set; }
-    
+
     public int? ImageId { get; set; }
-        
+
     public Image? Image { get; set; }
 
-    public List<StreetcodeContent> Streetcodes { get; set; } = new();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 }

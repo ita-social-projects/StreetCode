@@ -12,12 +12,11 @@ public class Partner
 
     [Required]
     public string Title { get; set; }
-    
     public string? LogoUrl { get; set; }
-    
+
     [Required]
     public string TargetUrl { get; set; }
-    
+
     public string? Description { get; set; }
 
     public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new();

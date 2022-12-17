@@ -30,5 +30,4 @@ public interface IRepositoryWrapper
     public void Save();
 
     public Task SaveAsync();
-
 }

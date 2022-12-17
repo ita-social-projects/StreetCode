@@ -10,8 +10,9 @@ public class HistoricalContext
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, MaxLength(50)]
+    [Required]
+    [MaxLength(50)]
     public string Title { get; set; }
 
-    public List<TimelineItem> TimelineItems { get; set; } = new();
+    public List<TimelineItem> TimelineItems { get; set; } = new ();
 }

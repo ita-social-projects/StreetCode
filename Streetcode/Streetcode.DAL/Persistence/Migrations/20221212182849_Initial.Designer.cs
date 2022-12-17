@@ -596,7 +596,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            LogoUrl = "",
+                            LogoUrl = string.Empty,
                             PartnerId = 1,
                             TargetUrl = "https://www.linkedin.com/company/softserve/",
                             Title = "LinkedIn"
@@ -604,7 +604,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            LogoUrl = "",
+                            LogoUrl = string.Empty,
                             PartnerId = 1,
                             TargetUrl = "https://www.instagram.com/softserve_people/",
                             Title = "Instagram"
@@ -612,7 +612,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            LogoUrl = "",
+                            LogoUrl = string.Empty,
                             PartnerId = 1,
                             TargetUrl = "https://www.facebook.com/SoftServeCompany",
                             Title = "facebook"

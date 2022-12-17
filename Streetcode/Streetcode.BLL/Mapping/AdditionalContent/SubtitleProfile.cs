@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.AdditionalContent;
 
 namespace Streetcode.BLL.Mapping.AdditionalContent;
 
-public class SubtitleProfile: Profile
+public class SubtitleProfile : Profile
 {
    public SubtitleProfile()
    {

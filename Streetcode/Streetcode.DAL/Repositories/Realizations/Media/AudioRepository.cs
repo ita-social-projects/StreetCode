@@ -6,10 +6,7 @@ namespace Repositories.Realizations;
 
 public class AudioRepository : RepositoryBase<Audio>, IAudioRepository
 {
-
-    public AudioRepository(StreetcodeDbContext _streetcodeDBContext) : base(_streetcodeDBContext)
+    public AudioRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
-  
-
 }

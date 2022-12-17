@@ -5,5 +5,4 @@ namespace Streetcode.DAL.Repositories.Interfaces.Toponyms;
 
 public interface IToponymRepository : IRepositoryBase<Toponym>
 {
-   
 }

@@ -4,7 +4,6 @@ using Streetcode.DAL.Entities.Media;
 
 namespace Streetcode.BLL.Mapping.Media;
 
-
 public class VideoProfile : Profile
 {
     public VideoProfile()

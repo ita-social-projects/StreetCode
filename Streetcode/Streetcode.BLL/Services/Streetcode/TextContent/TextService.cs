@@ -15,9 +15,9 @@ public class TextService : ITextService
     {
         // TODO implement here
     }
+
     public void GetTextAsync()
     {
         // TODO implement here
     }
-
 }

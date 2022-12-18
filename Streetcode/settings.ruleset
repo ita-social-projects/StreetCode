@@ -103,7 +103,7 @@
     <!-- The name of a static readonly field does not begin with an upper-case letter. -->
     <Rule Id="SA1400" Action="Error" />
     <!-- The access modifier for a C# element has not been explicitly defined. -->
-    <Rule Id="SA1401" Action="Error" />
+    <Rule Id="SA1401" Action="Warning" />
     <!-- A field within a C# class has an access modifier other than private. -->
     <Rule Id="SA1402" Action="Error" />
     <!-- A C# code file contains more than one unique type. -->

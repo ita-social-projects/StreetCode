@@ -14,10 +14,19 @@ partial class Build
         .DependsOn(SetLocalEnvironmentVariables,Compile);
 
     Target SetupFrontEnd => _ => _
-        .DependsOn(Compile);
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            //ToDo Setup Front-end
+            //ToDo Compile in diferent way than for back-end
+        });
 
     Target SetLocalEnvironmentVariables => _ => _
-        .Before(Compile);
+        .Before(Compile)
+        .Executes(() =>
+        {
+            //DoAsk what it means and how to use???
+        });
 
 }
 

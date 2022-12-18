@@ -6,7 +6,7 @@ namespace Targets;
 
 partial class Build
 {
-    Target UpdateNuke => _ => _
+    Target SetupNuke => _ => _
         .Executes(() =>
         {
             DotNetToolUpdate(_ => _

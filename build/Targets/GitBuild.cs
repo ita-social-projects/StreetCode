@@ -1,5 +1,4 @@
 ﻿using Nuke.Common;
-using System;
 using static Nuke.Common.Tools.Git.GitTasks;
 
 namespace Targets;
@@ -20,7 +19,7 @@ partial class Build
         .Executes(() =>
         {
             Git("add .");
-            Git($"commit -m {Msg}");
+            Git($"commit -m \"{Msg}\"");
         });
 
     Target SetupGit => _ => _

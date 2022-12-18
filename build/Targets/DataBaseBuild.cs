@@ -13,13 +13,15 @@ partial class Build
     readonly string MigrName = "New Migration Added";
      
     Target AddMigration => _ => _
+        //ToDo add condition to check if there is any changes in ef code first
+        .OnlyWhenStatic(()=>true)
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
                 .SetProcessWorkingDirectory(SourceDirectory)
                 .SetName(MigrName)
                 .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")  
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")  
                 .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(@"Persistence\Migrations"));

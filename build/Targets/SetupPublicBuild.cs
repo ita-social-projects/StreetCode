@@ -10,10 +10,18 @@ partial class Build
 {
     [Parameter("docker atom")] readonly string DockerAtom = "Streetcode";
 
-    Target SetPublicEnvironmentVariables => _ => _;
+    Target SetPublicEnvironmentVariables => _ => _
+        .Executes(() =>
+        {
+            //ToAsk ??? how to use and what it means
+        });
 
     Target SetupDocker => _ => _
-        .DependsOn(SetPublicEnvironmentVariables);
+        .DependsOn(SetPublicEnvironmentVariables)
+        .Executes(() =>
+        {
+            //ToDo setup docker by docker-compose file
+        });
 
     Target CleanDocker => _ => _
         .Executes(() =>

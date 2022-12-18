@@ -19,7 +19,7 @@ public class Partner
 
     public string? Description { get; set; }
 
-    public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new();
-    
-    public List<StreetcodePartner> StreetcodePartners { get; set; } = new();
+    public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new ();
+
+    public List<StreetcodePartner> StreetcodePartners { get; set; } = new ();
 }

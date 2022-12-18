@@ -5,5 +5,4 @@ namespace Streetcode.DAL.Repositories.Interfaces.Streetcode;
 
 public interface IStreetcodeRepository : IRepositoryBase<StreetcodeContent>
 {
-  
 }

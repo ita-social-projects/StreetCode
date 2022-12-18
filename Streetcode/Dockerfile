@@ -1,12 +1,35 @@
-﻿FROM node:17-alpine
-
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 
-COPY . .
+# adding curl and gpg for healthcheck
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    curl \
+    gpg \
+    && rm -rf /var/lib/apt/lists/*
+EXPOSE 5000
 
-RUN npm install
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ARG Configuration=debug
+WORKDIR /src
 
-EXPOSE 4000
-# required for docker desktop port mapping
+#restoring dependencies
+COPY ./*.sln ./
+COPY ./Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
+COPY ./Streetcode.DAL/*.csproj ./Streetcode.DAL/
+COPY ./Streetcode.BLL/*.csproj ./Streetcode.BLL/
+COPY ./Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
+RUN dotnet restore
 
-CMD ["node", "app.js"]
+# copying other neccessary data and building application
+COPY ./ ./
+RUN dotnet build -c $Configuration -o /app/build
+
+# publishishing application
+FROM build AS publish
+RUN dotnet publish -c $Configuration -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish ./
+ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]

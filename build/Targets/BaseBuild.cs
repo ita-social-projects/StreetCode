@@ -1,12 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nuke.Common;
+using Nuke.Common.IO;
+using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Utilities.Collections;
+using static Nuke.Common.IO.FileSystemTasks;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-namespace Targets
+namespace Targets;
+
+partial class Build
 {
-    class Build
-    {
-    }
+    Target Clean => _ => _
+        .DependsOn(UpdateNuke)
+        .Executes(() =>
+        {
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            EnsureCleanDirectory(OutputDirectory);
+        });
+
+    Target Restore => _ => _
+        .DependsOn(Clean)
+        .Executes(() =>
+        {
+            DotNetRestore(_ => _
+                .SetProjectFile(Solution)
+                .SetVerbosity(DotNetVerbosity.Quiet)
+            );
+        });
+
+    Target Compile => _ => _
+        .DependsOn(Restore)
+        //.Triggers(StartDevelopmentContainers)
+        .Executes(() =>
+        {
+            DotNetBuild(_ => _
+                .SetProjectFile(Solution)
+                .SetConfiguration(Configuration)
+                .EnableNoRestore()
+            );
+        });
 }

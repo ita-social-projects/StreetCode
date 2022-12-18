@@ -1,12 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Nuke.Common;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.EntityFramework;
+using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 
-namespace Targets
+namespace Targets;
+
+partial class Build
 {
-    class DataBaseBuild
-    {
-    }
+    [Parameter("Specifies migration name during its creation")]
+    readonly string MigrName = "New Migration Added";
+     
+    Target AddMigration => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            EntityFrameworkMigrationsAdd(_ => _
+                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetName(MigrName)
+                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+                .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")  
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
+                .SetConfiguration(Configuration)
+                .SetOutputDirectory(@"Persistence\Migrations"));
+        });
+
+    [Parameter("Specifies migration name during db update")]
+    [CanBeNull] 
+    readonly string UpdMigrName = default;
+
+    [Parameter("Specifies whether a migration rollback should be committed")]
+    readonly bool RollbackMigration = false;
+     
+    Target MigrateDatabase => _ => _
+        //.DependsOn(AddMigration)
+        .Executes(() =>
+        {
+            EntityFrameworkDatabaseUpdate(_ => _
+                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetMigration(RollbackMigration ? "0" : (UpdMigrName ?? String.Empty))
+                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")  
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
+                .SetConfiguration(Configuration)
+            );
+        });
+
+    Target DropDatabase => _ => _
+        .Executes(() =>
+        {
+            EntityFrameworkDatabaseDrop(_ => _
+                .SetProcessWorkingDirectory(SourceDirectory)
+                .EnableForce()
+                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+                .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
+                .SetConfiguration(Configuration)
+            );
+        });
 }

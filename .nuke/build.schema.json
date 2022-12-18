@@ -88,10 +88,10 @@
               "Clean",
               "CleanDevelopmentContainers",
               "Compile",
+              "CreateContainer",
               "CreateLocalDatabase",
               "DropDatabase",
               "EndAll",
-              "InstallNuke",
               "IntegrationTest",
               "MigrateDatabase",
               "Restore",
@@ -101,7 +101,8 @@
               "StartDevelopmentContainers",
               "TestAll",
               "UnitTest",
-              "UpdateLocalDatabase"
+              "UpdateLocalDatabase",
+              "UpdateNuke"
             ]
           }
         },
@@ -119,10 +120,10 @@
               "Clean",
               "CleanDevelopmentContainers",
               "Compile",
+              "CreateContainer",
               "CreateLocalDatabase",
               "DropDatabase",
               "EndAll",
-              "InstallNuke",
               "IntegrationTest",
               "MigrateDatabase",
               "Restore",
@@ -132,7 +133,8 @@
               "StartDevelopmentContainers",
               "TestAll",
               "UnitTest",
-              "UpdateLocalDatabase"
+              "UpdateLocalDatabase",
+              "UpdateNuke"
             ]
           }
         },

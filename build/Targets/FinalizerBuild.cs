@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Nuke.Common;
 
-namespace Targets
+namespace Targets;
+
+partial class Build
 {
-    class FinalizerBuild
-    {
-    }
+    Target EndAll => _ => _
+        .DependsOn(DropDatabase, CleanDevelopmentContainers);
 }
+

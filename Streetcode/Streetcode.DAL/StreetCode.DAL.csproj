@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="Persistence\Migrations" />
+    <Folder Include="seed-data" />
   </ItemGroup>
 
 </Project>

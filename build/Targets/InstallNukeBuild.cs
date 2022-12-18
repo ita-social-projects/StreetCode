@@ -1,17 +1,17 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Tools.DotNet;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-namespace Build.Targets;
+namespace Targets;
 
-class InstallNukeBuild
+partial class Build
 {
-    bool chechIfInstalled = default;
-
-    Target InstallNuke => _ => _
-        .OnlyWhenDynamic(() => chechIfInstalled)
+    Target UpdateNuke => _ => _
         .Executes(() =>
         {
-            //dotnet tool install Nuke.GlobalTool --global
-            DotNet("tool install Nuke.GlobalTool --global");
+            DotNetToolUpdate(_ => _
+                .SetPackageName("nuke.globaltool")
+                .EnableGlobal()
+                .SetVerbosity(DotNetVerbosity.Quiet));
         });
 }

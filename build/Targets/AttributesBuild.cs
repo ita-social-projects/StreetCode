@@ -33,6 +33,5 @@ partial class Build
     AbsolutePath UnitTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XUnitTest";
     AbsolutePath IntegrationTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.IntegrationTest";
 
-    [Parameter("docker atom")] const string DockerAtom = "Streetcode";
 }
 

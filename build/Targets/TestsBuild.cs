@@ -7,7 +7,6 @@ namespace Targets;
 partial class Build
 {
     Target UnitTest => _ => _
-        .DependsOn(Compile)
         .Executes(() =>
         {
             DotNetTest(_ => _
@@ -19,7 +18,6 @@ partial class Build
         });
 
     Target IntegrationTest => _ => _
-        .DependsOn(Compile, SetupLocal)
         .Executes(() =>
         {
             DotNetTest(_ => _
@@ -29,9 +27,5 @@ partial class Build
                 .EnableNoBuild()
             );
         });
-
-    Target TestAll => _ => _
-        .DependsOn(UnitTest, IntegrationTest)
-        .Triggers(EndAll);
 }
 

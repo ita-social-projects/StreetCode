@@ -10,19 +10,14 @@ namespace Targets;
 
 partial class Build
 {
-    Target SetLocalEnvironmentVariables => _ => _
+    Target SetupBackEnd => _ => _
+        .DependsOn(SetLocalEnvironmentVariables,Compile);
+
+    Target SetupFrontEnd => _ => _
         .DependsOn(Compile);
 
-    Target SetupLocalDockerContainer => _ => _
-        .DependsOn(StartDevelopmentContainers);
+    Target SetLocalEnvironmentVariables => _ => _
+        .Before(Compile);
 
-    Target CreateLocalDatabase => _ => _;
-
-    Target UpdateLocalDatabase => _ => _
-        .DependsOn(MigrateDatabase);
-
-    Target SetupLocal => _ => _
-        .DependsOn(SetLocalEnvironmentVariables, SetupLocalDockerContainer,
-            CreateLocalDatabase, UpdateLocalDatabase);
 }
 

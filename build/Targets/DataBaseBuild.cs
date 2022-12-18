@@ -13,7 +13,6 @@ partial class Build
     readonly string MigrName = "New Migration Added";
      
     Target AddMigration => _ => _
-        .DependsOn(Compile)
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
@@ -33,8 +32,7 @@ partial class Build
     [Parameter("Specifies whether a migration rollback should be committed")]
     readonly bool RollbackMigration = false;
      
-    Target MigrateDatabase => _ => _
-        //.DependsOn(AddMigration)
+    Target SetupDatabase => _ => _
         .Executes(() =>
         {
             EntityFrameworkDatabaseUpdate(_ => _

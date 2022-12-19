@@ -6,15 +6,15 @@ namespace Targets;
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
 {
-    public static int Main() => Execute<Build>(x => x.build);
+    public static int Main() => Execute<Build>(x => x.SetupBuild);
 
-    Target build => _ => _
+    Target SetupBuild => _ => _
         .DependsOn(BuildLocal,BuildPublic);
 
-    Target publish => _ => _
+    Target Publish => _ => _
         .DependsOn(PublishBackEnd,PublishFrontEnd);
 
-    Target test => _ => _
+    Target TestAll => _ => _
         .DependsOn(BuildPublic, UnitTest, IntegrationTest)
         .Triggers(EndAll);
 }

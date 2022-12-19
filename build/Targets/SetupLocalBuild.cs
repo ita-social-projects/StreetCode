@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nuke.Common;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 
 namespace Targets;
@@ -25,6 +26,7 @@ partial class Build
         .Before(Compile)
         .Executes(() =>
         {
+            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
             //DoAsk what it means and how to use???
         });
 

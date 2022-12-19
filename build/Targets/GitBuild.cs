@@ -25,12 +25,11 @@ partial class Build
     //public bool WithCli { get => WithCli = true; }
 
     Target CommitChanges => _ => _
-        .OnlyWhenDynamic(()=>!GitHasCleanWorkingCopy())
+        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
         .Executes(() =>
         {
             Git("add .");
             Git($"commit -m \"{Msg}\"");
-            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
         });
 
     Target SetupSubmodules => _ => _
@@ -47,7 +46,7 @@ partial class Build
         {
             Git("pull");
             if(Checkouth)
-                Git($"checkout {(NewB ? "-b" : "" )} {BName}");
+                Git($"checkout {(NewB ? "-b" : "")} {BName}");
 
             WithCli = false;
         });

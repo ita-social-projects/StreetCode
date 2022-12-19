@@ -6,12 +6,10 @@ namespace Targets;
 partial class Build
 {
     Target PublishBackEnd => _ => _
-        .DependsOn(AddMigration)
+        .DependsOn(AddMigration, CommitChanges)
         .After(PublishFrontEnd)
         .Executes(() =>
         {
-            Git("add .");
-            Git($"commit -m \"{Msg}\"");
             Git("push");
         });
 

@@ -131,12 +131,8 @@
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
-<<<<<<< HEAD
               "SetupSubmodules",
               "test",
-=======
-              "Test",
->>>>>>> 548ad677b2b5e3c8a6a37ff9317aad66bc3674cc
               "UnitTest"
             ]
           }
@@ -178,12 +174,8 @@
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
-<<<<<<< HEAD
               "SetupSubmodules",
               "test",
-=======
-              "Test",
->>>>>>> 548ad677b2b5e3c8a6a37ff9317aad66bc3674cc
               "UnitTest"
             ]
           }

@@ -1,4 +1,4 @@
-<a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreerCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
+<a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreetCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
 
 ***INSERT GRAPHIC HERE (include hyperlink in image)***
 

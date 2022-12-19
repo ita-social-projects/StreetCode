@@ -105,7 +105,6 @@
             "type": "string",
             "enum": [
               "AddMigration",
-              "build",
               "BuildLocal",
               "BuildPublic",
               "Clean",
@@ -118,7 +117,7 @@
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
-              "publish",
+              "Publish",
               "PublishBackEnd",
               "PublishFrontEnd",
               "RemoveEnvVariables",
@@ -126,13 +125,14 @@
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
               "SetupBackEnd",
+              "SetupBuild",
               "SetupDatabase",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
               "SetupSubmodules",
-              "test",
+              "TestAll",
               "UnitTest"
             ]
           }
@@ -148,7 +148,6 @@
             "type": "string",
             "enum": [
               "AddMigration",
-              "build",
               "BuildLocal",
               "BuildPublic",
               "Clean",
@@ -161,7 +160,7 @@
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
-              "publish",
+              "Publish",
               "PublishBackEnd",
               "PublishFrontEnd",
               "RemoveEnvVariables",
@@ -169,13 +168,14 @@
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
               "SetupBackEnd",
+              "SetupBuild",
               "SetupDatabase",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
               "SetupSubmodules",
-              "test",
+              "TestAll",
               "UnitTest"
             ]
           }

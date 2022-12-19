@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.DAL.Entities.Partners;
 
@@ -8,6 +9,6 @@ public class PartnerSourceLinkProfile : Profile
 {
     public PartnerSourceLinkProfile()
     {
-        CreateMap<PartnerSourceLink, SourceLinkDTO>().ReverseMap();
+        CreateMap<PartnerSourceLink, PartnerSourceLinkDTO>().ReverseMap();
     }
 }

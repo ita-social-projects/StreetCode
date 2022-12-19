@@ -1,4 +1,5 @@
-﻿using Nuke.Common;
+﻿using System;
+using Nuke.Common;
 using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
@@ -46,7 +47,7 @@ partial class Build
         {
             Git("pull");
             if(Checkouth)
-                Git($"checkout {(NewB ? "-b" : "")} {BName}");
+                Git($"checkout {(NewB ? "-b" : string.Empty)} {BName}");
 
             WithCli = false;
         });

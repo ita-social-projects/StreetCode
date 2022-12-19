@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.Donates;
-using Streetcode.DAL.Entities.Donations;
+using Streetcode.BLL.DTO.Feedback;
+using Streetcode.DAL.Entities.Feedback;
 
-namespace Streetcode.BLL.Mapping.Donations;
+namespace Streetcode.BLL.Mapping.Feedback;
 
 internal class DonationProfile : Profile
 {

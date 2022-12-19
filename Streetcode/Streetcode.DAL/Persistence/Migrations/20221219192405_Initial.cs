@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using static System.String;
 
 #nullable disable
 
@@ -89,27 +91,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_responses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "source_link_categories",
-                schema: "sources",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_source_link_categories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,14 +110,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Index = table.Column<int>(type: "int", nullable: false),
                     Teaser = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ViewCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     EventStartOrPersonBirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventEndOrPersonDeathDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     streetcode_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MiddleName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Rank = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
@@ -235,6 +223,28 @@ namespace Streetcode.DAL.Persistence.Migrations
                     table.PrimaryKey("PK_facts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_facts_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "source_link_categories",
+                schema: "sources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_source_link_categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_source_link_categories_images_ImageId",
                         column: x => x.ImageId,
                         principalSchema: "media",
                         principalTable: "images",
@@ -405,8 +415,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Url = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -451,8 +462,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UrlTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QrCodeUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QrCodeUrlTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -759,7 +772,7 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "feedback",
                 table: "responses",
-                columns: new[] { "Id", "Description", "Email", "FirstName" },
+                columns: new[] { "Id", "Description", "Email", "Name" },
                 values: new object[,]
                 {
                     { 1, "Good Job", "dmytrobuchkovsky@gmail.com", null },
@@ -767,31 +780,20 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "sources",
-                table: "source_link_categories",
-                columns: new[] { "Id", "Title" },
-                values: new object[,]
-                {
-                    { 1, "book" },
-                    { 2, "video" },
-                    { 3, "article" }
-                });
+                schema: "streetcode",
+                table: "streetcodes",
+                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "Teaser", "Title", "ViewCount", "streetcode_type" },
+                values: new object[] { 4, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6571), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000, "streetcode_event" });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
                 table: "streetcodes",
-                columns: new[] { "Id", "CreateDate", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "Teaser", "Title", "ViewCount", "streetcode_type" },
-                values: new object[] { 4, new DateTime(2022, 12, 12, 20, 28, 48, 546, DateTimeKind.Local).AddTicks(404), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000, "streetcode_event" });
-
-            migrationBuilder.InsertData(
-                schema: "streetcode",
-                table: "streetcodes",
-                columns: new[] { "Id", "CreateDate", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "MiddleName", "Teaser", "streetcode_type" },
+                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "Teaser", "streetcode_type" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 12, 12, 20, 28, 48, 546, DateTimeKind.Local).AddTicks(307), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв", "streetcode_person" },
-                    { 2, new DateTime(2022, 12, 12, 20, 28, 48, 546, DateTimeKind.Local).AddTicks(376), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.", "streetcode_person" },
-                    { 3, new DateTime(2022, 12, 12, 20, 28, 48, 546, DateTimeKind.Local).AddTicks(380), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.", "streetcode_person" }
+                    { 1, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6510), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв", "streetcode_person" },
+                    { 2, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6549), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.", "streetcode_person" },
+                    { 3, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6553), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.", "streetcode_person" }
                 });
 
             migrationBuilder.InsertData(
@@ -899,9 +901,20 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "LogoUrl", "PartnerId", "TargetUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, string.Empty, 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
-                    { 2, string.Empty, 1, "https://www.instagram.com/softserve_people/", "Instagram" },
-                    { 3, string.Empty, 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
+                    { 1, Empty, 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
+                    { 2, Empty, 1, "https://www.instagram.com/softserve_people/", "Instagram" },
+                    { 3, Empty, 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "sources",
+                table: "source_link_categories",
+                columns: new[] { "Id", "ImageId", "Title" },
+                values: new object[,]
+                {
+                    { 1, 1, "book" },
+                    { 2, 2, "video" },
+                    { 3, 1, "article" }
                 });
 
             migrationBuilder.InsertData(
@@ -962,32 +975,35 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "add_content",
                 table: "subtitles",
-                columns: new[] { "Id", "Description", "FirstName", "LastName", "Status", "StreetcodeId", "Url" },
+                columns: new[] { "Id", "Description", "FirstName", "LastName", "Status", "StreetcodeId", "Title", "Url" },
                 values: new object[,]
                 {
-                    { 1, "description", "Dmytro", "Buchkovsky", (byte)0, 1, "https://t.me/MaisterD" },
-                    { 2, "description", "Dmytro", "Buchkovsky", (byte)1, 2, "https://t.me/MaisterD" },
-                    { 3, "description", "Dmytro", "Buchkovsky", (byte)0, 3, "https://t.me/MaisterD" },
-                    { 4, "description", "Oleksndr", "Lazarenko", (byte)0, 1, null },
-                    { 5, null, "Oleksndr", "Lazarenko", (byte)0, 2, null },
-                    { 6, null, "Yaroslav", "Chushenko", (byte)1, 1, null },
-                    { 7, null, "Yaroslav", "Chushenko", (byte)1, 3, null },
-                    { 8, null, "Nazarii", "Hovdysh", (byte)0, 4, null },
-                    { 9, null, "Tatiana", "Shumylo", (byte)1, 4, null }
+                    { 1, "description", "Dmytro", "Buchkovsky", (byte)0, 1, null, "https://t.me/MaisterD" },
+                    { 2, "description", "Dmytro", "Buchkovsky", (byte)1, 2, null, "https://t.me/MaisterD" },
+                    { 3, "description", "Dmytro", "Buchkovsky", (byte)0, 3, null, "https://t.me/MaisterD" },
+                    { 4, "description", "Oleksndr", "Lazarenko", (byte)0, 1, null, null },
+                    { 5, null, "Oleksndr", "Lazarenko", (byte)0, 2, null, null },
+                    { 6, null, "Yaroslav", "Chushenko", (byte)1, 1, null, null },
+                    { 7, null, "Yaroslav", "Chushenko", (byte)1, 3, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "add_content",
+                table: "subtitles",
+                columns: new[] { "Id", "Description", "FirstName", "LastName", "Status", "StreetcodeId", "Title", "Url" },
+                values: new object[,]
+                {
+                    { 8, null, "Nazarii", "Hovdysh", (byte)0, 4, null, null },
+                    { 9, null, "Tatiana", "Shumylo", (byte)1, 4, null, null }
                 });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
                 table: "texts",
                 columns: new[] { "Id", "StreetcodeId", "TextContent", "Title" },
-                values: new object[] { 1, 1, "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\nЗа родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\nВосени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.", "Дитинство та юність" });
-
-            migrationBuilder.InsertData(
-                schema: "streetcode",
-                table: "texts",
-                columns: new[] { "Id", "StreetcodeId", "TextContent", "Title" },
                 values: new object[,]
                 {
+                    { 1, 1, "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\nЗа родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\nВосени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.", "Дитинство та юність" },
                     { 2, 2, "Батьки М. І. Костомарова намагалися прищепити сину вільнолюбні ідеї і дати добру освіту. Тому вже з 10 років М. Костомарова відправили навчатися до Московського пансіону, а згодом до Воронезької гімназії, яку той закінчив 1833 р.\r\n\r\n1833 р. М. І. Костомаров вступає на історико-філологічний факультет Харківського університету. Вже у цьому навчальному закладі він проявив непересічні здібності до навчання.\r\n\r\nВ університеті Микола Костомаров вивчав стародавні й нові мови, цікавився античною історією, німецькою філософією і новою французькою літературою, учився грати на фортепіано, пробував писати вірші. Зближення з гуртком українських романтиків Харківського університету незабаром визначило його захоплення переважно фольклором і козацьким минулим України.\r\n\r\nУ ті роки у Харківському університеті навколо професора-славіста і літератора-романтика І. Срезневського сформувався гурток студентів, захоплених збиранням зразків української народної пісенної творчості. Вони сприймали фольклор як вираження народного духу, самі складали вірші, балади і ліричні пісні, звертаючись до народної творчості.\r\n\r\nКостомаров в університетські роки дуже багато читав. Перевантаження позначилося на його здоров'ї — ще за студентства значно погіршився зір.\r\n\r\nНа світогляд М. І. Костомарова вплинули професор грецької літератури Харківського університету А. О. Валицький та професор всесвітньої історії М. М. Лунін.\r\n\r\n1836 р. М. І. Костомаров закінчив університет, а в січні 1837 р. склав іспити на ступінь кандидата й отримав направлення у Кінбурнський 7-й драгунський полк юнкером.\r\n\r\nУ січні 1837 року Костомаров склав іспити з усіх предметів, і 8 грудня 1837 року його затвердили в статусі кандидата.", "Юність і навчання" },
                     { 3, 3, "Народився у дворянській родині на хуторі Мотронівка (нині у межах с. Оленівка поблизу Борзни).\r\n\r\nУ 1843–1846 роках здобув вищу освіту на історико-філологічному факультеті Київського Імператорського університету св. Володимира.\r\n\r\n1846–1847 — учитель Петровського кадетського корпусу у Полтаві.\r\n\r\nРазом з М. Костомаровим і М. Гулаком був організатором Кирило-Мефодіївського братства. Брав участь у створенні «Статуту Слов'янського братства св. Кирила і Мефодія». Автор «Записки» — пояснень до статуту братства. Розвивав ідеї християнського соціалізму, виступав за об'єднання всіх слов'янських народів у республіканську федерацію, в якій провідну роль відводив Україні.\r\n1847 — 10 квітня був заарештований у Варшаві. Засланий до Олонецької губернії під нагляд поліції. Служив у Петрозаводському губернському правлінні.\r\n\r\n1856 — звільнений із заслання. Оселився у Санкт-Петербурзі, де став активним членом місцевого гуртка українців.\r\n\r\n1861–1862 — редактор першого українського щомісячного журналу «Основа».\r\n\r\nЗгодом служив у Варшаві. Підтримував зв'язки з Галичиною, співпрацював у часописах «Мета» і «Правда».\r\n\r\nОстанні роки життя провів на хуторі Мотронівці.", "Життєпис" },
                     { 4, 4, "Експерти пояснили, що дасть херсонська перемога українським силам\r\n\r\nНа тлі заяв окупантів про відведення військ та сил рф від Херсона та просування ЗСУ на херсонському напрямку українські бійці можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.", "визволення Херсона" }
@@ -996,13 +1012,13 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "transactions",
                 table: "transaction_links",
-                columns: new[] { "Id", "QrCodeUrl", "StreetcodeId", "Url" },
+                columns: new[] { "Id", "QrCodeUrl", "QrCodeUrlTitle", "StreetcodeId", "Url", "UrlTitle" },
                 values: new object[,]
                 {
-                    { 1, "https://qrcode/1", 1, "https://streetcode/1" },
-                    { 2, "https://qrcode/2", 2, "https://streetcode/2" },
-                    { 3, "https://qrcode/3", 3, "https://streetcode/3" },
-                    { 4, "https://qrcode/4", 4, "https://streetcode/4" }
+                    { 1, "https://qrcode/1", null, 1, "https://streetcode/1", null },
+                    { 2, "https://qrcode/2", null, 2, "https://streetcode/2", null },
+                    { 3, "https://qrcode/3", null, 3, "https://streetcode/3", null },
+                    { 4, "https://qrcode/4", null, 4, "https://streetcode/4", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1062,6 +1078,12 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode",
                 table: "related_figures",
                 column: "TargetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_source_link_categories_ImageId",
+                schema: "sources",
+                table: "source_link_categories",
+                column: "ImageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_source_links_StreetcodeId",

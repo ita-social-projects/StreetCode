@@ -7,7 +7,7 @@ namespace Streetcode.BLL.DTO.Media.Images;
 
 public class ImageDTO
 {
-    public IdentifierDTO Identifier;
+    public int Id;
     public string Alt;
     public UrlDTO Url;
     public IEnumerable<StreetcodeDTO> Streetcodes;

@@ -8,6 +8,6 @@ public class ToponymDTO
 {
     public IdentifierDTO Identifier;
     public string Description;
-    public IEnumerable<CoordinatesDTO> Coordinates;
+    public IEnumerable<CoordinateDTO> Coordinates;
     public IEnumerable<StreetcodeDTO> Streetcodes;
 }

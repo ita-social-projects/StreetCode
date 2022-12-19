@@ -6,7 +6,7 @@ namespace Streetcode.BLL.DTO.Media;
 
 public class AudioDTO
 {
-    public IdentifierDTO Identifier;
+    public int Id;
     public string Description;
     public UrlDTO Url;
     public int StreetcodeId;

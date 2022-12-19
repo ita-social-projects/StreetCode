@@ -11,11 +11,15 @@ public class TransactionLink
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
+    public string? UrlTitle { get; set; }
+
     [Required]
     public string Url { get; set; }
 
     [Required]
     public string QrCodeUrl { get; set; }
+
+    public string? QrCodeUrlTitle { get; set; }
 
     [Required]
     public int StreetcodeId { get; set; }

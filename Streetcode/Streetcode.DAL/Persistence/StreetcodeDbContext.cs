@@ -74,8 +74,14 @@ public class StreetcodeDbContext : DbContext
                 .WithOne(a => a.Image)
                 .HasForeignKey<Art>(a => a.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             entity.HasMany(d => d.Facts)
                 .WithOne(p => p.Image)
+                .HasForeignKey(d => d.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(i => i.SourceLinkCategories)
+                .WithOne(s => s.Image)
                 .HasForeignKey(d => d.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -88,6 +94,7 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)
                 .HasForeignKey(d => d.TargetId)
@@ -102,6 +109,7 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasOne(d => d.Partner)
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.PartnerId)

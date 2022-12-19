@@ -28,5 +28,9 @@ partial class Build
             //DoAsk what it means and how to use???
         });
 
+    Target BuildLocal => _ => _
+        .OnlyWhenDynamic(() => !Dockerize)
+        .DependsOn(SetupBackEnd, SetupDatabase, SetupFrontEnd);
+
 }
 

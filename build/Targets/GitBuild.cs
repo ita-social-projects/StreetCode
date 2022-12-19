@@ -9,7 +9,7 @@ partial class Build
     readonly string Msg = "make changes to the project";
 
     [Parameter("update Streetcode_Client supmodule")]
-    bool WithCli = false;
+    bool WithCli = true;
 
     [Parameter("checkout to branch")]
     bool Checkouth = false;
@@ -46,5 +46,9 @@ partial class Build
             Git("pull");
             if(Checkouth)
                 Git($"checkout {(NewB ? "-b" : "" )} {BName}");
+
+            WithCli = false;
+            Checkouth = false;
+            NewB = false;
         });
 }

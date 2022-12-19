@@ -6,7 +6,8 @@ namespace Targets;
 partial class Build
 {
     Target PublishBackEnd => _ => _
-        //.DependsOn(AddMigration)
+        .DependsOn(AddMigration)
+        .After(PublishFrontEnd)
         .Executes(() =>
         {
             Git("add .");
@@ -15,6 +16,7 @@ partial class Build
         });
 
     Target PublishFrontEnd => _ => _
+        .OnlyWhenDynamic(() => WithCli)
         .Executes(() =>
         {
             //ToDo publish front-end

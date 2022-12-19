@@ -48,4 +48,15 @@ partial class Build
             if (volumes.Any())
                 DockerVolumeRm(s => s.AddVolumes(volumes.Select(v => v.Text)));
         });
+
+    [Parameter("Build in Docker")]
+    bool Dockerize = false;
+
+    Target BuildPublic => _ => _
+        .OnlyWhenDynamic(() => Dockerize)
+        .DependsOn(SetupDocker, SetupDatabase)
+        .Executes(() =>
+        {
+            Dockerize = false;
+        });
 }

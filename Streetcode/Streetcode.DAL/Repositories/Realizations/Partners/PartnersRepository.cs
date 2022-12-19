@@ -7,8 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Partners;
 
 public class PartnersRepository : RepositoryBase<Partner>, IPartnersRepository
 {
-
-    public PartnersRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
+    public PartnersRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
 }

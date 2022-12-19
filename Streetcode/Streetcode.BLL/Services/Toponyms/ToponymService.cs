@@ -20,5 +20,4 @@ public class ToponymService : IToponymService
     {
         // TODO implement here
     }
-
 }

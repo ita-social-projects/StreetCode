@@ -10,7 +10,8 @@ public class Text
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, MaxLength(100)]
+    [Required]
+    [MaxLength(100)]
     public string Title { get; set; }
 
     [Required]

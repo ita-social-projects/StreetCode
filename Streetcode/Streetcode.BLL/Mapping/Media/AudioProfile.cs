@@ -4,8 +4,7 @@ using Streetcode.DAL.Entities.Media;
 
 namespace Streetcode.BLL.Mapping.Media;
 
-
-public class AudioProfile: Profile
+public class AudioProfile : Profile
 {
     public AudioProfile()
     {

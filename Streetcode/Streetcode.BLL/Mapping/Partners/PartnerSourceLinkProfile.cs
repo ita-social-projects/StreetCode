@@ -4,7 +4,6 @@ using Streetcode.DAL.Entities.Partners;
 
 namespace Streetcode.BLL.Mapping.Partners;
 
-
 public class PartnerSourceLinkProfile : Profile
 {
     public PartnerSourceLinkProfile()

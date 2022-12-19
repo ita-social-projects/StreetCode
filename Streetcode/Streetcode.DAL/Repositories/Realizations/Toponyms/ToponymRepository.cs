@@ -7,7 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Toponyms;
 
 public class ToponymRepository : RepositoryBase<Toponym>, IToponymRepository
 {
-    public ToponymRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
+    public ToponymRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
 }

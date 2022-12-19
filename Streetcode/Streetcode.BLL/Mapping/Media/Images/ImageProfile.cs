@@ -1,12 +1,10 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.BLL.Mapping.Media.Images;
 
-
-public class ImageProfile: Profile
+public class ImageProfile : Profile
 {
     public ImageProfile()
     {

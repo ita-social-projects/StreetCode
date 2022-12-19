@@ -1,4 +1,3 @@
-
 using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
@@ -27,5 +26,4 @@ public class FactService : IFactService
 
         return factDTO.Text;
     }
-
 }

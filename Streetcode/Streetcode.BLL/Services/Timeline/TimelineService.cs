@@ -11,10 +11,8 @@ public class TimelineService : ITimelineService
         _repositoryWrapper = repositoryWrapper;
     }
 
-
     public void GetTimelineItemsAsync()
     {
         // TODO implement here
     }
-
 }

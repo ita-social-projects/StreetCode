@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 
 namespace Streetcode.BLL.Mapping.Streetcode.TextContent;
 
-public class FactProfile: Profile
+public class FactProfile : Profile
 {
     public FactProfile()
     {

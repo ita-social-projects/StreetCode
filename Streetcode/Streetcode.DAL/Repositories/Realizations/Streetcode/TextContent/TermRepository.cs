@@ -7,8 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 
 public class TermRepository : RepositoryBase<Term>, ITermRepository
 {
-    public TermRepository(StreetcodeDbContext _streetcodeDBContext):base(_streetcodeDBContext)
+    public TermRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
-
     }
 }

@@ -4,5 +4,5 @@ public interface IImageService
 {
     public void GetPictureAsync();
     public void UploadPictureAsync();
-    public void DeletePictureAsync(); 
+    public void DeletePictureAsync();
 }

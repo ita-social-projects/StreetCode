@@ -3,7 +3,7 @@ using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.Media.Images;
 
-public class ArtService: IArtService
+public class ArtService : IArtService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     public ArtService(IRepositoryWrapper repositoryWrapper)
@@ -25,5 +25,4 @@ public class ArtService: IArtService
     {
         // TODO implement here
     }
-
 }

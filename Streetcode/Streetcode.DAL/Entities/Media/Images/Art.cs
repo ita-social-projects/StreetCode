@@ -9,12 +9,8 @@ public class Art
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    
     public string? Description { get; set; }
-
-    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new();
-
+    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new ();
     public int ImageId { get; set; }
-
     public Image? Image { get; set; }
 }

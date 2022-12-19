@@ -3,7 +3,7 @@ using StreetCode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.Media.Images;
 
-public class ImageService: IImageService
+public class ImageService : IImageService
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     public ImageService(IRepositoryWrapper repositoryWrapper)
@@ -14,7 +14,6 @@ public class ImageService: IImageService
     public void GetPictureAsync()
     {
         // TODO implement here
-
     }
 
     public void UploadPictureAsync()

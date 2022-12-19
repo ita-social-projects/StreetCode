@@ -6,6 +6,5 @@ public class StreetcodePartnerProfile : Profile
 {
     public StreetcodePartnerProfile()
     {
-       
     }
 }

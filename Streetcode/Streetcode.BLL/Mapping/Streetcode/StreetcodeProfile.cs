@@ -4,7 +4,6 @@ using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
 
-
 public class StreetcodeProfile : Profile
 {
     public StreetcodeProfile()

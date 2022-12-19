@@ -11,18 +11,18 @@ public class Image
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [MaxLength(100)] 
+    [MaxLength(100)]
     public string? Title { get; set; }
 
-    [MaxLength(100)] 
+    [MaxLength(100)]
     public string? Alt { get; set; }
 
-    [Required] 
+    [Required]
     public string Url { get; set; }
 
-    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new();
+    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new ();
 
-    public List<Fact> Facts { get; set; } = new();
+    public List<Fact> Facts { get; set; } = new ();
 
     public Art? Art { get; set; }
 }

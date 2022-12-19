@@ -11,5 +11,4 @@ public interface IMediaService
     public void GetAudioAsync();
     public void UploadAudioAsync();
     public void DeleteAudioAsync();
-
 }

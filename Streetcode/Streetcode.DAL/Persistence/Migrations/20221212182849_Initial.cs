@@ -899,9 +899,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "LogoUrl", "PartnerId", "TargetUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, "", 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
-                    { 2, "", 1, "https://www.instagram.com/softserve_people/", "Instagram" },
-                    { 3, "", 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
+                    { 1, string.Empty, 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
+                    { 2, string.Empty, 1, "https://www.instagram.com/softserve_people/", "Instagram" },
+                    { 3, string.Empty, 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
                 });
 
             migrationBuilder.InsertData(

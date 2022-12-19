@@ -8,5 +8,4 @@ public interface IStreetcodeService
     public void GetTagsByStreecodeIdAsync();
     public void GetEventsAsync();
     public void GetPersonsAsync();
-
 }

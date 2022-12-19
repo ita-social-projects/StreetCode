@@ -7,7 +7,7 @@ namespace Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 
 public class SubtitleRepository : RepositoryBase<Subtitle>, ISubtitleRepository
 {
-    public SubtitleRepository(StreetcodeDbContext _streetcodeDBContext): base(_streetcodeDBContext)
+    public SubtitleRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
     {
     }
 }

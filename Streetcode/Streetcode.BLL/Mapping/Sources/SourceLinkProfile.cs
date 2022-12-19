@@ -11,5 +11,3 @@ public class SourceLinkProfile : Profile
         CreateMap<SourceLink, SourceLinkDTO>().ReverseMap();
     }
 }
-
-

@@ -12,7 +12,7 @@ public class TransactLinksService : ITransactLinksService
     }
 
     public void GetTransactLinkAsync()
-    { 
+    {
         // TODO implement here
     }
 }

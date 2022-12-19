@@ -10,8 +10,9 @@ public class SourceLinkCategory
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required, MaxLength(100)]
+    [Required]
+    [MaxLength(100)]
     public string Title { get; set; }
 
-    public List<SourceLink> SourceLinks { get; set; } = new();
+    public List<SourceLink> SourceLinks { get; set; } = new ();
 }

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 
@@ -13,25 +12,28 @@ public class TermController : ControllerBase
     {
         _termService = termService;
     }
+
     [HttpPost("createTerm")]
     public void CreateTerm()
     {
         // TODO implement here
     }
+
     [HttpGet("getTerm")]
-    public void GetTerm() 
+    public void GetTerm()
     {
         // TODO implement here
     }
+
     [HttpPut("UpdateTerm")]
     public void UpdateTerm()
     {
         // TODO implement here
     }
+
     [HttpDelete("deleteTerm")]
     public void DeleteTerm()
     {
         // TODO implement here
     }
-
 }

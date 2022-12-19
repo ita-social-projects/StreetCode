@@ -5,5 +5,4 @@ namespace Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 
 public interface ISubtitleRepository : IRepositoryBase<Subtitle>
 {
-
 }

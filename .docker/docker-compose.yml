@@ -3,7 +3,7 @@
 services:
   #front-end:
   #  build:
-  #    context: ./../Streetcode/Streetcode.Client
+  #    context: ./../../Streetcode/Streetcode.Client
   #    dockerfile: Dockerfile
   #  init: true
   #  restart: always
@@ -68,7 +68,7 @@ services:
     volumes:
       - "./healthchecks:/healthchecks"
     healthcheck:
-      test: /.healthchecks/redis.sh
+      test: ./../.healthchecks/redis.sh
       interval: "5s"
     deploy:
       labels:
@@ -79,7 +79,7 @@ services:
   # docker compose --profile seed up -d
   #seed:
   #  build:
-  #    context: ./Streetcode.Seed
+  #    context: ./../Streetcode.Seed
   #    dockerfile: Dockerfile
   #  profiles: ["seed"]
   #  depends_on:

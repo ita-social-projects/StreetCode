@@ -14,15 +14,15 @@ ARG Configuration=debug
 WORKDIR /src
 
 #restoring dependencies
-COPY ./*.sln ./
-COPY ./Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
-COPY ./Streetcode.DAL/*.csproj ./Streetcode.DAL/
-COPY ./Streetcode.BLL/*.csproj ./Streetcode.BLL/
-COPY ./Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
+COPY ./../*.sln ./
+COPY ./../Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
+COPY ./../Streetcode.DAL/*.csproj ./Streetcode.DAL/
+COPY ./../Streetcode.BLL/*.csproj ./Streetcode.BLL/
+COPY ./../Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
 RUN dotnet restore
 
 # copying other neccessary data and building application
-COPY ./ ./
+COPY ./../ ./
 RUN dotnet build -c $Configuration -o /app/build
 
 # publishishing application

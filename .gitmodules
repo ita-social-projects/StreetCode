@@ -1,0 +1,3 @@
+[submodule "Streetcode/StreetCode_Client"]
+	path = Streetcode/StreetCode_Client
+	url = https://github.com/ita-social-projects/StreetCode_Client.git

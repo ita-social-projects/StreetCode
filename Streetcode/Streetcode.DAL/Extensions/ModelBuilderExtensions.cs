@@ -1,16 +1,17 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.Feedback;
+using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Timeline;
-using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Entities.Media;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode.Types;
+using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Extensions;
 
@@ -22,7 +23,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 1,
-                Status = DAL.Enums.SubtitleStatus.Editor,
+                Status = SubtitleStatus.Editor,
                 FirstName = "Dmytro",
                 LastName = "Buchkovsky",
                 Description = "description",
@@ -32,7 +33,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 2,
-                Status = DAL.Enums.SubtitleStatus.Illustrator,
+                Status = SubtitleStatus.Illustrator,
                 FirstName = "Dmytro",
                 LastName = "Buchkovsky",
                 Description = "description",
@@ -42,7 +43,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 3,
-                Status = DAL.Enums.SubtitleStatus.Editor,
+                Status = SubtitleStatus.Editor,
                 FirstName = "Dmytro",
                 LastName = "Buchkovsky",
                 Description = "description",
@@ -52,7 +53,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 4,
-                Status = DAL.Enums.SubtitleStatus.Editor,
+                Status = SubtitleStatus.Editor,
                 FirstName = "Oleksndr",
                 LastName = "Lazarenko",
                 Description = "description",
@@ -61,7 +62,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 5,
-                Status = DAL.Enums.SubtitleStatus.Editor,
+                Status = SubtitleStatus.Editor,
                 FirstName = "Oleksndr",
                 LastName = "Lazarenko",
                 StreetcodeId = 2
@@ -69,7 +70,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 6,
-                Status = DAL.Enums.SubtitleStatus.Illustrator,
+                Status = SubtitleStatus.Illustrator,
                 FirstName = "Yaroslav",
                 LastName = "Chushenko",
                 StreetcodeId = 1
@@ -77,7 +78,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 7,
-                Status = DAL.Enums.SubtitleStatus.Illustrator,
+                Status = SubtitleStatus.Illustrator,
                 FirstName = "Yaroslav",
                 LastName = "Chushenko",
                 StreetcodeId = 3
@@ -85,7 +86,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 8,
-                Status = DAL.Enums.SubtitleStatus.Editor,
+                Status = SubtitleStatus.Editor,
                 FirstName = "Nazarii",
                 LastName = "Hovdysh",
                 StreetcodeId = 4
@@ -93,7 +94,7 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 9,
-                Status = DAL.Enums.SubtitleStatus.Illustrator,
+                Status = SubtitleStatus.Illustrator,
                 FirstName = "Tatiana",
                 LastName = "Shumylo",
                 StreetcodeId = 4
@@ -129,7 +130,7 @@ public static class ModelBuilderExtensions
             new Response
             {
                 Id = 2,
-                FirstName = "Dmytro",
+                Name = "Dmytro",
                 Description = "Nice project",
                 Email = "mail@gmail.com"
             });

@@ -1,4 +1,4 @@
-namespace Streetcode.BLL.DTO.AdditionalContent;
+namespace Streetcode.BLL.DTO.Donates;
 
 public class DonationDTO
 {

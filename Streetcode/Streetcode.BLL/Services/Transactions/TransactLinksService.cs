@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-using Repositories.Realizations;
->>>>>>> remotes/origin/nuke-integration
 using Streetcode.BLL.Interfaces.Transactions;
 using StreetCode.DAL.Repositories.Interfaces.Base;
 
@@ -15,11 +11,7 @@ public class TransactLinksService : ITransactLinksService
         _repositoryWrapper = repositoryWrapper;
     }
 
-<<<<<<< HEAD
     public void GetTransactLinkAsync()
-=======
-    public string GetTransactLinkAsync()
->>>>>>> remotes/origin/nuke-integration
     {
         // TODO implement here
     }

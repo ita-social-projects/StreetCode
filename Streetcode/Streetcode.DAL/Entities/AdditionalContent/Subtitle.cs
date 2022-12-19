@@ -21,10 +21,11 @@ public class Subtitle
     [MaxLength(50)]
     public string LastName { get; set; }
 
-    [Column(TypeName = "text")]
     public string? Description { get; set; }
 
-    [Column(TypeName = "text")]
+    [MaxLength(50)]
+    public string? Title { get; set; }
+
     public string? Url { get; set; }
 
     [Required]

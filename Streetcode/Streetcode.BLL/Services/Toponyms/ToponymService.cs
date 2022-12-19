@@ -10,13 +10,8 @@ public class ToponymService : IToponymService
     {
         _repositoryWrapper = repositoryWrapper;
     }
-<<<<<<< HEAD
 
     public void GetToponymByNameAsync()
-=======
-    
-    public string GetToponymByNameAsync()
->>>>>>> remotes/origin/nuke-integration
     {
         // TODO implement here
     }

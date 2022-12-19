@@ -14,7 +14,7 @@ partial class Build
      
     Target AddMigration => _ => _
         //ToDo add condition to check if there is any changes in ef code first
-        .OnlyWhenStatic(()=>true)
+        .OnlyWhenStatic(()=>false)
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _

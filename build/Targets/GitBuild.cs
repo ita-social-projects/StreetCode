@@ -1,5 +1,6 @@
 ﻿using Nuke.Common;
 using static Nuke.Common.Tools.Git.GitTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -29,6 +30,7 @@ partial class Build
         {
             Git("add .");
             Git($"commit -m \"{Msg}\"");
+            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
         });
 
     Target SetupSubmodules => _ => _
@@ -48,7 +50,5 @@ partial class Build
                 Git($"checkout {(NewB ? "-b" : "" )} {BName}");
 
             WithCli = false;
-            Checkouth = false;
-            NewB = false;
         });
 }

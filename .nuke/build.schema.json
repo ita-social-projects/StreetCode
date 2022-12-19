@@ -109,7 +109,10 @@
               "BuildLocal",
               "BuildPublic",
               "Clean",
+              "CleanContainers",
               "CleanDocker",
+              "CleanImages",
+              "CleanVolumes",
               "CommitChanges",
               "Compile",
               "DropDatabase",
@@ -118,6 +121,7 @@
               "publish",
               "PublishBackEnd",
               "PublishFrontEnd",
+              "RemoveEnvVariables",
               "Restore",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
@@ -127,8 +131,12 @@
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
+<<<<<<< HEAD
               "SetupSubmodules",
               "test",
+=======
+              "Test",
+>>>>>>> 548ad677b2b5e3c8a6a37ff9317aad66bc3674cc
               "UnitTest"
             ]
           }
@@ -148,7 +156,10 @@
               "BuildLocal",
               "BuildPublic",
               "Clean",
+              "CleanContainers",
               "CleanDocker",
+              "CleanImages",
+              "CleanVolumes",
               "CommitChanges",
               "Compile",
               "DropDatabase",
@@ -157,6 +168,7 @@
               "publish",
               "PublishBackEnd",
               "PublishFrontEnd",
+              "RemoveEnvVariables",
               "Restore",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
@@ -166,8 +178,12 @@
               "SetupFrontEnd",
               "SetupGit",
               "SetupNuke",
+<<<<<<< HEAD
               "SetupSubmodules",
               "test",
+=======
+              "Test",
+>>>>>>> 548ad677b2b5e3c8a6a37ff9317aad66bc3674cc
               "UnitTest"
             ]
           }

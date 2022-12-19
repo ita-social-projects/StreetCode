@@ -19,6 +19,7 @@ partial class Build
 
     Target Restore => _ => _
         .DependsOn(Clean)
+        .OnlyWhenStatic(() => true)
         .Executes(() =>
         {
             DotNetRestore(_ => _

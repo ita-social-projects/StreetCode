@@ -35,7 +35,7 @@ services:
       - "./healthchecks:/healthchecks"
     deploy:
       labels:
-        atom: "Streetcode"
+        atom: ${DOCKER_ATOM:-Streetcode}
   
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -61,18 +61,18 @@ services:
       - "${MS_SQL_DB_PORT}:1433/tcp"
     deploy:
       labels:       
-        atom: "Streetcode"
+        atom: ${DOCKER_ATOM:-Streetcode}
       
   redis:
     image: redis:alpine
     volumes:
-      - "./healthchecks:/healthchecks"   
+      - "./healthchecks:/healthchecks"
     healthcheck:
       test: /.healthchecks/redis.sh
       interval: "5s"
     deploy:
       labels:
-        atom: "Streetcode"
+        atom: ${DOCKER_ATOM:-Streetcode}
       
   # this service runs once to seed the database
   # it won't run unless you specify the "seed" profile
@@ -91,7 +91,9 @@ services:
   #      atom: "Streetcode"
       
 volumes:
-  db-data: {}
+  db-data:
+    labels:
+      atom: ${DOCKER_ATOM:-Streetcode}
   
 #secrets:
 #  db-password:

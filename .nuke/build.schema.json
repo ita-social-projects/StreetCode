@@ -6,7 +6,7 @@
     "build": {
       "type": "object",
       "properties": {
-        "Branch": {
+        "BName": {
           "type": "string",
           "description": "create new branch and checkout to it"
         },
@@ -51,15 +51,15 @@
             "VSCode"
           ]
         },
-        "Message": {
-          "type": "string",
-          "description": "commit message"
-        },
         "MigrName": {
           "type": "string",
           "description": "Specifies migration name during its creation"
         },
-        "NewBranch": {
+        "Msg": {
+          "type": "string",
+          "description": "commit message"
+        },
+        "NewB": {
           "type": "boolean",
           "description": "create new branch and checkout to it"
         },
@@ -100,7 +100,10 @@
               "BuildLocal",
               "BuildPublic",
               "Clean",
+              "CleanContainers",
               "CleanDocker",
+              "CleanImages",
+              "CleanVolumes",
               "CommitChanges",
               "Compile",
               "DropDatabase",
@@ -109,6 +112,7 @@
               "Publish",
               "PublishBackEnd",
               "PublishFrontEnd",
+              "RemoveEnvVariables",
               "Restore",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
@@ -117,9 +121,9 @@
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupNuke",
               "Test",
-              "UnitTest",
-              "UpdateNuke"
+              "UnitTest"
             ]
           }
         },
@@ -137,7 +141,10 @@
               "BuildLocal",
               "BuildPublic",
               "Clean",
+              "CleanContainers",
               "CleanDocker",
+              "CleanImages",
+              "CleanVolumes",
               "CommitChanges",
               "Compile",
               "DropDatabase",
@@ -146,6 +153,7 @@
               "Publish",
               "PublishBackEnd",
               "PublishFrontEnd",
+              "RemoveEnvVariables",
               "Restore",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
@@ -154,9 +162,9 @@
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupNuke",
               "Test",
-              "UnitTest",
-              "UpdateNuke"
+              "UnitTest"
             ]
           }
         },

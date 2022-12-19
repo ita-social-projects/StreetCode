@@ -1,5 +1,6 @@
 ﻿using Nuke.Common;
 using static Nuke.Common.Tools.Git.GitTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -20,6 +21,7 @@ partial class Build
         {
             Git("add .");
             Git($"commit -m \"{Msg}\"");
+            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
         });
 
     Target SetupGit => _ => _
@@ -28,6 +30,6 @@ partial class Build
         {
             Git("pull");
             Git($"checkout {(NewB ? "-b" : "" )} {BName}");
-            //ToDo update submodules
+            Git("submodule update --init --recursive");
         });
 }

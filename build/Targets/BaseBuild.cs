@@ -1,9 +1,11 @@
 ﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.Git;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.Git.GitTasks;
 
 namespace Targets;
 
@@ -19,6 +21,7 @@ partial class Build
 
     Target Restore => _ => _
         .DependsOn(Clean)
+        .OnlyWhenStatic(() => true)
         .Executes(() =>
         {
             DotNetRestore(_ => _

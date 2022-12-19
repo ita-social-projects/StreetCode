@@ -32,4 +32,6 @@ RUN dotnet publish -c $Configuration -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish ./
+
+LABEL atom="Streetcode"
 ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]

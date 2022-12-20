@@ -5,7 +5,7 @@ namespace Streetcode.BLL.DTO.Streetcode.TextContent;
 
 public class FactDTO
 {
-    public IdentifierDTO Identifier;
+    public IdentifierDTO Identifier; // TODO reverse changes to "id-title" pattern
     public int ImageId;
     public ImageDTO Image;
     public string FactContent;

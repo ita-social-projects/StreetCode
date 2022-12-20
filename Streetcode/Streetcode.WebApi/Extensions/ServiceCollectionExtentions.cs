@@ -53,5 +53,13 @@ public static class ServiceCollectionExtentions
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddCors(opt => opt.AddDefaultPolicy(policy =>
+        {
+            policy
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowAnyOrigin(); // TODO fix origin queries
+        }));
     }
 }

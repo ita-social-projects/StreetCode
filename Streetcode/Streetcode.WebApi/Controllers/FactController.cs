@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Persistence;
 
 namespace Controllers;
 
@@ -8,13 +11,20 @@ namespace Controllers;
 [Route("api/[controller]")]
 public class FactController : ControllerBase
 {
+    private readonly StreetcodeDbContext _context;
     private readonly IFactService _factService;
     private readonly ILoggerService<FactController> _loggerService;
 
-    public FactController(IFactService factService, ILoggerService<FactController> loggerService)
+    /*public FactController(IFactService factService, ILoggerService<FactController> loggerService)
     {
         _factService = factService;
         _loggerService = loggerService;
+    }
+    */
+
+    public FactController(StreetcodeDbContext context)
+    {
+        _context = context;
     }
 
     [HttpGet("getFactById")]
@@ -23,8 +33,8 @@ public class FactController : ControllerBase
         // TODO implement here
     }
 
-    [HttpGet("getFactByStreetcode")]
-    public string GetFactsByStreetcode()
+    [HttpGet("getFactByStreetcodeId")]
+    public string GetFactsByStreetcodeId()
     {
         // TODO implement here
         _loggerService.LogError("Error????????");
@@ -37,10 +47,12 @@ public class FactController : ControllerBase
         // TODO implement here
     }
 
-    [HttpGet("getFact")]
-    public void GetFact()
+    [HttpGet("getAllFacts")]
+    public async Task<IEnumerable<Fact>> GetAllFacts()
     {
         // TODO implement here
+        var facts = await _context.Facts.ToListAsync();
+        return facts;
     }
 
     [HttpPut("updateFact")]
@@ -50,7 +62,7 @@ public class FactController : ControllerBase
     }
 
     [HttpDelete("deleteFact")]
-    public void DeleteFactById()
+    public void DeleteFact()
     {
         // TODO implement here
     }

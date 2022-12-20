@@ -245,7 +245,7 @@
     <!-- Chained C# statements are separated by a blank line. -->
     <Rule Id="SA1511" Action="Error" />
     <!-- The while footer at the bottom of a do-while statement is separated from the statement by a blank line. -->
-    <Rule Id="SA1512" Action="Error" />
+    <Rule Id="SA1512" Action="None" />
     <!-- A single-line comment within C# code is followed by a blank line. -->
     <Rule Id="SA1514" Action="Error" />
     <!-- An element documentation header above a C# element is not preceded by a blank line. -->

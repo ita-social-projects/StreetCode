@@ -15,21 +15,26 @@ builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// var dbTask = app.MigrateToDatabaseAsync();
+var dbTask = app.MigrateToDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
+
+app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-// await dbTask;
-//
+await dbTask;
+
 app.Run();

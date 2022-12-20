@@ -10,7 +10,7 @@ namespace Targets;
 partial class Build
 {
     Target Clean => _ => _
-        .DependsOn(SetupNuke)
+        .DependsOn(SetupNuke, SetupGit)
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);

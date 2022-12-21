@@ -1,6 +1,6 @@
 ﻿using Nuke.Common;
 using static Nuke.Common.Tools.Npm.NpmTasks;
-
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -14,8 +14,9 @@ partial class Build
         .After(SetupBackEnd)
         .Executes(() =>
         {
-            NpmInstall();
-            //ToDo Compile in diferent way than for back-end
+            //ToDo 
+            PowerShell($"cd \"${ClientDirectory}\"");
+            PowerShell("npm install");
         });
 
     Target SetLocalEnvironmentVariables => _ => _

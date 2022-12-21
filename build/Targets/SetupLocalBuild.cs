@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nuke.Common;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
+﻿using Nuke.Common;
+using static Nuke.Common.Tools.Npm.NpmTasks;
 
 
 namespace Targets;
@@ -12,27 +7,27 @@ namespace Targets;
 partial class Build
 {
     Target SetupBackEnd => _ => _
-        .DependsOn(SetLocalEnvironmentVariables,Compile);
+        .DependsOn(SetLocalEnvironmentVariables,SetupGit);
 
     Target SetupFrontEnd => _ => _
-        .DependsOn(Compile)
+        .OnlyWhenStatic(() => WithCli)
+        .After(SetupBackEnd)
         .Executes(() =>
         {
-            //ToDo Setup Front-end
+            NpmInstall();
             //ToDo Compile in diferent way than for back-end
         });
 
     Target SetLocalEnvironmentVariables => _ => _
-        .Before(Compile)
+        .Before(SetupBackEnd)
         .Executes(() =>
         {
-            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
             //DoAsk what it means and how to use???
         });
 
-    Target BuildLocal => _ => _
-        .OnlyWhenDynamic(() => !Dockerize)
-        .DependsOn(SetupBackEnd, SetupDatabase, SetupFrontEnd);
+    Target SetupLocal => _ => _
+        .OnlyWhenStatic(() => !Dockerize)
+        .DependsOn(SetupBackEnd, /*SetupDatabase,*/ SetupFrontEnd);
 
 }
 

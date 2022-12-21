@@ -5,6 +5,8 @@ namespace Targets;
 
 partial class Build
 {
+    [Parameter("enable to clean resources")]
+    readonly bool CleanRes = true;
     Target RemoveEnvVariables => _ => _
         .Executes(() =>
         {
@@ -12,6 +14,7 @@ partial class Build
         });
     
     Target EndAll => _ => _
+        .OnlyWhenStatic(()=>CleanRes)
         .DependsOn(DropDatabase, CleanDocker, RemoveEnvVariables);
 }
 

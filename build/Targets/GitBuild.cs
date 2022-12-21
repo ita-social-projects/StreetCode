@@ -1,7 +1,5 @@
-﻿using System;
-using Nuke.Common;
+﻿using Nuke.Common;
 using static Nuke.Common.Tools.Git.GitTasks;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -11,22 +9,20 @@ partial class Build
     readonly string Msg = "make changes to the project";
 
     [Parameter("update Streetcode_Client supmodule")]
-    bool WithCli = true;
+    readonly bool WithCli = true;
 
     [Parameter("checkout to branch")]
-    bool Checkouth = false;
+    readonly bool Checkout = false;
 
     [Parameter("name of branch to checkout")]
     readonly string BName = "master";
 
     [Parameter("create a new branch")]
-    bool NewB = false;
-
-    //[Parameter("allow to update submodules")]
-    //public bool WithCli { get => WithCli = true; }
+    readonly bool NewB = false;
 
     Target CommitChanges => _ => _
-        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
+        .OnlyWhenStatic(() => !GitHasCleanWorkingCopy())
+        .DependsOn(SetupNuke)
         .Executes(() =>
         {
             Git("add .");
@@ -34,21 +30,24 @@ partial class Build
         });
 
     Target SetupSubmodules => _ => _
-        .OnlyWhenDynamic(() => WithCli)
+        .OnlyWhenStatic(() => WithCli)
         .After(CommitChanges)
         .Executes(() =>
         {
             Git("submodule update --init --recursive");
         });
 
+    Target CheckoutBranch => _ => _
+        .OnlyWhenStatic(() => Checkout)
+        .Executes(() => 
+        { 
+            Git($"checkout {(NewB ? "-b" : string.Empty)} {BName}"); 
+        });
+
     Target SetupGit => _ => _
-        .DependsOn(CommitChanges,SetupSubmodules)
+        .DependsOn(SetupSubmodules,CommitChanges,CheckoutBranch)
         .Executes(() =>
         {
             Git("pull");
-            if(Checkouth)
-                Git($"checkout {(NewB ? "-b" : string.Empty)} {BName}");
-
-            WithCli = false;
         });
 }

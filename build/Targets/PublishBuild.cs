@@ -14,7 +14,7 @@ partial class Build
         });
 
     Target PublishFrontEnd => _ => _
-        .OnlyWhenDynamic(() => WithCli)
+        .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {
             //ToDo publish front-end

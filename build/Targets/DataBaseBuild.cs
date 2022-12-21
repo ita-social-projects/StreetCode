@@ -35,6 +35,7 @@ partial class Build
     readonly bool RollbackMigration = false;
      
     Target SetupDatabase => _ => _
+        .DependsOn(DropDatabase)
         .Executes(() =>
         {
             EntityFrameworkDatabaseUpdate(_ => _
@@ -48,6 +49,8 @@ partial class Build
         });
 
     Target DropDatabase => _ => _
+        //ToDo check if db exsists
+        .OnlyWhenStatic(() => false)
         .Executes(() =>
         {
             EntityFrameworkDatabaseDrop(_ => _
@@ -57,6 +60,6 @@ partial class Build
                 .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")
                 .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
                 .SetConfiguration(Configuration)
-            );
+            ); ;
         });
 }

@@ -4,13 +4,14 @@ using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.Npm.NpmTasks;
 
 namespace Targets;
 
 partial class Build
 {
     Target Clean => _ => _
-        .DependsOn(SetupNuke, SetupGit)
+        .DependsOn(SetupNuke)
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
@@ -19,7 +20,6 @@ partial class Build
 
     Target Restore => _ => _
         .DependsOn(Clean)
-        .OnlyWhenStatic(() => true)
         .Executes(() =>
         {
             DotNetRestore(_ => _
@@ -28,7 +28,7 @@ partial class Build
             );
         });
 
-    Target Compile => _ => _
+    Target CompileAPI => _ => _
         .DependsOn(Restore)
         .Executes(() =>
         {
@@ -37,5 +37,12 @@ partial class Build
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
             );
+        });
+
+    Target CompileCli => _ => _
+        .OnlyWhenStatic(() => WithCli)
+        .Executes(() =>
+        {
+            NpmRun();
         });
 }

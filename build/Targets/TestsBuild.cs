@@ -6,7 +6,14 @@ namespace Targets;
 
 partial class Build
 {
+    [Parameter("enable unit tests")]
+    readonly bool UTest = true;
+
+    [Parameter("enable integration tests")]
+    readonly bool ITest = true;
+
     Target UnitTest => _ => _
+        .OnlyWhenStatic(() => UTest)
         .Executes(() =>
         {
             DotNetTest(_ => _
@@ -18,6 +25,7 @@ partial class Build
         });
 
     Target IntegrationTest => _ => _
+        .OnlyWhenStatic(() => ITest)
         .Executes(() =>
         {
             DotNetTest(_ => _

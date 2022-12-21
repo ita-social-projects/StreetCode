@@ -4,6 +4,7 @@ using System.Linq;
 using Nuke.Common.Tooling;
 using static Utils.DockerComposeTasks;
 using static Nuke.Common.Tools.Docker.DockerTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -13,8 +14,10 @@ partial class Build
     readonly string DockerAtom = "Streetcode";
 
     Target SetPublicEnvironmentVariables => _ => _
+        .DependsOn(SetupNuke)
         .Executes(() =>
         {
+            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
             //ToAsk ??? how to use and what it means
         });
 
@@ -79,8 +82,8 @@ partial class Build
     [Parameter("Build in Docker")]
     bool Dockerize = false;
 
-    Target BuildPublic => _ => _
-        .OnlyWhenDynamic(() => Dockerize)
+    Target SetupPublic => _ => _
+        .OnlyWhenStatic(() => Dockerize)
         .DependsOn(SetupDocker, SetupDatabase)
         .Executes(() =>
         {

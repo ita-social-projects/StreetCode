@@ -12,7 +12,6 @@ namespace Controllers;
 [Route("api/[controller]")]
 public class FactController : ControllerBase
 {
-    private readonly StreetcodeDbContext _context;
     private readonly IFactService _factService;
     private readonly ILoggerService<FactController> _loggerService;
 
@@ -29,11 +28,9 @@ public class FactController : ControllerBase
     }
 
     [HttpGet("getFactByStreetcodeId")]
-    public string GetFactsByStreetcodeId()
+    public void GetFactsByStreetcodeId()
     {
         // TODO implement here
-        _loggerService.LogError("Error????????");
-        return _factService.GetFactsByStreetcodeAsync();
     }
 
     [HttpPost("createFact")]
@@ -43,11 +40,9 @@ public class FactController : ControllerBase
     }
 
     [HttpGet("getAllFacts")]
-    public async Task<IEnumerable<Fact>> GetAllFacts()
+    public void GetAllFacts()
     {
         // TODO implement here
-        var facts = await _context.Facts.ToListAsync();
-        return facts;
     }
 
     [HttpPut("updateFact")]

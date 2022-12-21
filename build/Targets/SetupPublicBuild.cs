@@ -17,7 +17,7 @@ partial class Build
         .DependsOn(SetupNuke)
         .Executes(() =>
         {
-            PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
+            PowerShell($"setx DOCKER_ATOM \"{DockerAtom}\"");
         });
 
     Target SetupDocker => _ => _
@@ -25,12 +25,12 @@ partial class Build
         .Executes(() =>
         {
             DockerComposeBuild(b => b
-                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetProcessWorkingDirectory(RootDirectory)
                 .EnableNoCache()
                 .EnableQuiet());
 
             DockerComposeUp(u => u
-                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetProcessWorkingDirectory(RootDirectory)
                 .EnableDetach());
         });
 
@@ -68,6 +68,7 @@ partial class Build
         });
 
     Target CleanVolumes => _ => _
+        .After(CleanContainers)
         .Executes(() =>
         {
             var volumes = DockerVolumeLs(v=>v
@@ -94,6 +95,6 @@ partial class Build
         .Executes(() =>
         {
             DockerComposeDown(u => u
-                .SetProcessWorkingDirectory(SourceDirectory));
+                .SetProcessWorkingDirectory(RootDirectory));
         });
 }

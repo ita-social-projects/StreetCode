@@ -26,7 +26,7 @@ public abstract class StreetcodeDTO
     public IEnumerable<TagDTO> Tags;
     public string Teaser;
     public AudioDTO Audio;
-    public TransactLinkDTO TransactLink;
+    public TransactLinkDTO TransactionLink;
     public string Text;
     public IEnumerable<VideoDTO> Videos;
     public IEnumerable<FactDTO> Facts;

@@ -9,5 +9,5 @@ public class VideoDTO
     public string Description;
     public UrlDTO Url;
     public int StreetcodeId;
-    public IEnumerable<StreetcodeDTO> Streetcodes;
+    public StreetcodeDTO Streetcode;
 }

@@ -8,5 +8,5 @@ public class SourceLinkCategoryDTO
     public string Title;
     public int ImageId;
     public ImageDTO Image;
-    public IEnumerable<SourceLinkDTO> SourceLink;
+    public IEnumerable<SourceLinkDTO> SourceLinks;
 }

@@ -16,11 +16,8 @@ public class SubtitleService : ISubtitleService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<SubtitleDTO>> GetSubtitlesByStreetcodeAsync()
+    public void GetSubtitlesByStreetcodeAsync()
     {
-        var subtitle = await _repositoryWrapper.SubtitleRepository.GetAllAsync(c => c.StreetcodeId == 1);
-        return _mapper.Map<IEnumerable<Subtitle>, IEnumerable<SubtitleDTO>>(subtitle);
-
-        // TODO clean after merge
+        // TODO implement here
     }
 }

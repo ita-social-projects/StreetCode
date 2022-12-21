@@ -30,7 +30,7 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: "http://*:5000" # ;https://*:5001
+      ASPNETCORE_URLS: "http://*:5000"
     volumes:
       - "./healthchecks:/healthchecks"
     labels:       

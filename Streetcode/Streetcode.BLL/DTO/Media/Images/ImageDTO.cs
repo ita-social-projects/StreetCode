@@ -1,4 +1,5 @@
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 
@@ -11,5 +12,6 @@ public class ImageDTO
     public UrlDTO Url;
     public IEnumerable<StreetcodeDTO> Streetcodes;
     public IEnumerable<FactDTO> Facts;
+    public IEnumerable<SourceLinkCategoryDTO> Categories;
     public ArtDTO Art;
 }

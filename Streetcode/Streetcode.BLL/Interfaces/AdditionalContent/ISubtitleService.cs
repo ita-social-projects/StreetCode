@@ -4,5 +4,5 @@ namespace Streetcode.BLL.Interfaces.AdditionalContent;
 
 public interface ISubtitleService
 {
-    public Task<IEnumerable<SubtitleDTO>> GetSubtitlesByStreetcodeAsync();
+    public void GetSubtitlesByStreetcodeAsync();
 }

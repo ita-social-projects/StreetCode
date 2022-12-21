@@ -11,18 +11,18 @@ EXPOSE 5000
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG Configuration=debug
-WORKDIR /src
 
 #restoring dependencies
-COPY ./../*.sln ./
-COPY ./../Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
-COPY ./../Streetcode.DAL/*.csproj ./Streetcode.DAL/
-COPY ./../Streetcode.BLL/*.csproj ./Streetcode.BLL/
-COPY ./../Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
+COPY ./Streetcode/*.sln ./
+COPY ./Streetcode/Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
+COPY ./Streetcode/Streetcode.BLL/*.csproj ./Streetcode.BLL/
+COPY ./Streetcode/Streetcode.DAL/*.csproj ./Streetcode.DAL/
+COPY ./Streetcode/Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
+COPY ./Streetcode/Streetcode.XIntegrationTest/*.csproj ./Streetcode.XIntegrationTest/
 RUN dotnet restore
 
 # copying other neccessary data and building application
-COPY ./../ ./
+COPY ./Streetcode/ ./
 RUN dotnet build -c $Configuration -o /app/build
 
 # publishishing application

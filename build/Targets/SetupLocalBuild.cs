@@ -27,7 +27,7 @@ partial class Build
 
     Target SetupLocal => _ => _
         .OnlyWhenStatic(() => !Dockerize)
-        .DependsOn(SetupBackEnd, SetupDatabase, SetupFrontEnd);
+        .DependsOn(SetupBackEnd, UpdateDatabase, SetupFrontEnd);
 
 }
 

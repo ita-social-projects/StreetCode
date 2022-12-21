@@ -1,4 +1,3 @@
-using Streetcode.BLL.DTO.Identifier;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode;
 
@@ -6,7 +5,8 @@ namespace Streetcode.BLL.DTO.Timeline;
 
 public class TimelineItemDTO
 {
-    public IdentifierDTO Identifier;
+    public int Id;
+    public string Title;
     public string Description;
     public DateTime Date;
     public ImageDTO Image;

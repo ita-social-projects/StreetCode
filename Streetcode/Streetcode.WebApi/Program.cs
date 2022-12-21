@@ -25,13 +25,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }
 
-app.UseCors(builder => builder
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .SetIsOriginAllowed((host) => true)
-    .AllowCredentials());
-
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseRouting();
 

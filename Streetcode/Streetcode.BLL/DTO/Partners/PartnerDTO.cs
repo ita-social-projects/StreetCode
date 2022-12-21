@@ -1,8 +1,5 @@
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Identifier;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.DAL.Entities.Partners;
-
 namespace Streetcode.BLL.DTO.Partners;
 
 public class PartnerDTO

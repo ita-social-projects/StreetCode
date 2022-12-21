@@ -9,7 +9,6 @@ namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates
     public class StreetcodeCoordinateDTO
     {
         public CoordinateDTO CoordinatesDTO;
-
         public int StreetcodeId;
     }
 }

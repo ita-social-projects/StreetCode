@@ -1,11 +1,11 @@
-﻿using Streetcode.BLL.DTO.Identifier;
-using Streetcode.BLL.DTO.Streetcode;
+﻿using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Partners;
 
 public class StreetcodePartnerDTO
 {
-    public IdentifierDTO Identifier;
+    public int Id;
+    public string Title;
     public bool IsSponsor;
     public int StreetcodeId;
     public StreetcodeDTO Streetcode;

@@ -18,7 +18,6 @@ partial class Build
         .Executes(() =>
         {
             PowerShell($"setx DOCKER_ATOM \"${DockerAtom}\"");
-            //ToAsk ??? how to use and what it means
         });
 
     Target SetupDocker => _ => _
@@ -84,7 +83,7 @@ partial class Build
 
     Target SetupPublic => _ => _
         .OnlyWhenStatic(() => Dockerize)
-        .DependsOn(SetupDocker, SetupDatabase)
+        .DependsOn(SetupDocker, UpdateDatabase)
         .Executes(() =>
         {
             Dockerize = false;

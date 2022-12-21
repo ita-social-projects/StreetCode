@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
@@ -15,16 +16,10 @@ public class FactController : ControllerBase
     private readonly IFactService _factService;
     private readonly ILoggerService<FactController> _loggerService;
 
-    /*public FactController(IFactService factService, ILoggerService<FactController> loggerService)
+    public FactController(IFactService factService, ILoggerService<FactController> loggerService)
     {
         _factService = factService;
         _loggerService = loggerService;
-    }
-    */
-
-    public FactController(StreetcodeDbContext context)
-    {
-        _context = context;
     }
 
     [HttpGet("getFactById")]

@@ -79,7 +79,7 @@ https://github.com/ita-social-projects/StreetCode
 
 
 ### How to run local 
- Run the Streetcode project than open your browser and enter https://localhost:7051/swagger/index.html url. If you had this page already opened, just reload it.
+ Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
 
 ### How to run Docker
  
@@ -87,7 +87,7 @@ https://github.com/ita-social-projects/StreetCode
 
 ## Usage
 ### How to work with swagger UI
-Run the Streetcode project than open your browser and enter https://localhost:7051/swagger/index.html url. If you had this page already opened, just reload it.
+Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
 
 ### How to run tests
 ### How to Checkstyle

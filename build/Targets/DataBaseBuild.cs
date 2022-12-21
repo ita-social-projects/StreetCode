@@ -34,7 +34,7 @@ partial class Build
     [Parameter("Specifies whether a migration rollback should be committed")]
     readonly bool RollbackMigration = false;
      
-    Target SetupDatabase => _ => _
+    Target UpdateDatabase => _ => _
         .DependsOn(DropDatabase)
         .Executes(() =>
         {
@@ -50,7 +50,7 @@ partial class Build
 
     Target DropDatabase => _ => _
         //ToDo fix this and remove line below
-        .OnlyWhenStatic(()=>false)
+        //.OnlyWhenStatic(()=>false)
         .Executes(() =>
         {
             EntityFrameworkDatabaseDrop(_ => _

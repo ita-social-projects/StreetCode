@@ -5,15 +5,15 @@ namespace Targets;
 
 partial class Build
 {
-    Target PublishBackEnd => _ => _
+    Target PushBackEnd => _ => _
         .DependsOn(AddMigration, CommitChanges)
-        .After(PublishFrontEnd)
+        .After(PushFrontEnd)
         .Executes(() =>
         {
             Git("push");
         });
 
-    Target PublishFrontEnd => _ => _
+    Target PushFrontEnd => _ => _
         .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {

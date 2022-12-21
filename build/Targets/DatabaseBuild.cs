@@ -33,8 +33,9 @@ partial class Build
 
     [Parameter("Specifies whether a migration rollback should be committed")]
     readonly bool RollbackMigration = false;
-     
+
     Target UpdateDatabase => _ => _
+        .OnlyWhenStatic(() => false)
         .DependsOn(DropDatabase)
         .Executes(() =>
         {
@@ -42,15 +43,14 @@ partial class Build
                 .SetProcessWorkingDirectory(SourceDirectory)
                 .SetMigration(RollbackMigration ? "0" : (UpdMigrName ?? String.Empty))
                 .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")  
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
                 .SetConfiguration(Configuration)
             );
         });
 
     Target DropDatabase => _ => _
-        //ToDo fix this and remove line below
-        //.OnlyWhenStatic(()=>false)
+        .OnlyWhenStatic(() => false)
         .Executes(() =>
         {
             EntityFrameworkDatabaseDrop(_ => _

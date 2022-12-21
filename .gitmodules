@@ -1,3 +1,4 @@
-[submodule "Streetcode/StreetCode_Client"]
-	path = Streetcode/StreetCode_Client
+[submodule "Streetcode/StreetCode.Client"]
+	path = Streetcode/StreetCode.Client
 	url = https://github.com/ita-social-projects/StreetCode_Client.git
+	branch = master

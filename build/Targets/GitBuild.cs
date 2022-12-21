@@ -21,7 +21,7 @@ partial class Build
     readonly bool NewB = false;
 
     Target CommitChanges => _ => _
-        .OnlyWhenStatic(() => !GitHasCleanWorkingCopy())
+        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
         .DependsOn(SetupNuke)
         .Executes(() =>
         {

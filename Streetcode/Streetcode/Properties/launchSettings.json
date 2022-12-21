@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Streetcode": {
+    "Streetcode_Dev": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -8,7 +8,28 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7051;http://localhost:5258"
+      "applicationUrl": "http://localhost:5000;https://localhost:5001"
+    },
+    "Streetcode_Local": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      }
+    },
+    "Streetcode_IntegTests": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "IntegrationTests"
+      }
+    },
+    "Streetcode_Prod": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -31,8 +52,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:14077",
-      "sslPort": 44398
+      "applicationUrl": "http://localhost:49614/",
+      "sslPort": 44340
     }
   }
 }

@@ -43,7 +43,7 @@ partial class Build
         .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {
-            PowerShell($"cd \"${ClientDirectory}\"");
+            PowerShell($"cd {ClientDirectory}");
             PowerShell("npm start");
         });
 }

@@ -15,7 +15,7 @@ partial class Build
         .Executes(() =>
         {
             //ToDo 
-            PowerShell($"cd \"${ClientDirectory}\"");
+            PowerShell($"cd {ClientDirectory}");
             PowerShell("npm install");
         });
 

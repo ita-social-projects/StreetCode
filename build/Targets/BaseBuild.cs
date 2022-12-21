@@ -18,6 +18,10 @@ partial class Build
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
             EnsureCleanDirectory(OutputDirectory);
+            
+            //TODO clean node_modules
+            
+            
         });
 
     Target Restore => _ => _

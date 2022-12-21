@@ -11,9 +11,10 @@ partial class Build
         //.OnlyWhenStatic(() => false)
         .Executes(() =>
         {
-            DotNetToolUpdate(_ => _
+            /*DotNetToolUpdate(_ => _
                 .SetPackageName("nuke.globaltool")
                 .EnableGlobal()
                 .SetVerbosity(DotNetVerbosity.Quiet));
+                */
         });
 }

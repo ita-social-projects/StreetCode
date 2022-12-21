@@ -1,6 +1,11 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Execution;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.Git;
+using Nuke.Common.Tools.PowerShell;
+using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.Npm.NpmTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 

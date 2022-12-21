@@ -7,6 +7,7 @@ partial class Build
 {
     [Parameter("enable to clean resources")]
     readonly bool CleanRes = true;
+    
     Target RemoveEnvVariables => _ => _
         .Executes(() =>
         {

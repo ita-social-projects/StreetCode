@@ -13,6 +13,7 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -39,6 +40,7 @@ public class StreetcodeDbContext : DbContext
     public virtual DbSet<Response> Responses { get; set; }
     public virtual DbSet<SourceLink> SourceLinks { get; set; }
     public virtual DbSet<Entities.Streetcode.StreetcodeContent> Streetcodes { get; set; }
+    public virtual DbSet<StreetcodeTimelineItem> StreetcodeTimelineItems { get; set; }
     public virtual DbSet<Subtitle> Subtitles { get; set; }
     public virtual DbSet<Tag> Tags { get; set; }
     public virtual DbSet<Term> Terms { get; set; }
@@ -111,6 +113,11 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(false);
         });
 
+        modelBuilder.Entity<StreetcodeTimelineItem>(entity =>
+        {
+            entity.HasKey(k => new { k.StreetcodesId, k.TimelineItemsId });
+        });
+
         modelBuilder.Entity<Entities.Streetcode.StreetcodeContent>(entity =>
         {
             entity.Property(s => s.CreatedAt)
@@ -141,9 +148,6 @@ public class StreetcodeDbContext : DbContext
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
-            entity.HasMany(d => d.TimelineItems)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_timeline_item", "streetcode"));
             entity.HasMany(d => d.Toponyms)
                 .WithMany(t => t.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));

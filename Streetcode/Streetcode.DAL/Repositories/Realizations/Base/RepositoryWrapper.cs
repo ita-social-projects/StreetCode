@@ -36,6 +36,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IStreetcodeRepository _streetcodeRepository;
 
+    private IStreetcodeTimelineItemRepository _streetcodeTimelineItemRepository;
+
     private ISubtitleRepository _subtitleRepository;
 
     private ITagRepository _tagRepository;
@@ -143,6 +145,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _streetcodeRepository;
+        }
+    }
+
+    public IStreetcodeTimelineItemRepository StreetcodeTimelineItemRepository
+    {
+        get
+        {
+            if (_streetcodeTimelineItemRepository == null)
+            {
+                _streetcodeTimelineItemRepository = new StreetcodeTimelineItemRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeTimelineItemRepository;
         }
     }
 

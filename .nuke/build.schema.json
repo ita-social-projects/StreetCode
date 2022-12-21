@@ -10,9 +10,13 @@
           "type": "string",
           "description": "name of branch to checkout"
         },
-        "Checkouth": {
+        "Checkout": {
           "type": "boolean",
           "description": "checkout to branch"
+        },
+        "CleanRes": {
+          "type": "boolean",
+          "description": "enable to clean resources"
         },
         "Configuration": {
           "type": "string",
@@ -58,6 +62,10 @@
             "VisualStudio",
             "VSCode"
           ]
+        },
+        "ITest": {
+          "type": "boolean",
+          "description": "enable integration tests"
         },
         "MigrName": {
           "type": "string",
@@ -105,15 +113,15 @@
             "type": "string",
             "enum": [
               "AddMigration",
-              "BuildLocal",
-              "BuildPublic",
+              "CheckoutBranch",
               "Clean",
               "CleanContainers",
               "CleanDocker",
               "CleanImages",
               "CleanVolumes",
               "CommitChanges",
-              "Compile",
+              "CompileAPI",
+              "CompileCli",
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
@@ -122,17 +130,20 @@
               "PublishFrontEnd",
               "RemoveEnvVariables",
               "Restore",
+              "Run",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
+              "Setup",
               "SetupBackEnd",
-              "SetupBuild",
               "SetupDatabase",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupLocal",
               "SetupNuke",
+              "SetupPublic",
               "SetupSubmodules",
-              "TestAll",
+              "Test",
               "UnitTest"
             ]
           }
@@ -148,15 +159,15 @@
             "type": "string",
             "enum": [
               "AddMigration",
-              "BuildLocal",
-              "BuildPublic",
+              "CheckoutBranch",
               "Clean",
               "CleanContainers",
               "CleanDocker",
               "CleanImages",
               "CleanVolumes",
               "CommitChanges",
-              "Compile",
+              "CompileAPI",
+              "CompileCli",
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
@@ -165,17 +176,20 @@
               "PublishFrontEnd",
               "RemoveEnvVariables",
               "Restore",
+              "Run",
               "SetLocalEnvironmentVariables",
               "SetPublicEnvironmentVariables",
+              "Setup",
               "SetupBackEnd",
-              "SetupBuild",
               "SetupDatabase",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupLocal",
               "SetupNuke",
+              "SetupPublic",
               "SetupSubmodules",
-              "TestAll",
+              "Test",
               "UnitTest"
             ]
           }
@@ -183,6 +197,10 @@
         "UpdMigrName": {
           "type": "string",
           "description": "Specifies migration name during db update"
+        },
+        "UTest": {
+          "type": "boolean",
+          "description": "enable unit tests"
         },
         "Verbosity": {
           "type": "string",

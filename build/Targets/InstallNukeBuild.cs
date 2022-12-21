@@ -7,7 +7,7 @@ namespace Targets;
 partial class Build
 {
     Target SetupNuke => _ => _
-        //ToDO no access to reinstall package
+        //ToDo fix accessibility and remove line below
         .OnlyWhenStatic(() => false)
         .Executes(() =>
         {

@@ -198,27 +198,31 @@ window.addEventListener("load",function(){e.contentLoaded()},!1)}).call(e,n(9))}
 
     <script>
 $(document).ready(function() {
+  $("#SetupNuke").addClass('highlight');
   $("#SetPublicEnvironmentVariables").addClass('highlight');
   $("#SetupDocker").addClass('highlight');
+  $("#DropDatabase").addClass('highlight');
   $("#SetupDatabase").addClass('highlight');
-  $("#BuildPublic").addClass('highlight');
+  $("#SetupPublic").addClass('highlight');
   $("#SetLocalEnvironmentVariables").addClass('highlight');
-  $("#SetupNuke").addClass('highlight');
-  $("#Clean").addClass('highlight');
-  $("#Restore").addClass('highlight');
-  $("#Compile").addClass('highlight');
-  $("#SetupFrontEnd").addClass('highlight');
+  $("#CheckoutBranch").addClass('highlight');
+  $("#CommitChanges").addClass('highlight');
+  $("#SetupSubmodules").addClass('highlight');
+  $("#SetupGit").addClass('highlight');
   $("#SetupBackEnd").addClass('highlight');
-  $("#BuildLocal").addClass('highlight');
-  $("#SetupBuild").addClass('highlight');
-  $("#SetupBuild").hover(
+  $("#SetupFrontEnd").addClass('highlight');
+  $("#SetupLocal").addClass('highlight');
+  $("#Setup").addClass('highlight');
+  $("#Run").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -226,6 +230,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -233,66 +238,139 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
-        $("#SetPublicEnvironmentVariables").addClass('highlight');
-        $("#SetupDocker").addClass('highlight');
-        $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
-        $("#SetLocalEnvironmentVariables").addClass('highlight');
         $("#SetupNuke").addClass('highlight');
+        $("#CompileCli").addClass('highlight');
         $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
-        $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#CompileAPI").addClass('highlight');
+        $("#Run").addClass('highlight');
     },
     function() {
-        $("#SetPublicEnvironmentVariables").removeClass('highlight');
-        $("#SetupDocker").removeClass('highlight');
-        $("#SetupDatabase").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
-        $("#SetLocalEnvironmentVariables").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
-        $("#SetupFrontEnd").removeClass('highlight');
-        $("#SetupBackEnd").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
-        $("#SetupBuild").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
+    });
+  $("#Setup").hover(
+    function() {
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
+        $("#Publish").removeClass('highlight');
+        $("#Test").removeClass('highlight');
+        $("#Clean").removeClass('highlight');
+        $("#Restore").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
+        $("#AddMigration").removeClass('highlight');
+        $("#SetupDatabase").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
+        $("#RemoveEnvVariables").removeClass('highlight');
+        $("#EndAll").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
+        $("#SetupNuke").removeClass('highlight');
+        $("#PublishBackEnd").removeClass('highlight');
+        $("#PublishFrontEnd").removeClass('highlight');
+        $("#SetupBackEnd").removeClass('highlight');
+        $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
+        $("#SetPublicEnvironmentVariables").removeClass('highlight');
+        $("#SetupDocker").removeClass('highlight');
+        $("#CleanImages").removeClass('highlight');
+        $("#CleanContainers").removeClass('highlight');
+        $("#CleanVolumes").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
+        $("#CleanDocker").removeClass('highlight');
+        $("#UnitTest").removeClass('highlight');
+        $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#SetPublicEnvironmentVariables").addClass('highlight');
+        $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
+        $("#SetupDatabase").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
+        $("#SetLocalEnvironmentVariables").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
+        $("#SetupBackEnd").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
+    },
+    function() {
+        $("#SetupNuke").removeClass('highlight');
+        $("#SetPublicEnvironmentVariables").removeClass('highlight');
+        $("#SetupDocker").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
+        $("#SetupDatabase").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
+        $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
+        $("#SetupBackEnd").removeClass('highlight');
+        $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#SetPublicEnvironmentVariables").addClass('highlight');
+        $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
+        $("#SetupDatabase").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
+        $("#SetLocalEnvironmentVariables").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
+        $("#SetupBackEnd").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#Publish").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -300,6 +378,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -307,50 +386,56 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
-        $("#PublishFrontEnd").addClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#CommitChanges").addClass('highlight');
+        $("#PublishFrontEnd").addClass('highlight');
         $("#AddMigration").addClass('highlight');
         $("#PublishBackEnd").addClass('highlight');
         $("#Publish").addClass('highlight');
     },
     function() {
-        $("#PublishFrontEnd").removeClass('highlight');
+        $("#SetupNuke").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
+        $("#PublishFrontEnd").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
         $("#Publish").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
-  $("#TestAll").hover(
+  $("#Test").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -358,6 +443,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -365,68 +451,66 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
         $("#IntegrationTest").addClass('highlight');
         $("#UnitTest").addClass('highlight');
         $("#CleanDocker").addClass('highlight');
-        $("#SetPublicEnvironmentVariables").addClass('highlight');
-        $("#SetupDocker").addClass('highlight');
-        $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#CleanVolumes").addClass('highlight');
         $("#CleanContainers").addClass('highlight');
         $("#CleanImages").addClass('highlight');
         $("#RemoveEnvVariables").addClass('highlight');
-        $("#DropDatabase").addClass('highlight');
-        $("#TestAll").addClass('highlight');
+        $("#Test").addClass('highlight');
         $("#EndAll").addClass('highlight');
     },
     function() {
         $("#IntegrationTest").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
-        $("#SetPublicEnvironmentVariables").removeClass('highlight');
-        $("#SetupDocker").removeClass('highlight');
-        $("#SetupDatabase").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupNuke").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#RemoveEnvVariables").removeClass('highlight');
-        $("#DropDatabase").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#EndAll").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#Clean").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -434,6 +518,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -441,13 +526,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -457,28 +542,32 @@ $(document).ready(function() {
     function() {
         $("#SetupNuke").removeClass('highlight');
         $("#Clean").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#Restore").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -486,6 +575,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -493,13 +583,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -511,28 +601,32 @@ $(document).ready(function() {
         $("#SetupNuke").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
-  $("#Compile").hover(
+  $("#CompileAPI").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -540,6 +634,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -547,48 +642,107 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
         $("#SetupNuke").addClass('highlight');
         $("#Clean").addClass('highlight');
         $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
+        $("#CompileAPI").addClass('highlight');
     },
     function() {
         $("#SetupNuke").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
+    });
+  $("#CompileCli").hover(
+    function() {
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
+        $("#Publish").removeClass('highlight');
+        $("#Test").removeClass('highlight');
+        $("#Clean").removeClass('highlight');
+        $("#Restore").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
+        $("#AddMigration").removeClass('highlight');
+        $("#SetupDatabase").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
+        $("#RemoveEnvVariables").removeClass('highlight');
+        $("#EndAll").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
+        $("#SetupNuke").removeClass('highlight');
+        $("#PublishBackEnd").removeClass('highlight');
+        $("#PublishFrontEnd").removeClass('highlight');
+        $("#SetupBackEnd").removeClass('highlight');
+        $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
+        $("#SetPublicEnvironmentVariables").removeClass('highlight');
+        $("#SetupDocker").removeClass('highlight');
+        $("#CleanImages").removeClass('highlight');
+        $("#CleanContainers").removeClass('highlight');
+        $("#CleanVolumes").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
+        $("#CleanDocker").removeClass('highlight');
+        $("#UnitTest").removeClass('highlight');
+        $("#IntegrationTest").removeClass('highlight');
+        $("#CompileCli").addClass('highlight');
+    },
+    function() {
+        $("#CompileCli").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#SetPublicEnvironmentVariables").addClass('highlight');
+        $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
+        $("#SetupDatabase").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
+        $("#SetLocalEnvironmentVariables").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
+        $("#SetupBackEnd").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#AddMigration").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -596,6 +750,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -603,13 +758,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -617,28 +772,32 @@ $(document).ready(function() {
     },
     function() {
         $("#AddMigration").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupDatabase").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -646,6 +805,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -653,42 +813,48 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
     },
     function() {
+        $("#DropDatabase").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#DropDatabase").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -696,6 +862,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -703,13 +870,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -717,28 +884,32 @@ $(document).ready(function() {
     },
     function() {
         $("#DropDatabase").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#RemoveEnvVariables").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -746,6 +917,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -753,13 +925,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -767,28 +939,32 @@ $(document).ready(function() {
     },
     function() {
         $("#RemoveEnvVariables").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#EndAll").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -796,6 +972,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -803,54 +980,58 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
         $("#CleanDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#CleanVolumes").addClass('highlight');
         $("#CleanContainers").addClass('highlight');
         $("#CleanImages").addClass('highlight');
         $("#RemoveEnvVariables").addClass('highlight');
-        $("#DropDatabase").addClass('highlight');
         $("#EndAll").addClass('highlight');
     },
     function() {
         $("#CleanDocker").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#RemoveEnvVariables").removeClass('highlight');
-        $("#DropDatabase").removeClass('highlight');
         $("#EndAll").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#CommitChanges").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -858,6 +1039,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -865,42 +1047,48 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#CommitChanges").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupSubmodules").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -908,6 +1096,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -915,13 +1104,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -929,28 +1118,32 @@ $(document).ready(function() {
     },
     function() {
         $("#SetupSubmodules").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
-  $("#SetupGit").hover(
+  $("#CheckoutBranch").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -958,6 +1151,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -965,46 +1159,109 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+    },
+    function() {
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#SetPublicEnvironmentVariables").addClass('highlight');
+        $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
+        $("#SetupDatabase").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
+        $("#SetLocalEnvironmentVariables").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
+        $("#SetupBackEnd").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
+    });
+  $("#SetupGit").hover(
+    function() {
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
+        $("#Publish").removeClass('highlight');
+        $("#Test").removeClass('highlight');
+        $("#Clean").removeClass('highlight');
+        $("#Restore").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
+        $("#AddMigration").removeClass('highlight');
+        $("#SetupDatabase").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
+        $("#RemoveEnvVariables").removeClass('highlight');
+        $("#EndAll").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
+        $("#SetupNuke").removeClass('highlight');
+        $("#PublishBackEnd").removeClass('highlight');
+        $("#PublishFrontEnd").removeClass('highlight');
+        $("#SetupBackEnd").removeClass('highlight');
+        $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
+        $("#SetPublicEnvironmentVariables").removeClass('highlight');
+        $("#SetupDocker").removeClass('highlight');
+        $("#CleanImages").removeClass('highlight');
+        $("#CleanContainers").removeClass('highlight');
+        $("#CleanVolumes").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
+        $("#CleanDocker").removeClass('highlight');
+        $("#UnitTest").removeClass('highlight');
+        $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
         $("#CommitChanges").addClass('highlight');
         $("#SetupSubmodules").addClass('highlight');
         $("#SetupGit").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupNuke").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1012,6 +1269,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1019,13 +1277,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1033,28 +1291,32 @@ $(document).ready(function() {
     },
     function() {
         $("#SetupNuke").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#PublishBackEnd").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1062,6 +1324,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1069,46 +1332,52 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#CommitChanges").addClass('highlight');
         $("#AddMigration").addClass('highlight');
         $("#PublishBackEnd").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#PublishFrontEnd").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1116,6 +1385,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1123,13 +1393,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1137,28 +1407,32 @@ $(document).ready(function() {
     },
     function() {
         $("#PublishFrontEnd").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupBackEnd").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1166,6 +1440,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1173,52 +1448,58 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
-        $("#SetLocalEnvironmentVariables").addClass('highlight');
         $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
+        $("#SetLocalEnvironmentVariables").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
     },
     function() {
-        $("#SetLocalEnvironmentVariables").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
-        $("#Clean").removeClass('highlight');
-        $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
         $("#SetupBackEnd").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupFrontEnd").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1226,6 +1507,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1233,50 +1515,46 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
         $("#SetupFrontEnd").addClass('highlight');
     },
     function() {
-        $("#SetupNuke").removeClass('highlight');
-        $("#Clean").removeClass('highlight');
-        $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetLocalEnvironmentVariables").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1284,6 +1562,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1291,13 +1570,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1305,28 +1584,32 @@ $(document).ready(function() {
     },
     function() {
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
-  $("#BuildLocal").hover(
+  $("#SetupLocal").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1334,6 +1617,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1341,58 +1625,66 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#SetupNuke").removeClass('highlight');
-        $("#Clean").removeClass('highlight');
-        $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
-        $("#SetupFrontEnd").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
+        $("#CommitChanges").removeClass('highlight');
+        $("#SetupSubmodules").removeClass('highlight');
+        $("#SetupGit").removeClass('highlight');
         $("#SetupBackEnd").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupFrontEnd").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetPublicEnvironmentVariables").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1400,6 +1692,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1407,42 +1700,48 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#SetupDocker").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1450,6 +1749,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1457,44 +1757,50 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#CleanImages").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1502,6 +1808,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1509,13 +1816,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1523,28 +1830,32 @@ $(document).ready(function() {
     },
     function() {
         $("#CleanImages").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#CleanContainers").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1552,6 +1863,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1559,13 +1871,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1573,28 +1885,32 @@ $(document).ready(function() {
     },
     function() {
         $("#CleanContainers").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#CleanVolumes").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1602,6 +1918,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1609,13 +1926,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1623,28 +1940,32 @@ $(document).ready(function() {
     },
     function() {
         $("#CleanVolumes").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
-  $("#BuildPublic").hover(
+  $("#SetupPublic").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1652,6 +1973,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1659,48 +1981,56 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
     },
     function() {
+        $("#SetupNuke").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
+        $("#DropDatabase").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#CleanDocker").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1708,6 +2038,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1715,13 +2046,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1735,28 +2066,32 @@ $(document).ready(function() {
         $("#CleanVolumes").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#UnitTest").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1764,6 +2099,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1771,13 +2107,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1785,28 +2121,32 @@ $(document).ready(function() {
     },
     function() {
         $("#UnitTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
   $("#IntegrationTest").hover(
     function() {
-        $("#SetupBuild").removeClass('highlight');
+        $("#Run").removeClass('highlight');
+        $("#Setup").removeClass('highlight');
         $("#Publish").removeClass('highlight');
-        $("#TestAll").removeClass('highlight');
+        $("#Test").removeClass('highlight');
         $("#Clean").removeClass('highlight');
         $("#Restore").removeClass('highlight');
-        $("#Compile").removeClass('highlight');
+        $("#CompileAPI").removeClass('highlight');
+        $("#CompileCli").removeClass('highlight');
         $("#AddMigration").removeClass('highlight');
         $("#SetupDatabase").removeClass('highlight');
         $("#DropDatabase").removeClass('highlight');
@@ -1814,6 +2154,7 @@ $(document).ready(function() {
         $("#EndAll").removeClass('highlight');
         $("#CommitChanges").removeClass('highlight');
         $("#SetupSubmodules").removeClass('highlight');
+        $("#CheckoutBranch").removeClass('highlight');
         $("#SetupGit").removeClass('highlight');
         $("#SetupNuke").removeClass('highlight');
         $("#PublishBackEnd").removeClass('highlight');
@@ -1821,13 +2162,13 @@ $(document).ready(function() {
         $("#SetupBackEnd").removeClass('highlight');
         $("#SetupFrontEnd").removeClass('highlight');
         $("#SetLocalEnvironmentVariables").removeClass('highlight');
-        $("#BuildLocal").removeClass('highlight');
+        $("#SetupLocal").removeClass('highlight');
         $("#SetPublicEnvironmentVariables").removeClass('highlight');
         $("#SetupDocker").removeClass('highlight');
         $("#CleanImages").removeClass('highlight');
         $("#CleanContainers").removeClass('highlight');
         $("#CleanVolumes").removeClass('highlight');
-        $("#BuildPublic").removeClass('highlight');
+        $("#SetupPublic").removeClass('highlight');
         $("#CleanDocker").removeClass('highlight');
         $("#UnitTest").removeClass('highlight');
         $("#IntegrationTest").removeClass('highlight');
@@ -1835,19 +2176,21 @@ $(document).ready(function() {
     },
     function() {
         $("#IntegrationTest").removeClass('highlight');
+        $("#SetupNuke").addClass('highlight');
         $("#SetPublicEnvironmentVariables").addClass('highlight');
         $("#SetupDocker").addClass('highlight');
+        $("#DropDatabase").addClass('highlight');
         $("#SetupDatabase").addClass('highlight');
-        $("#BuildPublic").addClass('highlight');
+        $("#SetupPublic").addClass('highlight');
         $("#SetLocalEnvironmentVariables").addClass('highlight');
-        $("#SetupNuke").addClass('highlight');
-        $("#Clean").addClass('highlight');
-        $("#Restore").addClass('highlight');
-        $("#Compile").addClass('highlight');
-        $("#SetupFrontEnd").addClass('highlight');
+        $("#CheckoutBranch").addClass('highlight');
+        $("#CommitChanges").addClass('highlight');
+        $("#SetupSubmodules").addClass('highlight');
+        $("#SetupGit").addClass('highlight');
         $("#SetupBackEnd").addClass('highlight');
-        $("#BuildLocal").addClass('highlight');
-        $("#SetupBuild").addClass('highlight');
+        $("#SetupFrontEnd").addClass('highlight');
+        $("#SetupLocal").addClass('highlight');
+        $("#Setup").addClass('highlight');
     });
 
 });
@@ -1893,16 +2236,18 @@ $(document).ready(function() {
     
     <div class="mermaid">
 graph LR
-SetupBuild
+Run
+Setup
 Publish
-TestAll ==> EndAll
+Test ==> EndAll
 Clean --> Restore
-Restore --> Compile
-Compile --> SetupBackEnd
-Compile --> SetupFrontEnd
+Restore --> CompileAPI
+CompileAPI --> Run
+CompileCli --> Run
 AddMigration --> PublishBackEnd
-SetupDatabase --> BuildLocal
-SetupDatabase --> BuildPublic
+SetupDatabase --> SetupLocal
+SetupDatabase --> SetupPublic
+DropDatabase --> SetupDatabase
 DropDatabase --> EndAll
 RemoveEnvVariables --> EndAll
 EndAll
@@ -1910,29 +2255,32 @@ CommitChanges -.-> SetupSubmodules
 CommitChanges --> SetupGit
 CommitChanges --> PublishBackEnd
 SetupSubmodules --> SetupGit
-SetupGit
+CheckoutBranch --> SetupGit
+SetupGit --> SetupBackEnd
+SetupNuke --> Test
 SetupNuke --> Clean
+SetupNuke --> CommitChanges
+SetupNuke --> SetPublicEnvironmentVariables
 PublishBackEnd --> Publish
 PublishFrontEnd --> Publish
 PublishFrontEnd -.-> PublishBackEnd
-SetupBackEnd --> BuildLocal
-SetupFrontEnd --> BuildLocal
-SetLocalEnvironmentVariables -.-> Compile
+SetupBackEnd -.-> SetupFrontEnd
+SetupBackEnd --> SetupLocal
+SetupFrontEnd --> SetupLocal
 SetLocalEnvironmentVariables --> SetupBackEnd
-BuildLocal --> SetupBuild
+SetupLocal --> Setup
 SetPublicEnvironmentVariables --> SetupDocker
-SetupDocker --> BuildPublic
+SetupDocker --> SetupPublic
 CleanImages
 CleanContainers -.-> CleanImages
 CleanVolumes
-BuildPublic --> SetupBuild
-BuildPublic --> TestAll
+SetupPublic --> Setup
 CleanDocker --> EndAll
 CleanDocker ==> CleanImages
 CleanDocker ==> CleanContainers
 CleanDocker ==> CleanVolumes
-UnitTest --> TestAll
-IntegrationTest --> TestAll
+UnitTest --> Test
+IntegrationTest --> Test
 
 
 linkStyle default interpolate basis

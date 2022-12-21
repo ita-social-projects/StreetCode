@@ -1,6 +1,6 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Tooling;
 using static Nuke.Common.Tools.Npm.NpmTasks;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -14,9 +14,8 @@ partial class Build
         .After(SetupBackEnd)
         .Executes(() =>
         {
-            //ToDo 
-            PowerShell($"cd {ClientDirectory}");
-            PowerShell("npm install");
+            NpmInstall(_ => _
+                .SetProcessWorkingDirectory(ClientDirectory));
         });
 
     Target SetLocalEnvironmentVariables => _ => _
@@ -28,7 +27,7 @@ partial class Build
 
     Target SetupLocal => _ => _
         .OnlyWhenStatic(() => !Dockerize)
-        .DependsOn(SetupBackEnd, /*SetupDatabase,*/ SetupFrontEnd);
+        .DependsOn(SetupBackEnd, SetupDatabase, SetupFrontEnd);
 
 }
 

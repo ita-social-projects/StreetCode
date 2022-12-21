@@ -1,10 +1,12 @@
 ﻿using Nuke.Common;
+using Nuke.Common.Execution;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
+using static Nuke.Common.Tools.Npm.NpmTasks;
 
 namespace Targets;
 
@@ -43,7 +45,7 @@ partial class Build
         .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {
-            PowerShell($"cd {ClientDirectory}");
-            PowerShell("npm start");
+            NpmRun(_ => _
+                .SetProcessWorkingDirectory(ClientDirectory));
         });
 }

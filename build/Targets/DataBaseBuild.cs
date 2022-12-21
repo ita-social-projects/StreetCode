@@ -49,17 +49,17 @@ partial class Build
         });
 
     Target DropDatabase => _ => _
-        //ToDo check if db exsists
-        .OnlyWhenStatic(() => false)
+        //ToDo fix this and remove line below
+        .OnlyWhenStatic(()=>false)
         .Executes(() =>
         {
             EntityFrameworkDatabaseDrop(_ => _
                 .SetProcessWorkingDirectory(SourceDirectory)
                 .EnableForce()
                 .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode\Streetcode.WebApi.csproj")
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
                 .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
                 .SetConfiguration(Configuration)
-            ); ;
+            );
         });
 }

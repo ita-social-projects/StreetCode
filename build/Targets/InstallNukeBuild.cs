@@ -8,13 +8,12 @@ partial class Build
 {
     Target SetupNuke => _ => _
         //ToDo fix accessibility and remove line below
-        //.OnlyWhenStatic(() => false)
+        .OnlyWhenStatic(() => false)
         .Executes(() =>
         {
             /*DotNetToolUpdate(_ => _
                 .SetPackageName("nuke.globaltool")
                 .EnableGlobal()
-                .SetVerbosity(DotNetVerbosity.Quiet));
-                */
+                .SetVerbosity(DotNetVerbosity.Quiet));*/
         });
 }

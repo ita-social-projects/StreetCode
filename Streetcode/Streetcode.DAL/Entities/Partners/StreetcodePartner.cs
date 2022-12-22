@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Partners;
 
-[Table("streetcode_partners", Schema = "partner_sponsors")]
+[Table("streetcode_partner", Schema = "partners")]
 public class StreetcodePartner
 {
     public bool IsSponsor { get; set; }
@@ -12,7 +12,7 @@ public class StreetcodePartner
     [Required]
     public int StreetcodeId { get; set; }
 
-    public StreetcodeContent? StreetCode { get; set; }
+    public StreetcodeContent? Streetcode { get; set; }
 
     [Required]
     public int PartnerId { get; set; }

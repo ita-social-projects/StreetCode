@@ -6,7 +6,8 @@ namespace Repositories.Realizations;
 
 public class ArtRepository : RepositoryBase<Art>, IArtRepository
 {
-    public ArtRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public ArtRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

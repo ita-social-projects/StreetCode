@@ -1,5 +1,5 @@
 ﻿using Streetcode.DAL.Entities.Media.Images;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Interfaces;
 

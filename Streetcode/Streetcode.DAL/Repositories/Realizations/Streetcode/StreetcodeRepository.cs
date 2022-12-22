@@ -7,7 +7,8 @@ namespace Streetcode.DAL.Repositories.Realizations.Streetcode;
 
 public class StreetcodeRepository : RepositoryBase<StreetcodeContent>, IStreetcodeRepository
 {
-    public StreetcodeRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public StreetcodeRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

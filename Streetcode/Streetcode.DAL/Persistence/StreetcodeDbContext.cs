@@ -22,7 +22,8 @@ public class StreetcodeDbContext : DbContext
     {
     }
 
-    public StreetcodeDbContext(DbContextOptions<StreetcodeDbContext> options) : base(options)
+    public StreetcodeDbContext(DbContextOptions<StreetcodeDbContext> options)
+        : base(options)
     {
     }
 
@@ -58,11 +59,13 @@ public class StreetcodeDbContext : DbContext
             .WithOne(p => p.Toponym)
             .HasForeignKey(d => d.ToponymId)
             .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Partner>()
             .HasMany(d => d.PartnerSourceLinks)
             .WithOne(p => p.Partner)
             .HasForeignKey(d => d.PartnerId)
             .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<TimelineItem>()
             .HasMany(d => d.HistoricalContexts)
             .WithMany(h => h.TimelineItems)
@@ -105,7 +108,7 @@ public class StreetcodeDbContext : DbContext
         {
             entity.HasKey(d => new { d.PartnerId, d.StreetcodeId });
 
-            entity.HasOne(d => d.StreetCode)
+            entity.HasOne(d => d.Streetcode)
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -123,18 +126,22 @@ public class StreetcodeDbContext : DbContext
         {
             entity.Property(s => s.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
+
             entity.Property(s => s.UpdatedAt)
                 .HasDefaultValueSql("GETDATE()");
+
             entity.Property(s => s.ViewCount)
                 .HasDefaultValue(0);
-            entity.HasDiscriminator<string>("streetcode_type")
-                .HasValue<StreetcodeContent>("streetcode_base")
-                .HasValue<PersonStreetCode>("streetcode_person")
-                .HasValue<EventStreetCode>("streetcode_event");
+
+            entity.HasDiscriminator<string>("StreetcodeType")
+                .HasValue<StreetcodeContent>("streetcode-base")
+                .HasValue<PersonStreetcode>("streetcode-person")
+                .HasValue<EventStreetcode>("streetcode-event");
 
             entity.HasOne(d => d.Coordinate)
                 .WithOne(c => c.Streetcode)
                 .OnDelete(DeleteBehavior.Cascade);
+
             entity.HasMany(d => d.Arts)
                 .WithMany(a => a.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_arts", "streetcode"));
@@ -146,12 +153,15 @@ public class StreetcodeDbContext : DbContext
             entity.HasMany(d => d.Tags)
                 .WithMany(t => t.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_tag", "streetcode"));
+
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
+
             entity.HasMany(d => d.TimelineItems)
                 .WithMany(t => t.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_timeline_item", "streetcode"));
+
             entity.HasMany(d => d.Toponyms)
                 .WithMany(t => t.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));
@@ -183,7 +193,7 @@ public class StreetcodeDbContext : DbContext
         });
 
         modelBuilder.Entity<Coordinate>()
-            .HasDiscriminator<string>("coordinate_type")
+            .HasDiscriminator<string>("CoordinateType")
             .HasValue<Coordinate>("coordinate_base")
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");

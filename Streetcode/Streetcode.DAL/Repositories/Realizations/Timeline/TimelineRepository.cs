@@ -7,7 +7,8 @@ namespace Streetcode.DAL.Repositories.Realizations.Timeline;
 
 public class TimelineRepository : RepositoryBase<TimelineItem>, ITimelineRepository
 {
-    public TimelineRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public TimelineRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

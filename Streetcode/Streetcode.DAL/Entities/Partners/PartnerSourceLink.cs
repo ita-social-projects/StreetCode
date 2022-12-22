@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Streetcode.DAL.Entities.Partners;
 
-[Table("partner_source_links", Schema = "partner_sponsors")]
+[Table("partner_source_links", Schema = "partners")]
 public class PartnerSourceLink
 {
     [Key]

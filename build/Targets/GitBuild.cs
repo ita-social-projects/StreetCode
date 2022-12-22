@@ -25,8 +25,7 @@ partial class Build
         .DependsOn(SetupNuke)
         .Executes(() =>
         {
-            Git("add .");
-            Git($"commit -m \"{Msg}\"");
+            Git($"commit -a -m \"{Msg}\"");
         });
 
     Target SetupSubmodules => _ => _

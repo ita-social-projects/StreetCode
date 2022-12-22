@@ -50,7 +50,6 @@ partial class Build
         });
 
     Target DropDatabase => _ => _
-        .OnlyWhenStatic(() => false)
         .Executes(() =>
         {
             EntityFrameworkDatabaseDrop(_ => _

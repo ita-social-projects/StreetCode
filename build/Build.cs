@@ -18,7 +18,6 @@ partial class Build : NukeBuild
         .DependsOn(PushFrontEnd, PushBackEnd);
 
     Target Test => _ => _
-        .DependsOn(SetupNuke)
-        .DependsOn(UnitTest, IntegrationTest)
+        .DependsOn(SetupNuke, UnitTest, IntegrationTest)
         .Triggers(EndAll);
 }

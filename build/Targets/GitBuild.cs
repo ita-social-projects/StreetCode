@@ -21,12 +21,13 @@ partial class Build
     readonly bool NewB = false;
 
     Target CommitChanges => _ => _
-        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
+        //.OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
         .DependsOn(SetupNuke)
         .Executes(() =>
         {
-            Git("add .");
-            Git($"commit -m \"{Msg}\"");
+            Serilog.Log.Debug(GitHasCleanWorkingCopy().ToString());
+            //Git("add .");
+            //Git($"commit -m \"{Msg}\"");
         });
 
     Target SetupSubmodules => _ => _

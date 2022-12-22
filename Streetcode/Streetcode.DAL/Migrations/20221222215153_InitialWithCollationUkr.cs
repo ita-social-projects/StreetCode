@@ -1,15 +1,16 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using static System.String;
 
 #nullable disable
 
-namespace Streetcode.DAL.Persistence.Migrations
+namespace Streetcode.DAL.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialWithCollationUkr : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("alter database StreetCodeDb collate SQL_Ukrainian_CP1251_CI_AS", true);
+
             migrationBuilder.EnsureSchema(
                 name: "media");
 
@@ -93,7 +94,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "ntext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -163,7 +164,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "ntext", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -783,7 +784,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode",
                 table: "streetcodes",
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "Teaser", "Title", "ViewCount", "streetcode_type" },
-                values: new object[] { 4, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6571), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000, "streetcode_event" });
+                values: new object[] { 4, new DateTime(2022, 12, 22, 23, 51, 52, 533, DateTimeKind.Local).AddTicks(9793), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000, "streetcode_event" });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
@@ -791,9 +792,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "Teaser", "streetcode_type" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6510), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв", "streetcode_person" },
-                    { 2, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6549), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.", "streetcode_person" },
-                    { 3, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6553), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.", "streetcode_person" }
+                    { 1, new DateTime(2022, 12, 22, 23, 51, 52, 533, DateTimeKind.Local).AddTicks(9648), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв", "streetcode_person" },
+                    { 2, new DateTime(2022, 12, 22, 23, 51, 52, 533, DateTimeKind.Local).AddTicks(9701), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.", "streetcode_person" },
+                    { 3, new DateTime(2022, 12, 22, 23, 51, 52, 533, DateTimeKind.Local).AddTicks(9708), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.", "streetcode_person" }
                 });
 
             migrationBuilder.InsertData(
@@ -901,9 +902,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "LogoUrl", "PartnerId", "TargetUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, Empty, 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
-                    { 2, Empty, 1, "https://www.instagram.com/softserve_people/", "Instagram" },
-                    { 3, Empty, 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
+                    { 1, "", 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
+                    { 2, "", 1, "https://www.instagram.com/softserve_people/", "Instagram" },
+                    { 3, "", 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
                 });
 
             migrationBuilder.InsertData(

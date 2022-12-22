@@ -18,6 +18,6 @@ public class Response
     [EmailAddress]
     public string Email { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string? Description { get; set; }
 }

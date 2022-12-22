@@ -19,7 +19,7 @@ public class TimelineItem
     [MaxLength(100)]
     public string Title { get; set; }
 
-    [Column(TypeName = "text")]
+    [Column(TypeName = "ntext")]
     public string? Description { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();

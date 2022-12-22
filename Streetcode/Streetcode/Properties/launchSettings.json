@@ -1,5 +1,15 @@
 {
   "profiles": {
+    "Streetcode_Local": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "STREETCODE_ENVIRONMENT": "Local"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5000;https://localhost:5001"
+    },
+
     "Streetcode_Dev": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -8,20 +18,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5000;https://localhost:5001"
-    },
-    "Streetcode_Local": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Local"
-      }
+      "applicationUrl": "https://localhost:7020/swagger/v1/swagger.json"
     },
     "Streetcode_IntegTests": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "IntegrationTests"
+        "STREETCODE_ENVIRONMENT": "IntegrationTests"
       }
     },
     "Streetcode_Prod": {
@@ -29,14 +32,6 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Docker": {

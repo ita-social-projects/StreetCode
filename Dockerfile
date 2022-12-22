@@ -1,22 +1,37 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+
+# adding curl and gpg for healthcheck
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    curl \
+    gpg \
+    && rm -rf /var/lib/apt/lists/*
+EXPOSE 5000
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["StreetCode/StreetCode.csproj", "StreetCode/"]
-RUN dotnet restore "StreetCode/StreetCode.csproj"
-COPY . .
-WORKDIR "/src/StreetCode"
-RUN dotnet build "StreetCode.csproj" -c Release -o /app/build
+ARG Configuration=debug
 
+#restoring dependencies
+COPY ./Streetcode/*.sln ./
+COPY ./Streetcode/Streetcode.WebApi/*.csproj ./Streetcode.WebApi/
+COPY ./Streetcode/Streetcode.BLL/*.csproj ./Streetcode.BLL/
+COPY ./Streetcode/Streetcode.DAL/*.csproj ./Streetcode.DAL/
+COPY ./Streetcode/Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
+COPY ./Streetcode/Streetcode.XIntegrationTest/*.csproj ./Streetcode.XIntegrationTest/
+RUN dotnet restore
+
+# copying other neccessary data and building application
+COPY ./Streetcode/ ./
+RUN dotnet build -c $Configuration -o /app/build
+
+# publishishing application
 FROM build AS publish
-RUN dotnet publish "StreetCode.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish -c $Configuration -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "StreetCode.dll"]
+COPY --from=publish /app/publish ./
+
+LABEL atom="Streetcode"
+ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]

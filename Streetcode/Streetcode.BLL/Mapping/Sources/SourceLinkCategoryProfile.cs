@@ -8,6 +8,6 @@ public class SourceLinkCategoryProfile : Profile
 {
     public SourceLinkCategoryProfile()
     {
-        CreateMap<SourceLinkCategory, SourceLinkDTO>().ReverseMap();
+        CreateMap<SourceLinkCategory, SourceLinkCategoryDTO>().ReverseMap();
     }
 }

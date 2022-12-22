@@ -60,7 +60,7 @@
     <!-- A constant field is placed beneath a non-constant field. -->
     <Rule Id="SA1208" Action="Error"/>
     <!-- Using directive for 'System' must appear before -->
-    <Rule Id="SA1000" Action="Error" />
+    <Rule Id="SA1000" Action="None" />
     <!-- The spacing around a C# keyword is incorrect. -->
     <Rule Id="SA1201" Action="Error" />
     <!-- An element within a C# code file is out of order in relation to the other elements in the code. -->
@@ -245,7 +245,7 @@
     <!-- Chained C# statements are separated by a blank line. -->
     <Rule Id="SA1511" Action="Error" />
     <!-- The while footer at the bottom of a do-while statement is separated from the statement by a blank line. -->
-    <Rule Id="SA1512" Action="Error" />
+    <Rule Id="SA1512" Action="None" />
     <!-- A single-line comment within C# code is followed by a blank line. -->
     <Rule Id="SA1514" Action="Error" />
     <!-- An element documentation header above a C# element is not preceded by a blank line. -->

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.AdditionalContent;
 
@@ -13,5 +14,5 @@ public class Tag
     [Required]
     [MaxLength(50)]
     public string Title { get; set; }
-    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new ();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new();
 }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 
 namespace Streetcode.DAL.Entities.Media.Images;
@@ -20,9 +22,11 @@ public class Image
     [Required]
     public string Url { get; set; }
 
-    public List<Streetcode.StreetcodeContent> Streetcodes { get; set; } = new ();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
     public List<Fact> Facts { get; set; } = new ();
 
     public Art? Art { get; set; }
+
+    public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
 }

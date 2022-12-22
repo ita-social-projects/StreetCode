@@ -8,7 +8,7 @@ public class PersonStreetCode : StreetcodeContent
     public string FirstName { get; set; }
 
     [MaxLength(50)]
-    public string MiddleName { get; set; }
+    public string? Rank { get; set; }
 
     [MaxLength(50)]
     public string LastName { get; set; }

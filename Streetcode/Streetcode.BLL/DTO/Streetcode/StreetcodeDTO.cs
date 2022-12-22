@@ -16,9 +16,8 @@ public abstract class StreetcodeDTO
     public int Id;
     public int Index;
     public IEnumerable<ToponymDTO> Toponyms;
-    public CoordinatesDTO Coordinate;
+    public CoordinateDTO Coordinate;
     public IEnumerable<ImageDTO> Images;
-    public int Code;
     public DateTime EventStartOrPersonBirthDate;
     public DateTime EventEndOrPersonDeathDate;
     public int ViewCount;
@@ -27,15 +26,15 @@ public abstract class StreetcodeDTO
     public IEnumerable<TagDTO> Tags;
     public string Teaser;
     public AudioDTO Audio;
-    public TransactLinkDTO TransactLink;
-    public string MainText;
+    public TransactLinkDTO TransactionLink;
+    public string Text;
     public IEnumerable<VideoDTO> Videos;
     public IEnumerable<FactDTO> Facts;
     public IEnumerable<TimelineDTO> TimelineItems;
     public IEnumerable<SourceLinkDTO> SourceLinks;
     public IEnumerable<ArtDTO> Arts;
     public IEnumerable<SubtitleDTO> Subtitles;
-    public IEnumerable<PartnerDTO> Sponsors;
     public IEnumerable<PartnerDTO> StreetcodePartners;
-    public IEnumerable<StreetcodeDTO> RelatedFugures;
+    public IEnumerable<RelatedFigureDTO> Observers;
+    public IEnumerable<RelatedFigureDTO> Targets;
 }

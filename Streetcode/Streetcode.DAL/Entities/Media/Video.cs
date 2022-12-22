@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Media;
 
@@ -20,5 +21,5 @@ public class Video
     [Required]
     public int StreetcodeId { get; set; }
 
-    public Streetcode.StreetcodeContent? Streetcode { get; set; }
+    public StreetcodeContent? Streetcode { get; set; }
 }

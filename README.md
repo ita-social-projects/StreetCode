@@ -1,6 +1,4 @@
-<a href="https://softserve.academy/"><img src="https://raw.githubusercontent.com/ita-social-projects/StreetCode/master/StreerCodeLogo.jpg" 
-  title="SoftServe IT Academy" 
-  alt="SoftServe IT Academy"></a>
+<a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreetCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
 
 # Streetcode
 This is a Back-end part of our Streetcode project.
@@ -81,7 +79,7 @@ https://github.com/ita-social-projects/StreetCode
 
 
 ### How to run local 
- Run the Streetcode project than open your browser and enter https://localhost:7051/swagger/index.html url. If you had this page already opened, just reload it.
+ Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
 
 ### How to run Docker
  
@@ -89,7 +87,7 @@ https://github.com/ita-social-projects/StreetCode
 
 ## Usage
 ### How to work with swagger UI
-Run the Streetcode project than open your browser and enter https://localhost:7051/swagger/index.html url. If you had this page already opened, just reload it.
+Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
 
 ### How to run tests
 ### How to Checkstyle

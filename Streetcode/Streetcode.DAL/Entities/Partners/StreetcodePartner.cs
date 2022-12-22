@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Partners;
 
@@ -11,7 +12,7 @@ public class StreetcodePartner
     [Required]
     public int StreetcodeId { get; set; }
 
-    public Streetcode.StreetcodeContent? StreetCode { get; set; }
+    public StreetcodeContent? StreetCode { get; set; }
 
     [Required]
     public int PartnerId { get; set; }

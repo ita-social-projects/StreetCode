@@ -8,6 +8,6 @@ public class CoordinateProfile : Profile
 {
     public CoordinateProfile()
     {
-        CreateMap<Coordinate, CoordinatesDTO>().ReverseMap();
+        CreateMap<Coordinate, CoordinateDTO>().ReverseMap();
     }
 }

@@ -1,18 +1,18 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
-using Streetcode.DAL.Entities.Feedback;
-using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Sources;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Extensions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
+using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -38,7 +38,7 @@ public class StreetcodeDbContext : DbContext
     public virtual DbSet<RelatedFigure> RelatedFigures { get; set; }
     public virtual DbSet<Response> Responses { get; set; }
     public virtual DbSet<SourceLink> SourceLinks { get; set; }
-    public virtual DbSet<Entities.Streetcode.StreetcodeContent> Streetcodes { get; set; }
+    public virtual DbSet<StreetcodeContent> Streetcodes { get; set; }
     public virtual DbSet<Subtitle> Subtitles { get; set; }
     public virtual DbSet<Tag> Tags { get; set; }
     public virtual DbSet<Term> Terms { get; set; }
@@ -74,8 +74,14 @@ public class StreetcodeDbContext : DbContext
                 .WithOne(a => a.Image)
                 .HasForeignKey<Art>(a => a.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
+
             entity.HasMany(d => d.Facts)
                 .WithOne(p => p.Image)
+                .HasForeignKey(d => d.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(i => i.SourceLinkCategories)
+                .WithOne(s => s.Image)
                 .HasForeignKey(d => d.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
@@ -88,6 +94,7 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)
                 .HasForeignKey(d => d.TargetId)
@@ -102,6 +109,7 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             entity.HasOne(d => d.Partner)
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.PartnerId)
@@ -111,7 +119,7 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(false);
         });
 
-        modelBuilder.Entity<Entities.Streetcode.StreetcodeContent>(entity =>
+        modelBuilder.Entity<StreetcodeContent>(entity =>
         {
             entity.Property(s => s.CreatedAt)
                 .HasDefaultValueSql("GETDATE()");
@@ -120,7 +128,7 @@ public class StreetcodeDbContext : DbContext
             entity.Property(s => s.ViewCount)
                 .HasDefaultValue(0);
             entity.HasDiscriminator<string>("streetcode_type")
-                .HasValue<Entities.Streetcode.StreetcodeContent>("streetcode_base")
+                .HasValue<StreetcodeContent>("streetcode_base")
                 .HasValue<PersonStreetCode>("streetcode_person")
                 .HasValue<EventStreetCode>("streetcode_event");
 

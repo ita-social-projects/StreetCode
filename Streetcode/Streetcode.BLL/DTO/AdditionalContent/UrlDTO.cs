@@ -1,9 +1,8 @@
-using Streetcode.BLL.DTO.Identifier;
-
 namespace Streetcode.BLL.DTO.AdditionalContent;
 
 public class UrlDTO
 {
-    public IdentifierDTO Identifier;
+    public int Id;
+    public string Title;
     public string Href;
 }

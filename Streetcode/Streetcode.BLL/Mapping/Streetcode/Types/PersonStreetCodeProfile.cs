@@ -4,10 +4,10 @@ using Streetcode.DAL.Entities.Streetcode.Types;
 
 namespace Streetcode.BLL.Mapping.Streetcode.Types;
 
-public class PersonStreetCodeProfile : Profile
+public class PersonStreetcodeProfile : Profile
 {
-    public PersonStreetCodeProfile()
+    public PersonStreetcodeProfile()
     {
-        CreateMap<PersonStreetCode, PersonStreetcodeDTO>().ReverseMap();
+        CreateMap<PersonStreetcode, PersonStreetcodeDTO>().ReverseMap();
     }
 }

@@ -108,7 +108,7 @@ public class StreetcodeDbContext : DbContext
         {
             entity.HasKey(d => new { d.PartnerId, d.StreetcodeId });
 
-            entity.HasOne(d => d.StreetCode)
+            entity.HasOne(d => d.Streetcode)
                 .WithMany(d => d.StreetcodePartners)
                 .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -133,10 +133,10 @@ public class StreetcodeDbContext : DbContext
             entity.Property(s => s.ViewCount)
                 .HasDefaultValue(0);
 
-            entity.HasDiscriminator<string>("streetcode_type")
-                .HasValue<StreetcodeContent>("streetcode_base")
-                .HasValue<PersonStreetCode>("streetcode_person")
-                .HasValue<EventStreetCode>("streetcode_event");
+            entity.HasDiscriminator<string>("StreetcodeType")
+                .HasValue<StreetcodeContent>("streetcode-base")
+                .HasValue<PersonStreetcode>("streetcode-person")
+                .HasValue<EventStreetcode>("streetcode-event");
 
             entity.HasOne(d => d.Coordinate)
                 .WithOne(c => c.Streetcode)
@@ -193,7 +193,7 @@ public class StreetcodeDbContext : DbContext
         });
 
         modelBuilder.Entity<Coordinate>()
-            .HasDiscriminator<string>("coordinate_type")
+            .HasDiscriminator<string>("CoordinateType")
             .HasValue<Coordinate>("coordinate_base")
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");

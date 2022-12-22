@@ -608,8 +608,8 @@ public static class ModelBuilderExtensions
                     " можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.",
                 StreetcodeId = 4
             });
-        modelBuilder.Entity<PersonStreetCode>().HasData(
-            new PersonStreetCode
+        modelBuilder.Entity<PersonStreetcode>().HasData(
+            new PersonStreetcode
             {
                 Id = 1,
                 Index = 1,
@@ -626,7 +626,7 @@ public static class ModelBuilderExtensions
                 Rank = "Григорович",
                 LastName = "Шевченко"
             },
-            new PersonStreetCode
+            new PersonStreetcode
             {
                 Id = 2,
                 Index = 2,
@@ -642,7 +642,7 @@ public static class ModelBuilderExtensions
                 Rank = "Іва́нович",
                 LastName = "Костома́ров"
             },
-            new PersonStreetCode
+            new PersonStreetcode
             {
                 Id = 3,
                 Index = 3,
@@ -656,8 +656,8 @@ public static class ModelBuilderExtensions
                 Rank = "Михайлович",
                 LastName = "Білозерський"
             });
-        modelBuilder.Entity<EventStreetCode>().HasData(
-            new EventStreetCode
+        modelBuilder.Entity<EventStreetcode>().HasData(
+            new EventStreetcode
             {
                 Id = 4,
                 Index = 4,

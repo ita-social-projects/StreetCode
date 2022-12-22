@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Realizations.Timeline;
 using Streetcode.DAL.Repositories.Realizations.Toponyms;
 using Streetcode.DAL.Repositories.Realizations.Transactions;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;
 

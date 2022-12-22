@@ -21,7 +21,7 @@ using Streetcode.BLL.Services.Timeline;
 using Streetcode.BLL.Services.Toponyms;
 using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 public static class ServiceCollectionExtentions
 {

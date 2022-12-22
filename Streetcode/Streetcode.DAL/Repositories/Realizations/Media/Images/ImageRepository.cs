@@ -6,7 +6,8 @@ namespace Repositories.Realizations;
 
 public class ImageRepository : RepositoryBase<Image>, IImageRepository
 {
-    public ImageRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public ImageRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

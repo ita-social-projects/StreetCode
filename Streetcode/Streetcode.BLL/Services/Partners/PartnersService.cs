@@ -1,5 +1,5 @@
 using Streetcode.BLL.Interfaces.Partners;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.Partners;
 

@@ -1375,7 +1375,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.EventStreetCode", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.EventStreetcode", b =>
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Streetcode.StreetcodeContent");
 
@@ -1403,7 +1403,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.PersonStreetCode", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.PersonStreetcode", b =>
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Streetcode.StreetcodeContent");
 
@@ -1608,7 +1608,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "StreetCode")
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany("StreetcodePartners")
                         .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1616,7 +1616,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Partner");
 
-                    b.Navigation("StreetCode");
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>

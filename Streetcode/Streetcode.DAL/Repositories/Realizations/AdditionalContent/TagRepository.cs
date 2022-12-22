@@ -7,7 +7,8 @@ namespace Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 
 public class TagRepository : RepositoryBase<Tag>, ITagRepository
 {
-    public TagRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public TagRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

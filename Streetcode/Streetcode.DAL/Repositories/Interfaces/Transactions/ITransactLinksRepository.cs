@@ -1,5 +1,5 @@
 using Streetcode.DAL.Entities.Transactions;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Transactions;
 

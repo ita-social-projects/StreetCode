@@ -32,6 +32,6 @@ partial class Build
     AbsolutePath OutputDirectory => RootDirectory / "Output";
     AbsolutePath UnitTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XUnitTest";
     AbsolutePath IntegrationTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XIntegrationTest";
-    AbsolutePath ClientDirectory => RootDirectory / "Streetcode" / "StreetCode.Client";
+    AbsolutePath ClientDirectory => RootDirectory / "Streetcode" / "Streetcode.Client";
 }
 

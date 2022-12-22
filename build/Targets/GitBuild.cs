@@ -25,7 +25,6 @@ partial class Build
         .DependsOn(SetupNuke)
         .Executes(() =>
         {
-            Serilog.Log.Debug(GitHasCleanWorkingCopy().ToString());
             Git($"commit -a -m \"{Msg}\"");
         });
 

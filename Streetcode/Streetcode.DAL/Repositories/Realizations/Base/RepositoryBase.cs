@@ -2,52 +2,52 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;
 
 public abstract class RepositoryBase<T> : IRepositoryBase<T>
     where T : class
 {
-    private readonly StreetcodeDbContext _streetcodeDBContext;
-    public RepositoryBase(StreetcodeDbContext streetcodeDBContext)
+    private readonly StreetcodeDbContext _streetcodeDbContext;
+    public RepositoryBase(StreetcodeDbContext streetcodeDbContext)
     {
-        _streetcodeDBContext = streetcodeDBContext;
+        _streetcodeDbContext = streetcodeDbContext;
     }
 
     public IQueryable<T> FindAll()
     {
-        return _streetcodeDBContext.Set<T>().AsNoTracking();
+        return _streetcodeDbContext.Set<T>().AsNoTracking();
     }
 
     public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
     {
-        return _streetcodeDBContext.Set<T>().Where(expression).AsNoTracking();
+        return _streetcodeDbContext.Set<T>().Where(expression).AsNoTracking();
     }
 
     public void Create(T entity)
     {
-        _streetcodeDBContext.Set<T>().Add(entity);
+        _streetcodeDbContext.Set<T>().Add(entity);
     }
 
     public async Task CreateAsync(T entity)
     {
-        await _streetcodeDBContext.Set<T>().AddAsync(entity);
+        await _streetcodeDbContext.Set<T>().AddAsync(entity);
     }
 
     public void Update(T entity)
     {
-        _streetcodeDBContext.Set<T>().Update(entity);
+        _streetcodeDbContext.Set<T>().Update(entity);
     }
 
     public void Delete(T entity)
     {
-        _streetcodeDBContext.Set<T>().Remove(entity);
+        _streetcodeDbContext.Set<T>().Remove(entity);
     }
 
     public void Attach(T entity)
     {
-        _streetcodeDBContext.Set<T>().Attach(entity);
+        _streetcodeDbContext.Set<T>().Attach(entity);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
@@ -56,7 +56,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
 
         if (includes.Length > 0)
         {
-            query = _streetcodeDBContext.Set<T>().Include(includes[0]);
+            query = _streetcodeDbContext.Set<T>().Include(includes[0]);
         }
 
         for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
@@ -64,7 +64,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
             query = query.Include(includes[queryIndex]);
         }
 
-        return query == null ? _streetcodeDBContext.Set<T>() : (IQueryable<T>)query;
+        return query == null ? _streetcodeDbContext.Set<T>() : (IQueryable<T>)query;
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
@@ -98,35 +98,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQuery(predicate, include).LastAsync();
     }
 
-    public async Task<T> GetLastOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
-    {
-        return await GetQuery(predicate, include).LastOrDefaultAsync();
-    }
-
-    public async Task<T> GetSingleAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
-    {
-        return await GetQuery(predicate, include).SingleAsync();
-    }
-
-    public async Task<T> GetSingleOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
-    {
-        return await GetQuery(predicate, include).SingleOrDefaultAsync();
-    }
-
-    public async Task<Tuple<IEnumerable<T>, int>> GetRangeAsync(
-        Expression<Func<T, bool>> predicate = null,
-        Expression<Func<T, T>> selector = null,
-        Func<IQueryable<T>, IQueryable<T>> sorting = null,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
-        int? pageNumber = null,
-        int? pageSize = null)
-    {
-        return await GetRangeQuery(predicate, selector, sorting, include, pageNumber, pageSize);
-    }
-
     private IQueryable<T> GetQuery(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, Expression<Func<T, T>> selector = null)
     {
-        var query = _streetcodeDBContext.Set<T>().AsNoTracking();
+        var query = _streetcodeDbContext.Set<T>().AsNoTracking();
         if (include != null)
         {
             query = include(query);
@@ -143,46 +117,5 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         }
 
         return query;
-    }
-
-    private async Task<Tuple<IEnumerable<T>, int>> GetRangeQuery(
-                                                   Expression<Func<T, bool>> filter = null,
-                                                   Expression<Func<T, T>> selector = null,
-                                                   Func<IQueryable<T>, IQueryable<T>> sorting = null,
-                                                   Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
-                                                   int? pageNumber = null,
-                                                   int? pageSize = null)
-    {
-        var query = _streetcodeDBContext.Set<T>().AsNoTracking();
-
-        if (include != null)
-        {
-            query = include(query);
-        }
-
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
-
-        if (selector != null)
-        {
-            query = query.Select(selector);
-        }
-
-        if (sorting != null)
-        {
-            query = sorting(query);
-        }
-
-        var totalRecords = await query.CountAsync();
-
-        if (pageNumber != null && pageSize != null)
-        {
-            query = query.Skip((int)(pageSize * (pageNumber - 1)))
-                .Take((int)pageSize);
-        }
-
-        return new Tuple<IEnumerable<T>, int>(query, totalRecords);
     }
 }

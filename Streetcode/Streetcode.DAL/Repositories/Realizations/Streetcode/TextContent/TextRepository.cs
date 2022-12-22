@@ -7,7 +7,8 @@ namespace Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 
 public class TextRepository : RepositoryBase<Text>, ITextRepository
 {
-    public TextRepository(StreetcodeDbContext streetcodeDBContext) : base(streetcodeDBContext)
+    public TextRepository(StreetcodeDbContext streetcodeDbContext)
+        : base(streetcodeDbContext)
     {
     }
 }

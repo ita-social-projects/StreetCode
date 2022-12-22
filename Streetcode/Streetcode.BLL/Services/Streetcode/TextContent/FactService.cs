@@ -2,7 +2,7 @@ using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
-using StreetCode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.Streetcode.TextContent;
 

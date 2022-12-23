@@ -20,6 +20,12 @@ partial class Build
         && GitHasCleanWorkingCopy(dalPath / "Extensions") 
         && GitHasCleanWorkingCopy(dalPath / "Persistance" / "StreetcodeDbContext.cs");
      
+
+    public bool CheckForMigration()
+    {
+
+    };
+     
     Target AddMigration => _ => _
         .OnlyWhenStatic(()=> !CheckForMigration(DALDirectory))
         .Executes(() =>

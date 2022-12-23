@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Streetcode.DAL.Migrations
+namespace Streetcode.DAL.Persistence.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Toponyms;
 
 namespace Streetcode.WebApi.Controllers.Toponyms;

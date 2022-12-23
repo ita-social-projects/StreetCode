@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Media;
 using Streetcode.BLL.Interfaces.Media.Images;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
+
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class ImageController : ControllerBase

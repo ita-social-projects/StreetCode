@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Timeline;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Timeline;
 
 namespace Streetcode.WebApi.Controllers.Timeline;

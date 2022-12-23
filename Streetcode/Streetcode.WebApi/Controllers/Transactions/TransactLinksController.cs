@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Transactions;
 

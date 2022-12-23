@@ -1,11 +1,6 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Persistence;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 

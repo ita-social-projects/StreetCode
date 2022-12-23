@@ -6,7 +6,7 @@ using Streetcode.BLL.Interfaces.Streetcode;
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
 public class StreetcodeController : ControllerBase
 {
     private readonly IStreetcodeService _streetcodeService;

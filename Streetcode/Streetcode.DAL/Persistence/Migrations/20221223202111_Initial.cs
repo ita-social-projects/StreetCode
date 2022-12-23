@@ -9,13 +9,14 @@ namespace Streetcode.DAL.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("alter database StreetCodeDb collate SQL_Ukrainian_CP1251_CI_AS", true);
-
             migrationBuilder.EnsureSchema(
                 name: "media");
 
             migrationBuilder.EnsureSchema(
                 name: "add_content");
+
+            migrationBuilder.EnsureSchema(
+                name: "feedback");
 
             migrationBuilder.EnsureSchema(
                 name: "streetcode");
@@ -27,9 +28,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "partners");
 
             migrationBuilder.EnsureSchema(
-                name: "feedback");
-
-            migrationBuilder.EnsureSchema(
                 name: "sources");
 
             migrationBuilder.EnsureSchema(
@@ -37,6 +35,19 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "transactions");
+
+            migrationBuilder.CreateTable(
+                name: "donations",
+                schema: "feedback",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_donations", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "historical_contexts",
@@ -784,7 +795,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode",
                 table: "streetcodes",
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "StreetcodeType", "Teaser", "Title", "ViewCount" },
-                values: new object[] { 4, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2357), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "streetcode-event", "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000 });
+                values: new object[] { 4, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(939), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "streetcode-event", "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000 });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
@@ -792,9 +803,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "StreetcodeType", "Teaser" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2296), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "streetcode-person", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв" },
-                    { 2, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2331), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "streetcode-person", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя." },
-                    { 3, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2336), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "streetcode-person", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст." }
+                    { 1, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(843), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "streetcode-person", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв" },
+                    { 2, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(886), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "streetcode-person", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя." },
+                    { 3, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(890), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "streetcode-person", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст." }
                 });
 
             migrationBuilder.InsertData(
@@ -1182,6 +1193,10 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "coordinates",
                 schema: "add_content");
+
+            migrationBuilder.DropTable(
+                name: "donations",
+                schema: "feedback");
 
             migrationBuilder.DropTable(
                 name: "partner_source_links",

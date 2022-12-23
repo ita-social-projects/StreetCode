@@ -1403,7 +1403,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2022, 12, 23, 15, 38, 15, 567, DateTimeKind.Local).AddTicks(8155),
+                            CreatedAt = new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(939),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1440,7 +1440,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 12, 23, 15, 38, 15, 567, DateTimeKind.Local).AddTicks(8044),
+                            CreatedAt = new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(843),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1454,7 +1454,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 12, 23, 15, 38, 15, 567, DateTimeKind.Local).AddTicks(8087),
+                            CreatedAt = new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(886),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1468,7 +1468,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 12, 23, 15, 38, 15, 567, DateTimeKind.Local).AddTicks(8134),
+                            CreatedAt = new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(890),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,

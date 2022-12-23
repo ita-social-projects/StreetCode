@@ -28,9 +28,8 @@ partial class Build
             Git($"commit -a -m \"{Msg}\"");
         });
 
-    Target SetupSubmodules => _ => _
+    Target UpdateSubmodules => _ => _
         .OnlyWhenStatic(() => WithCli)
-        .After(CommitChanges)
         .Executes(() =>
         {
             Git("submodule update --init --recursive");
@@ -43,10 +42,28 @@ partial class Build
             Git($"checkout {(NewB ? "-b" : string.Empty)} {BName}"); 
         });
 
-    Target SetupGit => _ => _
-        .DependsOn(SetupSubmodules,CommitChanges,CheckoutBranch)
+    Target PullBackEnd => _ => _
+        .After(CommitChanges)
         .Executes(() =>
         {
             Git("pull");
+        });
+
+    Target SetupGit => _ => _
+        .DependsOn(UpdateSubmodules, CommitChanges, PullBackEnd, CheckoutBranch);
+
+    Target PushBackEnd => _ => _
+        .DependsOn(AddMigration, CommitChanges, PullBackEnd)
+        .After(PushFrontEnd)
+        .Executes(() =>
+        {
+            Git("push");
+        });
+
+    Target PushFrontEnd => _ => _
+        .OnlyWhenStatic(() => WithCli)
+        .Executes(() =>
+        {
+            //ToDo publish front-end
         });
 }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.EntityFramework;
+using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
+using Nuke.Common.IO;
 
 namespace Targets;
 
@@ -11,10 +14,15 @@ partial class Build
 {
     [Parameter("Specifies migration name during its creation")]
     readonly string MigrName = "New Migration Added";
-     
+
+    bool CheckForMigration() =>
+        GitHasCleanCopy(DALDirectory / "Entities")
+        && GitHasCleanCopy(DALDirectory / "Enums") 
+        && GitHasCleanCopy(DALDirectory / "Extensions") 
+        && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
+
     Target AddMigration => _ => _
-        //ToDo add condition to check if there is any changes in ef code first
-        .OnlyWhenStatic(()=>false)
+        .OnlyWhenStatic(() => !CheckForMigration())
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
@@ -35,7 +43,6 @@ partial class Build
     readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
-         //.OnlyWhenStatic(() => false)
         .DependsOn(DropDatabase)
         .Executes(() =>
         {

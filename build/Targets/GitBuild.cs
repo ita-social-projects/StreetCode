@@ -1,5 +1,6 @@
 ﻿using Nuke.Common;
 using static Nuke.Common.Tools.Git.GitTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -8,7 +9,7 @@ partial class Build
     [Parameter("commit message")]
     readonly string Msg = "make changes to the project";
 
-    [Parameter("update Streetcode_Client supmodule")]
+    [Parameter("update Streetcode_Client submodule")]
     readonly bool WithCli = true;
 
     [Parameter("checkout to branch")]
@@ -20,20 +21,28 @@ partial class Build
     [Parameter("create a new branch")]
     readonly bool NewB = false;
 
-    Target CommitChanges => _ => _
+    Target CommitMainRepo => _ => _
         .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
-        .DependsOn(SetupNuke)
         .Executes(() =>
         {
             Git($"commit -a -m \"{Msg}\"");
         });
 
-    Target SetupSubmodules => _ => _
-        .OnlyWhenStatic(() => WithCli)
-        .After(CommitChanges)
+    Target CommitSubmodules => _ => _
+        .DependsOn(UpdateSubmodules)
+        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy(ClientDirectory) && WithCli)
         .Executes(() =>
         {
-            Git("submodule update --init --recursive");
+            //command below can`t work with spaces, we replace them by Unicode Character “⠀” (U+2800)
+            var joinedMessage = string.Join("⠀", Msg.Split(" "));
+            PowerShell($"git submodule foreach 'git add .; git commit -m \"{joinedMessage}\"'");
+        });
+
+    Target UpdateSubmodules => _ => _
+        .OnlyWhenStatic(() => WithCli)
+        .Executes(() =>
+        {
+            Git("submodule update --remote");
         });
 
     Target CheckoutBranch => _ => _
@@ -43,10 +52,20 @@ partial class Build
             Git($"checkout {(NewB ? "-b" : string.Empty)} {BName}"); 
         });
 
-    Target SetupGit => _ => _
-        .DependsOn(SetupSubmodules,CommitChanges,CheckoutBranch)
+    Target PullBackEnd => _ => _
+        .DependsOn(CommitMainRepo)
         .Executes(() =>
         {
             Git("pull");
+        });
+
+    Target SetupGit => _ => _
+        .DependsOn(CheckoutBranch, CommitSubmodules, PullBackEnd);
+
+    Target PushAll => _ => _
+        .DependsOn(AddMigration, PullBackEnd)
+        .Executes(() =>
+        {
+            Git(WithCli ? "push --recurse-submodules=on-demand" : "push");
         });
 }

@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -17,8 +15,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAppServices();
-builder.Services.AddDbContextPool<StreetcodeDBContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -35,7 +31,11 @@ else
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
+
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

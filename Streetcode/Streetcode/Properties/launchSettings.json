@@ -12,17 +12,17 @@
 
     "Streetcode_Dev": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7020/swagger/v1/swagger.json"
+      "applicationUrl": "http://localhost:5000;https://localhost:5001"
     },
     "Streetcode_IntegTests": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "IntegrationTests"
       }
@@ -36,7 +36,7 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
       "useSSL": true
@@ -47,8 +47,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:49614/",
-      "sslPort": 44340
+      "applicationUrl": "http://localhost:5000;https://localhost:5001"
     }
   }
 }

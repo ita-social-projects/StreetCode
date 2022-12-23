@@ -5,6 +5,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.EntityFramework;
 using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
+using Nuke.Common.IO;
 
 namespace Targets;
 
@@ -13,13 +14,20 @@ partial class Build
     [Parameter("Specifies migration name during its creation")]
     readonly string MigrName = "New Migration Added";
 
+    public bool CheckForMigration(AbsolutePath dalPath) => 
+        GitHasCleanWorkingCopy(dalPath / "Entities") 
+        && GitHasCleanWorkingCopy(dalPath / "Enums") 
+        && GitHasCleanWorkingCopy(dalPath / "Extensions") 
+        && GitHasCleanWorkingCopy(dalPath / "Persistance" / "StreetcodeDbContext.cs");
+     
+
     public bool CheckForMigration()
     {
 
     };
      
     Target AddMigration => _ => _
-        .OnlyWhenStatic(()=> !GitHasCleanWorkingCopy(DALDirectory.))
+        .OnlyWhenStatic(()=> !CheckForMigration(DALDirectory))
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _

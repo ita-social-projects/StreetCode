@@ -28,6 +28,7 @@ partial class Build
 
     [Solution] readonly Solution Solution;
 
+    AbsolutePath DALDirectory => RootDirectory / "Streetcode" / "Streetcode.DAL";
     AbsolutePath NukeDirectory => RootDirectory / ".nuke" / "temp";
     AbsolutePath SourceDirectory => RootDirectory / "Streetcode";
     AbsolutePath OutputDirectory => RootDirectory / "Output";

@@ -1,23 +1,36 @@
-
 using Repositories.Interfaces;
-using StreetCode.DAL.Repositories.Interfaces.Base;
-
+using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
+using Streetcode.DAL.Repositories.Interfaces.Partners;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
+using Streetcode.DAL.Repositories.Interfaces.Timeline;
+using Streetcode.DAL.Repositories.Interfaces.Toponyms;
+using Streetcode.DAL.Repositories.Interfaces.Transactions;
+using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
+using Streetcode.DAL.Repositories.Realizations.Partners;
+using Streetcode.DAL.Repositories.Realizations.Streetcode;
+using Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
+using Streetcode.DAL.Repositories.Realizations.Timeline;
+using Streetcode.DAL.Repositories.Realizations.Toponyms;
+using Streetcode.DAL.Repositories.Realizations.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Repositories.Realizations;
 
-public class RepositoryWrapper : IRepositoryWrapper 
+public class RepositoryWrapper : IRepositoryWrapper
 {
+    private readonly StreetcodeDbContext _streetcodeDbContext;
 
-    public RepositoryWrapper(StreetcodeDBContext streetcodeDBContext) 
-    {
-        _streetcodeDBContext = streetcodeDBContext;
-    }
+    private IVideoRepository _videoRepository;
 
-    private StreetcodeDBContext _streetcodeDBContext;
+    private IAudioRepository _audioRepository;
+
+    private IImageRepository _imageRepository;
+
+    private IArtRepository _artRepository;
 
     private IFactRepository _factRepository;
-
-    private IMediaRepository _mediaRepository;
 
     private IPartnersRepository _partnersRepository;
 
@@ -37,27 +50,73 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ITransactLinksRepository _transactLinksRepository;
 
+    public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
+    {
+        _streetcodeDbContext = streetcodeDbContext;
+    }
 
-    public IFactRepository FactRepository {
+    public IFactRepository FactRepository
+    {
         get
         {
             if (_factRepository == null)
             {
-                _factRepository = new FactRepository(_streetcodeDBContext);
+                _factRepository = new FactRepository(_streetcodeDbContext);
             }
+
             return _factRepository;
         }
     }
 
-    public IMediaRepository MediaRepository
+    public IImageRepository ImageRepository
     {
         get
         {
-            if (_mediaRepository == null)
+            if (_imageRepository == null)
             {
-                _mediaRepository = new MediaRepository(_streetcodeDBContext);
+                _imageRepository = new ImageRepository(_streetcodeDbContext);
             }
-            return _mediaRepository;
+
+            return _imageRepository;
+        }
+    }
+
+    public IAudioRepository AudioRepository
+    {
+        get
+        {
+            if (_audioRepository == null)
+            {
+                _audioRepository = new AudioRepository(_streetcodeDbContext);
+            }
+
+            return _audioRepository;
+        }
+    }
+
+    public IVideoRepository VideoRepository
+    {
+        get
+        {
+            if (_videoRepository == null)
+            {
+                _videoRepository = new VideoRepository(_streetcodeDbContext);
+            }
+
+            return _videoRepository;
+        }
+    }
+
+    public IArtRepository ArtRepository
+    {
+        get
+        {
+            if (_artRepository == null)
+            {
+                _artRepository = new ArtRepository(_streetcodeDbContext);
+            }
+
+            return _artRepository;
         }
     }
 
@@ -67,8 +126,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_partnersRepository == null)
             {
-                _partnersRepository = new PartnersRepository(_streetcodeDBContext);
+                _partnersRepository = new PartnersRepository(_streetcodeDbContext);
             }
+
             return _partnersRepository;
         }
     }
@@ -79,8 +139,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_streetcodeRepository == null)
             {
-                _streetcodeRepository = new StreetcodeRepository(_streetcodeDBContext);
+                _streetcodeRepository = new StreetcodeRepository(_streetcodeDbContext);
             }
+
             return _streetcodeRepository;
         }
     }
@@ -91,8 +152,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_subtitleRepository == null)
             {
-                _subtitleRepository = new SubtitleRepository(_streetcodeDBContext);
+                _subtitleRepository = new SubtitleRepository(_streetcodeDbContext);
             }
+
             return _subtitleRepository;
         }
     }
@@ -103,8 +165,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_tagRepository == null)
             {
-                _tagRepository = new TagRepository(_streetcodeDBContext);
+                _tagRepository = new TagRepository(_streetcodeDbContext);
             }
+
             return _tagRepository;
         }
     }
@@ -115,8 +178,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_termRepository == null)
             {
-                _termRepository = new TermRepository(_streetcodeDBContext);
+                _termRepository = new TermRepository(_streetcodeDbContext);
             }
+
             return _termRepository;
         }
     }
@@ -127,8 +191,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_textRepository == null)
             {
-                _textRepository = new TextRepository(_streetcodeDBContext);
+                _textRepository = new TextRepository(_streetcodeDbContext);
             }
+
             return _textRepository;
         }
     }
@@ -139,8 +204,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_timelineRepository == null)
             {
-                _timelineRepository = new TimelineRepository(_streetcodeDBContext);
+                _timelineRepository = new TimelineRepository(_streetcodeDbContext);
             }
+
             return _timelineRepository;
         }
     }
@@ -151,8 +217,9 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_toponymRepository == null)
             {
-                _toponymRepository = new ToponymRepository(_streetcodeDBContext);
+                _toponymRepository = new ToponymRepository(_streetcodeDbContext);
             }
+
             return _toponymRepository;
         }
     }
@@ -163,15 +230,14 @@ public class RepositoryWrapper : IRepositoryWrapper
         {
             if (_transactLinksRepository == null)
             {
-                _transactLinksRepository = new TransactLinksRepository(_streetcodeDBContext);
+                _transactLinksRepository = new TransactLinksRepository(_streetcodeDbContext);
             }
+
             return _transactLinksRepository;
         }
     }
 
-
-    //private void All_Repoes;
-
+    // private void All_Repoes;
     public void All_Interfaces()
     {
         throw new NotImplementedException();
@@ -179,11 +245,11 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     public void Save()
     {
-        _streetcodeDBContext.SaveChanges();
+        _streetcodeDbContext.SaveChanges();
     }
 
     public async Task SaveAsync()
     {
-        await _streetcodeDBContext.SaveChangesAsync();
+        await _streetcodeDbContext.SaveChangesAsync();
     }
 }

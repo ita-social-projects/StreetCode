@@ -35,7 +35,7 @@ partial class Build
         .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {
-            Git("submodule update --remote --merge");
+            Git("submodule update --remote");
         });
 
     Target CheckoutBranch => _ => _

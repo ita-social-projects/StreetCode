@@ -220,7 +220,7 @@
         },
         "WithCli": {
           "type": "boolean",
-          "description": "update Streetcode_Client supmodule"
+          "description": "update Streetcode_Client submodule"
         }
       }
     }

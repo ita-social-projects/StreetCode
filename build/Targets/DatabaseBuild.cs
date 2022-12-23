@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
@@ -14,20 +15,14 @@ partial class Build
     [Parameter("Specifies migration name during its creation")]
     readonly string MigrName = "New Migration Added";
 
-    public bool CheckForMigration(AbsolutePath dalPath) => 
-        GitHasCleanWorkingCopy(dalPath / "Entities") 
-        && GitHasCleanWorkingCopy(dalPath / "Enums") 
-        && GitHasCleanWorkingCopy(dalPath / "Extensions") 
-        && GitHasCleanWorkingCopy(dalPath / "Persistance" / "StreetcodeDbContext.cs");
-     
+    bool CheckForMigration() =>
+        GitHasCleanCopy(DALDirectory / "Entities")
+        && GitHasCleanCopy(DALDirectory / "Enums") 
+        && GitHasCleanCopy(DALDirectory / "Extensions") 
+        && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
 
-    public bool CheckForMigration()
-    {
-
-    };
-     
     Target AddMigration => _ => _
-        .OnlyWhenStatic(()=> !CheckForMigration(DALDirectory))
+        .OnlyWhenStatic(() => !CheckForMigration())
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
@@ -48,7 +43,6 @@ partial class Build
     readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
-        .OnlyWhenStatic(() => false)
         .DependsOn(DropDatabase)
         .Executes(() =>
         {

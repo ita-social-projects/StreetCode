@@ -9,7 +9,7 @@ partial class Build
     [Parameter("commit message")]
     readonly string Msg = "make changes to the project";
 
-    [Parameter("update Streetcode_Client supmodule")]
+    [Parameter("update Streetcode_Client submodule")]
     readonly bool WithCli = true;
 
     [Parameter("checkout to branch")]
@@ -33,7 +33,7 @@ partial class Build
         .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy(ClientDirectory) && WithCli)
         .Executes(() =>
         {
-            //comand below can`t work with spaces, we replace them by Unicode Character “⠀” (U+2800)
+            //command below can`t work with spaces, we replace them by Unicode Character “⠀” (U+2800)
             var joinedMessage = string.Join("⠀", Msg.Split(" "));
             PowerShell($"git submodule foreach 'git add .; git commit -m \"{joinedMessage}\"'");
         });
@@ -66,9 +66,6 @@ partial class Build
         .DependsOn(AddMigration, PullBackEnd)
         .Executes(() =>
         {
-            if (WithCli)
-                Git("push --recurse-submodules=on-demand");
-            else
-                Git("push");
+            Git(WithCli ? "push --recurse-submodules=on-demand" : "push");
         });
 }

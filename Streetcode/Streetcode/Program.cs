@@ -19,7 +19,7 @@ builder.Services.AddAppServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.ApplicationName == "Local")
+if (app.Environment.EnvironmentName == "Local")
 {
     builder.Configuration.AddUserSecrets<string>();
     app.UseSwagger();

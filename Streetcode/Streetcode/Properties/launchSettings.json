@@ -27,13 +27,6 @@
         "STREETCODE_ENVIRONMENT": "IntegrationTests"
       }
     },
-    "Streetcode_Prod": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      }
-    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": false,

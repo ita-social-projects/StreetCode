@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.EntityFramework;
+using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 
 namespace Targets;
@@ -11,10 +12,14 @@ partial class Build
 {
     [Parameter("Specifies migration name during its creation")]
     readonly string MigrName = "New Migration Added";
+
+    public bool CheckForMigration()
+    {
+
+    };
      
     Target AddMigration => _ => _
-        //ToDo add condition to check if there is any changes in ef code first
-        .OnlyWhenStatic(()=>false)
+        .OnlyWhenStatic(()=> !GitHasCleanWorkingCopy(DALDirectory.))
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _

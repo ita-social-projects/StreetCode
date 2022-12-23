@@ -38,6 +38,7 @@ public class StreetcodeDbContext : DbContext
     public virtual DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
     public virtual DbSet<RelatedFigure> RelatedFigures { get; set; }
     public virtual DbSet<Response> Responses { get; set; }
+    public virtual DbSet<Donation> Donations { get; set; }
     public virtual DbSet<SourceLink> SourceLinks { get; set; }
     public virtual DbSet<StreetcodeContent> Streetcodes { get; set; }
     public virtual DbSet<Subtitle> Subtitles { get; set; }

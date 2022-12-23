@@ -18,6 +18,5 @@ public class Response
     [EmailAddress]
     public string Email { get; set; }
 
-    [Column(TypeName = "text")]
     public string? Description { get; set; }
 }

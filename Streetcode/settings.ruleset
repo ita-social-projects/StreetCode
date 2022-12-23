@@ -82,7 +82,7 @@
     <!-- A C# statement contains parenthesis which are unnecessary and should be removed. -->
     <Rule Id="SA1121" Action="Error" />
     <!-- The code uses one of the basic C# types, but does not use the built-in alias for the type. -->
-    <Rule Id="SA1122" Action="Error" />
+    <Rule Id="SA1122" Action="None" />
     <!-- The C# code includes an empty string, written as "". -->
     <Rule Id="SA1133" Action="Error" />
     <!-- Two or more attributes appeared within the same set of square brackets. -->

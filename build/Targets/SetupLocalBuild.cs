@@ -24,7 +24,6 @@ partial class Build
         });
 
     Target SetLocalEnvironmentVariables => _ => _
-        .Before(SetupBackEnd)
         .Executes(() =>
         {
             //DoAsk what it means and how to use???
@@ -32,7 +31,7 @@ partial class Build
 
     Target SetupLocal => _ => _
         .OnlyWhenStatic(() => !Dockerize)
-        .DependsOn(SetupBackEnd, UpdateDatabase, SetupFrontEnd);
+        .DependsOn(SetupFrontEnd, UpdateDatabase, SetupBackEnd);
 
 }
 

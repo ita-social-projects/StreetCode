@@ -13,7 +13,6 @@ partial class Build
     readonly bool ITest = true;
 
     Target UnitTest => _ => _
-        .After(SetupNuke)
         .OnlyWhenStatic(() => UTest)
         .Executes(() =>
         {
@@ -26,7 +25,6 @@ partial class Build
         });
 
     Target IntegrationTest => _ => _
-        .After(SetupNuke)
         .OnlyWhenStatic(() => ITest)
         .Executes(() =>
         {

@@ -35,7 +35,7 @@ partial class Build
     readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
-        .OnlyWhenStatic(() => false)
+         //.OnlyWhenStatic(() => false)
         .DependsOn(DropDatabase)
         .Executes(() =>
         {

@@ -28,7 +28,8 @@ partial class Build
 
     [Solution] readonly Solution Solution;
 
-    AbsolutePath SourceDirectory = RootDirectory / "Streetcode";
+    AbsolutePath NukeDirectory => RootDirectory / ".nuke" / "temp";
+    AbsolutePath SourceDirectory => RootDirectory / "Streetcode";
     AbsolutePath OutputDirectory => RootDirectory / "Output";
     AbsolutePath UnitTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XUnitTest";
     AbsolutePath IntegrationTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XIntegrationTest";

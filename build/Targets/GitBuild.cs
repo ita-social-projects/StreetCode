@@ -1,4 +1,5 @@
 ﻿using Nuke.Common;
+using Nuke.Common.CI.GitHubActions;
 using static Nuke.Common.Tools.Git.GitTasks;
 
 namespace Targets;
@@ -26,13 +27,15 @@ partial class Build
         .Executes(() =>
         {
             Git($"commit -a -m \"{Msg}\"");
+            if (WithCli)
+                Git($"submodule foreach 'git commit -a -m \"{Msg}\"'");
         });
 
     Target UpdateSubmodules => _ => _
         .OnlyWhenStatic(() => WithCli)
         .Executes(() =>
         {
-            Git("submodule update --init --recursive");
+            Git("submodule update --remote --merge");
         });
 
     Target CheckoutBranch => _ => _
@@ -43,27 +46,22 @@ partial class Build
         });
 
     Target PullBackEnd => _ => _
-        .After(CommitChanges)
+        .DependsOn(CommitChanges)
         .Executes(() =>
         {
             Git("pull");
         });
 
     Target SetupGit => _ => _
-        .DependsOn(UpdateSubmodules, CommitChanges, PullBackEnd, CheckoutBranch);
+        .DependsOn(PullBackEnd, UpdateSubmodules, CheckoutBranch);
 
-    Target PushBackEnd => _ => _
-        .DependsOn(AddMigration, CommitChanges, PullBackEnd)
-        .After(PushFrontEnd)
+    Target PushAll => _ => _
+        .DependsOn(AddMigration, PullBackEnd)
         .Executes(() =>
         {
-            Git("push");
-        });
-
-    Target PushFrontEnd => _ => _
-        .OnlyWhenStatic(() => WithCli)
-        .Executes(() =>
-        {
-            //ToDo publish front-end
+            if (WithCli)
+                Git("push --recurse-submodules=on-demand");
+            else
+                Git("push");
         });
 }

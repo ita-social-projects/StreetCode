@@ -118,6 +118,9 @@
               "CleanContainers",
               "CleanDocker",
               "CleanImages",
+              "CleanNukeTemp",
+              "CleanSubmodule",
+              "CleanTests",
               "CleanVolumes",
               "CommitChanges",
               "CompileAPI",
@@ -125,9 +128,9 @@
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
+              "PullBackEnd",
               "Push",
-              "PushBackEnd",
-              "PushFrontEnd",
+              "PushAll",
               "RemoveEnvVariables",
               "Restore",
               "Run",
@@ -141,10 +144,10 @@
               "SetupLocal",
               "SetupNuke",
               "SetupPublic",
-              "SetupSubmodules",
               "Test",
               "UnitTest",
-              "UpdateDatabase"
+              "UpdateDatabase",
+              "UpdateSubmodules"
             ]
           }
         },
@@ -164,6 +167,9 @@
               "CleanContainers",
               "CleanDocker",
               "CleanImages",
+              "CleanNukeTemp",
+              "CleanSubmodule",
+              "CleanTests",
               "CleanVolumes",
               "CommitChanges",
               "CompileAPI",
@@ -171,9 +177,9 @@
               "DropDatabase",
               "EndAll",
               "IntegrationTest",
+              "PullBackEnd",
               "Push",
-              "PushBackEnd",
-              "PushFrontEnd",
+              "PushAll",
               "RemoveEnvVariables",
               "Restore",
               "Run",
@@ -187,10 +193,10 @@
               "SetupLocal",
               "SetupNuke",
               "SetupPublic",
-              "SetupSubmodules",
               "Test",
               "UnitTest",
-              "UpdateDatabase"
+              "UpdateDatabase",
+              "UpdateSubmodules"
             ]
           }
         },

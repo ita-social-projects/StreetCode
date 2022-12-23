@@ -15,7 +15,7 @@ partial class Build : NukeBuild
         .DependsOn(SetupPublic, SetupLocal);
 
     Target Push => _ => _
-        .DependsOn(PushFrontEnd, PushBackEnd);
+        .DependsOn(PushAll);
 
     Target Test => _ => _
         .DependsOn(SetupNuke, UnitTest, IntegrationTest)

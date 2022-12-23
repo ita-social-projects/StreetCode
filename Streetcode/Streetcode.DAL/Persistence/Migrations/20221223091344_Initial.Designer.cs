@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20221219192405_Initial")]
+    [Migration("20221223091344_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,21 +107,21 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("CoordinateType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Latitude")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<decimal>("Longtitude")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<string>("coordinate_type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("coordinates", "add_content");
 
-                    b.HasDiscriminator<string>("coordinate_type").HasValue("coordinate_base");
+                    b.HasDiscriminator<string>("CoordinateType").HasValue("coordinate_base");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
@@ -295,7 +295,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -600,7 +600,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("partners", "partner_sponsors");
+                    b.ToTable("partners", "partners");
 
                     b.HasData(
                         new
@@ -655,7 +655,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("PartnerId");
 
-                    b.ToTable("partner_source_links", "partner_sponsors");
+                    b.ToTable("partner_source_links", "partners");
 
                     b.HasData(
                         new
@@ -701,7 +701,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("StreetcodeId");
 
-                    b.ToTable("streetcode_partners", "partner_sponsors");
+                    b.ToTable("streetcode_partner", "partners");
 
                     b.HasData(
                         new
@@ -883,6 +883,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
+                    b.Property<string>("StreetcodeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Teaser")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -897,15 +901,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("streetcode_type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("streetcodes", "streetcode");
 
-                    b.HasDiscriminator<string>("streetcode_type").HasValue("streetcode_base");
+                    b.HasDiscriminator<string>("StreetcodeType").HasValue("streetcode-base");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
@@ -1097,7 +1097,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1386,13 +1386,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.ToTable("streetcodes", "streetcode");
 
-                    b.HasDiscriminator().HasValue("streetcode_event");
+                    b.HasDiscriminator().HasValue("streetcode-event");
 
                     b.HasData(
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6571),
+                            CreatedAt = new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2357),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1423,13 +1423,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.ToTable("streetcodes", "streetcode");
 
-                    b.HasDiscriminator().HasValue("streetcode_person");
+                    b.HasDiscriminator().HasValue("streetcode-person");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6510),
+                            CreatedAt = new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2296),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1443,7 +1443,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6549),
+                            CreatedAt = new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2331),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1457,7 +1457,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6553),
+                            CreatedAt = new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2336),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,

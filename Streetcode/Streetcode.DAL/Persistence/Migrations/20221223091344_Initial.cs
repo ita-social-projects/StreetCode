@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using static System.String;
 
 #nullable disable
 
@@ -10,6 +9,8 @@ namespace Streetcode.DAL.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("alter database StreetCodeDb collate SQL_Ukrainian_CP1251_CI_AS", true);
+
             migrationBuilder.EnsureSchema(
                 name: "media");
 
@@ -23,7 +24,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "timeline");
 
             migrationBuilder.EnsureSchema(
-                name: "partner_sponsors");
+                name: "partners");
 
             migrationBuilder.EnsureSchema(
                 name: "feedback");
@@ -69,7 +70,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "partners",
-                schema: "partner_sponsors",
+                schema: "partners",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -93,7 +94,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -114,7 +115,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     EventStartOrPersonBirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventEndOrPersonDeathDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    streetcode_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StreetcodeType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Rank = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -163,7 +164,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -254,7 +255,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "partner_source_links",
-                schema: "partner_sponsors",
+                schema: "partners",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -270,7 +271,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     table.ForeignKey(
                         name: "FK_partner_source_links_partners_PartnerId",
                         column: x => x.PartnerId,
-                        principalSchema: "partner_sponsors",
+                        principalSchema: "partners",
                         principalTable: "partners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -378,8 +379,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "streetcode_partners",
-                schema: "partner_sponsors",
+                name: "streetcode_partner",
+                schema: "partners",
                 columns: table => new
                 {
                     StreetcodeId = table.Column<int>(type: "int", nullable: false),
@@ -388,16 +389,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_streetcode_partners", x => new { x.PartnerId, x.StreetcodeId });
+                    table.PrimaryKey("PK_streetcode_partner", x => new { x.PartnerId, x.StreetcodeId });
                     table.ForeignKey(
-                        name: "FK_streetcode_partners_partners_PartnerId",
+                        name: "FK_streetcode_partner_partners_PartnerId",
                         column: x => x.PartnerId,
-                        principalSchema: "partner_sponsors",
+                        principalSchema: "partners",
                         principalTable: "partners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_streetcode_partners_streetcodes_StreetcodeId",
+                        name: "FK_streetcode_partner_streetcodes_StreetcodeId",
                         column: x => x.StreetcodeId,
                         principalSchema: "streetcode",
                         principalTable: "streetcodes",
@@ -594,7 +595,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Latitude = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     Longtitude = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    coordinate_type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CoordinateType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StreetcodeId = table.Column<int>(type: "int", nullable: true),
                     ToponymId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -759,7 +760,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
+                schema: "partners",
                 table: "partners",
                 columns: new[] { "Id", "Description", "LogoUrl", "TargetUrl", "Title" },
                 values: new object[,]
@@ -782,18 +783,18 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "streetcode",
                 table: "streetcodes",
-                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "Teaser", "Title", "ViewCount", "streetcode_type" },
-                values: new object[] { 4, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6571), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000, "streetcode_event" });
+                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "StreetcodeType", "Teaser", "Title", "ViewCount" },
+                values: new object[] { 4, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2357), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "streetcode-event", "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000 });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
                 table: "streetcodes",
-                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "Teaser", "streetcode_type" },
+                columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "StreetcodeType", "Teaser" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6510), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв", "streetcode_person" },
-                    { 2, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6549), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.", "streetcode_person" },
-                    { 3, new DateTime(2022, 12, 19, 21, 24, 5, 475, DateTimeKind.Local).AddTicks(6553), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.", "streetcode_person" }
+                    { 1, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2296), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "streetcode-person", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв" },
+                    { 2, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2331), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "streetcode-person", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя." },
+                    { 3, new DateTime(2022, 12, 23, 11, 13, 43, 636, DateTimeKind.Local).AddTicks(2336), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "streetcode-person", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст." }
                 });
 
             migrationBuilder.InsertData(
@@ -866,27 +867,27 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.InsertData(
                 schema: "add_content",
                 table: "coordinates",
-                columns: new[] { "Id", "Latitude", "Longtitude", "StreetcodeId", "coordinate_type" },
+                columns: new[] { "Id", "CoordinateType", "Latitude", "Longtitude", "StreetcodeId" },
                 values: new object[,]
                 {
-                    { 6, 49.8429m, 24.0311m, 1, "coordinate_streetcode" },
-                    { 7, 50.4550m, 30.5238m, 2, "coordinate_streetcode" },
-                    { 9, 50.4690m, 30.5328m, 3, "coordinate_streetcode" },
-                    { 10, 46.3950m, 32.3738m, 4, "coordinate_streetcode" }
+                    { 6, "coordinate_streetcode", 49.8429m, 24.0311m, 1 },
+                    { 7, "coordinate_streetcode", 50.4550m, 30.5238m, 2 },
+                    { 9, "coordinate_streetcode", 50.4690m, 30.5328m, 3 },
+                    { 10, "coordinate_streetcode", 46.3950m, 32.3738m, 4 }
                 });
 
             migrationBuilder.InsertData(
                 schema: "add_content",
                 table: "coordinates",
-                columns: new[] { "Id", "Latitude", "Longtitude", "ToponymId", "coordinate_type" },
+                columns: new[] { "Id", "CoordinateType", "Latitude", "Longtitude", "ToponymId" },
                 values: new object[,]
                 {
-                    { 1, 49.8429m, 24.0311m, 1, "coordinate_toponym" },
-                    { 2, 50.4500m, 30.5233m, 1, "coordinate_toponym" },
-                    { 3, 47.5m, 37.32m, 1, "coordinate_toponym" },
-                    { 4, 50.4600m, 30.5243m, 2, "coordinate_toponym" },
-                    { 5, 50.4550m, 30.5238m, 2, "coordinate_toponym" },
-                    { 8, 46.3950m, 32.3738m, 3, "coordinate_toponym" }
+                    { 1, "coordinate_toponym", 49.8429m, 24.0311m, 1 },
+                    { 2, "coordinate_toponym", 50.4500m, 30.5233m, 1 },
+                    { 3, "coordinate_toponym", 47.5m, 37.32m, 1 },
+                    { 4, "coordinate_toponym", 50.4600m, 30.5243m, 2 },
+                    { 5, "coordinate_toponym", 50.4550m, 30.5238m, 2 },
+                    { 8, "coordinate_toponym", 46.3950m, 32.3738m, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -896,14 +897,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                 values: new object[] { 2, " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес. Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».", 5, "Перший Кобзар" });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
+                schema: "partners",
                 table: "partner_source_links",
                 columns: new[] { "Id", "LogoUrl", "PartnerId", "TargetUrl", "Title" },
                 values: new object[,]
                 {
-                    { 1, Empty, 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
-                    { 2, Empty, 1, "https://www.instagram.com/softserve_people/", "Instagram" },
-                    { 3, Empty, 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
+                    { 1, "", 1, "https://www.linkedin.com/company/softserve/", "LinkedIn" },
+                    { 2, "", 1, "https://www.instagram.com/softserve_people/", "Instagram" },
+                    { 3, "", 1, "https://www.facebook.com/SoftServeCompany", "facebook" }
                 });
 
             migrationBuilder.InsertData(
@@ -929,8 +930,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[,]
                 {
@@ -939,14 +940,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 1, 3 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[,]
                 {
@@ -955,20 +956,20 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 2, 2 });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[] { 2, 4, true });
 
             migrationBuilder.InsertData(
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                schema: "partners",
+                table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 3, 3 });
 
@@ -1069,7 +1070,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_partner_source_links_PartnerId",
-                schema: "partner_sponsors",
+                schema: "partners",
                 table: "partner_source_links",
                 column: "PartnerId");
 
@@ -1116,9 +1117,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 column: "StreetcodesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_streetcode_partners_StreetcodeId",
-                schema: "partner_sponsors",
-                table: "streetcode_partners",
+                name: "IX_streetcode_partner_StreetcodeId",
+                schema: "partners",
+                table: "streetcode_partner",
                 column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
@@ -1184,7 +1185,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "partner_source_links",
-                schema: "partner_sponsors");
+                schema: "partners");
 
             migrationBuilder.DropTable(
                 name: "related_figures",
@@ -1211,8 +1212,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode");
 
             migrationBuilder.DropTable(
-                name: "streetcode_partners",
-                schema: "partner_sponsors");
+                name: "streetcode_partner",
+                schema: "partners");
 
             migrationBuilder.DropTable(
                 name: "streetcode_tag",
@@ -1268,7 +1269,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "partners",
-                schema: "partner_sponsors");
+                schema: "partners");
 
             migrationBuilder.DropTable(
                 name: "tags",

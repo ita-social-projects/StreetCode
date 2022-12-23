@@ -1,6 +1,6 @@
 ﻿using Nuke.Common;
-using Nuke.Common.CI.GitHubActions;
 using static Nuke.Common.Tools.Git.GitTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Targets;
 
@@ -21,14 +21,21 @@ partial class Build
     [Parameter("create a new branch")]
     readonly bool NewB = false;
 
-    Target CommitChanges => _ => _
+    Target CommitMainRepo => _ => _
         .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy())
-        .DependsOn(SetupNuke)
         .Executes(() =>
         {
             Git($"commit -a -m \"{Msg}\"");
-            if (WithCli)
-                Git($"submodule foreach 'git commit -a -m \"{Msg}\"'");
+        });
+
+    Target CommitSubmodules => _ => _
+        .DependsOn(UpdateSubmodules)
+        .OnlyWhenDynamic(() => !GitHasCleanWorkingCopy(ClientDirectory) && WithCli)
+        .Executes(() =>
+        {
+            //comand below can`t work with spaces, we replace them by Unicode Character “⠀” (U+2800)
+            var joinedMessage = string.Join("⠀", Msg.Split(" "));
+            PowerShell($"git submodule foreach 'git add .; git commit -m \"{joinedMessage}\"'");
         });
 
     Target UpdateSubmodules => _ => _
@@ -46,14 +53,14 @@ partial class Build
         });
 
     Target PullBackEnd => _ => _
-        .DependsOn(CommitChanges)
+        .DependsOn(CommitMainRepo)
         .Executes(() =>
         {
             Git("pull");
         });
 
     Target SetupGit => _ => _
-        .DependsOn(PullBackEnd, UpdateSubmodules, CheckoutBranch);
+        .DependsOn(CheckoutBranch, CommitSubmodules, PullBackEnd);
 
     Target PushAll => _ => _
         .DependsOn(AddMigration, PullBackEnd)

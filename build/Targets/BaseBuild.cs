@@ -41,7 +41,7 @@ partial class Build
     });
 
     Target Clean => _ => _
-        .DependsOn(/*SetupNuke,*/ CleanTests, CleanNukeTemp, CleanSubmodule)
+        .DependsOn(CleanTests, CleanNukeTemp, CleanSubmodule)
         .Executes(() =>
         {
             SourceDirectory

@@ -51,6 +51,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 ### Required to install
 * <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0" target="_blank">ASP.NET Core Runtime 6.0.12</a>
 * <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank"> Microsoft SQL Server 2017</a>+
+* <a href="https://nuke.build/" target="_blank"> Nuke Build 6.2.1</a>+
 
 ### Environment
 environmental variables

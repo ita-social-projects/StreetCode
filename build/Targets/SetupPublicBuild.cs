@@ -14,7 +14,6 @@ partial class Build
     readonly string DockerAtom = "Streetcode";
 
     Target SetPublicEnvironmentVariables => _ => _
-        .DependsOn(SetupNuke)
         .Executes(() =>
         {
             PowerShell($"setx DOCKER_ATOM \"{DockerAtom}\"");
@@ -84,14 +83,14 @@ partial class Build
 
     Target SetupPublic => _ => _
         .OnlyWhenStatic(() => Dockerize)
-        .DependsOn(SetupDocker, UpdateDatabase)
+        .DependsOn(UpdateDatabase, SetupDocker)
         .Executes(() =>
         {
             Dockerize = false;
         });
 
     Target CleanDocker => _ => _
-        .Triggers(CleanContainers, CleanVolumes, CleanImages)
+        .Triggers(CleanVolumes, CleanImages, CleanContainers)
         .Executes(() =>
         {
             DockerComposeDown(u => u

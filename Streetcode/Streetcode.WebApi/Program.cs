@@ -1,6 +1,15 @@
 using Streetcode.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    config.SetBasePath(Directory.GetCurrentDirectory());
+    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
+    config.AddEnvironmentVariables("STREETCODE_");
+});
 
 // Add services to the container.
 builder.Services.AddCustomServices(builder.Configuration);
@@ -18,11 +27,16 @@ var app = builder.Build();
 var dbTask = app.MigrateToDatabaseAsync();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.EnvironmentName == "Local")
 {
+    builder.Configuration.AddUserSecrets<string>();
     app.UseSwagger();
     app.UseSwaggerUI();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
+}
+else
+{
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

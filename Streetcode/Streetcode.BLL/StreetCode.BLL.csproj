@@ -23,4 +23,14 @@
     <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MediatR\AdditionalContent\" />
+    <Folder Include="MediatR\Media\Images\" />
+    <Folder Include="MediatR\Partners\" />
+    <Folder Include="MediatR\Streetcode\TextContent\" />
+    <Folder Include="MediatR\Timeline\" />
+    <Folder Include="MediatR\Toponyms\" />
+    <Folder Include="MediatR\Transactions\" />
+  </ItemGroup>
+
 </Project>

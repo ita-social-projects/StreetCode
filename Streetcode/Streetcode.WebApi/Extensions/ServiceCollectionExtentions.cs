@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
@@ -53,5 +54,29 @@ public static class ServiceCollectionExtentions
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        services.AddAutoMapper(typeof(Program).Assembly);
+        services.AddMediatR(typeof(Program).Assembly);
+
+        services.AddCors(opt =>
+        {
+            opt.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                policy.WithOrigins("http://localhost:3000");
+                policy.AllowCredentials();
+                policy.SetPreflightMaxAge(TimeSpan.FromDays(1));
+            });
+        });
+
+        services.AddHsts(opt =>
+        {
+            opt.Preload = true;
+            opt.IncludeSubDomains = true;
+            opt.MaxAge = TimeSpan.FromDays(30);
+        });
+
+        services.AddLogging();
     }
 }

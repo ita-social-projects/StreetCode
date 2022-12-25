@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.Interfaces.Timeline;
 
-public interface ITimelineService
+public interface ITimelineItemService
 {
     public void GetTimelineItemsAsync();
 }

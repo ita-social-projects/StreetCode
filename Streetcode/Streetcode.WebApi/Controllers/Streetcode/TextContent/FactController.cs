@@ -1,6 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Streetcode.TextContent;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Queries;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
@@ -8,18 +10,20 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 [Route("api/[controller]/[action]")]
 public class FactController : ControllerBase
 {
-    private readonly IFactService _factService;
+    private readonly IMediator _mediator;
 
-    public FactController(IFactService factService)
+    public FactController(IMediator mediator)
     {
-        _factService = factService;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
+        var facts = await _mediator.Send(new GetAllFactsQuery());
+
         // TODO implement here
-        return Ok();
+        return Ok(facts);
     }
 
     [HttpGet("{id}")]

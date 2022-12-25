@@ -41,7 +41,7 @@ public static class ServiceCollectionExtentions
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<ITermService, TermService>();
         services.AddScoped<ITextService, TextService>();
-        services.AddScoped<ITimelineService, TimelineService>();
+        services.AddScoped<ITimelineItemService, TimelineItemService>();
         services.AddScoped<IToponymService, ToponymService>();
         services.AddScoped<ITransactLinksService, TransactLinksService>();
 

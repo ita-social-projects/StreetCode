@@ -6,10 +6,10 @@ namespace Streetcode.WebApi.Controllers.Timeline;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class TimelineController : ControllerBase
+public class TimelineItemController : ControllerBase
 {
-    private readonly ITimelineService _timelineService;
-    public TimelineController(ITimelineService timelineService)
+    private readonly ITimelineItemService _timelineService;
+    public TimelineItemController(ITimelineItemService timelineService)
     {
         _timelineService = timelineService;
     }
@@ -29,14 +29,14 @@ public class TimelineController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TimelineDTO timeline)
+    public async Task<IActionResult> Create(TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(TimelineDTO timeline)
+    public async Task<IActionResult> Update(TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();

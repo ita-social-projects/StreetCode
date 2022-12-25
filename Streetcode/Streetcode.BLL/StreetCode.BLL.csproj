@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="NLog" Version="5.1.0" />
@@ -24,12 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MediatR\AdditionalContent\" />
-    <Folder Include="MediatR\Media\Images\" />
+    <Folder Include="MediatR\AdditionalContent\Tag\" />
+    <Folder Include="MediatR\AdditionalContent\Subtitle\" />
+    <Folder Include="MediatR\Media\Art\" />
+    <Folder Include="MediatR\Media\Image\" />
+    <Folder Include="MediatR\Media\Audio\" />
+    <Folder Include="MediatR\Media\Video\" />
     <Folder Include="MediatR\Partners\" />
-    <Folder Include="MediatR\Streetcode\TextContent\" />
-    <Folder Include="MediatR\Timeline\" />
-    <Folder Include="MediatR\Toponyms\" />
+    <Folder Include="MediatR\Streetcode\Fact\Handlers\CommandHandlers\" />
+    <Folder Include="MediatR\Streetcode\Streetcode\" />
+    <Folder Include="MediatR\Streetcode\Text\" />
+    <Folder Include="MediatR\Streetcode\Term\" />
+    <Folder Include="MediatR\Timeline\TimelineItem\" />
     <Folder Include="MediatR\Transactions\" />
   </ItemGroup>
 

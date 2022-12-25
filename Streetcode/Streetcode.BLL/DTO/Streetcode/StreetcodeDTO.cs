@@ -30,7 +30,7 @@ public abstract class StreetcodeDTO
     public string Text;
     public IEnumerable<VideoDTO> Videos;
     public IEnumerable<FactDTO> Facts;
-    public IEnumerable<TimelineDTO> TimelineItems;
+    public IEnumerable<TimelineItemDTO> TimelineItems;
     public IEnumerable<SourceLinkDTO> SourceLinks;
     public IEnumerable<ArtDTO> Arts;
     public IEnumerable<SubtitleDTO> Subtitles;

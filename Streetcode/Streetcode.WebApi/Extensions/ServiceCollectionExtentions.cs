@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
@@ -55,8 +56,8 @@ public static class ServiceCollectionExtentions
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddAutoMapper(typeof(Program).Assembly);
-        services.AddMediatR(typeof(Program).Assembly);
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddCors(opt =>
         {

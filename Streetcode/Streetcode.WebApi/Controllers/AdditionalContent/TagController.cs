@@ -1,19 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.Interfaces.AdditionalContent;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class TagController : ControllerBase
+public class TagController : BaseApiController
 {
-    private readonly ITagService _tagService;
-    public TagController(ITagService tagService)
-    {
-        _tagService = tagService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,43 +12,43 @@ public class TagController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpGet("{streetcodeId}")]
-    public async Task<IActionResult> GetByStreetcodeId(int streetcodeId)
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpGet("{title}")]
-    public async Task<IActionResult> GetTagByTitle(string title)
+    public async Task<IActionResult> GetTagByTitle([FromRoute] string title)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TagDTO tag)
+    public async Task<IActionResult> Create([FromBody] TagDTO tag)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(TagDTO tag)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TagDTO tag)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

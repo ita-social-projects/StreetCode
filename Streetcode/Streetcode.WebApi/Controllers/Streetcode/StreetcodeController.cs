@@ -1,56 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.Interfaces.Streetcode;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class StreetcodeController : ControllerBase
+public class StreetcodeController : BaseApiController
 {
-    private readonly IStreetcodeService _streetcodeService;
-    public StreetcodeController(IStreetcodeService streetcodeService)
-    {
-        _streetcodeService = streetcodeService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetByTagId(int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName(int name)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{index}")]
-    public async Task<IActionResult> GetByIndex(int index)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{streetcodeId}")]
-    public async Task<IActionResult> GetByStreetcodeId(int streetcodeId)
     {
         // TODO implement here
         return Ok();
@@ -70,22 +26,57 @@ public class StreetcodeController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        // TODO implement here
+        return Ok();
+    }
+
+    [HttpGet("{tagId:int}")]
+    public async Task<IActionResult> GetByTagId([FromRoute] int tagId)
+    {
+        // TODO implement here
+        return Ok();
+    }
+
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetByName([FromRoute] string name)
+    {
+        // TODO implement here
+        return Ok();
+    }
+
+    [HttpGet("{index}")]
+    public async Task<IActionResult> GetByIndex([FromRoute] int index)
+    {
+        // TODO implement here
+        return Ok();
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        // TODO implement here
+        return Ok();
+    }
+
     [HttpPost]
-    public async Task<IActionResult> Create(StreetcodeDTO fact)
+    public async Task<IActionResult> Create([FromBody] StreetcodeDTO streetcode)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(StreetcodeDTO fact)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] StreetcodeDTO streetcode)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

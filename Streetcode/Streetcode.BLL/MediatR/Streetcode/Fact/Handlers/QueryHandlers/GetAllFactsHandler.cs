@@ -1,27 +1,29 @@
 ﻿using AutoMapper;
+using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Queries;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Fact.Handlers.QueryHandlers
+namespace Streetcode.BLL.MediatR.Streetcode.Fact.Handlers.QueryHandlers;
+
+public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnumerable<FactDTO>>>
 {
-    public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, IEnumerable<FactDTO>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repositoryWrapper;
+
+    public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
-        private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly IMapper _mapper;
+        _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+    }
 
-        public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
-        {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
-        }
+    public async Task<Result<IEnumerable<FactDTO>>> Handle(GetAllFactsQuery request, CancellationToken cancellationToken)
+    {
+        var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
 
-        public async Task<IEnumerable<FactDTO>> Handle(GetAllFactsQuery request, CancellationToken cancellationToken)
-        {
-            var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
-
-            return _mapper.Map<IEnumerable<FactDTO>>(facts);
-        }
+        var factDtos = _mapper.Map<IEnumerable<FactDTO>>(facts);
+        return Result.Ok(factDtos);
     }
 }

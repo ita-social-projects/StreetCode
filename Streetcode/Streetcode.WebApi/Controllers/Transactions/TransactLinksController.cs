@@ -1,19 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Transactions;
-using Streetcode.BLL.Interfaces.Transactions;
 
 namespace Streetcode.WebApi.Controllers.Transactions;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class TransactLinksController : ControllerBase
+public class TransactLinksController : BaseApiController
 {
-    private readonly ITransactLinksService _transactLinksService;
-    public TransactLinksController(ITransactLinksService transactLinksService)
-    {
-        _transactLinksService = transactLinksService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,29 +12,29 @@ public class TransactLinksController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TransactLinkDTO transactLink)
+    public async Task<IActionResult> Create([FromBody] TransactLinkDTO transactLink)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(TransactLinkDTO transactLink)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TransactLinkDTO transactLink)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

@@ -1,19 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Timeline;
-using Streetcode.BLL.Interfaces.Timeline;
 
 namespace Streetcode.WebApi.Controllers.Timeline;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class TimelineItemController : ControllerBase
+public class TimelineItemController : BaseApiController
 {
-    private readonly ITimelineItemService _timelineService;
-    public TimelineItemController(ITimelineItemService timelineService)
-    {
-        _timelineService = timelineService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,29 +12,29 @@ public class TimelineItemController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TimelineItemDTO timeline)
+    public async Task<IActionResult> Create([FromBody] TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(TimelineItemDTO timeline)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

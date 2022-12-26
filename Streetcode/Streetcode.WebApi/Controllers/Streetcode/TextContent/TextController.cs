@@ -1,19 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.Interfaces.Streetcode.TextContent;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class TextController : ControllerBase
+public class TextController : BaseApiController
 {
-    private readonly ITextService _textService;
-    public TextController(ITextService textService)
-    {
-        _textService = textService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,29 +12,29 @@ public class TextController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(TextDTO fact)
+    public async Task<IActionResult> Create([FromBody] TextDTO fact)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(TextDTO fact)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TextDTO fact)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

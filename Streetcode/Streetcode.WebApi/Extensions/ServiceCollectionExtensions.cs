@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Repositories.Realizations;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Media;
@@ -24,8 +22,11 @@ using Streetcode.BLL.Services.Toponyms;
 using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
-public static class ServiceCollectionExtentions
+namespace Streetcode.WebApi.Extensions;
+
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
@@ -48,6 +49,9 @@ public static class ServiceCollectionExtentions
 
         services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
         return services;
     }
 
@@ -55,9 +59,6 @@ public static class ServiceCollectionExtentions
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddCors(opt =>
         {

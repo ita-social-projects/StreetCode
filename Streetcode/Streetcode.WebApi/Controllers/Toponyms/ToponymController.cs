@@ -1,19 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.Interfaces.Toponyms;
 
 namespace Streetcode.WebApi.Controllers.Toponyms;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class ToponymController : ControllerBase
+public class ToponymController : BaseApiController
 {
-    private readonly IToponymService _toponymService;
-    public ToponymController(IToponymService toponymService)
-    {
-        _toponymService = toponymService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,36 +12,36 @@ public class ToponymController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName(string name)
+    public async Task<IActionResult> GetByName([FromRoute] string name)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ToponymDTO toponym)
+    public async Task<IActionResult> Create([FromBody] ToponymDTO toponym)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(ToponymDTO toponym)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ToponymDTO toponym)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

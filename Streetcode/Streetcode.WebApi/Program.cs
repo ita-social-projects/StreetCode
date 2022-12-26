@@ -1,4 +1,5 @@
 using Streetcode.Extensions;
+using Streetcode.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";

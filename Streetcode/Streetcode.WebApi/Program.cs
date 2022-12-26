@@ -1,5 +1,7 @@
+using Streetcode.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
-var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
 builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
 {
@@ -20,7 +22,7 @@ builder.Services.AddAppServices();
 
 var app = builder.Build();
 
-// var dbTask = app.MigrateToDatabaseAsync();
+var dbTask = app.MigrateToDatabaseAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.EnvironmentName == "Local")
@@ -44,6 +46,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// await dbTask;
-//
+await dbTask;
+
 app.Run();

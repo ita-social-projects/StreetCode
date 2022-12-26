@@ -1,19 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Media.Images;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class ArtController : ControllerBase
+public class ArtController : BaseApiController
 {
-    private readonly IArtService _artService;
-    public ArtController(IArtService artService)
-    {
-        _artService = artService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,29 +12,29 @@ public class ArtController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(ArtDTO art)
+    public async Task<IActionResult> Create([FromBody] ArtDTO art)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(ArtDTO art)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ArtDTO art)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

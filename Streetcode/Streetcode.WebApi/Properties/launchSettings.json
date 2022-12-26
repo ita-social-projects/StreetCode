@@ -2,7 +2,7 @@
   "profiles": {
     "Streetcode_Local": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "Local"
       },

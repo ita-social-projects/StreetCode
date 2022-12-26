@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Media.Images;
+using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Timeline;
 
-namespace Streetcode.WebApi.Controllers.Media.Images;
+namespace Streetcode.WebApi.Controllers.Timeline;
 
-public class ImageController : BaseApiController
+public class TimelineItemController : BaseApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -21,14 +20,14 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ImageDTO image)
+    public async Task<IActionResult> Create([FromBody] TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ImageDTO image)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TimelineItemDTO timeline)
     {
         // TODO implement here
         return Ok();

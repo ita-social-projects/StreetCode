@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
 
 namespace Streetcode.BLL.Mapping.AdditionalContent;

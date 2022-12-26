@@ -4,10 +4,10 @@ namespace Streetcode.BLL.DTO.Streetcode.TextContent;
 
 public class FactDTO
 {
-    public int Id;
-    public string Title;
-    public int ImageId;
-    public ImageDTO Image;
-    public string FactContent;
-    public IEnumerable<StreetcodeDTO> Streetcodes;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public int ImageId { get; set; }
+    public ImageDTO Image { get; set; }
+    public string FactContent { get; set; }
+    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

@@ -1,19 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media;
-using Streetcode.BLL.Interfaces.Media;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class VideoController : ControllerBase
+public class VideoController : BaseApiController
 {
-    private readonly IVideoService _videoService;
-    public VideoController(IVideoService videoService)
-    {
-        _videoService = videoService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -21,29 +12,29 @@ public class VideoController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(VideoDTO video)
+    public async Task<IActionResult> Create([FromBody] VideoDTO video)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(VideoDTO video)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] VideoDTO video)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

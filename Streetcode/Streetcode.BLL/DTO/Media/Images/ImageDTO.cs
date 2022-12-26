@@ -7,11 +7,11 @@ namespace Streetcode.BLL.DTO.Media.Images;
 
 public class ImageDTO
 {
-    public int Id;
-    public string Alt;
-    public UrlDTO Url;
-    public IEnumerable<StreetcodeDTO> Streetcodes;
-    public IEnumerable<FactDTO> Facts;
-    public IEnumerable<SourceLinkCategoryDTO> Categories;
-    public ArtDTO Art;
+    public int Id { get; set; }
+    public string Alt { get; set; }
+    public UrlDTO Url { get; set; }
+    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
+    public IEnumerable<FactDTO> Facts { get; set; }
+    public IEnumerable<SourceLinkCategoryDTO> Categories { get; set; }
+    public ArtDTO Art { get; set; }
 }

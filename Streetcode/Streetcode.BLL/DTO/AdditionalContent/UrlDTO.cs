@@ -2,7 +2,7 @@ namespace Streetcode.BLL.DTO.AdditionalContent;
 
 public class UrlDTO
 {
-    public int Id;
-    public string Title;
-    public string Href;
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string Href { get; set; }
 }

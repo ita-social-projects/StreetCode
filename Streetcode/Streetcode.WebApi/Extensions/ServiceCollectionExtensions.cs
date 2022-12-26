@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Repositories.Realizations;
+using Microsoft.OpenApi.Models;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Media;
@@ -23,13 +23,14 @@ using Streetcode.BLL.Services.Toponyms;
 using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
-public static class ServiceCollectionExtentions
+namespace Streetcode.WebApi.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAppServices(this IServiceCollection services)
+    public static void AddEntityServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
-
         services.AddScoped<IFactService, FactService>();
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IArtService, ArtService>();
@@ -41,22 +42,32 @@ public static class ServiceCollectionExtentions
         services.AddScoped<ITagService, TagService>();
         services.AddScoped<ITermService, TermService>();
         services.AddScoped<ITextService, TextService>();
-        services.AddScoped<ITimelineService, TimelineService>();
+        services.AddScoped<ITimelineItemService, TimelineItemService>();
         services.AddScoped<IToponymService, ToponymService>();
         services.AddScoped<ITransactLinksService, TransactLinksService>();
-
-        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-
-        return services;
     }
 
-    public static void AddCustomServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static void AddRepositoryServices(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+    }
+
+    public static void AddCustomServices(this IServiceCollection services)
+    {
+        services.AddEntityServices();
+        services.AddRepositoryServices();
+
+        var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+        services.AddAutoMapper(currentAssemblies);
+        services.AddMediatR(currentAssemblies);
+
+        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+    }
+
+    public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
-
-        services.AddAutoMapper(typeof(Program).Assembly);
-        services.AddMediatR(typeof(Program).Assembly);
 
         services.AddCors(opt =>
         {
@@ -78,5 +89,17 @@ public static class ServiceCollectionExtentions
         });
 
         services.AddLogging();
+        services.AddControllers();
+    }
+
+    public static void AddSwaggerServices(this IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(opt =>
+        {
+            opt.SwaggerDoc("V1", new OpenApiInfo { Title = "MyApi", Version = "V1" });
+
+            opt.CustomSchemaIds(x => x.FullName);
+        });
     }
 }

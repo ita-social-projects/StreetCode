@@ -1,20 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.Interfaces.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 
-[ApiController]
-[Route("api/[controller]/[action]")]
-public class SubtitleController : ControllerBase
+public class SubtitleController : BaseApiController
 {
-    private readonly ISubtitleService _subtitleService;
-    public SubtitleController(ISubtitleService subtitleService)
-    {
-        _subtitleService = subtitleService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -22,36 +12,36 @@ public class SubtitleController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById([FromRoute] int id)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpGet("{streetcodeId}")]
-    public async Task<IActionResult> GetByStreetcodeId(int streetcodeId)
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         // TODO implement here
         return Ok();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(SubtitleDTO subtitle)
+    public async Task<IActionResult> Create([FromBody] SubtitleDTO subtitle)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(SubtitleDTO subtitle)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] SubtitleDTO subtitle)
     {
         // TODO implement here
         return Ok();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
     {
         // TODO implement here
         return Ok();

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates;
 
-namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates
+public class StreetcodeCoordinateDTO
 {
-    public class StreetcodeCoordinateDTO
-    {
-        public CoordinateDTO CoordinatesDTO;
-        public int StreetcodeId;
-    }
+    public CoordinateDTO Coordinates { get; set; }
+    public int StreetcodeId { get; set; }
 }

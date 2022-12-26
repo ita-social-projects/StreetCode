@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Streetcode.BLL.Interfaces.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Media;
@@ -28,10 +29,8 @@ namespace Streetcode.WebApi.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAppServices(this IServiceCollection services)
+    public static void AddEntityServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
-
         services.AddScoped<IFactService, FactService>();
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IArtService, ArtService>();
@@ -46,16 +45,26 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITimelineItemService, TimelineItemService>();
         services.AddScoped<IToponymService, ToponymService>();
         services.AddScoped<ITransactLinksService, TransactLinksService>();
-
-        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-        services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-
-        return services;
     }
 
-    public static void AddCustomServices(this IServiceCollection services, ConfigurationManager configuration)
+    public static void AddRepositoryServices(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+    }
+
+    public static void AddCustomServices(this IServiceCollection services)
+    {
+        services.AddEntityServices();
+        services.AddRepositoryServices();
+
+        var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+        services.AddAutoMapper(currentAssemblies);
+        services.AddMediatR(currentAssemblies);
+
+        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+    }
+
+    public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -80,5 +89,17 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
+        services.AddControllers();
+    }
+
+    public static void AddSwaggerServices(this IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(opt =>
+        {
+            opt.SwaggerDoc("V1", new OpenApiInfo { Title = "MyApi", Version = "V1" });
+
+            opt.CustomSchemaIds(x => x.FullName);
+        });
     }
 }

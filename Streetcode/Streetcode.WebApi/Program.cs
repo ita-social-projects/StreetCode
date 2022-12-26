@@ -1,31 +1,15 @@
-using Streetcode.Extensions;
 using Streetcode.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
+builder.Host.ConfigureApplication();
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    config.SetBasePath(Directory.GetCurrentDirectory());
-    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-    config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-    config.AddEnvironmentVariables("STREETCODE_");
-});
-
-// Add services to the container.
-builder.Services.AddCustomServices(builder.Configuration);
-builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAppServices();
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddSwaggerServices();
+builder.Services.AddCustomServices();
 
 var app = builder.Build();
-
 var dbTask = app.MigrateToDatabaseAsync();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.EnvironmentName == "Local")
 {
     builder.Configuration.AddUserSecrets<string>();
@@ -38,11 +22,10 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors();
-
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

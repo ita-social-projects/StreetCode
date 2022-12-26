@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
 
-namespace Streetcode.Extensions;
+namespace Streetcode.WebApi.Extensions;
 
 public static class WebApplicationExtensions
 {

@@ -51,7 +51,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 ### Required to install
 * <a href="https://dotnet.microsoft.com/en-us/download/dotnet/6.0" target="_blank">ASP.NET Core Runtime 6.0.12</a>
 * <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank"> Microsoft SQL Server 2017</a>+
-* <a href="https://nuke.build/" target="_blank"> Nuke Build 6.2.1</a>+
+* <a href="https://nuke.build/" target="_blank"> Nuke Build 6.2.1+</a> ```dotnet tool install Nuke.GlobalTool --global --version <VERSION_NUMBER>```
 
 ### Environment
 environmental variables
@@ -71,6 +71,10 @@ api.secret=${API_SECRET}
   ```
 https://github.com/ita-social-projects/StreetCode
   ```
+  Or if your have an associated SSH key:
+  ```
+git@github.com:ita-social-projects/StreetCode.git
+  ```
 
 ### Setup
   1. Change connection string  
@@ -82,13 +86,56 @@ https://github.com/ita-social-projects/StreetCode
 ### How to run local 
  Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
 
+### How to connect to db locally
+1. launch SQL Server management Studio
+2. In the pop-up window:
+    - enter **"localhost"** as the server name;
+    - select **"windows authentication"** as authentication mechanism;
+3. After the connection has been established, right-click on the server (the first line with the icon), on the left-hand side of the UI
+4. In the the appeared window find and click on **"properties"**
+5. In the properties section, select **"security"** page
+6. Make sure that **"Server authentication"** radio-button is set to **"SQL Server and Windows Authentication mode"**
+7. Click "Ok"
+8. Then again, on the left-hand side of the UI find folder entitled **"Security"**, and expand it
+9. In unrolled list of options find folder "Logins", and expand it
+10. At this point, you should have **"sa"** as the last option.
+    If for some reason you do not see it, please refer to https://stackoverflow.com/questions/35753254/why-login-without-rights-can-see-sa-login
+11. Right-click on the "sa" item, select "properties"
+12. Change password to the default system one - **"Admin@1234"**. Don't forget to confirm it afterwards
+13. On the left-hand side select **"Status"** page, and set **"Login"** radio-button to **"Enabled"**
+14. Click "Ok"
+
+Now you can connect to your localhost instance with login (sa) and password (Admin@1234)!
+
+**_NOTE:_** Here's the full walkthrough: https://www.youtube.com/watch?v=ANFnDqe4JBk&t=211s.
+
+
 ### How to run Docker
- 
+
+1. In the **"build"** project, find the **"Targets"** folder
+2. In the appeared list of classes, find and click on **"SetupPublicBuild.cs"**
+3. Open the command prompt/PowerShell/linux terminal, go inside of **"/Streetcode"** directory, and start the **"SetupDocker"** Target.
+```
+cd ./Streetcode
+nuke SetupDocker
+```
+After waiting for target completion, you should find that the image and running containers for back-end, front-end, db and redis have been successfully created.
+
+**_NOTE:_**  If order to delete newly created images/containers/volumes, you can utilize the **"CleanDocker"** Target.
+```
+cd ./Streetcode
+nuke CleanDocker
+```
+That will delete all unnecessary docker-atoms for you.
+
 ---
 
 ## Usage
 ### How to work with swagger UI
 Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.
+
+### How to run API without swagger UI
+Run the Streetcode project in any other profile but "Local" and enter http://localhost:5000. Now, you are free to test API-endpoints with <a href="https://www.postman.com/" target="_blank">Postman</a> or any other tool.
 
 ### How to run tests
 ### How to Checkstyle
@@ -147,7 +194,7 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 ## FAQ
 
 - **Сan't  install .NET Core 6.0.0+ in Visual Studio?**
-    - Try to install Visual Studio 2022
+    - Try to install <a href="https://visualstudio.microsoft.com/ru/free-developer-offers/" target="_blank">Visual Studio 2022</a>
 
 ---
 

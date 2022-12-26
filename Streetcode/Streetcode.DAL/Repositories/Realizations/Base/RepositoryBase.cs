@@ -1,117 +1,123 @@
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Repositories.Realizations;
+namespace Streetcode.DAL.Repositories.Realizations.Base;
 
 public abstract class RepositoryBase<T> : IRepositoryBase<T>
     where T : class
 {
-    private readonly StreetcodeDbContext _streetcodeDbContext;
-    public RepositoryBase(StreetcodeDbContext streetcodeDbContext)
+    private readonly StreetcodeDbContext _dbContext;
+
+    protected RepositoryBase(StreetcodeDbContext context)
     {
-        _streetcodeDbContext = streetcodeDbContext;
+        _dbContext = context;
     }
 
-    public IQueryable<T> FindAll()
+    public IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default)
     {
-        return _streetcodeDbContext.Set<T>().AsNoTracking();
+        return GetQueryable(predicate).AsNoTracking();
     }
 
-    public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+    public async Task<EntityState> CreateAsync(T entity)
     {
-        return _streetcodeDbContext.Set<T>().Where(expression).AsNoTracking();
+        return (await _dbContext.Set<T>().AddAsync(entity)).State;
     }
 
     public void Create(T entity)
     {
-        _streetcodeDbContext.Set<T>().Add(entity);
-    }
-
-    public async Task CreateAsync(T entity)
-    {
-        await _streetcodeDbContext.Set<T>().AddAsync(entity);
+        _dbContext.Set<T>().Add(entity);
     }
 
     public void Update(T entity)
     {
-        _streetcodeDbContext.Set<T>().Update(entity);
+        _dbContext.Set<T>().Update(entity);
     }
 
     public void Delete(T entity)
     {
-        _streetcodeDbContext.Set<T>().Remove(entity);
+        _dbContext.Set<T>().Remove(entity);
     }
 
     public void Attach(T entity)
     {
-        _streetcodeDbContext.Set<T>().Attach(entity);
+        _dbContext.Set<T>().Attach(entity);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
     {
-        IIncludableQueryable<T, object> query = null;
+        IIncludableQueryable<T, object>? query = default;
 
-        if (includes.Length > 0)
+        if (includes.Any())
         {
-            query = _streetcodeDbContext.Set<T>().Include(includes[0]);
+            query = _dbContext.Set<T>().Include(includes[0]);
         }
 
         for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
         {
-            query = query.Include(includes[queryIndex]);
+            query = query!.Include(includes[queryIndex]);
         }
 
-        return query == null ? _streetcodeDbContext.Set<T>() : (IQueryable<T>)query;
+        return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<IEnumerable<T>> GetAllAsync(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQuery(predicate, include).ToListAsync();
+        return await GetQueryable(predicate, include).ToListAsync() ?? new List<T>();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, T>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<IEnumerable<T>> GetAllAsync(
+        Expression<Func<T, T>> selector,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQuery(predicate, include, selector).ToListAsync();
+        return await GetQueryable(predicate, include, selector).ToListAsync() ?? new List<T>();
     }
 
-    public async Task<T> GetFirstAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<T?> GetSingleOrDefaultAsync(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        var query = GetQuery(predicate, include);
-        return await query.FirstAsync();
+        return await GetQueryable(predicate, include).SingleOrDefaultAsync();
     }
 
-    public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQuery(predicate, include).FirstOrDefaultAsync();
+        return await GetQueryable(predicate, include).FirstOrDefaultAsync();
     }
 
-    public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, T>> selector, Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    public async Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, T>> selector,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQuery(predicate, include, selector).FirstOrDefaultAsync();
+        return await GetQueryable(predicate, include, selector).FirstOrDefaultAsync();
     }
 
-    public async Task<T> GetLastAsync(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
+    private IQueryable<T> GetQueryable(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        Expression<Func<T, T>>? selector = default)
     {
-        return await GetQuery(predicate, include).LastAsync();
-    }
+        var query = _dbContext.Set<T>().AsNoTracking();
 
-    private IQueryable<T> GetQuery(Expression<Func<T, bool>> predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, Expression<Func<T, T>> selector = null)
-    {
-        var query = _streetcodeDbContext.Set<T>().AsNoTracking();
-        if (include != null)
+        if (include is not null)
         {
             query = include(query);
         }
 
-        if (predicate != null)
+        if (predicate is not null)
         {
             query = query.Where(predicate);
         }
 
-        if (selector != null)
+        if (selector is not null)
         {
             query = query.Select(selector);
         }

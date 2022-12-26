@@ -2,8 +2,8 @@
 
 public class RelatedFigureDTO
 {
-    public int ObserverId;
-    public int TargetId;
-    public StreetcodeDTO Observer;
-    public StreetcodeDTO Target;
+    public int ObserverId { get; set; }
+    public int TargetId { get; set; }
+    public StreetcodeDTO Observer { get; set; }
+    public StreetcodeDTO Target { get; set; }
 }

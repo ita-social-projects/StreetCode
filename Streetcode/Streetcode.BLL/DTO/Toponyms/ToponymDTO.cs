@@ -5,9 +5,9 @@ namespace Streetcode.BLL.DTO.Toponyms;
 
 public class ToponymDTO
 {
-    public int Id;
-    public string Title;
-    public string Description;
-    public IEnumerable<ToponymCoordinateDTO> Coordinates;
-    public IEnumerable<StreetcodeDTO> Streetcodes;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public IEnumerable<ToponymCoordinateDTO> Coordinates { get; set; }
+    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

@@ -5,9 +5,9 @@ namespace Streetcode.BLL.DTO.Sources;
 
 public class SourceLinkDTO
 {
-    public int Id;
-    public string Title;
-    public UrlDTO Url;
-    public int StreetcodeId;
-    public StreetcodeDTO Streetcode;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public UrlDTO Url { get; set; }
+    public int StreetcodeId { get; set; }
+    public StreetcodeDTO Streetcode { get; set; }
 }

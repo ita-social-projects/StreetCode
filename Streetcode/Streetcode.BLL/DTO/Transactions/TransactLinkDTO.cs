@@ -5,9 +5,9 @@ namespace Streetcode.BLL.DTO.Transactions;
 
 public class TransactLinkDTO
 {
-    public int Id;
-    public UrlDTO Url;
-    public UrlDTO QrCodeUrl;
-    public int StreetcodeId;
-    public StreetcodeDTO Streetcode;
+    public int Id { get; set; }
+    public UrlDTO Url { get; set; }
+    public UrlDTO QrCodeUrl { get; set; }
+    public int StreetcodeId { get; set; }
+    public StreetcodeDTO Streetcode { get; set; }
 }

@@ -6,7 +6,7 @@ namespace Streetcode.BLL.DTO.Map;
 
 public class MapDTO
 {
-    public ImageDTO Background;
-    public IEnumerable<ToponymDTO> Toponyms;
-    public IEnumerable<StreetcodeDTO> Streetcodes;
+    public ImageDTO Background { get; set; }
+    public IEnumerable<ToponymDTO> Toponyms { get; set; }
+    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

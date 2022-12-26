@@ -4,11 +4,11 @@ namespace Streetcode.BLL.DTO.Partners;
 
 public class StreetcodePartnerDTO
 {
-    public int Id;
-    public string Title;
-    public bool IsSponsor;
-    public int StreetcodeId;
-    public StreetcodeDTO Streetcode;
-    public int PartnerId;
-    public PartnerDTO Partner;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public bool IsSponsor { get; set; }
+    public int StreetcodeId { get; set; }
+    public StreetcodeDTO Streetcode { get; set; }
+    public int PartnerId { get; set; }
+    public PartnerDTO Partner { get; set; }
 }

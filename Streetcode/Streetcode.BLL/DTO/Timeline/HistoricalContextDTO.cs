@@ -2,7 +2,7 @@ namespace Streetcode.BLL.DTO.Timeline;
 
 public class HistoricalContextDTO
 {
-    public int Id;
-    public string Title;
-    public IEnumerable<TimelineItemDTO> TimelineItems;
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public IEnumerable<TimelineItemDTO> TimelineItems { get; set; }
 }

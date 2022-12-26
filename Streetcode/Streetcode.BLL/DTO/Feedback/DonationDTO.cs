@@ -2,5 +2,5 @@ namespace Streetcode.BLL.DTO.Feedback;
 
 public class DonationDTO
 {
-    public int Id;
+    public int Id { get; set; }
 }

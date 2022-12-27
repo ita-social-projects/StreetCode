@@ -38,6 +38,10 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IStreetcodeRepository _streetcodeRepository;
 
+    private IEventStreetcodeRepository _eventStreetcodeRepository;
+
+    private IPersonStreetcodeRepository _personStreetcodeRepository;
+
     private ISubtitleRepository _subtitleRepository;
 
     private ITagRepository _tagRepository;
@@ -145,6 +149,32 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _streetcodeRepository;
+        }
+    }
+
+    public IEventStreetcodeRepository EventStreetcodeRepository
+    {
+        get
+        {
+            if (_eventStreetcodeRepository == null)
+            {
+                _eventStreetcodeRepository = new EventStreetcodeRepository(_streetcodeDbContext);
+            }
+
+            return _eventStreetcodeRepository;
+        }
+    }
+
+    public IPersonStreetcodeRepository PersonStreetcodeRepository
+    {
+        get
+        {
+            if (_personStreetcodeRepository == null)
+            {
+                _personStreetcodeRepository = new PersonStreetcodeRepository(_streetcodeDbContext);
+            }
+
+            return _personStreetcodeRepository;
         }
     }
 

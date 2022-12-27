@@ -18,6 +18,8 @@ public interface IRepositoryWrapper
     IAudioRepository AudioRepository { get; }
     IPartnersRepository PartnersRepository { get; }
     IStreetcodeRepository StreetcodeRepository { get; }
+    IEventStreetcodeRepository EventStreetcodeRepository { get; }
+    IPersonStreetcodeRepository PersonStreetcodeRepository { get; }
     ISubtitleRepository SubtitleRepository { get; }
     ITagRepository TagRepository { get; }
     ITermRepository TermRepository { get; }

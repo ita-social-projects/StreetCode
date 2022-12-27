@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Queries;
 
-namespace Streetcode.WebApi.Controllers.Streetcode;
+namespace Streetcode.WebApi.Controllers.Streetcode.Types;
 
-public class StreetcodeController : BaseApiController
+public class PersonStreetcodeController : BaseApiController
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -30,7 +30,7 @@ public class StreetcodeController : BaseApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetPersonStreetcodeByIdQuery(id)));
     }
 
     [HttpGet("{tagId:int}")]

@@ -239,19 +239,13 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    // private void All_Repoes;
-    public void All_Interfaces()
+    public int SaveChanges()
     {
-        throw new NotImplementedException();
+        return _streetcodeDbContext.SaveChanges();
     }
 
-    public void Save()
+    public async Task<int> SaveChangesAsync()
     {
-        _streetcodeDbContext.SaveChanges();
-    }
-
-    public async Task SaveAsync()
-    {
-        await _streetcodeDbContext.SaveChangesAsync();
+        return await _streetcodeDbContext.SaveChangesAsync();
     }
 }

@@ -223,7 +223,7 @@
     <!-- A field name in C# contains an underscore. -->
     <Rule Id="SA1312" Action="Error" />
     <!-- The name of a variable in C# does not begin with a lower-case letter. -->
-    <Rule Id="SA1313" Action="Error" />
+    <Rule Id="SA1313" Action="None" />
     <!-- The name of a parameter in C# does not begin with a lower-case letter. -->
     <Rule Id="SA1409" Action="Error" />
     <!-- A C# file contains code which is unnecessary and can be removed without changing the overall logic of the code. -->

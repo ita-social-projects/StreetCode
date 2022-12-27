@@ -33,7 +33,7 @@
     <Folder Include="MediatR\Media\Audio\" />
     <Folder Include="MediatR\Media\Video\" />
     <Folder Include="MediatR\Partners\" />
-    <Folder Include="MediatR\Streetcode\Fact\Handlers\CommandHandlers\" />
+    <Folder Include="MediatR\Streetcode\Fact" />
     <Folder Include="MediatR\Streetcode\Streetcode\" />
     <Folder Include="MediatR\Streetcode\Text\" />
     <Folder Include="MediatR\Streetcode\Term\" />

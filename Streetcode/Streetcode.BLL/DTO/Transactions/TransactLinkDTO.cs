@@ -9,5 +9,5 @@ public class TransactLinkDTO
     public UrlDTO Url { get; set; }
     public UrlDTO QrCodeUrl { get; set; }
     public int StreetcodeId { get; set; }
-    public StreetcodeDTO Streetcode { get; set; }
+    public StreetcodeDTO? Streetcode { get; set; }
 }

@@ -11,7 +11,7 @@ public class Partner
     public int Id { get; set; }
 
     [Required]
-    public string Title { get; set; }
+    public string? Title { get; set; }
     public string? LogoUrl { get; set; }
 
     [Required]

@@ -12,8 +12,8 @@ public class SourceLink
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
-    public string? Url { get; set; }
+    public string? Title { get; set; }
+    public string Url { get; set; }
 
     [Required]
     public int StreetcodeId { get; set; }

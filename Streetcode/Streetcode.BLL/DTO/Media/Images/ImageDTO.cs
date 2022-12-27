@@ -8,10 +8,10 @@ namespace Streetcode.BLL.DTO.Media.Images;
 public class ImageDTO
 {
     public int Id { get; set; }
-    public string Alt { get; set; }
+    public string? Alt { get; set; }
     public UrlDTO Url { get; set; }
     public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
     public IEnumerable<FactDTO> Facts { get; set; }
     public IEnumerable<SourceLinkCategoryDTO> Categories { get; set; }
-    public ArtDTO Art { get; set; }
+    public ArtDTO? Art { get; set; }
 }

@@ -2,11 +2,9 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Queries;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Fact.Handlers.QueryHandlers;
+namespace Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
 
 public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnumerable<FactDTO>>>
 {

@@ -25,9 +25,8 @@ public interface IRepositoryWrapper
     ITimelineRepository TimelineRepository { get; }
     IToponymRepository ToponymRepository { get; }
     ITransactLinksRepository TransactLinksRepository { get; }
-    public void All_Interfaces();
 
-    public void Save();
+    public int SaveChanges();
 
-    public Task SaveAsync();
+    public Task<int> SaveChangesAsync();
 }

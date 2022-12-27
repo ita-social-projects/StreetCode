@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Queries;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
@@ -15,35 +20,31 @@ public class FactController : BaseApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetFactByIdQuery(id)));
     }
 
     [HttpGet("{streetcodeId:int}")]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetFactByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] FactDTO fact)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateFactCommand(fact)));
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] FactDTO fact)
     {
-        // TODO implement here
-        return Ok();
+        fact.Id = id;
+        return HandleResult(await Mediator.Send(new UpdateFactCommand(fact)));
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteFactCommand(id)));
     }
 }

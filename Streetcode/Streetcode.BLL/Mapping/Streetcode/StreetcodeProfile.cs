@@ -6,8 +6,8 @@ namespace Streetcode.BLL.Mapping.Streetcode;
 
 public class StreetcodeProfile : Profile
 {
-    public StreetcodeProfile()
-    {
+	public StreetcodeProfile()
+	{
         CreateMap<StreetcodeContent, StreetcodeDTO>().ReverseMap();
     }
 }

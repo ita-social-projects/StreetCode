@@ -73,10 +73,9 @@ public static class ServiceCollectionExtensions
         {
             opt.AddDefaultPolicy(policy =>
             {
+                policy.AllowAnyOrigin();
                 policy.AllowAnyHeader();
                 policy.AllowAnyMethod();
-                policy.WithOrigins("http://localhost:3000");
-                policy.AllowCredentials();
                 policy.SetPreflightMaxAge(TimeSpan.FromDays(1));
             });
         });

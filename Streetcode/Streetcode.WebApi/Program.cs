@@ -21,8 +21,8 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
 app.UseCors();
+app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication();

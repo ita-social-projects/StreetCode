@@ -6,6 +6,7 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Timeline;
@@ -736,6 +737,22 @@ public static class ModelBuilderExtensions
                 Url = "https://streetcode/4",
                 QrCodeUrl = "https://qrcode/4",
                 StreetcodeId = 4
+            });
+        modelBuilder.Entity<RelatedFigure>().HasData(
+            new RelatedFigure
+            {
+                ObserverId = 1,
+                TargetId = 2
+            },
+            new RelatedFigure
+            {
+                ObserverId = 1,
+                TargetId = 3
+            },
+            new RelatedFigure
+            {
+                ObserverId = 2,
+                TargetId = 3
             });
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,10 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221227180254_AddCyrillicCollation")]
+    partial class AddCyrillicCollation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -778,11 +780,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1283,7 +1285,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcode_toponym", "streetcode");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.StreetcodeCoordinate", b =>
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate");
 
@@ -1329,7 +1331,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.ToponymCoordinate", b =>
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate");
 
@@ -1404,7 +1406,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2022, 12, 28, 16, 3, 49, 265, DateTimeKind.Local).AddTicks(2742),
+                            CreatedAt = new DateTime(2022, 12, 27, 20, 2, 52, 474, DateTimeKind.Local).AddTicks(2373),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1441,7 +1443,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 12, 28, 16, 3, 49, 265, DateTimeKind.Local).AddTicks(2566),
+                            CreatedAt = new DateTime(2022, 12, 27, 20, 2, 52, 474, DateTimeKind.Local).AddTicks(2255),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1455,7 +1457,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 12, 28, 16, 3, 49, 265, DateTimeKind.Local).AddTicks(2686),
+                            CreatedAt = new DateTime(2022, 12, 27, 20, 2, 52, 474, DateTimeKind.Local).AddTicks(2334),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1469,7 +1471,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 12, 28, 16, 3, 49, 265, DateTimeKind.Local).AddTicks(2693),
+                            CreatedAt = new DateTime(2022, 12, 27, 20, 2, 52, 474, DateTimeKind.Local).AddTicks(2342),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1749,18 +1751,18 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.StreetcodeCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithOne("Coordinate")
-                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeId")
+                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.StreetcodeCoordinate", "StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Streetcode");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.ToponymCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Toponyms.Toponym", "Toponym")
                         .WithMany("Coordinates")

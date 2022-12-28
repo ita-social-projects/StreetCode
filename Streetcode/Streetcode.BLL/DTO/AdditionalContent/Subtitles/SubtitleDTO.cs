@@ -8,7 +8,7 @@ public class SubtitleDTO
     public SubtitleStatusDTO SubtitleStatus { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public UrlDTO? Url { get; set; }
     public int StreetcodeId { get; set; }
 }

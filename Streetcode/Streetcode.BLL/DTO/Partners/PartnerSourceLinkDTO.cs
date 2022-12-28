@@ -8,5 +8,5 @@ public class PartnerSourceLinkDTO
     public string LogoUrl { get; set; }
     public UrlDTO Url { get; set; }
     public int PartnerId { get; set; }
-    public PartnerDTO Partner { get; set; }
+    public PartnerDTO? Partner { get; set; }
 }

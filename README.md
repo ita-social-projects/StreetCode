@@ -1,4 +1,4 @@
-<a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreetCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
+<a href="https://softserve.academy/"><div align="center"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreetCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></div></a>
 
 # Streetcode
 This is a Back-end part of our Streetcode project.

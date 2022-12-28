@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Toponyms;

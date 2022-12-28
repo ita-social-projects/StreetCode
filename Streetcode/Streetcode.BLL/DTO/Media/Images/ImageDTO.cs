@@ -11,7 +11,4 @@ public class ImageDTO
     public string Alt { get; set; }
     public UrlDTO Url { get; set; }
     public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
-    public IEnumerable<FactDTO> Facts { get; set; }
-    public IEnumerable<SourceLinkCategoryDTO> Categories { get; set; }
-    public ArtDTO Art { get; set; }
 }

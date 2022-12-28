@@ -3,14 +3,9 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.DTO.Streetcode.Types;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Queries;
-using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Handlers.QueryHandlers;
+namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 
 public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, Result<StreetcodeDTO>>
 {
@@ -28,7 +23,22 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetSingleOrDefaultAsync(
             predicate: st => st.Id == request.id,
             include: source => source
-                    .Include(l => l.Tags));
+                    .Include(l => l.Toponyms)
+                    .Include(l => l.Images)
+                    .Include(l => l.Tags)
+                    .Include(l => l.Audio)
+                    .Include(l => l.TransactionLink)
+                    .Include(l => l.Videos)
+                    .Include(l => l.Facts)
+                    .Include(l => l.TimelineItems)
+                    .Include(l => l.SourceLinks)
+                    .Include(l => l.Arts)
+                    .Include(l => l.Subtitles));
+
+        if (streetcode is null)
+        {
+            return Result.Fail(new Error($"Cannot find a fact with corresponding Id: {request.id}"));
+        }
 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         return Result.Ok(streetcodeDto);

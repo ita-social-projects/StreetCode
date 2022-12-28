@@ -8,6 +8,10 @@ public class TransactionLinkProfile : Profile
 {
     public TransactionLinkProfile()
     {
-        CreateMap<TransactionLink, TransactLinkDTO>().ReverseMap();
+        CreateMap<TransactionLink, TransactLinkDTO>()
+            .ForPath(dto => dto.Url.Title, conf => conf.MapFrom(ol => ol.UrlTitle))
+            .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url))
+            .ForPath(dto => dto.QrCodeUrl.Title, conf => conf.MapFrom(ol => ol.QrCodeUrlTitle))
+            .ForPath(dto => dto.QrCodeUrl.Href, conf => conf.MapFrom(ol => ol.QrCodeUrl));
     }
 }

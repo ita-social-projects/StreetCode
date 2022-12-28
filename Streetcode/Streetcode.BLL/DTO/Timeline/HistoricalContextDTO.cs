@@ -4,5 +4,4 @@ public class HistoricalContextDTO
 {
     public int Id { get; set; }
     public string Title { get; set; }
-    public IEnumerable<TimelineItemDTO> TimelineItems { get; set; }
 }

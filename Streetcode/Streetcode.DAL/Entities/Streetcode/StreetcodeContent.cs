@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;

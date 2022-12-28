@@ -11,5 +11,4 @@ public class TimelineItemDTO
     public DateTime Date { get; set; }
     public ImageDTO Image { get; set; }
     public IEnumerable<HistoricalContextDTO> HistoricalContexts { get; set; }
-    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

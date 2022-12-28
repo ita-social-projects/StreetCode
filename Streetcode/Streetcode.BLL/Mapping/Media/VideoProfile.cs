@@ -8,6 +8,8 @@ public class VideoProfile : Profile
 {
     public VideoProfile()
     {
-        CreateMap<Video, VideoDTO>().ReverseMap();
+        CreateMap<Video, VideoDTO>()
+            .ForPath(dto => dto.Url.Title, conf => conf.MapFrom(ol => ol.Title))
+            .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url));
     }
 }

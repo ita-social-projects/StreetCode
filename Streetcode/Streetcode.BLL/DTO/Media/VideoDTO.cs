@@ -9,5 +9,4 @@ public class VideoDTO
     public string Description { get; set; }
     public UrlDTO Url { get; set; }
     public int StreetcodeId { get; set; }
-    public StreetcodeDTO Streetcode { get; set; }
 }

@@ -35,7 +35,7 @@ public abstract class StreetcodeDTO
     public IEnumerable<SourceLinkDTO> SourceLinks { get; set; }
     public IEnumerable<ArtDTO> Arts { get; set; }
     public IEnumerable<SubtitleDTO> Subtitles { get; set; }
-    public IEnumerable<PartnerDTO> StreetcodePartners { get; set; }
+    public IEnumerable<StreetcodePartnerDTO> StreetcodePartners { get; set; }
     public IEnumerable<RelatedFigureDTO> Observers { get; set; }
     public IEnumerable<RelatedFigureDTO> Targets { get; set; }
 }

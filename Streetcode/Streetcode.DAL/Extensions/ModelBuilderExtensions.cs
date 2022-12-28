@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;

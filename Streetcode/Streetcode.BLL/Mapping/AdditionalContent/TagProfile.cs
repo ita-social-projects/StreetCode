@@ -8,6 +8,6 @@ public class TagProfile : Profile
 {
     public TagProfile()
     {
-        CreateMap<Tag, TagDTO>().ReverseMap();
+        CreateMap<Tag, TagDTO>().ForMember(x => x.Streetcodes, conf => conf.Ignore());
     }
 }

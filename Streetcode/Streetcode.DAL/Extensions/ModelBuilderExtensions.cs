@@ -13,6 +13,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Extensions;
 
@@ -774,5 +775,15 @@ public static class ModelBuilderExtensions
                 ObserverId = 2,
                 TargetId = 3
             });
+
+        SeedMtoMTables();
+    }
+
+    private static void SeedMtoMTables()
+    {
+        DbContext dbContext = new StreetcodeDbContext();
+        var queryFile = Path.Combine("../SeedMtoMSQLQuery.sql");
+        var query = File.ReadAllText(queryFile);
+        dbContext.Database.ExecuteSqlRaw(query);
     }
 }

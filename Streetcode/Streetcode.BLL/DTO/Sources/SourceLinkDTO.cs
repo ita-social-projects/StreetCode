@@ -8,5 +8,5 @@ public class SourceLinkDTO
     public int Id { get; set; }
     public UrlDTO Url { get; set; }
     public int StreetcodeId { get; set; }
-    public StreetcodeDTO? Streetcode { get; set; }
+    public IEnumerable<SourceLinkCategoryDTO> SourceLinkCategory { get; set; }
 }

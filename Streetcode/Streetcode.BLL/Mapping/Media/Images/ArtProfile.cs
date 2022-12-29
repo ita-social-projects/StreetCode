@@ -8,6 +8,6 @@ public class ArtProfile : Profile
 {
     public ArtProfile()
     {
-        CreateMap<Art, ArtDTO>().ReverseMap();
+        CreateMap<Art, ArtDTO>().ForMember(x => x.Streetcodes, conf => conf.Ignore());
     }
 }

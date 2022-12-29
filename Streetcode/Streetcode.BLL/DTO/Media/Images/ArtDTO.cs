@@ -8,5 +8,4 @@ public class ArtDTO
     public string? Description { get; set; }
     public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
     public int ImageId { get; set; }
-    public ImageDTO? Image { get; set; }
 }

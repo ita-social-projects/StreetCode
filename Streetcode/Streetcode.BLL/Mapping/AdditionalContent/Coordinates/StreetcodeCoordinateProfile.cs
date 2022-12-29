@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 
 namespace Streetcode.BLL.Mapping.AdditionalContent.Coordinates;
 

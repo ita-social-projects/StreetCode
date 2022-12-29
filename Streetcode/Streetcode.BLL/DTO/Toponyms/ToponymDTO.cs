@@ -1,4 +1,4 @@
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates;
+using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Toponyms;

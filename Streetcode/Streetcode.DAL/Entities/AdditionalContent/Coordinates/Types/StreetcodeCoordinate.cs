@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Streetcode.DAL.Entities.Streetcode;
 
-namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+namespace Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 
 public class StreetcodeCoordinate : Coordinate
 {

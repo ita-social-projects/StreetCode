@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Queries;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 

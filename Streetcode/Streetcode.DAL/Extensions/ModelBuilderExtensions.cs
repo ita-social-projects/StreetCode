@@ -776,14 +776,16 @@ public static class ModelBuilderExtensions
                 TargetId = 3
             });
 
-        SeedMtoMTables();
+        // SeedMtoMTables();
     }
 
     private static void SeedMtoMTables()
     {
-        DbContext dbContext = new StreetcodeDbContext();
-        var queryFile = Path.Combine("../SeedMtoMSQLQuery.sql");
-        var query = File.ReadAllText(queryFile);
-        dbContext.Database.ExecuteSqlRaw(query);
+        var dbContext = new StreetcodeDbContext(new DbContextOptionsBuilder<StreetcodeDbContext>().Options);
+
+        var cwd = Directory.GetCurrentDirectory();
+        var queryFile = Path.Combine($"{cwd}/../Streetcode.DAL/SeedMtoMSQLQuery.sql");
+
+        dbContext.Database.ExecuteSqlRaw(File.ReadAllText(queryFile));
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Partners;
 
-namespace Streetcode.DAL.Entities.Partners;
+namespace Streetcode.DAL.Entities.Streetcode;
 
-[Table("streetcode_partner", Schema = "partners")]
+[Table("streetcode_partner", Schema = "streetcode")]
 public class StreetcodePartner
 {
     public bool IsSponsor { get; set; }

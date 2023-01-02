@@ -6,12 +6,14 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Extensions;
 
@@ -145,7 +147,6 @@ public static class ModelBuilderExtensions
             {
                 Id = 2,
                 ImageId = 3,
-                Description = "«Погруддя жінки» — портрет роботи Тараса Шевченка (копія з невідомого оригіналу) виконаний ним у Вільно в 1830 році на папері італійським олівцем. Розмір 47,5 × 38. Зустрічається також під назвою «Жіноча голівка»"
             },
             new Art
             {
@@ -208,6 +209,27 @@ public static class ModelBuilderExtensions
                 Title = "Звільнення Херсона",
                 Alt = "Звільнення Херсона",
                 Url = "https://www.bing.com/images/search?view=detailV2&ccid=F5o3vrW9&id=5409686EF1396243251CE5AF505766A0A2D0662E&thid=OIP.F5o3vrW9jZJ9ECMgkmevTwHaFj&mediaurl=https%3a%2f%2fstorage1.censor.net%2fimages%2f1%2f7%2f9%2fa%2f179a37beb5bd8d927d1023209267af4f%2foriginal.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.179a37beb5bd8d927d1023209267af4f%3frik%3dLmbQoqBmV1Cv5Q%26pid%3dImgRaw%26r%3d0&exph=720&expw=960&q=%d0%b2%d0%b8%d0%b7%d0%b2%d0%be%d0%bb%d0%b5%d0%bd%d0%bd%d1%8f+%d1%85%d0%b5%d1%80%d1%81%d0%be%d0%bd%d1%83&simid=608050323200235844&FORM=IRPRST&ck=C9A86B9D5EBBADF456F315DFD0BA990B&selectedIndex=3&ajaxhist=0&ajaxserp=0"
+            },
+            new Image
+            {
+                Id = 9,
+                Title = "book",
+                Alt = "book",
+                Url = "https://marvistamom.com/wp-content/uploads/books3.jpg"
+            },
+            new Image
+            {
+                Id = 10,
+                Title = "video",
+                Alt = "video",
+                Url = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg"
+            },
+            new Image
+            {
+                Id = 11,
+                Title = "article",
+                Alt = "article",
+                Url = "https://images.laws.com/constitution/constitutional-convention.jpg"
             });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
@@ -318,17 +340,17 @@ public static class ModelBuilderExtensions
             new HistoricalContext
             {
                 Id = 1,
-                Title = "Book"
+                Title = "Дитинство"
             },
             new HistoricalContext
             {
                 Id = 2,
-                Title = "Wideo"
+                Title = "Студентство"
             },
             new HistoricalContext
             {
                 Id = 3,
-                Title = "Article"
+                Title = "Життя в Петербурзі"
             });
         modelBuilder.Entity<Video>().HasData(
             new Video
@@ -486,19 +508,19 @@ public static class ModelBuilderExtensions
             {
                 Id = 1,
                 Title = "book",
-                ImageId = 1
+                ImageId = 9
             },
             new SourceLinkCategory
             {
                 Id = 2,
                 Title = "video",
-                ImageId = 2
+                ImageId = 10
             },
             new SourceLinkCategory
             {
                 Id = 3,
                 Title = "article",
-                ImageId = 1
+                ImageId = 11
             });
         modelBuilder.Entity<Fact>().HasData(
             new Fact
@@ -737,5 +759,33 @@ public static class ModelBuilderExtensions
                 QrCodeUrl = "https://qrcode/4",
                 StreetcodeId = 4
             });
+        modelBuilder.Entity<RelatedFigure>().HasData(
+            new RelatedFigure
+            {
+                ObserverId = 1,
+                TargetId = 2
+            },
+            new RelatedFigure
+            {
+                ObserverId = 1,
+                TargetId = 3
+            },
+            new RelatedFigure
+            {
+                ObserverId = 2,
+                TargetId = 3
+            });
+
+        // SeedMtoMTables();
+    }
+
+    private static void SeedMtoMTables()
+    {
+        var dbContext = new StreetcodeDbContext(new DbContextOptionsBuilder<StreetcodeDbContext>().Options);
+
+        var cwd = Directory.GetCurrentDirectory();
+        var queryFile = Path.Combine($"{cwd}/../Streetcode.DAL/SeedMtoMSQLQuery.sql");
+
+        dbContext.Database.ExecuteSqlRaw(File.ReadAllText(queryFile));
     }
 }

@@ -75,6 +75,11 @@ public class StreetcodeDbContext : DbContext
             .WithMany(h => h.TimelineItems)
             .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
 
+        modelBuilder.Entity<SourceLink>()
+            .HasMany(d => d.Categories)
+            .WithMany(h => h.SourceLinks)
+            .UsingEntity(j => j.ToTable("source_link_source_link_category", "sources"));
+
         modelBuilder.Entity<Image>(entity =>
         {
             entity.HasOne(d => d.Art)

@@ -67,7 +67,13 @@ public static class ServiceCollectionExtensions
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddDbContext<StreetcodeDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        {
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), opt =>
+            {
+                opt.MigrationsAssembly(typeof(StreetcodeDbContext).Assembly.GetName().Name);
+                opt.MigrationsHistoryTable("__EFMigrationsHistory", schema: "entity_framework");
+            });
+        });
 
         services.AddCors(opt =>
         {

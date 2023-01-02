@@ -8,7 +8,7 @@ builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 
 var app = builder.Build();
-var dbTask = app.MigrateToDatabaseAsync();
+var dbTask = app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

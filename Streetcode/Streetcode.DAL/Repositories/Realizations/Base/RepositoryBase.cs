@@ -63,6 +63,24 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
+    public IQueryable<T> Include(params string[] includes)
+    {
+        IQueryable<T>? query = default;
+        var textInfo = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
+
+        if (includes.Any())
+        {
+            query = _dbContext.Set<T>().Include(textInfo.ToTitleCase(includes[0]));
+        }
+
+        for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
+        {
+            query = query!.Include(textInfo.ToTitleCase(includes[queryIndex]));
+        }
+
+        return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
+    }
+
     public async Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)

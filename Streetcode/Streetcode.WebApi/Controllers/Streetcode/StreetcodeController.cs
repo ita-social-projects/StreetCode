@@ -28,9 +28,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id)
+    public async Task<IActionResult> GetById([FromRoute] int id, [FromQuery] string[] includes)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id, includes)));
     }
 
     [HttpGet("{tagId:int}")]

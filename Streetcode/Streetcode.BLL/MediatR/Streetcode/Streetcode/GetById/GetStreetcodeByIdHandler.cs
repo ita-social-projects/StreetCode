@@ -20,20 +20,11 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIdQuery request, CancellationToken cancellationToken)
     {
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: st => st.Id == request.id,
-            include: source => source
-                    .Include(l => l.Toponyms)
-                    .Include(l => l.Images)
-                    .Include(l => l.Tags)
-                    .Include(l => l.Audio)
-                    .Include(l => l.TransactionLink)
-                    .Include(l => l.Videos)
-                    .Include(l => l.Facts)
-                    .Include(l => l.TimelineItems)
-                    .Include(l => l.SourceLinks)
-                    .Include(l => l.Arts)
-                    .Include(l => l.Subtitles));
+        var streetcodesIncluded =
+            _repositoryWrapper.StreetcodeRepository.Include(request.includes);
+
+        var streetcode = await streetcodesIncluded
+            .FirstOrDefaultAsync(s => s.Id == request.id, cancellationToken: cancellationToken);
 
         if (streetcode is null)
         {

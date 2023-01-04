@@ -36,6 +36,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IPartnersRepository _partnersRepository;
 
+    private IRelatedFigureRepository _relatedFigureRepository;
+
     private IStreetcodeRepository _streetcodeRepository;
 
     private ISubtitleRepository _subtitleRepository;
@@ -132,6 +134,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _partnersRepository;
+        }
+    }
+
+    public IRelatedFigureRepository RelatedFigureRepository
+    {
+        get
+        {
+            if (_relatedFigureRepository == null)
+            {
+                _relatedFigureRepository = new RelatedFigureRepository(_streetcodeDbContext);
+            }
+
+            return _relatedFigureRepository;
         }
     }
 

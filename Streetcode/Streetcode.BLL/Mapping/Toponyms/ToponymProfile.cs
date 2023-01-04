@@ -8,6 +8,6 @@ public class ToponymProfile : Profile
 {
     public ToponymProfile()
     {
-        CreateMap<Toponym, ToponymDTO>().ForMember(x => x.Streetcodes, conf => conf.Ignore());
+        CreateMap<Toponym, ToponymDTO>().ReverseMap();
     }
 }

@@ -22,18 +22,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
             predicate: st => st.Id == request.id,
-            include: source => source
-                    .Include(l => l.Toponyms)
-                    .Include(l => l.Images)
-                    .Include(l => l.Tags)
-                    .Include(l => l.Audio)
-                    .Include(l => l.TransactionLink)
-                    .Include(l => l.Videos)
-                    .Include(l => l.Facts)
-                    .Include(l => l.TimelineItems)
-                    .Include(l => l.SourceLinks)
-                    .Include(l => l.Arts)
-                    .Include(l => l.Subtitles));
+            include: source => source.Include(l => l.Tags));
 
         if (streetcode is null)
         {

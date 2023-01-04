@@ -17,7 +17,6 @@ public interface IRepositoryWrapper
     IImageRepository ImageRepository { get; }
     IAudioRepository AudioRepository { get; }
     IPartnersRepository PartnersRepository { get; }
-    IRelatedFigureRepository RelatedFigureRepository { get; }
     IStreetcodeRepository StreetcodeRepository { get; }
     ISubtitleRepository SubtitleRepository { get; }
     ITagRepository TagRepository { get; }

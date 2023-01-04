@@ -21,7 +21,7 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
     public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository
-            .GetSingleOrDefaultAsync(f => f.Streetcode.Id == request.StreetcodeId);
+            .GetSingleOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
 
         if (transactLinks is null)
         {

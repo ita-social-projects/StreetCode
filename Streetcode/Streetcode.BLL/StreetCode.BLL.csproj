@@ -27,14 +27,8 @@
 
   <ItemGroup>
     <Folder Include="MediatR\AdditionalContent\Tag\" />
-    <Folder Include="MediatR\AdditionalContent\Subtitle\" />
     <Folder Include="MediatR\Media\Art\" />
-    <Folder Include="MediatR\Media\Image\" />
-    <Folder Include="MediatR\Media\Audio\" />
-    <Folder Include="MediatR\Media\Video\" />
     <Folder Include="MediatR\Partners\" />
-    <Folder Include="MediatR\Streetcode\Text\" />
-    <Folder Include="MediatR\Streetcode\Term\" />
   </ItemGroup>
 
 </Project>

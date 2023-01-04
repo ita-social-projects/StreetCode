@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetById;
 
-public class GetTransactionLinkByIdHandler : IRequestHandler<GetTransactionLinkByIdQuery, Result<TimelineItemDTO>>
+public class GetTransactionLinkByIdHandler : IRequestHandler<GetTimelineItemByIdQuery, Result<TimelineItemDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -18,7 +18,7 @@ public class GetTransactionLinkByIdHandler : IRequestHandler<GetTransactionLinkB
         _mapper = mapper;
     }
 
-    public async Task<Result<TimelineItemDTO>> Handle(GetTransactionLinkByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TimelineItemDTO>> Handle(GetTimelineItemByIdQuery request, CancellationToken cancellationToken)
     {
         var timelineItem = await _repositoryWrapper.TimelineRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 

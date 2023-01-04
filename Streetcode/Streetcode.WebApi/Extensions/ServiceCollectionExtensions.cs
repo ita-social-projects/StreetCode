@@ -102,7 +102,7 @@ public static class ServiceCollectionExtensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(opt =>
         {
-            opt.SwaggerDoc("V1", new OpenApiInfo { Title = "MyApi", Version = "V1" });
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyApi", Version = "v1" });
 
             opt.CustomSchemaIds(x => x.FullName);
         });

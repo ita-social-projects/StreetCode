@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;

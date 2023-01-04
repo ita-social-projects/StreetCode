@@ -10,11 +10,11 @@ public class RelatedFigureProfile : Profile
     {
         CreateMap<EventStreetcode, RelatedFigureDTO>()
             .ForPath(dto => dto.Title, conf => conf.MapFrom(e => e.Title))
-            .ForPath(dto => dto.Image, conf => conf.MapFrom(e => e.Images.FirstOrDefault()));
+            .ForPath(dto => dto.ImageId, conf => conf.MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
 
         CreateMap<PersonStreetcode, RelatedFigureDTO>()
             .ForPath(dto => dto.Title, conf => conf
                 .MapFrom(e => (e.Rank == null) ? e.FirstName + " " + e.LastName : e.Rank + " " + e.FirstName + " " + e.LastName))
-            .ForPath(dto => dto.Image, conf => conf.MapFrom(e => e.Images.FirstOrDefault()));
+            .ForPath(dto => dto.ImageId, conf => conf.MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
     }
 }

@@ -26,7 +26,7 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find a streetcode with corresponding Id: {request.index}"));
+            return Result.Fail(new Error($"Cannot find a streetcode with corresponding Index: {request.index}"));
         }
 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);

@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId
@@ -24,7 +22,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId
             var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.streetcodeId);
             if (text is null)
             {
-                return Result.Fail(new Error($"Cannot find a fact by a streetcode Id: {request.streetcodeId}"));
+                return Result.Fail(new Error($"Cannot find a text by a streetcodeId: {request.streetcodeId}"));
             }
 
             var textDto = _mapper.Map<TextDTO>(text);

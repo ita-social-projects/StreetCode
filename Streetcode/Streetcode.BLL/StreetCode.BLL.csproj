@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="MediatR\AdditionalContent\Tag\" />
-    <Folder Include="MediatR\Media\Art\" />
     <Folder Include="MediatR\Partners\" />
   </ItemGroup>
 

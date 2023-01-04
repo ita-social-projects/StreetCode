@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentResults;
+using MediatR;
+using Streetcode.BLL.DTO.Streetcode;
 
-namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId
-{
-    internal class GetRelatedFiguresByStreetcodeIdQuery
-    {
-    }
-}
+public record GetRelatedFigureByStreetcodeIdQuery(int StreetcodeId) : IRequest<Result<IEnumerable<RelatedFigureDTO>>>;

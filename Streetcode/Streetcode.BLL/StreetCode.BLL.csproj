@@ -35,8 +35,6 @@
     <Folder Include="MediatR\Partners\" />
     <Folder Include="MediatR\Streetcode\Text\" />
     <Folder Include="MediatR\Streetcode\Term\" />
-    <Folder Include="MediatR\Timeline\TimelineItem\" />
-    <Folder Include="MediatR\Transactions\" />
   </ItemGroup>
 
 </Project>

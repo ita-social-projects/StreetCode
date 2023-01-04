@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -9,22 +11,7 @@ public class StreetcodeController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetEvents()
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetPersons()
-    {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery()));
     }
 
     [HttpGet("{id:int}")]
@@ -33,32 +20,10 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
     }
 
-    [HttpGet("{tagId:int}")]
-    public async Task<IActionResult> GetByTagId([FromRoute] int tagId)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{name}")]
-    public async Task<IActionResult> GetByName([FromRoute] string name)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
     [HttpGet("{index}")]
     public async Task<IActionResult> GetByIndex([FromRoute] int index)
     {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet("{streetcodeId:int}")]
-    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
-    {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index)));
     }
 
     [HttpPost]

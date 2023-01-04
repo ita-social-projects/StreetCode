@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetById;
+using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Timeline;
 
@@ -15,8 +17,13 @@ public class TimelineItemController : BaseApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetTransactionLinkByIdQuery(id)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        return HandleResult(await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]

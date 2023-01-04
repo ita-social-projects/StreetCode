@@ -26,6 +26,7 @@ public class StreetcodeDbContext : DbContext
     public StreetcodeDbContext(DbContextOptions<StreetcodeDbContext> options)
         : base(options)
     {
+        Database.EnsureDeleted();
     }
 
     public virtual DbSet<Art> Arts { get; set; }

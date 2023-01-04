@@ -10,6 +10,7 @@ public class ImageProfile : Profile
     {
         CreateMap<Image, ImageDTO>()
             .ForPath(dto => dto.Url.Title, conf => conf.MapFrom(ol => ol.Title))
+            .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url))
             .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url));
     }
 }

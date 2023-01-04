@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Subtitle.GetAll;
-using Streetcode.BLL.MediatR.Subtitle.GetById;
-using Streetcode.BLL.MediatR.Subtitle.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.AdditionalContent.GetById;
+using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetAll;
+using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 

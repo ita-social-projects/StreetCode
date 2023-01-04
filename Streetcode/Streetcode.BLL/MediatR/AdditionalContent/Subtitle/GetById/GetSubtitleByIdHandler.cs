@@ -2,9 +2,10 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.MediatR.AdditionalContent.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Subtitle.GetById;
+namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetById;
 
 public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Result<SubtitleDTO>>
 {

@@ -4,7 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Subtitle.GetAll;
+namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetAll;
 
 public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Result<IEnumerable<SubtitleDTO>>>
 {

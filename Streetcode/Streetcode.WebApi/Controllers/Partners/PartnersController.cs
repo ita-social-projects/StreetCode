@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.MediatR.Partner.GetById;
+using Streetcode.BLL.MediatR.Partners.GetAll;
+using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Partners;
 
@@ -8,22 +11,19 @@ public class PartnersController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetSponsors()
-    {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetAllPartnersQuery()));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok(id);
+        return HandleResult(await Mediator.Send(new GetPartnerByIdQuery(id)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        return HandleResult(await Mediator.Send(new GetPartnersByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]

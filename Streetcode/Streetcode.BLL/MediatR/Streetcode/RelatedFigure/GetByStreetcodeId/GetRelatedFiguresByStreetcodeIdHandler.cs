@@ -26,3 +26,4 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         var relatedFigureDtos = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
         return Result.Ok(value: relatedFigureDtos);
     }
+}

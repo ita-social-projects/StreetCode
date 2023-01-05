@@ -17,7 +17,7 @@ using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
 
-public class StreetcodeDbContext : DbContext
+public sealed class StreetcodeDbContext : DbContext
 {
     public StreetcodeDbContext()
     {
@@ -26,32 +26,33 @@ public class StreetcodeDbContext : DbContext
     public StreetcodeDbContext(DbContextOptions<StreetcodeDbContext> options)
         : base(options)
     {
+        Database.EnsureDeleted();
     }
 
-    public virtual DbSet<Art> Arts { get; set; }
-    public virtual DbSet<Audio> Audios { get; set; }
-    public virtual DbSet<ToponymCoordinate> ToponymCoordinates { get; set; }
-    public virtual DbSet<StreetcodeCoordinate> StreetcodeCoordinates { get; set; }
-    public virtual DbSet<Fact> Facts { get; set; }
-    public virtual DbSet<HistoricalContext> HistoricalContexts { get; set; }
-    public virtual DbSet<Image> Images { get; set; }
-    public virtual DbSet<Partner> Partners { get; set; }
-    public virtual DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
-    public virtual DbSet<RelatedFigure> RelatedFigures { get; set; }
-    public virtual DbSet<Response> Responses { get; set; }
-    public virtual DbSet<Donation> Donations { get; set; }
-    public virtual DbSet<SourceLink> SourceLinks { get; set; }
-    public virtual DbSet<StreetcodeContent> Streetcodes { get; set; }
-    public virtual DbSet<Subtitle> Subtitles { get; set; }
-    public virtual DbSet<Tag> Tags { get; set; }
-    public virtual DbSet<Term> Terms { get; set; }
-    public virtual DbSet<Text> Texts { get; set; }
-    public virtual DbSet<TimelineItem> TimelineItems { get; set; }
-    public virtual DbSet<Toponym> Toponyms { get; set; }
-    public virtual DbSet<TransactionLink> TransactionLinks { get; set; }
-    public virtual DbSet<Video> Videos { get; set; }
-    public virtual DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
-    public virtual DbSet<StreetcodePartner> StreetcodePartners { get; set; }
+    public DbSet<Art> Arts { get; set; }
+    public DbSet<Audio> Audios { get; set; }
+    public DbSet<ToponymCoordinate> ToponymCoordinates { get; set; }
+    public DbSet<StreetcodeCoordinate> StreetcodeCoordinates { get; set; }
+    public DbSet<Fact> Facts { get; set; }
+    public DbSet<HistoricalContext> HistoricalContexts { get; set; }
+    public DbSet<Image> Images { get; set; }
+    public DbSet<Partner> Partners { get; set; }
+    public DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
+    public DbSet<RelatedFigure> RelatedFigures { get; set; }
+    public DbSet<Response> Responses { get; set; }
+    public DbSet<Donation> Donations { get; set; }
+    public DbSet<SourceLink> SourceLinks { get; set; }
+    public DbSet<StreetcodeContent> Streetcodes { get; set; }
+    public DbSet<Subtitle> Subtitles { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Term> Terms { get; set; }
+    public DbSet<Text> Texts { get; set; }
+    public DbSet<TimelineItem> TimelineItems { get; set; }
+    public DbSet<Toponym> Toponyms { get; set; }
+    public DbSet<TransactionLink> TransactionLinks { get; set; }
+    public DbSet<Video> Videos { get; set; }
+    public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
+    public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

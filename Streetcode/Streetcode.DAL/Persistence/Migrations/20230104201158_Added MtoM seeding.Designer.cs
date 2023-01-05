@@ -9,11 +9,11 @@ using Streetcode.DAL.Persistence;
 
 #nullable disable
 
-namespace Streetcode.DAL.Migrations
+namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20221231161443_MtoM tables seeding")]
-    partial class MtoMtablesseeding
+    [Migration("20230104201158_Added MtoM seeding")]
+    partial class AddedMtoMseeding
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -1443,7 +1443,7 @@ namespace Streetcode.DAL.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3542),
+                            CreatedAt = new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7284),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1480,7 +1480,7 @@ namespace Streetcode.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3326),
+                            CreatedAt = new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7208),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1494,7 +1494,7 @@ namespace Streetcode.DAL.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3374),
+                            CreatedAt = new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7256),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1508,7 +1508,7 @@ namespace Streetcode.DAL.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3377),
+                            CreatedAt = new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7259),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,

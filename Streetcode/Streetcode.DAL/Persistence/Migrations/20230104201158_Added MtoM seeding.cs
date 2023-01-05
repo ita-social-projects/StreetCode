@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Streetcode.DAL.Migrations
+namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class MtoMtablesseeding : Migration
+    public partial class AddedMtoMseeding : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,6 +41,9 @@ namespace Streetcode.DAL.Migrations
                 schema: "sources",
                 table: "source_link_source_link_category",
                 newName: "IX_source_link_source_link_category_SourceLinksId");
+
+            migrationBuilder.AlterDatabase(
+                collation: "SQL_Ukrainian_CP1251_CI_AS");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_source_link_source_link_category",
@@ -108,7 +111,7 @@ namespace Streetcode.DAL.Migrations
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "CreatedAt",
-                value: new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3542));
+                value: new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7284));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -116,7 +119,7 @@ namespace Streetcode.DAL.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3326));
+                value: new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7208));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -124,7 +127,7 @@ namespace Streetcode.DAL.Migrations
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3374));
+                value: new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7256));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -132,7 +135,7 @@ namespace Streetcode.DAL.Migrations
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "CreatedAt",
-                value: new DateTime(2022, 12, 31, 18, 14, 43, 121, DateTimeKind.Local).AddTicks(3377));
+                value: new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7259));
 
             migrationBuilder.UpdateData(
                 schema: "sources",
@@ -249,6 +252,9 @@ namespace Streetcode.DAL.Migrations
                 schema: "sources",
                 table: "SourceLinkSourceLinkCategory",
                 newName: "IX_SourceLinkSourceLinkCategory_SourceLinksId");
+
+            migrationBuilder.AlterDatabase(
+                oldCollation: "SQL_Ukrainian_CP1251_CI_AS");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_SourceLinkSourceLinkCategory",

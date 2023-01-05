@@ -19,7 +19,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var streetcode = _repositoryWrapper.StreetcodeRepository.GetSingleOrDefaultAsync(st => st.Id == request.StreetcodeId).Result;
+        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetSingleOrDefaultAsync(st => st.Id == request.StreetcodeId);
 
         if (streetcode is null)
         {

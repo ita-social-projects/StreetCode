@@ -3,6 +3,7 @@ using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
+using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Timeline;
@@ -12,6 +13,7 @@ using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
 using Streetcode.DAL.Repositories.Realizations.Partners;
+using Streetcode.DAL.Repositories.Realizations.Source;
 using Streetcode.DAL.Repositories.Realizations.Streetcode;
 using Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Realizations.Timeline;
@@ -35,6 +37,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IFactRepository _factRepository;
 
     private IPartnersRepository _partnersRepository;
+
+    private ISourceLinkRepository _sourceLinkRepository;
 
     private IRelatedFigureRepository _relatedFigureRepository;
 
@@ -134,6 +138,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _partnersRepository;
+        }
+    }
+
+    public ISourceLinkRepository SourceLinkRepository
+    {
+        get
+        {
+            if (_sourceLinkRepository == null)
+            {
+                _sourceLinkRepository = new SourceLinkRepository(_streetcodeDbContext);
+            }
+
+            return _sourceLinkRepository;
         }
     }
 

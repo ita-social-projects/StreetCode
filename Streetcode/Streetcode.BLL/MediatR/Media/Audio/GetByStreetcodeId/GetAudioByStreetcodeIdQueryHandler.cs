@@ -20,7 +20,8 @@ namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId
         public async Task<Result<IEnumerable<AudioDTO>>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var audio = await _repositoryWrapper.AudioRepository.GetAllAsync(audio => audio.StreetcodeId == request.streetcodeId);
-            if (audio == null)
+
+            if (audio is null)
             {
                 return Result.Fail(new Error("Can`t find audio with this StreetcodeId"));
             }

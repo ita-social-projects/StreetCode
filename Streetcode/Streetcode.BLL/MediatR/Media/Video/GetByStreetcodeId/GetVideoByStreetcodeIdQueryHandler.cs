@@ -20,7 +20,8 @@ namespace Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId
         public async Task<Result<IEnumerable<VideoDTO>>> Handle(GetVideoByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var video = await _repositoryWrapper.VideoRepository.GetAllAsync(video => video.StreetcodeId == request.streetcodeId);
-            if (video == null)
+
+            if (video is null)
             {
                 return Result.Fail(new Error("Can`t find video with this StreetcodeId"));
             }

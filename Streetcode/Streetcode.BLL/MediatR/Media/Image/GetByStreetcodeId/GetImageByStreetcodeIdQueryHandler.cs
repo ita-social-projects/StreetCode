@@ -21,7 +21,8 @@ namespace Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId
         public async Task<Result<IEnumerable<ImageDTO>>> Handle(GetImageByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var image = await _repositoryWrapper.ImageRepository.GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.streetcodeId));
-            if (image == null)
+
+            if (image is null)
             {
                 return Result.Fail(new Error("Can`t find Image with this StreetcodeId"));
             }

@@ -19,7 +19,8 @@ public class GetTransactionLinkByIdHandler : IRequestHandler<GetTimelineItemById
 
     public async Task<Result<TimelineItemDTO>> Handle(GetTimelineItemByIdQuery request, CancellationToken cancellationToken)
     {
-        var timelineItem = await _repositoryWrapper.TimelineRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var timelineItem = await _repositoryWrapper.TimelineRepository
+            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
         if (timelineItem is null)
         {

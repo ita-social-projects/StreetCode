@@ -19,8 +19,8 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
     public async Task<Result<PartnerDTO>> Handle(GetPartnerByIdQuery request, CancellationToken cancellationToken)
     {
-        var partner = await _repositoryWrapper.PartnersRepository.GetFirstOrDefaultAsync(
-            predicate: st => st.Id == request.id);
+        var partner = await _repositoryWrapper.PartnersRepository
+            .GetFirstOrDefaultAsync(st => st.Id == request.id);
 
         if (partner is null)
         {

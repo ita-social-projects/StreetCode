@@ -20,7 +20,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
         public async Task<Result<IEnumerable<TermDTO>>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
         {
             var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
+
             var termDto = _mapper.Map<IEnumerable<TermDTO>>(terms);
+
             return Result.Ok(termDto);
         }
     }

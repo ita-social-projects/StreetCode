@@ -20,7 +20,8 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.GetByStreetcodeId
         public async Task<Result<IEnumerable<SourceLinkDTO>>> Handle(GetSourceLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetAllAsync(sourceLink => sourceLink.StreetcodeId == request.streetcodeId);
-            if (sourceLink == null)
+
+            if (sourceLink is null)
             {
                 return Result.Fail(new Error("Can`t find sourceLink with this StreetcodeId"));
             }

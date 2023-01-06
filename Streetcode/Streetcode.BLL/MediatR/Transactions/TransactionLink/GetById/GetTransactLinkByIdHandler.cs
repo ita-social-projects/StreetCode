@@ -19,7 +19,8 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
 
     public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByIdQuery request, CancellationToken cancellationToken)
     {
-        var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var transactLinks = await _repositoryWrapper.TransactLinksRepository
+            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
         if (transactLinks is null)
         {

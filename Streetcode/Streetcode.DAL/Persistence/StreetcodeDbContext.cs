@@ -76,10 +76,16 @@ public sealed class StreetcodeDbContext : DbContext
             .WithMany(h => h.TimelineItems)
             .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
 
+        modelBuilder.Entity<SourceLinkCategory>()
+            .HasMany(d => d.SubCategories)
+            .WithOne(p => p.SourceLinkCategory)
+            .HasForeignKey(d => d.SourceLinkCategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<SourceLink>()
-            .HasMany(d => d.Categories)
+            .HasMany(d => d.SubCategories)
             .WithMany(h => h.SourceLinks)
-            .UsingEntity(j => j.ToTable("source_link_source_link_category", "sources"));
+            .UsingEntity(j => j.ToTable("source_link_source_link_subcategory", "sources"));
 
         modelBuilder.Entity<Image>(entity =>
         {

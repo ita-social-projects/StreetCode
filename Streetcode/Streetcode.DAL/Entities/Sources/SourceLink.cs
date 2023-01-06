@@ -21,5 +21,5 @@ public class SourceLink
 
     public Streetcode.StreetcodeContent? Streetcode { get; set; }
 
-    public List<SourceLinkCategory> Categories { get; set; } = new ();
+    public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

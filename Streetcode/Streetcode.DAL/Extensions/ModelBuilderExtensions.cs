@@ -13,7 +13,6 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
-using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Extensions;
 
@@ -507,20 +506,45 @@ public static class ModelBuilderExtensions
             new SourceLinkCategory
             {
                 Id = 1,
-                Title = "book",
+                Title = "Книги",
                 ImageId = 9
             },
             new SourceLinkCategory
             {
                 Id = 2,
-                Title = "video",
+                Title = "Фільми",
                 ImageId = 10
             },
             new SourceLinkCategory
             {
                 Id = 3,
-                Title = "article",
+                Title = "Цитати",
                 ImageId = 11
+            });
+        modelBuilder.Entity<SourceLinkSubCategory>().HasData(
+            new SourceLinkSubCategory
+            {
+                Id = 1,
+                Title = "Том 9: Історичні студії та розвідки (1917–1923).",
+                SourceLinkCategoryId = 1,
+            },
+            new SourceLinkSubCategory
+            {
+                Id = 2,
+                Title = "Том 10: Історичні студії та розвідки (1917–1923).",
+                SourceLinkCategoryId = 1,
+            },
+            new SourceLinkSubCategory
+            {
+                Id = 3,
+                Title = "Том 12: Історичні студії та розвідки (1917–1923).",
+                SourceLinkCategoryId = 3,
+            },
+            new SourceLinkSubCategory
+            {
+                Id = 4,
+                Title = "Том 11: Історичні студії та розвідки (1917–1923).",
+                SourceLinkCategoryId = 1,
             });
         modelBuilder.Entity<Fact>().HasData(
             new Fact
@@ -775,17 +799,5 @@ public static class ModelBuilderExtensions
                 ObserverId = 2,
                 TargetId = 3
             });
-
-        // SeedMtoMTables();
-    }
-
-    private static void SeedMtoMTables()
-    {
-        var dbContext = new StreetcodeDbContext(new DbContextOptionsBuilder<StreetcodeDbContext>().Options);
-
-        var cwd = Directory.GetCurrentDirectory();
-        var queryFile = Path.Combine($"{cwd}/../Streetcode.DAL/SeedMtoMSQLQuery.sql");
-
-        dbContext.Database.ExecuteSqlRaw(File.ReadAllText(queryFile));
     }
 }

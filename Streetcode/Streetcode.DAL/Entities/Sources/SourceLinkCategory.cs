@@ -20,7 +20,5 @@ public class SourceLinkCategory
 
     public Image? Image { get; set; }
 
-    public List<SourceLink> SourceLinks { get; set; } = new ();
-
     public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

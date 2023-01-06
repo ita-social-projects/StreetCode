@@ -9,11 +9,11 @@ using Streetcode.DAL.Persistence;
 
 #nullable disable
 
-namespace Streetcode.DAL.Persistence.Migrations
+namespace Streetcode.DAL.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230106112804_Added SourceLinkSubCategory entity")]
-    partial class AddedSourceLinkSubCategoryentity
+    [Migration("20230106142335_Added SourceLinkSubCategory entity and its relationships")]
+    partial class AddedSourceLinkSubCategoryentityanditsrelationships
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,19 +85,19 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcode_image", "streetcode");
                 });
 
-            modelBuilder.Entity("SourceLinkSourceLinkCategory", b =>
+            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
                 {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SourceLinksId")
                         .HasColumnType("int");
 
-                    b.HasKey("CategoriesId", "SourceLinksId");
+                    b.Property<int>("SubCategoriesId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("SourceLinksId");
+                    b.HasKey("SourceLinksId", "SubCategoriesId");
 
-                    b.ToTable("source_link_source_link_category", "sources");
+                    b.HasIndex("SubCategoriesId");
+
+                    b.ToTable("source_link_source_link_subcategory", "sources");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate", b =>
@@ -1486,7 +1486,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 6, 13, 28, 3, 833, DateTimeKind.Local).AddTicks(3227),
+                            CreatedAt = new DateTime(2023, 1, 6, 16, 23, 34, 615, DateTimeKind.Local).AddTicks(2735),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1523,7 +1523,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 6, 13, 28, 3, 833, DateTimeKind.Local).AddTicks(3149),
+                            CreatedAt = new DateTime(2023, 1, 6, 16, 23, 34, 615, DateTimeKind.Local).AddTicks(2629),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1537,7 +1537,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 6, 13, 28, 3, 833, DateTimeKind.Local).AddTicks(3197),
+                            CreatedAt = new DateTime(2023, 1, 6, 16, 23, 34, 615, DateTimeKind.Local).AddTicks(2692),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1551,7 +1551,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 6, 13, 28, 3, 833, DateTimeKind.Local).AddTicks(3202),
+                            CreatedAt = new DateTime(2023, 1, 6, 16, 23, 34, 615, DateTimeKind.Local).AddTicks(2696),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1624,17 +1624,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SourceLinkSourceLinkCategory", b =>
+            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
                 {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Streetcode.DAL.Entities.Sources.SourceLink", null)
                         .WithMany()
                         .HasForeignKey("SourceLinksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", null)
+                        .WithMany()
+                        .HasForeignKey("SubCategoriesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

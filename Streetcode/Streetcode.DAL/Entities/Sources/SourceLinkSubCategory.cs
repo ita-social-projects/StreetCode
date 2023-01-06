@@ -18,4 +18,6 @@ public class SourceLinkSubCategory
     public int SourceLinkCategoryId { get; set; }
 
     public SourceLinkCategory? SourceLinkCategory { get; set; }
+
+    public List<SourceLink> SourceLinks { get; set; } = new ();
 }

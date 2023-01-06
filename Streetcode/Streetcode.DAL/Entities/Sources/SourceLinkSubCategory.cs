@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.DAL.Entities.Sources;
 
-[Table("source_link_categories", Schema = "sources")]
-public class SourceLinkCategory
+[Table("source_link_subcategories", Schema = "sources")]
+public class SourceLinkSubCategory
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,9 +15,9 @@ public class SourceLinkCategory
     public string Title { get; set; }
 
     [Required]
-    public int ImageId { get; set; }
+    public int SourceLinkCategoryId { get; set; }
 
-    public Image? Image { get; set; }
+    public SourceLinkCategory? SourceLinkCategory { get; set; }
 
-    public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
+    public List<SourceLink> SourceLinks { get; set; } = new ();
 }

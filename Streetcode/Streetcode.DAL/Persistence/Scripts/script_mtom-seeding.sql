@@ -1,6 +1,6 @@
 USE [StreetcodeDb]
 
-INSERT INTO [sources].[source_link_source_link_category]
+INSERT INTO [sources].[source_link_source_link_subcategory]
      VALUES
            (1, 3),
 		   (2, 1),

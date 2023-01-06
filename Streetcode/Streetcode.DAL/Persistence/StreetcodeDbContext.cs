@@ -65,6 +65,12 @@ public sealed class StreetcodeDbContext : DbContext
             .HasForeignKey(d => d.ToponymId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<SourceLinkCategory>()
+            .HasMany(d => d.SubCategories)
+            .WithOne(p => p.SourceLinkCategory)
+            .HasForeignKey(d => d.SourceLinkCategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<Partner>()
             .HasMany(d => d.PartnerSourceLinks)
             .WithOne(p => p.Partner)

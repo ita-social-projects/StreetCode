@@ -775,17 +775,24 @@ public static class ModelBuilderExtensions
                 ObserverId = 2,
                 TargetId = 3
             });
-
-        // SeedMtoMTables();
-    }
-
-    private static void SeedMtoMTables()
-    {
-        var dbContext = new StreetcodeDbContext(new DbContextOptionsBuilder<StreetcodeDbContext>().Options);
-
-        var cwd = Directory.GetCurrentDirectory();
-        var queryFile = Path.Combine($"{cwd}/../Streetcode.DAL/SeedMtoMSQLQuery.sql");
-
-        dbContext.Database.ExecuteSqlRaw(File.ReadAllText(queryFile));
+        modelBuilder.Entity<SourceLinkSubCategory>().HasData(
+            new SourceLinkSubCategory
+            {
+                Id = 1,
+                Title = "Книги про Грушевьского",
+                SourceLinkCategoryId = 3,
+            },
+            new SourceLinkSubCategory
+            {
+                Id = 2,
+                Title = "Праці Грушевьского",
+                SourceLinkCategoryId = 1,
+            },
+            new SourceLinkSubCategory
+            {
+                Id = 3,
+                Title = "Фільми про Грушевьского",
+                SourceLinkCategoryId = 1,
+            });
     }
 }

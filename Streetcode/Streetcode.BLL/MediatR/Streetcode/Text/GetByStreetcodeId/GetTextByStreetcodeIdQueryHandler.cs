@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId
         public async Task<Result<TextDTO>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.streetcodeId);
-            
+
             if (text is null)
             {
                 return Result.Fail(new Error($"Cannot find a text by a streetcodeId: {request.streetcodeId}"));

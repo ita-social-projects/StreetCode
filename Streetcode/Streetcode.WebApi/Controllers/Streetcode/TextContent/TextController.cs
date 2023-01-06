@@ -1,5 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Text.Create;
+using Streetcode.BLL.MediatR.Streetcode.Text.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
@@ -8,19 +17,23 @@ public class TextController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetAllTextsQuery()));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TextDTO fact)
+    public async Task<IActionResult> Create([FromBody] TextDTO text)
     {
         // TODO implement here
         return Ok();

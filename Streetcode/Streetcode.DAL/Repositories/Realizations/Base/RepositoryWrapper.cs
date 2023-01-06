@@ -3,6 +3,7 @@ using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
+using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Timeline;
@@ -12,6 +13,7 @@ using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
 using Streetcode.DAL.Repositories.Realizations.Partners;
+using Streetcode.DAL.Repositories.Realizations.Source;
 using Streetcode.DAL.Repositories.Realizations.Streetcode;
 using Streetcode.DAL.Repositories.Realizations.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Realizations.Timeline;
@@ -35,6 +37,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IFactRepository _factRepository;
 
     private IPartnersRepository _partnersRepository;
+
+    private ISourceLinkRepository _sourceLinkRepository;
+
+    private IRelatedFigureRepository _relatedFigureRepository;
 
     private IStreetcodeRepository _streetcodeRepository;
 
@@ -61,7 +67,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_factRepository == null)
+            if (_factRepository is null)
             {
                 _factRepository = new FactRepository(_streetcodeDbContext);
             }
@@ -74,7 +80,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_imageRepository == null)
+            if (_imageRepository is null)
             {
                 _imageRepository = new ImageRepository(_streetcodeDbContext);
             }
@@ -87,7 +93,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_audioRepository == null)
+            if (_audioRepository is null)
             {
                 _audioRepository = new AudioRepository(_streetcodeDbContext);
             }
@@ -100,7 +106,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_videoRepository == null)
+            if (_videoRepository is null)
             {
                 _videoRepository = new VideoRepository(_streetcodeDbContext);
             }
@@ -113,7 +119,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_artRepository == null)
+            if (_artRepository is null)
             {
                 _artRepository = new ArtRepository(_streetcodeDbContext);
             }
@@ -126,7 +132,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_partnersRepository == null)
+            if (_partnersRepository is null)
             {
                 _partnersRepository = new PartnersRepository(_streetcodeDbContext);
             }
@@ -135,11 +141,37 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public ISourceLinkRepository SourceLinkRepository
+    {
+        get
+        {
+            if (_sourceLinkRepository is null)
+            {
+                _sourceLinkRepository = new SourceLinkRepository(_streetcodeDbContext);
+            }
+
+            return _sourceLinkRepository;
+        }
+    }
+
+    public IRelatedFigureRepository RelatedFigureRepository
+    {
+        get
+        {
+            if (_relatedFigureRepository is null)
+            {
+                _relatedFigureRepository = new RelatedFigureRepository(_streetcodeDbContext);
+            }
+
+            return _relatedFigureRepository;
+        }
+    }
+
     public IStreetcodeRepository StreetcodeRepository
     {
         get
         {
-            if (_streetcodeRepository == null)
+            if (_streetcodeRepository is null)
             {
                 _streetcodeRepository = new StreetcodeRepository(_streetcodeDbContext);
             }
@@ -152,7 +184,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_subtitleRepository == null)
+            if (_subtitleRepository is null)
             {
                 _subtitleRepository = new SubtitleRepository(_streetcodeDbContext);
             }
@@ -165,7 +197,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_tagRepository == null)
+            if (_tagRepository is null)
             {
                 _tagRepository = new TagRepository(_streetcodeDbContext);
             }
@@ -178,7 +210,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_termRepository == null)
+            if (_termRepository is null)
             {
                 _termRepository = new TermRepository(_streetcodeDbContext);
             }
@@ -191,7 +223,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_textRepository == null)
+            if (_textRepository is null)
             {
                 _textRepository = new TextRepository(_streetcodeDbContext);
             }
@@ -204,7 +236,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_timelineRepository == null)
+            if (_timelineRepository is null)
             {
                 _timelineRepository = new TimelineRepository(_streetcodeDbContext);
             }
@@ -217,7 +249,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_toponymRepository == null)
+            if (_toponymRepository is null)
             {
                 _toponymRepository = new ToponymRepository(_streetcodeDbContext);
             }
@@ -230,7 +262,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if (_transactLinksRepository == null)
+            if (_transactLinksRepository is null)
             {
                 _transactLinksRepository = new TransactLinksRepository(_streetcodeDbContext);
             }

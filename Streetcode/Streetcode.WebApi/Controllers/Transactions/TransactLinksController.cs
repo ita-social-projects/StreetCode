@@ -1,5 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Transactions;
+using Streetcode.BLL.MediatR.Media.Video.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
+using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
+using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Transactions;
 
@@ -8,15 +15,19 @@ public class TransactLinksController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetAllTransactLinksQuery()));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        return HandleResult(await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetTransactLinkByIdQuery(id)));
     }
 
     [HttpPost]

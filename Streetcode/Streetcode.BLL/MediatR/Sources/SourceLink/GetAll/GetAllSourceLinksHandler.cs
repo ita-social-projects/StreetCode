@@ -23,7 +23,10 @@ public class GetAllSourceLinksHandler : IRequestHandler<GetAllSourceLinksQuery, 
     public async Task<Result<IEnumerable<SourceLinkDTO>>> Handle(GetAllSourceLinksQuery request, CancellationToken cancellationToken)
     {
         var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetAllAsync(
-            include: s => s.Include(l => l.SubCategories));
+            include: s => s.Include(l => l.SubCategories)
+            .ThenInclude(sc => sc.SourceLinkCategory!.Image)
+            .Include(l => l.SubCategories)
+            .ThenInclude(sc => sc.SourceLinkCategory) !);
 
         var sourceLinkDtos = _mapper.Map<IEnumerable<SourceLinkDTO>>(sourceLink);
         return Result.Ok(sourceLinkDtos);

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -20,7 +20,12 @@ public class GetSourceLinkByIdHandler : IRequestHandler<GetSourceLinkByIdQuery, 
 
     public async Task<Result<SourceLinkDTO>> Handle(GetSourceLinkByIdQuery request, CancellationToken cancellationToken)
     {
-        var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetFirstOrDefaultAsync(
+            predicate: f => f.Id == request.Id,
+            include: s => s.Include(l => l.SubCategories)
+                .ThenInclude(sc => sc.SourceLinkCategory!.Image)
+                .Include(l => l.SubCategories)
+                .ThenInclude(sc => sc.SourceLinkCategory) !);
 
         if (sourceLink is null)
         {

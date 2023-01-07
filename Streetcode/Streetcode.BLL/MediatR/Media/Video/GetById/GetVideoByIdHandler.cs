@@ -23,7 +23,7 @@ public class GetVideoByIdHandler : IRequestHandler<GetVideoByIdQuery, Result<Vid
 
         if (video is null)
         {
-            return Result.Fail(new Error($"Cannot find a Video with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a Video with corresponding categoryId: {request.Id}"));
         }
 
         var videoDto = _mapper.Map<VideoDTO>(video);

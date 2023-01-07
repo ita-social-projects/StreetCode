@@ -21,7 +21,7 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
 
         if (text is null)
         {
-            return Result.Fail(new Error($"Cannot find a text with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a text with corresponding categoryId: {request.Id}"));
         }
 
         _repositoryWrapper.FactRepository.Delete(text);

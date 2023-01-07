@@ -724,9 +724,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -737,29 +734,24 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StreetcodeId");
-
                     b.ToTable("source_links", "sources");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            StreetcodeId = 1,
                             Title = "Вікіпедія",
                             Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
                         },
                         new
                         {
                             Id = 2,
-                            StreetcodeId = 1,
                             Title = "Кобзар",
                             Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
                         },
                         new
                         {
                             Id = 3,
-                            StreetcodeId = 4,
                             Title = "Св'яткування звільнення",
                             Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
                         });
@@ -776,6 +768,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -785,6 +780,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("ImageId");
 
+                    b.HasIndex("StreetcodeId");
+
                     b.ToTable("source_link_categories", "sources");
 
                     b.HasData(
@@ -792,18 +789,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             ImageId = 9,
+                            StreetcodeId = 1,
                             Title = "Книги"
                         },
                         new
                         {
                             Id = 2,
                             ImageId = 10,
+                            StreetcodeId = 1,
                             Title = "Фільми"
                         },
                         new
                         {
                             Id = 3,
                             ImageId = 11,
+                            StreetcodeId = 1,
                             Title = "Цитати"
                         });
                 });
@@ -1490,7 +1490,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1282),
+                            CreatedAt = new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9889),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1527,7 +1527,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1198),
+                            CreatedAt = new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9833),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1541,7 +1541,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1261),
+                            CreatedAt = new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9871),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1555,7 +1555,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1266),
+                            CreatedAt = new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9874),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1698,17 +1698,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Partner");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithMany("SourceLinks")
-                        .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
@@ -1717,7 +1706,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("SourceLinkCategories")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Image");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
@@ -1897,7 +1894,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Observers");
 
-                    b.Navigation("SourceLinks");
+                    b.Navigation("SourceLinkCategories");
 
                     b.Navigation("StreetcodePartners");
 

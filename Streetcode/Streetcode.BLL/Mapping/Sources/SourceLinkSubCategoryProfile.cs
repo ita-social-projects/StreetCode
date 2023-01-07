@@ -9,8 +9,8 @@ public class SourceLinkSubCategoryProfile : Profile
     public SourceLinkSubCategoryProfile()
     {
         CreateMap<SourceLinkSubCategory, SourceLinkSubCategoryDTO>()
-            .ForMember(d => d.SourceLinks, c => c.Ignore())
-            .ForMember(d => d.SourceLinks, c => c.Ignore())
+            .ForMember(s => s.SourceLinks, c => c.MapFrom(b => b.SourceLinks))
+            .ForMember(s => s.SourceLinkCategory, c => c.Ignore())
             .ReverseMap();
     }
 }

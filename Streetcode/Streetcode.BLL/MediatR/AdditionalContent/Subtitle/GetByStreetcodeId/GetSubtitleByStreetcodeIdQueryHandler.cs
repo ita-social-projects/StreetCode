@@ -22,7 +22,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
             var subtitle = await _repositoryWrapper.SubtitleRepository.GetFirstOrDefaultAsync(Subtitle => Subtitle.StreetcodeId == request.streetcodeId);
             if (subtitle is null)
             {
-                return Result.Fail(new Error($"Cannot find a subtitle by a streetcode Id: {request.streetcodeId}"));
+                return Result.Fail(new Error($"Cannot find a subtitle by a streetcode categoryId: {request.streetcodeId}"));
             }
 
             var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);

@@ -23,7 +23,7 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
 
         if (art is null)
         {
-            return Result.Fail(new Error($"Cannot find a art with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a art with corresponding categoryId: {request.Id}"));
         }
 
         var artDto = _mapper.Map<ArtDTO>(art);

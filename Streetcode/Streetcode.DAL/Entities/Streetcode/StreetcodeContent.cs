@@ -59,7 +59,7 @@ public class StreetcodeContent
 
     public List<Video> Videos { get; set; } = new ();
 
-    public List<SourceLink> SourceLinks { get; set; } = new ();
+    public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
 
     public List<TimelineItem> TimelineItems { get; set; } = new ();
 

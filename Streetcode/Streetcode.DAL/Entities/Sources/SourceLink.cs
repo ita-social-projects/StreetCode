@@ -16,10 +16,5 @@ public class SourceLink
     [Required]
     public string Url { get; set; }
 
-    [Required]
-    public int StreetcodeId { get; set; }
-
-    public Streetcode.StreetcodeContent? Streetcode { get; set; }
-
     public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

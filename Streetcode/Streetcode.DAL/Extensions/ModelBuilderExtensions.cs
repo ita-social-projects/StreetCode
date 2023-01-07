@@ -486,40 +486,40 @@ public static class ModelBuilderExtensions
                 Id = 1,
                 Title = "Вікіпедія",
                 Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-                StreetcodeId = 1
             },
             new SourceLink
             {
                 Id = 2,
                 Title = "Кобзар",
                 Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf",
-                StreetcodeId = 1
             },
             new SourceLink
             {
                 Id = 3,
                 Title = "Св'яткування звільнення",
                 Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-                StreetcodeId = 4
             });
         modelBuilder.Entity<SourceLinkCategory>().HasData(
             new SourceLinkCategory
             {
                 Id = 1,
                 Title = "Книги",
-                ImageId = 9
+                ImageId = 9,
+                StreetcodeId = 1,
             },
             new SourceLinkCategory
             {
                 Id = 2,
                 Title = "Фільми",
-                ImageId = 10
+                ImageId = 10,
+                StreetcodeId = 1,
             },
             new SourceLinkCategory
             {
                 Id = 3,
                 Title = "Цитати",
-                ImageId = 11
+                ImageId = 11,
+                StreetcodeId = 1,
             });
         modelBuilder.Entity<SourceLinkSubCategory>().HasData(
             new SourceLinkSubCategory

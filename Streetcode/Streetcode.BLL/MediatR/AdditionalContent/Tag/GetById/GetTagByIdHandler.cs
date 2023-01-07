@@ -25,7 +25,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
 
         if (tag is null)
         {
-            return Result.Fail(new Error($"Cannot find a Tag with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a Tag with corresponding categoryId: {request.Id}"));
         }
 
         var tagDto = _mapper.Map<TagDTO>(tag);

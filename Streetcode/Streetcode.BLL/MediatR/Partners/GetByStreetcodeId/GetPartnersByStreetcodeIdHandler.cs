@@ -23,7 +23,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot streetcode a fact with corresponding Id: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot streetcode a fact with corresponding categoryId: {request.StreetcodeId}"));
         }
 
         var partners = streetcode.StreetcodePartners.Select(sp => sp.Partner);

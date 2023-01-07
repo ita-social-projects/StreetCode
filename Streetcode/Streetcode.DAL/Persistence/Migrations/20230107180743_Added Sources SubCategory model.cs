@@ -5,13 +5,36 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class AddedSourceLinkSubCategorymodelanditsrelationships : Migration
+    public partial class AddedSourcesSubCategorymodel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_source_links_streetcodes_StreetcodeId",
+                schema: "sources",
+                table: "source_links");
+
             migrationBuilder.DropTable(
                 name: "source_link_source_link_category",
                 schema: "sources");
+
+            migrationBuilder.DropIndex(
+                name: "IX_source_links_StreetcodeId",
+                schema: "sources",
+                table: "source_links");
+
+            migrationBuilder.DropColumn(
+                name: "StreetcodeId",
+                schema: "sources",
+                table: "source_links");
+
+            migrationBuilder.AddColumn<int>(
+                name: "StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "source_link_subcategories",
@@ -67,24 +90,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                 table: "source_link_categories",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "Title",
-                value: "Книги");
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 1, "Книги" });
 
             migrationBuilder.UpdateData(
                 schema: "sources",
                 table: "source_link_categories",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "Title",
-                value: "Фільми");
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 1, "Фільми" });
 
             migrationBuilder.UpdateData(
                 schema: "sources",
                 table: "source_link_categories",
                 keyColumn: "Id",
                 keyValue: 3,
-                column: "Title",
-                value: "Цитати");
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 1, "Цитати" });
 
             migrationBuilder.InsertData(
                 schema: "sources",
@@ -104,7 +127,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1282));
+                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9889));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -112,7 +135,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1198));
+                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9833));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -120,7 +143,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1261));
+                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9871));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -128,7 +151,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1266));
+                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9874));
+
+            migrationBuilder.CreateIndex(
+                name: "IX_source_link_categories_StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories",
+                column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_source_link_source_link_subcategory_SubCategoriesId",
@@ -141,10 +170,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "sources",
                 table: "source_link_subcategories",
                 column: "SourceLinkCategoryId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_source_link_categories_streetcodes_StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories",
+                column: "StreetcodeId",
+                principalSchema: "streetcode",
+                principalTable: "streetcodes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_source_link_categories_streetcodes_StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories");
+
             migrationBuilder.DropTable(
                 name: "source_link_source_link_subcategory",
                 schema: "sources");
@@ -152,6 +196,24 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "source_link_subcategories",
                 schema: "sources");
+
+            migrationBuilder.DropIndex(
+                name: "IX_source_link_categories_StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories");
+
+            migrationBuilder.DropColumn(
+                name: "StreetcodeId",
+                schema: "sources",
+                table: "source_link_categories");
+
+            migrationBuilder.AddColumn<int>(
+                name: "StreetcodeId",
+                schema: "sources",
+                table: "source_links",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "source_link_source_link_category",
@@ -205,6 +267,30 @@ namespace Streetcode.DAL.Persistence.Migrations
                 value: "article");
 
             migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "StreetcodeId",
+                value: 1);
+
+            migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "StreetcodeId",
+                value: 1);
+
+            migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "StreetcodeId",
+                value: 4);
+
+            migrationBuilder.UpdateData(
                 schema: "streetcode",
                 table: "streetcodes",
                 keyColumn: "Id",
@@ -237,10 +323,26 @@ namespace Streetcode.DAL.Persistence.Migrations
                 value: new DateTime(2023, 1, 4, 22, 11, 57, 551, DateTimeKind.Local).AddTicks(7259));
 
             migrationBuilder.CreateIndex(
+                name: "IX_source_links_StreetcodeId",
+                schema: "sources",
+                table: "source_links",
+                column: "StreetcodeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_source_link_source_link_category_SourceLinksId",
                 schema: "sources",
                 table: "source_link_source_link_category",
                 column: "SourceLinksId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_source_links_streetcodes_StreetcodeId",
+                schema: "sources",
+                table: "source_links",
+                column: "StreetcodeId",
+                principalSchema: "streetcode",
+                principalTable: "streetcodes",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

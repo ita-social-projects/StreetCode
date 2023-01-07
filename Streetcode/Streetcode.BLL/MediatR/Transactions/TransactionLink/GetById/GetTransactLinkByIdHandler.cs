@@ -24,7 +24,7 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
 
         if (transactLinks is null)
         {
-            return Result.Fail(new Error($"Cannot find a transactLinks with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a transactLinks with corresponding categoryId: {request.Id}"));
         }
 
         var transactLinksDto = _mapper.Map<TransactLinkDTO>(transactLinks);

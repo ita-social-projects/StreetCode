@@ -17,7 +17,7 @@ using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
 
-public sealed class StreetcodeDbContext : DbContext
+public class StreetcodeDbContext : DbContext
 {
     public StreetcodeDbContext()
     {
@@ -26,7 +26,6 @@ public sealed class StreetcodeDbContext : DbContext
     public StreetcodeDbContext(DbContextOptions<StreetcodeDbContext> options)
         : base(options)
     {
-        Database.EnsureDeleted();
     }
 
     public DbSet<Art> Arts { get; set; }
@@ -52,7 +51,9 @@ public sealed class StreetcodeDbContext : DbContext
     public DbSet<TransactionLink> TransactionLinks { get; set; }
     public DbSet<Video> Videos { get; set; }
     public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
+    public DbSet<SourceLinkSubCategory> SourceLinkSubCategories { get; set; }
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

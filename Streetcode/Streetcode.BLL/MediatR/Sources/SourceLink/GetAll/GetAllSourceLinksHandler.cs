@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
@@ -21,7 +22,8 @@ public class GetAllSourceLinksHandler : IRequestHandler<GetAllSourceLinksQuery, 
 
     public async Task<Result<IEnumerable<SourceLinkDTO>>> Handle(GetAllSourceLinksQuery request, CancellationToken cancellationToken)
     {
-        var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetAllAsync();
+        var sourceLink = await _repositoryWrapper.SourceLinkRepository.GetAllAsync(
+            include: s => s.Include(l => l.SubCategories));
 
         var sourceLinkDtos = _mapper.Map<IEnumerable<SourceLinkDTO>>(sourceLink);
         return Result.Ok(sourceLinkDtos);

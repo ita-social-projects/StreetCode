@@ -10,7 +10,7 @@ public class SourceLink
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? Title { get; set; }
 
     [Required]

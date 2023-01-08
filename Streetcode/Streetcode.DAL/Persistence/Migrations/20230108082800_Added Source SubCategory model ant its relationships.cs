@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class AddedSourcesSubCategorymodel : Migration
+    public partial class AddedSourceSubCategorymodelantitsrelationships : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,18 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "StreetcodeId",
                 schema: "sources",
                 table: "source_links");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Title",
+                schema: "sources",
+                table: "source_links",
+                type: "nvarchar(300)",
+                maxLength: 300,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(100)",
+                oldMaxLength: 100,
+                oldNullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "StreetcodeId",
@@ -115,10 +127,56 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "SourceLinkCategoryId", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "Том 9: Історичні студії та розвідки (1917–1923)." },
-                    { 2, 1, "Том 10: Історичні студії та розвідки (1917–1923)." },
-                    { 3, 3, "Том 12: Історичні студії та розвідки (1917–1923)." },
-                    { 4, 1, "Том 11: Історичні студії та розвідки (1917–1923)." }
+                    { 1, 2, "Фільми про Т. Г. Шевченко" },
+                    { 2, 2, "Хроніки про Т. Г. Шевченко" },
+                    { 3, 2, "Блоги про Т. Г. Шевченко" },
+                    { 4, 1, "Праці Грушевського" },
+                    { 5, 1, "Книги про Грушевського" },
+                    { 6, 1, "Статті" },
+                    { 7, 3, "Пряма мова" }
+                });
+
+            migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "Title",
+                value: "Том 2: Суспільно-політичні твори (1907–1914).");
+
+            migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "Title",
+                value: "Том 3: Суспільно-політичні твори (1907 — березень 1917).");
+
+            migrationBuilder.UpdateData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "Title",
+                value: "Том 4. Книга 1: Суспільно-політичні твори (доба Української Центральної Ради, березень 1917 — квітень 1918).");
+
+            migrationBuilder.InsertData(
+                schema: "sources",
+                table: "source_links",
+                columns: new[] { "Id", "Title", "Url" },
+                values: new object[,]
+                {
+                    { 4, "Том 5: Історичні студії та розвідки (1888–1896).", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 5, "Том 6: Історичні студії та розвідки (1895–1900).", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 6, "Том 7: Історичні студії та розвідки (1900–1906).", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 7, "Том 8: Історичні студії та розвідки (1906–1916).", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 8, "Том 9: Історичні студії та розвідки (1917–1923).", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 9, "Том 10. Книга 1: Історичні студії та розвідки (1924— 1930)/ упор. О.Юркова.", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 10, "Том 10. Книга 2: Історичні студії та розвідки (1930— 1934)", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 11, "Том 11: Літературно-критичні праці (1883–1931), «По світу»", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 12, "Том 12: Поезія (1882–1903). Проза, драматичні твори, переклади (1883–1886)", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 13, "Том 13 : Серія \"Літературно-критичні та художні твори (1887-1924)\"", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 14, "Том 14: Рецензії та огляди (1888–1897).", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" }
                 });
 
             migrationBuilder.UpdateData(
@@ -127,7 +185,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 4,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9889));
+                value: new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3654));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -135,7 +193,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9833));
+                value: new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3597));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -143,7 +201,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 2,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9871));
+                value: new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3636));
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",
@@ -151,7 +209,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 keyColumn: "Id",
                 keyValue: 3,
                 column: "CreatedAt",
-                value: new DateTime(2023, 1, 7, 20, 7, 42, 828, DateTimeKind.Local).AddTicks(9874));
+                value: new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3640));
 
             migrationBuilder.CreateIndex(
                 name: "IX_source_link_categories_StreetcodeId",
@@ -202,10 +260,88 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "sources",
                 table: "source_link_categories");
 
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 4);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 5);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 6);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 7);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 8);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 9);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 10);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 11);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 12);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 13);
+
+            migrationBuilder.DeleteData(
+                schema: "sources",
+                table: "source_links",
+                keyColumn: "Id",
+                keyValue: 14);
+
             migrationBuilder.DropColumn(
                 name: "StreetcodeId",
                 schema: "sources",
                 table: "source_link_categories");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Title",
+                schema: "sources",
+                table: "source_links",
+                type: "nvarchar(100)",
+                maxLength: 100,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(300)",
+                oldMaxLength: 300,
+                oldNullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "StreetcodeId",
@@ -271,24 +407,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                 table: "source_links",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "StreetcodeId",
-                value: 1);
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 1, "Вікіпедія" });
 
             migrationBuilder.UpdateData(
                 schema: "sources",
                 table: "source_links",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "StreetcodeId",
-                value: 1);
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 1, "Кобзар" });
 
             migrationBuilder.UpdateData(
                 schema: "sources",
                 table: "source_links",
                 keyColumn: "Id",
                 keyValue: 3,
-                column: "StreetcodeId",
-                value: 4);
+                columns: new[] { "StreetcodeId", "Title" },
+                values: new object[] { 4, "Св'яткування звільнення" });
 
             migrationBuilder.UpdateData(
                 schema: "streetcode",

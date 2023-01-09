@@ -16,10 +16,12 @@ public static class WebApplicationExtensions
             var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
 
             var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+
             await streetcodeContext.Database.EnsureDeletedAsync();
             await streetcodeContext.Database.MigrateAsync();
 
             var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
+
             foreach (var task in filesContexts)
             {
                 await streetcodeContext.Database.ExecuteSqlRawAsync(task);

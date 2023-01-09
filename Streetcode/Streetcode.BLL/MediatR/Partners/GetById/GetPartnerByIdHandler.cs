@@ -4,7 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Partner.GetById;
+namespace Streetcode.BLL.MediatR.Partners.GetById;
 
 public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result<PartnerDTO>>
 {
@@ -24,7 +24,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
         if (partner is null)
         {
-            return Result.Fail(new Error($"Cannot find a Partner with corresponding categoryId: {request.id}"));
+            return Result.Fail(new Error($"Cannot find a partner with corresponding id: {request.id}"));
         }
 
         var partnerDto = _mapper.Map<PartnerDTO>(partner);

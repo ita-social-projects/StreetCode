@@ -19,15 +19,15 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
 
     public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByIdQuery request, CancellationToken cancellationToken)
     {
-        var transactLinks = await _repositoryWrapper.TransactLinksRepository
+        var transactLink = await _repositoryWrapper.TransactLinksRepository
             .GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
-        if (transactLinks is null)
+        if (transactLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a transactLinks with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a transaction link with corresponding id: {request.Id}"));
         }
 
-        var transactLinksDto = _mapper.Map<TransactLinkDTO>(transactLinks);
-        return Result.Ok(transactLinksDto);
+        var mappedTransactLink = _mapper.Map<TransactLinkDTO>(transactLink);
+        return Result.Ok(mappedTransactLink);
     }
 }

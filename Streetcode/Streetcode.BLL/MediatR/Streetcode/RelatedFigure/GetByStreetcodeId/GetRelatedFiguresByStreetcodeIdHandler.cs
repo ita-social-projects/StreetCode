@@ -21,12 +21,23 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     {
         var observers = _repositoryWrapper.RelatedFigureRepository
             .FindAll(f => f.TargetId == request.StreetcodeId).Select(o => o.Observer);
+
+        if (observers is null)
+        {
+            return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+        }
+
         var targets = _repositoryWrapper.RelatedFigureRepository
             .FindAll(f => f.ObserverId == request.StreetcodeId).Select(t => t.Target);
 
         var relatedFigures = observers.Union(targets).Distinct();
 
-        var relatedFigureDtos = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
-        return Result.Ok(value: relatedFigureDtos);
+        if (relatedFigures is null)
+        {
+            return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+        }
+
+        var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
+        return Result.Ok(mappedRelatedFigures);
     }
 }

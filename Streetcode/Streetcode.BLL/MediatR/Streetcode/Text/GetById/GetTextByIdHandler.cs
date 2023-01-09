@@ -23,7 +23,7 @@ public class GetTextByIdHandler : IRequestHandler<GetTextByIdQuery, Result<TextD
 
         if (text is null)
         {
-            return Result.Fail(new Error($"Cannot find a text with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a text with corresponding id: {request.Id}"));
         }
 
         var textDto = _mapper.Map<TextDTO>(text);

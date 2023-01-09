@@ -20,15 +20,15 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
 
     public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var transactLinks = await _repositoryWrapper.TransactLinksRepository
-            .GetSingleOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
+        var transactLink = await _repositoryWrapper.TransactLinksRepository
+            .GetFirstOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
 
-        if (transactLinks is null)
+        if (transactLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a transactLinks by a streetcodeId: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}"));
         }
 
-        var transactLinksDto = _mapper.Map<TransactLinkDTO>(transactLinks);
-        return Result.Ok(transactLinksDto);
+        var mappedTransactLink = _mapper.Map<TransactLinkDTO>(transactLink);
+        return Result.Ok(mappedTransactLink);
     }
 }

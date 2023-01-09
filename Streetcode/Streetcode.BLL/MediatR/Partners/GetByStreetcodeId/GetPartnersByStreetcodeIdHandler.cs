@@ -19,11 +19,12 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetSingleOrDefaultAsync(st => st.Id == request.StreetcodeId);
+        var streetcode = await _repositoryWrapper.StreetcodeRepository
+            .GetSingleOrDefaultAsync(st => st.Id == request.streetcodeId);
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot streetcode a fact with corresponding categoryId: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find a fact with corresponding streetcode id: {request.streetcodeId}"));
         }
 
         var partners = streetcode.StreetcodePartners.Select(sp => sp.Partner);

@@ -23,7 +23,7 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
 
         if (audio is null)
         {
-            return Result.Fail(new Error($"Cannot find a Audio with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find an audio with corresponding id: {request.Id}"));
         }
 
         var audioDto = _mapper.Map<AudioDTO>(audio);

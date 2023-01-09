@@ -30,7 +30,7 @@ public class GetSubCategoriesByCategoryIdHandler : IRequestHandler<GetSubCategor
 
         if (sourceLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a sourceLink with corresponding categoryId: {request.categoryId}"));
+            return Result.Fail(new Error($"Cannot find a source category with corresponding id: {request.categoryId}"));
         }
 
         var sourceLinkDto = _mapper.Map<IEnumerable<SourceLinkSubCategoryDTO>>(sourceLink);

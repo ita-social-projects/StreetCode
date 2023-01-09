@@ -4,30 +4,29 @@ using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId
+namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
+
+public class GetTextByStreetcodeIdQueryHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDTO>>
 {
-    public class GetTextByStreetcodeIdQueryHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDTO>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repositoryWrapper;
+
+    public GetTextByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
+        _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+    }
 
-        public GetTextByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public async Task<Result<TextDTO>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    {
+        var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.streetcodeId);
+
+        if (text is null)
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
+            return Result.Fail(new Error($"Cannot find a text by a streetcode id: {request.streetcodeId}"));
         }
 
-        public async Task<Result<TextDTO>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
-        {
-            var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.streetcodeId);
-
-            if (text is null)
-            {
-                return Result.Fail(new Error($"Cannot find a text by a streetcodeId: {request.streetcodeId}"));
-            }
-
-            var textDto = _mapper.Map<TextDTO>(text);
-            return Result.Ok(textDto);
-        }
+        var textDto = _mapper.Map<TextDTO>(text);
+        return Result.Ok(textDto);
     }
 }

@@ -24,7 +24,7 @@ public class GetByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQue
 
         if (fact is null)
         {
-            return Result.Fail(new Error($"Cannot find a fact by a streetcode categoryId: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find a fact by a streetcode id: {request.StreetcodeId}"));
         }
 
         var factDto = _mapper.Map<FactDTO>(fact);

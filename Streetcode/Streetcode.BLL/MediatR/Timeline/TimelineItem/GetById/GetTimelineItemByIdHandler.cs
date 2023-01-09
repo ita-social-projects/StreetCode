@@ -24,7 +24,7 @@ public class GetTransactionLinkByIdHandler : IRequestHandler<GetTimelineItemById
 
         if (timelineItem is null)
         {
-            return Result.Fail(new Error($"Cannot find a timelineItem with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a timeline item with corresponding id: {request.Id}"));
         }
 
         var timelineItemDto = _mapper.Map<TimelineItemDTO>(timelineItem);

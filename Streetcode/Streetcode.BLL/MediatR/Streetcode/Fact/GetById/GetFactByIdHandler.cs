@@ -23,7 +23,7 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
 
         if (fact is null)
         {
-            return Result.Fail(new Error($"Cannot find a fact with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a fact with corresponding id: {request.Id}"));
         }
 
         var factDto = _mapper.Map<FactDTO>(fact);

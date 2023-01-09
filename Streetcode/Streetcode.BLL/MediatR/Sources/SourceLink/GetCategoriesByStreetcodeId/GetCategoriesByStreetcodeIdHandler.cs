@@ -31,7 +31,7 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
 
         if (srcCategories is null)
         {
-            return Result.Fail(new Error($"Can`t find sourceLink with this StreetcodeId {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cant find a source category  with this streetcode id {request.streetcodeId}"));
         }
 
         var mappedSrcCategories = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(srcCategories);

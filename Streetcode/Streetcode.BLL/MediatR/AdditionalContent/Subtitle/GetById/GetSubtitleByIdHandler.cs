@@ -24,7 +24,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 
         if (subtitle is null)
         {
-            return Result.Fail(new Error($"Cannot find a subtitle with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a subtitle with corresponding id: {request.Id}"));
         }
 
         var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);

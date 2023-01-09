@@ -2,11 +2,10 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
+namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetTagByTitle;
 
 public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<TagDTO>>
 {

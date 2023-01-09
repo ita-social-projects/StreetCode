@@ -26,7 +26,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find a streetcode with corresponding categoryId: {request.id}"));
+            return Result.Fail(new Error($"Cannot find a streetcode with corresponding id: {request.id}"));
         }
 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);

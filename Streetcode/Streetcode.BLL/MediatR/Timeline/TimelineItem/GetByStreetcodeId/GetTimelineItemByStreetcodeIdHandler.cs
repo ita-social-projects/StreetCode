@@ -24,7 +24,7 @@ public class GetTimelineItemByStreetcodeIdHandler : IRequestHandler<GetTimelineI
 
         if (timelineItem is null)
         {
-            return Result.Fail(new Error($"Cannot find a timelineItem by a streetcode categoryId: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find a timeline item by a streetcode id: {request.StreetcodeId}"));
         }
 
         var timelineItemDto = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItem);

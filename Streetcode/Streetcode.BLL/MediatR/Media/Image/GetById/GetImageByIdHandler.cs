@@ -23,7 +23,7 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
 
         if (image is null)
         {
-            return Result.Fail(new Error($"Cannot find a image with corresponding categoryId: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a image with corresponding id: {request.Id}"));
         }
 
         var imageDto = _mapper.Map<ImageDTO>(image);

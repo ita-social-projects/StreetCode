@@ -19,11 +19,12 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var art = await _repositoryWrapper.ArtRepository.GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.streetcodeId));
+            var art = await _repositoryWrapper.ArtRepository
+                .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.streetcodeId));
 
             if (art is null)
             {
-                return Result.Fail(new Error("Can`t find Art with this StreetcodeId"));
+                return Result.Fail(new Error($"Cannot find an art with corresponding streetcode id: {request.streetcodeId}"));
             }
 
             var artDto = _mapper.Map<IEnumerable<ArtDTO>>(art);

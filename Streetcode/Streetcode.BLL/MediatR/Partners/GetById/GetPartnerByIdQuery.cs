@@ -2,6 +2,6 @@
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
 
-namespace Streetcode.BLL.MediatR.Partner.GetById;
+namespace Streetcode.BLL.MediatR.Partners.GetById;
 
 public record GetPartnerByIdQuery(int id) : IRequest<Result<PartnerDTO>>;

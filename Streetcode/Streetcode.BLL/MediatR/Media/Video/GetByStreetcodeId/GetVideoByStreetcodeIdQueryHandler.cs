@@ -19,10 +19,12 @@ namespace Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId
 
         public async Task<Result<VideoDTO>> Handle(GetVideoByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var video = await _repositoryWrapper.VideoRepository.GetSingleOrDefaultAsync(video => video.StreetcodeId == request.streetcodeId);
-            if (video == null)
+            var video = await _repositoryWrapper.VideoRepository
+                .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.streetcodeId);
+
+            if (video is null)
             {
-                return Result.Fail(new Error("Can`t find video with this StreetcodeId"));
+                return Result.Fail(new Error($"Cannot find a video by a streetcode Id: {request.streetcodeId}"));
             }
 
             var videoDto = _mapper.Map<VideoDTO>(video);

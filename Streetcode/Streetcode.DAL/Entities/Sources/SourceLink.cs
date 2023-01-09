@@ -10,16 +10,11 @@ public class SourceLink
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [MaxLength(100)]
+    [MaxLength(300)]
     public string? Title { get; set; }
 
     [Required]
     public string Url { get; set; }
-
-    [Required]
-    public int StreetcodeId { get; set; }
-
-    public Streetcode.StreetcodeContent? Streetcode { get; set; }
 
     public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

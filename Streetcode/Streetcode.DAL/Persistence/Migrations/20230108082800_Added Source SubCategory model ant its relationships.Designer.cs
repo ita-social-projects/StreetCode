@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230106144400_Added SourceLinkSubCategory model and its relationships")]
-    partial class AddedSourceLinkSubCategorymodelanditsrelationships
+    [Migration("20230108082800_Added Source SubCategory model ant its relationships")]
+    partial class AddedSourceSubCategorymodelantitsrelationships
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -726,12 +726,9 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -739,30 +736,91 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StreetcodeId");
-
                     b.ToTable("source_links", "sources");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            StreetcodeId = 1,
-                            Title = "Вікіпедія",
+                            Title = "Том 2: Суспільно-політичні твори (1907–1914).",
                             Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
                         },
                         new
                         {
                             Id = 2,
-                            StreetcodeId = 1,
-                            Title = "Кобзар",
+                            Title = "Том 3: Суспільно-політичні твори (1907 — березень 1917).",
                             Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
                         },
                         new
                         {
                             Id = 3,
-                            StreetcodeId = 4,
-                            Title = "Св'яткування звільнення",
+                            Title = "Том 4. Книга 1: Суспільно-політичні твори (доба Української Центральної Ради, березень 1917 — квітень 1918).",
+                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Title = "Том 5: Історичні студії та розвідки (1888–1896).",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Title = "Том 6: Історичні студії та розвідки (1895–1900).",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Title = "Том 7: Історичні студії та розвідки (1900–1906).",
+                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Title = "Том 8: Історичні студії та розвідки (1906–1916).",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Title = "Том 9: Історичні студії та розвідки (1917–1923).",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Title = "Том 10. Книга 1: Історичні студії та розвідки (1924— 1930)/ упор. О.Юркова.",
+                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Title = "Том 10. Книга 2: Історичні студії та розвідки (1930— 1934)",
+                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Title = "Том 11: Літературно-критичні праці (1883–1931), «По світу»",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Title = "Том 12: Поезія (1882–1903). Проза, драматичні твори, переклади (1883–1886)",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Title = "Том 13 : Серія \"Літературно-критичні та художні твори (1887-1924)\"",
+                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Title = "Том 14: Рецензії та огляди (1888–1897).",
                             Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
                         });
                 });
@@ -778,6 +836,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -787,6 +848,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("ImageId");
 
+                    b.HasIndex("StreetcodeId");
+
                     b.ToTable("source_link_categories", "sources");
 
                     b.HasData(
@@ -794,18 +857,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             ImageId = 9,
+                            StreetcodeId = 1,
                             Title = "Книги"
                         },
                         new
                         {
                             Id = 2,
                             ImageId = 10,
+                            StreetcodeId = 1,
                             Title = "Фільми"
                         },
                         new
                         {
                             Id = 3,
                             ImageId = 11,
+                            StreetcodeId = 1,
                             Title = "Цитати"
                         });
                 });
@@ -836,26 +902,44 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            SourceLinkCategoryId = 1,
-                            Title = "Том 9: Історичні студії та розвідки (1917–1923)."
+                            SourceLinkCategoryId = 2,
+                            Title = "Фільми про Т. Г. Шевченко"
                         },
                         new
                         {
                             Id = 2,
-                            SourceLinkCategoryId = 1,
-                            Title = "Том 10: Історичні студії та розвідки (1917–1923)."
+                            SourceLinkCategoryId = 2,
+                            Title = "Хроніки про Т. Г. Шевченко"
                         },
                         new
                         {
                             Id = 3,
-                            SourceLinkCategoryId = 3,
-                            Title = "Том 12: Історичні студії та розвідки (1917–1923)."
+                            SourceLinkCategoryId = 2,
+                            Title = "Блоги про Т. Г. Шевченко"
                         },
                         new
                         {
                             Id = 4,
                             SourceLinkCategoryId = 1,
-                            Title = "Том 11: Історичні студії та розвідки (1917–1923)."
+                            Title = "Праці Грушевського"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            SourceLinkCategoryId = 1,
+                            Title = "Книги про Грушевського"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            SourceLinkCategoryId = 1,
+                            Title = "Статті"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            SourceLinkCategoryId = 3,
+                            Title = "Пряма мова"
                         });
                 });
 
@@ -1492,7 +1576,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1282),
+                            CreatedAt = new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3654),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1529,7 +1613,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1198),
+                            CreatedAt = new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3597),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1543,7 +1627,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1261),
+                            CreatedAt = new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3636),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1557,7 +1641,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 6, 16, 44, 0, 37, DateTimeKind.Local).AddTicks(1266),
+                            CreatedAt = new DateTime(2023, 1, 8, 10, 27, 59, 889, DateTimeKind.Local).AddTicks(3640),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1700,17 +1784,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Partner");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithMany("SourceLinks")
-                        .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
@@ -1719,7 +1792,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("SourceLinkCategories")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Image");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
@@ -1899,7 +1980,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Observers");
 
-                    b.Navigation("SourceLinks");
+                    b.Navigation("SourceLinkCategories");
 
                     b.Navigation("StreetcodePartners");
 

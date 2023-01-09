@@ -38,7 +38,9 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IPartnersRepository _partnersRepository;
 
-    private ISourceLinkRepository _sourceLinkRepository;
+    private ISourceCategoryRepository _sourceCategoryRepository;
+
+    private ISourceSubCategoryRepository _sourceSubCategoryRepository;
 
     private IRelatedFigureRepository _relatedFigureRepository;
 
@@ -141,16 +143,29 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public ISourceLinkRepository SourceLinkRepository
+    public ISourceCategoryRepository SourceCategoryRepository
     {
         get
         {
-            if (_sourceLinkRepository is null)
+            if (_sourceCategoryRepository is null)
             {
-                _sourceLinkRepository = new SourceLinkRepository(_streetcodeDbContext);
+                _sourceCategoryRepository = new SourceCategoryRepository(_streetcodeDbContext);
             }
 
-            return _sourceLinkRepository;
+            return _sourceCategoryRepository;
+        }
+    }
+
+    public ISourceSubCategoryRepository SourceSubCategoryRepository
+    {
+        get
+        {
+            if (_sourceSubCategoryRepository is null)
+            {
+                _sourceSubCategoryRepository = new SourceSubCategoryRepository(_streetcodeDbContext);
+            }
+
+            return _sourceSubCategoryRepository;
         }
     }
 

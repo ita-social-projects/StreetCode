@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Sources;
 
@@ -19,6 +20,8 @@ public class SourceLinkCategory
     public int ImageId { get; set; }
 
     public Image? Image { get; set; }
+
+    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
     public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

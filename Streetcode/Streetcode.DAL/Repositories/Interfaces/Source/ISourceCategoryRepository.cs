@@ -4,6 +4,6 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Source;
 
-public interface ISourceLinkRepository : IRepositoryBase<SourceLink>
+public interface ISourceCategoryRepository : IRepositoryBase<SourceLinkCategory>
 {
 }

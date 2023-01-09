@@ -21,7 +21,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            return Result.Fail(new Error($"Cannot find a fact with corresponding Id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find a fact with corresponding categoryId: {request.Id}"));
         }
 
         _repositoryWrapper.FactRepository.Delete(fact);

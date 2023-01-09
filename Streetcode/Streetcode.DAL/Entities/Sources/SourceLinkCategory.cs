@@ -21,10 +21,7 @@ public class SourceLinkCategory
 
     public Image? Image { get; set; }
 
-    [Required]
-    public int StreetcodeId { get; set; }
+    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
-    public StreetcodeContent? Streetcode { get; set; }
-
-    public List<SourceLinkSubCategory> SubCategories { get; set; } = new();
+    public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
 }

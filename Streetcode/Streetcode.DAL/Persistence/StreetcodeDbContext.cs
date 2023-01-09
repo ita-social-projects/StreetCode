@@ -184,9 +184,8 @@ public class StreetcodeDbContext : DbContext
                 .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));
 
             entity.HasMany(d => d.SourceLinkCategories)
-                .WithOne(p => p.Streetcode)
-                .HasForeignKey(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.Streetcodes)
+                .UsingEntity(j => j.ToTable("streetcode_source_link_categories", "sources"));
 
             entity.HasMany(d => d.Videos)
                 .WithOne(p => p.Streetcode)

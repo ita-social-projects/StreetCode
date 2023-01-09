@@ -214,7 +214,7 @@ public static class ModelBuilderExtensions
                 Id = 9,
                 Title = "book",
                 Alt = "book",
-                Url = "https://marvistamom.com/wp-content/uploads/books3.jpg"
+                Url = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80"
             },
             new Image
             {
@@ -586,21 +586,18 @@ public static class ModelBuilderExtensions
                 Id = 1,
                 Title = "Книги",
                 ImageId = 9,
-                StreetcodeId = 1,
             },
             new SourceLinkCategory
             {
                 Id = 2,
                 Title = "Фільми",
                 ImageId = 10,
-                StreetcodeId = 1,
             },
             new SourceLinkCategory
             {
                 Id = 3,
                 Title = "Цитати",
                 ImageId = 11,
-                StreetcodeId = 1,
             });
         modelBuilder.Entity<SourceLinkSubCategory>().HasData(
             new SourceLinkSubCategory

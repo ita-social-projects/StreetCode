@@ -26,6 +26,13 @@ INSERT INTO [sources].[source_link_source_link_subcategory]
            (13, 7), (14, 7)
 ;
 
+INSERT INTO [sources].[streetcode_source_link_categories]
+    VALUES
+           (1, 1),
+           (2, 1),
+           (3, 1)
+;
+
 INSERT INTO [streetcode].[streetcode_arts]
      VALUES
            (1, 1),

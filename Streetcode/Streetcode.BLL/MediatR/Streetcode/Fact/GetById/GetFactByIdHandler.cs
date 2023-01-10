@@ -19,14 +19,14 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
 
     public async Task<Result<FactDTO>> Handle(GetFactByIdQuery request, CancellationToken cancellationToken)
     {
-        var fact = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var facts = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
-        if (fact is null)
+        if (facts is null)
         {
             return Result.Fail(new Error($"Cannot find a fact with corresponding id: {request.Id}"));
         }
 
-        var factDto = _mapper.Map<FactDTO>(fact);
-        return Result.Ok(factDto);
+        var factsDto = _mapper.Map<FactDTO>(facts);
+        return Result.Ok(factsDto);
     }
 }

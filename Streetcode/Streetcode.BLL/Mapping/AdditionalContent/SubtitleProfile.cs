@@ -10,6 +10,7 @@ public class SubtitleProfile : Profile
    {
         CreateMap<Subtitle, SubtitleDTO>()
             .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url))
+            .ForPath(dto => dto.SubtitleStatus, conf => conf.MapFrom(ol => ol.Status))
             .ForPath(dto => dto.Url.Title, conf => conf.MapFrom(ol => ol.Title));
    }
 }

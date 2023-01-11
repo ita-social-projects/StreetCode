@@ -23,7 +23,7 @@ public class SubtitleController : BaseApiController
     [HttpGet("{streetcodeId:int}")]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetSubtitleByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetSubtitlesByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]

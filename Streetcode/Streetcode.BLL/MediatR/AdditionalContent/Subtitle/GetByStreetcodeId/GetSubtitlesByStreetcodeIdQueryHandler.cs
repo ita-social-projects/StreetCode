@@ -19,14 +19,14 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetSubtitlesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var subtitle = await _repositoryWrapper.SubtitleRepository.GetAllAsync(Subtitle => Subtitle.StreetcodeId == request.streetcodeId);
-            if (subtitle is null)
+            var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync(Subtitle => Subtitle.StreetcodeId == request.streetcodeId);
+            if (subtitles is null)
             {
                 return Result.Fail(new Error($"Cannot find a subtitle by a streetcode id: {request.streetcodeId}"));
             }
 
-            var subtitleDto = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitle);
-            return Result.Ok(subtitleDto);
+            var subtitlesDto = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
+            return Result.Ok(subtitlesDto);
         }
     }
 }

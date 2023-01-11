@@ -14,7 +14,7 @@ public class RelatedFigureProfile : Profile
 
         CreateMap<PersonStreetcode, RelatedFigureDTO>()
             .ForPath(dto => dto.Title, conf => conf
-                .MapFrom(e => (e.Rank == null) ? $"{e.FirstName} {e.LastName}" : $"{e.Rank} {e.FirstName} {e.LastName}"))
+                .MapFrom(e => (e.Rank == null) ? $"{e.FirstName} {e.LastName}" : $"{e.FirstName} {e.LastName}"))
             .ForPath(dto => dto.ImageId, conf => conf.MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
     }
 }

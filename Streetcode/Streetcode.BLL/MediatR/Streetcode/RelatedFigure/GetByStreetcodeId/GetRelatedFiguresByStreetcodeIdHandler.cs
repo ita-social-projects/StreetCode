@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -19,18 +20,25 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
     public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var observers = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.TargetId == request.StreetcodeId).Select(o => o.Observer);
+        var observerIds = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.TargetId == request.StreetcodeId).Select(o => o.ObserverId);
 
-        if (observers is null)
+        var targetIds = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.ObserverId == request.StreetcodeId).Select(t => t.TargetId);
+
+        var relatedFigureIds = observerIds.Union(targetIds).Distinct();
+
+        if (relatedFigureIds is null)
         {
             return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
         }
 
-        var targets = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.ObserverId == request.StreetcodeId).Select(t => t.Target);
-
-        var relatedFigures = observers.Union(targets).Distinct();
+        var relatedFigures = await _repositoryWrapper.StreetcodeRepository
+            .GetAllAsync(
+                predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
+                include: scl => scl
+                    .Include(sc => sc.Images)
+                    .Include(sc => sc.Tags));
 
         if (relatedFigures is null)
         {

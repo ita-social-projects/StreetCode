@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
@@ -29,13 +30,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error($"Cannot find any tags by a streetcode id: {request.StreetcodeId}"));
         }
 
-        var observerIds = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.TargetId == request.StreetcodeId).Select(o => o.ObserverId);
-
-        var targetIds = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.ObserverId == request.StreetcodeId).Select(t => t.TargetId);
-
-        var relatedFigureIds = observerIds.Union(targetIds).Distinct();
+        var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
         if (relatedFigureIds is null)
         {
@@ -54,10 +49,26 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
         }
 
-        relatedFigures.ToList()
-            .ForEach(f => f.Tags = f.Tags.Where(t => tags.Any(tg => tg.Id == t.Id)).ToList());
+        IntercectTags(relatedFigures, tags);
 
         var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
         return Result.Ok(mappedRelatedFigures);
+    }
+
+    private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)
+    {
+        var observerIds = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.TargetId == StreetcodeId).Select(o => o.ObserverId);
+
+        var targetIds = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.ObserverId == StreetcodeId).Select(t => t.TargetId);
+
+        return observerIds.Union(targetIds).Distinct();
+    }
+
+    private void IntercectTags(IEnumerable<StreetcodeContent> relatedFigures, IEnumerable<Tag> tags)
+    {
+        relatedFigures.ToList()
+            .ForEach(f => f.Tags = f.Tags.Where(t => tags.Any(tg => tg.Id == t.Id)).ToList());
     }
 }

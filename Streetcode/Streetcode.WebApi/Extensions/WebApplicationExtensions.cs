@@ -13,7 +13,7 @@ public static class WebApplicationExtensions
         try
         {
             var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName;
+            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
             var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
 

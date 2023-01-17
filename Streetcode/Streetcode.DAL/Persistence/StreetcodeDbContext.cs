@@ -52,7 +52,6 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Video> Videos { get; set; }
     public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
     public DbSet<SourceLinkSubCategory> SourceLinkSubCategories { get; set; }
-    public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,11 +65,16 @@ public class StreetcodeDbContext : DbContext
             .HasForeignKey(d => d.ToponymId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        modelBuilder.Entity<Partner>()
-            .HasMany(d => d.PartnerSourceLinks)
-            .WithOne(p => p.Partner)
-            .HasForeignKey(d => d.PartnerId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Partner>(entity =>
+        {
+            entity.HasMany(d => d.PartnerSourceLinks)
+                .WithOne(p => p.Partner)
+                .HasForeignKey(d => d.PartnerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(p => p.IsKeyPartner)
+                .HasDefaultValue("false");
+        });
 
         modelBuilder.Entity<TimelineItem>()
             .HasMany(d => d.HistoricalContexts)
@@ -121,24 +125,6 @@ public class StreetcodeDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<StreetcodePartner>(entity =>
-        {
-            entity.HasKey(d => new { d.PartnerId, d.StreetcodeId });
-
-            entity.HasOne(d => d.Streetcode)
-                .WithMany(d => d.StreetcodePartners)
-                .HasForeignKey(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasOne(d => d.Partner)
-                .WithMany(d => d.StreetcodePartners)
-                .HasForeignKey(d => d.PartnerId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.Property(e => e.IsSponsor)
-                .HasDefaultValue(false);
-        });
-
         modelBuilder.Entity<StreetcodeContent>(entity =>
         {
             entity.Property(s => s.CreatedAt)
@@ -186,6 +172,10 @@ public class StreetcodeDbContext : DbContext
             entity.HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_source_link_categories", "sources"));
+
+            entity.HasMany(d => d.Partners)
+                .WithMany(p => p.Streetcodes)
+                .UsingEntity(j => j.ToTable("streetcode_partners", "streetcode"));
 
             entity.HasMany(d => d.Videos)
                 .WithOne(p => p.Streetcode)

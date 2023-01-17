@@ -12,8 +12,12 @@ public class Partner
     public int Id { get; set; }
 
     [Required]
-    public string? Title { get; set; }
+    public string Title { get; set; }
+
     public string? LogoUrl { get; set; }
+
+    [Required]
+    public bool IsKeyPartner { get; set; }
 
     [Required]
     public string TargetUrl { get; set; }
@@ -22,5 +26,5 @@ public class Partner
 
     public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new ();
 
-    public List<StreetcodePartner> StreetcodePartners { get; set; } = new ();
+    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 }

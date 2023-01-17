@@ -178,7 +178,7 @@ public class StreetcodeDbContext : DbContext
                 .HasValue<PersonStreetcode>("streetcode-person")
                 .HasValue<EventStreetcode>("streetcode-event");
 
-            entity.HasOne(d => d.Coordinate)
+            entity.HasMany(d => d.Coordinates)
                 .WithOne(c => c.Streetcode)
                 .OnDelete(DeleteBehavior.Cascade);
 

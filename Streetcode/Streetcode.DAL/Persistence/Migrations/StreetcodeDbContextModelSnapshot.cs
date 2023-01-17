@@ -1529,9 +1529,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
-                    b.HasIndex("StreetcodeId")
-                        .IsUnique()
-                        .HasFilter("[StreetcodeId] IS NOT NULL");
+                    b.HasIndex("StreetcodeId");
 
                     b.ToTable("coordinates", "add_content");
 
@@ -1643,7 +1641,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 16, 20, 33, 42, 41, DateTimeKind.Local).AddTicks(2804),
+                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4481),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1680,7 +1678,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 16, 20, 33, 42, 41, DateTimeKind.Local).AddTicks(2739),
+                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4412),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1694,7 +1692,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 16, 20, 33, 42, 41, DateTimeKind.Local).AddTicks(2779),
+                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4459),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1708,7 +1706,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 16, 20, 33, 42, 41, DateTimeKind.Local).AddTicks(2787),
+                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4463),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -2010,8 +2008,8 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithOne("Coordinate")
-                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeId")
+                        .WithMany("Coordinates")
+                        .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2059,7 +2057,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.Navigation("Audio");
 
-                    b.Navigation("Coordinate");
+                    b.Navigation("Coordinates");
 
                     b.Navigation("Observers");
 

@@ -47,8 +47,6 @@ public class StreetcodeContent
 
     public List<Toponym> Toponyms { get; set; } = new ();
 
-    public List<Art> Arts { get; set; } = new ();
-
     public List<Image> Images { get; set; } = new ();
 
     public List<Tag> Tags { get; set; } = new ();
@@ -68,4 +66,6 @@ public class StreetcodeContent
     public List<RelatedFigure> Targets { get; set; } = new ();
 
     public List<StreetcodePartner> StreetcodePartners { get; set; } = new ();
+
+    public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 }

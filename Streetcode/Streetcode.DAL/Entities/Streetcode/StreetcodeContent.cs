@@ -41,7 +41,7 @@ public class StreetcodeContent
 
     public Audio? Audio { get; set; }
 
-    public StreetcodeCoordinate? Coordinate { get; set; }
+    public List<StreetcodeCoordinate> Coordinates { get; set; } = new();
 
     public TransactionLink? TransactionLink { get; set; }
 

@@ -30,6 +30,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IAudioRepository _audioRepository;
 
+    private IStreetcodeCoordinateRepository _streetcodeCoordinateRepository;
+
     private IImageRepository _imageRepository;
 
     private IArtRepository _artRepository;
@@ -101,6 +103,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _audioRepository;
+        }
+    }
+
+    public IStreetcodeCoordinateRepository StreetcodeCoordinateRepository
+    {
+        get
+        {
+            if (_streetcodeCoordinateRepository is null)
+            {
+                _streetcodeCoordinateRepository = new StreetcodeCoordinateRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeCoordinateRepository;
         }
     }
 

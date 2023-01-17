@@ -1,5 +1,4 @@
 using Repositories.Interfaces;
-using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
@@ -18,6 +17,7 @@ public interface IRepositoryWrapper
     IVideoRepository VideoRepository { get; }
     IImageRepository ImageRepository { get; }
     IAudioRepository AudioRepository { get; }
+    IStreetcodeCoordinateRepository StreetcodeCoordinateRepository { get; }
     IPartnersRepository PartnersRepository { get; }
     ISourceCategoryRepository SourceCategoryRepository { get; }
     ISourceSubCategoryRepository SourceSubCategoryRepository { get; }

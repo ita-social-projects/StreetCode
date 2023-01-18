@@ -49,7 +49,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
         }
 
-        IntercectTags(relatedFigures, tags);
+        IntersectTags(relatedFigures, tags);
 
         var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
         return Result.Ok(mappedRelatedFigures);
@@ -66,7 +66,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         return observerIds.Union(targetIds).Distinct();
     }
 
-    private void IntercectTags(IEnumerable<StreetcodeContent> relatedFigures, IEnumerable<Tag> tags)
+    private void IntersectTags(IEnumerable<StreetcodeContent> relatedFigures, IEnumerable<Tag> tags)
     {
         relatedFigures.ToList()
             .ForEach(f => f.Tags = f.Tags.Where(t => tags.Any(tg => tg.Id == t.Id)).ToList());

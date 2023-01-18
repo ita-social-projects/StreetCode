@@ -5,5 +5,5 @@ namespace Streetcode.BLL.Interfaces.Streetcode;
 
 public interface IRelatedFigureService
 {
-    public Task<IEnumerable<RelatedFigureDTO>> GetRelatedFiguresByStreetcodeId(int streetcodeId);
+    public void GetRelatedFiguresByStreetcodeId(int streetcodeId);
 }

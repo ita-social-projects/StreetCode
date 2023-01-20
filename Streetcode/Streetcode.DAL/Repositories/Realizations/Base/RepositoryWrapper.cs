@@ -2,6 +2,7 @@ using Repositories.Interfaces;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
@@ -35,6 +36,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IImageRepository _imageRepository;
 
     private IArtRepository _artRepository;
+
+    private IStreetcodeArtRepository _streetcodeArtRepository;
 
     private IFactRepository _factRepository;
 
@@ -142,6 +145,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _artRepository;
+        }
+    }
+
+    public IStreetcodeArtRepository StreetcodeArtRepository
+    {
+        get
+        {
+            if (_streetcodeArtRepository is null)
+            {
+                _streetcodeArtRepository = new StreetcodeArtRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeArtRepository;
         }
     }
 

@@ -7,12 +7,12 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 {
-    public class GetStreetcodeArtByStreetcodeIdQueryHandler : IRequestHandler<GetStreetcodeArtByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtDTO>>>
+    public class GetStreetcodeArtByStreetcodeIdHandler : IRequestHandler<GetStreetcodeArtByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtDTO>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
 
-        public GetStreetcodeArtByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetStreetcodeArtByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

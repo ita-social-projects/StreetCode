@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var art = await _repositoryWrapper.ArtRepository
-                .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.streetcodeId));
+                .GetAllAsync(f => f.StreetcodeArts.Any(s => s.StreetcodeId == request.streetcodeId));
 
             if (art is null)
             {

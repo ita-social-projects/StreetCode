@@ -52,6 +52,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Video> Videos { get; set; }
     public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
     public DbSet<SourceLinkSubCategory> SourceLinkSubCategories { get; set; }
+    public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -125,6 +126,28 @@ public class StreetcodeDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<StreetcodeArt>(entity =>
+        {
+            entity.HasKey(d => new { d.ArtId, d.StreetcodeId });
+
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.StreetcodeArts)
+                .HasForeignKey(d => d.StreetcodeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Art)
+                .WithMany(d => d.StreetcodeArts)
+                .HasForeignKey(d => d.ArtId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Index)
+                .HasDefaultValue(1);
+
+            entity
+                .HasIndex(d => new { d.ArtId, d.StreetcodeId })
+                .IsUnique(false);
+        });
+
         modelBuilder.Entity<StreetcodeContent>(entity =>
         {
             entity.Property(s => s.CreatedAt)
@@ -141,13 +164,9 @@ public class StreetcodeDbContext : DbContext
                 .HasValue<PersonStreetcode>("streetcode-person")
                 .HasValue<EventStreetcode>("streetcode-event");
 
-            entity.HasOne(d => d.Coordinate)
+            entity.HasMany(d => d.Coordinates)
                 .WithOne(c => c.Streetcode)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(d => d.Arts)
-                .WithMany(a => a.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_arts", "streetcode"));
 
             entity.HasMany(d => d.Facts)
                 .WithMany(f => f.Streetcodes)

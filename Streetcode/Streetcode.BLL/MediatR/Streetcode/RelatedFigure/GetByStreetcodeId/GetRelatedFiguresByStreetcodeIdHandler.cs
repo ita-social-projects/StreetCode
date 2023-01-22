@@ -22,14 +22,6 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
     public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        IEnumerable<Tag>? tags = await _repositoryWrapper.TagRepository
-            .GetAllAsync(t => t.Streetcodes.Any(sc => sc.Id == request.StreetcodeId));
-
-        if (tags is null)
-        {
-            return Result.Fail(new Error($"Cannot find any tags by a streetcode id: {request.StreetcodeId}"));
-        }
-
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
         if (relatedFigureIds is null)
@@ -49,8 +41,6 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
         }
 
-        IntersectTags(relatedFigures, tags);
-
         var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
         return Result.Ok(mappedRelatedFigures);
     }
@@ -64,11 +54,5 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             .FindAll(f => f.ObserverId == StreetcodeId).Select(t => t.TargetId);
 
         return observerIds.Union(targetIds).Distinct();
-    }
-
-    private void IntersectTags(IEnumerable<StreetcodeContent> relatedFigures, IEnumerable<Tag> tags)
-    {
-        relatedFigures.ToList()
-            .ForEach(f => f.Tags = f.Tags.Where(t => tags.Any(tg => tg.Id == t.Id)).ToList());
     }
 }

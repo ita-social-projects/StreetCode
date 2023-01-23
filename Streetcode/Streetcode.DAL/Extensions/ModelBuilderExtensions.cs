@@ -263,6 +263,7 @@ public static class ModelBuilderExtensions
                 Url = "https://somelink4",
                 StreetcodeId = 4
             });
+        /*
         modelBuilder.Entity<ToponymCoordinate>().HasData(
             new ToponymCoordinate
             {
@@ -306,6 +307,8 @@ public static class ModelBuilderExtensions
                 Longtitude = 32.3738M,
                 ToponymId = 3
             });
+        */
+
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
             new StreetcodeCoordinate
             {
@@ -838,17 +841,20 @@ public static class ModelBuilderExtensions
             new Toponym
             {
                 Id = 1,
-                Title = "вулиця Шевченка"
+                Oblast = "Seed1",
+                StreetName = "SeedStreet1"
             },
             new Toponym
             {
                 Id = 2,
-                Title = "парк Шевченка"
+                Oblast = "Seed2",
+                StreetName = "SeedStreet2"
             },
             new Toponym
             {
                 Id = 3,
-                Title = "місто Херсон"
+                Oblast = "Seed3",
+                StreetName = "SeedStreet3"
             });
         modelBuilder.Entity<TransactionLink>().HasData(
             new TransactionLink

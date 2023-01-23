@@ -113,6 +113,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "source_links",
+                schema: "sources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_source_links", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "streetcodes",
                 schema: "streetcode",
                 columns: table => new
@@ -340,29 +355,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "source_links",
-                schema: "sources",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StreetcodeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_source_links", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_source_links_streetcodes_StreetcodeId",
-                        column: x => x.StreetcodeId,
-                        principalSchema: "streetcode",
-                        principalTable: "streetcodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "streetcode_image",
                 schema: "streetcode",
                 columns: table => new
@@ -391,7 +383,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.CreateTable(
                 name: "streetcode_partner",
-                schema: "partners",
+                schema: "streetcode",
                 columns: table => new
                 {
                     StreetcodeId = table.Column<int>(type: "int", nullable: false),
@@ -657,26 +649,27 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "streetcode_arts",
+                name: "streetcode_art",
                 schema: "streetcode",
                 columns: table => new
                 {
-                    ArtsId = table.Column<int>(type: "int", nullable: false),
-                    StreetcodesId = table.Column<int>(type: "int", nullable: false)
+                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
+                    ArtId = table.Column<int>(type: "int", nullable: false),
+                    Index = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_streetcode_arts", x => new { x.ArtsId, x.StreetcodesId });
+                    table.PrimaryKey("PK_streetcode_art", x => new { x.ArtId, x.StreetcodeId });
                     table.ForeignKey(
-                        name: "FK_streetcode_arts_arts_ArtsId",
-                        column: x => x.ArtsId,
+                        name: "FK_streetcode_art_arts_ArtId",
+                        column: x => x.ArtId,
                         principalSchema: "media",
                         principalTable: "arts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_streetcode_arts_streetcodes_StreetcodesId",
-                        column: x => x.StreetcodesId,
+                        name: "FK_streetcode_art_streetcodes_StreetcodeId",
+                        column: x => x.StreetcodeId,
                         principalSchema: "streetcode",
                         principalTable: "streetcodes",
                         principalColumn: "Id",
@@ -711,25 +704,74 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SourceLinkSourceLinkCategory",
+                name: "source_link_subcategories",
                 schema: "sources",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "int", nullable: false),
-                    SourceLinksId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SourceLinkCategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SourceLinkSourceLinkCategory", x => new { x.CategoriesId, x.SourceLinksId });
+                    table.PrimaryKey("PK_source_link_subcategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SourceLinkSourceLinkCategory_source_link_categories_CategoriesId",
-                        column: x => x.CategoriesId,
+                        name: "FK_source_link_subcategories_source_link_categories_SourceLinkCategoryId",
+                        column: x => x.SourceLinkCategoryId,
+                        principalSchema: "sources",
+                        principalTable: "source_link_categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "streetcode_source_link_categories",
+                schema: "sources",
+                columns: table => new
+                {
+                    SourceLinkCategoriesId = table.Column<int>(type: "int", nullable: false),
+                    StreetcodesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_streetcode_source_link_categories", x => new { x.SourceLinkCategoriesId, x.StreetcodesId });
+                    table.ForeignKey(
+                        name: "FK_streetcode_source_link_categories_source_link_categories_SourceLinkCategoriesId",
+                        column: x => x.SourceLinkCategoriesId,
                         principalSchema: "sources",
                         principalTable: "source_link_categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SourceLinkSourceLinkCategory_source_links_SourceLinksId",
+                        name: "FK_streetcode_source_link_categories_streetcodes_StreetcodesId",
+                        column: x => x.StreetcodesId,
+                        principalSchema: "streetcode",
+                        principalTable: "streetcodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "source_link_source_link_subcategory",
+                schema: "sources",
+                columns: table => new
+                {
+                    SourceLinksId = table.Column<int>(type: "int", nullable: false),
+                    SubCategoriesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_source_link_source_link_subcategory", x => new { x.SourceLinksId, x.SubCategoriesId });
+                    table.ForeignKey(
+                        name: "FK_source_link_source_link_subcategory_source_link_subcategories_SubCategoriesId",
+                        column: x => x.SubCategoriesId,
+                        principalSchema: "sources",
+                        principalTable: "source_link_subcategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_source_link_source_link_subcategory_source_links_SourceLinksId",
                         column: x => x.SourceLinksId,
                         principalSchema: "sources",
                         principalTable: "source_links",
@@ -749,9 +791,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "Title" },
                 values: new object[,]
                 {
-                    { 1, "Book" },
-                    { 2, "Wideo" },
-                    { 3, "Article" }
+                    { 1, "Дитинство" },
+                    { 2, "Студентство" },
+                    { 3, "Життя в Петербурзі" }
                 });
 
             migrationBuilder.InsertData(
@@ -767,7 +809,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                     { 5, "Кобзар", "Кобзар", "https://www.bing.com/images/search?view=detailV2&ccid=6juPycgD&id=00A2C7B1F325A9870421D651A956BCE2C851654E&thid=OIP.6juPycgDNwJ3v2Zr-kde1gHaK_&mediaurl=https%3A%2F%2Fwww.megakniga.com.ua%2Fuploads%2Fcache%2FProducts%2FProduct_images_343456%2Fd067b1_w1600.jpg&cdnurl=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FR.ea3b8fc9c803370277bf666bfa475ed6%3Frik%3DTmVRyOK8VqlR1g%26pid%3DImgRaw%26r%3D0&exph=1200&expw=809&q=%d0%ba%d0%be%d0%b1%d0%b7%d0%b0%d1%80&simid=608047540067197142&form=IRPRST&ck=4280C365AEBC65D796FBF885B3252710&selectedindex=1&ajaxhist=0&ajaxserp=0&vt=0&sim=11" },
                     { 6, "Мико́ла Костома́ров", "Мико́ла Костома́ров", "https://www.bing.com/images/search?view=detailV2&ccid=KUJZwRaU&id=A53DDEBFF57BE2396FB7FA50737F83704B1BE30F&thid=OIP.KUJZwRaUjipKMLR8H91BrAAAAA&mediaurl=https%3a%2f%2fgdb.rferl.org%2f224F2B76-EE74-4B85-A78A-BF8A354FA0B1_w250_r0_s.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.294259c116948e2a4a30b47c1fdd41ac%3frik%3dD%252bMbS3CDf3NQ%252bg%26pid%3dImgRaw%26r%3d0&exph=340&expw=250&q=%d0%9c%d0%b8%d0%ba%d0%be%cc%81%d0%bb%d0%b0+%d0%9a%d0%be%d1%81%d1%82%d0%be%d0%bc%d0%b0%cc%81%d1%80%d0%be%d0%b2&simid=608030609289524022&FORM=IRPRST&ck=E08972A7A7E2CEE9B67158DDC372F92F&selectedIndex=3&ajaxhist=0&ajaxserp=0" },
                     { 7, "Василь Білозерський", "Василь Білозерський", "https://www.bing.com/images/search?view=detailV2&ccid=hIQUFjAM&id=B14676F51B4A0EB314ED15283540D088B3030E28&thid=OIP.hIQUFjAMGwOt7f7ujR44aQAAAA&mediaurl=https%3a%2f%2fnaurok-test.nyc3.cdn.digitaloceanspaces.com%2fuploads%2ftest%2f229691%2f36505%2f276576_1582512990.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.84841416300c1b03adedfeee8d1e3869%3frik%3dKA4Ds4jQQDUoFQ%26pid%3dImgRaw%26r%3d0&exph=351&expw=240&q=%d0%92%d0%b0%d1%81%d0%b8%d0%bb%d1%8c+%d0%91%d1%96%d0%bb%d0%be%d0%b7%d0%b5%d1%80%d1%81%d1%8c%d0%ba%d0%b8%d0%b9&simid=608001205960330039&FORM=IRPRST&ck=07DE282212732F4C0712D614C87002F3&selectedIndex=1&ajaxhist=0&ajaxserp=0" },
-                    { 8, "Звільнення Херсона", "Звільнення Херсона", "https://www.bing.com/images/search?view=detailV2&ccid=F5o3vrW9&id=5409686EF1396243251CE5AF505766A0A2D0662E&thid=OIP.F5o3vrW9jZJ9ECMgkmevTwHaFj&mediaurl=https%3a%2f%2fstorage1.censor.net%2fimages%2f1%2f7%2f9%2fa%2f179a37beb5bd8d927d1023209267af4f%2foriginal.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.179a37beb5bd8d927d1023209267af4f%3frik%3dLmbQoqBmV1Cv5Q%26pid%3dImgRaw%26r%3d0&exph=720&expw=960&q=%d0%b2%d0%b8%d0%b7%d0%b2%d0%be%d0%bb%d0%b5%d0%bd%d0%bd%d1%8f+%d1%85%d0%b5%d1%80%d1%81%d0%be%d0%bd%d1%83&simid=608050323200235844&FORM=IRPRST&ck=C9A86B9D5EBBADF456F315DFD0BA990B&selectedIndex=3&ajaxhist=0&ajaxserp=0" }
+                    { 8, "Звільнення Херсона", "Звільнення Херсона", "https://www.bing.com/images/search?view=detailV2&ccid=F5o3vrW9&id=5409686EF1396243251CE5AF505766A0A2D0662E&thid=OIP.F5o3vrW9jZJ9ECMgkmevTwHaFj&mediaurl=https%3a%2f%2fstorage1.censor.net%2fimages%2f1%2f7%2f9%2fa%2f179a37beb5bd8d927d1023209267af4f%2foriginal.jpg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.179a37beb5bd8d927d1023209267af4f%3frik%3dLmbQoqBmV1Cv5Q%26pid%3dImgRaw%26r%3d0&exph=720&expw=960&q=%d0%b2%d0%b8%d0%b7%d0%b2%d0%be%d0%bb%d0%b5%d0%bd%d0%bd%d1%8f+%d1%85%d0%b5%d1%80%d1%81%d0%be%d0%bd%d1%83&simid=608050323200235844&FORM=IRPRST&ck=C9A86B9D5EBBADF456F315DFD0BA990B&selectedIndex=3&ajaxhist=0&ajaxserp=0" },
+                    { 9, "book", "book", "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80" },
+                    { 10, "video", "video", "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg" },
+                    { 11, "article", "article", "https://images.laws.com/constitution/constitutional-convention.jpg" }
                 });
 
             migrationBuilder.InsertData(
@@ -792,10 +837,32 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "sources",
+                table: "source_links",
+                columns: new[] { "Id", "Title", "Url" },
+                values: new object[,]
+                {
+                    { 1, "Том 2: Суспільно-політичні твори (1907–1914).", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 2, "Том 3: Суспільно-політичні твори (1907 — березень 1917).", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 3, "Том 4. Книга 1: Суспільно-політичні твори (доба Української Центральної Ради, березень 1917 — квітень 1918).", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 4, "Том 5: Історичні студії та розвідки (1888–1896).", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 5, "Том 6: Історичні студії та розвідки (1895–1900).", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 6, "Том 7: Історичні студії та розвідки (1900–1906).", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 7, "Том 8: Історичні студії та розвідки (1906–1916).", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 8, "Том 9: Історичні студії та розвідки (1917–1923).", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 9, "Том 10. Книга 1: Історичні студії та розвідки (1924— 1930)/ упор. О.Юркова.", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 10, "Том 10. Книга 2: Історичні студії та розвідки (1930— 1934)", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" },
+                    { 11, "Том 11: Літературно-критичні праці (1883–1931), «По світу»", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 12, "Том 12: Поезія (1882–1903). Проза, драматичні твори, переклади (1883–1886)", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
+                    { 13, "Том 13 : Серія \"Літературно-критичні та художні твори (1887-1924)\"", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
+                    { 14, "Том 14: Рецензії та огляди (1888–1897).", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" }
+                });
+
+            migrationBuilder.InsertData(
                 schema: "streetcode",
                 table: "streetcodes",
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "Index", "StreetcodeType", "Teaser", "Title", "ViewCount" },
-                values: new object[] { 4, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(939), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "streetcode-event", "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000 });
+                values: new object[] { 4, new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4481), new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "streetcode-event", "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).", "Звільнення Херсона", 1000 });
 
             migrationBuilder.InsertData(
                 schema: "streetcode",
@@ -803,9 +870,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "EventEndOrPersonDeathDate", "EventStartOrPersonBirthDate", "FirstName", "Index", "LastName", "Rank", "StreetcodeType", "Teaser" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(843), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "streetcode-person", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв" },
-                    { 2, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(886), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "streetcode-person", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя." },
-                    { 3, new DateTime(2022, 12, 23, 22, 21, 11, 540, DateTimeKind.Local).AddTicks(890), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "streetcode-person", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст." }
+                    { 1, new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4412), new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Тарас", 1, "Шевченко", "Григорович", "streetcode-person", "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв" },
+                    { 2, new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4459), new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Мико́ла", 2, "Костома́ров", "Іва́нович", "streetcode-person", "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя." },
+                    { 3, new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4463), new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Василь", 3, "Білозерський", "Михайлович", "streetcode-person", "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст." }
                 });
 
             migrationBuilder.InsertData(
@@ -828,7 +895,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     { 1, "Етнографія — суспільствознавча наука, об'єктом дослідження якої є народи, їхня культура і побут, походження, розселення, процеси культурно-побутових відносин на всіх етапах історії людства.", "етнограф" },
                     { 2, "Гра́фіка — вид образотворчого мистецтва, для якого характерна перевага ліній і штрихів, використання контрастів білого та чорного та менше, ніж у живописі, використання кольору. Твори можуть мати як монохромну, так і поліхромну гаму.", "гравер" },
-                    { 3, "Кріпа́цтво, або кріпосне́ право, у вузькому сенсі — правова система, або система правових норм при феодалізмі, яка встановлювала залежність селянина від феодала й неповну власність феодала на селянина.", "кріпак" }
+                    { 3, "Кріпа́цтво, або кріпосне́ право, у вузькому сенсі — правова система, або система правових норм при феодалізмі, яка встановлювала залежність селянина від феодала й неповну власність феодала на селянина.", "кріпак" },
+                    { 4, "Ма́чуха — нерідна матір для дітей чоловіка від його попереднього шлюбу.", "мачуха" }
                 });
 
             migrationBuilder.InsertData(
@@ -859,8 +927,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 values: new object[,]
                 {
                     { 1, "«Погруддя жінки» — портрет роботи Тараса Шевченка (копія з невідомого оригіналу) виконаний ним у Вільно в 1830 році на папері італійським олівцем. Розмір 47,5 × 38. Зустрічається також під назвою «Жіноча голівка»", 2 },
-                    { 2, "«Погруддя жінки» — портрет роботи Тараса Шевченка (копія з невідомого оригіналу) виконаний ним у Вільно в 1830 році на папері італійським олівцем. Розмір 47,5 × 38. Зустрічається також під назвою «Жіноча голівка»", 3 },
-                    { 3, null, 4 }
+                    { 2, null, 3 },
+                    { 3, null, 4 },
+                    { 4, null, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -919,29 +988,29 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "streetcode",
+                table: "related_figures",
+                columns: new[] { "ObserverId", "TargetId" },
+                values: new object[,]
+                {
+                    { 1, 2 },
+                    { 1, 3 },
+                    { 2, 3 }
+                });
+
+            migrationBuilder.InsertData(
                 schema: "sources",
                 table: "source_link_categories",
                 columns: new[] { "Id", "ImageId", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "book" },
-                    { 2, 2, "video" },
-                    { 3, 1, "article" }
+                    { 1, 9, "Книги" },
+                    { 2, 10, "Фільми" },
+                    { 3, 11, "Цитати" }
                 });
 
             migrationBuilder.InsertData(
-                schema: "sources",
-                table: "source_links",
-                columns: new[] { "Id", "StreetcodeId", "Title", "Url" },
-                values: new object[,]
-                {
-                    { 1, 1, "Вікіпедія", "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87" },
-                    { 2, 1, "Кобзар", "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf" },
-                    { 3, 4, "Св'яткування звільнення", "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html" }
-                });
-
-            migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[,]
@@ -951,13 +1020,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 1, 3 });
 
             migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[,]
@@ -967,19 +1036,19 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 2, 2 });
 
             migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId", "IsSponsor" },
                 values: new object[] { 2, 4, true });
 
             migrationBuilder.InsertData(
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 columns: new[] { "PartnerId", "StreetcodeId" },
                 values: new object[] { 3, 3 });
@@ -995,8 +1064,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     { 3, "description", "Dmytro", "Buchkovsky", (byte)0, 3, null, "https://t.me/MaisterD" },
                     { 4, "description", "Oleksndr", "Lazarenko", (byte)0, 1, null, null },
                     { 5, null, "Oleksndr", "Lazarenko", (byte)0, 2, null, null },
-                    { 6, null, "Yaroslav", "Chushenko", (byte)1, 1, null, null },
-                    { 7, null, "Yaroslav", "Chushenko", (byte)1, 3, null, null }
+                    { 6, null, "Yaroslav", "Chushenko", (byte)1, 1, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1005,6 +1073,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "Description", "FirstName", "LastName", "Status", "StreetcodeId", "Title", "Url" },
                 values: new object[,]
                 {
+                    { 7, null, "Yaroslav", "Chushenko", (byte)1, 3, null, null },
                     { 8, null, "Nazarii", "Hovdysh", (byte)0, 4, null, null },
                     { 9, null, "Tatiana", "Shumylo", (byte)1, 4, null, null }
                 });
@@ -1015,7 +1084,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: new[] { "Id", "StreetcodeId", "TextContent", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\nЗа родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\nВосени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.", "Дитинство та юність" },
+                    { 1, 1, "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\r\n\r\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\r\n\r\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».", "Дитинство та юність" },
                     { 2, 2, "Батьки М. І. Костомарова намагалися прищепити сину вільнолюбні ідеї і дати добру освіту. Тому вже з 10 років М. Костомарова відправили навчатися до Московського пансіону, а згодом до Воронезької гімназії, яку той закінчив 1833 р.\r\n\r\n1833 р. М. І. Костомаров вступає на історико-філологічний факультет Харківського університету. Вже у цьому навчальному закладі він проявив непересічні здібності до навчання.\r\n\r\nВ університеті Микола Костомаров вивчав стародавні й нові мови, цікавився античною історією, німецькою філософією і новою французькою літературою, учився грати на фортепіано, пробував писати вірші. Зближення з гуртком українських романтиків Харківського університету незабаром визначило його захоплення переважно фольклором і козацьким минулим України.\r\n\r\nУ ті роки у Харківському університеті навколо професора-славіста і літератора-романтика І. Срезневського сформувався гурток студентів, захоплених збиранням зразків української народної пісенної творчості. Вони сприймали фольклор як вираження народного духу, самі складали вірші, балади і ліричні пісні, звертаючись до народної творчості.\r\n\r\nКостомаров в університетські роки дуже багато читав. Перевантаження позначилося на його здоров'ї — ще за студентства значно погіршився зір.\r\n\r\nНа світогляд М. І. Костомарова вплинули професор грецької літератури Харківського університету А. О. Валицький та професор всесвітньої історії М. М. Лунін.\r\n\r\n1836 р. М. І. Костомаров закінчив університет, а в січні 1837 р. склав іспити на ступінь кандидата й отримав направлення у Кінбурнський 7-й драгунський полк юнкером.\r\n\r\nУ січні 1837 року Костомаров склав іспити з усіх предметів, і 8 грудня 1837 року його затвердили в статусі кандидата.", "Юність і навчання" },
                     { 3, 3, "Народився у дворянській родині на хуторі Мотронівка (нині у межах с. Оленівка поблизу Борзни).\r\n\r\nУ 1843–1846 роках здобув вищу освіту на історико-філологічному факультеті Київського Імператорського університету св. Володимира.\r\n\r\n1846–1847 — учитель Петровського кадетського корпусу у Полтаві.\r\n\r\nРазом з М. Костомаровим і М. Гулаком був організатором Кирило-Мефодіївського братства. Брав участь у створенні «Статуту Слов'янського братства св. Кирила і Мефодія». Автор «Записки» — пояснень до статуту братства. Розвивав ідеї християнського соціалізму, виступав за об'єднання всіх слов'янських народів у республіканську федерацію, в якій провідну роль відводив Україні.\r\n1847 — 10 квітня був заарештований у Варшаві. Засланий до Олонецької губернії під нагляд поліції. Служив у Петрозаводському губернському правлінні.\r\n\r\n1856 — звільнений із заслання. Оселився у Санкт-Петербурзі, де став активним членом місцевого гуртка українців.\r\n\r\n1861–1862 — редактор першого українського щомісячного журналу «Основа».\r\n\r\nЗгодом служив у Варшаві. Підтримував зв'язки з Галичиною, співпрацював у часописах «Мета» і «Правда».\r\n\r\nОстанні роки життя провів на хуторі Мотронівці.", "Життєпис" },
                     { 4, 4, "Експерти пояснили, що дасть херсонська перемога українським силам\r\n\r\nНа тлі заяв окупантів про відведення військ та сил рф від Херсона та просування ЗСУ на херсонському напрямку українські бійці можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.", "визволення Херсона" }
@@ -1045,6 +1114,36 @@ namespace Streetcode.DAL.Persistence.Migrations
                     { 4, "За виконанням Богдана Ступки", 4, "Вірш: Мені Однаково", "https://youtu.be/v3siIQi4nCQ" }
                 });
 
+            migrationBuilder.InsertData(
+                schema: "sources",
+                table: "source_link_subcategories",
+                columns: new[] { "Id", "SourceLinkCategoryId", "Title" },
+                values: new object[,]
+                {
+                    { 1, 2, "Фільми про Т. Г. Шевченко" },
+                    { 2, 2, "Хроніки про Т. Г. Шевченко" },
+                    { 3, 2, "Блоги про Т. Г. Шевченко" },
+                    { 4, 1, "Праці Грушевського" },
+                    { 5, 1, "Книги про Грушевського" },
+                    { 6, 1, "Статті" },
+                    { 7, 3, "Пряма мова" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "streetcode",
+                table: "streetcode_art",
+                columns: new[] { "ArtId", "StreetcodeId", "Index" },
+                values: new object[,]
+                {
+                    { 1, 1, 1 },
+                    { 2, 1, 3 },
+                    { 2, 2, 7 },
+                    { 2, 3, 6 },
+                    { 3, 1, 4 },
+                    { 3, 3, 2 },
+                    { 4, 1, 5 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_arts_ImageId",
                 schema: "media",
@@ -1063,9 +1162,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "IX_coordinates_StreetcodeId",
                 schema: "add_content",
                 table: "coordinates",
-                column: "StreetcodeId",
-                unique: true,
-                filter: "[StreetcodeId] IS NOT NULL");
+                column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_coordinates_ToponymId",
@@ -1098,22 +1195,28 @@ namespace Streetcode.DAL.Persistence.Migrations
                 column: "ImageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_source_links_StreetcodeId",
+                name: "IX_source_link_source_link_subcategory_SubCategoriesId",
                 schema: "sources",
-                table: "source_links",
-                column: "StreetcodeId");
+                table: "source_link_source_link_subcategory",
+                column: "SubCategoriesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SourceLinkSourceLinkCategory_SourceLinksId",
+                name: "IX_source_link_subcategories_SourceLinkCategoryId",
                 schema: "sources",
-                table: "SourceLinkSourceLinkCategory",
-                column: "SourceLinksId");
+                table: "source_link_subcategories",
+                column: "SourceLinkCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_streetcode_arts_StreetcodesId",
+                name: "IX_streetcode_art_ArtId_StreetcodeId",
                 schema: "streetcode",
-                table: "streetcode_arts",
-                column: "StreetcodesId");
+                table: "streetcode_art",
+                columns: new[] { "ArtId", "StreetcodeId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_streetcode_art_StreetcodeId",
+                schema: "streetcode",
+                table: "streetcode_art",
+                column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_streetcode_fact_StreetcodesId",
@@ -1129,9 +1232,15 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_streetcode_partner_StreetcodeId",
-                schema: "partners",
+                schema: "streetcode",
                 table: "streetcode_partner",
                 column: "StreetcodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_streetcode_source_link_categories_StreetcodesId",
+                schema: "sources",
+                table: "streetcode_source_link_categories",
+                column: "StreetcodesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_streetcode_tag_TagsId",
@@ -1211,11 +1320,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "feedback");
 
             migrationBuilder.DropTable(
-                name: "SourceLinkSourceLinkCategory",
+                name: "source_link_source_link_subcategory",
                 schema: "sources");
 
             migrationBuilder.DropTable(
-                name: "streetcode_arts",
+                name: "streetcode_art",
                 schema: "streetcode");
 
             migrationBuilder.DropTable(
@@ -1228,7 +1337,11 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "streetcode_partner",
-                schema: "partners");
+                schema: "streetcode");
+
+            migrationBuilder.DropTable(
+                name: "streetcode_source_link_categories",
+                schema: "sources");
 
             migrationBuilder.DropTable(
                 name: "streetcode_tag",
@@ -1267,7 +1380,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "media");
 
             migrationBuilder.DropTable(
-                name: "source_link_categories",
+                name: "source_link_subcategories",
                 schema: "sources");
 
             migrationBuilder.DropTable(
@@ -1305,6 +1418,10 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "streetcodes",
                 schema: "streetcode");
+
+            migrationBuilder.DropTable(
+                name: "source_link_categories",
+                schema: "sources");
 
             migrationBuilder.DropTable(
                 name: "images",

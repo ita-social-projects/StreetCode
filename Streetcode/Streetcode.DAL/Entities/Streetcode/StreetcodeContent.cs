@@ -41,13 +41,11 @@ public class StreetcodeContent
 
     public Audio? Audio { get; set; }
 
-    public StreetcodeCoordinate? Coordinate { get; set; }
+    public List<StreetcodeCoordinate> Coordinates { get; set; } = new();
 
     public TransactionLink? TransactionLink { get; set; }
 
     public List<Toponym> Toponyms { get; set; } = new ();
-
-    public List<Art> Arts { get; set; } = new ();
 
     public List<Image> Images { get; set; } = new ();
 
@@ -68,4 +66,6 @@ public class StreetcodeContent
     public List<RelatedFigure> Targets { get; set; } = new ();
 
     public List<StreetcodePartner> StreetcodePartners { get; set; } = new ();
+
+    public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 }

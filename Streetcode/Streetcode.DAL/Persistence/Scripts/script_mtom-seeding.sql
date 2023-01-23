@@ -33,13 +33,6 @@ INSERT INTO [sources].[streetcode_source_link_categories]
            (3, 1)
 ;
 
-INSERT INTO [streetcode].[streetcode_arts]
-     VALUES
-           (1, 1),
-		   (2, 1),
-		   (3, 1)
-;
-
 INSERT INTO [streetcode].[streetcode_fact]
      VALUES
            (1, 1),

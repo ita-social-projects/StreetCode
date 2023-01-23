@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.MediatR.Toponyms.GetAll;
+using Streetcode.BLL.MediatR.Toponyms.GetById;
+using Streetcode.BLL.MediatR.Toponyms.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Toponyms;
 
@@ -8,15 +11,19 @@ public class ToponymController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetAllToponymsQuery()));
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetToponymsByIdQuery(id)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    {
+        return HandleResult(await Mediator.Send(new GetToponymsByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{name}")]

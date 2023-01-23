@@ -37,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IPartnersService, PartnersService>();
+        services.AddScoped<IRelatedFigureService, RelatedFigureService>();
         services.AddScoped<IStreetcodeService, StreetcodeService>();
         services.AddScoped<ISubtitleService, SubtitleService>();
         services.AddScoped<ITagService, TagService>();

@@ -325,6 +325,10 @@ namespace Streetcode.WebApi.Utils
             }
         }
 
+        public static async Task<bool> SaveToponymToDb(AddressEntity addressEntity)
+        {
+        }
+
         public class AddressEntity
         {
             public string Oblast { get; set; }

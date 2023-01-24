@@ -1,5 +1,8 @@
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
+using Streetcode.DAL.Repositories.Realizations.Base;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -15,17 +18,24 @@ static void ExecuteMethod(object state)
 }
 
 var app = builder.Build();
-var dbTask = app.MigrateAndSeedDbAsync();
-
+await app.MigrateAndSeedDbAsync();
+/*
 await using var timer = new Timer(
     WebParsingUtils.ParseZipFileFromWeb,
     null,
     TimeSpan.Zero,
     TimeSpan.FromHours(12));
+*/
+
+using var scope = app.Services.CreateScope();
+var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
+WebParsingUtils utils = new WebParsingUtils(new RepositoryWrapper(streetcodeContext));
+utils.SaveToponymToDb();
 
 if (app.Environment.EnvironmentName == "Local")
 {
-    builder.Configuration.AddUserSecrets<string>();
+    // builder.Configuration.AddUserSecrets<string>();
+
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }
@@ -42,7 +52,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-await dbTask;
 
 app.Run();

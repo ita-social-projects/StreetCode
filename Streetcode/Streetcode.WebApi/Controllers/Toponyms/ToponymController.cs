@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.MediatR.Toponyms.Create;
 using Streetcode.BLL.MediatR.Toponyms.GetAll;
 using Streetcode.BLL.MediatR.Toponyms.GetById;
 using Streetcode.BLL.MediatR.Toponyms.GetByStreetcodeId;
@@ -36,8 +37,7 @@ public class ToponymController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ToponymDTO toponym)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateToponymQuery(toponym)));
     }
 
     [HttpPut("{id:int}")]

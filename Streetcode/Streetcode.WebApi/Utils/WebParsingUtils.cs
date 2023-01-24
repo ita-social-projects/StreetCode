@@ -5,14 +5,23 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
+using Streetcode.DAL.Entities;
 
 namespace Streetcode.WebApi.Utils
 {
     public class WebParsingUtils
     {
-        public static async Task DownloadAndExtractAsync(string fileUrl, string zipPath, string extractTo, CancellationToken cancellationToken, ILogger logger = null)
+        private readonly IRepositoryWrapper _repository;
+
+        public WebParsingUtils(IRepositoryWrapper repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task DownloadAndExtractAsync(string fileUrl, string zipPath, string extractTo, CancellationToken cancellationToken, ILogger logger = null)
         {
             if (string.IsNullOrEmpty(fileUrl))
             {
@@ -82,45 +91,7 @@ namespace Streetcode.WebApi.Utils
             }
         }
 
-        public static async Task ParseZipFileFromWeb(object? state)
-        {
-            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
-            var fileUrl = @"https://www.ukrposhta.ua/files/shares/out/houses.zip?_ga=2.213909844.272819342.1674050613-1387315609.1673613938&_gl=1*1obnqll*_ga*MTM4NzMxNTYwOS4xNjczNjEzOTM4*_ga_6400KY4HRY*MTY3NDA1MDYxMy4xMC4xLjE2NzQwNTE3ODUuNjAuMC4w";
-            var zipPath = $"{projRootDirectory}/Streetcode.DAL/houses.zip";
-            var extractTo = $"{projRootDirectory}/Streetcode.DAL";
-            var existingFilePath = Path.Combine(extractTo, "houses.csv");
-            if (File.Exists(existingFilePath))
-            {
-                File.Delete(existingFilePath);
-            }
-
-            var clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
-
-            using (var client = new HttpClient(clientHandler, false) { DefaultRequestHeaders = { } })
-            {
-                using var response = await client.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead);
-                response.Content.Headers.ContentType.CharSet = Encoding.GetEncoding(1251).WebName;
-
-                await using (var streamToReadFrom = await response.Content.ReadAsStreamAsync())
-                {
-                    await using var streamToWriteTo = File.Open(zipPath, FileMode.Create);
-                    await streamToReadFrom.CopyToAsync(streamToWriteTo);
-                }
-
-                using (var archive = ZipFile.OpenRead(zipPath))
-                {
-                    Console.WriteLine("Archive received");
-                    archive.ExtractToDirectory(extractTo, overwriteFiles: true);
-                }
-
-                File.Delete(zipPath);
-            }
-
-            await ProcessCSVfile(extractTo, false, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-        }
-
-        public static async Task ParseZipFileFromWeb1(string mode)
+        public async Task ParseZipFileFromWeb(string mode)
         {
             var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
             string fileUrl = "https://www.ukrposhta.ua/files/shares/out/houses.zip?_ga=2.213909844.272819342.1674050613-1387315609.1673613938&_gl=1*1obnqll*_ga*MTM4NzMxNTYwOS4xNjczNjEzOTM4*_ga_6400KY4HRY*MTY3NDA1MDYxMy4xMC4xLjE2NzQwNTE3ODUuNjAuMC4w";
@@ -155,7 +126,7 @@ namespace Streetcode.WebApi.Utils
 
         // This method processes initial csv file and creates data.csv, where all duplicated addresses are removed in order to optimize the script.
         // This script also calls OSM Nominatim API in order to get lat and lon of current address row
-        public static async Task ProcessCSVfile(string extractTo, bool deleteFile = false, params int[] columnsToExtract)
+        public async Task ProcessCSVfile(string extractTo, bool deleteFile = false, params int[] columnsToExtract)
         {
                 List<AddressEntity> addresses = new List<AddressEntity>();
                 string csvPath = $"{extractTo}/data.csv";
@@ -325,8 +296,23 @@ namespace Streetcode.WebApi.Utils
             }
         }
 
-        public static async Task<bool> SaveToponymToDb(AddressEntity addressEntity)
+        public void SaveToponymToDb()
         {
+            try
+            {
+                Streetcode.DAL.Entities.Toponyms.Toponym toponym = new Streetcode.DAL.Entities.Toponyms.Toponym() { Oblast = "TESTTEST", StreetName = "test" };
+                _repository.ToponymRepository.Create(toponym);
+                _repository.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.Message);
+                Console.ForegroundColor = ConsoleColor.White;
+            }
         }
 
         public class AddressEntity

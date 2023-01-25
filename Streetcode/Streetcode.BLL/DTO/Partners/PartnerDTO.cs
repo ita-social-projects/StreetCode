@@ -11,6 +11,5 @@ public class PartnerDTO
     public string? Description { get; set; }
     public string? LogoUrl { get; set; }
     public string TargetUrl { get; set; }
-    public List<StreetcodeDTO>? Streetcodes { get; set; }
     public List<PartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
 }

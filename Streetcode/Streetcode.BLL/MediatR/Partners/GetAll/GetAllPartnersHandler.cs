@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -19,7 +20,11 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
-        var partner = await _repositoryWrapper.PartnersRepository.GetAllAsync();
+        var partner = await _repositoryWrapper
+            .PartnersRepository
+            .GetAllAsync(
+                include: p => p
+                    .Include(pl => pl.PartnerSourceLinks));
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partner);
         return Result.Ok(partnerDtos);

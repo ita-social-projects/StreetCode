@@ -32,20 +32,10 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         var partners = await _repositoryWrapper.PartnersRepository
             .GetAllAsync(
-                predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id),
+                predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id) || p.IsKeyPartner,
                 include: p => p.Include(pl => pl.PartnerSourceLinks));
-
-        partners.Union(await GetKeyPartners());
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
         return Result.Ok(value: partnerDtos);
-    }
-
-    private async Task<IEnumerable<Partner>> GetKeyPartners()
-    {
-        return await _repositoryWrapper.PartnersRepository
-            .GetAllAsync(
-                predicate: p => p.IsKeyPartner,
-                include: p => p.Include(pl => pl.PartnerSourceLinks));
     }
 }

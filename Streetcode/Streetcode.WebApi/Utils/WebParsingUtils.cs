@@ -13,6 +13,7 @@ using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Persistence;
 
 namespace Streetcode.WebApi.Utils
 {
@@ -20,9 +21,9 @@ namespace Streetcode.WebApi.Utils
     {
         private readonly IRepositoryWrapper _repository;
 
-        public WebParsingUtils(IRepositoryWrapper repository)
+        public WebParsingUtils(StreetcodeDbContext streetcodeContext)
         {
-            _repository = repository;
+            _repository = new RepositoryWrapper(streetcodeContext);
         }
 
         public async Task DownloadAndExtractAsync(string fileUrl, string zipPath, string extractTo, CancellationToken cancellationToken, ILogger logger = null)
@@ -149,20 +150,25 @@ namespace Streetcode.WebApi.Utils
             // Grouping all rows from initial csv in order to get rid of duplicated streets
 
             var forParsindRows = rows
-                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct().ToList();
+                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct();
 
             var alreadyParsedRows = allLinesFromDataCSV
-                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct().ToList();
+                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct();
 
-            var alreadyParsedRowsToWrite = allLinesFromDataCSV
-                .Select(x => string.Join(";", x.Split(';').ToList())).Distinct().ToList();
+            var alreadyParsedRowsToWrite = allLinesFromDataCSV.Distinct();
 
-            var remainsToParse = forParsindRows.Except(alreadyParsedRows).ToList();
-            var toBeDeleted = alreadyParsedRows.Except(forParsindRows).ToList();
+            var remainsToParse = forParsindRows.Except(alreadyParsedRows)
+                .Select(x => x.Split(';').ToList())
+                // .Take(10)
+                .ToList();
+
+            var toBeDeleted = alreadyParsedRows.Except(forParsindRows);
 
             Console.WriteLine("Remains to parse: " + remainsToParse.Count());
             Console.WriteLine("To be deleted: " + toBeDeleted.Count());
 
+
+            // deletes out of date data in data.csv
             foreach (var row in toBeDeleted)
             {
                 alreadyParsedRowsToWrite = alreadyParsedRowsToWrite.Where(x => !x.Contains(row)).ToList();
@@ -170,31 +176,12 @@ namespace Streetcode.WebApi.Utils
 
             File.WriteAllLines(csvPath, alreadyParsedRowsToWrite, Encoding.GetEncoding(1251));
 
-            var remainsToParseEntities = remainsToParse.Select(x =>
+            // parses coordinates and writes into data.csv
+            foreach (var col in remainsToParse)
             {
-                var columns = x.Split(';').ToList();
-                return new AddressEntity()
-                {
-                    Oblast = columns[0],
-                    AdminRegionOld = columns[1],
-                    AdminRegionNew = columns[2],
-                    Gromada = columns[3],
-                    City = columns[4],
-                    PostIndex = columns[5],
-                    StreetName = columns[6]
-                };
-            })
-            .ToList();
+                string cityStringSearchOptimized = col[4].Substring(col[4].IndexOf(" ") + 1);
 
-            // foreach (var row in remainsToParseEntities)
-            // {
-            //    Console.WriteLine(row.Oblast + ' ' + row.AdminRegionOld + ' ' + row.AdminRegionNew + ' ' + row.Gromada + ' ' + row.City + ' ' + row.StreetName);
-            // }
-            for (int i = 0; i < remainsToParseEntities.Count(); i++)
-            {
-                string cityStringSearchOptimized = remainsToParseEntities[i].City.Substring(remainsToParseEntities[i].City.IndexOf(" ") + 1);
-
-                string streetNameStringSearchOptimized = OptimizeStreetname(remainsToParseEntities[i].StreetName);
+                string streetNameStringSearchOptimized = OptimizeStreetname(col[6]);
 
                 string addressrow = cityStringSearchOptimized + " " + streetNameStringSearchOptimized;
 
@@ -208,13 +195,10 @@ namespace Streetcode.WebApi.Utils
                 Console.WriteLine("\n" + addressrow);
                 Console.WriteLine("Coordinates[" + res.Item1 + " " + res.Item2 + "]");
 
-                remainsToParseEntities[i].Lat = res.Item1;
-                remainsToParseEntities[i].Lon = res.Item2;
-
-                string newRow = remainsToParseEntities[i].Oblast + ";" + remainsToParseEntities[i].AdminRegionOld + ";" +
-                    remainsToParseEntities[i].AdminRegionNew + ";" + remainsToParseEntities[i].Gromada + ";" +
-                    remainsToParseEntities[i].City + ";" + remainsToParseEntities[i].PostIndex + ";"
-                    + remainsToParseEntities[i].StreetName + ";" + res.Item1 + ";" + res.Item2;
+                string newRow = col[0] + ";" + col[1] + ";" +
+                    col[2] + ";" + col[3] + ";" +
+                    col[4] + ";" + col[5] + ";"
+                    + col[6] + ";" + res.Item1 + ";" + res.Item2;
 
                 Console.WriteLine(newRow);
                 await File.AppendAllTextAsync(csvPath, newRow + "\n", Encoding.GetEncoding(1251));
@@ -225,7 +209,37 @@ namespace Streetcode.WebApi.Utils
                 File.Delete(excelPath);
             }
 
-            // await SaveToponymsToDb(csvPath);
+            await SaveToponymsToDb(csvPath);
+        }
+
+        public async Task SaveToponymsToDb(string csvPath)
+        {
+            var rows = new List<string>(File.ReadAllLines(csvPath, Encoding.GetEncoding(1251)))
+                .Select(x => x.Split(';').ToList()).ToList();
+
+            foreach (var col in rows)
+            {
+                try
+                {
+                    await _repository.ToponymRepository.CreateAsync(new Toponym()
+                    {
+                        Oblast = col[0],
+                        AdminRegionOld = col[1],
+                        AdminRegionNew = col[2],
+                        Gromada = col[3],
+                        Community = col[4],
+                        StreetName = col[6],
+                        Coordinates = new List<ToponymCoordinate>(),
+                        Streetcodes = new List<StreetcodeContent>(),
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            Console.WriteLine("Success: " + (await _repository.SaveChangesAsync() > 0));
         }
 
         // Following method returns name of the street optimized in such kind of way that will allow OSM Nominatim find its coordinates
@@ -308,48 +322,6 @@ namespace Streetcode.WebApi.Utils
             {
                 return new Tuple<string, string>(data[0]["lat"].ToString(), data[0]["lon"].ToString());
             }
-        }
-
-        // public async Task SaveToponymsToDb(string csvPath)
-        // {
-        //    List<string> rows = new List<string>(File.ReadAllLines(csvPath, Encoding.GetEncoding(1251)));
-        //    foreach (var ad in adresses)
-        //    {
-        //        try
-        //        {
-        //            Toponym toponym = new Toponym()
-        //            {
-        //                Oblast = ad.Oblast,
-        //                AdminRegionOld = ad.AdminRegionOld,
-        //                AdminRegionNew = ad.AdminRegionNew,
-        //                Gromada = ad.Gromada,
-        //                Community = ad.City,
-        //                StreetName = ad.StreetName,
-        //                Coordinates = new List<ToponymCoordinate>(),
-        //                Streetcodes = new List<StreetcodeContent>(),
-        //            };
-        //            await _repository.ToponymRepository.CreateAsync(toponym);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex.Message);
-        //        }
-        //    }
-
-        // Console.WriteLine(await _repository.SaveChangesAsync() > 0);
-        //  }
-
-        public class AddressEntity
-        {
-            public string Oblast { get; set; }
-            public string AdminRegionOld { get; set; }
-            public string AdminRegionNew { get; set; }
-            public string Gromada { get; set; }
-            public string City { get; set; }
-            public string PostIndex { get; set; }
-            public string StreetName { get; set; }
-            public string Lat { get; set; }
-            public string Lon { get; set; }
         }
     }
 }

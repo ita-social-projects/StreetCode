@@ -9,6 +9,10 @@ using Newtonsoft.Json;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.DAL.Entities;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Toponyms;
 
 namespace Streetcode.WebApi.Utils
 {
@@ -91,7 +95,7 @@ namespace Streetcode.WebApi.Utils
             }
         }
 
-        public async Task ParseZipFileFromWeb(string mode)
+        public async Task ParseZipFileFromWeb()
         {
             var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
             string fileUrl = "https://www.ukrposhta.ua/files/shares/out/houses.zip?_ga=2.213909844.272819342.1674050613-1387315609.1673613938&_gl=1*1obnqll*_ga*MTM4NzMxNTYwOS4xNjczNjEzOTM4*_ga_6400KY4HRY*MTY3NDA1MDYxMy4xMC4xLjE2NzQwNTE3ODUuNjAuMC4w";
@@ -109,10 +113,7 @@ namespace Streetcode.WebApi.Utils
                     File.Delete(zipPath);
                 }
 
-                if (mode == "full_parse")
-                {
-                    await ProcessCSVfile(extractTo, false, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-                }
+                await ProcessCSVfile(extractTo, false);
             }
             catch (OperationCanceledException)
             {
@@ -126,92 +127,105 @@ namespace Streetcode.WebApi.Utils
 
         // This method processes initial csv file and creates data.csv, where all duplicated addresses are removed in order to optimize the script.
         // This script also calls OSM Nominatim API in order to get lat and lon of current address row
-        public async Task ProcessCSVfile(string extractTo, bool deleteFile = false, params int[] columnsToExtract)
+        public async Task ProcessCSVfile(string extractTo, bool deleteFile = false)
         {
-                List<AddressEntity> addresses = new List<AddressEntity>();
-                string csvPath = $"{extractTo}/data.csv";
-                int rowToStartReadingHousesCSV = 0;
+            // Following line is required for proper csv encoding
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-                if (File.Exists(csvPath))
-                {
-                    string[] allLinesFromDataCSV = File.ReadAllLines(csvPath, Encoding.GetEncoding(1251));
-                    string lastTextRowFromDataCsv = allLinesFromDataCSV.Last();
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.OutputEncoding = Encoding.GetEncoding(1251);
-                    Console.WriteLine("CURRENT LAST ROW IS" + lastTextRowFromDataCsv);
-                    rowToStartReadingHousesCSV = Array.IndexOf(allLinesFromDataCSV, lastTextRowFromDataCsv);
-                    Console.WriteLine(rowToStartReadingHousesCSV);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
+            string csvPath = $"{extractTo}/data.csv";
 
-                string excelPath = Directory.GetFiles(extractTo).First(fName => fName.EndsWith("houses.csv"));
+            List<string> allLinesFromDataCSV = new List<string>();
 
-                // Following line is required for proper csv encoding
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-                string[] rows = File.ReadAllLines(excelPath, Encoding.GetEncoding(1251));
-
-                // Grouping all rows from initial csv in order to get rid of duplicated streets
-                var groupedRows = rows
-                   .Select(x => x.Split(';'))
-                   .GroupBy(x => new { Column0 = x[0], Column1 = x[1], Column2 = x[2], Column3 = x[3], Column4 = x[4], Column6 = x[6] })
-                   .ToDictionary(g => g.Key, g => g.ToList());
-
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Import started. Rows to parse in original csv- " + rows.Length);
-                Console.WriteLine("Import started. Rows to parse in grouped csv- " + groupedRows.Count);
-                try
-                {
-                foreach (var row in groupedRows)
-                {
-                    if (Array.IndexOf(groupedRows.ToArray(), row) >= rowToStartReadingHousesCSV + 1 || (rowToStartReadingHousesCSV == 0))
-                    {
-                        var columns = row.Key;
-                        AddressEntity addressEntityBase = new AddressEntity() { Oblast = columns.Column0, AdminRegionOld = columns.Column1, AdminRegionNew = columns.Column2, Gromada = columns.Column3, City = columns.Column4, StreetName = columns.Column6 };
-                        string newRow = null;
-
-                        // OSM Nominatim does not like e.g "м. Вінниця" - use "Вінниця" instead
-                        string cityStringSearchOptimized = addressEntityBase.City.Substring(addressEntityBase.City.IndexOf(" ") + 1);
-
-                        string streetNameStringSearchOptimized = OptimizeStreetname(addressEntityBase.StreetName);
-
-                        string addressrow = cityStringSearchOptimized + " " + streetNameStringSearchOptimized;
-
-                        var res = await CallAPICoords(addressrow);
-                        if (res.Item1 == "" && res.Item2 == "")
-                        {
-                            addressrow = cityStringSearchOptimized;
-                            res = await CallAPICoords(addressrow);
-                        }
-
-                        Console.WriteLine("\n" + addressrow);
-                        Console.WriteLine("Coordinates[" + res.Item1 + " " + res.Item2 + "]");
-                        addressEntityBase.Lat = res.Item1;
-                        addressEntityBase.Lon = res.Item2;
-                        newRow = addressEntityBase.Oblast + ";" + addressEntityBase.AdminRegionOld + ";" + addressEntityBase.AdminRegionNew + ";" + addressEntityBase.Gromada + ";" + addressEntityBase.City + ";" + addressEntityBase.PostIndex + ";" + addressEntityBase.StreetName + ";" + res.Item1 + ";" + res.Item2;
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.OutputEncoding = Encoding.GetEncoding(1251);
-
-                        // Console.WriteLine(newRow);
-                        Console.ForegroundColor = ConsoleColor.White;
-                        await File.AppendAllTextAsync(csvPath, newRow + "\n", Encoding.GetEncoding(1251));
-                    }
-                }
-            }
-            catch (Exception ex)
+            if (File.Exists(csvPath))
             {
-                Console.WriteLine(ex.Message);
-                Environment.Exit(1);
+                allLinesFromDataCSV = new List<string>(File.ReadAllLines(csvPath, Encoding.GetEncoding(1251)));
+                Console.OutputEncoding = Encoding.GetEncoding(1251);
             }
 
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Import finished");
-                Console.ForegroundColor = ConsoleColor.White;
+            string excelPath = Directory.GetFiles(extractTo).First(fName => fName.EndsWith("houses.csv"));
 
-                if (deleteFile)
+            List<string> rows = new List<string>(File.ReadAllLines(excelPath, Encoding.GetEncoding(1251)));
+
+            // Grouping all rows from initial csv in order to get rid of duplicated streets
+
+            var forParsindRows = rows
+                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct().ToList();
+
+            var alreadyParsedRows = allLinesFromDataCSV
+                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct().ToList();
+
+            var alreadyParsedRowsToWrite = allLinesFromDataCSV
+                .Select(x => string.Join(";", x.Split(';').ToList())).Distinct().ToList();
+
+            var remainsToParse = forParsindRows.Except(alreadyParsedRows).ToList();
+            var toBeDeleted = alreadyParsedRows.Except(forParsindRows).ToList();
+
+            Console.WriteLine("Remains to parse: " + remainsToParse.Count());
+            Console.WriteLine("To be deleted: " + toBeDeleted.Count());
+
+            foreach (var row in toBeDeleted)
+            {
+                alreadyParsedRowsToWrite = alreadyParsedRowsToWrite.Where(x => !x.Contains(row)).ToList();
+            }
+
+            File.WriteAllLines(csvPath, alreadyParsedRowsToWrite, Encoding.GetEncoding(1251));
+
+            var remainsToParseEntities = remainsToParse.Select(x =>
+            {
+                var columns = x.Split(';').ToList();
+                return new AddressEntity()
                 {
-                    File.Delete(excelPath);
+                    Oblast = columns[0],
+                    AdminRegionOld = columns[1],
+                    AdminRegionNew = columns[2],
+                    Gromada = columns[3],
+                    City = columns[4],
+                    PostIndex = columns[5],
+                    StreetName = columns[6]
+                };
+            })
+            .ToList();
+
+            // foreach (var row in remainsToParseEntities)
+            // {
+            //    Console.WriteLine(row.Oblast + ' ' + row.AdminRegionOld + ' ' + row.AdminRegionNew + ' ' + row.Gromada + ' ' + row.City + ' ' + row.StreetName);
+            // }
+            for (int i = 0; i < remainsToParseEntities.Count(); i++)
+            {
+                string cityStringSearchOptimized = remainsToParseEntities[i].City.Substring(remainsToParseEntities[i].City.IndexOf(" ") + 1);
+
+                string streetNameStringSearchOptimized = OptimizeStreetname(remainsToParseEntities[i].StreetName);
+
+                string addressrow = cityStringSearchOptimized + " " + streetNameStringSearchOptimized;
+
+                var res = await CallAPICoords(addressrow);
+                if (res.Item1 == "" && res.Item2 == "")
+                {
+                    addressrow = cityStringSearchOptimized;
+                    res = await CallAPICoords(addressrow);
                 }
+
+                Console.WriteLine("\n" + addressrow);
+                Console.WriteLine("Coordinates[" + res.Item1 + " " + res.Item2 + "]");
+
+                remainsToParseEntities[i].Lat = res.Item1;
+                remainsToParseEntities[i].Lon = res.Item2;
+
+                string newRow = remainsToParseEntities[i].Oblast + ";" + remainsToParseEntities[i].AdminRegionOld + ";" +
+                    remainsToParseEntities[i].AdminRegionNew + ";" + remainsToParseEntities[i].Gromada + ";" +
+                    remainsToParseEntities[i].City + ";" + remainsToParseEntities[i].PostIndex + ";"
+                    + remainsToParseEntities[i].StreetName + ";" + res.Item1 + ";" + res.Item2;
+
+                Console.WriteLine(newRow);
+                await File.AppendAllTextAsync(csvPath, newRow + "\n", Encoding.GetEncoding(1251));
+            }
+
+            if (deleteFile)
+            {
+                File.Delete(excelPath);
+            }
+
+            //await SaveToponymsToDb(csvPath);
         }
 
         // Following method returns name of the street optimized in such kind of way that will allow OSM Nominatim find its coordinates
@@ -260,7 +274,7 @@ namespace Streetcode.WebApi.Utils
 
         // Following method calls OSM Nominatim API for single address and returns lat and lon coordinates
         // For some addresses nothing can be returned
-        public static async Task<Tuple<string, string>> CallAPICoords(string address)
+        public static async Task<Tuple<string, string>?> CallAPICoords(string address)
         {
             try
             {
@@ -296,24 +310,34 @@ namespace Streetcode.WebApi.Utils
             }
         }
 
-        public void SaveToponymToDb()
-        {
-            try
-            {
-                Streetcode.DAL.Entities.Toponyms.Toponym toponym = new Streetcode.DAL.Entities.Toponyms.Toponym() { Oblast = "TESTTEST", StreetName = "test" };
-                _repository.ToponymRepository.Create(toponym);
-                _repository.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.Message);
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-        }
+        // public async Task SaveToponymsToDb(string csvPath)
+        // {
+        //    List<string> rows = new List<string>(File.ReadAllLines(csvPath, Encoding.GetEncoding(1251)));
+        //    foreach (var ad in adresses)
+        //    {
+        //        try
+        //        {
+        //            Toponym toponym = new Toponym()
+        //            {
+        //                Oblast = ad.Oblast,
+        //                AdminRegionOld = ad.AdminRegionOld,
+        //                AdminRegionNew = ad.AdminRegionNew,
+        //                Gromada = ad.Gromada,
+        //                Community = ad.City,
+        //                StreetName = ad.StreetName,
+        //                Coordinates = new List<ToponymCoordinate>(),
+        //                Streetcodes = new List<StreetcodeContent>(),
+        //            };
+        //            await _repository.ToponymRepository.CreateAsync(toponym);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(ex.Message);
+        //        }
+        //    }
+
+        // Console.WriteLine(await _repository.SaveChangesAsync() > 0);
+        //  }
 
         public class AddressEntity
         {

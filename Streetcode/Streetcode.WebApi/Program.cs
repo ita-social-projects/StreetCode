@@ -30,7 +30,7 @@ await using var timer = new Timer(
 using var scope = app.Services.CreateScope();
 var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
 WebParsingUtils utils = new WebParsingUtils(new RepositoryWrapper(streetcodeContext));
-utils.SaveToponymToDb();
+await utils.ParseZipFileFromWeb();
 
 if (app.Environment.EnvironmentName == "Local")
 {

@@ -7,10 +7,10 @@ public class PartnerDTO
 {
     public int Id { get; set; }
     public bool IsKeyPartner { get; set; }
-    public int ImageId { get; set; }
+    public string Title { get; set; }
     public string? Description { get; set; }
-    public string LogoUrl { get; set; }
-    public UrlDTO TargetUrl { get; set; }
-    public List<StreetcodeDTO> StreetcodePartners { get; set; }
-    public List<PartnerSourceLinkDTO> PartnerSourceLinks { get; set; }
+    public string? LogoUrl { get; set; }
+    public string TargetUrl { get; set; }
+    public List<StreetcodeDTO>? Streetcodes { get; set; }
+    public List<PartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
 }

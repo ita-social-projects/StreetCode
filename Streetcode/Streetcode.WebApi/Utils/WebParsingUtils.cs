@@ -159,14 +159,13 @@ namespace Streetcode.WebApi.Utils
 
             var remainsToParse = forParsindRows.Except(alreadyParsedRows)
                 .Select(x => x.Split(';').ToList())
-                // .Take(10)
+                .Take(10)
                 .ToList();
 
             var toBeDeleted = alreadyParsedRows.Except(forParsindRows);
 
             Console.WriteLine("Remains to parse: " + remainsToParse.Count());
             Console.WriteLine("To be deleted: " + toBeDeleted.Count());
-
 
             // deletes out of date data in data.csv
             foreach (var row in toBeDeleted)
@@ -229,7 +228,6 @@ namespace Streetcode.WebApi.Utils
                         Gromada = col[3],
                         Community = col[4],
                         StreetName = col[6],
-                        Coordinates = new List<ToponymCoordinate>(),
                         Streetcodes = new List<StreetcodeContent>(),
                     });
                 }

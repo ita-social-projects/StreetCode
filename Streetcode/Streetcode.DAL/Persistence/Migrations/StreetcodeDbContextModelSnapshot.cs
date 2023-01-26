@@ -23,21 +23,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ArtStreetcodeContent", b =>
-                {
-                    b.Property<int>("ArtsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArtsId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_arts", "streetcode");
-                });
-
             modelBuilder.Entity("FactStreetcodeContent", b =>
                 {
                     b.Property<int>("FactsId")
@@ -454,6 +439,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 3,
                             ImageId = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ImageId = 1
                         });
                 });
 
@@ -980,6 +970,72 @@ namespace Streetcode.DAL.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArt", b =>
+                {
+                    b.Property<int>("ArtId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.HasKey("ArtId", "StreetcodeId");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.HasIndex("ArtId", "StreetcodeId");
+
+                    b.ToTable("streetcode_art", "streetcode");
+
+                    b.HasData(
+                        new
+                        {
+                            ArtId = 1,
+                            StreetcodeId = 1,
+                            Index = 1
+                        },
+                        new
+                        {
+                            ArtId = 2,
+                            StreetcodeId = 1,
+                            Index = 3
+                        },
+                        new
+                        {
+                            ArtId = 3,
+                            StreetcodeId = 1,
+                            Index = 4
+                        },
+                        new
+                        {
+                            ArtId = 4,
+                            StreetcodeId = 1,
+                            Index = 5
+                        },
+                        new
+                        {
+                            ArtId = 2,
+                            StreetcodeId = 2,
+                            Index = 7
+                        },
+                        new
+                        {
+                            ArtId = 2,
+                            StreetcodeId = 3,
+                            Index = 6
+                        },
+                        new
+                        {
+                            ArtId = 3,
+                            StreetcodeId = 3,
+                            Index = 2
+                        });
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
                     b.Property<int>("Id")
@@ -1178,6 +1234,12 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 3,
                             Description = "Кріпа́цтво, або кріпосне́ право, у вузькому сенсі — правова система, або система правових норм при феодалізмі, яка встановлювала залежність селянина від феодала й неповну власність феодала на селянина.",
                             Title = "кріпак"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Ма́чуха — нерідна матір для дітей чоловіка від його попереднього шлюбу.",
+                            Title = "мачуха"
                         });
                 });
 
@@ -1213,7 +1275,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             StreetcodeId = 1,
-                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\nЗа родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\nВосени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.",
+                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\r\n\r\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\r\n\r\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
                             Title = "Дитинство та юність"
                         },
                         new
@@ -1347,6 +1409,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("StreetType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -1488,9 +1554,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
-                    b.HasIndex("StreetcodeId")
-                        .IsUnique()
-                        .HasFilter("[StreetcodeId] IS NOT NULL");
+                    b.HasIndex("StreetcodeId");
 
                     b.ToTable("coordinates", "add_content");
 
@@ -1534,7 +1598,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ToponymId")
                         .HasColumnType("int");
 
-                    b.HasIndex("ToponymId");
+                    b.HasIndex("ToponymId")
+                        .IsUnique()
+                        .HasFilter("[ToponymId] IS NOT NULL");
 
                     b.ToTable("coordinates", "add_content");
 
@@ -1558,7 +1624,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 23, 15, 50, 10, 682, DateTimeKind.Local).AddTicks(4843),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6859),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1595,7 +1661,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 23, 15, 50, 10, 682, DateTimeKind.Local).AddTicks(4781),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6798),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1609,7 +1675,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 23, 15, 50, 10, 682, DateTimeKind.Local).AddTicks(4823),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6839),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1623,7 +1689,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 23, 15, 50, 10, 682, DateTimeKind.Local).AddTicks(4828),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6842),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1634,21 +1700,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                             LastName = "Білозерський",
                             Rank = "Михайлович"
                         });
-                });
-
-            modelBuilder.Entity("ArtStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Art", null)
-                        .WithMany()
-                        .HasForeignKey("ArtsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("FactStreetcodeContent", b =>
@@ -1822,6 +1873,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Target");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArt", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Art", "Art")
+                        .WithMany("StreetcodeArts")
+                        .HasForeignKey("ArtId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeArts")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Art");
+
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodePartner", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Partners.Partner", "Partner")
@@ -1921,8 +1991,8 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithOne("Coordinate")
-                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeId")
+                        .WithMany("Coordinates")
+                        .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1932,12 +2002,17 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Toponyms.Toponym", "Toponym")
-                        .WithMany("Coordinates")
-                        .HasForeignKey("ToponymId")
+                        .WithOne("Coordinate")
+                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", "ToponymId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Toponym");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
+                {
+                    b.Navigation("StreetcodeArts");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Image", b =>
@@ -1965,9 +2040,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.Navigation("Audio");
 
-                    b.Navigation("Coordinate");
+                    b.Navigation("Coordinates");
 
                     b.Navigation("Observers");
+
+                    b.Navigation("StreetcodeArts");
 
                     b.Navigation("StreetcodePartners");
 
@@ -1984,7 +2061,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
-                    b.Navigation("Coordinates");
+                    b.Navigation("Coordinate")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

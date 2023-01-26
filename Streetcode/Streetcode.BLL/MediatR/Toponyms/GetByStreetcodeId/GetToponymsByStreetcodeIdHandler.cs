@@ -25,7 +25,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
             .GetAllAsync(
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.streetcodeId),
                 include: scl => scl
-                    .Include(sc => sc.Coordinates));
+                    .Include(sc => sc.Coordinate));
 
         if (toponym is null)
         {

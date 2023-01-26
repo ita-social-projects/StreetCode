@@ -174,9 +174,9 @@ namespace Streetcode.WebApi.Utils
             {
                 string cityStringSearchOptimized = col[4].Substring(col[4].IndexOf(" ") + 1);
 
-                string streetNameStringSearchOptimized = OptimizeStreetname(col[6]);
+                var streetNameStringSearchOptimized = OptimizeStreetname(col[6]);
 
-                string addressrow = cityStringSearchOptimized + " " + streetNameStringSearchOptimized;
+                string addressrow = cityStringSearchOptimized + " " + streetNameStringSearchOptimized.Item1 + " " + streetNameStringSearchOptimized.Item2;
 
                 var res = await CallAPICoords(addressrow);
                 if (res.Item1 == "" && res.Item2 == "")
@@ -212,9 +212,10 @@ namespace Streetcode.WebApi.Utils
 
             foreach (var col in rows)
             {
-                Console.WriteLine(col[7] + " " + col[8]);
                 try
                 {
+                    var name_type = OptimizeStreetname(col[6]);
+
                     await _repository.ToponymRepository.CreateAsync(new Toponym()
                     {
                         Oblast = col[0],
@@ -222,13 +223,13 @@ namespace Streetcode.WebApi.Utils
                         AdminRegionNew = col[2],
                         Gromada = col[3],
                         Community = col[4],
-                        StreetName = col[6],
+                        StreetName = name_type.Item1,
+                        StreetType = name_type.Item2,
                         Coordinate = new ToponymCoordinate()
                         {
                             Latitude = decimal.Parse(col[7], CultureInfo.InvariantCulture),
                             Longtitude = decimal.Parse(col[8], CultureInfo.InvariantCulture)
-                        },
-                        Streetcodes = new List<StreetcodeContent>(),
+                        }
                     });
                 }
                 catch (Exception ex)
@@ -241,44 +242,117 @@ namespace Streetcode.WebApi.Utils
         }
 
         // Following method returns name of the street optimized in such kind of way that will allow OSM Nominatim find its coordinates
-        public static string OptimizeStreetname(string streetname)
+        public static Tuple<string?, string?> OptimizeStreetname(string streetname)
         {
-            string streetNameStringSearchOptimized = streetname;
+            var streetNameStringSearchOptimized = new Tuple<string?, string?>(null, null);
 
-            // OSM Nominatim does not like e.g "пров. 1-й Тихий", use "1-й Тихий провулок" instead
-            if (streetname.IndexOf("пров.") != -1)
+            if (streetname.IndexOf("пров. ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " провулок";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "провулок");
             }
-
-            // OSM Nominatim does not like e.g "проїзд 3-й Цукровиків", use "3-й Цукровиків проїзд" instead
-            else if (streetname.IndexOf("проїзд") != -1)
+            else if (streetname.IndexOf("проїзд ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " проїзд";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "проїзд");
             }
-
-            // OSM Nominatim does not like e.g "бульв. Івана  Світличного", use "Івана  Світличного бульвар" instead
-            else if (streetname.IndexOf("бульв.") != -1)
+            else if (streetname.IndexOf("вул. ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " бульвар";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "вулиця");
             }
-
-            // OSM Nominatim does not like e.g "шосе Стратегічне", use "Стратегічне шосе" instead
+            else if (streetname.IndexOf("просп. ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "проспект");
+            }
+            else if (streetname.IndexOf("тупик ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "тупик");
+            }
+            else if (streetname.IndexOf("пл. ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "площа");
+            }
+            else if (streetname.IndexOf("майдан ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "майдан");
+            }
+            else if (streetname.IndexOf("узвіз ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "узвіз");
+            }
+            else if (streetname.IndexOf("дорога ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "дорога");
+            }
+            else if (streetname.IndexOf("парк ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "парк");
+            }
+            else if (streetname.IndexOf("жилий масив ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ", streetname.IndexOf(" ") + 1) + 1), "парк");
+            }
+            else if (streetname.IndexOf("м-р ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "мікрорайон");
+            }
+            else if (streetname.IndexOf("алея ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "алея");
+            }
+            else if (streetname.IndexOf("хутір ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "хутір");
+            }
+            else if (streetname.IndexOf("кв-л ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "квартал");
+            }
+            else if (streetname.IndexOf("урочище ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "урочище");
+            }
+            else if (streetname.IndexOf("набережна ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "набережна");
+            }
+            else if (streetname.IndexOf("селище ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "селище");
+            }
+            else if (streetname.IndexOf("лінія ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "лінія");
+            }
+            else if (streetname.IndexOf("шлях ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "шлях");
+            }
+            else if (streetname.IndexOf("спуск ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "спуск");
+            }
+            else if (streetname.IndexOf("завулок ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "завулок");
+            }
+            else if (streetname.IndexOf("острів ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "острів");
+            }
+            else if (streetname.IndexOf("бульв. ") != -1)
+            {
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "більвар");
+            }
             else if (streetname.IndexOf("шосе ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " шосе";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "шосе");
             }
-
-            // OSM Nominatim does not like e.g "містечко Військове", use "Військове містечко" instead
             else if (streetname.IndexOf("містечко ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " містечко";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "містечко");
             }
-
-            // OSM Nominatim does not like e.g "в’їзд 2-й Криничний", use "2-й Криничний в’їзд" instead
-            else if (streetname.IndexOf("в’їзд") != -1)
+            else if (streetname.IndexOf("в’їзд ") != -1)
             {
-                streetNameStringSearchOptimized = streetname.Substring(streetname.IndexOf(" ") + 1) + " в’їзд";
+                streetNameStringSearchOptimized = new Tuple<string?, string?>(streetname.Substring(streetname.IndexOf(" ") + 1), "в’їзд");
             }
 
             return streetNameStringSearchOptimized;

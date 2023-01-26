@@ -1,19 +1,14 @@
-﻿using System.IO.Compression;
-using System.Linq;
+﻿using System.Globalization;
+using System.IO.Compression;
 using System.Net;
-using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using Newtonsoft.Json;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
-using Streetcode.DAL.Entities;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.WebApi.Utils
 {
@@ -150,17 +145,16 @@ namespace Streetcode.WebApi.Utils
             // Grouping all rows from initial csv in order to get rid of duplicated streets
 
             var forParsindRows = rows
-                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct();
+                .Select(x => string.Join(";", x.Split(';').Take(7))).Distinct();
 
             var alreadyParsedRows = allLinesFromDataCSV
-                .Select(x => string.Join(";", x.Split(';').Take(7).ToList())).Distinct();
+                .Select(x => string.Join(";", x.Split(';').Take(7))).Distinct();
 
             var alreadyParsedRowsToWrite = allLinesFromDataCSV.Distinct();
 
             var remainsToParse = forParsindRows.Except(alreadyParsedRows)
                 .Select(x => x.Split(';').ToList())
-                .Take(10)
-                .ToList();
+                .Take(10);
 
             var toBeDeleted = alreadyParsedRows.Except(forParsindRows);
 
@@ -214,10 +208,11 @@ namespace Streetcode.WebApi.Utils
         public async Task SaveToponymsToDb(string csvPath)
         {
             var rows = new List<string>(File.ReadAllLines(csvPath, Encoding.GetEncoding(1251)))
-                .Select(x => x.Split(';').ToList()).ToList();
+                .Skip(1).Select(x => x.Split(';'));
 
             foreach (var col in rows)
             {
+                Console.WriteLine(col[7] + " " + col[8]);
                 try
                 {
                     await _repository.ToponymRepository.CreateAsync(new Toponym()
@@ -228,6 +223,11 @@ namespace Streetcode.WebApi.Utils
                         Gromada = col[3],
                         Community = col[4],
                         StreetName = col[6],
+                        Coordinate = new ToponymCoordinate()
+                        {
+                            Latitude = decimal.Parse(col[7], CultureInfo.InvariantCulture),
+                            Longtitude = decimal.Parse(col[8], CultureInfo.InvariantCulture)
+                        },
                         Streetcodes = new List<StreetcodeContent>(),
                     });
                 }

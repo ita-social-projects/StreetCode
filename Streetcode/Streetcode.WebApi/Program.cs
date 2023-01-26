@@ -1,8 +1,4 @@
 using Streetcode.WebApi.Extensions;
-using Streetcode.WebApi.Utils;
-using Streetcode.DAL.Repositories.Realizations.Base;
-using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -11,25 +7,8 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 
-static void ExecuteMethod(object state)
-{
-    (string excelPath, string csvPath) = ((string, string))state;
-    var columnsToExtract = new[] { 2, 5, 6 }; // Column indices for B, E, and F
-}
-
 var app = builder.Build();
 await app.MigrateAndSeedDbAsync();
-/*
-await using var timer = new Timer(
-    WebParsingUtils.ParseZipFileFromWeb,
-    null,
-    TimeSpan.Zero,
-    TimeSpan.FromHours(12));
-*/
-
-WebParsingUtils utils = new WebParsingUtils(app.Services.CreateScope()
-    .ServiceProvider.GetRequiredService<StreetcodeDbContext>());
-await utils.ParseZipFileFromWeb();
 
 if (app.Environment.EnvironmentName == "Local")
 {

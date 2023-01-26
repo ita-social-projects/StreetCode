@@ -27,8 +27,8 @@ await using var timer = new Timer(
     TimeSpan.FromHours(12));
 */
 
-using var scope = app.Services.CreateScope();
-WebParsingUtils utils = new WebParsingUtils(scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>());
+WebParsingUtils utils = new WebParsingUtils(app.Services.CreateScope()
+    .ServiceProvider.GetRequiredService<StreetcodeDbContext>());
 await utils.ParseZipFileFromWeb();
 
 if (app.Environment.EnvironmentName == "Local")

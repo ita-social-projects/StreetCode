@@ -100,24 +100,28 @@ namespace Streetcode.WebApi.Utils
 
             var cancellationToken = new CancellationTokenSource().Token;
 
-            try
-            {
-                await DownloadAndExtractAsync(fileUrl, zipPath, extractTo, cancellationToken);
-                Console.WriteLine("Download and extraction completed successfully.");
-                if (File.Exists(zipPath))
-                {
-                    File.Delete(zipPath);
-                }
+            int currentTry = 0, numberOfRetries = 3;
 
-                await ProcessCSVfile(extractTo, false);
-            }
-            catch (OperationCanceledException)
+            while (currentTry < numberOfRetries)
             {
-                Console.WriteLine("The operation was canceled.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                try
+                {
+                    await DownloadAndExtractAsync(fileUrl, zipPath, extractTo, cancellationToken);
+                    Console.WriteLine("Download and extraction completed successfully.");
+                    if (File.Exists(zipPath))
+                    {
+                        File.Delete(zipPath);
+                    }
+
+                    await ProcessCSVfile(extractTo, false);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Thread.Sleep(10000);
+                    currentTry++;
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                }
             }
         }
 
@@ -154,6 +158,8 @@ namespace Streetcode.WebApi.Utils
 
             var remainsToParse = forParsindRows.Except(alreadyParsedRows)
                 .Select(x => x.Split(';').ToList())
+
+                // TODO take it of if you want to start global parse
                 .Take(10);
 
             var toBeDeleted = alreadyParsedRows.Except(forParsindRows);

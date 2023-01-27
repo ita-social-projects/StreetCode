@@ -43,7 +43,7 @@ namespace Streetcode.WebApi.Utils
             clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 
             using var client = new HttpClient(clientHandler, false) { DefaultRequestHeaders = { }, Timeout = TimeSpan.FromSeconds(60) };
-            
+
             try
             {
                 using var response = await client.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
@@ -57,13 +57,12 @@ namespace Streetcode.WebApi.Utils
                 }
 
                 using var archive = ZipFile.OpenRead(zipPath);
-                
+
                 archive.ExtractToDirectory(extractTo, overwriteFiles: true);
                 if (logger != null)
                 {
                     logger.LogInformation("Archive received and extracted to {extractTo}", extractTo);
                 }
-                
             }
             catch (OperationCanceledException)
             {
@@ -83,7 +82,6 @@ namespace Streetcode.WebApi.Utils
 
                 throw;
             }
-            
         }
 
         public async Task ParseZipFileFromWebAsync()

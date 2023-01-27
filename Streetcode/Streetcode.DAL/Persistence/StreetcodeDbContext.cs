@@ -100,8 +100,8 @@ public class StreetcodeDbContext : DbContext
                 .HasForeignKey<Art>(a => a.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Logo)
-                .WithOne(p => p.Partner)
+            entity.HasOne(d => d.Partner)
+                .WithOne(p => p.Logo)
                 .HasForeignKey<Partner>(d => d.LogoId)
                 .OnDelete(DeleteBehavior.Cascade);
 

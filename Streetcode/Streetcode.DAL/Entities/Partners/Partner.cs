@@ -15,7 +15,8 @@ public class Partner
     [Required]
     public string Title { get; set; }
 
-    public string LogoId { get; set; }
+    [Required]
+    public int LogoId { get; set; }
 
     [Required]
     public bool IsKeyPartner { get; set; }
@@ -25,7 +26,7 @@ public class Partner
 
     public string? Description { get; set; }
 
-    public Image Logo { get; set; }
+    public Image? Logo { get; set; }
 
     public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new ();
 

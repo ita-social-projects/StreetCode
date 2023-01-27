@@ -120,6 +120,21 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Title = "wictory"
+            },
+            new Tag
+            {
+                Id = 5,
+                Title = "Наукова школа"
+            },
+            new Tag
+            {
+                Id = 6,
+                Title = "Історія"
+            },
+            new Tag
+            {
+                Id = 7,
+                Title = "Політика"
             });
         modelBuilder.Entity<Response>().HasData(
             new Response
@@ -234,6 +249,48 @@ public static class ModelBuilderExtensions
                 Title = "article",
                 Alt = "article",
                 Url = "https://images.laws.com/constitution/constitutional-convention.jpg"
+            },
+            new Image
+            {
+                Id = 12,
+                Title = "SoftServe",
+                Alt = "SoftServe",
+                Url = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png"
+            },
+            new Image
+            {
+                Id = 13,
+                Title = "Parimatch",
+                Alt = "Parimatch",
+                Url = "https://static.ua-football.com/img/upload/19/270071.png"
+            },
+            new Image
+            {
+                Id = 14,
+                Title = "Community Partners",
+                Alt = "Community Partners",
+                Url = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png"
+            },
+            new Image
+            {
+                Id = 15,
+                Title = "Володимир-Варфоломей",
+                Alt = "Володимир-Варфоломей",
+                Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
+            },
+            new Image
+            {
+                Id = 16,
+                Title = "Леся Українка",
+                Alt = "Леся Українка",
+                Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
+            },
+            new Image
+            {
+                Id = 17,
+                Title = "Іван Мазепа",
+                Alt = "Іван Мазепа",
+                Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
             });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
@@ -394,30 +451,34 @@ public static class ModelBuilderExtensions
                 Id = 1,
                 IsKeyPartner = true,
                 Title = "SoftServe",
-                Description = "Developers",
-                LogoUrl = "https://www.bing.com/images/search?view=detailV2&ccid=g3DnkGqg&id=98C6F1FDD6CDA685A3DE2AD392FAC228180A28CC&thid=OIP.g3DnkGqgmhKFWM2ct5mXrAHaHa&mediaurl=https%3a%2f%2fyt3.ggpht.com%2fa-%2fAN66SAxaiWXvFxW9BUQ32pzQ5tv5UuXz2fLZ20LaMg%3ds900-mo-c-c0xffffffff-rj-k-no&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.8370e7906aa09a128558cd9cb79997ac%3frik%3dzCgKGCjC%252bpLTKg%26pid%3dImgRaw%26r%3d0&exph=900&expw=900&q=softserve&simid=608013145967840441&FORM=IRPRST&ck=C08BED6E397D35D8A4824BB4B78EBCE8&selectedIndex=1&ajaxhist=0&ajaxserp=0",
+                Description = "Український культурний фонд є флагманською українською інституцією культури, яка у своїй діяльності інтегрує" +
+                    " різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи." +
+                    " Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні" +
+                    " види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
+                LogoId = 12,
                 TargetUrl = "https://www.softserveinc.com/en-us"
             },
             new Partner
             {
                 Id = 2,
-                Title = "parimatch",
-                LogoUrl = "https://www.bing.com/images/search?view=detailV2&ccid=9TObzn%2ba&id=21D8755FE7846CE9660BC2365F5EE70417D31DA7&thid=OIP.9TObzn-a15MsLhdfHh1e_gHaE8&mediaurl=https%3a%2f%2fi2.wp.com%2feuropeangaming.eu%2fportal%2fwp-content%2fuploads%2f2020%2f02%2f5-10.jpg%3ffit%3d1200%252C800%26ssl%3d1&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.f5339bce7f9ad7932c2e175f1e1d5efe%3frik%3dpx3TFwTnXl82wg%26pid%3dImgRaw%26r%3d0&exph=800&expw=1200&q=parimatch&simid=607987165708116105&FORM=IRPRST&ck=BA1164F39CC2BBD1CE20F50A93602E5C&selectedIndex=1&ajaxhist=0&ajaxserp=0",
+                Title = "Parimatch",
+                Description = "some text",
+                LogoId = 13,
                 TargetUrl = "https://parimatch.com/"
             },
             new Partner
             {
                 Id = 3,
                 Title = "comunity partner",
-                LogoUrl = "https://www.bing.com/images/search?view=detailV2&ccid=9TObzn%2ba&id=21D8755FE7846CE9660BC2365F5EE70417D31DA7&thid=OIP.9TObzn-a15MsLhdfHh1e_gHaE8&mediaurl=https%3a%2f%2fi2.wp.com%2feuropeangaming.eu%2fportal%2fwp-content%2fuploads%2f2020%2f02%2f5-10.jpg%3ffit%3d1200%252C800%26ssl%3d1&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.f5339bce7f9ad7932c2e175f1e1d5efe%3frik%3dpx3TFwTnXl82wg%26pid%3dImgRaw%26r%3d0&exph=800&expw=1200&q=parimatch&simid=607987165708116105&FORM=IRPRST&ck=BA1164F39CC2BBD1CE20F50A93602E5C&selectedIndex=1&ajaxhist=0&ajaxserp=0",
-                TargetUrl = "https://parimatch.com/"
+                LogoId = 14,
+                TargetUrl = "https://partners.salesforce.com/pdx/s/?language=en_US&redirected=RGSUDODQUL"
             });
         modelBuilder.Entity<PartnerSourceLink>().HasData(
             new PartnerSourceLink
             {
                 Id = 1,
                 Title = "LinkedIn",
-                LogoUrl = string.Empty,
+                LogoUrl = "https://play-lh.googleusercontent.com/kMofEFLjobZy_bCuaiDogzBcUT-dz3BBbOrIEjJ-hqOabjK8ieuevGe6wlTD15QzOqw",
                 TargetUrl = "https://www.linkedin.com/company/softserve/",
                 PartnerId = 1
             },
@@ -425,7 +486,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 2,
                 Title = "Instagram",
-                LogoUrl = string.Empty,
+                LogoUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
                 TargetUrl = "https://www.instagram.com/softserve_people/",
                 PartnerId = 1
             },
@@ -433,7 +494,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Title = "facebook",
-                LogoUrl = string.Empty,
+                LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png",
                 TargetUrl = "https://www.facebook.com/SoftServeCompany",
                 PartnerId = 1
             });
@@ -806,6 +867,42 @@ public static class ModelBuilderExtensions
                 FirstName = "Василь",
                 Rank = "Михайлович",
                 LastName = "Білозерський"
+            },
+            new PersonStreetcode
+            {
+                Id = 5,
+                Index = 5,
+                Teaser = "some teaser",
+                ViewCount = 0,
+                CreatedAt = DateTime.Now,
+                EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
+                EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
+                FirstName = "Володимир-Варфоломей",
+                LastName = "Кропивницький-Шевченківський"
+            },
+            new PersonStreetcode
+            {
+                Id = 6,
+                Index = 6,
+                Teaser = "some teaser",
+                ViewCount = 0,
+                CreatedAt = DateTime.Now,
+                EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
+                EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
+                FirstName = "Леся",
+                LastName = "Українка"
+            },
+            new PersonStreetcode
+            {
+                Id = 7,
+                Index = 7,
+                Teaser = "some teaser",
+                ViewCount = 0,
+                CreatedAt = DateTime.Now,
+                EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
+                EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
+                FirstName = "Іван",
+                LastName = "Мазепа"
             });
         modelBuilder.Entity<EventStreetcode>().HasData(
             new EventStreetcode
@@ -842,6 +939,70 @@ public static class ModelBuilderExtensions
                 Description = "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв," +
                     " де його наставником став К. Брюллов. За словами Шевченка: «настала найсвітліша доба його життя, незабутні, золоті дні»" +
                     " навчання в Академії мистецтв, яким він присвятив у 1856 році автобіографічну повість «Художник»."
+            }new TimelineItem
+            {
+                Id = 3,
+                Date = new DateTime(1832, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 4,
+                Date = new DateTime(1833, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 5,
+                Date = new DateTime(1834, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 6,
+                Date = new DateTime(1834, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 7,
+                Date = new DateTime(1834, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 8,
+                Date = new DateTime(1834, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 9,
+                Date = new DateTime(1835, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
+            }, new TimelineItem
+            {
+                Id = 10,
+                Date = new DateTime(1836, 1, 1),
+                Title = "Перші роки в Петербурзі",
+                Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
+                            "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
+                            " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
             });
         modelBuilder.Entity<Toponym>().HasData(
             new Toponym
@@ -903,6 +1064,26 @@ public static class ModelBuilderExtensions
             {
                 ObserverId = 2,
                 TargetId = 3
+            },
+            new RelatedFigure
+            {
+                ObserverId = 1,
+                TargetId = 4
+            },
+            new RelatedFigure
+            {
+                ObserverId = 5,
+                TargetId = 1
+            },
+            new RelatedFigure
+            {
+                ObserverId = 6,
+                TargetId = 1
+            },
+            new RelatedFigure
+            {
+                ObserverId = 7,
+                TargetId = 1
             });
     }
 }

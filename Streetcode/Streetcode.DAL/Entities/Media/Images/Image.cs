@@ -28,5 +28,7 @@ public class Image
 
     public Art? Art { get; set; }
 
+    public Partner? Partner { get; set; }
+
     public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
 }

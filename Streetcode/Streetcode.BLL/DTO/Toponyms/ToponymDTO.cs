@@ -12,7 +12,8 @@ public class ToponymDTO
     public string? Gromada { get; set; }
     public string? Community { get; set; }
     public string StreetName { get; set; }
+    public string StreetType { get; set; }
 
-    public IEnumerable<ToponymCoordinateDTO> Coordinates { get; set; }
+    public ToponymCoordinateDTO Coordinate { get; set; }
     public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

@@ -15,10 +15,11 @@ public class RepeatingService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (await _timer.WaitForNextTickAsync(stoppingToken)
-            && !stoppingToken.IsCancellationRequested)
+        do
         {
-            await _utils.ParseZipFileFromWeb();
+            await _utils.ParseZipFileFromWebAsync();
         }
+        while (await _timer.WaitForNextTickAsync(stoppingToken)
+            && !stoppingToken.IsCancellationRequested);
     }
 }

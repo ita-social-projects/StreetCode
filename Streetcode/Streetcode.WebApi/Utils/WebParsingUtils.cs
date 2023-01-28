@@ -21,7 +21,11 @@ namespace Streetcode.WebApi.Utils
             _repository = new RepositoryWrapper(streetcodeContext);
         }
 
-        public async Task DownloadAndExtractAsync(string fileUrl, string zipPath, string extractTo, CancellationToken cancellationToken, ILogger logger = null)
+        public async Task DownloadAndExtractAsync(
+            string fileUrl,
+            string zipPath,
+            string extractTo,
+            CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(fileUrl) || !Uri.IsWellFormedUriString(fileUrl, UriKind.Absolute))
             {
@@ -42,11 +46,17 @@ namespace Streetcode.WebApi.Utils
             clientHandler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 
-            using var client = new HttpClient(clientHandler, false) { DefaultRequestHeaders = { }, Timeout = TimeSpan.FromSeconds(60) };
+            using var client = new HttpClient(clientHandler, false)
+            {
+                DefaultRequestHeaders = { },
+                Timeout = TimeSpan.FromSeconds(60)
+            };
 
             try
             {
-                using var response = await client.GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                using var response = await client
+                    .GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+
                 response.EnsureSuccessStatusCode();
                 response.Content.Headers.ContentType.CharSet = Encoding.GetEncoding(1251).WebName;
 
@@ -59,26 +69,18 @@ namespace Streetcode.WebApi.Utils
                 using var archive = ZipFile.OpenRead(zipPath);
 
                 archive.ExtractToDirectory(extractTo, overwriteFiles: true);
-                if (logger != null)
-                {
-                    logger.LogInformation("Archive received and extracted to {extractTo}", extractTo);
-                }
+
+                Console.WriteLine("Archive received and extracted to {extractTo}" + extractTo);
             }
             catch (OperationCanceledException)
             {
-                if (logger != null)
-                {
-                    logger.LogWarning("The operation was cancelled.");
-                }
+                Console.WriteLine("The operation was cancelled.");
 
                 throw;
             }
             catch (Exception ex)
             {
-                if (logger != null)
-                {
-                    logger.LogError(ex, "An error occurred while downloading and extracting the archive");
-                }
+                Console.WriteLine(ex.Message);
 
                 throw;
             }
@@ -160,15 +162,15 @@ namespace Streetcode.WebApi.Utils
             var alreadyParsedRows = allLinesFromDataCSV
                 .Select(x => string.Join(";", x.Split(';').Take(7))).Distinct().ToList();
 
-            var alreadyParsedRowsToWrite = allLinesFromDataCSV.Distinct();
+            var alreadyParsedRowsToWrite = allLinesFromDataCSV.Distinct().ToList();
 
             var remainsToParse = forParsingRows.Except(alreadyParsedRows)
-                .Select(x => x.Split(';').ToList())
+                .Select(x => x.Split(';').ToList()).ToList()
 
                 // TODO take it of if you want to start global parse
                 .Take(10);
 
-            var toBeDeleted = alreadyParsedRows.Except(forParsingRows);
+            var toBeDeleted = alreadyParsedRows.Except(forParsingRows).ToList();
 
             Console.WriteLine("Remains to parse: " + remainsToParse.Count());
             Console.WriteLine("To be deleted: " + toBeDeleted.Count());
@@ -188,9 +190,9 @@ namespace Streetcode.WebApi.Utils
 
                 var optimizedSearchString = OptimizeStreetname(col[6]);
 
-                string addressrow = cityStringSearchOptimized + " " + optimizedSearchString.Item1 + " " + optimizedSearchString.Item2;
+                string addressrow = $"{cityStringSearchOptimized} {optimizedSearchString.Item1} {optimizedSearchString.Item2}";
 
-                (string, string) res = await FetchCoordsByAddressAsync(addressrow);
+                var res = await FetchCoordsByAddressAsync(addressrow);
 
                 if (res.Item1 == string.Empty && res.Item2 == string.Empty)
                 {
@@ -273,9 +275,7 @@ namespace Streetcode.WebApi.Utils
                 var jsonData = await client.GetStringAsync("https://nominatim.openstreetmap.org/search?q=" + address + "&format=json&limit=1&addressdetails=1");
 
                 // Parse JSON data to coordinates tuple
-                var coords = ParseJsonToCoordinateTuple(jsonData);
-
-                return coords;
+                return ParseJsonToCoordinateTuple(jsonData);
             }
             catch (Exception ex)
             {

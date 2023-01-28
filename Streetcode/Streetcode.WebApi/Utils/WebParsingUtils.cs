@@ -70,7 +70,7 @@ namespace Streetcode.WebApi.Utils
 
                 archive.ExtractToDirectory(extractTo, overwriteFiles: true);
 
-                Console.WriteLine("Archive received and extracted to {extractTo}" + extractTo);
+                Console.WriteLine("Archive received and extracted to " + extractTo);
             }
             catch (OperationCanceledException)
             {
@@ -95,28 +95,20 @@ namespace Streetcode.WebApi.Utils
 
             var cancellationToken = new CancellationTokenSource().Token;
 
-            int currentTry = 0, numberOfRetries = 3;
-
-            while (currentTry < numberOfRetries)
+            try
             {
-                try
+                await DownloadAndExtractAsync(fileUrl, zipPath, extractTo, cancellationToken);
+                Console.WriteLine("Download and extraction completed successfully.");
+                if (File.Exists(zipPath))
                 {
-                    await DownloadAndExtractAsync(fileUrl, zipPath, extractTo, cancellationToken);
-                    Console.WriteLine("Download and extraction completed successfully.");
-                    if (File.Exists(zipPath))
-                    {
-                        File.Delete(zipPath);
-                    }
+                    File.Delete(zipPath);
+                }
 
-                    await ProcessCsvFileAsync(extractTo);
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    Thread.Sleep(10000);
-                    currentTry++;
-                    Console.WriteLine("An error occurred: " + ex.Message);
-                }
+                await ProcessCsvFileAsync(extractTo);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
 
@@ -156,11 +148,9 @@ namespace Streetcode.WebApi.Utils
 
             // Grouping all rows from initial csv in order to get rid of duplicated streets
 
-            var forParsingRows = rows
-                .Select(x => string.Join(";", x.Split(';').Take(7))).Distinct().ToList();
+            var forParsingRows = GetDistinctRowsByFirstSeven(rows);
 
-            var alreadyParsedRows = allLinesFromDataCSV
-                .Select(x => string.Join(";", x.Split(';').Take(7))).Distinct().ToList();
+            var alreadyParsedRows = GetDistinctRowsByFirstSeven(allLinesFromDataCSV);
 
             var alreadyParsedRowsToWrite = allLinesFromDataCSV.Distinct().ToList();
 
@@ -184,6 +174,11 @@ namespace Streetcode.WebApi.Utils
             await File.WriteAllLinesAsync(csvPath, alreadyParsedRowsToWrite, Encoding.GetEncoding(1251));
 
             // parses coordinates and writes into data.csv
+
+            // col is a list of string that contains the data of a toponym.
+            // col[0] is Oblast, col[1] is AdminRegionOld, col[2] is AdminRegionNew,
+            // col[3] is Gromada, col[4] is Community, col[7] is Latitude and col[8] is Longtitude.
+            // col[5] and col[6] are used for StreetName and StreetType respectively.
             foreach (var col in remainsToParse)
             {
                 string cityStringSearchOptimized = col[4].Substring(col[4].IndexOf(" ") + 1);
@@ -194,7 +189,7 @@ namespace Streetcode.WebApi.Utils
 
                 var res = await FetchCoordsByAddressAsync(addressrow);
 
-                if (res.Item1 == string.Empty && res.Item2 == string.Empty)
+                if (res.Item1 == null && res.Item2 == null)
                 {
                     addressrow = cityStringSearchOptimized;
                     res = await FetchCoordsByAddressAsync(addressrow);
@@ -261,7 +256,7 @@ namespace Streetcode.WebApi.Utils
         /// </summary>
         /// <param name="address">The address to fetch coordinates for.</param>
         /// <returns>A tuple containing the latitude and longitude of the address.</returns>
-        public static async Task<(string, string)> FetchCoordsByAddressAsync(string address)
+        public static async Task<(string?, string?)> FetchCoordsByAddressAsync(string address)
         {
             try
             {
@@ -273,6 +268,9 @@ namespace Streetcode.WebApi.Utils
 
                 // Send GET request to Nominatim API and retrieve JSON data
                 var jsonData = await client.GetStringAsync("https://nominatim.openstreetmap.org/search?q=" + address + "&format=json&limit=1&addressdetails=1");
+
+                var bytes = Encoding.UTF8.GetBytes(jsonData);
+                jsonData = Encoding.UTF8.GetString(bytes);
 
                 // Parse JSON data to coordinates tuple
                 return ParseJsonToCoordinateTuple(jsonData);
@@ -287,8 +285,16 @@ namespace Streetcode.WebApi.Utils
             return (null, null);
         }
 
+        /// <summary>
+        /// Returns a list of distinct rows based on the first seven columns of the input list.
+        /// </summary>
+        /// <param name="rows">The list of rows to filter.</param>
+        /// <returns>A list of distinct rows based on the first seven columns of the input list.</returns>
+        private List<string> GetDistinctRowsByFirstSeven(List<string> rows) =>
+            rows.Select(x => string.Join(";", x.Split(';').Take(7))).Distinct().ToList();
+
         // Following method returns name of the street optimized in such kind of way that will allow OSM Nominatim find its coordinates
-        private static (string?, string?) OptimizeStreetname(string streetname)
+        private static (string, string) OptimizeStreetname(string streetname)
         {
             if (streetname.IndexOf("пров. ", StringComparison.Ordinal) != -1)
             {
@@ -399,21 +405,16 @@ namespace Streetcode.WebApi.Utils
                 return (streetname.Substring(streetname.IndexOf(" ") + 1), "в’їзд");
             }
 
-            return (null, null);
+            return (string.Empty, string.Empty);
         }
 
         // Following method parses JSON from OSM Nominatim API and returns lat/lon tuple
-        private static (string, string) ParseJsonToCoordinateTuple(string json)
+        private static (string?, string?) ParseJsonToCoordinateTuple(string json)
         {
             var data = JsonConvert.DeserializeObject<List<Dictionary<string, object>>>(json);
-            if (data.Count == 0)
-            {
-                return (string.Empty, string.Empty);
-            }
-            else
-            {
-                return (data[0]["lat"].ToString(), data[0]["lon"].ToString());
-            }
+
+            return data == null || data.Count == 0 ? (null, null) :
+                (data[0]["lat"].ToString(), data[0]["lon"].ToString());
         }
     }
 }

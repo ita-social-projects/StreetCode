@@ -417,7 +417,7 @@ public class WebParsingUtils
 
         if (streetname.IndexOf("бульв. ", StringComparison.Ordinal) != -1)
         {
-            return (streetname.Substring(streetname.IndexOf(" ") + 1), "більвар");
+            return (streetname.Substring(streetname.IndexOf(" ") + 1), "бульвар");
         }
 
         if (streetname.IndexOf("шосе ", StringComparison.Ordinal) != -1)

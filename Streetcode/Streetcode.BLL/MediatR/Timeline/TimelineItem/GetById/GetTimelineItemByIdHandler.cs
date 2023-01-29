@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetById;
 
-public class GetTransactionLinkByIdHandler : IRequestHandler<GetTimelineItemByIdQuery, Result<TimelineItemDTO>>
+public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQuery, Result<TimelineItemDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetTransactionLinkByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTimelineItemByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -20,7 +21,9 @@ public class GetTransactionLinkByIdHandler : IRequestHandler<GetTimelineItemById
     public async Task<Result<TimelineItemDTO>> Handle(GetTimelineItemByIdQuery request, CancellationToken cancellationToken)
     {
         var timelineItem = await _repositoryWrapper.TimelineRepository
-            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
+            .GetFirstOrDefaultAsync(
+                predicate: ti => true,
+                include: ti => ti.Include(til => til.HistoricalContexts));
 
         if (timelineItem is null)
         {

@@ -1,5 +1,7 @@
 using Streetcode.BLL.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.DAL.Entities.Toponyms;
 
 namespace Streetcode.BLL.Services.Toponyms;
 

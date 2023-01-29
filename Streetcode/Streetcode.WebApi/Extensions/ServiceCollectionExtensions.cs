@@ -24,6 +24,7 @@ using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
+using Streetcode.WebApi.Utils;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -37,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IVideoService, VideoService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<IPartnersService, PartnersService>();
+        services.AddScoped<IRelatedFigureService, RelatedFigureService>();
         services.AddScoped<IStreetcodeService, StreetcodeService>();
         services.AddScoped<ISubtitleService, SubtitleService>();
         services.AddScoped<ITagService, TagService>();
@@ -60,6 +62,8 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
+
+        services.AddHostedService<RepeatingService>();
 
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
     }

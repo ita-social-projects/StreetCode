@@ -6,7 +6,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 
-public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStreetcodeIdQuery, Result<IEnumerable<AudioDTO>>>
+public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStreetcodeIdQuery, Result<AudioDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -17,17 +17,17 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<AudioDTO>>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var audio = await _repositoryWrapper.AudioRepository
-            .GetAllAsync(audio => audio.StreetcodeId == request.streetcodeId);
+            .GetFirstOrDefaultAsync(audio => audio.StreetcodeId == request.streetcodeId);
 
         if (audio is null)
         {
             return Result.Fail(new Error($"Cannot find an audio with the corresponding streetcode id: {request.streetcodeId}"));
         }
 
-        var audioDto = _mapper.Map<IEnumerable<AudioDTO>>(audio);
+        var audioDto = _mapper.Map<AudioDTO>(audio);
         return Result.Ok(audioDto);
     }
 }

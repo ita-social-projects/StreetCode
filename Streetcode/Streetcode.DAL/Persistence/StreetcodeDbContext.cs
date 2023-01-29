@@ -61,9 +61,8 @@ public class StreetcodeDbContext : DbContext
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<Toponym>()
-            .HasMany(d => d.Coordinates)
+            .HasOne(d => d.Coordinate)
             .WithOne(p => p.Toponym)
-            .HasForeignKey(d => d.ToponymId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Partner>(entity =>

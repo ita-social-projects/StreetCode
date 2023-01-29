@@ -8,8 +8,7 @@ builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 
 var app = builder.Build();
-
-var dbTask = app.MigrateAndSeedDbAsync();
+await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {
@@ -30,7 +29,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-await dbTask;
 
 app.Run();

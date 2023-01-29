@@ -5,7 +5,7 @@ namespace Streetcode.WebApi.Utils;
 public class RepeatingService : BackgroundService
 {
     // change FromDays function if you want to change periodicity of parsing data from ukrposhta
-    private readonly PeriodicTimer _timer = new(TimeSpan.FromSeconds(20));
+    private readonly PeriodicTimer _timer = new(TimeSpan.FromDays(20));
     private readonly WebParsingUtils _utils;
 
     public RepeatingService(StreetcodeDbContext streetcodeDbContext)

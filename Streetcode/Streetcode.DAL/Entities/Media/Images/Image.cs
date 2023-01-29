@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -27,6 +28,8 @@ public class Image
     public List<Fact> Facts { get; set; } = new ();
 
     public Art? Art { get; set; }
+
+    public Partner? Partner { get; set; }
 
     public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
 }

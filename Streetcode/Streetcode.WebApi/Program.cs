@@ -12,8 +12,7 @@ await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {
-    // builder.Configuration.AddUserSecrets<string>();
-
+    builder.Configuration.AddUserSecrets<string>();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }

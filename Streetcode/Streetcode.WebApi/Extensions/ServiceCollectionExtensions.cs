@@ -64,7 +64,6 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(currentAssemblies);
 
         services.AddHostedService<RepeatingService>();
-
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
     }
 

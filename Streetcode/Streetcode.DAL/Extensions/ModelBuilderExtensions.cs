@@ -379,52 +379,6 @@ public static class ModelBuilderExtensions
                 Url = "https://somelink4",
                 StreetcodeId = 4
             });
-        /*
-        modelBuilder.Entity<ToponymCoordinate>().HasData(
-            new ToponymCoordinate
-            {
-                Id = 1,
-                Latitude = 49.8429M,
-                Longtitude = 24.0311M,
-                ToponymId = 1
-            },
-            new ToponymCoordinate
-            {
-                Id = 2,
-                Latitude = 50.4500M,
-                Longtitude = 30.5233M,
-                ToponymId = 1
-            },
-            new ToponymCoordinate
-            {
-                Id = 3,
-                Latitude = 47.5M,
-                Longtitude = 37.32M,
-                ToponymId = 1
-            },
-            new ToponymCoordinate
-            {
-                Id = 4,
-                Latitude = 50.4600M,
-                Longtitude = 30.5243M,
-                ToponymId = 2
-            },
-            new ToponymCoordinate
-            {
-                Id = 5,
-                Latitude = 50.4550M,
-                Longtitude = 30.5238M,
-                ToponymId = 2
-            },
-            new ToponymCoordinate
-            {
-                Id = 8,
-                Latitude = 46.3950M,
-                Longtitude = 32.3738M,
-                ToponymId = 3
-            });
-        */
-
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
             new StreetcodeCoordinate
             {
@@ -1060,25 +1014,6 @@ public static class ModelBuilderExtensions
                 Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
                             "а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його" +
                             " в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року."
-            });
-        modelBuilder.Entity<Toponym>().HasData(
-            new Toponym
-            {
-                Id = 1,
-                Oblast = "Seed1",
-                StreetName = "SeedStreet1"
-            },
-            new Toponym
-            {
-                Id = 2,
-                Oblast = "Seed2",
-                StreetName = "SeedStreet2"
-            },
-            new Toponym
-            {
-                Id = 3,
-                Oblast = "Seed3",
-                StreetName = "SeedStreet3"
             });
         modelBuilder.Entity<TransactionLink>().HasData(
             new TransactionLink

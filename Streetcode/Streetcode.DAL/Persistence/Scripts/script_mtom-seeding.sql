@@ -83,13 +83,6 @@ INSERT INTO [streetcode].[streetcode_timeline_item]
 		   (1, 6), (1, 7), (1, 8), (1, 9), (1, 10)
 ;
 
-INSERT INTO [streetcode].[streetcode_toponym]
-     VALUES
-           (1, 1),
-		   (2, 1),
-		   (2, 3)
-;
-
 INSERT INTO [timeline].[timeline_item_historical_context]
      VALUES
            (1, 1),

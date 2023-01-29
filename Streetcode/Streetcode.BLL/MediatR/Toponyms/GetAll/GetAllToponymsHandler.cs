@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Toponyms;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Toponyms.GetAll;
@@ -19,7 +20,9 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery, Result
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetAllToponymsQuery request, CancellationToken cancellationToken)
     {
-        var toponym = await _repositoryWrapper.ToponymRepository.GetAllAsync();
+        var toponym = await _repositoryWrapper.ToponymRepository
+            .GetAllAsync(include: scl => scl
+                    .Include(sc => sc.Coordinate));
 
         var toponymDtos = _mapper.Map<IEnumerable<ToponymDTO>>(toponym);
         return Result.Ok(toponymDtos);

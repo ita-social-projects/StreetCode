@@ -14,11 +14,28 @@ public class Toponym
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string Oblast { get; set; }
 
-    public string? Description { get; set; }
+    [MaxLength(150)]
+    public string? AdminRegionOld { get; set; }
+
+    [MaxLength(150)]
+    public string? AdminRegionNew { get; set; }
+
+    [MaxLength(150)]
+    public string? Gromada { get; set; }
+
+    [MaxLength(150)]
+    public string? Community { get; set; }
+
+    [Required]
+    [MaxLength(150)]
+    public string StreetName { get; set; }
+
+    [MaxLength(50)]
+    public string? StreetType { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
-    public List<ToponymCoordinate> Coordinates { get; set; } = new ();
+    public ToponymCoordinate Coordinate { get; set; }
 }

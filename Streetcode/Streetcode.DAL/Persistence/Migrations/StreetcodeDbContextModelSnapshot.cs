@@ -1384,13 +1384,35 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("AdminRegionNew")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("AdminRegionOld")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Community")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Gromada")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Oblast")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("StreetName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("StreetType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -1400,17 +1422,20 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Title = "вулиця Шевченка"
+                            Oblast = "Seed1",
+                            StreetName = "SeedStreet1"
                         },
                         new
                         {
                             Id = 2,
-                            Title = "парк Шевченка"
+                            Oblast = "Seed2",
+                            StreetName = "SeedStreet2"
                         },
                         new
                         {
                             Id = 3,
-                            Title = "місто Херсон"
+                            Oblast = "Seed3",
+                            StreetName = "SeedStreet3"
                         });
                 });
 
@@ -1573,55 +1598,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ToponymId")
                         .HasColumnType("int");
 
-                    b.HasIndex("ToponymId");
+                    b.HasIndex("ToponymId")
+                        .IsUnique()
+                        .HasFilter("[ToponymId] IS NOT NULL");
 
                     b.ToTable("coordinates", "add_content");
 
                     b.HasDiscriminator().HasValue("coordinate_toponym");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Latitude = 49.8429m,
-                            Longtitude = 24.0311m,
-                            ToponymId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Latitude = 50.4500m,
-                            Longtitude = 30.5233m,
-                            ToponymId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Latitude = 47.5m,
-                            Longtitude = 37.32m,
-                            ToponymId = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Latitude = 50.4600m,
-                            Longtitude = 30.5243m,
-                            ToponymId = 2
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Latitude = 50.4550m,
-                            Longtitude = 30.5238m,
-                            ToponymId = 2
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Latitude = 46.3950m,
-                            Longtitude = 32.3738m,
-                            ToponymId = 3
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.EventStreetcode", b =>
@@ -1641,7 +1624,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4481),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6859),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1678,7 +1661,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4412),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6798),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1692,7 +1675,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4459),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6839),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1706,7 +1689,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 17, 21, 40, 17, 968, DateTimeKind.Local).AddTicks(4463),
+                            CreatedAt = new DateTime(2023, 1, 26, 13, 34, 56, 57, DateTimeKind.Local).AddTicks(6842),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -2019,8 +2002,8 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Toponyms.Toponym", "Toponym")
-                        .WithMany("Coordinates")
-                        .HasForeignKey("ToponymId")
+                        .WithOne("Coordinate")
+                        .HasForeignKey("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", "ToponymId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2078,7 +2061,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
-                    b.Navigation("Coordinates");
+                    b.Navigation("Coordinate")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

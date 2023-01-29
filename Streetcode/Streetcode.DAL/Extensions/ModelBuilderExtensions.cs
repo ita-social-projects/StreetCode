@@ -154,23 +154,36 @@ public static class ModelBuilderExtensions
             new Art
             {
                 Id = 1,
-                ImageId = 2,
-                Description = "«Погруддя жінки» — портрет роботи Тараса Шевченка (копія з невідомого оригіналу) виконаний ним у Вільно в 1830 році на папері італійським олівцем. Розмір 47,5 × 38. Зустрічається також під назвою «Жіноча голівка»"
+                ImageId = 18,
+                Description = "Анатолій Федірко, «Український супрематичний політичний діяч Михайло Грушевський», 2019-2020 роки."
             },
             new Art
             {
                 Id = 2,
-                ImageId = 3,
+                ImageId = 19,
             },
             new Art
             {
                 Id = 3,
-                ImageId = 4
+                ImageId = 20,
+                Description = "Назар Дубів опублікував серію малюнків, у яких перетворив класиків української літератури та політичних діячів на сучасних модників"
             },
             new Art
             {
                 Id = 4,
-                ImageId = 1
+                ImageId = 21
+            },
+            new Art
+            {
+                Id = 5,
+                ImageId = 22,
+                Description = "«Козаки на орбіті» поєднує не тільки тему козаків, а й апелює до космічної тематики."
+            },
+            new Art
+            {
+                Id = 6,
+                ImageId = 23,
+                Description = "На вулиці Січових стрільців, 75 закінчили малювати мурал Михайла Грушевського на місці малюнка будинку з лелекою."
             });
         modelBuilder.Entity<Image>().HasData(
             new Image
@@ -291,6 +304,47 @@ public static class ModelBuilderExtensions
                 Title = "Іван Мазепа",
                 Alt = "Іван Мазепа",
                 Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
+            }, new Image
+            {
+                Id = 18,
+                Title = "Михайло Грушевський",
+                Alt = "Грушевький",
+                Url = "/assets/b647ab7ccc32fdb15536.png"
+            },
+            new Image
+            {
+                Id = 19,
+                Title = "Грушевський",
+                Alt = "Грушевький",
+                Url = "/assets/46a4e32fed29974d6562.png"
+            },
+            new Image
+            {
+                Id = 20,
+                Title = "Сучасний Грушевський",
+                Alt = "Грушевський",
+                Url = "/assets/affcff354ffdf1c788e5.png"
+            },
+            new Image
+            {
+                Id = 21,
+                Title = "Мурал Грушевського",
+                Alt = "мурал",
+                Url = "/assets/841a6ad9c34f36476c04.png"
+            },
+            new Image
+            {
+                Id = 22,
+                Title = "Козаки на орбіті",
+                Alt = "Козаки на орбіті",
+                Url = "/assets/05b6e5a005600349283a.png"
+            },
+            new Image
+            {
+                Id = 23,
+                Title = "Мурал М. Грушевського",
+                Alt = "мурал",
+                Url = "/assets/4153f1a052db8b5bfdd9.png"
             });
         modelBuilder.Entity<Audio>().HasData(
             new Audio

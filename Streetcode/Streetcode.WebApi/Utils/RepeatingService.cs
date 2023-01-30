@@ -1,5 +1,4 @@
 ﻿using Streetcode.DAL.Persistence;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Streetcode.WebApi.Utils;
 

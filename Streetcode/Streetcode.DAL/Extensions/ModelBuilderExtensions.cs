@@ -309,42 +309,42 @@ public static class ModelBuilderExtensions
                 Id = 18,
                 Title = "Михайло Грушевський",
                 Alt = "Грушевький",
-                Url = "/assets/b647ab7ccc32fdb15536.png"
+                Url = "/assets/2296e9b1db2ab72f2db9.png"
             },
             new Image
             {
                 Id = 19,
                 Title = "Грушевський",
                 Alt = "Грушевький",
-                Url = "/assets/46a4e32fed29974d6562.png"
+                Url = "/assets/35b44f042d027c3a7589.png"
             },
             new Image
             {
                 Id = 20,
                 Title = "Сучасний Грушевський",
                 Alt = "Грушевський",
-                Url = "/assets/affcff354ffdf1c788e5.png"
+                Url = "/assets/c58dac51751395fb3217.png"
             },
             new Image
             {
                 Id = 21,
                 Title = "Мурал Грушевського",
                 Alt = "мурал",
-                Url = "/assets/841a6ad9c34f36476c04.png"
+                Url = "/assets/233c6bbb0b79df230d93.png"
             },
             new Image
             {
                 Id = 22,
                 Title = "Козаки на орбіті",
                 Alt = "Козаки на орбіті",
-                Url = "/assets/05b6e5a005600349283a.png"
+                Url = "/assets/02b59f4ef917107514e3.png"
             },
             new Image
             {
                 Id = 23,
                 Title = "Мурал М. Грушевського",
                 Alt = "мурал",
-                Url = "/assets/4153f1a052db8b5bfdd9.png"
+                Url = "/assets/8ecaa9756bac938f8f73.png"
             });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
@@ -520,37 +520,31 @@ public static class ModelBuilderExtensions
             {
                 ArtId = 2,
                 StreetcodeId = 1,
-                Index = 3,
+                Index = 2,
             },
             new StreetcodeArt
             {
                 ArtId = 3,
                 StreetcodeId = 1,
-                Index = 4,
+                Index = 3,
             },
             new StreetcodeArt
             {
                 ArtId = 4,
                 StreetcodeId = 1,
+                Index = 4,
+            },
+            new StreetcodeArt
+            {
+                ArtId = 5,
+                StreetcodeId = 1,
                 Index = 5,
             },
             new StreetcodeArt
             {
-                ArtId = 2,
-                StreetcodeId = 2,
-                Index = 7,
-            },
-            new StreetcodeArt
-            {
-                ArtId = 2,
-                StreetcodeId = 3,
+                ArtId = 6,
+                StreetcodeId = 1,
                 Index = 6,
-            },
-            new StreetcodeArt
-            {
-                ArtId = 3,
-                StreetcodeId = 3,
-                Index = 2,
             });
         modelBuilder.Entity<SourceLink>().HasData(
             new SourceLink

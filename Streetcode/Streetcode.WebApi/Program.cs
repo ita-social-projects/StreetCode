@@ -1,4 +1,6 @@
+using Hangfire;
 using Streetcode.WebApi.Extensions;
+using Streetcode.WebApi.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -27,6 +29,12 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
+
+// change Cron.Monthly to set another parsing interval from ukrposhta
+RecurringJob.AddOrUpdate<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
 
 app.MapControllers();
 

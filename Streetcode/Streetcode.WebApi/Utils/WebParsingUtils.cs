@@ -2,6 +2,8 @@
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Xml;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Toponyms;
@@ -25,10 +27,12 @@ public class WebParsingUtils
     private static readonly string _fileToParseUrl = "https://www.ukrposhta.ua/files/shares/out/houses.zip?_ga=2.213909844.272819342.1674050613-1387315609.1673613938&_gl=1*1obnqll*_ga*MTM4NzMxNTYwOS4xNjczNjEzOTM4*_ga_6400KY4HRY*MTY3NDA1MDYxMy4xMC4xLjE2NzQwNTE3ODUuNjAuMC4w";
 
     private readonly IRepositoryWrapper _repository;
+    private readonly StreetcodeDbContext _streetcodeContext;
 
     public WebParsingUtils(StreetcodeDbContext streetcodeContext)
     {
         _repository = new RepositoryWrapper(streetcodeContext);
+        _streetcodeContext = streetcodeContext;
     }
 
     public static async Task DownloadAndExtractAsync(
@@ -224,6 +228,10 @@ public class WebParsingUtils
                 await File.ReadAllLinesAsync(csvPath, Encoding.GetEncoding(1251)))
             .Skip(1)
             .Select(x => x.Split(';'));
+
+        // this part of code truncates Toponyms table
+        _streetcodeContext.Set<Toponym>().RemoveRange(_streetcodeContext.Set<Toponym>());
+        _streetcodeContext.SaveChanges();
 
         foreach (var row in rows)
         {

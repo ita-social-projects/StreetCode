@@ -24,7 +24,7 @@ using Streetcode.BLL.Services.Transactions;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
-using Streetcode.WebApi.Utils;
+using Hangfire;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -63,8 +63,6 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
 
-        services.AddHostedService<RepeatingService>();
-
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
     }
 
@@ -96,6 +94,13 @@ public static class ServiceCollectionExtensions
             opt.IncludeSubDomains = true;
             opt.MaxAge = TimeSpan.FromDays(30);
         });
+
+        services.AddHangfire(config =>
+        {
+            config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+        });
+
+        services.AddHangfireServer();
 
         services.AddLogging();
         services.AddControllers();

@@ -24,4 +24,17 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MediatRTests\AdditionalContent\" />
+    <Folder Include="MediatRTests\Media\" />
+    <Folder Include="MediatRTests\Partners\" />
+    <Folder Include="MediatRTests\Source\" />
+    <Folder Include="MediatRTests\StreetCode\Fact\" />
+    <Folder Include="MediatRTests\StreetCode\RelatedFigure\" />
+    <Folder Include="MediatRTests\StreetCode\Streetcode\" />
+    <Folder Include="MediatRTests\Timeline\" />
+    <Folder Include="MediatRTests\Toponyms\" />
+    <Folder Include="MediatRTests\Transactions\" />
+  </ItemGroup>
+
 </Project>

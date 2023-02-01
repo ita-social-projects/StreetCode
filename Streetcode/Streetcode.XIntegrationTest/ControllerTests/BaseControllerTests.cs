@@ -1,12 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
+
 
 namespace Streetcode.XIntegrationTest.ControllerTests
 {
-    internal class BaseControllerTests
+    
+    public class BaseControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
+        protected HttpClient _client;
+
+        protected string baseUrl = "https://localhost:5001/";
+
+        public BaseControllerTests(WebApplicationFactory<Program> factory)
+        {
+            _client = factory
+                .CreateClient() ;
+
+           
+        }
+
+       
+
     }
 }

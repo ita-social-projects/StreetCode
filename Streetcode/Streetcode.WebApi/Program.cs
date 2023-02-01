@@ -39,3 +39,6 @@ RecurringJob.AddOrUpdate<WebParsingUtils>(
 app.MapControllers();
 
 app.Run();
+public partial class Program
+{
+}

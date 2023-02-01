@@ -36,6 +36,8 @@ public static class MockFactRepository
 
         var mockRepo = new Mock<IRepositoryWrapper>();
 
+        //mockRepo.Setup();
+
         mockRepo.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),

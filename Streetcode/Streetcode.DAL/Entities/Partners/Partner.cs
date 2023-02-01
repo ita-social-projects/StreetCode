@@ -24,6 +24,8 @@ public class Partner
     [Required]
     public string TargetUrl { get; set; }
 
+    public string? UrlTitle { get; set; }
+
     public string? Description { get; set; }
 
     public Image? Logo { get; set; }

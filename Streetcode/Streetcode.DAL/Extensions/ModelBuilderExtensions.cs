@@ -467,7 +467,8 @@ public static class ModelBuilderExtensions
                     " Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні" +
                     " види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
                 LogoId = 12,
-                TargetUrl = "https://www.softserveinc.com/en-us"
+                TargetUrl = "https://www.softserveinc.com/en-us",
+                UrlTitle = "go to SoftServe page"
             },
             new Partner
             {
@@ -488,16 +489,16 @@ public static class ModelBuilderExtensions
             new PartnerSourceLink
             {
                 Id = 1,
-                Title = "LinkedIn",
-                LogoUrl = "https://play-lh.googleusercontent.com/kMofEFLjobZy_bCuaiDogzBcUT-dz3BBbOrIEjJ-hqOabjK8ieuevGe6wlTD15QzOqw",
-                TargetUrl = "https://www.linkedin.com/company/softserve/",
+                Title = "Twitter",
+                LogoType = LogoType.Twitter,
+                TargetUrl = "https://twitter.com/SoftServeInc",
                 PartnerId = 1
             },
             new PartnerSourceLink
             {
                 Id = 2,
                 Title = "Instagram",
-                LogoUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
+                LogoType = LogoType.Instagram,
                 TargetUrl = "https://www.instagram.com/softserve_people/",
                 PartnerId = 1
             },
@@ -505,7 +506,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Title = "facebook",
-                LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png",
+                LogoType = LogoType.Facebook,
                 TargetUrl = "https://www.facebook.com/SoftServeCompany",
                 PartnerId = 1
             });

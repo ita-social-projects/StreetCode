@@ -23,14 +23,14 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
             var art = await _repositoryWrapper
             .StreetcodeArtRepository
             .GetAllAsync(
-                predicate: s => s.StreetcodeId == request.streetcodeId,
+                predicate: s => s.StreetcodeId == request.StreetcodeId,
                 include: art => art
                     .Include(a => a.Art)
                     .Include(i => i.Art.Image) !);
 
             if (art is null)
             {
-                return Result.Fail(new Error($"Cannot find an art with corresponding streetcode id: {request.streetcodeId}"));
+                return Result.Fail(new Error($"Cannot find an art with corresponding streetcode id: {request.StreetcodeId}"));
             }
 
             var artDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(art);

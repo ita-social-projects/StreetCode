@@ -6,12 +6,12 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
 
-public class GetVideoByStreetcodeIdQueryHandler : IRequestHandler<GetVideoByStreetcodeIdQuery, Result<VideoDTO>>
+public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcodeIdQuery, Result<VideoDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetVideoByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetVideoByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -20,11 +20,11 @@ public class GetVideoByStreetcodeIdQueryHandler : IRequestHandler<GetVideoByStre
     public async Task<Result<VideoDTO>> Handle(GetVideoByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var video = await _repositoryWrapper.VideoRepository
-            .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.streetcodeId);
+            .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.StreetcodeId);
 
         if (video is null)
         {
-            return Result.Fail(new Error($"Cannot find a video by a streetcode id: {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cannot find any video by the streetcode id: {request.StreetcodeId}"));
         }
 
         var videoDto = _mapper.Map<VideoDTO>(video);

@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 {
-    public record GetStreetcodeArtByStreetcodeIdQuery(int streetcodeId) : IRequest<Result<IEnumerable<StreetcodeArtDTO>>>;
+    public record GetStreetcodeArtByStreetcodeIdQuery(int StreetcodeId) : IRequest<Result<IEnumerable<StreetcodeArtDTO>>>;
 }

@@ -6,12 +6,12 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 
-public class GetByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQuery, Result<IEnumerable<FactDTO>>>
+public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQuery, Result<IEnumerable<FactDTO>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetFactByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -24,7 +24,7 @@ public class GetByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQue
 
         if (fact is null)
         {
-            return Result.Fail(new Error($"Cannot find a fact by a streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find any fact by the streetcode id: {request.StreetcodeId}"));
         }
 
         var factDto = _mapper.Map<IEnumerable<FactDTO>>(fact);

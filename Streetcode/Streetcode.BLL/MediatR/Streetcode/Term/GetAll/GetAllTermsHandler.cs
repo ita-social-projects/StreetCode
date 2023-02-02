@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
@@ -21,8 +22,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
         {
             var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
 
-            var termDto = _mapper.Map<IEnumerable<TermDTO>>(terms);
+            if (terms is null)
+            {
+                return Result.Fail(new Error($"Cannot find any term"));
+            }
 
+            var termDto = _mapper.Map<IEnumerable<TermDTO>>(terms);
             return Result.Ok(termDto);
         }
     }

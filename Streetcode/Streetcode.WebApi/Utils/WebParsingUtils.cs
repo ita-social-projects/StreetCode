@@ -2,9 +2,6 @@
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-using System.Threading;
-using System.Xml;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Polly;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;

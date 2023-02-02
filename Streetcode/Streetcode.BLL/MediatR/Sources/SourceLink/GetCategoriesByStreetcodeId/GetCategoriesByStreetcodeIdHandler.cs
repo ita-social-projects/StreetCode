@@ -3,7 +3,6 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
@@ -24,14 +23,14 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
         var srcCategories = await _repositoryWrapper
             .SourceCategoryRepository
             .GetAllAsync(
-                predicate: sc => sc.Streetcodes.Any(s => s.Id == request.streetcodeId),
+                predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.SubCategories)
                     .Include(sc => sc.Image) !);
 
         if (srcCategories is null)
         {
-            return Result.Fail(new Error($"Cant find a source category  with this streetcode id {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cant find any source category with the streetcode id {request.StreetcodeId}"));
         }
 
         var mappedSrcCategories = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(srcCategories);

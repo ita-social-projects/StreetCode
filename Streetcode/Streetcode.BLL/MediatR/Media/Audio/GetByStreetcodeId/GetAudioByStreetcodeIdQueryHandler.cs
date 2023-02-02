@@ -20,11 +20,11 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
     public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var audio = await _repositoryWrapper.AudioRepository
-            .GetFirstOrDefaultAsync(audio => audio.StreetcodeId == request.streetcodeId);
+            .GetFirstOrDefaultAsync(audio => audio.StreetcodeId == request.StreetcodeId);
 
         if (audio is null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with the corresponding streetcode id: {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cannot find an audio with the corresponding streetcode id: {request.StreetcodeId}"));
         }
 
         var audioDto = _mapper.Map<AudioDTO>(audio);

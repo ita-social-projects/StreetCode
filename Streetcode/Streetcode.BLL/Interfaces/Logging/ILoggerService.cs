@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Streetcode.BLL.Interfaces.Logging
+﻿namespace Streetcode.BLL.Interfaces.Logging
 {
     public interface ILoggerService<out T>
     {

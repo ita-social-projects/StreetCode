@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
@@ -23,17 +22,22 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository
-            .GetSingleOrDefaultAsync(st => st.Id == request.streetcodeId);
+            .GetSingleOrDefaultAsync(st => st.Id == request.StreetcodeId);
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find a fact with corresponding streetcode id: {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}"));
         }
 
         var partners = await _repositoryWrapper.PartnersRepository
             .GetAllAsync(
                 predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id) || p.IsKeyPartner,
                 include: p => p.Include(pl => pl.PartnerSourceLinks));
+
+        if (partners is null)
+        {
+            return Result.Fail(new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}"));
+        }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
         return Result.Ok(value: partnerDtos);

@@ -30,4 +30,4 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
         var coordinatesDto = _mapper.Map<IEnumerable<StreetcodeCoordinateDTO>>(coordinates);
         return Result.Ok(coordinatesDto);
     }
-};
+}

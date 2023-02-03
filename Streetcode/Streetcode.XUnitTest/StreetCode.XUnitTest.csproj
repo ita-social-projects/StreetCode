@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="MediatRTests\AdditionalContent\" />
-    <Folder Include="MediatRTests\Media\" />
     <Folder Include="MediatRTests\Partners\" />
     <Folder Include="MediatRTests\Source\" />
     <Folder Include="MediatRTests\StreetCode\RelatedFigure\" />

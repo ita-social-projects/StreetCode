@@ -2,19 +2,10 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.Mapping.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
-using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;

@@ -23,8 +23,9 @@ public class GetByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async void GetFactById_ShouldReturnSuccessfullyExistingId(int streetCodeId)
+    public async Task GetFactById_ShouldReturnSuccessfullyExistingId(int streetCodeId)
     {
+        //Act
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
@@ -37,10 +38,12 @@ public class GetByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
             .Returns(GetListFactDTO());
 
+        //Arrange
         var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
+        //Assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
         Assert.NotEmpty(result.Value);
@@ -48,8 +51,9 @@ public class GetByStreetcodeIdTest
 
     [Theory]
     [InlineData(2)]
-    public async void GetFactById_ShouldReturnSuccessfullyType(int streetCodeId)
+    public async Task GetFactById_ShouldReturnSuccessfullyType(int streetCodeId)
     {
+        //Act
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
@@ -62,13 +66,42 @@ public class GetByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
             .Returns(GetListFactDTO());
 
+        //Arrange
         var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
+        //Assert
         Assert.NotNull(result);
         Assert.True(result.IsSuccess);
         Assert.IsType<List<FactDTO>>(result.ValueOrDefault);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    public async Task GetFactById_ShouldThrowErrorWhenIdNotExist(int streetCodeId)
+    {
+        //Act
+        _mockRepository.Setup(x => x.FactRepository
+              .GetAllAsync(
+                  It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
+              IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
+              .ReturnsAsync((List<DAL.Entities.Streetcode.TextContent.Fact>)null);
+
+        _mockMapper
+            .Setup(x => x
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
+            .Returns(GetListFactDTO());
+
+        //Arrange
+        var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
+
+        //Assert
+        Assert.True(result.IsFailed);
+        Assert.Equal($"Cannot find a fact by a streetcode id: {streetCodeId}", result.Errors.First().Message);
     }
 
     private static IQueryable<DAL.Entities.Streetcode.TextContent.Fact> GetListFacts()

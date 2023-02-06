@@ -28,12 +28,25 @@ public class GetAllVideosTest
     [Fact]
     public async Task GetAllFacts_ShouldReturnSuccessfullyType()
     {
-        (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
+        //Act
+        _mockRepository.Setup(x => x.VideoRepository
+              .GetAllAsync(
+                  It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
+                    It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
+              IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
+              .ReturnsAsync(GetListVideos());
 
+        _mockMapper
+            .Setup(x => x
+            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<DAL.Entities.Media.Video>>()))
+            .Returns(GetListVideosDTO());
+
+        //Arrange
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
+        //Assert
         Assert.NotNull(result);
         Assert.IsType<List<VideoDTO>>(result.ValueOrDefault);
     }
@@ -41,32 +54,29 @@ public class GetAllVideosTest
     [Fact]
     public async Task GetAllFacts_ShouldReturnSuccessfullyCountMatch()
     {
-        (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
-
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
-
-        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
-
-        Assert.NotNull(result);
-        Assert.Equal(GetListVideosDTO().Count, result.Value.Count());
-    }
-
-    private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(Mock<IMapper> injectedMapper, Mock<IRepositoryWrapper> injectedReppo)
-    {
-        injectedReppo.Setup(x => x.VideoRepository
+        //Act
+        _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
               IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
               .ReturnsAsync(GetListVideos());
 
-        injectedMapper
+        _mockMapper
             .Setup(x => x
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<DAL.Entities.Media.Video>>()))
             .Returns(GetListVideosDTO());
 
-        return (injectedMapper, injectedReppo);
+        //Arrange
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+
+        //Assert
+        Assert.NotNull(result);
+        Assert.Equal(GetListVideosDTO().Count, result.Value.Count());
     }
+
     private static IQueryable<DAL.Entities.Media.Video> GetListVideos()
     {
         var videos = new List<DAL.Entities.Media.Video>

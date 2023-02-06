@@ -24,12 +24,15 @@ public class GetAllFactsTest
     [Fact]
     public async Task GetAllFacts_ShouldReturnSuccessfullyType()
     {
+        //Act
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
+        //Arrange
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
+        //Assert
         Assert.NotNull(result);
         Assert.IsType<List<FactDTO>>(result.ValueOrDefault);
     }
@@ -37,12 +40,15 @@ public class GetAllFactsTest
     [Fact]
     public async Task GetAllFacts_ShouldReturnSuccessfullyCountMatch()
     {
+        //Act
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
+        //Arrange
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
+        //Assert
         Assert.NotNull(result);
         Assert.Equal(GetListFacts().Count(), result.Value.Count());
     }

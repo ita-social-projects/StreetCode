@@ -11,7 +11,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;
 public class DeleteFactTest
 {
     private Mock<IRepositoryWrapper> _repository;
-    private Mock<IMapper> _mockMapper;
 
     public DeleteFactTest()
     {
@@ -38,13 +37,34 @@ public class DeleteFactTest
                 Id = id
             }));
 
-        _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
-
         var handler = new DeleteFactHandler(_repository.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 
         Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
+    }
+
+    [Theory]
+    [InlineData(2)]
+    public async Task DeleteFact_ShouldReturnNull(int id)
+    {
+        _repository.Setup(x => x.FactRepository
+        .GetFirstOrDefaultAsync(
+               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
+                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
+            .ReturnsAsync((DAL.Entities.Streetcode.TextContent.Fact)null);
+
+        _repository.Setup(x => x.FactRepository
+            .Delete(new DAL.Entities.Streetcode.TextContent.Fact()
+            {
+                Id = id
+            }));
+
+        var handler = new DeleteFactHandler(_repository.Object);
+
+        var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
+
+        Assert.Equal($"Cannot find a fact with corresponding categoryId: {id}", result.Errors.First().Message);
     }
 }

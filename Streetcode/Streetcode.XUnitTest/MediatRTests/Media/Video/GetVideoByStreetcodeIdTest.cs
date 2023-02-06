@@ -53,7 +53,7 @@ public class GetVideoByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyNotExistingId(int streetcodeId)
+    public async Task GetById_ShouldThrowErrorWhenIdNotExist(int streetcodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository

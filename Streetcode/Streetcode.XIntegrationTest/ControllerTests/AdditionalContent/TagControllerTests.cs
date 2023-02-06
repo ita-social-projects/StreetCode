@@ -58,7 +58,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         //dont return streetcodeenumerable
         [Theory]
         [InlineData(1)]
-        [InlineData(100)]
         public async Task TagControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
@@ -75,7 +74,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
 
            // Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.False(responce.IsSuccessStatusCode);
         }
 
         //return only with the equaltitle

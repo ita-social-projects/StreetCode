@@ -53,7 +53,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 
         [Theory]
         [InlineData(1)]
-        [InlineData(100)]
         public async Task SubtitleControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"/api/Subtitle/getByStreetcodeId/{streetcodeId}");

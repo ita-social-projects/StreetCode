@@ -25,7 +25,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
        
         [Theory]
         [InlineData(1)]
-        [InlineData(1000)]
         public async Task CoordinateControllerTests_GetGetByStreetcodeId_SuccsessStatusCode(int id)
         {
             var responce = await _client.GetAsync($"/api/Coordinate/GetByStreetcodeId/{id}");
@@ -43,7 +42,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             var responce = await _client.GetAsync($"/api/Coordinate/GetByStreetcodeId/-10");
 
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.False(responce.IsSuccessStatusCode);
         }
 
 

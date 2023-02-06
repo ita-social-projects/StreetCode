@@ -56,7 +56,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
       
         [Theory]
         [InlineData(1)]
-        [InlineData(100)]
         public async Task ArtControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");

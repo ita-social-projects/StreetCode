@@ -9,12 +9,12 @@ namespace Streetcode.WebApi.Controllers.Source;
 public class SourcesController : BaseApiController
 {
     /*
-    [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
-    {
-        return HandleResult(await Mediator.Send(new object()));
-    }
-    */
+[HttpGet]
+public async Task<IActionResult> GetAllCategories()
+{
+   return HandleResult(await Mediator.Send(new object()));
+}
+*/
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetCategoryById([FromRoute] int id)

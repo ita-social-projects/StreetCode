@@ -344,3 +344,4 @@ healthchecksdb
 /Streetcode/Streetcode.WebApi/appsettings.json
 /Streetcode/Streetcode.WebApi/appsettings.Local.json
 /Streetcode/Streetcode.XIntegrationTest/ControllerTests/AdditionalContent/CoordinateControllerTests.cs
+/Streetcode/Streetcode.WebApi/appsettings.IntegrationTests.json

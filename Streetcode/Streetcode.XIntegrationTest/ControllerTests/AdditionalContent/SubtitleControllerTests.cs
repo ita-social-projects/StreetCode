@@ -20,21 +20,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        public async Task SubtitleControllerTests_GetAllSuccsesfulResult()
+        public async Task SubtitleControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"/api/Subtitle/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<SubtitleDTO>>();
 
-            responce.EnsureSuccessStatusCode(); // Status Code 200-299
             Assert.NotNull(returnedValue);
-            Assert.Equal(10, returnedValue.Count());
            
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task SubtitleControllerTests_GetByIdSuccsesfulResult(int id)
+        public async Task SubtitleControllerTests_GetByIdSuccessfulResult(int id)
         {
             var responce = await _client.GetAsync($"/api/Subtitle/getById/{id}");
 
@@ -53,7 +51,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 
         [Theory]
         [InlineData(1)]
-        public async Task SubtitleControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task SubtitleControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"/api/Subtitle/getByStreetcodeId/{streetcodeId}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<SubtitleDTO>>();

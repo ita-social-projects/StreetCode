@@ -18,7 +18,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         
 
         [Fact]
-        public async Task VideoControllerTests_GetAllSuccsesfulResult()
+        public async Task VideoControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
@@ -29,7 +29,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
         }
         [Fact]
-        public async Task VideoControllerTests_GetByIdSuccsesfulResult()
+        public async Task VideoControllerTests_GetByIdSuccessfulResult()
         {
             int id = 1;
             var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
@@ -54,17 +54,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
         [Theory]
         [InlineData(1)]
-        public async Task VideoControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task VideoControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<VideoDTO>>();
+            var returnedValue = await responce.Content.ReadFromJsonAsync<VideoDTO>();
 
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(video=>video.StreetcodeId == streetcodeId));
+            Assert.True(returnedValue.StreetcodeId == streetcodeId);
             Assert.True(responce.IsSuccessStatusCode);
         }
         [Fact]
-        public async Task VideoControllerTests_GetByStreetcodeIdIcorrectBadRequest()
+        public async Task VideoControllerTests_GetByStreetcodeIdIncorrectBadRequest()
         {
             int streetcodeId = -100;
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");

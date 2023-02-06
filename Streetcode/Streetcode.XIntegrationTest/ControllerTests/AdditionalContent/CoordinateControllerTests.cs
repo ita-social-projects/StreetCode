@@ -29,7 +29,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             var responce = await _client.GetAsync($"/api/Coordinate/GetByStreetcodeId/{id}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<StreetcodeCoordinateDTO>>();
-            responce.EnsureSuccessStatusCode(); // Status Code 200-299
+            responce.EnsureSuccessStatusCode();
             Assert.NotNull(returnedValue);
             if (returnedValue.Count() != 0)
             {

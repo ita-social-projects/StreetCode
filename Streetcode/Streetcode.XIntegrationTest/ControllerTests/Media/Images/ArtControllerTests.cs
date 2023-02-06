@@ -20,7 +20,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         }
         [Fact]
-        public async Task ArtControllerTests_GetAllSuccsesfulResult()
+        public async Task ArtControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
@@ -31,7 +31,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         }
         [Fact]
-        public async Task ArtControllerTests_GetByIdSuccsesfulResult()
+        public async Task ArtControllerTests_GetByIdSuccessfulResult()
         {
             int id = 1;
             var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
@@ -56,14 +56,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
       
         [Theory]
         [InlineData(1)]
-        public async Task ArtControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task ArtControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<ArtDTO>>();
-
+            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable< ArtDTO>>();
+            Assert.True(responce.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
             Assert.True(returnedValue.All(t => t.Streetcodes.Any(s => s.Id == streetcodeId)));
-            Assert.True(responce.IsSuccessStatusCode);
+           
         }
 
     }

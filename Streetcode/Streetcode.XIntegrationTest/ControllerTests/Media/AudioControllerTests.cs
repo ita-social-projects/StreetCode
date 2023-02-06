@@ -22,7 +22,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         }
 
         [Fact]
-        public async Task AudioControllerTests_GetAllSuccsesfulResult()
+        public async Task AudioControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
@@ -33,7 +33,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
         }
         [Fact]
-        public async Task AudioControllerTests_GetByIdSuccsesfulResult()
+        public async Task AudioControllerTests_GetByIdSuccessfulResult()
         {
             int id = 1;
             var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
@@ -58,7 +58,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
         [Theory]
         [InlineData(1)]
-        public async Task AudioControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task AudioControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<AudioDTO>();
@@ -68,7 +68,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.True(responce.IsSuccessStatusCode);
         }
         [Fact]
-        public async Task AudioControllerTests_GetByStreetcodeIdIcorrectBadRequest()
+        public async Task AudioControllerTests_GetByStreetcodeIdIncorrectBadRequest()
         {
             int streetcodeId = -100;
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");

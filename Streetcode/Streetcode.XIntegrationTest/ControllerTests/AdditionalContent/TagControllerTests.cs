@@ -22,18 +22,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        public async Task TagControllerTests_GetAllSuccsesfulResult()
+        public async Task TagControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
+
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<TagDTO>>();
 
-            responce.EnsureSuccessStatusCode(); // Status Code 200-299
             Assert.NotNull(returnedValue);
 
         }
         [Fact]
-        public async Task TagControllerTests_GetByIdSuccsesfulResult()
+        public async Task TagControllerTests_GetByIdSuccessfulResult()
         {
             int id = 1;
             var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
@@ -58,7 +58,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         //dont return streetcodeenumerable
         [Theory]
         [InlineData(1)]
-        public async Task TagControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task TagControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<TagDTO>>();
@@ -73,14 +73,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             int streetcodeId = -100;
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
 
-           // Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
             Assert.False(responce.IsSuccessStatusCode);
         }
 
         //return only with the equaltitle
         [Theory]
         [InlineData("writer")]
-        public async Task TagControllerTests_GetByTitleSuccsesfulResult(string title)
+        public async Task TagControllerTests_GetByTitleSuccessfulResult(string title)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetTagByTitle/{title}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<TagDTO>();

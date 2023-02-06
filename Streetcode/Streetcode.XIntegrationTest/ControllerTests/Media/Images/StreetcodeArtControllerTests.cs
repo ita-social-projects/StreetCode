@@ -24,7 +24,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         [Theory]
         [InlineData(1)]
-        public async Task StreetcodeArtControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task StreetcodeArtControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<StreetcodeArtDTO>>();

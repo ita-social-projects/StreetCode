@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         }
         [Fact]
-        public async Task ImageControllerTests_GetAllSuccsesfulResult()
+        public async Task ImageControllerTests_GetAllSuccessfulResult()
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
             Assert.True(responce.IsSuccessStatusCode);
@@ -30,7 +30,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         }
         [Fact]
-        public async Task ImageControllerTests_GetByIdSuccsesfulResult()
+        public async Task ImageControllerTests_GetByIdSuccessfulResult()
         {
             int id = 1;
             var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
@@ -56,7 +56,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Theory]
         [InlineData(1)]
         [InlineData(100)]
-        public async Task ImageControllerTests_GetByStreetcodeIdSuccsesfulResult(int streetcodeId)
+        public async Task ImageControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
         {
             var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
             var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<ImageDTO>>();

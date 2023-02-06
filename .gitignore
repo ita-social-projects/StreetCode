@@ -341,3 +341,6 @@ healthchecksdb
 
 # Nuke temp
 *.nuke/temp
+/Streetcode/Streetcode.WebApi/appsettings.json
+/Streetcode/Streetcode.WebApi/appsettings.Local.json
+/Streetcode/Streetcode.XIntegrationTest/ControllerTests/AdditionalContent/CoordinateControllerTests.cs

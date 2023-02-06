@@ -341,3 +341,7 @@ healthchecksdb
 
 # Nuke temp
 *.nuke/temp
+Streetcode/Streetcode.DAL/data.csv
+Streetcode/Streetcode.DAL/houses.csv
+Streetcode/Streetcode.WebApi/appsettings.Local.json
+Streetcode/.editorconfig

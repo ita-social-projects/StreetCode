@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.9.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.13" />
@@ -24,8 +24,10 @@
     </PackageReference>
   </ItemGroup>
 
+	
   <ItemGroup>
     <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
-
+	
+	
 </Project>

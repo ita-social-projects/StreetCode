@@ -19,6 +19,12 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.streetcodeId)) is null)
+            {
+                return Result.Fail(
+                    new Error($"Cannot find a arts by a streetcode id: {request.streetcodeId}, because such streetcode doesn`t exist"));
+            }
+
             var art = await _repositoryWrapper.ArtRepository
                 .GetAllAsync(f => f.StreetcodeArts.Any(s => s.StreetcodeId == request.streetcodeId));
 

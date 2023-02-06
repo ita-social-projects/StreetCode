@@ -10,12 +10,13 @@ using Xunit;
 using System.Text.Json;
 using System.Net.Http.Json;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.TextContent
 {
-    public class FactControllerTests : BaseControllerTests, IClassFixture<WebApplicationFactory<Program>>
+    public class FactControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public FactControllerTests(WebApplicationFactory<Program> factory) : base(factory)
+        public FactControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
 
         }

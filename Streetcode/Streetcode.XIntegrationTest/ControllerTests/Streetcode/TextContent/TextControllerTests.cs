@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,9 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.TextContent
 {
-    public class TextControllerTests : BaseControllerTests, IClassFixture<WebApplicationFactory<Program>>
+    public class TextControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public TextControllerTests(WebApplicationFactory<Program> factory) : base(factory)
+        public TextControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
 
         }

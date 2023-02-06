@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.WebApi.Controllers.Source;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,11 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Source
 {
-    public class SourceControllerTests : BaseControllerTests, IClassFixture<WebApplicationFactory<Program>>
+    public class SourceControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
   
 
-        public SourceControllerTests(WebApplicationFactory<Program> factory) : base(factory)
+        public SourceControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
         {
 
         }
@@ -83,10 +84,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Source
             var response = await _client.GetAsync($"/api/Sources/GetSubCategoriesByCategoryId/{categoryId}");
             var returnedValue = await response.Content.ReadFromJsonAsync <IEnumerable<SourceLinkSubCategoryDTO>>();
             Assert.NotNull(returnedValue);
-            Assert.True(response.IsSuccessStatusCode);
-            
+            Assert.True(response.IsSuccessStatusCode);           
 
         }
+
 
     }
 }

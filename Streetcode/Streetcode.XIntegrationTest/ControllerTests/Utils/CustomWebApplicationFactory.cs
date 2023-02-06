@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Streetcode.DAL.Persistence;
+using Streetcode.WebApi.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -17,89 +18,67 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
     {
+        protected override void ConfigureClient(HttpClient client)
+        {
+            
+            base.ConfigureClient(client);
+
+        }
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder
-                   .UseEnvironment("IntegrationTests");
 
-            builder.ConfigureServices(async services =>
+            //builder.ConfigureServices(async services =>
+            //{
+            //    var dbContextDescriptor = services.SingleOrDefault(
+            //    d => d.ServiceType ==
+            //        typeof(DbContextOptions<StreetcodeDbContext>));
+
+            //    services.Remove(dbContextDescriptor);
+
+
+
+
+            //    var dbConnectionDescriptor = services.SingleOrDefault(
+            //        d => d.ServiceType ==
+            //            typeof(DbConnection));
+
+            //    services.Remove(dbConnectionDescriptor);
+            //    File.WriteAllText("C:\\Users\\Надія\\Desktop\\connString2.txt", $"{DateTime.Now.Second}:{DateTime.Now.Millisecond}");
+            //    services.AddSingleton<DbConnection>(container =>
+            //    {
+            //        var connection
+            //        = new SqlConnection(
+
+            //            // connectionString
+            //             "Server=DESKTOP-I7Q35NQ\\SQLEXPRESS;Database=_TestStreetcodeDb;Trusted_Connection=True;TrustServerCertificate=True;User Id=sa;Password=Admin@1234;MultipleActiveResultSets=true;"
+            //            );
+            //        connection.Open();
+
+            //        return connection;
+            //    });
+
+            //    services.AddDbContext<StreetcodeDbContext>((container, options) =>
+            //    {
+
+            //        var connection = container.GetRequiredService<DbConnection>();
+            //        options.UseSqlServer(connection);
+
+            //    });
+
+
+            //});
+            builder.ConfigureAppConfiguration(config =>
             {
+                var integrationConfig = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.IntegrationTests.json")
+                    .Build();
 
-                builder.ConfigureAppConfiguration(
-                    async (builderContext, configBuilder) =>
-                    {
-
-                        var dbContextDescriptor = services.SingleOrDefault(
-                        d => d.ServiceType ==
-                            typeof(DbContextOptions<StreetcodeDbContext>));
-
-                        services.Remove(dbContextDescriptor);
-
-                        var dbConnectionDescriptor = services.SingleOrDefault(
-                            d => d.ServiceType ==
-                                typeof(DbConnection));
-
-                        services.Remove(dbConnectionDescriptor);
-
-                        services.AddSingleton<DbConnection>(container =>
-                        {
-                            var connection
-                            = new SqlConnection(builderContext.Configuration.GetConnectionString("DefaultTestConnection"));
-                            connection.Open();
-
-                            return connection;
-                        });
-
-                        services.AddDbContext<StreetcodeDbContext>((container, options) =>
-                        {
-
-                            var connection = container.GetRequiredService<DbConnection>();
-                            options.UseSqlServer(connection,opt=>opt.EnableRetryOnFailure());
-                            
-                        });
-
-                        
-
-                        //using (var scope = services.BuildServiceProvider().CreateScope())
-                        //{
-                        //    using (var appContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>())
-                        //    {
-                        //        try
-                        //        {
-                        //            Console.WriteLine("\n\n\n\nyyyyyyyyy\n");
-                        //            appContext.Database.EnsureCreated();
-                        //            var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-                        //            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
-
-                        //            var scriptFiles = Directory.GetFiles($"../../../../Streetcode.DAL/Persistence/Scripts/");
-
-                        //            await streetcodeContext.Database.EnsureDeletedAsync();
-                        //            await streetcodeContext.Database.MigrateAsync();
-
-                        //            //var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
-
-                        //            //foreach (var task in filesContexts)
-                        //            //{
-                        //            //    await streetcodeContext.Database.ExecuteSqlRawAsync(task);
-                        //            //}
-                        //        }
-                        //        catch (Exception ex)
-                        //        {
-                        //            Console.WriteLine("\n\n\n\nereeerr\n");
-                        //            throw;
-                        //        }
-                        //    }
-                        //}
-                    });
-
-
-
-
-
+                config.AddConfiguration(integrationConfig);
             });
 
 
-        
+
+
 
         }
     }

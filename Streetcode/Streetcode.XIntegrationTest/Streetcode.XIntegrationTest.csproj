@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
-
+	
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.13" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
@@ -21,8 +21,10 @@
     </PackageReference>
   </ItemGroup>
 
+	
   <ItemGroup>
     <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
-
+	
+	
 </Project>

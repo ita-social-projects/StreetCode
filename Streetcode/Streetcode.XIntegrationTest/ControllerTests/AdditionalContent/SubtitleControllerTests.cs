@@ -28,6 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 
             responce.EnsureSuccessStatusCode(); // Status Code 200-299
             Assert.NotNull(returnedValue);
+            Assert.Equal(10, returnedValue.Count());
            
         }
 

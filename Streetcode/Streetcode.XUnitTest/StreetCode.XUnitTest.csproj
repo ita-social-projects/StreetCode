@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="coverlet.collector" Version="3.2.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,7 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MediatRTests\AdditionalContent\" />
     <Folder Include="MediatRTests\Media\" />
     <Folder Include="MediatRTests\Partners\" />
     <Folder Include="MediatRTests\Source\" />
@@ -35,6 +35,11 @@
     <Folder Include="MediatRTests\Timeline\" />
     <Folder Include="MediatRTests\Toponyms\" />
     <Folder Include="MediatRTests\Transactions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
+    <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,77 +11,68 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 {
-    public class GetTagByIdRequestHandlerTests
+    public class GetSubtitleByIdRequestHandlerTests
     {
-        [Theory]
-        [InlineData(1)]
-        public async Task GetSubtitlesById_ReturnElement(int id)
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+
+        public GetSubtitleByIdRequestHandlerTests()
+        {
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+        }
+
+        private const int _id = 1;
+
+        private readonly Subtitle subtitle = new Subtitle { Id = _id };
+        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = _id };
+
+        [Fact]
+        public async Task GetSubtitlesById_ReturnElement()
         {
             //Arrange
-            var mockRepo = new Mock<IRepositoryWrapper>();
-
-            mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+            _mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(new Subtitle { Id = 1 });
+                .ReturnsAsync(subtitle);
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
-                .Returns((Subtitle source) =>
-                {
-                    return new SubtitleDTO
-                    {
-                        Id = source.Id
-                    };
-                });
+            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
+                .Returns(subtitleDTO);
 
-            var handler = new GetSubtitleByIdHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
             
             //Act
-            var result = await handler.Handle(new GetSubtitleByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitleByIdQuery(_id), CancellationToken.None);
 
             //Assert
-
-            Assert.NotNull(result.Value);
-
             Assert.IsType<SubtitleDTO>(result.Value);
 
-            Assert.True(result.Value.Id.Equals(id));
+            Assert.True(result.Value.Id.Equals(_id));
         }
 
-        [Theory]
-        [InlineData(-1)]
-        public async Task GetSubtitlesById_ReturnsNoElements(int id)
+        [Fact]
+        public async Task GetSubtitlesById_ReturnsNoElements()
         {
             //Arrange
-            var mockRepo = new Mock<IRepositoryWrapper>();
-
-            mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+            _mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
             It.IsAny<Expression<Func<Subtitle, bool>>>(),
             It.IsAny<Func<IQueryable<Subtitle>,
             IIncludableQueryable<Subtitle, object>>>()))
             .ReturnsAsync(new Subtitle()); //returns default
 
-            var mockMapper = new Mock<IMapper>();
+            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
+                .Returns(new SubtitleDTO());
 
-            mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
-                .Returns((Subtitle source) =>
-                {
-                    return new SubtitleDTO
-                    {
-                        Id = source.Id
-                    };
-                });
-
-            var handler = new GetSubtitleByIdHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             //Act
-            var result = await handler.Handle(new GetSubtitleByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitleByIdQuery(_id), CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
-            Assert.False(result.Value.Id.Equals(id));
+
+            Assert.False(result.Value.Id.Equals(_id));
         }
     }
 }

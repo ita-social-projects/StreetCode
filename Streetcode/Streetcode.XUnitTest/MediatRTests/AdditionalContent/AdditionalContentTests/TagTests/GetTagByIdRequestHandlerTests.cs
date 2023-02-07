@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
@@ -18,74 +12,76 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetTagByIdRequestHandlerTests
     {
-        [Theory]
-        [InlineData(1)]
-        public async Task GetTagById_ReturnElement(int id)
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+
+        public GetTagByIdRequestHandlerTests()
+        {
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+        }
+
+        private const int _id = 1;
+
+        private readonly Tag tag = new Tag
+        {
+            Id = 1,
+            Title = "some title 1"
+        };
+        private readonly TagDTO tagDTO = new TagDTO
+        {
+            Id = 1,
+            Title = "some title 1"
+        };
+
+        [Fact]
+        public async Task GetTagById_ReturnElement()
         {
             //Arrange
-            var mockRepo = new Mock<IRepositoryWrapper>();
-
-            mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
+            _mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Tag, bool>>>(),
                 It.IsAny<Func<IQueryable<Tag>,
                 IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(new Tag { Id = 1 });
+                .ReturnsAsync(tag);
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
-                .Returns((Tag source) =>
-                {
-                    return new TagDTO
-                    {
-                        Id = source.Id
-                    };
-                });
+            _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
+                .Returns(tagDTO);
 
-            var handler = new GetTagByIdHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new GetTagByIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             //Act
-            var result = await handler.Handle(new GetTagByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByIdQuery(_id), CancellationToken.None);
 
             //Assert
             Assert.NotNull(result.Value);
 
             Assert.IsType<TagDTO>(result.Value);
 
-            Assert.True(result.Value.Id.Equals(id));
+            Assert.True(result.Value.Id.Equals(_id));
         }
 
-        [Theory]
-        [InlineData(-1)]
-        public async Task GetTagById_ReturnsNoElements(int id)
+        [Fact]
+        public async Task GetTagById_ReturnsNoElements()
         {
             //Arrange
-            var mockRepo = new Mock<IRepositoryWrapper>();
-
-            mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
+            _mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
             It.IsAny<Expression<Func<Tag, bool>>>(),
             It.IsAny<Func<IQueryable<Tag>,
             IIncludableQueryable<Tag, object>>>()))
             .ReturnsAsync(new Tag()); //returns default
 
-            var mockMapper = new Mock<IMapper>();
+            _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
+                .Returns(new TagDTO());
 
-            mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
-                .Returns((Tag source) =>
-                {
-                    return new TagDTO
-                    {
-                        Id = source.Id
-                    };
-                });
-
-            var handler = new GetTagByIdHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new GetTagByIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             //Act
-            var result = await handler.Handle(new GetTagByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByIdQuery(_id), CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
-            Assert.False(result.Value.Id.Equals(id));
+
+            Assert.NotEqual(result.Value.Id, _id);
         }
     }
 }

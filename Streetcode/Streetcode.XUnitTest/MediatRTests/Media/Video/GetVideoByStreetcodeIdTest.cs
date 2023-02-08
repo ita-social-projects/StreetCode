@@ -31,20 +31,18 @@ public class GetVideoByStreetcodeIdTest
                It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
-            .ReturnsAsync(new Video()
-            {
-                Id = streetcodeId
-            });
+            .ReturnsAsync(GetVideo(streetcodeId));
 
         _mockMapper
             .Setup(x => x
             .Map<VideoDTO>(It.IsAny<Video>()))
-            .Returns(new VideoDTO { Id = streetcodeId });
+            .Returns(GetVideoDTO(streetcodeId));
 
         //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
-        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
+            CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -64,22 +62,20 @@ public class GetVideoByStreetcodeIdTest
                It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
-            .ReturnsAsync((Video)null);
+            .ReturnsAsync(GetVideoWithNotExistingId());
 
         _mockMapper
             .Setup(x => x
             .Map<VideoDTO>(It.IsAny<Video>()))
-            .Returns((DAL.Entities.Streetcode.TextContent.Fact video) =>
-            {
-                return new VideoDTO { Id = video.Id };
-            });
+            .Returns(GetVideoDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any video by the streetcode id: {streetcodeId}";
 
         //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
-        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
+            CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -99,25 +95,46 @@ public class GetVideoByStreetcodeIdTest
                It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
-            .ReturnsAsync(new Video()
-            {
-                Id = streetcodeId
-            });
+            .ReturnsAsync(GetVideo(streetcodeId));
 
         _mockMapper
              .Setup(x => x
              .Map<VideoDTO>(It.IsAny<Video>()))
-             .Returns(new VideoDTO { Id = streetcodeId });
+             .Returns(GetVideoDTO(streetcodeId));
 
         //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
-        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
+            CancellationToken.None);
 
         //Assert
         Assert.Multiple(
             () => Assert.NotNull(result.ValueOrDefault),
             () => Assert.IsType<VideoDTO>(result.ValueOrDefault)
         );
+    }
+
+    private static VideoDTO GetVideoDTO(int id)
+    {
+        return new VideoDTO()
+        {
+            Id = id
+        };
+    }
+    private static Video GetVideo(int id)
+    {
+        return new Video()
+        {
+            Id = id
+        };
+    }
+    private static VideoDTO? GetVideoDTOWithNotExistingId()
+    {
+        return null;
+    }
+    private static Video? GetVideoWithNotExistingId()
+    {
+        return null;
     }
 }

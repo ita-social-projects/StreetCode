@@ -58,6 +58,33 @@ public class GetAllVideosTest
         );
     }
 
+    [Fact]
+    public async Task ShouldThrowExeption_ReppoReturnNull()
+    {
+        //Arrange
+        _mockRepository.Setup(x => x.VideoRepository
+              .GetAllAsync(
+                  It.IsAny<Expression<Func<Video, bool>>>(),
+                    It.IsAny<Func<IQueryable<Video>,
+              IIncludableQueryable<Video, object>>>()))
+              .ReturnsAsync(GetVideosWithNotExistingId());
+
+        _mockMapper
+            .Setup(x => x
+            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
+            .Returns(GetVideosDTOWithNotExistingId());
+
+        var expectedError = "Cannot find any videos";
+
+        //Act
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+
+        //Assert
+        Assert.Equal(expectedError, result.Errors.First().Message);
+    }
+
     private static (Mock<IRepositoryWrapper> _mockRepository, Mock<IMapper>  _mockMapper) MockRepoAndMapper(
         Mock<IRepositoryWrapper> _mockRepository,
         Mock<IMapper> _mockMapper) 
@@ -111,5 +138,13 @@ public class GetAllVideosTest
         };
 
         return videosDTO;
+    }
+    private static List<Video>? GetVideosWithNotExistingId()
+    {
+        return null;
+    }
+    private static List<VideoDTO>? GetVideosDTOWithNotExistingId()
+    {
+        return null;
     }
 }

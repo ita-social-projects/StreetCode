@@ -24,7 +24,7 @@ public class GetFactByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetFactById_ShouldReturnSuccessfullyExistingId(int streetCodeId)
+    public async Task ShouldReturnSuccessfully_ExistingId(int streetCodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.FactRepository

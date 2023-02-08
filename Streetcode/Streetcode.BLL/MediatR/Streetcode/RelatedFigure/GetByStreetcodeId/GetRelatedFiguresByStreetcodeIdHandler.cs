@@ -22,44 +22,53 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
     public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
-
-        if (relatedFigureIds is null)
+        try
         {
-            return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+            var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
+
+            if (relatedFigureIds is null)
+            {
+                return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+            }
+
+            var relatedFigures = await _repositoryWrapper.StreetcodeRepository
+                .GetAllAsync(
+                    predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
+                    include: scl => scl
+                        .Include(sc => sc.Images)
+                        .Include(sc => sc.Tags));
+
+            if (relatedFigures is null)
+            {
+                return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+            }
+
+            var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
+            return Result.Ok(mappedRelatedFigures);
         }
-
-        var relatedFigures = await _repositoryWrapper.StreetcodeRepository
-            .GetAllAsync(
-                predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
-                include: scl => scl
-                    .Include(sc => sc.Images)
-                    .Include(sc => sc.Tags));
-
-        if (relatedFigures is null)
+        catch (ArgumentNullException ex)
         {
-            return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error(ex.Message));
         }
-
-        var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
-        return Result.Ok(mappedRelatedFigures);
     }
 
     private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)
     {
-        try
-        {
-            var observerIds = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.TargetId == StreetcodeId).Select(o => o.ObserverId);
+        var observers = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.TargetId == StreetcodeId);
 
-            var targetIds = _repositoryWrapper.RelatedFigureRepository
-                .FindAll(f => f.ObserverId == StreetcodeId).Select(t => t.TargetId);
+        var targets = _repositoryWrapper.RelatedFigureRepository
+            .FindAll(f => f.ObserverId == StreetcodeId);
 
-            return observerIds.Union(targetIds).Distinct();
-        }
-        catch (ArgumentNullException)
+        if (observers == null || targets == null)
         {
-            return null;
+            throw new ArgumentNullException(message: $"Cannot find any related figures by a streetcode id: {StreetcodeId}", innerException: null);
         }
+
+        var observerIds = observers.Select(o => o.ObserverId);
+
+        var targetIds = targets.Select(t => t.TargetId);
+
+        return observerIds.Union(targetIds).Distinct();
     }
 }

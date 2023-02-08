@@ -47,9 +47,11 @@ public class GetVideoByStreetcodeIdTest
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.Equal(result.Value.Id, streetcodeId);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.Equal(result.Value.Id, streetcodeId)
+        );
     }
 
     [Theory]
@@ -78,9 +80,11 @@ public class GetVideoByStreetcodeIdTest
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Equal($"Cannot find a video by a streetcode id: {streetcodeId}", result.Errors.First().Message);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsFailed),
+            () => Assert.Equal($"Cannot find a video by a streetcode id: {streetcodeId}", result.Errors.First().Message)
+        );
     }
 
     [Theory]
@@ -109,7 +113,9 @@ public class GetVideoByStreetcodeIdTest
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result.ValueOrDefault);
-        Assert.IsType<VideoDTO>(result.ValueOrDefault);
+        Assert.Multiple(
+            () => Assert.NotNull(result.ValueOrDefault),
+            () => Assert.IsType<VideoDTO>(result.ValueOrDefault)
+        );
     }
 }

@@ -47,9 +47,11 @@ public class GetVideoByIdTest
         var result = await handler.Handle(new GetVideoByIdQuery (id), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.Equal(result.Value.Id, id);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.Equal(result.Value.Id, id)
+        );
     }
 
     [Theory]
@@ -78,9 +80,12 @@ public class GetVideoByIdTest
         var result = await handler.Handle(new GetVideoByIdQuery(id), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Equal($"Cannot find a video with corresponding id: {id}", result.Errors.First().Message);
+
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsFailed),
+            () => Assert.Equal($"Cannot find a video with corresponding id: {id}", result.Errors.First().Message)
+        );
     }
 
     [Theory]

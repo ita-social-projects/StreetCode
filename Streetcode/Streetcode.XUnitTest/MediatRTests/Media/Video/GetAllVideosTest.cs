@@ -77,8 +77,10 @@ public class GetAllVideosTest
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.Equal(GetListVideosDTO().Count, result.Value.Count());
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.Equal(GetListVideosDTO().Count, result.Value.Count())
+        );
     }
 
     private static IQueryable<Video> GetListVideos()

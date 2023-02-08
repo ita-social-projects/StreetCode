@@ -45,9 +45,11 @@ public class GetFactByStreetcodeIdTest
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotEmpty(result.Value);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.NotEmpty(result.Value)
+        );
     }
 
     [Theory]
@@ -73,9 +75,11 @@ public class GetFactByStreetcodeIdTest
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsType<List<FactDTO>>(result.ValueOrDefault);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
+        );
     }
 
     [Theory]
@@ -101,8 +105,10 @@ public class GetFactByStreetcodeIdTest
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert
-        Assert.True(result.IsFailed);
-        Assert.Equal($"Cannot find a fact by a streetcode id: {streetCodeId}", result.Errors.First().Message);
+        Assert.Multiple(
+            () => Assert.True(result.IsFailed),
+            () => Assert.Equal($"Cannot find a fact by a streetcode id: {streetCodeId}", result.Errors.First().Message)
+        );
     }
 
     private static IQueryable<Fact> GetListFacts()

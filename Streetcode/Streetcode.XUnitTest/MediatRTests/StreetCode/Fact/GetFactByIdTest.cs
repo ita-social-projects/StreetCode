@@ -46,9 +46,11 @@ public class GetFactByIdTest
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.Equal(result.Value.Id, id);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.Equal(result.Value.Id, id)
+        );
     }
 
     [Theory]
@@ -77,9 +79,12 @@ public class GetFactByIdTest
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Equal($"Cannot find a fact with corresponding id: {id}", result.Errors.First().Message);
+
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () =>Assert.True(result.IsFailed),
+            () => Assert.Equal($"Cannot find a fact with corresponding id: {id}", result.Errors.First().Message)
+        );
     }
 
     [Theory]
@@ -110,7 +115,9 @@ public class GetFactByIdTest
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result.ValueOrDefault);
-        Assert.IsType<FactDTO>(result.ValueOrDefault);
+        Assert.Multiple(
+            () => Assert.NotNull(result.ValueOrDefault),
+            () => Assert.IsType<FactDTO>(result.ValueOrDefault)
+        );
     }
 }

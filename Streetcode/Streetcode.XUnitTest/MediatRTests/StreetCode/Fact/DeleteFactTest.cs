@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class DeleteFactTest
 {
@@ -23,16 +24,16 @@ public class DeleteFactTest
     {
         _repository.Setup(x => x.FactRepository
         .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-            .ReturnsAsync(new DAL.Entities.Streetcode.TextContent.Fact
+               It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(new Fact
             {
                 Id = id
             });
 
         _repository.Setup(x => x.FactRepository
-            .Delete(new DAL.Entities.Streetcode.TextContent.Fact()
+            .Delete(new Fact()
             {
                 Id = id
             }));
@@ -50,13 +51,13 @@ public class DeleteFactTest
     {
         _repository.Setup(x => x.FactRepository
         .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-            .ReturnsAsync((DAL.Entities.Streetcode.TextContent.Fact)null);
+               It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync((Fact)null);
 
         _repository.Setup(x => x.FactRepository
-            .Delete(new DAL.Entities.Streetcode.TextContent.Fact()
+            .Delete(new Fact()
             {
                 Id = id
             }));

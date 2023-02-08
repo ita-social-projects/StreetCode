@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetAllFactsTest
 {

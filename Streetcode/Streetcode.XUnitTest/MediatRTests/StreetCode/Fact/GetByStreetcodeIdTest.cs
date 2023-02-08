@@ -4,11 +4,12 @@ using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetByStreetcodeIdTest
 {
@@ -28,18 +29,18 @@ public class GetByStreetcodeIdTest
         //Act
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-              IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
+                  It.IsAny<Expression<Func<Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<Fact>,
+              IIncludableQueryable<Fact, object>>>()))
               .ReturnsAsync(GetListFacts());
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         //Arrange
-        var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
@@ -56,18 +57,18 @@ public class GetByStreetcodeIdTest
         //Act
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-              IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
+                  It.IsAny<Expression<Func<Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<Fact>,
+              IIncludableQueryable<Fact, object>>>()))
               .ReturnsAsync(GetListFacts());
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         //Arrange
-        var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
@@ -84,18 +85,18 @@ public class GetByStreetcodeIdTest
         //Act
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-              IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-              .ReturnsAsync((List<DAL.Entities.Streetcode.TextContent.Fact>)null);
+                  It.IsAny<Expression<Func<Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<Fact>,
+              IIncludableQueryable<Fact, object>>>()))
+              .ReturnsAsync((List<Fact>)null);
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         //Arrange
-        var handler = new GetByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
@@ -104,11 +105,11 @@ public class GetByStreetcodeIdTest
         Assert.Equal($"Cannot find a fact by a streetcode id: {streetCodeId}", result.Errors.First().Message);
     }
 
-    private static IQueryable<DAL.Entities.Streetcode.TextContent.Fact> GetListFacts()
+    private static IQueryable<Fact> GetListFacts()
     {
-        var facts = new List<DAL.Entities.Streetcode.TextContent.Fact>
+        var facts = new List<Fact>
         {
-            new DAL.Entities.Streetcode.TextContent.Fact
+            new Fact
             {
                 Id = 1,
                 Title = "Викуп з кріпацтва",

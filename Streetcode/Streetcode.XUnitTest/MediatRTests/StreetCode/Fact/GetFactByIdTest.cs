@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Fact;
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetFactByIdTest
 {
@@ -26,17 +27,17 @@ public class GetFactByIdTest
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-            .ReturnsAsync(new DAL.Entities.Streetcode.TextContent.Fact()
+               It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(new Fact()
             {
                 Id = id
             });
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDTO>(It.IsAny<DAL.Entities.Streetcode.TextContent.Fact>()))
+            .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(new FactDTO { Id = id});
 
         //Act
@@ -57,15 +58,15 @@ public class GetFactByIdTest
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-            .ReturnsAsync((DAL.Entities.Streetcode.TextContent.Fact)null);
+               It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync((Fact)null);
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDTO>(It.IsAny<DAL.Entities.Streetcode.TextContent.Fact>()))
-            .Returns((DAL.Entities.Streetcode.TextContent.Fact fact) =>
+            .Map<FactDTO>(It.IsAny<Fact>()))
+            .Returns((Fact fact) =>
             {
                 return new FactDTO { Id = fact.Id };
             });
@@ -88,17 +89,17 @@ public class GetFactByIdTest
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-                IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
-            .ReturnsAsync(new DAL.Entities.Streetcode.TextContent.Fact()
+               It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(new Fact()
             {
                 Id = id
             });
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDTO>(It.IsAny<DAL.Entities.Streetcode.TextContent.Fact>()))
+            .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(new FactDTO {
                 Id = id
             });

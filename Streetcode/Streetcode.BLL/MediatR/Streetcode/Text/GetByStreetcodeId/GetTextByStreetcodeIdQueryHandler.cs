@@ -19,11 +19,11 @@ public class GetTextByStreetcodeIdQueryHandler : IRequestHandler<GetTextByStreet
 
     public async Task<Result<TextDTO>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.streetcodeId);
+        var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(text => text.StreetcodeId == request.StreetcodeId);
 
         if (text is null)
         {
-            return Result.Fail(new Error($"Cannot find a text by a streetcode id: {request.streetcodeId}"));
+            return Result.Fail(new Error($"Cannot find any text by the streetcode id: {request.StreetcodeId}"));
         }
 
         var textDto = _mapper.Map<TextDTO>(text);

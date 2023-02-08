@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Video.GetAll;
@@ -19,9 +20,14 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 
     public async Task<Result<IEnumerable<VideoDTO>>> Handle(GetAllVideosQuery request, CancellationToken cancellationToken)
     {
-        var video = await _repositoryWrapper.VideoRepository.GetAllAsync();
+        var videos = await _repositoryWrapper.VideoRepository.GetAllAsync();
 
-        var videoDtos = _mapper.Map<IEnumerable<VideoDTO>>(video);
+        if (videos is null)
+        {
+            return Result.Fail(new Error($"Cannot find any videos"));
+        }
+
+        var videoDtos = _mapper.Map<IEnumerable<VideoDTO>>(videos);
         return Result.Ok(videoDtos);
     }
 }

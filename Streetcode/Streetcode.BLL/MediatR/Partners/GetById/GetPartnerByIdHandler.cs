@@ -23,13 +23,13 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
         var partner = await _repositoryWrapper
             .PartnersRepository
             .GetSingleOrDefaultAsync(
-                predicate: p => p.Id == request.id,
+                predicate: p => p.Id == request.Id,
                 include: p => p
                     .Include(pl => pl.PartnerSourceLinks));
 
         if (partner is null)
         {
-            return Result.Fail(new Error($"Cannot find a partner with corresponding id: {request.id}"));
+            return Result.Fail(new Error($"Cannot find any partner with corresponding id: {request.Id}"));
         }
 
         var partnerDto = _mapper.Map<PartnerDTO>(partner);

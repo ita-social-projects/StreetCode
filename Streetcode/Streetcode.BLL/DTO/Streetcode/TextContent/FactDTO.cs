@@ -1,5 +1,3 @@
-using Streetcode.BLL.DTO.Media.Images;
-
 namespace Streetcode.BLL.DTO.Streetcode.TextContent;
 
 public class FactDTO

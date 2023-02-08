@@ -24,7 +24,7 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
 
         if (transactLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a transaction link with corresponding id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find any transaction link with corresponding id: {request.Id}"));
         }
 
         var mappedTransactLink = _mapper.Map<TransactLinkDTO>(transactLink);

@@ -21,6 +21,11 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
     {
         var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync();
 
+        if (subtitles is null)
+        {
+            return Result.Fail(new Error($"Cannot find any subtitles"));
+        }
+
         var subtitleDtos = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
         return Result.Ok(subtitleDtos);
     }

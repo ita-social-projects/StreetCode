@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatR.Media.Art.GetByStreetCodeId
+namespace Streetcode.XUnitTest.MediatR.Media.Arts
 {
     public class GetImageByStreetcodeIdTest
     {
@@ -24,53 +25,16 @@ namespace Streetcode.XUnitTest.MediatR.Media.Art.GetByStreetCodeId
         [Theory]
         [InlineData(1)]
 
-        public async Task GetArtByStreetCodeId_ReturnsSuccessfullyArtById(int streetcodeId)
+        public async Task Handle_ReturnsSuccessfullyArt(int streetcodeId)
         {
-            var allArtsList = new List<DAL.Entities.Media.Images.Art>()
-            {
-                new DAL.Entities.Media.Images.Art()
-                {
-                    Id = 1,
-                    ImageId = 1,
-                    Description = "Test text 1"
-                },
-                new DAL.Entities.Media.Images.Art()
-                {
-                    Id = 2,
-                    ImageId = 2,
-                    Description = "Test text 2"
-                }
-            };
-            var allArtsDTOList = new List<ArtDTO>()
-            {
-                new ArtDTO
-                {
-                   Id = 1,
-                   ImageId = 1,
-                   Description = "Test text 1"
+            // Arrange
+            MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
 
-                },
-                new ArtDTO
-                {
-                   Id = 2,
-                   ImageId = 2,
-                   Description = "Test text 2"
-                }
-            };
-
-             
-            _mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
-            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
-            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
-            IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
-            .ReturnsAsync(allArtsList);
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
-             .Returns(allArtsDTOList);
-                
+            // Act
             var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
-
             var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+
+            //Assert
             Assert.Equal(streetcodeId, result.Value.First().Id);
 
         }
@@ -78,86 +42,84 @@ namespace Streetcode.XUnitTest.MediatR.Media.Art.GetByStreetCodeId
         [Theory]
         [InlineData(1)]
 
-        public async Task GetArtByStreetCodeId_ShouldReturnTypeResultIEnumerableArtDTO(int streetcodeId)
+        public async Task Handle_ReturnsType(int streetcodeId)
         {
-            var allArtsList = new List<DAL.Entities.Media.Images.Art>()
-            {
-                new DAL.Entities.Media.Images.Art()
-                {
-                    Id = 1,
-                    ImageId = 1,
-                    Description = "Test text 1"
+            // Arrange
+            MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
 
-                },
-                new DAL.Entities.Media.Images.Art()
-                {
-                    Id = 2,
-                    ImageId = 2,
-                    Description = "Test text 2"
-
-                }
-            };
-            var allArtsDTOList = new List<ArtDTO>()
-            {
-                new ArtDTO
-                {
-                   Id = 1,
-                   ImageId = 1,
-                   Description = "Test text 1"
-
-                },
-                new ArtDTO
-                {
-                   Id = 2,
-                   ImageId = 2,
-                   Description = "Test text 3"
-
-                }
-            };
-
-
-            _mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
-            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
-            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
-            IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
-             .ReturnsAsync(allArtsList);
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
-             .Returns(allArtsDTOList);
-
+            // Act
             var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
-
             var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
+            // Assert
             Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
-
         }
 
 
         [Theory]
         [InlineData(-1)]
-        public async Task GetArtByStreetCodeId_WithNonExistentValue_ShouldReturnError(int streetcodeId)
+        public async Task Handle_ReturnsError(int streetcodeId)
         {
-            var emptyArts = (List<DAL.Entities.Media.Images.Art>)null;
-            var emptyArtsDTO = (List<ArtDTO>)null;
-
-            _mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
-            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
-            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
-            IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
-            .ReturnsAsync(emptyArts);
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
-             .Returns(emptyArtsDTO);
+            // Arrange
+            MockRepositoryAndMapper(null, null);
             var error = $"Cannot find an art with corresponding streetcode id: {streetcodeId}";
 
+            // Act
             var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
-
             var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
-          
-            Assert.Equal(error, result.Errors.First().Message);
-          
 
+            // Assert
+            Assert.Equal(error, result.Errors.First().Message);
+        }
+
+        private List<Art> GetArtsList()
+        {
+            return new List<Art>()
+            {
+                new Art()
+                {
+                    Id = 1,
+                    ImageId = 1,
+                    Description = "Test text 1",
+
+                },
+                new Art()
+                {
+                    Id = 2,
+                    ImageId = 2,
+                    Description = "Test text 2",
+
+                },
+            };
+        }
+
+        private List<ArtDTO> GetArtsDTOList()
+        {
+            return new List<ArtDTO>()
+            {
+                new ArtDTO
+                {
+                    Id = 1,
+                    ImageId = 1,
+                },
+                new ArtDTO
+                {
+                    Id = 2,
+                    ImageId = 2,
+                },
+            };
+        }
+
+        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
+        {
+            _mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
+            It.IsAny<Expression<Func<Art, bool>>>(),
+            It.IsAny<Func<IQueryable<Art>,
+            IIncludableQueryable<Art, object>>>()))
+            .ReturnsAsync(artList);
+
+            _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
+            .Returns(artListDTO);
         }
     }
 }

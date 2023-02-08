@@ -27,7 +27,7 @@ public class GetAllVideosTest
     }
 
     [Fact]
-    public async Task ShouldReturn_SuccessfullyType()
+    public async Task ShouldReturnSuccessfully_Type()
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
@@ -48,12 +48,15 @@ public class GetAllVideosTest
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.IsType<List<VideoDTO>>(result.ValueOrDefault);
+
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.IsType<List<VideoDTO>>(result.ValueOrDefault)
+        );
     }
 
     [Fact]
-    public async Task ShouldReturn_SuccessfullyCountMatch()
+    public async Task ShouldReturnSuccessfully_CountMatch()
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository

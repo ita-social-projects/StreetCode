@@ -35,18 +35,26 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             Title = "test_title"
         };
 
-        [Fact]
-        public async Task GetTagByTitle_Exists()
+        async Task SetupRepository(Tag tag)
         {
-            //Arrange
             _mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Tag, bool>>>(),
                 It.IsAny<Func<IQueryable<Tag>,
                 IIncludableQueryable<Tag, object>>>()))
                 .ReturnsAsync(tag);
-
+        }
+        async Task SetupMapper(TagDTO tagDTO)
+        {
             _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
                 .Returns(tagDTO);
+        }
+
+        [Fact]
+        public async Task Handler_Returns_Matching_Element()
+        {
+            //Arrange
+            await SetupRepository(tag);
+            await SetupMapper(tagDTO);
 
             var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object);
 
@@ -62,17 +70,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         }
 
         [Fact]
-        public async Task GetTagByTitle_NotExists()
+        public async Task Handler_Returns_NoMatching_Element()
         {
             //Arrange
-            _mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Tag, bool>>>(),
-                It.IsAny<Func<IQueryable<Tag>,
-                IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(new Tag()); //default
-
-            _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
-                .Returns(new TagDTO());
+            await SetupRepository(new Tag());
+            await SetupMapper(new TagDTO());
 
             var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object);
 

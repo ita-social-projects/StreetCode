@@ -69,18 +69,26 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             }
         };
 
-        [Fact]
-        public async Task GetSTagsByStreetcodeId_ReturnsList()
+        async Task SetupRepository(List<Tag> returnList)
         {
-            //Arrange
             _mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Tag, bool>>>(),
                 It.IsAny<Func<IQueryable<Tag>,
                 IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(tags);
-
+                .ReturnsAsync(returnList);
+        }
+        async Task SetupMapper(List<TagDTO> returnList)
+        {
             _mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(tagDTOs);
+                .Returns(returnList);
+        }
+
+        [Fact]
+        public async Task Handler_Returns_NotEmpty_List()
+        {
+            //Arrange
+            await SetupRepository(tags);
+            await SetupMapper(tagDTOs);
 
             var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
@@ -97,17 +105,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         }
 
         [Fact]
-        public async Task GetSubtitlesByStreetcodeId_ReturnsNoElements()
+        public async Task Handler_Returns_Empty_List()
         {
             //Arrange
-            _mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Tag, bool>>>(),
-                It.IsAny<Func<IQueryable<Tag>,
-                IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(new List<Tag>()); //default
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(new List<TagDTO>());
+            await SetupRepository(new List<Tag>());
+            await SetupMapper(new List<TagDTO>());
 
             var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 

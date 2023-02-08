@@ -26,19 +26,26 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private readonly Subtitle subtitle = new Subtitle { Id = _id };
         private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = _id };
-
-        [Fact]
-        public async Task GetSubtitlesById_ReturnElement()
+        async Task SetupRepository(Subtitle returnElement)
         {
-            //Arrange
             _mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(subtitle);
+                .ReturnsAsync(returnElement);
+        }
+        async Task SetupMapper(SubtitleDTO returnElement)
+        {
+            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+                .Returns(returnElement);
+        }
 
-            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
-                .Returns(subtitleDTO);
+        [Fact]
+        public async Task Handler_Returns_Matching_Element()
+        {
+            //Arrange
+            await SetupRepository(subtitle);
+            await SetupMapper(subtitleDTO);
 
             var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
             
@@ -52,17 +59,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         }
 
         [Fact]
-        public async Task GetSubtitlesById_ReturnsNoElements()
+        public async Task Handler_Returns_NoMatching_Element()
         {
             //Arrange
-            _mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
-            It.IsAny<Expression<Func<Subtitle, bool>>>(),
-            It.IsAny<Func<IQueryable<Subtitle>,
-            IIncludableQueryable<Subtitle, object>>>()))
-            .ReturnsAsync(new Subtitle()); //returns default
-
-            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<Subtitle>()))
-                .Returns(new SubtitleDTO());
+            await SetupRepository(new Subtitle());
+            await SetupMapper(new SubtitleDTO());
 
             var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
 

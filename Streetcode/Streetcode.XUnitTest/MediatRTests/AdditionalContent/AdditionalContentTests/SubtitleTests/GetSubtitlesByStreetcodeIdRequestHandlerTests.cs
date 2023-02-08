@@ -36,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
                 StreetcodeId = 1
             }
         };
-        private readonly List<SubtitleDTO> subtitlesDTO = new List<SubtitleDTO>
+        private readonly List<SubtitleDTO> subtitleDTOs = new List<SubtitleDTO>
         {
             new SubtitleDTO
             {
@@ -49,20 +49,27 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
                 StreetcodeId = 1
             }
         };
-
-        [Fact]
-        public async Task GetSubtitlesByStreetcodeId_ReturnsList()
+        async Task SetupRepository(List<Subtitle> returnList)
         {
-            //Arrange
             _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(subtitles);
-
+                .ReturnsAsync(returnList);
+        }
+        async Task SetupMapper(List<SubtitleDTO> returnList)
+        {
             _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(subtitlesDTO);
-            
+                .Returns(returnList);
+        }
+
+        [Fact]
+        public async Task Handler_Returns_NotEmpty_List()
+        {
+            //Arrange
+            await SetupRepository(subtitles);
+            await SetupMapper(subtitleDTOs);
+
             var handler = new GetSubtitlesByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
 
             //Act
@@ -77,16 +84,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         }
 
         [Fact]
-        public async Task GetSubtitlesByStreetcodeId_ReturnsNoElements()
+        public async Task Handler_Returns_Empty_List()
         {
-            _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Subtitle, bool>>>(),
-                It.IsAny<Func<IQueryable<Subtitle>,
-                IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(new List<Subtitle>()); //default value
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(new List<SubtitleDTO>());
+            //Arrange
+            await SetupRepository(new List<Subtitle>());
+            await SetupMapper(new List<SubtitleDTO>());
 
             var handler = new GetSubtitlesByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
 

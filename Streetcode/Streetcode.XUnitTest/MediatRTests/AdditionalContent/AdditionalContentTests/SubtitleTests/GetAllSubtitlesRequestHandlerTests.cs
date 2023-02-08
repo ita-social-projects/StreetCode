@@ -51,19 +51,27 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             }
         };
 
-        [Fact]
-        public async Task GetAllSubtitles_ReturnsList()
+        async Task SetupRepository(List<Subtitle> returnList)
         {
-            //Arrange
-
             _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(subtitles);
+                .ReturnsAsync(returnList);
+        }
 
+        async Task SetupMapper(List<SubtitleDTO> returnList)
+        {
             _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(subtitleDTOs);
+                .Returns(returnList);
+        }
+
+        [Fact]
+        public async Task Handler_Returns_NotEmpty_List()
+        {
+            //Arrange
+            await SetupRepository(subtitles);
+            await SetupMapper(subtitleDTOs);
 
             var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object);
 
@@ -77,17 +85,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         }
 
         [Fact]
-        public async Task GetAllSubtitles_ReturnsNoElements()
+        public async Task Handler_Returns_Empty_List()
         {
             //Arrange
-            _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Subtitle, bool>>>(),
-                It.IsAny<Func<IQueryable<Subtitle>,
-                IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(new List<Subtitle>());
-
-            _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(new List<SubtitleDTO>());
+            await SetupRepository(new List<Subtitle>());
+            await SetupMapper(new List<SubtitleDTO>());
 
             var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object);
 

@@ -3,11 +3,12 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
+using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Media.Video;
+namespace Streetcode.XUnitTest.MediatRTests.Media.Videos;
 
 public class GetVideoByStreetcodeIdTest
 {
@@ -27,10 +28,10 @@ public class GetVideoByStreetcodeIdTest
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
-                IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
-            .ReturnsAsync(new DAL.Entities.Media.Video()
+               It.IsAny<Expression<Func<Video, bool>>>(),
+                It.IsAny<Func<IQueryable<Video>,
+                IIncludableQueryable<Video, object>>>()))
+            .ReturnsAsync(new Video()
             {
                 Id = streetcodeId
             });
@@ -41,7 +42,7 @@ public class GetVideoByStreetcodeIdTest
             .Returns(new VideoDTO { Id = streetcodeId });
 
         //Act
-        var handler = new GetVideoByStreetcodeIdQueryHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
@@ -58,21 +59,21 @@ public class GetVideoByStreetcodeIdTest
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
-                IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
-            .ReturnsAsync((DAL.Entities.Media.Video)null);
+               It.IsAny<Expression<Func<Video, bool>>>(),
+                It.IsAny<Func<IQueryable<Video>,
+                IIncludableQueryable<Video, object>>>()))
+            .ReturnsAsync((Video)null);
 
         _mockMapper
             .Setup(x => x
-            .Map<VideoDTO>(It.IsAny<DAL.Entities.Media.Video>()))
+            .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns((DAL.Entities.Streetcode.TextContent.Fact video) =>
             {
                 return new VideoDTO { Id = video.Id };
             });
 
         //Act
-        var handler = new GetVideoByStreetcodeIdQueryHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
@@ -89,21 +90,21 @@ public class GetVideoByStreetcodeIdTest
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
-                IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
-            .ReturnsAsync(new DAL.Entities.Media.Video()
+               It.IsAny<Expression<Func<Video, bool>>>(),
+                It.IsAny<Func<IQueryable<Video>,
+                IIncludableQueryable<Video, object>>>()))
+            .ReturnsAsync(new Video()
             {
                 Id = streetcodeId
             });
 
         _mockMapper
              .Setup(x => x
-             .Map<VideoDTO>(It.IsAny<DAL.Entities.Media.Video>()))
+             .Map<VideoDTO>(It.IsAny<Video>()))
              .Returns(new VideoDTO { Id = streetcodeId });
 
         //Act
-        var handler = new GetVideoByStreetcodeIdQueryHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 

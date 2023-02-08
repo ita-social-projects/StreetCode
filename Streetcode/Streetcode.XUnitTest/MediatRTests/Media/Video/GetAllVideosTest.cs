@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Video.GetAll;
+using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Media.Video;
+namespace Streetcode.XUnitTest.MediatRTests.Media.Videos;
 
 public class GetAllVideosTest
 {
@@ -31,14 +32,14 @@ public class GetAllVideosTest
         //Act
         _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
-              IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
+                  It.IsAny<Expression<Func<Video, bool>>>(),
+                    It.IsAny<Func<IQueryable<Video>,
+              IIncludableQueryable<Video, object>>>()))
               .ReturnsAsync(GetListVideos());
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<DAL.Entities.Media.Video>>()))
+            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
         //Arrange
@@ -57,14 +58,14 @@ public class GetAllVideosTest
         //Act
         _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Media.Video, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Media.Video>,
-              IIncludableQueryable<DAL.Entities.Media.Video, object>>>()))
+                  It.IsAny<Expression<Func<Video, bool>>>(),
+                    It.IsAny<Func<IQueryable<Video>,
+              IIncludableQueryable<Video, object>>>()))
               .ReturnsAsync(GetListVideos());
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<DAL.Entities.Media.Video>>()))
+            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
         //Arrange
@@ -77,16 +78,16 @@ public class GetAllVideosTest
         Assert.Equal(GetListVideosDTO().Count, result.Value.Count());
     }
 
-    private static IQueryable<DAL.Entities.Media.Video> GetListVideos()
+    private static IQueryable<Video> GetListVideos()
     {
-        var videos = new List<DAL.Entities.Media.Video>
+        var videos = new List<Video>
         {
-            new DAL.Entities.Media.Video
+            new Video
             {
                 Id = 1
             },
 
-            new DAL.Entities.Media.Video
+            new Video
             {
                 Id = 2
             }

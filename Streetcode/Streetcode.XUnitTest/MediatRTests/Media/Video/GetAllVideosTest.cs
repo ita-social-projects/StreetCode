@@ -27,9 +27,9 @@ public class GetAllVideosTest
     }
 
     [Fact]
-    public async Task GetAllFacts_ShouldReturnSuccessfullyType()
+    public async Task ShouldReturn_SuccessfullyType()
     {
-        //Act
+        //Arrange
         _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Video, bool>>>(),
@@ -42,7 +42,7 @@ public class GetAllVideosTest
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
-        //Arrange
+        //Act
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -53,9 +53,9 @@ public class GetAllVideosTest
     }
 
     [Fact]
-    public async Task GetAllFacts_ShouldReturnSuccessfullyCountMatch()
+    public async Task ShouldReturn_SuccessfullyCountMatch()
     {
-        //Act
+        //Arrange
         _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Video, bool>>>(),
@@ -68,7 +68,7 @@ public class GetAllVideosTest
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
-        //Arrange
+        //Act
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);

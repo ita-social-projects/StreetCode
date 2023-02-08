@@ -11,12 +11,12 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
-public class GetByStreetcodeIdTest
+public class GetFactByStreetcodeIdTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
 
-    public GetByStreetcodeIdTest()
+    public GetFactByStreetcodeIdTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();

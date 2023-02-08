@@ -23,7 +23,7 @@ public class GetVideoByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyExistingId(int streetcodeId)
+    public async Task ShouldReturnSuccessfully_ExistingId(int streetcodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
@@ -38,7 +38,7 @@ public class GetVideoByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<VideoDTO>(It.IsAny<DAL.Entities.Media.Video>()))
+            .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(new VideoDTO { Id = streetcodeId });
 
         //Act
@@ -54,7 +54,7 @@ public class GetVideoByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldThrowErrorWhenIdNotExist(int streetcodeId)
+    public async Task ShouldThrowError_IdNotExist(int streetcodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
@@ -85,7 +85,7 @@ public class GetVideoByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyCorrectType(int streetcodeId)
+    public async Task ShouldReturnSuccessfully_CorrectType(int streetcodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository

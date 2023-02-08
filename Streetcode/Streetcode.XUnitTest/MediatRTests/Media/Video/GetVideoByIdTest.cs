@@ -23,7 +23,7 @@ public class GetVideoByIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyExistingId(int id)
+    public async Task ShouldReturn_SuccessfullyExistingId(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
@@ -54,7 +54,7 @@ public class GetVideoByIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldThrowErrorWhenIdNotExist(int id)
+    public async Task ShouldThrowError_WhenIdNotExist(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository
@@ -85,7 +85,7 @@ public class GetVideoByIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyCorrectType(int id)
+    public async Task ShouldReturnSuccessfully_CorrectType(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.VideoRepository

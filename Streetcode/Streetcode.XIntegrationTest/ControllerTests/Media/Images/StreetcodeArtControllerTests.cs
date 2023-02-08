@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,34 +15,32 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class StreetcodeArtControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        string secondPartUrl = "/api/StreetcodeArt";
-        public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
+        public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)
+            : base(factory, "/api/StreetcodeArt")
         {
-
         }
-
-        //has nullable streetcodes
 
         [Theory]
         [InlineData(1)]
-        public async Task StreetcodeArtControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<StreetcodeArtDTO>>();
+            var response = await client.GetByStreetcodeId(streetcodeId);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeArtDTO>>(response.Content);
 
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(a => (a.Streetcode?.Id??streetcodeId) == streetcodeId ));
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.True(returnedValue.All(a => (a.Streetcode?.Id ?? streetcodeId) == streetcodeId));
+            Assert.True(response.IsSuccessStatusCode);
         }
+
         [Fact]
-        public async Task StreetcodeArtControllerTests_GetByStreetcodeIdIncorectBadRequest()
+        public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
-            // Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
-            Assert.False(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
         }
     }
-       
 }

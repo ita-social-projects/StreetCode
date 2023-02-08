@@ -74,6 +74,8 @@ public class GetVideoByStreetcodeIdTest
                 return new VideoDTO { Id = video.Id };
             });
 
+        var expectedError = $"Cannot find any video by the streetcode id: {streetcodeId}";
+
         //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -83,7 +85,7 @@ public class GetVideoByStreetcodeIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find any video by the streetcode id: {streetcodeId}", result.Errors.First().Message)
+            () => Assert.Equal(expectedError, result.Errors.First().Message)
         );
     }
 

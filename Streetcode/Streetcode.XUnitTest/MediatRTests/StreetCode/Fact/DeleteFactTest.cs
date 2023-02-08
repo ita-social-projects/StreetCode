@@ -20,7 +20,7 @@ public class DeleteFactTest
 
     [Theory]
     [InlineData(2)]
-    public async Task DeleteFact_ShouldDeleteSuccessfully(int id)
+    public async Task ShouldDeleteSuccessfully(int id)
     {
         //Arrange
         _repository.Setup(x => x.FactRepository
@@ -50,7 +50,7 @@ public class DeleteFactTest
 
     [Theory]
     [InlineData(2)]
-    public async Task DeleteFact_ShouldReturnNull(int id)
+    public async Task ShouldThrowExeption_IdNotExisting(int id)
     {
         //Arrange
         _repository.Setup(x => x.FactRepository
@@ -66,12 +66,14 @@ public class DeleteFactTest
                 Id = id
             }));
 
+        var expectedError = $"Cannot find a fact with corresponding categoryId: {id}";
+
         //Act
         var handler = new DeleteFactHandler(_repository.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 
         //Assert
-        Assert.Equal($"Cannot find a fact with corresponding categoryId: {id}", result.Errors.First().Message);
+        Assert.Equal(expectedError, result.Errors.First().Message);
     }
 }

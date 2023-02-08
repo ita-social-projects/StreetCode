@@ -74,6 +74,8 @@ public class GetVideoByIdTest
                 return new VideoDTO { Id = video.Id };
             });
 
+        var expectedError = $"Cannot find a video with corresponding id: {id}";
+
         //Act
         var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -84,7 +86,7 @@ public class GetVideoByIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find a video with corresponding id: {id}", result.Errors.First().Message)
+            () => Assert.Equal(expectedError, result.Errors.First().Message)
         );
     }
 

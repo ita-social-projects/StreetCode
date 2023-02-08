@@ -22,7 +22,7 @@ public class GetFactByIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyExistingId(int id)
+    public async Task ShouldReturnSuccessfully_ExistingId(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
@@ -55,7 +55,7 @@ public class GetFactByIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyNotExistingId(int id)
+    public async Task ShouldReturnSuccessfully_NotExistingId(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
@@ -73,23 +73,24 @@ public class GetFactByIdTest
                 return new FactDTO { Id = fact.Id };
             });
 
+        var expectedError = $"Cannot find any fact with corresponding id: {id}";
+
         //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
-
         Assert.Multiple(
             () => Assert.NotNull(result),
             () =>Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find any fact with corresponding id: {id}", result.Errors.First().Message)
+            () => Assert.Equal(expectedError, result.Errors.First().Message)
         );
     }
 
     [Theory]
     [InlineData(1)]
-    public async Task GetById_ShouldReturnSuccessfullyCorrectType(int id)
+    public async Task ShouldReturnSuccessfully_CorrectType(int id)
     {
         //Arrange
         _mockRepository.Setup(x => x.FactRepository

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
@@ -17,12 +18,11 @@ public class GetAllFactsTest
     public GetAllFactsTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
-
         _mockMapper = new Mock<IMapper>();
     }
 
     [Fact]
-    public async Task GetAllFacts_ShouldReturnSuccessfullyType()
+    public async Task ShouldReturnSuccessfully_CorrectType()
     {
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
@@ -33,12 +33,14 @@ public class GetAllFactsTest
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
         //Assert
-        Assert.NotNull(result);
-        Assert.IsType<List<FactDTO>>(result.ValueOrDefault);
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
+        );
     }
 
     [Fact]
-    public async Task GetAllFacts_ShouldReturnSuccessfullyCountMatch()
+    public async Task ShouldReturnSuccessfully_CountMatch()
     {
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
@@ -55,23 +57,25 @@ public class GetAllFactsTest
         );
     }
 
-    private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(Mock<IMapper> injectedMapper, Mock<IRepositoryWrapper> injectedReppo)
+    private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(
+        Mock<IMapper> injectedMapper,
+        Mock<IRepositoryWrapper> injectedReppo)
     {
         injectedReppo.Setup(x => x.FactRepository
               .GetAllAsync(
-                  It.IsAny<Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.TextContent.Fact>,
-              IIncludableQueryable<DAL.Entities.Streetcode.TextContent.Fact, object>>>()))
+                  It.IsAny<Expression<Func<Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<Fact>,
+              IIncludableQueryable<Fact, object>>>()))
               .ReturnsAsync(GetListFacts());
 
         injectedMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<DAL.Entities.Streetcode.TextContent.Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         return (injectedMapper, injectedReppo);
     }
-    private static IQueryable<DAL.Entities.Streetcode.TextContent.Fact> GetListFacts()
+    private static IQueryable<Fact> GetListFacts()
     {
         var facts = new List<DAL.Entities.Streetcode.TextContent.Fact>
         {

@@ -54,7 +54,7 @@ public class GetFactByStreetcodeIdTest
 
     [Theory]
     [InlineData(2)]
-    public async Task GetFactById_ShouldReturnSuccessfullyType(int streetCodeId)
+    public async Task ShouldReturnSuccessfully_CorrectType(int streetCodeId)
     {
         //Act
         _mockRepository.Setup(x => x.FactRepository
@@ -84,7 +84,7 @@ public class GetFactByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task GetFactById_ShouldThrowErrorWhenIdNotExist(int streetCodeId)
+    public async Task ShouldThrowError_IdNotExist(int streetCodeId)
     {
         //Arrange
         _mockRepository.Setup(x => x.FactRepository
@@ -99,6 +99,8 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
+        var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
+
         //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -107,7 +109,7 @@ public class GetFactByStreetcodeIdTest
         //Assert
         Assert.Multiple(
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find any fact by the streetcode id: {streetCodeId}", result.Errors.First().Message)
+            () => Assert.Equal(expectedError, result.Errors.First().Message)
         );
     }
 

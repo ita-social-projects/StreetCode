@@ -83,7 +83,7 @@ public class GetFactByIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () =>Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find a fact with corresponding id: {id}", result.Errors.First().Message)
+            () => Assert.Equal($"Cannot find any fact with corresponding id: {id}", result.Errors.First().Message)
         );
     }
 

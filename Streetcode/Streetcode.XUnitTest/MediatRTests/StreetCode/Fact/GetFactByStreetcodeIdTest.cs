@@ -26,7 +26,7 @@ public class GetFactByStreetcodeIdTest
     [InlineData(1)]
     public async Task GetFactById_ShouldReturnSuccessfullyExistingId(int streetCodeId)
     {
-        //Act
+        //Arrange
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Fact, bool>>>(),
@@ -39,7 +39,7 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        //Arrange
+        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
@@ -69,7 +69,7 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        //Arrange
+        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
@@ -86,7 +86,7 @@ public class GetFactByStreetcodeIdTest
     [InlineData(1)]
     public async Task GetFactById_ShouldThrowErrorWhenIdNotExist(int streetCodeId)
     {
-        //Act
+        //Arrange
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Fact, bool>>>(),
@@ -99,7 +99,7 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        //Arrange
+        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
@@ -107,7 +107,7 @@ public class GetFactByStreetcodeIdTest
         //Assert
         Assert.Multiple(
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find a fact by a streetcode id: {streetCodeId}", result.Errors.First().Message)
+            () => Assert.Equal($"Cannot find any fact by the streetcode id: {streetCodeId}", result.Errors.First().Message)
         );
     }
 

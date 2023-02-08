@@ -83,7 +83,7 @@ public class GetVideoByStreetcodeIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal($"Cannot find a video by a streetcode id: {streetcodeId}", result.Errors.First().Message)
+            () => Assert.Equal($"Cannot find any video by the streetcode id: {streetcodeId}", result.Errors.First().Message)
         );
     }
 

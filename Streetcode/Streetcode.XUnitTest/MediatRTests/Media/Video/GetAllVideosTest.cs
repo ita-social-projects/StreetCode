@@ -5,12 +5,7 @@ using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Video.GetAll;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Videos;
@@ -30,17 +25,7 @@ public class GetAllVideosTest
     public async Task ShouldReturnSuccessfully_Type()
     {
         //Arrange
-        _mockRepository.Setup(x => x.VideoRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Video, bool>>>(),
-                    It.IsAny<Func<IQueryable<Video>,
-              IIncludableQueryable<Video, object>>>()))
-              .ReturnsAsync(GetListVideos());
-
-        _mockMapper
-            .Setup(x => x
-            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
-            .Returns(GetListVideosDTO());
+        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
 
         //Act
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
@@ -59,6 +44,24 @@ public class GetAllVideosTest
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
         //Arrange
+        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
+
+        //Act
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+
+        //Assert
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.Equal(GetListVideosDTO().Count, result.Value.Count())
+        );
+    }
+
+    private static (Mock<IRepositoryWrapper> _mockRepository, Mock<IMapper>  _mockMapper) MockRepoAndMapper(
+        Mock<IRepositoryWrapper> _mockRepository,
+        Mock<IMapper> _mockMapper) 
+    {
         _mockRepository.Setup(x => x.VideoRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Video, bool>>>(),
@@ -71,16 +74,7 @@ public class GetAllVideosTest
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
-        //Act
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
-
-        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
-
-        //Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.Equal(GetListVideosDTO().Count, result.Value.Count())
-        );
+        return (_mockRepository, _mockMapper);
     }
 
     private static IQueryable<Video> GetListVideos()

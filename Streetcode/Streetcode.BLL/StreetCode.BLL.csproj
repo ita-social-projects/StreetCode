@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="MediatR\AdditionalContent\Tag\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
 </Project>

@@ -19,6 +19,12 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetSubtitlesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
+            {
+                return Result.Fail(
+                    new Error($"Cannot find a subtitles by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
+            }
+
             var subtitles = await _repositoryWrapper.SubtitleRepository
                 .GetAllAsync(Subtitle => Subtitle.StreetcodeId == request.StreetcodeId);
 

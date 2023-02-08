@@ -19,6 +19,12 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
 
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
+        {
+            return Result.Fail(
+                new Error($"Cannot find a tags by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
+        }
+
         var tags = await _repositoryWrapper.TagRepository
             .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId));
 

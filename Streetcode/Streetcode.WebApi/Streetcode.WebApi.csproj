@@ -9,6 +9,9 @@
 	  <CodeAnalysisRuleSet>../settings.ruleset</CodeAnalysisRuleSet>
 
   </PropertyGroup>
+	<ItemGroup>
+     <InternalsVisibleTo Include="Streetcode.XIntegrationTest" />
+</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />

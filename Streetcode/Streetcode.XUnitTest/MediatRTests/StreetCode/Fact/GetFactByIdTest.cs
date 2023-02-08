@@ -30,15 +30,12 @@ public class GetFactByIdTest
                It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(new Fact()
-            {
-                Id = id
-            });
+            .ReturnsAsync(GetFact(id));
 
         _mockMapper
             .Setup(x => x
             .Map<FactDTO>(It.IsAny<Fact>()))
-            .Returns(new FactDTO { Id = id});
+            .Returns(GetFactDTO(id));
 
         //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -63,15 +60,12 @@ public class GetFactByIdTest
                It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync((Fact)null);
+            .ReturnsAsync(GetFactWithNotExistingId());
 
         _mockMapper
             .Setup(x => x
             .Map<FactDTO>(It.IsAny<Fact>()))
-            .Returns((Fact fact) =>
-            {
-                return new FactDTO { Id = fact.Id };
-            });
+            .Returns(GetFactDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
 
@@ -83,7 +77,7 @@ public class GetFactByIdTest
         //Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () =>Assert.True(result.IsFailed),
+            () => Assert.True(result.IsFailed),
             () => Assert.Equal(expectedError, result.Errors.First().Message)
         );
     }
@@ -98,17 +92,12 @@ public class GetFactByIdTest
                It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(new Fact()
-            {
-                Id = id
-            });
+            .ReturnsAsync(GetFact(id));
 
         _mockMapper
             .Setup(x => x
             .Map<FactDTO>(It.IsAny<Fact>()))
-            .Returns(new FactDTO {
-                Id = id
-            });
+            .Returns(GetFactDTO(id));
 
         //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -120,5 +109,29 @@ public class GetFactByIdTest
             () => Assert.NotNull(result.ValueOrDefault),
             () => Assert.IsType<FactDTO>(result.ValueOrDefault)
         );
+    }
+
+    private static Fact GetFact(int id)
+    {
+        return new Fact
+        {
+            Id = id
+        };
+    }
+    private static Fact? GetFactWithNotExistingId()
+    {
+        return null;
+    }
+
+    private static FactDTO GetFactDTO(int id)
+    {
+        return new FactDTO
+        {
+            Id = id
+        };
+    }
+    private static FactDTO? GetFactDTOWithNotExistingId()
+    {
+        return null;
     }
 }

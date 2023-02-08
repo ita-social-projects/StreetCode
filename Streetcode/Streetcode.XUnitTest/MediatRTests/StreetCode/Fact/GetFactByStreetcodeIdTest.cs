@@ -92,12 +92,12 @@ public class GetFactByStreetcodeIdTest
                   It.IsAny<Expression<Func<Fact, bool>>>(),
                     It.IsAny<Func<IQueryable<Fact>,
               IIncludableQueryable<Fact, object>>>()))
-              .ReturnsAsync((List<Fact>)null);
+              .ReturnsAsync(GetListFactsWithNotExistingStreetcodeId());
 
         _mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
-            .Returns(GetListFactDTO());
+            .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
 
@@ -152,7 +152,14 @@ public class GetFactByStreetcodeIdTest
 
         return streetCodes;
     }
-
+    private static List<Fact>? GetListFactsWithNotExistingStreetcodeId()
+    {
+        return null;
+    }
+    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
+    {
+        return null;
+    }
     private static List<FactDTO> GetListFactDTO()
     {
         var facts = new List<FactDTO>

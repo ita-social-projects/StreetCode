@@ -57,6 +57,33 @@ public class GetAllFactsTest
         );
     }
 
+    [Fact]
+    public async Task ShouldThrowExeption_IdNotExist()
+    {
+        //Arrange
+        _mockRepository.Setup(x => x.FactRepository
+              .GetAllAsync(
+                  It.IsAny<Expression<Func<Fact, bool>>>(),
+                    It.IsAny<Func<IQueryable<Fact>,
+              IIncludableQueryable<Fact, object>>>()))
+              .ReturnsAsync(GetListFactsWithNotExistingId());
+
+        _mockMapper
+            .Setup(x => x
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Returns(GetListFactsDTOWithNotExistingId());
+
+        var expectedError = "Cannot find any fact";
+
+        //Act
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
+
+        //Assert
+        Assert.Equal(expectedError, result.Errors.First().Message);
+    }
+
     private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(
         Mock<IMapper> injectedMapper,
         Mock<IRepositoryWrapper> injectedReppo)
@@ -77,9 +104,9 @@ public class GetAllFactsTest
     }
     private static IQueryable<Fact> GetListFacts()
     {
-        var facts = new List<DAL.Entities.Streetcode.TextContent.Fact>
+        var facts = new List<Fact>
         {
-            new DAL.Entities.Streetcode.TextContent.Fact
+            new Fact
             {
                 Id = 1,
                 Title = "Викуп з кріпацтва",
@@ -100,7 +127,14 @@ public class GetAllFactsTest
 
         return facts.AsQueryable();
     }
-
+    private static List<Fact>? GetListFactsWithNotExistingId()
+    {
+        return null;
+    }
+    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
+    {
+        return null;
+    }
     private static List<FactDTO> GetListFactDTO()
     {
         var factsDTO = new List<FactDTO>

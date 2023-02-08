@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
@@ -20,9 +19,14 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
-        var tag = await _repositoryWrapper.TagRepository.GetAllAsync();
+        var tags = await _repositoryWrapper.TagRepository.GetAllAsync();
 
-        var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tag);
+        if (tags is null)
+        {
+            return Result.Fail(new Error($"Cannot find any tags"));
+        }
+
+        var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);
         return Result.Ok(tagDtos);
     }
 }

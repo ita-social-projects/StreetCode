@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
 using JetBrains.Annotations;
 using Nuke.Common;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.EntityFramework;
-using static Nuke.Common.Tools.Git.GitTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
-using Nuke.Common.IO;
 
 namespace Targets;
 

@@ -1,5 +1,3 @@
-using Streetcode.BLL.DTO.Streetcode;
-
 namespace Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 
 public class SubtitleDTO

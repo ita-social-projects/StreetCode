@@ -20,11 +20,16 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery, Result
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetAllToponymsQuery request, CancellationToken cancellationToken)
     {
-        var toponym = await _repositoryWrapper.ToponymRepository
+        var toponyms = await _repositoryWrapper.ToponymRepository
             .GetAllAsync(include: scl => scl
                     .Include(sc => sc.Coordinate));
 
-        var toponymDtos = _mapper.Map<IEnumerable<ToponymDTO>>(toponym);
+        if (toponyms is null)
+        {
+            return Result.Fail(new Error($"Cannot find any toponym"));
+        }
+
+        var toponymDtos = _mapper.Map<IEnumerable<ToponymDTO>>(toponyms);
         return Result.Ok(toponymDtos);
     }
 }

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetAll;
@@ -20,12 +21,17 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
 
     public async Task<Result<IEnumerable<TimelineItemDTO>>> Handle(GetAllTimelineItemsQuery request, CancellationToken cancellationToken)
     {
-        var timelineItem = await _repositoryWrapper
+        var timelineItems = await _repositoryWrapper
             .TimelineRepository
             .GetAllAsync(
                 include: ti => ti.Include(til => til.HistoricalContexts));
 
-        var timelineItemDtos = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItem);
+        if (timelineItems is null)
+        {
+            return Result.Fail(new Error($"Cannot find any timelineItem"));
+        }
+
+        var timelineItemDtos = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
         return Result.Ok(timelineItemDtos);
     }
 }

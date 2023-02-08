@@ -1,6 +1,4 @@
 ﻿using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.BLL.DTO.Media.Images
 {

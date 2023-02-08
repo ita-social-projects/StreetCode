@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;

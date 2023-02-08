@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
@@ -27,6 +28,11 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
                 include: scl => scl
                     .Include(sc => sc.SubCategories)
                     .Include(sc => sc.Image) !);
+
+        if (srcCategories is null)
+        {
+            return Result.Fail(new Error($"Cannot find any srcCategory by the corresponding id: {request.Id}"));
+        }
 
         var mappedSrcCategories = _mapper.Map<SourceLinkCategoryDTO>(srcCategories);
         return Result.Ok(mappedSrcCategories);

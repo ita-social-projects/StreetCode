@@ -3,9 +3,6 @@ using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Media.Video.GetAll;
-using Streetcode.BLL.MediatR.Media.Video.GetById;
-using Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
@@ -14,7 +11,7 @@ public class AudioController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllAudeoQuery()));
+        return HandleResult(await Mediator.Send(new GetAllAudiosQuery()));
     }
 
     [HttpGet("{streetcodeId:int}")]

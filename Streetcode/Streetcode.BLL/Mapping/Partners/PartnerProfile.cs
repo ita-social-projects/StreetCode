@@ -8,6 +8,8 @@ public class PartnerProfile : Profile
 {
     public PartnerProfile()
     {
-        CreateMap<Partner, PartnerDTO>().ReverseMap();
+        CreateMap<Partner, PartnerDTO>()
+            .ForPath(dto => dto.TargetUrl.Title, conf => conf.MapFrom(ol => ol.UrlTitle))
+            .ForPath(dto => dto.TargetUrl.Href, conf => conf.MapFrom(ol => ol.TargetUrl));
     }
 }

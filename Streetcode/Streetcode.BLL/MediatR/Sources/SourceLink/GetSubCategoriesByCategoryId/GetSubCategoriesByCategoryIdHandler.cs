@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +23,13 @@ public class GetSubCategoriesByCategoryIdHandler : IRequestHandler<GetSubCategor
         var sourceLink = await _repositoryWrapper
             .SourceSubCategoryRepository
             .GetAllAsync(
-                predicate: ssc => ssc.SourceLinkCategoryId == request.categoryId,
+                predicate: ssc => ssc.SourceLinkCategoryId == request.CategoryId,
                 include: sscl => sscl
                     .Include(ssc => ssc.SourceLinks));
 
         if (sourceLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a source category with corresponding id: {request.categoryId}"));
+            return Result.Fail(new Error($"Cannot find any source category with corresponding id: {request.CategoryId}"));
         }
 
         var sourceLinkDto = _mapper.Map<IEnumerable<SourceLinkSubCategoryDTO>>(sourceLink);

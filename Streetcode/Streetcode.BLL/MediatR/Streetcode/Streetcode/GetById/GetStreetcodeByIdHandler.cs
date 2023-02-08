@@ -21,12 +21,12 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIdQuery request, CancellationToken cancellationToken)
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: st => st.Id == request.id,
+            predicate: st => st.Id == request.Id,
             include: source => source.Include(l => l.Tags));
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find a streetcode with corresponding id: {request.id}"));
+            return Result.Fail(new Error($"Cannot find any streetcode with corresponding id: {request.Id}"));
         }
 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);

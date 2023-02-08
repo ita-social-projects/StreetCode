@@ -21,6 +21,11 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
     {
         var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
 
+        if (facts is null)
+        {
+            return Result.Fail(new Error($"Cannot find any fact"));
+        }
+
         var factDtos = _mapper.Map<IEnumerable<FactDTO>>(facts);
         return Result.Ok(factDtos);
     }

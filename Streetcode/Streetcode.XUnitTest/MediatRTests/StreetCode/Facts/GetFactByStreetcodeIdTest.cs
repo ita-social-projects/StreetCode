@@ -56,7 +56,7 @@ public class GetFactByStreetcodeIdTest
     [InlineData(2)]
     public async Task ShouldReturnSuccessfully_CorrectType(int streetCodeId)
     {
-        //Act
+        //Arrange
         _mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Fact, bool>>>(),

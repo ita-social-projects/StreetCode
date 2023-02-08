@@ -75,7 +75,7 @@ public class DeleteFactTest
 
     [Theory]
     [InlineData(2)]
-    public async Task ShouldThrowError_SaveChangesAsyncIsNotSuccessful(int id)
+    public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id)
     {
         //Arrange
         _repository.Setup(x => x.FactRepository

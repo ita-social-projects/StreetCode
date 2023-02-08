@@ -85,22 +85,22 @@ public class GetAllFactsTest
     }
 
     private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(
-        Mock<IMapper> injectedMapper,
-        Mock<IRepositoryWrapper> injectedReppo)
+        Mock<IMapper> mockMapper,
+        Mock<IRepositoryWrapper> mockRepository)
     {
-        injectedReppo.Setup(x => x.FactRepository
+        mockRepository.Setup(x => x.FactRepository
               .GetAllAsync(
                   It.IsAny<Expression<Func<Fact, bool>>>(),
                     It.IsAny<Func<IQueryable<Fact>,
               IIncludableQueryable<Fact, object>>>()))
               .ReturnsAsync(GetListFacts());
 
-        injectedMapper
+        mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        return (injectedMapper, injectedReppo);
+        return (mockMapper, mockRepository);
     }
     private static IQueryable<Fact> GetListFacts()
     {

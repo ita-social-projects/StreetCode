@@ -6,7 +6,6 @@ using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
-
 using Model = Streetcode.DAL.Entities.Media.Audio;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio

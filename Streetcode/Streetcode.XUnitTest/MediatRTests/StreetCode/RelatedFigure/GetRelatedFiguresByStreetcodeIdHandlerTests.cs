@@ -6,7 +6,6 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
-
 using Entities = Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Streetcode;

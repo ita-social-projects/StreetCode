@@ -7,7 +7,6 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
-
 using Model = Streetcode.DAL.Entities.Streetcode.StreetcodeContent;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode

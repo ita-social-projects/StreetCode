@@ -8,7 +8,6 @@ using System.Linq.Expressions;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.DAL.Entities.Streetcode;
 using Microsoft.EntityFrameworkCore.Query;
-
 using Model = Streetcode.DAL.Entities.Streetcode.StreetcodeContent;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode

@@ -24,13 +24,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
         [Theory]
         [InlineData(1)]
-        public async Task Handle_ReturnsSuccessfullyArt(int id)
+        public async Task Handle_ReturnsArt(int id)
         {
             // Arrange
             GetMockRepositoryAndMapper(GetArt(), GetArtDTO());
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
 
             // Assert
@@ -44,9 +44,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             GetMockRepositoryAndMapper(GetArt(), GetArtDTO());
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
 
             // Assert
@@ -55,14 +55,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
         [Theory]
         [InlineData(-1)]
-        public async Task Handle_ReturnsError(int id)
+        public async Task Handle_WithNonExistentId_ReturnsError(int id)
         {
             // Arrange
             GetMockRepositoryAndMapper(null, null);
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
             var expectedError = $"Cannot find an art with corresponding id: {id}";
 
             // Act
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
 
             // Assert

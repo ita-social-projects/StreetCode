@@ -27,10 +27,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-
-            // Act
             var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object);
 
+            // Act
             var result = await handler.Handle(new GetAllImagesQuery(), default);
 
             // Assert
@@ -43,14 +42,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             //Arrange
             MockRepositoryAndMapper(new List<Image>() { }, new List<ImageDTO>() { });
+            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object);
+            int expectedResult = 0;
 
             //Act
-            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object);
-
             var result = await handler.Handle(new GetAllImagesQuery(), default);
 
             //Assert
-            Assert.Equal(0, result.Value.Count());
+            Assert.Equal(expectedResult, result.Value.Count());
 
         }
 
@@ -59,10 +58,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             //Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-
-            //Act
             var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object);
 
+            //Act
             var result = await handler.Handle(new GetAllImagesQuery(), default);
 
             //Assert

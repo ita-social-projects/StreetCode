@@ -9,8 +9,8 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatR.Media.Images
-{
+namespace Streetcode.XUnitTest.MediatRTests.Media.Images
+{ 
     public class GetImageByStreetcodeIdTest
     {
         private Mock<IRepositoryWrapper> _mockRepo;
@@ -25,13 +25,13 @@ namespace Streetcode.XUnitTest.MediatR.Media.Images
         [Theory]
         [InlineData(1)]
 
-        public async Task Handle_ReturnsSuccessfullyImage(int streetcodeId)
+        public async Task Handle_ReturnsImage(int streetcodeId)
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
+            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             //Assert
@@ -46,9 +46,9 @@ namespace Streetcode.XUnitTest.MediatR.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
+            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             // Assert
@@ -58,18 +58,18 @@ namespace Streetcode.XUnitTest.MediatR.Media.Images
 
         [Theory]
         [InlineData(-1)]
-        public async Task Handle_ReturnsError(int streetcodeId)
+        public async Task Handle_WithNonExistentId_ReturnsError(int streetcodeId)
         {
             // Arrange
             MockRepositoryAndMapper(null, null);
-            var error = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
+            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var expectedError = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
 
             // Act
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             // Assert
-            Assert.Equal(error, result.Errors.First().Message);
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         private List<Image> GetImagesList()

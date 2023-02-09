@@ -11,91 +11,96 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
     public class CreateStreetcodeHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        public CreateStreetcodeHandlerTests()
-        {
-            _repository = new Mock<IRepositoryWrapper>();
-            _mapper = new Mock<IMapper>();
-        }
-
         [Fact]
-        public async Task Handle_ReturnsSuccess()
+        public async Task CreateStreetcodeHandler_Success()
         {
+            var repository = new Mock<IRepositoryWrapper>();
+            var mockMapper = new Mock<IMapper>();
+
             var testStreetcode = new StreetcodeContent();
+
             var testStreetcodeDTO = new EventStreetcodeDTO();
 
-            RepositorySetup(testStreetcode, 1);
-            MapperSetup(testStreetcode);
+            repository.Setup(x => x.StreetcodeRepository.Create(testStreetcode));
+            repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
+            mockMapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
+
+            var handler = new CreateStreetcodeHandler(repository.Object, mockMapper.Object);
 
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
             
+            Assert.NotNull(result);
             Assert.True(result.IsSuccess);
 
         }
         [Fact]
-        public async Task Handle_ReturnErrorNull()
+        public async Task CreateStreetcodeHandler_ErrorNull()
         {
+            var repository = new Mock<IRepositoryWrapper>();
+            var mockMapper = new Mock<IMapper>();
+
             var testStreetcode = new StreetcodeContent();
+
             var testStreetcodeDTO = new EventStreetcodeDTO();
-            string expectedErrorMessage = "Cannot convert null to Streetcode";
 
-            RepositorySetup(testStreetcode, 1);
-            MapperSetup(null);
+            repository.Setup(x => x.StreetcodeRepository.Create(testStreetcode));
+            repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
+            mockMapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns((StreetcodeContent)null);
+
+            var handler = new CreateStreetcodeHandler(repository.Object, mockMapper.Object);
 
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
 
-            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
+            Assert.Single(result.Errors);
+            Assert.Equal("Cannot convert null to Streetcode", result.Errors.First().Message);
+
         }
 
         [Fact]
-        public async Task Handle_ReturnsSaveError()
+        public async Task CreateStreetcodeHandler_SaveError()
         {
+            var repository = new Mock<IRepositoryWrapper>();
+            var mockMapper = new Mock<IMapper>();
+
             var testStreetcode = new StreetcodeContent();
+
             var testStreetcodeDTO = new EventStreetcodeDTO();
-            string expectedErrorMessage = "Failed to create a streetcode";
 
-            RepositorySetup(testStreetcode, -1);
-            MapperSetup(testStreetcode);
+            repository.Setup(x => x.StreetcodeRepository.Create(testStreetcode));
+            repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
 
-            _mapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
+            mockMapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
 
-            var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
+            var handler = new CreateStreetcodeHandler(repository.Object, mockMapper.Object);
 
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
 
-            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
+            Assert.Single(result.Errors);
+            Assert.Equal("Failed to create a streetcode", result.Errors.First().Message);
         }
 
         [Fact]
-        public async Task Handle_ReturnsCorrectType() 
+        public async Task CreateStreetcodeHandler_TypeCheck() 
         { 
+            var repository = new Mock<IRepositoryWrapper>();
+            var mockMapper = new Mock<IMapper>();
+
             var testStreetcode = new StreetcodeContent();
+
             var testStreetcodeDTO = new EventStreetcodeDTO();
 
-            RepositorySetup(testStreetcode, 1);
-            MapperSetup(testStreetcode);
+            repository.Setup(x => x.StreetcodeRepository.Create(testStreetcode));
+            repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
+            mockMapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
+
+            var handler = new CreateStreetcodeHandler(repository.Object, mockMapper.Object);
 
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
 
             Assert.IsAssignableFrom<Unit>(result.Value);
-        }
-
-        private void RepositorySetup(StreetcodeContent streetcodeContent, int saveChangesVariable)
-        {
-            _repository.Setup(x => x.StreetcodeRepository.Create(streetcodeContent));
-            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
-        }
-
-        private void MapperSetup(StreetcodeContent streetcodeContent)
-        {
-            _mapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(streetcodeContent);
         }
     }
 }

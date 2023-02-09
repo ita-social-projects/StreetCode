@@ -108,20 +108,12 @@ public class GetAllFactsTest
         {
             new Fact
             {
-                Id = 1,
-                Title = "Викуп з кріпацтва",
-                ImageId = null,
-                Image = null,
-                FactContent = "Навесні 1838-го Карл Брюллов..."
+                Id = 1
             },
 
-            new DAL.Entities.Streetcode.TextContent.Fact
+            new Fact
             {
-                Id = 2,
-                Title = "Перший Кобзар",
-                ImageId = 5,
-                Image = null,
-                FactContent = "Ознайомившись випадково з рукописними творами"
+                Id = 2
             }
         };
 
@@ -141,18 +133,12 @@ public class GetAllFactsTest
         {
             new FactDTO
             {
-                Id = 1,
-                Title = "Викуп з кріпацтва",
-                ImageId = null,
-                FactContent = "Навесні 1838-го Карл Брюллов..."
+                Id = 1
             },
 
             new FactDTO
             {
                 Id = 2,
-                Title = "Перший Кобзар",
-                ImageId = 5,
-                FactContent = "Ознайомившись випадково з рукописними творами"
             }
         };
 

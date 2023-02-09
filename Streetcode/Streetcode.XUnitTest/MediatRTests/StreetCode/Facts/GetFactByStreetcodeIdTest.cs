@@ -136,17 +136,7 @@ public class GetFactByStreetcodeIdTest
         {
             new StreetcodeContent
             {
-                Id = 1,
-                Index = 1,
-                Teaser = "TestTeser",
-                ViewCount = 1,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                EventStartOrPersonBirthDate = DateTime.Now,
-                EventEndOrPersonDeathDate = DateTime.Now,
-                Text = null,
-                Audio = null,
-                TransactionLink = null
+                Id = 1
             },
         };
 
@@ -166,10 +156,7 @@ public class GetFactByStreetcodeIdTest
         {
             new FactDTO
             {
-                Id = 1,
-                Title = "Викуп з кріпацтва",
-                ImageId = null,
-                FactContent = "Навесні 1838-го Карл Брюллов..."
+                Id = 1
             },
         };
 

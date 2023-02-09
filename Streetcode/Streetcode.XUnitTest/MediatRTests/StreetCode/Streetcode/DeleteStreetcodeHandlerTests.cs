@@ -20,39 +20,42 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSuccess(int id)
-        {
+        {   
+            // arrange
             var testStreetcode = new StreetcodeContent();
             int testSaveChangesSuccess = 1;
 
             RepositorySetup(testStreetcode, testSaveChangesSuccess);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object);
-
+            // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
-            
+            // assert
             Assert.True(result.IsSuccess);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsNullError(int id)
-        {
+        {   
+            // arrange
             string expectedErrorMessage = $"Cannot find a streetcode with corresponding categoryId: {id}";
             int testSaveChangesSuccess = 1;
 
             RepositorySetup(null, testSaveChangesSuccess);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object);
-
+            // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSaveAsyncError(int id)
-        {
+        {   
+            // arrange
             var testStreetcode = new StreetcodeContent();
             string expectedErrorMessage = "Failed to delete a streetcode";
             int testSaveChangesFailed = -1;
@@ -60,9 +63,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             RepositorySetup(testStreetcode, testSaveChangesFailed);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object);
-
+            // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 

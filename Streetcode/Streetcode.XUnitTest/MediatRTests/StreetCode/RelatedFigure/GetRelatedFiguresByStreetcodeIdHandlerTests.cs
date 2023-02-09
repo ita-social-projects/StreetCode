@@ -25,6 +25,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         [InlineData(1)]
         public async Task Handle_ExistingId_ReturnsSuccess(int id)
         {
+            // arrange
             var testRelatedList = new List<Entities.RelatedFigure>()
             {
                 new Entities.RelatedFigure()
@@ -39,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             {
                 new RelatedFigureDTO()
             };
-
+            
             RepositorySetup(testRelatedList.AsQueryable(), null);
 
             _repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
@@ -51,9 +52,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
                 .Returns(testRelatedDTOList);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
-
+            // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Multiple(
                 () => Assert.NotNull(result), 
                 () => Assert.NotEmpty(result.Value));         
@@ -62,7 +63,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsCorrectType(int id)
-        {
+        {   
+            // arrange
             var testStreetcodeContentList = new List<StreetcodeContent>()
             {
                 new StreetcodeContent()
@@ -83,16 +85,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             MapperSetup(testRelatedDTO);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
-
+            // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.IsAssignableFrom<IEnumerable<RelatedFigureDTO>>(result.Value);
         }
 
         [Theory]
         [InlineData(2)]
         public async Task Handle_NonExisting_ReturnsGetAllNull(int id)
-        {
+        {   
+            // arrange
             var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>();
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
@@ -101,16 +104,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             MapperSetup(testRelatedDTO);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
-
+            // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         [Theory]
         [InlineData(2)]
         public async Task Handle_NonExisting_ReturnsFindAllNull(int id)
-        {
+        {   
+            // arrange
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
 
@@ -118,9 +122,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             MapperSetup(testRelatedDTO);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
-
+            // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
         }
 

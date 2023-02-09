@@ -24,7 +24,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSuccess(int id)
-        {
+        {   
+            // arrange 
             var testAudioList = new List<Model>()
             {
                 new Model { Id = id }
@@ -39,21 +40,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             MapperSetup(testAudioListDTO);
 
             var handler = new GetAllAudioHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetAllAudeoQuery(), CancellationToken.None);
-
+            // assert
             Assert.NotEmpty(result.Value);
         }
         [Fact]
         public async Task Handle_ReturnsError()
-        {
+        {   
+            // arrange
             RepositorySetup(null, null);
             MapperSetup(null);
 
-             var handler = new GetAllAudioHandler(_repository.Object, _mapper.Object);
-
+            var handler = new GetAllAudioHandler(_repository.Object, _mapper.Object);
+            // act
             var result = await handler.Handle(new GetAllAudeoQuery(), CancellationToken.None);
-
+            // assert
             Assert.Null(result.Value);
         }
 

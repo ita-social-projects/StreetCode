@@ -24,7 +24,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSuccess(int id) 
-        {
+        {   
+            // arrange
             var testContentDTO = new EventStreetcodeDTO();
             var testContent = new StreetcodeContent();
 
@@ -32,16 +33,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             MapperSetup(testContentDTO);
 
             var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.True(result.IsSuccess);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsCorrectType(int id)
-        {
+        {   
+            // arrange
             var testContentDTO = new EventStreetcodeDTO();
             var testContent = new StreetcodeContent();
 
@@ -49,25 +51,26 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             MapperSetup(testContentDTO);
 
             var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsError(int id)
-        {
+        {   
+            // arrange
             string expectedErrorMessage = $"Cannot find a streetcode with corresponding id: {id}";
 
             RepositorySetup(null);
             MapperSetup(null);
 
             var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 

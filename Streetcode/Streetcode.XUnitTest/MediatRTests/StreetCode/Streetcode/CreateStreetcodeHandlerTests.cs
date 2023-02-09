@@ -21,7 +21,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         [Fact]
         public async Task Handle_ReturnsSuccess()
-        {
+        {   
+            // arrange
             var testStreetcode = new StreetcodeContent();
             var testStreetcodeDTO = new EventStreetcodeDTO();
             int testSaveChangesSuccess = 1;
@@ -30,15 +31,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             MapperSetup(testStreetcode);
 
             var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-            
+            // assert
             Assert.True(result.IsSuccess);
 
         }
         [Fact]
         public async Task Handle_ReturnErrorNull()
-        {
+        {   
+            // arrange
             var testStreetcode = new StreetcodeContent();
             var testStreetcodeDTO = new EventStreetcodeDTO();
             string expectedErrorMessage = "Cannot convert null to Streetcode";
@@ -48,15 +50,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             MapperSetup(null);
 
             var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         [Fact]
         public async Task Handle_ReturnsSaveError()
-        {
+        {   
+            // arrange
             var testStreetcode = new StreetcodeContent();
             var testStreetcodeDTO = new EventStreetcodeDTO();
             string expectedErrorMessage = "Failed to create a streetcode";
@@ -68,15 +71,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
 
             var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         [Fact]
         public async Task Handle_ReturnsCorrectType() 
         { 
+            // arrange
             var testStreetcode = new StreetcodeContent();
             var testStreetcodeDTO = new EventStreetcodeDTO();
             int testSaveChangesSuccess = 1;
@@ -85,9 +89,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             MapperSetup(testStreetcode);
 
             var handler = new CreateStreetcodeHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new CreateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-
+            // assert
             Assert.IsAssignableFrom<Unit>(result.Value);
         }
 

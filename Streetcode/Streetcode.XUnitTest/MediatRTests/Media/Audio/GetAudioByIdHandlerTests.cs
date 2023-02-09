@@ -24,7 +24,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         [Theory]
         [InlineData(2)]
         public async Task Handle_ExistingId_Succcess(int id)
-        {
+        {   
+            // arrange
             var testAudio = new Model() { Id = id };
             var testAudioDTO = new AudioDTO { Id = id };
 
@@ -32,16 +33,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             MapperSetup(testAudioDTO);
 
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(id, result.Value.Id);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_NonExistingId_ErrorHandling(int id)
-        {
+        {   
+            // arrange
             string expectedErrorMessage = $"Cannot find an audio with corresponding id: {id}";
 
             var testAudioDTO = new AudioDTO { Id = id };
@@ -50,16 +52,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             MapperSetup(testAudioDTO);
 
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnCorrectType(int id)
-        {
+        {   
+            // arrange
             var testAudio = new Model() { Id = id };
 
             var testAudioDTO = new AudioDTO { Id = id };
@@ -68,9 +71,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             MapperSetup(testAudioDTO);
 
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
-
+            // assert
             Assert.IsAssignableFrom<AudioDTO>(result.Value);
         }
 

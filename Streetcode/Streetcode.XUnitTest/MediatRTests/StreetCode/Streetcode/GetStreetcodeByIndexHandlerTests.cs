@@ -25,7 +25,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSuccess(int id)
-        {
+        {   
+            // arrange
             var testModelList = new List<Model>()
             {
                 new Model(),
@@ -47,41 +48,43 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .Returns(testDTOList);
 
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
-
+            // assert
             Assert.NotNull(result);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsError(int id)
-        {
+        {   
+            // arrange 
             var testStreetcodeDTO = new EventStreetcodeDTO();
             var expectedErrorMessage = $"Cannot find a streetcode with corresponding Index: {id}";
 
             Setup(null, testStreetcodeDTO);
 
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
-
+            // assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsCorrectType(int id)
-        {
+        {   
+            // arrange
             var testStreetcodeDTO = new EventStreetcodeDTO();
             var testStreetcode = new Model();
 
             Setup(testStreetcode, testStreetcodeDTO);
 
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
-
+            // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
-
+            // assert
             Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
         }
 

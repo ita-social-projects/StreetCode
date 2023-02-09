@@ -21,6 +21,11 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();
 
+        if (transactLinks is null)
+        {
+            return Result.Fail(new Error($"Cannot find any transaction link"));
+        }
+
         var transactLinksDtos = _mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks);
         return Result.Ok(transactLinksDtos);
     }

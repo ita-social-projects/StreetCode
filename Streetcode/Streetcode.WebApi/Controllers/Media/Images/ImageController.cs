@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Media.Images;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
 using Streetcode.BLL.MediatR.Media.Image.GetById;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Media.Video.GetAll;
-using Streetcode.BLL.MediatR.Media.Video.GetById;
-using Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 

@@ -767,6 +767,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UrlTitle")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LogoId")
@@ -782,7 +785,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                             IsKeyPartner = true,
                             LogoId = 12,
                             TargetUrl = "https://www.softserveinc.com/en-us",
-                            Title = "SoftServe"
+                            Title = "SoftServe",
+                            UrlTitle = "go to SoftServe page"
                         },
                         new
                         {
@@ -811,9 +815,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("LogoUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte>("LogoType")
+                        .HasColumnType("tinyint");
 
                     b.Property<int>("PartnerId")
                         .HasColumnType("int");
@@ -837,15 +840,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            LogoUrl = "https://play-lh.googleusercontent.com/kMofEFLjobZy_bCuaiDogzBcUT-dz3BBbOrIEjJ-hqOabjK8ieuevGe6wlTD15QzOqw",
+                            LogoType = (byte)0,
                             PartnerId = 1,
-                            TargetUrl = "https://www.linkedin.com/company/softserve/",
-                            Title = "LinkedIn"
+                            TargetUrl = "https://twitter.com/SoftServeInc",
+                            Title = "Twitter"
                         },
                         new
                         {
                             Id = 2,
-                            LogoUrl = "https://www.facebook.com/images/fb_icon_325x325.png",
+                            LogoType = (byte)1,
                             PartnerId = 1,
                             TargetUrl = "https://www.instagram.com/softserve_people/",
                             Title = "Instagram"
@@ -853,7 +856,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            LogoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png",
+                            LogoType = (byte)2,
                             PartnerId = 1,
                             TargetUrl = "https://www.facebook.com/SoftServeCompany",
                             Title = "facebook"
@@ -1743,7 +1746,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2353),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6954),
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
@@ -1780,7 +1783,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2109),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6882),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
@@ -1794,7 +1797,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2217),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6917),
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
@@ -1808,7 +1811,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2226),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6922),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
@@ -1822,7 +1825,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2265),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6927),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 5,
@@ -1835,7 +1838,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2273),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6931),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 6,
@@ -1848,7 +1851,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 1, 30, 19, 30, 37, 34, DateTimeKind.Local).AddTicks(2281),
+                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6935),
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 7,

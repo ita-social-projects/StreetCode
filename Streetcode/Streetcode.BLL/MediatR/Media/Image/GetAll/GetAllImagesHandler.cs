@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetAll;
@@ -19,9 +20,14 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
 
     public async Task<Result<IEnumerable<ImageDTO>>> Handle(GetAllImagesQuery request, CancellationToken cancellationToken)
     {
-        var image = await _repositoryWrapper.ImageRepository.GetAllAsync();
+        var images = await _repositoryWrapper.ImageRepository.GetAllAsync();
 
-        var imageDtos = _mapper.Map<IEnumerable<ImageDTO>>(image);
+        if (images is null)
+        {
+            return Result.Fail(new Error($"Cannot find any image"));
+        }
+
+        var imageDtos = _mapper.Map<IEnumerable<ImageDTO>>(images);
         return Result.Ok(imageDtos);
     }
 }

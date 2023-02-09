@@ -1,43 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Streetcode.DAL.Persistence;
-using System.Data.Common;
-using Xunit;
-
-using Streetcode.WebApi.Extensions;
-using System;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.TestHost;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-
-namespace Streetcode.XIntegrationTest.ControllerTests
+﻿namespace Streetcode.XIntegrationTest.ControllerTests
 {
-    
+    using Streetcode.XIntegrationTest.ControllerTests.Utils;
+    using Xunit;
+
     public class BaseControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        protected HttpClient _client;
+        protected StreetcodeClient client;
 
-        protected string baseUrl = "https://localhost:5001/";
-        protected CustomWebApplicationFactory<Program> _factory;
-
-        public BaseControllerTests(CustomWebApplicationFactory<Program> factory)
+        public BaseControllerTests(CustomWebApplicationFactory<Program> factory,string secondPartUrl = "")
         {
-            
-            _client = factory
-                .CreateClient() ;
-            
-            this._factory = factory;
-
+            this.client = new StreetcodeClient(factory.CreateClient(), secondPartUrl);
         }
-
-       
-
     }
 }

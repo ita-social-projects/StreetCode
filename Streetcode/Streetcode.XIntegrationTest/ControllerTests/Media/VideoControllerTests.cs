@@ -1,80 +1,71 @@
-﻿using Streetcode.BLL.DTO.Media;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
+    using Streetcode.BLL.DTO.Media;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils;
+    using Xunit;
+
     public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        string secondPartUrl = "/api/Video";
-        public VideoControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
-        { }
-        
 
-        [Fact]
-        public async Task VideoControllerTests_GetAllSuccessfulResult()
+        public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
+            : base(factory, "/api/Video")
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
-            Assert.True(responce.IsSuccessStatusCode);
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<AudioDTO>>();
-
-            responce.EnsureSuccessStatusCode();
-            Assert.NotNull(returnedValue);
-
         }
+
         [Fact]
-        public async Task VideoControllerTests_GetByIdSuccessfulResult()
+        public async Task GetAll_ReturnSuccessStatusCode()
+        {
+            var response = await client.GetAllAsync();
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<AudioDTO>>(response.Content);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+        }
+
+        [Fact]
+        public async Task GetById_ReturnSuccessStatusCode()
         {
             int id = 1;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
+            var response = await client.GetByIdAsync(id);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
 
-            var returnedValue = await responce.Content.ReadFromJsonAsync<AudioDTO>();
-
+            Assert.True(response.IsSuccessStatusCode);
             Assert.Equal(id, returnedValue?.Id);
-            Assert.True(responce.IsSuccessStatusCode);
         }
 
         [Fact]
-        public async Task VideoControllerTests_GetByIdIncorectBadRequest()
+        public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
+            var response = await client.GetByIdAsync(id);
 
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
-            Assert.False(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
         }
-
-
 
         [Theory]
         [InlineData(1)]
-        public async Task VideoControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<VideoDTO>();
+            var response = await client.GetByStreetcodeId(streetcodeId);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
+            Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
             Assert.True(returnedValue.StreetcodeId == streetcodeId);
-            Assert.True(responce.IsSuccessStatusCode);
         }
+
         [Fact]
-        public async Task VideoControllerTests_GetByStreetcodeIdIncorrectBadRequest()
+        public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
+            var response = await client.GetByStreetcodeId(streetcodeId);
 
-
-            Assert.False(responce.IsSuccessStatusCode);
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
+            Assert.Multiple(
+                () => Assert.False(response.IsSuccessStatusCode),
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
         }
-
-
-
     }
 }

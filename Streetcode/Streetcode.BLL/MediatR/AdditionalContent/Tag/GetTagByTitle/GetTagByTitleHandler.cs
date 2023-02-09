@@ -20,11 +20,11 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
 
     public async Task<Result<TagDTO>> Handle(GetTagByTitleQuery request, CancellationToken cancellationToken)
     {
-        var tag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(f => f.Title == request.title);
+        var tag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(f => f.Title == request.Title);
 
         if (tag is null)
         {
-            return Result.Fail(new Error($"Cannot find a Tag by a title: {request.title}"));
+            return Result.Fail(new Error($"Cannot find any tag by the title: {request.Title}"));
         }
 
         var tagDto = _mapper.Map<TagDTO>(tag);

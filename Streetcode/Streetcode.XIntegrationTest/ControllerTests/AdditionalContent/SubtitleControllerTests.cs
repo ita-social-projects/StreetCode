@@ -1,66 +1,72 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class SubtitleControllerTests: BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
+        public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
+            : base(factory, "api/Subtitle")
         {
-
         }
 
         [Fact]
-        public async Task SubtitleControllerTests_GetAllSuccessfulResult()
+        public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var responce = await _client.GetAsync($"/api/Subtitle/GetAll");
-            Assert.True(responce.IsSuccessStatusCode);
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<SubtitleDTO>>();
+            var response = await this.client.GetAllAsync();
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
 
-            Assert.NotNull(returnedValue);
-           
+            Assert.Multiple(
+                () => Assert.True(response.IsSuccessStatusCode),
+                () => Assert.NotNull(returnedValue),
+                () => Assert.Equal(10, returnedValue.Count()));
+        }
+
+        [Fact]
+        public async Task GetAll_ReturnCorrectContent()
+        {
+            var response = await this.client.GetAllAsync();
+
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
+
+            Assert.Multiple(
+                () => Assert.NotNull(returnedValue),
+                () => Assert.Equal(10, returnedValue.Count()));
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task SubtitleControllerTests_GetByIdSuccessfulResult(int id)
+        public async Task GetById_ReturnSuccessStatusCode(int id)
         {
-            var responce = await _client.GetAsync($"/api/Subtitle/getById/{id}");
+            var response = await this.client.GetByIdAsync(id);
 
-            var returnedValue = await responce.Content.ReadFromJsonAsync<SubtitleDTO>();
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
 
-            Assert.Equal(id, returnedValue.Id);
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(id, returnedValue?.Id),
+                () => Assert.True(response.IsSuccessStatusCode));
         }
 
         [Fact]
-        public async Task SubtitleControllerTests_GetByIdIncorrectBadRequestResult()
+        public async Task GetById_Incorrect_ReturnBadRequest()
         {
-            var responce = await _client.GetAsync($"/api/Subtitle/getById/-100");
-            Assert.False(responce.IsSuccessStatusCode);
+            int incorrectId = -100;
+            var response = await this.client.GetByIdAsync(incorrectId);
+            Assert.False(response.IsSuccessStatusCode);
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task SubtitleControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
-            var responce = await _client.GetAsync($"/api/Subtitle/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<SubtitleDTO>>();
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
 
-            Assert.NotNull(returnedValue);
-            Assert.True( returnedValue.All(s=>s.StreetcodeId==streetcodeId));
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.NotNull(returnedValue),
+                () => Assert.True(returnedValue.All(s => s.StreetcodeId == streetcodeId)),
+                () => Assert.True(response.IsSuccessful));
         }
-
-
     }
 }

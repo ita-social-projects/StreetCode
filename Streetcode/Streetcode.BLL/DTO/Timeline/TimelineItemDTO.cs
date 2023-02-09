@@ -1,6 +1,3 @@
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Streetcode;
-
 namespace Streetcode.BLL.DTO.Timeline;
 
 public class TimelineItemDTO

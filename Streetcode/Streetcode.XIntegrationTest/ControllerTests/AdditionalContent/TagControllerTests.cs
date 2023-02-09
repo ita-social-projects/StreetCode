@@ -1,106 +1,95 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class TagControllerTests :BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        string secondPartUrl = "/api/Tag";
-        public TagControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory)
+        public TagControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory, "/api/Tag")
         {
 
         }
 
         [Fact]
-        public async Task TagControllerTests_GetAllSuccessfulResult()
+        public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/GetAll");
-            Assert.True(responce.IsSuccessStatusCode);
-
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<TagDTO>>();
-
+            var response = await client.GetAllAsync();
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
+           
+            Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-
         }
+
         [Fact]
-        public async Task TagControllerTests_GetByIdSuccessfulResult()
+        public async Task GetById_ReturnSuccessStatusCode()
         {
             int id = 1;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
+            var response = await client.GetByIdAsync(id);
 
-            var returnedValue = await responce.Content.ReadFromJsonAsync<TagDTO>();
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
-            Assert.Equal(id, returnedValue?.Id);
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(id, returnedValue?.Id),
+                () => Assert.True(response.IsSuccessStatusCode));
         }
 
         [Fact]
-        public async Task TagControllerTests_GetByIdIncorectBadRequest()
+        public async Task GetByIdIncorrect_ReturnBadRequest()
         {
-            int id = -100;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getById/{id}");
+            int incorrectId = -100;
+            var response = await client.GetByIdAsync(incorrectId);
 
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest,responce.StatusCode);
-            Assert.False(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
         }
 
-       
-        //dont return streetcodeenumerable
         [Theory]
         [InlineData(1)]
-        public async Task TagControllerTests_GetByStreetcodeIdSuccessfulResult(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<IEnumerable<TagDTO>>();
+            var response = await client.GetByStreetcodeId(streetcodeId);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
 
-            Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(t => t.Streetcodes.Any(s=>s.Id==streetcodeId)));
-            Assert.True(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.NotNull(returnedValue),
+                () => Assert.True(returnedValue.All(t => t.Streetcodes.Any(s => s.Id == streetcodeId))),
+                () => Assert.True(response.IsSuccessStatusCode));
         }
+
         [Fact]
-        public async Task TagControllerTests_GetByStreetcodeIdIncorectBadRequest()
+        public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var responce = await _client.GetAsync($"{secondPartUrl}/getByStreetcodeId/{streetcodeId}");
+            var response = await client.GetByStreetcodeId(streetcodeId);
 
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, responce.StatusCode);
-            Assert.False(responce.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        //return only with the equaltitle
         [Theory]
         [InlineData("writer")]
-        public async Task TagControllerTests_GetByTitleSuccessfulResult(string title)
+        public async Task GetByTitle_ReturnSuccessStatusCode(string title)
         {
-            var responce = await _client.GetAsync($"{secondPartUrl}/GetTagByTitle/{title}");
-            var returnedValue = await responce.Content.ReadFromJsonAsync<TagDTO>();
+            var response = await client.GetResponse($"/GetTagByTitle/{title}");
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
+            Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.Equal(returnedValue.Title,title);
-            Assert.True(responce.IsSuccessStatusCode);
-
+            Assert.Equal(returnedValue.Title, title);
         }
-
 
         [Fact]
-        public async Task TagControllerTests_GetByTitleIncorrectBadRequest()
+        public async Task GetByTitle_Incorrect_ReturnBadRequest()
         {
-            string title = "Some_incorect_Title";
-            var responce = await _client.GetAsync($"{secondPartUrl}/GetTagByTitle/{title}");
-            Assert.False(responce.IsSuccessStatusCode);
+            string title = "Some_Incorrect_Title";
+            var response = await client.GetResponse($"/GetTagByTitle/{title}");
+            Assert.Multiple(
+              () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+              () => Assert.False(response.IsSuccessStatusCode));
         }
-
-
-
     }
 }

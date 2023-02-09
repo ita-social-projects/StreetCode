@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.GetById;
@@ -24,7 +23,7 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
 
         if (term is null)
         {
-            return Result.Fail(new Error($"Cannot find a term with corresponding id: {request.Id}"));
+            return Result.Fail(new Error($"Cannot find any term with corresponding id: {request.Id}"));
         }
 
         var termDto = _mapper.Map<TermDTO>(term);

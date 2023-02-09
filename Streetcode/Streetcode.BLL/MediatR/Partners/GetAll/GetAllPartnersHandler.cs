@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAll;
@@ -20,13 +21,18 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
-        var partner = await _repositoryWrapper
+        var partners = await _repositoryWrapper
             .PartnersRepository
             .GetAllAsync(
                 include: p => p
                     .Include(pl => pl.PartnerSourceLinks));
 
-        var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partner);
+        if (partners is null)
+        {
+            return Result.Fail(new Error($"Cannot find any partners"));
+        }
+
+        var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
         return Result.Ok(partnerDtos);
     }
 }

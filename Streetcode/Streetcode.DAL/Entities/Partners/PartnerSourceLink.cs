@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.Partners;
 
@@ -15,7 +16,7 @@ public class PartnerSourceLink
     public string Title { get; set; }
 
     [Required]
-    public string LogoUrl { get; set; }
+    public LogoType LogoType { get; set; }
 
     [Required]
     public string TargetUrl { get; set; }

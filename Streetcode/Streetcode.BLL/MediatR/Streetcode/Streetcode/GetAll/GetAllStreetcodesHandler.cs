@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
@@ -19,9 +20,14 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
     public async Task<Result<IEnumerable<StreetcodeDTO>>> Handle(GetAllStreetcodesQuery request, CancellationToken cancellationToken)
     {
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+        var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
 
-        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcode);
+        if (streetcodes is null)
+        {
+            return Result.Fail(new Error($"Cannot find any streetcode"));
+        }
+
+        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes);
         return Result.Ok(streetcodeDtos);
     }
 }

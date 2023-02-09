@@ -1,11 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
-using Streetcode.BLL.MediatR.Streetcode.Text.Create;
-using Streetcode.BLL.MediatR.Streetcode.Text.Delete;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;

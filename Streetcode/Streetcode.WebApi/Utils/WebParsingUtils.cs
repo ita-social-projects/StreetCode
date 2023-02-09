@@ -2,9 +2,8 @@
 using System.IO.Compression;
 using System.Net;
 using System.Text;
-using System.Xml;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Polly;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Persistence;
@@ -60,6 +59,11 @@ public class WebParsingUtils
         clientHandler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
         clientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 
+        var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(
+            3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+        var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(5, TimeSpan.FromMinutes(1));
+
         using var client = new HttpClient(clientHandler, false)
         {
             DefaultRequestHeaders = { },
@@ -68,8 +72,8 @@ public class WebParsingUtils
 
         try
         {
-            using var response = await client
-                .GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+            using var response = await retryPolicy.WrapAsync(circuitBreakerPolicy).ExecuteAsync(async () => await client
+                .GetAsync(fileUrl, HttpCompletionOption.ResponseHeadersRead, cancellationToken));
 
             response.EnsureSuccessStatusCode();
             response.Content.Headers.ContentType!.CharSet = Encoding.GetEncoding(1251).WebName;
@@ -272,6 +276,11 @@ public class WebParsingUtils
     /// <returns>A tuple containing the latitude and longitude of the address.</returns>
     public static async Task<(string?, string?)> FetchCoordsByAddressAsync(string address)
     {
+        var retryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(
+            3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+        var circuitBreakerPolicy = Policy.Handle<Exception>().CircuitBreakerAsync(5, TimeSpan.FromMinutes(1));
+
         try
         {
             using var client = new HttpClient();
@@ -281,7 +290,9 @@ public class WebParsingUtils
             client.DefaultRequestHeaders.Add("Referer", "http://www.microsoft.com");
 
             // Send GET request to Nominatim API and retrieve JSON data
-            var jsonData = await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={address}&format=json&limit=1&addressdetails=1");
+            var jsonData = await retryPolicy.WrapAsync(circuitBreakerPolicy).ExecuteAsync(async () =>
+                await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={address}&format=json&limit=1&addressdetails=1"));
+
             return ParseJsonToCoordinateTuple(Encoding.UTF8.GetString(jsonData));
         }
         catch (Exception ex)

@@ -19,9 +19,14 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
 
     public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetAllArtsQuery request, CancellationToken cancellationToken)
     {
-        var art = await _repositoryWrapper.ArtRepository.GetAllAsync();
+        var arts = await _repositoryWrapper.ArtRepository.GetAllAsync();
 
-        var artDtos = _mapper.Map<IEnumerable<ArtDTO>>(art);
+        if (arts is null)
+        {
+            return Result.Fail(new Error($"Cannot find any arts"));
+        }
+
+        var artDtos = _mapper.Map<IEnumerable<ArtDTO>>(arts);
         return Result.Ok(artDtos);
     }
 }

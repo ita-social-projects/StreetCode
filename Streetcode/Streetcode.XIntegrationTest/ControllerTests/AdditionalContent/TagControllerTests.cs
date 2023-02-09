@@ -38,15 +38,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetByIdIncorrect_ReturnBadRequest()
         {
-            int id = -100;
-            var response = await client.GetByIdAsync(id);
+            int incorrectId = -100;
+            var response = await client.GetByIdAsync(incorrectId);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        //dont return streetcodeenumerable
         [Theory]
         [InlineData(1)]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
@@ -71,7 +70,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        //return only with the equaltitle
         [Theory]
         [InlineData("writer")]
         public async Task GetByTitle_ReturnSuccessStatusCode(string title)
@@ -89,7 +87,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             string title = "Some_Incorrect_Title";
             var response = await client.GetResponse($"/GetTagByTitle/{title}");
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Multiple(
+              () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+              () => Assert.False(response.IsSuccessStatusCode));
         }
     }
 }

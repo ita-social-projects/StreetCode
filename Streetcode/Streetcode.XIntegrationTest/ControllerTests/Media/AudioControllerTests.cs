@@ -48,7 +48,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [InlineData(1)]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -59,7 +59,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),

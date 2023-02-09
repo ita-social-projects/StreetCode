@@ -51,7 +51,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
-            var response = await this.client.GetByIdAsync(-100);
+            int incorrectId = -100;
+            var response = await this.client.GetByIdAsync(incorrectId);
             Assert.False(response.IsSuccessStatusCode);
         }
 

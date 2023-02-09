@@ -17,35 +17,20 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetByStreetcodeId_SuccsessStatusCode()
         {
-            int id = 1;
-            var response = await client.GetByIdAsync(id);
+            int streetcodeId = 1;
+            var response = await client.GetByStreetcodeId(streetcodeId);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeCoordinateDTO>>(response.Content);
 
+            Assert.NotNull(returnedValue);
             Assert.True(response.IsSuccessStatusCode);
-        }
-
-        [Fact]
-        public async Task GetByStreetcodeId_ReturnExpectedContent()
-        {
-            int id = 1;
-            var response = await client.GetByStreetcodeId(id);
-            var content = response.Content;
-            if (response.IsSuccessStatusCode)
-            {
-                var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeCoordinateDTO>>(response.Content);
-
-                Assert.NotNull(returnedValue);
-
-                if (returnedValue.Count() != 0)
-                {
-                    Assert.Equal(id, returnedValue.FirstOrDefault(c => c.StreetcodeId == id)?.StreetcodeId);
-                }
-            }
+            Assert.True(returnedValue.All(c => c.StreetcodeId == streetcodeId));
         }
 
         [Fact]
         public async Task GetByStreetcodeId_DoesntExist_ReturnBadRequest()
         {
-            var response = await client.GetByStreetcodeId(-10);
+            int invalidStreetcodeId = -10;
+            var response = await this.client.GetByStreetcodeId(invalidStreetcodeId);
             Assert.False(response.IsSuccessStatusCode);
         }
     }

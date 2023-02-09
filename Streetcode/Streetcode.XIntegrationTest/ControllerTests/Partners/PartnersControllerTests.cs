@@ -69,8 +69,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
             int streetcodeId = -100;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
-            Assert.False(response.IsSuccessStatusCode);
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Multiple(
+                          () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                          () => Assert.False(response.IsSuccessStatusCode));
         }
     }
 }

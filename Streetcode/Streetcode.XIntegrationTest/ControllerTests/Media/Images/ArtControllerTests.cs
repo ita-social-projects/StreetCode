@@ -19,7 +19,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
-            Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
         }
 
@@ -65,7 +64,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Multiple(
+                          () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+                          () => Assert.False(response.IsSuccessStatusCode));
         }
     }
 }

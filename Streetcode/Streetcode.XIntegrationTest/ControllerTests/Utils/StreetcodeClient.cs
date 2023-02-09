@@ -6,14 +6,12 @@
 
     public class StreetcodeClient
     {
-        public RestClient Client { get; }
-        public HttpClient cli;
+        protected RestClient Client;
 
         public string SecondPartUrl { get; }
 
         public StreetcodeClient(HttpClient client,string secondPartUrl = "")
         {
-            cli = client;
             this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
@@ -35,7 +33,6 @@
 
         public async Task<RestResponse> GetResponse(string requestString)
         {
-
             var request = new RestRequest($"{this.SecondPartUrl}{requestString}");
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("content-type", "application/json");

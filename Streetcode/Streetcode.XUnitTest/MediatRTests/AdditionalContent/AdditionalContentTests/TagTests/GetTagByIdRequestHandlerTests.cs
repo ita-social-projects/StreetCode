@@ -61,8 +61,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByIdQuery(_id), CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result.Value);
-
             Assert.IsType<TagDTO>(result.Value);
 
             Assert.True(result.Value.Id.Equals(_id));

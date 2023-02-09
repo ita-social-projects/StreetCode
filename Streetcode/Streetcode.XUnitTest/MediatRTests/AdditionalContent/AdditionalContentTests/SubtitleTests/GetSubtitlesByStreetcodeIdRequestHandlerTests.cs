@@ -76,8 +76,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
             
             //Assert
-            Assert.NotNull(result.Value);
-
             Assert.IsType<List<SubtitleDTO>>(result.Value);
 
             Assert.True(result.Value.All(x => x.StreetcodeId == _streetcode_id));

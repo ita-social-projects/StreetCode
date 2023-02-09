@@ -62,8 +62,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result.Value);
-
             Assert.IsType<TagDTO>(result.Value);
 
             Assert.Equal(result.Value.Title, _title);
@@ -82,8 +80,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result.Value);
-
             Assert.IsType<TagDTO>(result.Value);
 
             Assert.Null(result.Value.Title);

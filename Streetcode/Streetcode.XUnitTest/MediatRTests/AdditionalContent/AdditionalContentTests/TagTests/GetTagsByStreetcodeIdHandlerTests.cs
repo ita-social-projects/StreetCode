@@ -96,8 +96,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
             
             //Assert
-            Assert.NotNull(result.Value);
-
             Assert.IsType<List<TagDTO>>(result.Value);
 
             Assert.True(result.Value.All(x =>

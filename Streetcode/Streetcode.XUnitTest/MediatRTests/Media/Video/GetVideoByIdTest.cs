@@ -38,9 +38,9 @@ public class GetVideoByIdTest
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(id));
 
-        //Act
         var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetVideoByIdQuery (id),
             CancellationToken.None);
 

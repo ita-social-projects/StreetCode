@@ -39,9 +39,9 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert
@@ -69,9 +69,9 @@ public class GetFactByStreetcodeIdTest
             .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert
@@ -101,9 +101,9 @@ public class GetFactByStreetcodeIdTest
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
 
-        //Act
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
         //Assert

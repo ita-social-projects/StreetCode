@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -35,9 +34,9 @@ public class DeleteFactTest
 
         _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        //Act
         var handler = new DeleteFactHandler(_repository.Object);
 
+        //Act
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 
         //Assert

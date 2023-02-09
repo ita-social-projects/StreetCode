@@ -31,8 +31,9 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
-        //Act
         var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object);
+
+        //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
 
         //Assert
@@ -49,10 +50,11 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFactWithNotExistId());
 
-        //Act
         var expectedError = "Cannot convert null to Fact";
 
         var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object);
+
+        //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTOWithNotExistId()), CancellationToken.None);
 
         //Assert
@@ -69,10 +71,11 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
-        //Act
         var expectedError = "Failed to update a fact";
 
         var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object);
+
+        //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
 
         //Assert
@@ -89,8 +92,9 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
-        //Act
         var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object);
+
+        //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
 
         //Assert

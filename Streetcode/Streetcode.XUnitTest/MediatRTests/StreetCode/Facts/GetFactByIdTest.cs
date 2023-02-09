@@ -37,9 +37,9 @@ public class GetFactByIdTest
             .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
@@ -69,9 +69,9 @@ public class GetFactByIdTest
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
 
-        //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert
@@ -99,9 +99,9 @@ public class GetFactByIdTest
             .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        //Act
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
 
         //Assert

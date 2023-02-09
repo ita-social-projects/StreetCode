@@ -27,9 +27,9 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        //Act
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
         //Assert
@@ -45,9 +45,9 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        //Act
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
         //Assert
@@ -75,9 +75,9 @@ public class GetAllFactsTest
 
         var expectedError = "Cannot find any fact";
 
-        //Act
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
 
         //Assert

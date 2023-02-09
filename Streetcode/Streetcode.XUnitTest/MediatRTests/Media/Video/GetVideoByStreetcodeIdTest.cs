@@ -38,9 +38,9 @@ public class GetVideoByStreetcodeIdTest
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(streetcodeId));
 
-        //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
             CancellationToken.None);
 
@@ -71,9 +71,9 @@ public class GetVideoByStreetcodeIdTest
 
         var expectedError = $"Cannot find any video by the streetcode id: {streetcodeId}";
 
-        //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
             CancellationToken.None);
 
@@ -102,9 +102,9 @@ public class GetVideoByStreetcodeIdTest
              .Map<VideoDTO>(It.IsAny<Video>()))
              .Returns(GetVideoDTO(streetcodeId));
 
-        //Act
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
             CancellationToken.None);
 

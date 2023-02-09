@@ -26,14 +26,12 @@ public class GetAllVideosTest
     {
         //Arrange
         (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
-
-        //Act
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
         //Assert
-
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.IsType<List<VideoDTO>>(result.ValueOrDefault)
@@ -44,11 +42,10 @@ public class GetAllVideosTest
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
         //Arrange
-        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
-
-        //Act
+        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);    
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
         //Assert
@@ -75,10 +72,9 @@ public class GetAllVideosTest
             .Returns(GetVideosDTOWithNotExistingId());
 
         var expectedError = "Cannot find any videos";
-
-        //Act
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
 
+        //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
 
         //Assert

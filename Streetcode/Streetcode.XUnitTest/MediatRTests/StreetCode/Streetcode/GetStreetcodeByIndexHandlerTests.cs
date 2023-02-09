@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {   
             // arrange 
             var testStreetcodeDTO = new EventStreetcodeDTO();
-            var expectedErrorMessage = $"Cannot find a streetcode with corresponding Index: {id}";
+            var expectedErrorMessage = $"Cannot find any streetcode with corresponding index: {id}";
 
             Setup(null, testStreetcodeDTO);
 

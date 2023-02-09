@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsError(int id)
         {   
             // arrange
-            string expectedErrorMessage = $"Cannot find a streetcode with corresponding id: {id}";
+            string expectedErrorMessage = $"Cannot find any streetcode with corresponding id: {id}";
 
             RepositorySetup(null);
             MapperSetup(null);

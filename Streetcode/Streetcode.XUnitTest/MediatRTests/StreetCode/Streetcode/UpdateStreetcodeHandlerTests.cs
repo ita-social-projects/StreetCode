@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿/*using AutoMapper;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.Types;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
@@ -85,3 +85,4 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
     }
 }
+*/

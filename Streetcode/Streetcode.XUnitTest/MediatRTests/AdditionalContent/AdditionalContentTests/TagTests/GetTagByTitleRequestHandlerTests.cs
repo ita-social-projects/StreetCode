@@ -22,17 +22,17 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             _mockMapper = new Mock<IMapper>();
         }
 
-        private readonly string _title = "test_title";
+        private static string _title = "test_title";
 
         private readonly Tag tag = new Tag
         {
             Id = 1,
-            Title = "test_title"
+            Title = _title
         };
         private readonly TagDTO tagDTO = new TagDTO
         {
             Id = 1,
-            Title = "test_title"
+            Title = _title
         };
 
         async Task SetupRepository(Tag tag)
@@ -62,9 +62,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
 
             //Assert
-            Assert.IsType<TagDTO>(result.Value);
-
-            Assert.Equal(result.Value.Title, _title);
+            Assert.Multiple(
+                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.Equal(result.Value.Title, _title));
         }
 
         [Fact]
@@ -80,9 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
 
             //Assert
-            Assert.IsType<TagDTO>(result.Value);
-
-            Assert.Null(result.Value.Title);
+            Assert.Multiple(
+                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.Null(result.Value.Title));
         }
     }
 }

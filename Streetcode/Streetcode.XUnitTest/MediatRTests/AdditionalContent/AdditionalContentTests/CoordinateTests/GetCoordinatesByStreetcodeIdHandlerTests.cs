@@ -29,12 +29,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             new StreetcodeCoordinate
             {
                 Id = 1,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             },
             new StreetcodeCoordinate
             {
                 Id = 2,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             }
         };
         private readonly List<StreetcodeCoordinateDTO> coordinateDTOs = new List<StreetcodeCoordinateDTO>
@@ -42,12 +42,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             new StreetcodeCoordinateDTO
             {
                 Id = 1,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             },
             new StreetcodeCoordinateDTO
             {
                 Id = 2,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             }
         };
 
@@ -79,8 +79,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.True(result.Value.All(co => co.StreetcodeId == _streetcode_id));
+            Assert.Multiple(
+                () => Assert.IsType<List<StreetcodeCoordinateDTO>>(result.Value),
+                () => Assert.True(result.Value.All(co => co.StreetcodeId.Equals(_streetcode_id))));
         }
 
         [Fact]
@@ -96,7 +97,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
             //Assert
-            Assert.Empty(result.Value);
+
+            Assert.Multiple(
+                () => Assert.IsType<List<StreetcodeCoordinateDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
     }
 }

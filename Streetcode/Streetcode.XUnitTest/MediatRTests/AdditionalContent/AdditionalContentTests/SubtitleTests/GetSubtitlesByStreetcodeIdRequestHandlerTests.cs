@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -28,12 +29,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             new Subtitle
             {
                 Id = 1,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             },
             new Subtitle
             {
                 Id = 2,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             }
         };
         private readonly List<SubtitleDTO> subtitleDTOs = new List<SubtitleDTO>
@@ -41,12 +42,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             new SubtitleDTO
             {
                 Id = 1,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             },
             new SubtitleDTO
             {
                 Id = 2,
-                StreetcodeId = 1
+                StreetcodeId = _streetcode_id
             }
         };
         async Task SetupRepository(List<Subtitle> returnList)
@@ -74,11 +75,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
             //Act
             var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
-            
-            //Assert
-            Assert.IsType<List<SubtitleDTO>>(result.Value);
 
-            Assert.True(result.Value.All(x => x.StreetcodeId == _streetcode_id));
+            //Assert
+            Assert.Multiple(
+                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+                () => Assert.True(result.Value.All(x => x.StreetcodeId == _streetcode_id)));
         }
 
         [Fact]
@@ -94,7 +95,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
             //Assert
-            Assert.Empty(result.Value);
+            Assert.Multiple(
+                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
     }
 }

@@ -79,9 +79,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
             
             //Assert
-            Assert.IsType<List<SubtitleDTO>>(result.Value);
-
-            Assert.True(result.Value.Count() == subtitles.Count);
+            Assert.Multiple(
+                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+                () => Assert.True(result.Value.Count().Equals(subtitles.Count)));
         }
 
         [Fact]
@@ -97,9 +97,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
 
             //Assert
-            Assert.IsType<List<SubtitleDTO>>(result.Value);
-
-            Assert.Empty(result.Value);
+            Assert.Multiple(
+                    () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+                    () => Assert.Empty(result.Value));
         }
     }
 }

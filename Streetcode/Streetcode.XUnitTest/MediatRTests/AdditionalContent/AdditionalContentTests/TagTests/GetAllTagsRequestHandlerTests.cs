@@ -75,9 +75,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
 
             //Assert
-            Assert.IsType<List<TagDTO>>(result.Value);
-
-            Assert.True(result.Value.Count() == tags.Count);
+            Assert.Multiple(
+                () => Assert.IsType<List<TagDTO>>(result.Value),
+                () => Assert.True(result.Value.Count() == tags.Count));
         }
 
         [Fact]
@@ -93,7 +93,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
 
             //Assert
-            Assert.Empty(result.Value);
+            Assert.Multiple(
+                () => Assert.IsType<List<TagDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
     }
 }

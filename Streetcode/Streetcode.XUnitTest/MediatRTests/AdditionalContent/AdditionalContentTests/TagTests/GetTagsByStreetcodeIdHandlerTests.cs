@@ -33,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 Id = 1,
                 Streetcodes = new List<StreetcodeContent> {
                     new StreetcodeContent {
-                        Id = 1
+                        Id = _streetcode_id
                     }
                 }
             },
@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 Id = 2,
                 Streetcodes = new List<StreetcodeContent> {
                     new StreetcodeContent {
-                        Id = 1
+                        Id = _streetcode_id
                     }
                 }
             }
@@ -54,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 Id = 1,
                 Streetcodes = new List<StreetcodeDTO> {
                     new EventStreetcodeDTO {
-                        Id = 1
+                        Id = _streetcode_id
                     }
                 }
             },
@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 Id = 2,
                 Streetcodes = new List<StreetcodeDTO> {
                     new EventStreetcodeDTO {
-                        Id = 1
+                        Id = _streetcode_id
                     }
                 }
             }
@@ -94,12 +94,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             //Act
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
-            
-            //Assert
-            Assert.IsType<List<TagDTO>>(result.Value);
 
-            Assert.True(result.Value.All(x =>
-                x.Streetcodes.All(y => y.Id == _streetcode_id)));
+            //Assert
+            Assert.Multiple(
+                () => Assert.IsType<List<TagDTO>>(result.Value),
+                () => Assert.True(result.Value.All(x => x.Streetcodes.All(y => y.Id == _streetcode_id))));
         }
 
         [Fact]
@@ -115,7 +114,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
             //Assert
-            Assert.Empty(result.Value);
+            Assert.Multiple(
+                () => Assert.IsType<List<TagDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
     }
 }

@@ -25,12 +25,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private readonly Tag tag = new Tag
         {
-            Id = 1,
+            Id = _id,
             Title = "some title 1"
         };
         private readonly TagDTO tagDTO = new TagDTO
         {
-            Id = 1,
+            Id = _id,
             Title = "some title 1"
         };
 
@@ -61,9 +61,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByIdQuery(_id), CancellationToken.None);
 
             //Assert
-            Assert.IsType<TagDTO>(result.Value);
-
-            Assert.True(result.Value.Id.Equals(_id));
+            Assert.Multiple(
+                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.True(result.Value.Id.Equals(_id)));
         }
 
         [Fact]
@@ -79,9 +79,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var result = await handler.Handle(new GetTagByIdQuery(_id), CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
-
-            Assert.NotEqual(result.Value.Id, _id);
+            Assert.Multiple(
+                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.False(result.Value.Id.Equals(_id)));
         }
     }
 }

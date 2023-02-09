@@ -46,10 +46,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             Assert.NotEmpty(result.Value);
         }
 
-        /*[Fact]
+        [Fact]
         public async Task Handle_ReturnsError()
-        {   
+        {
             // arrange
+            string expectedErrorMessage = "Cannot find any audios";
             RepositorySetup(null, null);
             MapperSetup(null);
 
@@ -57,8 +58,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
             // assert
-            Assert.Null(result.Value);
-        }*/
+            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
+        }
 
         private void RepositorySetup(Model audio, List<Model> audios)
         {

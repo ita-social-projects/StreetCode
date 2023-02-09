@@ -6,12 +6,12 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
 
-public class GetTextByStreetcodeIdQueryHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDTO>>
+public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetTextByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTextByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

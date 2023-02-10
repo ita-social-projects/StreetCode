@@ -74,9 +74,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             return new Art
             {
-                Id = 1,
-                ImageId = 1,
-                Description = "Test text 1",
+                Id = 1
             };
         }
 
@@ -84,8 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             return new ArtDTO
             {
-                Id = 1,
-                ImageId = 1,
+                Id = 1
             };
         }
 

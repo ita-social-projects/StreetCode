@@ -29,7 +29,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -46,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(null, null);
-            var handler = new GetImageByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
             var expectedError = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
 
             // Act
@@ -78,18 +78,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             {
                 new Image()
                 {
-                    Id = 1,
-                    Title= "Title1",
-                    Alt = "Alt1",
-                    Url = "https://",
+                    Id = 1
 
                 },
                 new Image()
                 {
-                    Id = 2,
-                    Title= "Title2",
-                    Alt = "Alt2",
-                    Url = "https://",
+                    Id = 2
                 },
             };
         }
@@ -100,13 +94,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             {
                 new ImageDTO
                 {
-                    Id = 1,
-                    Alt = "Alt1",
+                    Id = 1
                 },
                 new ImageDTO
                 {
-                    Id = 2,
-                    Alt = "Alt2",
+                    Id = 2
                 },
             };
         }

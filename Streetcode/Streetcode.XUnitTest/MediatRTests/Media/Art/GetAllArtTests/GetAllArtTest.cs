@@ -74,16 +74,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
              {
                 new Art()
                 {
-                    Id = 1,
-                    ImageId = 1,
-                    Description = "Test text 1",
+                    Id = 1
 
                 },
                 new Art()
                 {
-                    Id = 2,
-                    ImageId = 2,
-                    Description = "Test text 2",
+                    Id = 2
 
                 },
              };
@@ -95,13 +91,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             {
                 new ArtDTO
                 {
-                    Id = 1,
-                    ImageId = 1,
+                    Id = 1
                 },
                 new ArtDTO
                 {
-                    Id = 2,
-                    ImageId = 2,
+                    Id = 2
                 },
             };
         }

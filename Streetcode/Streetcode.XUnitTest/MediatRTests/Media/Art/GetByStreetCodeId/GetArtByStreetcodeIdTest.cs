@@ -29,10 +29,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetArtsByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             //Assert
             Assert.Equal(streetcodeId, result.Value.First().Id);
@@ -46,10 +46,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetArtsByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
@@ -62,11 +62,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             MockRepositoryAndMapper(null, null);
-            var handler = new GetArtByStreetcodeIdQueryHandler(_mockRepo.Object, _mockMapper.Object);
-            var expectedError = $"Cannot find an art with corresponding streetcode id: {streetcodeId}";
+            var handler = new GetArtsByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var expectedError = $"Cannot find any art with corresponding streetcode id: {streetcodeId}";
 
             // Act
-            var result = await handler.Handle(new GetArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.First().Message);
@@ -79,16 +79,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                 new Art()
                 {
                     Id = 1,
-                    ImageId = 1,
-                    Description = "Test text 1",
-
                 },
                 new Art()
                 {
                     Id = 2,
-                    ImageId = 2,
-                    Description = "Test text 2",
-
                 },
             };
         }
@@ -100,12 +94,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                 new ArtDTO
                 {
                     Id = 1,
-                    ImageId = 1,
                 },
                 new ArtDTO
                 {
                     Id = 2,
-                    ImageId = 2,
                 },
             };
         }

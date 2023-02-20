@@ -555,21 +555,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 6,
                             Alt = "Мико́ла Костома́ров",
                             Title = "Мико́ла Костома́ров",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg"
+                            Url = "https://i.ibb.co/f85t1Vs/Antonovich.png"
                         },
                         new
                         {
                             Id = 7,
                             Alt = "Василь Білозерський",
                             Title = "Василь Білозерський",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG"
+                            Url = "https://i.ibb.co/f85t1Vs/Antonovich.png"
                         },
                         new
                         {
                             Id = 8,
                             Alt = "Звільнення Херсона",
                             Title = "Звільнення Херсона",
-                            Url = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg"
+                            Url = "https://i.ibb.co/89KKcBD/Ratushny.png"
                         },
                         new
                         {
@@ -618,21 +618,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 15,
                             Alt = "Володимир-Варфоломей",
                             Title = "Володимир-Варфоломей",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
+                            Url = "https://i.ibb.co/f85t1Vs/Antonovich.png"
                         },
                         new
                         {
                             Id = 16,
                             Alt = "Леся Українка",
                             Title = "Леся Українка",
-                            Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
+                            Url = "https://i.ibb.co/RB9KtSq/Ukrainka.png"
                         },
                         new
                         {
                             Id = 17,
                             Alt = "Іван Мазепа",
                             Title = "Іван Мазепа",
-                            Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
+                            Url = "https://i.ibb.co/YDjTGzW/Mazepa.png"
                         },
                         new
                         {

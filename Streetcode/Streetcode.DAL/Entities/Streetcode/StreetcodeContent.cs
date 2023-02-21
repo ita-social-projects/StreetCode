@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Media;
@@ -69,4 +70,9 @@ public class StreetcodeContent
     public List<Partner> Partners { get; set; } = new ();
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
+
+    public IIncludableQueryable<StreetcodeContent, object> Include(Func<object, object> value)
+    {
+        throw new NotImplementedException();
+    }
 }

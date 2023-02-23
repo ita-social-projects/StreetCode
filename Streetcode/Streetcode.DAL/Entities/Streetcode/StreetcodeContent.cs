@@ -28,6 +28,10 @@ public class StreetcodeContent
     public string Teaser { get; set; }
 
     public Stage Stage { get; set; }
+
+    [Required]
+    public string StreetcodeType { get; set; }
+
     public int ViewCount { get; set; }
 
     public DateTime CreatedAt { get; set; }

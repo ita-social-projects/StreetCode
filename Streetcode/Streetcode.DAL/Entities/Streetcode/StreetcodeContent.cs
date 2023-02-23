@@ -10,6 +10,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.Streetcode;
 
@@ -26,6 +27,7 @@ public class StreetcodeContent
     [Required]
     public string Teaser { get; set; }
 
+    public Stage Stage { get; set; }
     public int ViewCount { get; set; }
 
     public DateTime CreatedAt { get; set; }

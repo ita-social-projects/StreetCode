@@ -12,14 +12,7 @@
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureAppConfiguration((context, builder) =>
-            {
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
-                builder.SetBasePath(Directory.GetCurrentDirectory());
-                builder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                builder.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-                builder.AddEnvironmentVariables("STREETCODE_");
-            });
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests");
         }
     }
 }

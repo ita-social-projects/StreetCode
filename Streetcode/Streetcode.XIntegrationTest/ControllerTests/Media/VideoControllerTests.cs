@@ -1,6 +1,4 @@
-﻿
-
-namespace Streetcode.XIntegrationTest.ControllerTests.Media
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     using Streetcode.BLL.DTO.Media;
     using Streetcode.XIntegrationTest.ControllerTests.Utils;
@@ -8,7 +6,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
     public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
@@ -31,6 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
             Assert.Equal(id, returnedValue?.Id);
         }
 

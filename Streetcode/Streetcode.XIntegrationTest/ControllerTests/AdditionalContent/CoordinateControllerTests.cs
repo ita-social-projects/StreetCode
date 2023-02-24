@@ -1,28 +1,27 @@
-﻿using FluentResults;
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates;
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using System.Net.Http.Json;
-using System.Text.Json;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class CoordinateControllerTests: BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory):base(factory,"/api/Coordinate")
+        public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
+            : base(factory, "/api/Coordinate")
         {
         }
 
         [Fact]
+        [ExtractTestStreetcode]
         public async Task GetByStreetcodeId_SuccsessStatusCode()
         {
-            int streetcodeId = 1;
+            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeCoordinateDTO>>(response.Content);
 
-            Assert.NotNull(returnedValue);
             Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
             Assert.True(returnedValue.All(c => c.StreetcodeId == streetcodeId));
         }
 

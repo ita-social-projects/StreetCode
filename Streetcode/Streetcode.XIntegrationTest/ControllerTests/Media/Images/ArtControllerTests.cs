@@ -1,5 +1,7 @@
 ﻿using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Xunit;
@@ -8,7 +10,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ArtControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public ArtControllerTests(CustomWebApplicationFactory<Program> factory) : base(factory,"/api/Art")
+        public ArtControllerTests(CustomWebApplicationFactory<Program> factory)
+            : base(factory, "/api/Art")
         {
         }
 
@@ -23,22 +26,27 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
+        [ExtractTestArt]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            int id = 1;
-            var response = await this.client.GetByIdAsync(id);
+            Art expectedArt = ExtractTestArt.ArtForTest;
+            var response = await this.client.GetByIdAsync(expectedArt.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ArtDTO>(response.Content);
 
-            Assert.Equal(id, returnedValue?.Id);
             Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+            Assert.Multiple(
+                () => Assert.Equal(expectedArt.Id, returnedValue.Id),
+                () => Assert.Equal(expectedArt.ImageId, returnedValue.ImageId),
+                () => Assert.Equal(expectedArt.Description, returnedValue.Description));
         }
 
         [Fact]
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var response = await client.GetByIdAsync(-1);
+            var response = await client.GetByIdAsync(id);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -50,11 +58,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
             var response = await client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable< ArtDTO>>(response.Content);
-            Assert.Multiple(
-              () => Assert.True(response.IsSuccessStatusCode),
-              () => Assert.NotNull(returnedValue),
-              () => Assert.True(returnedValue.All(t => t.Streetcodes.Any(s => s.Id == streetcodeId))));
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
+
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+            Assert.True(returnedValue.All(t => t.Streetcodes.All(s => s.Id == streetcodeId)));
         }
 
         [Fact]

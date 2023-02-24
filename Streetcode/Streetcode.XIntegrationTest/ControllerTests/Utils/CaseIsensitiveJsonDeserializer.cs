@@ -1,9 +1,7 @@
-﻿
-using System.Text.Json;
-
-
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
+    using System.Text.Json;
+
     public class CaseIsensitiveJsonDeserializer
     {
         private static JsonSerializerOptions options = new JsonSerializerOptions
@@ -11,9 +9,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             PropertyNameCaseInsensitive = true
         };
 
-        public static T Deserialize<T>(string text)
+        public static T? Deserialize<T>(string? text)
+            where T : class
         {
-            return JsonSerializer.Deserialize<T>(text, options);
+            if (text == null)
+                return null;
+            try
+            {
+                return JsonSerializer.Deserialize<T>(text, options);
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 

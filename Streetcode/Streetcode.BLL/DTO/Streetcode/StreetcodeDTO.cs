@@ -2,7 +2,7 @@ using Streetcode.BLL.DTO.AdditionalContent;
 
 namespace Streetcode.BLL.DTO.Streetcode;
 
-public abstract class StreetcodeDTO
+public class StreetcodeDTO
 {
     public int Id { get; set; }
     public int Index { get; set; }

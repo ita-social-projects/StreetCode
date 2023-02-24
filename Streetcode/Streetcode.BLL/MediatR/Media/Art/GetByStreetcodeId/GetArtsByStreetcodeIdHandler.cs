@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,7 +27,11 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             }
 
             var arts = await _repositoryWrapper.ArtRepository
-               .GetAllAsync(f => f.StreetcodeArts.Any(s => s.StreetcodeId == request.StreetcodeId));
+               .GetAllAsync(
+                   predicate: f => f.StreetcodeArts.Any(s => s.StreetcodeId == request.StreetcodeId),
+                   include: art => art.Include(a => a.StreetcodeArts)
+                   .ThenInclude(s => s.Streetcode));
+
             if (arts is null)
             {
                 return Result.Fail(new Error($"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}"));

@@ -1,10 +1,13 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle;
+using System.Net;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class SubtitleControllerTests: BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class SubtitleControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
@@ -12,40 +15,32 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        public async Task GetAll_ReturnSuccessStatusCode()
+        public async Task GetAll_ReturnSuccess()
         {
             var response = await this.client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
-
-            Assert.Multiple(
-                () => Assert.True(response.IsSuccessStatusCode),
-                () => Assert.NotNull(returnedValue),
-                () => Assert.Equal(10, returnedValue.Count()));
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
         }
 
         [Fact]
-        public async Task GetAll_ReturnCorrectContent()
+        [ExtractTestSubtitle]
+        public async Task GetById_ReturnSuccessContent()
         {
-            var response = await this.client.GetAllAsync();
+            Subtitle expectedSubtitle = ExtractTestSubtitle.SubtitleForTest;
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
-
-            Assert.Multiple(
-                () => Assert.NotNull(returnedValue),
-                () => Assert.Equal(10, returnedValue.Count()));
-        }
-
-        [Theory]
-        [InlineData(1)]
-        public async Task GetById_ReturnSuccessStatusCode(int id)
-        {
-            var response = await this.client.GetByIdAsync(id);
+            var response = await this.client.GetByIdAsync(expectedSubtitle.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
 
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
             Assert.Multiple(
-                () => Assert.Equal(id, returnedValue?.Id),
-                () => Assert.True(response.IsSuccessStatusCode));
+                () => Assert.Equal(expectedSubtitle.Id, returnedValue?.Id),
+                () => Assert.Equal(expectedSubtitle.LastName, returnedValue?.LastName),
+                () => Assert.Equal(expectedSubtitle.FirstName, returnedValue?.FirstName),
+                () => Assert.Equal(expectedSubtitle.Description, returnedValue?.Description),
+                () => Assert.Equal((int)expectedSubtitle.Status, (int)returnedValue?.SubtitleStatus));
         }
 
         [Fact]
@@ -53,20 +48,22 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             int incorrectId = -100;
             var response = await this.client.GetByIdAsync(incorrectId);
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.False(response.IsSuccessStatusCode),
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode));
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccess(int streetcodeId)
         {
             var response = await this.client.GetByStreetcodeId(streetcodeId);
+
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
 
-            Assert.Multiple(
-                () => Assert.NotNull(returnedValue),
-                () => Assert.True(returnedValue.All(s => s.StreetcodeId == streetcodeId)),
-                () => Assert.True(response.IsSuccessful));
+            Assert.True(response.IsSuccessful);
+            Assert.NotNull(returnedValue);
+            Assert.True(returnedValue.All(s => s.StreetcodeId == streetcodeId));
         }
     }
 }

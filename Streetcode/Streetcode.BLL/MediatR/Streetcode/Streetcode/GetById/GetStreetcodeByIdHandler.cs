@@ -24,8 +24,6 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
             predicate: st => st.Id == request.Id,
             include: source => source.Include(l => l.Tags));
 
-        Console.WriteLine(streetcode.GetType());
-
         if (streetcode is null)
         {
             return Result.Fail(new Error($"Cannot find any streetcode with corresponding id: {request.Id}"));

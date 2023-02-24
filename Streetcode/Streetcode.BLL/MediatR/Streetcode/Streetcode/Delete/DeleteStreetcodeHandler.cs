@@ -15,6 +15,14 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
     public async Task<Result<Unit>> Handle(DeleteStreetcodeCommand request, CancellationToken cancellationToken)
     {
+        var streetcodesRelated = await _repositoryWrapper.RelatedFigureRepository
+            .GetAllAsync(sc => sc.ObserverId == request.Id || sc.TargetId == request.Id);
+
+        foreach (var streetcodeRelated in streetcodesRelated)
+        {
+            _repositoryWrapper.RelatedFigureRepository.Delete(streetcodeRelated);
+        }
+
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
         if (streetcode is null)

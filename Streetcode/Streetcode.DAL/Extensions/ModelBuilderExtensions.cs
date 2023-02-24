@@ -835,6 +835,7 @@ public static class ModelBuilderExtensions
                          "Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. " +
                          "Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. " +
                          "Академік Імператорської академії мистецтв",
+                Stage = Stage.Draft,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
@@ -851,6 +852,7 @@ public static class ModelBuilderExtensions
                     " — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. " +
                     "\r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство»." +
                     " У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
+                Stage = Stage.Draft,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1817, 5, 4),
@@ -865,6 +867,7 @@ public static class ModelBuilderExtensions
                 Index = 3,
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
                     " і культурний діяч, журналіст.",
+                Stage = Stage.Draft,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -878,6 +881,7 @@ public static class ModelBuilderExtensions
                 Id = 5,
                 Index = 5,
                 Teaser = "some teaser",
+                Stage = Stage.Published,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -890,6 +894,7 @@ public static class ModelBuilderExtensions
                 Id = 6,
                 Index = 6,
                 Teaser = "some teaser",
+                Stage = Stage.Published,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -902,6 +907,7 @@ public static class ModelBuilderExtensions
                 Id = 7,
                 Index = 7,
                 Teaser = "some teaser",
+                Stage = Stage.Published,
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -919,6 +925,7 @@ public static class ModelBuilderExtensions
                     " та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ" +
                     " Сили відійшли на лівий берег (відомий як відхід росіян" +
                     " з Херсона, 9–11 листопада 2022 р.).",
+                Stage = Stage.Draft,
                 ViewCount = 1000,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(2022, 11, 9),

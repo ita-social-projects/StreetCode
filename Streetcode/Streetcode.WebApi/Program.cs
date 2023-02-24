@@ -11,7 +11,8 @@ builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
-// await app.MigrateAndSeedDbAsync();
+// Uncomment to full fill Db and apply migrations
+await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

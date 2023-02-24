@@ -30,7 +30,7 @@ public class StreetcodeContent
     public Stage Stage { get; set; }
 
     [Required]
-    public string StreetcodeType { get; set; }
+    public StreetcodeType Type { get; set; }
 
     public int ViewCount { get; set; }
 

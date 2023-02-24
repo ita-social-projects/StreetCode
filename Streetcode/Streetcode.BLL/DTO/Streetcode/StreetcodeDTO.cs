@@ -8,7 +8,7 @@ public abstract class StreetcodeDTO
     public int Id { get; set; }
     public int Index { get; set; }
     public Stage Stage { get; set; }
-    public string StreetcodeType { get; set; }
+    public StreetcodeType Type { get; set; }
     public DateTime EventStartOrPersonBirthDate { get; set; }
     public DateTime EventEndOrPersonDeathDate { get; set; }
     public int ViewCount { get; set; }

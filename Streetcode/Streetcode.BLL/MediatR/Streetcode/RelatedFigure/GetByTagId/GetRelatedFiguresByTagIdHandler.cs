@@ -22,18 +22,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
         public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
         {
-            var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll(f => f.Tags.Select(t => t.Id).Any(id => id == request.tagId))
-            .Include(scl => scl.Images)
-            .Include(scl => scl.Tags)
-            .ToList();
-
-            //var streetcode = await _repositoryWrapper.StreetcodeRepository
-            //    .GetAllAsync(
-            //    predicate: sc => sc.Tags.Select(t => t.Id).Any(tag => tag == request.tagId),
-            //    include: scl => scl
-            //        .Include(sc => sc.Images)
-            //        .Include(sc => sc.Tags));
+            var streetcodes = await _repositoryWrapper.StreetcodeRepository
+                .GetAllAsync(
+                predicate: sc => sc.Tags.Select(t => t.Id).Any(tag => tag == request.tagId),
+                include: scl => scl
+                    .Include(sc => sc.Images)
+                    .Include(sc => sc.Tags));
 
             if (streetcodes is null)
             {

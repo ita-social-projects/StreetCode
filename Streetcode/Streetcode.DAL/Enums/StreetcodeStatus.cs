@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.DAL.Enums;
 
-public enum Stage
+public enum StreetcodeStatus
 {
     Draft,
     Published

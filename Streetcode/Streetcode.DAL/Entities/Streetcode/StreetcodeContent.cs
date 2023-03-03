@@ -27,7 +27,19 @@ public class StreetcodeContent
     [Required]
     public string Teaser { get; set; }
 
-    public Stage Stage { get; set; }
+    [Required]
+    [MaxLength(50)]
+    public string DateString { get; set; }
+
+    [MaxLength(30)]
+    public string? Alias { get; set; }
+
+    public StreetcodeStatus Status { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string Title { get; set; }
+
     public int ViewCount { get; set; }
 
     public DateTime CreatedAt { get; set; }

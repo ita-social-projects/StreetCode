@@ -21,14 +21,14 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return GetQueryable(predicate).AsNoTracking();
     }
 
-    public async Task<EntityState> CreateAsync(T entity)
+    public async Task<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>> CreateAsync(T entity)
     {
-        return (await _dbContext.Set<T>().AddAsync(entity)).State;
+        return await _dbContext.Set<T>().AddAsync(entity);
     }
 
-    public void Create(T entity)
+    public T Create(T entity)
     {
-        _dbContext.Set<T>().Add(entity);
+        return _dbContext.Set<T>().Add(entity).Entity;
     }
 
     public void Update(T entity)

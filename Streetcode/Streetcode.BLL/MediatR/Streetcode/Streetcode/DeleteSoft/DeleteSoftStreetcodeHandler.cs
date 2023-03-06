@@ -1,33 +1,32 @@
 ﻿using FluentResults;
-using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
+namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 
-public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, Result<Unit>>
+public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public DeleteStreetcodeHandler(IRepositoryWrapper repositoryWrapper)
+    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
     }
 
-    public async Task<Result<Unit>> Handle(DeleteStreetcodeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(DeleteSoftStreetcodeCommand request, CancellationToken cancellationToken)
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository
-            .GetFirstOrDefaultAsync(
-            predicate: s => s.Id == request.Id,
-            include: s => s.Include(x => x.Observers)
-                           .Include(x => x.Targets));
+            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
         if (streetcode is null)
         {
             throw new Exception($"Cannot find a streetcode with corresponding categoryId: {request.Id}");
         }
 
-        _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
+        streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;
+        streetcode.UpdatedAt = DateTime.Now;
+
+        _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 

@@ -15,16 +15,25 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
     public async Task<Result<Unit>> Handle(DeleteStreetcodeCommand request, CancellationToken cancellationToken)
     {
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var streetcode = await _repositoryWrapper.StreetcodeRepository
+            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find a streetcode with corresponding categoryId: {request.Id}"));
+            throw new Exception($"Cannot find a streetcode with corresponding categoryId: {request.Id}");
         }
 
-        _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
+        streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;
+
+        _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a streetcode"));
+
+        if (!resultIsSuccess)
+        {
+            throw new Exception("Failed to delete a streetcode");
+        }
+
+        return Result.Ok(Unit.Value);
     }
 }

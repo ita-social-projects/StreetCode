@@ -35,7 +35,7 @@ app.UseHangfireDashboard();
 
 // check street codes to delete every minute those that were added status "deleted" 7 days ago
 RecurringJob.AddOrUpdate<SoftDeletingUtils>(
-    (sd) => sd.DeleteStreetcodeWithStageDeleted(7),
+    (sd) => sd.DeleteStreetcodeWithStageDeleted(0),
     Cron.Minutely);
 
 // change Cron.Monthly to set another parsing interval from ukrposhta

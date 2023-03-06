@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -7,13 +6,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 
 public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStreetcodeByIdCommand, Result<Unit>>
 {
-    private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
-        _mapper = mapper;
     }
 
     public async Task<Result<Unit>> Handle(UpdateStatusStreetcodeByIdCommand request, CancellationToken cancellationToken)
@@ -34,7 +31,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if (!resultIsSuccessChangeStage)
         {
-            throw new Exception("Failed to change streetcode stage!");
+            throw new Exception("Failed to change streetcode status!");
         }
 
         return Result.Ok(Unit.Value);

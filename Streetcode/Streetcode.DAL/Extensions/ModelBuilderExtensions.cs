@@ -225,21 +225,21 @@ public static class ModelBuilderExtensions
                 Id = 6,
                 Title = "Мико́ла Костома́ров",
                 Alt = "Мико́ла Костома́ров",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg"
+                Url = "https://i.ibb.co/RB9KtSq/Ukrainka.png"
             },
             new Image
             {
                 Id = 7,
                 Title = "Василь Білозерський",
                 Alt = "Василь Білозерський",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG"
+                Url = "https://i.ibb.co/f85t1Vs/Antonovich.png"
             },
             new Image
             {
                 Id = 8,
                 Title = "Звільнення Херсона",
                 Alt = "Звільнення Херсона",
-                Url = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg"
+                Url = "https://i.ibb.co/89KKcBD/Ratushny.png"
             },
             new Image
             {
@@ -288,21 +288,21 @@ public static class ModelBuilderExtensions
                 Id = 15,
                 Title = "Володимир-Варфоломей",
                 Alt = "Володимир-Варфоломей",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
+                Url = "https://i.ibb.co/f85t1Vs/Antonovich.png"
             },
             new Image
             {
                 Id = 16,
                 Title = "Леся Українка",
                 Alt = "Леся Українка",
-                Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
+                Url = "https://i.ibb.co/RB9KtSq/Ukrainka.png"
             },
             new Image
             {
                 Id = 17,
                 Title = "Іван Мазепа",
                 Alt = "Іван Мазепа",
-                Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
+                Url = "https://i.ibb.co/YDjTGzW/Mazepa.png"
             }, new Image
             {
                 Id = 18,
@@ -837,16 +837,21 @@ public static class ModelBuilderExtensions
                          "Академік Імператорської академії мистецтв",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "9 березня 1814 — 10 березня 1861",
                 EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
                 EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
                 FirstName = "Тарас",
                 Rank = "Григорович",
-                LastName = "Шевченко"
+                LastName = "Шевченко",
+                Title = "Тарас Шевченко",
+                Alias = "Кобзар"
             },
             new PersonStreetcode
             {
                 Id = 2,
                 Index = 2,
+                DateString = "9 березня 1814 — 10 березня 1861",
+                Title = "Мико́ла Костома́ров",
                 Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург)" +
                     " — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. " +
                     "\r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство»." +
@@ -857,12 +862,14 @@ public static class ModelBuilderExtensions
                 EventEndOrPersonDeathDate = new DateTime(1885, 4, 7),
                 FirstName = "Мико́ла",
                 Rank = "Іва́нович",
-                LastName = "Костома́ров"
+                LastName = "Костома́ров",
             },
             new PersonStreetcode
             {
                 Id = 3,
                 Index = 3,
+                Title = "Василь Білозерський",
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
                     " і культурний діяч, журналіст.",
                 ViewCount = 0,
@@ -878,6 +885,8 @@ public static class ModelBuilderExtensions
                 Id = 5,
                 Index = 5,
                 Teaser = "some teaser",
+                DateString = "2 січня 1825 — 20 лютого 1899",
+                Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -892,10 +901,13 @@ public static class ModelBuilderExtensions
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Леся",
-                LastName = "Українка"
+                LastName = "Українка",
+                Title = "Леся Українка",
+                Alias = "Лариса Косач"
             },
             new PersonStreetcode
             {
@@ -904,9 +916,11 @@ public static class ModelBuilderExtensions
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Іван",
+                Title = "Іван Мазепа",
                 LastName = "Мазепа"
             });
         modelBuilder.Entity<EventStreetcode>().HasData(
@@ -914,6 +928,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Index = 4,
+                DateString = "11 листопада 2022",
                 Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання" +
                     " Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області" +
                     " та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ" +

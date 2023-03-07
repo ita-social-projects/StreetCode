@@ -1,4 +1,4 @@
-﻿using FluentResults;
+using FluentResults;
 using MediatR;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -15,11 +15,11 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
 
     public async Task<Result<Unit>> Handle(DeleteRelatedFigureCommand request, CancellationToken cancellationToken)
     {
-        var relation = await _repositoryWrapper.RelatedFigureRepository.GetFirstOrDefaultAsync(rel => rel.ObserverId == request.id1 && rel.TargetId == request.id2);
+        var relation = await _repositoryWrapper.RelatedFigureRepository.GetFirstOrDefaultAsync(rel => rel.ObserverId == request.ObserverId && rel.TargetId == request.TargetId);
 
         if (relation is null)
         {
-            return Result.Fail(new Error($"Cannot find a relation between streetcodes with corresponding ids: {request.id1} & {request.id2}"));
+            return Result.Fail(new Error($"Cannot find a relation between streetcodes with corresponding ids: {request.ObserverId} & {request.TargetId}"));
         }
 
         _repositoryWrapper.RelatedFigureRepository.Delete(relation);

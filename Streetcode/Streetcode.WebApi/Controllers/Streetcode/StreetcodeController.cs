@@ -7,15 +7,17 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Requests.Streetcode;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequest request)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery()));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(
+            request.Page, request.Amount, request.Title, request.Sort, request.Filter)));
     }
 
     [HttpGet("{id:int}")]
@@ -44,7 +46,7 @@ public class StreetcodeController : BaseApiController
         return Ok();
     }
 
-    [HttpPatch("{id:int}/{stage}")]
+    [HttpPatch("{id:int}/{status}")]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,
         [FromRoute] StreetcodeStatus status)

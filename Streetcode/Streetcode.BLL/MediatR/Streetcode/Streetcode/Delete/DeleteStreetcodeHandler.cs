@@ -24,7 +24,7 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
         if (streetcode is null)
         {
-            throw new Exception($"Cannot find a streetcode with corresponding categoryId: {request.Id}");
+            return Result.Fail(new Error($"Cannot find a streetcode with corresponding categoryId: {request.Id}"));
         }
 
         _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
@@ -33,7 +33,7 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
         if (!resultIsSuccess)
         {
-            throw new Exception("Failed to delete a streetcode");
+            return Result.Fail("Failed to delete a streetcode");
         }
 
         return Result.Ok(Unit.Value);

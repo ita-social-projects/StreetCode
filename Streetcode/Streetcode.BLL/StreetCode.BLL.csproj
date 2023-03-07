@@ -28,8 +28,4 @@
     <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MediatR\AdditionalContent\Tag\" />
-  </ItemGroup>
-
 </Project>

@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryBase<T>
+    where T : class
 {
     IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default);
 
-    Task<EntityState> CreateAsync(T entity);
+    Task<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>> CreateAsync(T entity);
 
-    void Create(T entity);
+    T Create(T entity);
 
     void Update(T entity);
 

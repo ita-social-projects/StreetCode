@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
@@ -9,5 +13,17 @@ public class RelatedFigureController : BaseApiController
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId)));
+    }
+
+    [HttpPost("{ObserverId:int}&{TargetId:int}")]
+    public async Task<IActionResult> Create([FromRoute] int id1, int id2)
+    {
+        return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(id1, id2)));
+    }
+
+    [HttpDelete("{ObserverId:int}&{TargetId:int}")]
+    public async Task<IActionResult> Delete([FromRoute] int id1, int id2)
+    {
+        return HandleResult(await Mediator.Send(new DeleteRelatedFigureCommand(id1, id2)));
     }
 }

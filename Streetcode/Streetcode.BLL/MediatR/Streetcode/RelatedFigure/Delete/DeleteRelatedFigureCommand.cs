@@ -1,6 +1,6 @@
-﻿using FluentResults;
+using FluentResults;
 using MediatR;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 
-public record DeleteRelatedFigureCommand(int id1, int id2) : IRequest<Result<Unit>>;
+public record DeleteRelatedFigureCommand(int ObserverId, int TargetId) : IRequest<Result<Unit>>;

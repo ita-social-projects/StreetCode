@@ -32,7 +32,7 @@ public interface IRepositoryWrapper
     ITimelineRepository TimelineRepository { get; }
     IToponymRepository ToponymRepository { get; }
     ITransactLinksRepository TransactLinksRepository { get; }
-
+    IHistoricalContextRepository HistoricalContextRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

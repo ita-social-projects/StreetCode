@@ -65,6 +65,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ITransactLinksRepository _transactLinksRepository;
 
+    private IHistoricalContextRepository _historyContextRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -317,6 +319,18 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IHistoricalContextRepository HistoricalContextRepository
+    {
+        get
+        {
+            if (_historyContextRepository is null)
+            {
+                _historyContextRepository = new HistoricalContextRepository(_streetcodeDbContext);
+            }
+
+            return _historyContextRepository;
+        }
+    }
     public int SaveChanges()
     {
         return _streetcodeDbContext.SaveChanges();

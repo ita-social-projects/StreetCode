@@ -15,7 +15,10 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
 
     public async Task<Result<Unit>> Handle(DeleteRelatedFigureCommand request, CancellationToken cancellationToken)
     {
-        var relation = await _repositoryWrapper.RelatedFigureRepository.GetFirstOrDefaultAsync(rel => rel.ObserverId == request.ObserverId && rel.TargetId == request.TargetId);
+        var relation = await _repositoryWrapper.RelatedFigureRepository
+                                .GetFirstOrDefaultAsync(rel =>
+                                rel.ObserverId == request.ObserverId &&
+                                rel.TargetId == request.TargetId);
 
         if (relation is null)
         {

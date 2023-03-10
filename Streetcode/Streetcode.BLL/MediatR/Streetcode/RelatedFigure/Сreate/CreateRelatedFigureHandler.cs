@@ -20,23 +20,23 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 
     public async Task<Result<Unit>> Handle(CreateRelatedFigureCommand request, CancellationToken cancellationToken)
     {
-        var entity1 = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(rel => rel.Id == request.ObserverId);
-        var entity2 = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(rel => rel.Id == request.TargetId);
+        var observerEntity = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(rel => rel.Id == request.ObserverId);
+        var targetEntity = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(rel => rel.Id == request.TargetId);
 
-        if (entity1 is null)
+        if (observerEntity is null)
         {
             return Result.Fail(new Error($"No existing streetcode with id: {request.ObserverId}"));
         }
 
-        if (entity2 is null)
+        if (targetEntity is null)
         {
             return Result.Fail(new Error($"No existing streetcode with id: {request.TargetId}"));
         }
 
         var relation = new DAL.Entities.Streetcode.RelatedFigure
         {
-            ObserverId = entity1.Id,
-            TargetId = entity2.Id,
+            ObserverId = observerEntity.Id,
+            TargetId = targetEntity.Id,
         };
 
         _repositoryWrapper.RelatedFigureRepository.Create(relation);

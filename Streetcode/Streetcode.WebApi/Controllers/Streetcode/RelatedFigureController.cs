@@ -19,12 +19,12 @@ public class RelatedFigureController : BaseApiController
     [HttpPost("{ObserverId:int}&{TargetId:int}")]
     public async Task<IActionResult> Create([FromRoute] int ObserverId, int TargetId)
     {
-        return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(id1, id2)));
+        return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(ObserverId, TargetId)));
     }
 
     [HttpDelete("{ObserverId:int}&{TargetId:int}")]
     public async Task<IActionResult> Delete([FromRoute] int ObserverId, int TargetId)
     {
-        return HandleResult(await Mediator.Send(new DeleteRelatedFigureCommand(id1, id2)));
+        return HandleResult(await Mediator.Send(new DeleteRelatedFigureCommand(ObserverId, TargetId)));
     }
 }

@@ -7,6 +7,7 @@ namespace Streetcode.DAL.Entities.Streetcode.TextContent;
 public class Term
 {
     [Key]
+
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
@@ -16,4 +17,6 @@ public class Term
 
     [Required]
     public string Description { get; set; }
+
+    public List<RelatedTerm> RelatedTerms { get; set; } = new();
 }

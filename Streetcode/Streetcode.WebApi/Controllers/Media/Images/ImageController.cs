@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
+using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
 using Streetcode.BLL.MediatR.Media.Image.GetById;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Media.Image.UploadBase;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -45,5 +47,17 @@ public class ImageController : BaseApiController
     {
         // TODO implement here
         return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadBase([FromBody] ImageBaseDTO image)
+    {
+        return HandleResult(await Mediator.Send(new UploadBaseImageCommand(image)));
+    }
+
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetBaseFileByName([FromRoute] string name)
+    {
+        return HandleResult(await Mediator.Send(new GetBaseFileByNameQuery(name)));
     }
 }

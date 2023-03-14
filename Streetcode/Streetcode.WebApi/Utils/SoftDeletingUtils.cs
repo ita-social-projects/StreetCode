@@ -22,7 +22,6 @@ public class SoftDeletingUtils
 
         if (streetcodes is null || streetcodes.Count() == 0)
         {
-            Console.WriteLine("SoftDeletingUtils triggered: Nothin to delete!");
             return;
         }
 
@@ -36,8 +35,6 @@ public class SoftDeletingUtils
             {
                 throw new Exception("Failed to delete a streetcode");
             }
-
-            Console.WriteLine($"SoftDeletingUtils triggered: {streetcodes.Count()} streetcodes deleted!");
         }
     }
 }

@@ -24,6 +24,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
         }
 
         streetcode.Status = request.Status;
+        streetcode.UpdatedAt = DateTime.Now;
 
         _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 

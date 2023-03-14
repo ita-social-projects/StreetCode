@@ -16,19 +16,16 @@ public class GetBaseFileByNameHandler : IRequestHandler<GetBaseFileByNameQuery, 
 
     public async Task<Result<ImageBaseDTO>> Handle(GetBaseFileByNameQuery request, CancellationToken cancellationToken)
     {
-        string filePath = $"../../BlobStorage/{request.Name}";
+        string encodedBase;
+        string mimeType;
 
-        string mimeType = request.Name.Split('.')[1];
+        (encodedBase, mimeType) = _blobStorage.FindFileInStorage(request.Name);
 
-        var files = Convert.ToBase64String(File.ReadAllBytes(filePath));
-
-        var result = new ImageBaseDTO()
+        return Result.Ok(new ImageBaseDTO()
         {
-            Name = request.Name,
-            BaseFormat = files,
-            MimeType = mimeType
-        };
-
-        return Result.Ok(result);
+                BaseFormat = encodedBase,
+                MimeType = mimeType,
+                Name = request.Name
+        });
     }
 }

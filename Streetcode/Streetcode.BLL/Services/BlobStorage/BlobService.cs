@@ -4,7 +4,7 @@ namespace Streetcode.BLL.Services.BlobStorage;
 
 public class BlobService : IBlobService
 {
-    public (string encodedBase, string mimetype) FindFileInStorage(string base64, string name)
+    public (string encodedBase, string mimetype) FindFileInStorage(string name)
     {
         string filePath = $"../../BlobStorage/{name}";
 
@@ -23,6 +23,6 @@ public class BlobService : IBlobService
 
         string fileName = name + fileExtension;
 
-        File.WriteAllBytes($"./StreetCode/BlobStorage/{fileName}", imageBytes);
+        File.WriteAllBytes($"../../BlobStorage/{fileName}", imageBytes);
     }
 }

@@ -5,9 +5,6 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
-using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Requests.Streetcode;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -18,6 +15,12 @@ public class StreetcodeController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(
             request.Page, request.Amount, request.Title, request.Sort, request.Filter)));
+    }
+
+    [HttpGet("{index:int}")]
+    public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
+    {
+        return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
     }
 
     [HttpGet("{id:int}")]

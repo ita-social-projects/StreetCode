@@ -33,11 +33,10 @@ public class PartnersController : BaseApiController
         return HandleResult(await Mediator.Send(new CreatePartnerQuery(partner)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] PartnerDTO partner)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] CreatePartnerDTO partner)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new BLL.MediatR.Partners.Update.UpdatePartnerQuery(partner)));
     }
 
     [HttpDelete("{id:int}")]

@@ -33,6 +33,7 @@ public interface IRepositoryWrapper
     IToponymRepository ToponymRepository { get; }
     ITransactLinksRepository TransactLinksRepository { get; }
     IHistoricalContextRepository HistoricalContextRepository { get; }
+    IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

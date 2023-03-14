@@ -67,6 +67,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IHistoricalContextRepository _historyContextRepository;
 
+    private IPartnerSourceLinkRepository _partnerSourceLinkRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -329,6 +331,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _historyContextRepository;
+        }
+    }
+
+    public IPartnerSourceLinkRepository PartnerSourceLinkRepository
+    {
+        get
+        {
+            if (_partnerSourceLinkRepository is null)
+            {
+                _partnerSourceLinkRepository = new PartnersourceLinksRepository(_streetcodeDbContext);
+            }
+
+            return _partnerSourceLinkRepository;
         }
     }
 

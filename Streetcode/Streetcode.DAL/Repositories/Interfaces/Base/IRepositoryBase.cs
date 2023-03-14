@@ -13,11 +13,13 @@ public interface IRepositoryBase<T>
 
     T Create(T entity);
 
-    void Update(T entity);
+    Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity);
 
     void Delete(T entity);
 
     void Attach(T entity);
+
+    Task CreateRangeAsync(IEnumerable<T> items);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 

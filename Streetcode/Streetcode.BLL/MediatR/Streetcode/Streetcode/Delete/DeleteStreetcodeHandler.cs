@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Microsoft.EntityFrameworkCore;
 using MediatR;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -15,7 +16,11 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
     public async Task<Result<Unit>> Handle(DeleteStreetcodeCommand request, CancellationToken cancellationToken)
     {
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var streetcode = await _repositoryWrapper.StreetcodeRepository
+            .GetFirstOrDefaultAsync(
+            predicate: s => s.Id == request.Id,
+            include: s => s.Include(x => x.Observers)
+                           .Include(x => x.Targets));
 
         if (streetcode is null)
         {
@@ -25,6 +30,12 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
         _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a streetcode"));
+
+        if (!resultIsSuccess)
+        {
+            return Result.Fail("Failed to delete a streetcode");
+        }
+
+        return Result.Ok(Unit.Value);
     }
 }

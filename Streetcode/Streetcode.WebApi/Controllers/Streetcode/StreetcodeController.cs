@@ -1,18 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequest request)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery()));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(
+            request.Page, request.Amount, request.Title, request.Sort, request.Filter)));
     }
 
     [HttpGet("{index:int}")]
@@ -47,10 +49,23 @@ public class StreetcodeController : BaseApiController
         return Ok();
     }
 
+    [HttpPatch("{id:int}/{status}")]
+    public async Task<IActionResult> PatchStage(
+        [FromRoute] int id,
+        [FromRoute] StreetcodeStatus status)
+    {
+        return HandleResult(await Mediator.Send(new UpdateStatusStreetcodeByIdCommand(id, status)));
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> SoftDelete([FromRoute] int id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteSoftStreetcodeCommand(id)));
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
     }
 }

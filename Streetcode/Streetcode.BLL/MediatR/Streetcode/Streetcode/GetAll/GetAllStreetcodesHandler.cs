@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -32,58 +30,92 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         if (request.Title is not null)
         {
-            streetcodes = streetcodes.Where(s => s.Title
-            .ToLower()
-            .Contains(request.Title
-            .ToLower()) || s.Index
-            .ToString() == request.Title);
+            FindStreetcodesWithMatchTitle(ref streetcodes, request.Title);
         }
 
         if (request.Filter is not null)
         {
-            var filterParams = request.Filter.Split(':');
-            var filterColumn = filterParams[0];
-            var filterValue = filterParams[1];
-
-            streetcodes = streetcodes.Where(s => filterValue.Contains(s.Status.ToString()));
+            FindFilteredStreetcodes(ref streetcodes, request.Filter);
         }
 
         if (request.Sort is not null)
         {
-            var sortParams = request.Sort.Split(',');
-            var sortedRecords = streetcodes;
-
-            foreach (var sortParam in sortParams)
-            {
-                var sortColumn = sortParam.Trim();
-                var sortDirection = "asc";
-
-                if (sortColumn.StartsWith("-"))
-                {
-                    sortDirection = "desc";
-                    sortColumn = sortColumn.Substring(1);
-                }
-
-                var property = typeof(StreetcodeContent).GetProperty(sortColumn);
-
-                sortedRecords = sortDirection switch
-                {
-                    "asc" => sortedRecords.OrderBy(s => property.GetValue(s, null)),
-                    "desc" => sortedRecords.OrderByDescending(s => property.GetValue(s, null)),
-                    _ => sortedRecords,
-                };
-            }
-
-            streetcodes = sortedRecords;
+            FindSortedStreetcodes(ref streetcodes, request.Sort);
         }
 
-        var totalPages = (int)Math.Ceiling(streetcodes.Count() / (double)request.Amount);
+        var streetcodesList = streetcodes.AsEnumerable();
 
-        streetcodes = streetcodes.ToList()
-            .Skip((request.Page - 1) * request.Amount)
-            .Take(request.Amount);
+        foreach (var item in streetcodesList)
+        {
+            Console.WriteLine(item.Title);
+        }
 
-        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes);
+        ApplyPagination(ref streetcodesList, request.Amount, request.Page);
+
+        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodesList);
         return Result.Ok(streetcodeDtos);
+    }
+
+    private void FindStreetcodesWithMatchTitle(
+        ref IEnumerable<StreetcodeContent> streetcodes,
+        string title)
+    {
+        streetcodes = streetcodes.Where(s => s.Title
+            .ToLower()
+            .Contains(title
+            .ToLower()) || s.Index
+            .ToString() == title);
+    }
+
+    private void FindFilteredStreetcodes(
+        ref IEnumerable<StreetcodeContent> streetcodes,
+        string filter)
+    {
+        var filterParams = filter.Split(':');
+        var filterColumn = filterParams[0];
+        var filterValue = filterParams[1];
+
+        streetcodes = streetcodes.Where(s => filterValue.Contains(s.Status.ToString()));
+    }
+
+    private void FindSortedStreetcodes(
+        ref IEnumerable<StreetcodeContent> streetcodes,
+        string sort)
+    {
+        var sortParams = sort.Split(',');
+        var sortedRecords = streetcodes;
+
+        foreach (var sortParam in sortParams)
+        {
+            var sortColumn = sortParam.Trim();
+            var sortDirection = "asc";
+
+            if (sortColumn.StartsWith("-"))
+            {
+                sortDirection = "desc";
+                sortColumn = sortColumn.Substring(1);
+            }
+
+            var property = typeof(StreetcodeContent).GetProperty(sortColumn);
+
+            streetcodes = sortDirection switch
+            {
+                "asc" => sortedRecords.OrderBy(s => property.GetValue(s, null)),
+                "desc" => sortedRecords.OrderByDescending(s => property.GetValue(s, null)),
+                _ => sortedRecords,
+            };
+        }
+    }
+
+    private void ApplyPagination(
+        ref IEnumerable<StreetcodeContent> streetcodes,
+        int amount,
+        int page)
+    {
+        var totalPages = (int)Math.Ceiling(streetcodes.Count() / (double)amount);
+
+        streetcodes = streetcodes
+            .Skip((page - 1) * amount)
+            .Take(amount);
     }
 }

@@ -28,13 +28,8 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 
-        var resultIsSuccessChangeStage = await _repositoryWrapper.SaveChangesAsync() > 0;
+        var resultIsSuccessChangeStatus = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        if (!resultIsSuccessChangeStage)
-        {
-            throw new Exception("Failed to change streetcode status!");
-        }
-
-        return Result.Ok(Unit.Value);
+        return resultIsSuccessChangeStatus ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update status of streetcode"));
     }
 }

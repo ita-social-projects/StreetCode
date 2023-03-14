@@ -5,6 +5,10 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
+using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Requests.Streetcode;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 

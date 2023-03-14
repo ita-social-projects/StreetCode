@@ -331,6 +331,7 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _historyContextRepository;
         }
     }
+
     public int SaveChanges()
     {
         return _streetcodeDbContext.SaveChanges();

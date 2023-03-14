@@ -3,12 +3,14 @@ using Streetcode.BLL.DTO.Partners;
 
 namespace Streetcode.BLL.DTO.Partners
 {
-    public class CreatePartnerRequest
+    public class CreatePartnerDTO
     {
         public bool IsKeyPartner { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public CreateUrlRequest TargetUrl { get; set; }
-        public List<PartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
+        public string TargetUrl { get; set; }
+        public string? UrlTitle { get; set; }
+        public string LogoBase64 { get; set; }
+        public List<CreatePartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Partners.GetById;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
@@ -27,10 +28,9 @@ public class PartnersController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] PartnerDTO partner)
+    public async Task<IActionResult> Create([FromBody] CreatePartnerDTO partner)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreatePartnerQuery(partner)));
     }
 
     [HttpPut("{id:int}")]

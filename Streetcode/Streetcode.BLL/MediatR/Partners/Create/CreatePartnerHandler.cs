@@ -20,12 +20,23 @@ namespace Streetcode.BLL.MediatR.Partners.Create
 
         public async Task<Result<PartnerDTO>> Handle(CreatePartnerQuery request, CancellationToken cancellationToken)
         {
-            var newItem = (await _repositoryWrapper.PartnersRepository.CreateAsync(_mapper.Map<Partner>(request.newPartner))).Entity;
+            var newPartner = _mapper.Map<Partner>(request.newPartner);
+
+            // add adding phot to blob and getting href for this
+
+            newPartner.Logo = new DAL.Entities.Media.Images.Image()
+            {
+                Alt = newPartner.Title,
+                Title = newPartner.Title,
+                Url = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg",
+            };
+            newPartner = (await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner)).Entity;
+
             try
             {
                 if (_repositoryWrapper.SaveChanges() > 0)
                 {
-                    return Result.Ok(_mapper.Map<PartnerDTO>(newItem));
+                    return Result.Ok(_mapper.Map<PartnerDTO>(newPartner));
                 }
             }
             catch(Exception ex)

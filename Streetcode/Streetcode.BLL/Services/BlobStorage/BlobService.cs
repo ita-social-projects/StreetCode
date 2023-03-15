@@ -6,16 +6,13 @@ namespace Streetcode.BLL.Services.BlobStorage;
 
 public class BlobService : IBlobService
 {
+    private readonly string _keyCrypt = "SlavaKasterovSuperGoodInshalaKey"; //32 length
     private readonly string _blobPath = "../../BlobStorage/";
     public (string encodedBase, string mimetype) FindFileInStorage(string name)
     {
-        string filePath = $"{_blobPath}{name}";
+        string[] splitedName = name.Split('.');
 
-        string mimeType = name.Split('.')[1];
-
-        var encodedBase = Convert.ToBase64String(File.ReadAllBytes(filePath));
-
-        return (encodedBase, mimeType);
+        return DecryptFile(splitedName[0], splitedName[1]);
     }
 
     public void SaveFileInStorage(string base64, string name, string mimeType)
@@ -27,9 +24,7 @@ public class BlobService : IBlobService
             .Replace(".", "_")
             .Replace(":", "_");
 
-        EncryptFunction(imageBytes, $"{_blobPath}TEST.bin", "key228");
-
-        DecryptFunction($"{_blobPath}TEST.bin", $"{_blobPath}{createdFileName}{fileExtension}", "key228");
+        EncryptFile(imageBytes, fileExtension, createdFileName);
     }
 
     private string HashFunction(string createdFileName)
@@ -42,83 +37,52 @@ public class BlobService : IBlobService
         }
     }
 
-    private void EncryptFunction(byte[] inputFile, string outputFile, string keyString)
+    private void EncryptFile(byte[] imageBytes, string type, string name)
     {
-        // Generate a 256-bit key from the user-supplied key string
-        byte[] key = new byte[32];
-        byte[] keyBytes = System.Text.Encoding.UTF8.GetBytes(keyString);
-        for (int i = 0; i < keyBytes.Length && i < key.Length; i++)
-        {
-            key[i] = keyBytes[i];
-        }
+        byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
-        // Generate a random initialization vector (IV)
         byte[] iv = new byte[16];
-        using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+        using (var rng = new RNGCryptoServiceProvider())
         {
             rng.GetBytes(iv);
         }
 
-        // Create the AES encryption algorithm
+        byte[] encryptedBytes;
         using (Aes aes = Aes.Create())
         {
-            aes.Key = key;
+            aes.KeySize = 256;
+            aes.Key = keyBytes;
             aes.IV = iv;
-
-            // Encrypt the file
-            using (var inputFileStream = new MemoryStream(inputFile))
-            using (var outputFileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-            using (var cryptoStream = new CryptoStream(outputFileStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
-            {
-                // Write the IV to the output file
-                outputFileStream.Write(iv, 0, iv.Length);
-
-                // Encrypt the file contents and write to the output file
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = inputFileStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    cryptoStream.Write(buffer, 0, bytesRead);
-                }
-            }
+            ICryptoTransform encryptor = aes.CreateEncryptor();
+            encryptedBytes = encryptor.TransformFinalBlock(imageBytes, 0, imageBytes.Length);
         }
+
+        byte[] encryptedData = new byte[encryptedBytes.Length + iv.Length];
+        Buffer.BlockCopy(iv, 0, encryptedData, 0, iv.Length);
+        Buffer.BlockCopy(encryptedBytes, 0, encryptedData, iv.Length, encryptedBytes.Length);
+        File.WriteAllBytes($"{_blobPath}{name}{type}", encryptedData);
     }
 
-    private void DecryptFunction(string inputFile, string outputFile, string keyString)
+    private (string encodedBase, string mimeType) DecryptFile(string fileName, string type)
     {
-        byte[] key = new byte[32];
-        byte[] keyBytes = System.Text.Encoding.UTF8.GetBytes(keyString);
-        for (int i = 0; i < keyBytes.Length && i < key.Length; i++)
-        {
-            key[i] = keyBytes[i];
-        }
+        byte[] encryptedData = File.ReadAllBytes($"{_blobPath}{fileName}.{type}");
+        byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
-        // Read the IV from the input file
         byte[] iv = new byte[16];
-        using (var inputFileStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-        {
-            inputFileStream.Read(iv, 0, iv.Length);
-        }
+        Buffer.BlockCopy(encryptedData, 0, iv, 0, iv.Length);
 
-        // Create the AES decryption algorithm
+        byte[] decryptedBytes;
         using (Aes aes = Aes.Create())
         {
-            aes.Key = key;
+            aes.KeySize = 256;
+            aes.Key = keyBytes;
             aes.IV = iv;
-
-            // Decrypt the file
-            using (FileStream inputFileStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read))
-            using (FileStream outputFileStream = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
-            using (CryptoStream cryptoStream = new CryptoStream(inputFileStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
-            {
-                // Decrypt the file contents and write to the output file
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    outputFileStream.Write(buffer, 0, bytesRead);
-                }
-            }
+            ICryptoTransform decryptor = aes.CreateDecryptor();
+            decryptedBytes = decryptor.TransformFinalBlock(encryptedData, iv.Length, encryptedData.Length - iv.Length);
         }
+
+        string encodedBase = Convert.ToBase64String(decryptedBytes);
+
+        return (encodedBase, type);
     }
 }

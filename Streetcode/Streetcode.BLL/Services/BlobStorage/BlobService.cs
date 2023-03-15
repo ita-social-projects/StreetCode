@@ -24,6 +24,7 @@ public class BlobService : IBlobService
             .Replace(".", "_")
             .Replace(":", "_");
 
+        Directory.CreateDirectory(_blobPath);
         EncryptFile(imageBytes, fileExtension, createdFileName);
     }
 

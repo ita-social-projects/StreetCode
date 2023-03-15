@@ -6,13 +6,19 @@ namespace Streetcode.BLL.Services.BlobStorage;
 
 public class BlobService : IBlobService
 {
-    private readonly string _keyCrypt = "SlavaKasterovSuperGoodInshalaKey"; //32 length
+    private readonly string _keyCrypt = Environment.GetEnvironmentVariable("BlobStoreKey");
     private readonly string _blobPath = "../../BlobStorage/";
-    public (string encodedBase, string mimetype) FindFileInStorage(string name)
+    public MemoryStream FindFileInStorage(string name)
     {
         string[] splitedName = name.Split('.');
 
-        return DecryptFile(splitedName[0], splitedName[1]);
+        byte[] decodedBytes;
+
+        decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
+
+        var image = new MemoryStream(decodedBytes);
+
+        return image;
     }
 
     public void SaveFileInStorage(string base64, string name, string mimeType)
@@ -64,7 +70,7 @@ public class BlobService : IBlobService
         File.WriteAllBytes($"{_blobPath}{name}{type}", encryptedData);
     }
 
-    private (string encodedBase, string mimeType) DecryptFile(string fileName, string type)
+    private byte[] DecryptFile(string fileName, string type)
     {
         byte[] encryptedData = File.ReadAllBytes($"{_blobPath}{fileName}.{type}");
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
@@ -82,8 +88,8 @@ public class BlobService : IBlobService
             decryptedBytes = decryptor.TransformFinalBlock(encryptedData, iv.Length, encryptedData.Length - iv.Length);
         }
 
-        string encodedBase = Convert.ToBase64String(decryptedBytes);
+        /*string encodedBase = Convert.ToBase64String(decryptedBytes);*/
 
-        return (encodedBase, type);
+        return decryptedBytes;
     }
 }

@@ -4,4 +4,4 @@ using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
 
-public record GetBaseFileByNameQuery(string Name) : IRequest<Result<ImageBaseDTO>>;
+public record GetBaseFileByNameQuery(string Name) : IRequest<Result<MemoryStream>>;

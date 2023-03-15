@@ -5,7 +5,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
 
-public class GetBaseFileByNameHandler : IRequestHandler<GetBaseFileByNameQuery, Result<ImageBaseDTO>>
+public class GetBaseFileByNameHandler : IRequestHandler<GetBaseFileByNameQuery, Result<MemoryStream>>
 {
     private readonly IBlobService _blobStorage;
 
@@ -14,18 +14,10 @@ public class GetBaseFileByNameHandler : IRequestHandler<GetBaseFileByNameQuery, 
         _blobStorage = blobService;
     }
 
-    public async Task<Result<ImageBaseDTO>> Handle(GetBaseFileByNameQuery request, CancellationToken cancellationToken)
+    public async Task<Result<MemoryStream>> Handle(GetBaseFileByNameQuery request, CancellationToken cancellationToken)
     {
-        string encodedBase;
-        string mimeType;
+        var file = _blobStorage.FindFileInStorage(request.Name);
 
-        (encodedBase, mimeType) = _blobStorage.FindFileInStorage(request.Name);
-
-        return Result.Ok(new ImageBaseDTO()
-        {
-                BaseFormat = encodedBase,
-                MimeType = mimeType,
-                Name = request.Name
-        });
+        return file;
     }
 }

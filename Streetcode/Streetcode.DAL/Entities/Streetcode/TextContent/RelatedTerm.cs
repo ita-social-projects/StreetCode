@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.DAL.Entities.Streetcode.TextContent
 {
-    [Table("relatedTerms", Schema = "streetcode")]
+    [Table("related_terms", Schema = "streetcode")]
     public class RelatedTerm
     {
         [Key]

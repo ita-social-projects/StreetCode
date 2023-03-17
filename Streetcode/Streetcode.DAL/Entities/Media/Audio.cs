@@ -16,7 +16,10 @@ public class Audio
     public string? Description { get; set; }
 
     [Required]
-    public string Url { get; set; }
+    public string BlobStorageName { get; set; }
+
+    [Required]
+    public string MimeType { get; set; }
 
     public int StreetcodeId { get; set; }
 

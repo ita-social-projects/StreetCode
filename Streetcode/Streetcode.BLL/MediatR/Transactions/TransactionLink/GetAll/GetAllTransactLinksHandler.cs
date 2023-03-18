@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Transactions;
@@ -16,7 +16,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
     }
-
+    
     public async Task<Result<IEnumerable<TransactLinkDTO>>> Handle(GetAllTransactLinksQuery request, CancellationToken cancellationToken)
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();

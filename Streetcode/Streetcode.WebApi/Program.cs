@@ -1,4 +1,5 @@
 using Hangfire;
+using Streetcode.DAL.Entities.Email;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 
@@ -11,7 +12,7 @@ builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
-// await app.MigrateAndSeedDbAsync();
+await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

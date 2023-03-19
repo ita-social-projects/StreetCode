@@ -4,6 +4,7 @@ using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Partners.GetById;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
+using Streetcode.DAL.Entities.Partners;
 
 namespace Streetcode.WebApi.Controllers.Partners;
 
@@ -42,7 +43,6 @@ public class PartnersController : BaseApiController
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new BLL.MediatR.Partners.Delete.DeletePartnerQuery(id)));
     }
 }

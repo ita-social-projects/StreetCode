@@ -30,21 +30,24 @@ namespace Streetcode.BLL.MediatR.Partners.Create
                 Title = newPartner.Title,
                 Url = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg",
             };
-            newPartner = (await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner)).Entity;
 
             try
             {
-                if (_repositoryWrapper.SaveChanges() > 0)
-                {
-                    return Result.Ok(_mapper.Map<PartnerDTO>(newPartner));
-                }
+                newPartner.Streetcodes.Clear();
+                newPartner = (await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner)).Entity;
+                _repositoryWrapper.SaveChanges();
+                var streetcodeIds = request.newPartner.Streetcodes.Select(s => s.Id).ToList();
+                newPartner.Streetcodes.AddRange(await _repositoryWrapper
+                    .StreetcodeRepository
+                    .GetAllAsync(s => streetcodeIds.Contains(s.Id)));
+
+                _repositoryWrapper.SaveChanges();
+                return Result.Ok(_mapper.Map<PartnerDTO>(newPartner));
             }
             catch(Exception ex)
             {
                 return Result.Fail(ex.Message);
             }
-
-            return Result.Fail("The partner wasn`t added");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Partners
 {
@@ -14,5 +15,6 @@ namespace Streetcode.BLL.DTO.Partners
         public string? UrlTitle { get; set; }
         public string LogoBase64 { get; set; }
         public List<CreatePartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
+        public List<StreetcodeShortDTO> Streetcodes { get; set; } = new List<StreetcodeShortDTO>();
     }
 }

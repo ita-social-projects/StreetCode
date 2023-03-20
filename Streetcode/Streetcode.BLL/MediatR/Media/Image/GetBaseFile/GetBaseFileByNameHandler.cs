@@ -19,14 +19,7 @@ public class GetBaseFileByNameHandler : IRequestHandler<GetBaseFileByNameQuery, 
 
     public async Task<Result<MemoryStream>> Handle(GetBaseFileByNameQuery request, CancellationToken cancellationToken)
     {
-        var audio = await _repositoryWrapper.AudioRepository.GetFirstOrDefaultAsync(f => f.Id == request.Name);
-
-        if (audio is null)
-        {
-            return Result.Fail(new Error($"Cannot find an audio with corresponding id: {request.Name}"));
-        }
-
-        var file = _blobStorage.FindFileInStorage(audio.BlobStorageName);
+        var file = _blobStorage.FindFileInStorage(request.Name);
 
         return file;
     }

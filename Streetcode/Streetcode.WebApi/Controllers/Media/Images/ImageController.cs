@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
 using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
@@ -50,7 +51,7 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> UploadBase([FromBody] ImageBaseDTO image)
+    public async Task<IActionResult> UploadBase([FromBody] FileBaseCreateDTO image)
     {
         return HandleResult(await Mediator.Send(new UploadBaseImageCommand(image)));
     }

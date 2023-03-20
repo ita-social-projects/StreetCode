@@ -9,5 +9,7 @@ public class AudioProfile : Profile
     public AudioProfile()
     {
         CreateMap<Audio, AudioDTO>();
+
+        CreateMap<FileBaseCreateDTO, Audio>();
     }
 }

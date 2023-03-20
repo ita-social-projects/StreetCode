@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.MediatR.Media.Audio.CreateNewAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
@@ -26,11 +28,16 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] AudioDTO audio)
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetAudioByName([FromRoute] string name)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetBaseFileByNameQuery(name)));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] FileBaseCreateDTO audio)
+    {
+        return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
     }
 
     [HttpPut("{id:int}")]

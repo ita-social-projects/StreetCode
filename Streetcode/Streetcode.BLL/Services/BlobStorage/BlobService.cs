@@ -21,17 +21,20 @@ public class BlobService : IBlobService
         return image;
     }
 
-    public void SaveFileInStorage(string base64, string name, string mimeType)
+    public string SaveFileInStorage(string base64, string name, string extension)
     {
         byte[] imageBytes = Convert.FromBase64String(base64);
-        string fileExtension = "." + mimeType.Split('/')[1];
         string createdFileName = $"{DateTime.Now}{name}"
             .Replace(" ", "_")
             .Replace(".", "_")
             .Replace(":", "_");
 
+        string hashBlobStorageName = HashFunction(createdFileName);
+
         Directory.CreateDirectory(_blobPath);
-        EncryptFile(imageBytes, fileExtension, createdFileName);
+        EncryptFile(imageBytes, extension, hashBlobStorageName);
+
+        return hashBlobStorageName;
     }
 
     private string HashFunction(string createdFileName)
@@ -67,7 +70,7 @@ public class BlobService : IBlobService
         byte[] encryptedData = new byte[encryptedBytes.Length + iv.Length];
         Buffer.BlockCopy(iv, 0, encryptedData, 0, iv.Length);
         Buffer.BlockCopy(encryptedBytes, 0, encryptedData, iv.Length, encryptedBytes.Length);
-        File.WriteAllBytes($"{_blobPath}{name}{type}", encryptedData);
+        File.WriteAllBytes($"{_blobPath}{name}.{type}", encryptedData);
     }
 
     private byte[] DecryptFile(string fileName, string type)

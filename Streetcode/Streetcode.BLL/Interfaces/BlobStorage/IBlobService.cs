@@ -2,6 +2,6 @@
 
 public interface IBlobService
 {
-    public void SaveFileInStorage(string base64, string name, string mimeType);
+    public string SaveFileInStorage(string base64, string name, string mimeType);
     public MemoryStream FindFileInStorage(string name);
 }

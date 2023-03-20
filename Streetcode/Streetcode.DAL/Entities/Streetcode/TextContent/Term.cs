@@ -16,4 +16,6 @@ public class Term
 
     [Required]
     public string Description { get; set; }
+
+    public List<RelatedTerm> RelatedTerms { get; set; } = new();
 }

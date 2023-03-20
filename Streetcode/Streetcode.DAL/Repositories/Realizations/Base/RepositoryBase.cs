@@ -110,7 +110,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
         Expression<Func<T, T>>? selector = default)
     {
-        var query = _dbContext.Set<T>().AsQueryable();
+        var query = _dbContext.Set<T>().AsNoTracking();
 
         if (include is not null)
         {

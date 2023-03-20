@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
 
 namespace Streetcode.BLL.MediatR.Partners.Update
@@ -67,6 +68,7 @@ namespace Streetcode.BLL.MediatR.Partners.Update
             // update logo if base64 is not empty
             try
             {
+                _repositoryWrapper.PartnersRepository.Update(partner);
                 _repositoryWrapper.SaveChanges();
 
                 return Result.Ok(_mapper.Map<PartnerDTO>(partner));

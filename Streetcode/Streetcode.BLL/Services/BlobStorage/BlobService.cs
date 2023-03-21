@@ -12,9 +12,7 @@ public class BlobService : IBlobService
     {
         string[] splitedName = name.Split('.');
 
-        byte[] decodedBytes;
-
-        decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
+        byte[] decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
 
         var image = new MemoryStream(decodedBytes);
 
@@ -37,13 +35,18 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
+    public void DeleteFileInStorage(string name)
+    {
+        File.Delete($"{_blobPath}{name}");
+    }
+
     private string HashFunction(string createdFileName)
     {
         using (var hash = SHA256.Create())
         {
             Encoding enc = Encoding.UTF8;
             byte[] result = hash.ComputeHash(enc.GetBytes(createdFileName));
-            return Convert.ToBase64String(result);
+            return Convert.ToBase64String(result).Replace('/', '_');
         }
     }
 
@@ -90,8 +93,6 @@ public class BlobService : IBlobService
             ICryptoTransform decryptor = aes.CreateDecryptor();
             decryptedBytes = decryptor.TransformFinalBlock(encryptedData, iv.Length, encryptedData.Length - iv.Length);
         }
-
-        /*string encodedBase = Convert.ToBase64String(decryptedBytes);*/
 
         return decryptedBytes;
     }

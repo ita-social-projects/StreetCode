@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Audio.CreateNewAudio;
+using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
@@ -29,16 +30,10 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
     }
 
-    [HttpGet("{name}")]
-    public async Task<IActionResult> GetAudioByName([FromRoute] string name)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetBaseAudio([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetBaseFileByNameQuery(name)));
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetBaseAudio([FromRoute] string name)
-    {
-        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(name)));
+        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id)));
     }
 
     [HttpPost]
@@ -57,7 +52,6 @@ public class AudioController : BaseApiController
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteAudioCommand(id)));
     }
 }

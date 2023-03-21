@@ -2,6 +2,7 @@
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.MediatR.Media.Audio.CreateNewAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
+using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
@@ -32,6 +33,12 @@ public class AudioController : BaseApiController
     public async Task<IActionResult> GetAudioByName([FromRoute] string name)
     {
         return HandleResult(await Mediator.Send(new GetBaseFileByNameQuery(name)));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetBaseAudio([FromRoute] string name)
+    {
+        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(name)));
     }
 
     [HttpPost]

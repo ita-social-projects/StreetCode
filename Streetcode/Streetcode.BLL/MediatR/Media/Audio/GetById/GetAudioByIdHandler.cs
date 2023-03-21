@@ -26,6 +26,8 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
             return Result.Fail(new Error($"Cannot find an audio with corresponding id: {request.Id}"));
         }
 
+        audio.BlobStorageName = $"https://localhost:5001/api/Image/GetBaseFileByName/{audio.BlobStorageName}";
+
         var audioDto = _mapper.Map<AudioDTO>(audio);
         return Result.Ok(audioDto);
     }

@@ -16,7 +16,7 @@ public class UploadBaseImageHandler : IRequestHandler<UploadBaseImageCommand, Re
     {
         _blobService.SaveFileInStorage(
             request.Image.BaseFormat,
-            request.Image.Name,
+            request.Image.Title,
             request.Image.MimeType);
 
         return Result.Ok(Unit.Value);

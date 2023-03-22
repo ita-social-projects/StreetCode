@@ -7,6 +7,6 @@ public class ImageDTO
 {
     public int Id { get; set; }
     public string? Alt { get; set; }
-    public string BlobStorageName { get; set; }
+    public string BlobName { get; set; }
     public IEnumerable<StreetcodeDTO>? Streetcodes { get; set; }
 }

@@ -28,13 +28,12 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
     {
         string hashBlobStorageName = _blobService.SaveFileInStorage(
             request.Audio.BaseFormat,
-            request.Audio.Name,
+            request.Audio.Title,
             request.Audio.Extension);
 
         var audio = _mapper.Map<DAL.Entities.Media.Audio>(request.Audio);
 
-        audio.BlobStorageName = $"{hashBlobStorageName}.{request.Audio.Extension}";
-        audio.MimeType = request.Audio.MimeType;
+        audio.BlobName = $"{hashBlobStorageName}.{request.Audio.Extension}";
 
         await _repositoryWrapper.AudioRepository.CreateAsync(audio);
 
@@ -42,6 +41,6 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(audio);
 
-        return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error("Failed to create a audio"));
+        return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error("Failed to create an audio"));
     }
 }

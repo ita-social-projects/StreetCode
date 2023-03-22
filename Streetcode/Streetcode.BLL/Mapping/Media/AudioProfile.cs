@@ -14,7 +14,13 @@ public class AudioProfile : Profile
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType))
-            .ForMember(dest => dest.StreetcodeId, opt => opt.MapFrom(src => src.StreetcodeId))
-            .ForMember(dest => dest.BlobStorageName, opt => opt.MapFrom(src => src.Name));
+            .ForMember(dest => dest.StreetcodeId, opt => opt.MapFrom(src => src.StreetcodeId));
+
+        CreateMap<AudioFileBaseUpdateDTO, Audio>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType))
+            .ForMember(dest => dest.StreetcodeId, opt => opt.MapFrom(src => src.StreetcodeId));
     }
 }

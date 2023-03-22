@@ -7,5 +7,4 @@ public class FileBaseCreateDTO
     public string BaseFormat { get; set; }
     public string MimeType { get; set; }
     public string Extension { get; set; }
-    public string Name { get; set; }
 }

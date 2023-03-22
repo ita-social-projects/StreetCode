@@ -6,7 +6,7 @@ using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
+using Streetcode.BLL.MediatR.Media.Audio.Update;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
@@ -42,11 +42,10 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] AudioDTO audio)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDTO audio)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new UpdateAudioCommand(audio)));
     }
 
     [HttpDelete("{id:int}")]

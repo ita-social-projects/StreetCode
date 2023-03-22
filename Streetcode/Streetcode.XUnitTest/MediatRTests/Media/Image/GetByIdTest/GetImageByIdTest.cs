@@ -77,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
                 Id = 2,
                 Title = "Title2",
                 Alt = "Alt2",
-                BlobStorageName = "https://",
+                BlobName = "https://",
                 MimeType = ""
             };
         }

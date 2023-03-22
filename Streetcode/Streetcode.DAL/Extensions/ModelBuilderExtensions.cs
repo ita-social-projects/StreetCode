@@ -190,7 +190,7 @@ public static class ModelBuilderExtensions
                 Id = 1,
                 Title = "Тарас Шевченко",
                 Alt = "Портрет Тараса Шевченка",
-                BlobStorageName = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg",
+                BlobName = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg",
                 MimeType = ""
             },
             new Image
@@ -198,7 +198,7 @@ public static class ModelBuilderExtensions
                 Id = 2,
                 Title = "Погруддя жінки",
                 Alt = "Тарас Шевченко: Погруддя жінки",
-                BlobStorageName = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg",
+                BlobName = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg",
                 MimeType = ""
             },
             new Image
@@ -206,7 +206,7 @@ public static class ModelBuilderExtensions
                 Id = 3,
                 Title = "Портрет Павла Васильовича Енгельгардта",
                 Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                BlobStorageName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg",
+                BlobName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg",
                 MimeType = ""
             },
             new Image
@@ -214,7 +214,7 @@ public static class ModelBuilderExtensions
                 Id = 4,
                 Title = "Портрет невідомого",
                 Alt = "Тарас Шевченко: Портрет невідомого",
-                BlobStorageName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg",
+                BlobName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg",
                 MimeType = ""
             },
             new Image
@@ -222,7 +222,7 @@ public static class ModelBuilderExtensions
                 Id = 5,
                 Title = "Кобзар",
                 Alt = "Кобзар",
-                BlobStorageName = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg",
+                BlobName = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg",
                 MimeType = ""
             },
             new Image
@@ -230,7 +230,7 @@ public static class ModelBuilderExtensions
                 Id = 6,
                 Title = "Мико́ла Костома́ров",
                 Alt = "Мико́ла Костома́ров",
-                BlobStorageName = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg",
+                BlobName = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg",
                 MimeType = ""
             },
             new Image
@@ -238,7 +238,7 @@ public static class ModelBuilderExtensions
                 Id = 7,
                 Title = "Василь Білозерський",
                 Alt = "Василь Білозерський",
-                BlobStorageName = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG",
+                BlobName = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG",
                 MimeType = ""
             },
             new Image
@@ -246,7 +246,7 @@ public static class ModelBuilderExtensions
                 Id = 8,
                 Title = "Звільнення Херсона",
                 Alt = "Звільнення Херсона",
-                BlobStorageName = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg",
+                BlobName = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg",
                 MimeType = ""
             },
             new Image
@@ -254,7 +254,7 @@ public static class ModelBuilderExtensions
                 Id = 9,
                 Title = "book",
                 Alt = "book",
-                BlobStorageName = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80",
+                BlobName = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80",
                 MimeType = ""
             },
             new Image
@@ -262,7 +262,7 @@ public static class ModelBuilderExtensions
                 Id = 10,
                 Title = "video",
                 Alt = "video",
-                BlobStorageName = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg",
+                BlobName = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg",
                 MimeType = ""
             },
             new Image
@@ -270,7 +270,7 @@ public static class ModelBuilderExtensions
                 Id = 11,
                 Title = "article",
                 Alt = "article",
-                BlobStorageName = "https://images.laws.com/constitution/constitutional-convention.jpg",
+                BlobName = "https://images.laws.com/constitution/constitutional-convention.jpg",
                 MimeType = ""
             },
             new Image
@@ -278,7 +278,7 @@ public static class ModelBuilderExtensions
                 Id = 12,
                 Title = "SoftServe",
                 Alt = "SoftServe",
-                BlobStorageName = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png",
+                BlobName = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png",
                 MimeType = ""
             },
             new Image
@@ -286,7 +286,7 @@ public static class ModelBuilderExtensions
                 Id = 13,
                 Title = "Parimatch",
                 Alt = "Parimatch",
-                BlobStorageName = "https://static.ua-football.com/img/upload/19/270071.png",
+                BlobName = "https://static.ua-football.com/img/upload/19/270071.png",
                 MimeType = ""
             },
             new Image
@@ -294,7 +294,7 @@ public static class ModelBuilderExtensions
                 Id = 14,
                 Title = "Community Partners",
                 Alt = "Community Partners",
-                BlobStorageName = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png",
+                BlobName = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png",
                 MimeType = ""
             },
             new Image
@@ -302,7 +302,7 @@ public static class ModelBuilderExtensions
                 Id = 15,
                 Title = "Володимир-Варфоломей",
                 Alt = "Володимир-Варфоломей",
-                BlobStorageName = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg",
+                BlobName = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg",
                 MimeType = ""
             },
             new Image
@@ -310,7 +310,7 @@ public static class ModelBuilderExtensions
                 Id = 16,
                 Title = "Леся Українка",
                 Alt = "Леся Українка",
-                BlobStorageName = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D",
+                BlobName = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D",
                 MimeType = ""
             },
             new Image
@@ -318,14 +318,14 @@ public static class ModelBuilderExtensions
                 Id = 17,
                 Title = "Іван Мазепа",
                 Alt = "Іван Мазепа",
-                BlobStorageName = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/",
+                BlobName = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/",
                 MimeType = ""
             }, new Image
             {
                 Id = 18,
                 Title = "Михайло Грушевський",
                 Alt = "Грушевький",
-                BlobStorageName = "/assets/2296e9b1db2ab72f2db9.png",
+                BlobName = "/assets/2296e9b1db2ab72f2db9.png",
                 MimeType = ""
             },
             new Image
@@ -333,7 +333,7 @@ public static class ModelBuilderExtensions
                 Id = 19,
                 Title = "Грушевський",
                 Alt = "Грушевький",
-                BlobStorageName = "/assets/35b44f042d027c3a7589.png",
+                BlobName = "/assets/35b44f042d027c3a7589.png",
                 MimeType = ""
             },
             new Image
@@ -341,7 +341,7 @@ public static class ModelBuilderExtensions
                 Id = 20,
                 Title = "Сучасний Грушевський",
                 Alt = "Грушевський",
-                BlobStorageName = "/assets/c58dac51751395fb3217.png",
+                BlobName = "/assets/c58dac51751395fb3217.png",
                 MimeType = ""
             },
             new Image
@@ -349,7 +349,7 @@ public static class ModelBuilderExtensions
                 Id = 21,
                 Title = "Мурал Грушевського",
                 Alt = "мурал",
-                BlobStorageName = "/assets/233c6bbb0b79df230d93.png",
+                BlobName = "/assets/233c6bbb0b79df230d93.png",
                 MimeType = ""
             },
             new Image
@@ -357,7 +357,7 @@ public static class ModelBuilderExtensions
                 Id = 22,
                 Title = "Козаки на орбіті",
                 Alt = "Козаки на орбіті",
-                BlobStorageName = "/assets/02b59f4ef917107514e3.png",
+                BlobName = "/assets/02b59f4ef917107514e3.png",
                 MimeType = ""
             },
             new Image
@@ -365,7 +365,7 @@ public static class ModelBuilderExtensions
                 Id = 23,
                 Title = "Мурал М. Грушевського",
                 Alt = "мурал",
-                BlobStorageName = "/assets/8ecaa9756bac938f8f73.png",
+                BlobName = "/assets/8ecaa9756bac938f8f73.png",
                 MimeType = ""
             });
         modelBuilder.Entity<Audio>().HasData(
@@ -374,7 +374,7 @@ public static class ModelBuilderExtensions
                 Id = 1,
                 Title = "audio1",
                 Description = "for streetcode1",
-                BlobStorageName = "https://somelink1",
+                BlobName = "https://somelink1",
                 MimeType = "",
                 StreetcodeId = 1
             },
@@ -383,7 +383,7 @@ public static class ModelBuilderExtensions
                 Id = 2,
                 Title = "audio2",
                 Description = "for streetcode2",
-                BlobStorageName = "https://somelink2",
+                BlobName = "https://somelink2",
                 MimeType = "",
                 StreetcodeId = 2
             },
@@ -392,7 +392,7 @@ public static class ModelBuilderExtensions
                 Id = 3,
                 Title = "audio3",
                 Description = "for streetcode3",
-                BlobStorageName = "https://somelink3",
+                BlobName = "https://somelink3",
                 MimeType = "",
                 StreetcodeId = 3
             },
@@ -401,7 +401,7 @@ public static class ModelBuilderExtensions
                 Id = 4,
                 Title = "audio4",
                 Description = "for streetcode4",
-                BlobStorageName = "https://somelink4",
+                BlobName = "https://somelink4",
                 MimeType = "",
                 StreetcodeId = 4
             });

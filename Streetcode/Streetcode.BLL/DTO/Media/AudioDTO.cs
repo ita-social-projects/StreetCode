@@ -6,7 +6,7 @@ public class AudioDTO
 {
     public int Id { get; set; }
     public string? Description { get; set; }
-    public string BlobStorageName { get; set; }
+    public string BlobName { get; set; }
 
     public int StreetcodeId { get; set; }
 }

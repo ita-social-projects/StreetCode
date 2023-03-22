@@ -21,7 +21,7 @@ public class Image
     public string? Alt { get; set; }
 
     [Required]
-    public string BlobStorageName { get; set; }
+    public string BlobName { get; set; }
 
     [Required]
     public string MimeType { get; set; }

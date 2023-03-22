@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
-using Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
+using Streetcode.BLL.MediatR.Media.Image.GetBaseImage;
 using Streetcode.BLL.MediatR.Media.Image.GetById;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Media.Image.UploadBase;
+using Streetcode.BLL.MediatR.Media.Image.Create;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -30,10 +29,9 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ImageDTO image)
+    public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateImageCommand(image)));
     }
 
     [HttpPut("{id:int}")]
@@ -50,15 +48,9 @@ public class ImageController : BaseApiController
         return Ok();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> UploadBase([FromBody] FileBaseCreateDTO image)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetBaseImage([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new UploadBaseImageCommand(image)));
-    }
-
-    [HttpGet("{name}")]
-    public async Task<IActionResult> GetBaseFileByName([FromRoute] string name)
-    {
-        return HandleResult(await Mediator.Send(new GetBaseFileByNameQuery(name)));
+        return HandleResult(await Mediator.Send(new GetBaseImageQuery(id)));
     }
 }

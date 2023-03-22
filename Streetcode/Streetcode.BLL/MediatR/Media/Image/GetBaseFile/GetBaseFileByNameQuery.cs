@@ -1,7 +1,0 @@
-﻿using FluentResults;
-using MediatR;
-using Streetcode.BLL.DTO.Media.Images;
-
-namespace Streetcode.BLL.MediatR.Media.Image.GetBaseFile;
-
-public record GetBaseFileByNameQuery(string Name) : IRequest<Result<MemoryStream>>;

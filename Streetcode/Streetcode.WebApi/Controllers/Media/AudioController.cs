@@ -37,7 +37,7 @@ public class AudioController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] FileBaseCreateDTO audio)
+    public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
     {
         return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
     }

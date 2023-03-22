@@ -1,12 +1,13 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Delete;
 
-public class DeleteImageHandler : IRequestHandler<DeleteAudioCommand, Result<Unit>>
+public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
@@ -17,10 +18,12 @@ public class DeleteImageHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
         _blobService = blobService;
     }
 
-    public async Task<Result<Unit>> Handle(DeleteAudioCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(DeleteImageCommand request, CancellationToken cancellationToken)
     {
         var image = await _repositoryWrapper.ImageRepository
-            .GetFirstOrDefaultAsync(i => i.Id == request.Id);
+            .GetFirstOrDefaultAsync(
+            predicate: i => i.Id == request.Id,
+            include: s => s.Include(i => i.Streetcodes));
 
         if (image is null)
         {

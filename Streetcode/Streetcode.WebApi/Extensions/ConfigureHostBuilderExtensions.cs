@@ -12,7 +12,6 @@ public static class ConfigureHostBuilderExtensions
             config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
             config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
             config.AddEnvironmentVariables("STREETCODE_");
-            config.AddEnvironmentVariables("BlobStoreKey");
         });
     }
 }

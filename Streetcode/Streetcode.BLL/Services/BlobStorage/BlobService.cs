@@ -1,13 +1,22 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.BlobStorage;
 
 namespace Streetcode.BLL.Services.BlobStorage;
 
 public class BlobService : IBlobService
 {
-    private readonly string _keyCrypt = Environment.GetEnvironmentVariable("BlobStoreKey");
-    private readonly string _blobPath = "../../BlobStorage/";
+    private readonly BlobEnvirovmentVariables _envirovment;
+    private readonly string _keyCrypt;
+    private readonly string _blobPath;
+    public BlobService(IOptions<BlobEnvirovmentVariables> envirovment)
+    {
+        _envirovment = envirovment.Value;
+        _keyCrypt = _envirovment.BlobStoreKey;
+        _blobPath = _envirovment.BlobStorePath;
+    }
+
     public MemoryStream FindFileInStorage(string name)
     {
         string[] splitedName = name.Split('.');

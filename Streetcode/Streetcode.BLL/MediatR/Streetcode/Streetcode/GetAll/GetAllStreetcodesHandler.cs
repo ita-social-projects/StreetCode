@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
@@ -20,22 +21,12 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
     public async Task<Result<IEnumerable<StreetcodeDTO>>> Handle(GetAllStreetcodesQuery request, CancellationToken cancellationToken)
     {
-        var streetcodes = await _repositoryWrapper.StreetcodeRepository
-            .GetAllAsync();
-
-        if (streetcodes is null)
-        {
-            return Result.Fail(new Error($"Cannot find any streetcodes"));
-        }
+        var streetcodes = _repositoryWrapper.StreetcodeRepository
+            .FindAll();
 
         if (request.Title is not null)
         {
             FindStreetcodesWithMatchTitle(ref streetcodes, request.Title);
-        }
-
-        if (request.Filter is not null)
-        {
-            FindFilteredStreetcodes(ref streetcodes, request.Filter);
         }
 
         if (request.Sort is not null)
@@ -43,21 +34,19 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             FindSortedStreetcodes(ref streetcodes, request.Sort);
         }
 
-        var streetcodesList = streetcodes.AsEnumerable();
-
-        foreach (var item in streetcodesList)
+        if (request.Filter is not null)
         {
-            Console.WriteLine(item.Title);
+            FindFilteredStreetcodes(ref streetcodes, request.Filter);
         }
 
-        ApplyPagination(ref streetcodesList, request.Amount, request.Page);
+        ApplyPagination(ref streetcodes, request.Amount, request.Page);
 
-        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodesList);
+        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
         return Result.Ok(streetcodeDtos);
     }
 
     private void FindStreetcodesWithMatchTitle(
-        ref IEnumerable<StreetcodeContent> streetcodes,
+        ref IQueryable<StreetcodeContent> streetcodes,
         string title)
     {
         streetcodes = streetcodes.Where(s => s.Title
@@ -68,47 +57,49 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
     }
 
     private void FindFilteredStreetcodes(
-        ref IEnumerable<StreetcodeContent> streetcodes,
+        ref IQueryable<StreetcodeContent> streetcodes,
         string filter)
     {
         var filterParams = filter.Split(':');
         var filterColumn = filterParams[0];
         var filterValue = filterParams[1];
 
-        streetcodes = streetcodes.Where(s => filterValue.Contains(s.Status.ToString()));
+        streetcodes = streetcodes
+            .AsEnumerable()
+            .Where(s => filterValue == s.Status.ToString())
+            .AsQueryable();
     }
 
     private void FindSortedStreetcodes(
-        ref IEnumerable<StreetcodeContent> streetcodes,
+        ref IQueryable<StreetcodeContent> streetcodes,
         string sort)
     {
-        var sortParams = sort.Split(',');
         var sortedRecords = streetcodes;
 
-        foreach (var sortParam in sortParams)
+        var sortColumn = sort.Trim();
+        var sortDirection = "asc";
+
+        if (sortColumn.StartsWith("-"))
         {
-            var sortColumn = sortParam.Trim();
-            var sortDirection = "asc";
-
-            if (sortColumn.StartsWith("-"))
-            {
-                sortDirection = "desc";
-                sortColumn = sortColumn.Substring(1);
-            }
-
-            var property = typeof(StreetcodeContent).GetProperty(sortColumn);
-
-            streetcodes = sortDirection switch
-            {
-                "asc" => sortedRecords.OrderBy(s => property.GetValue(s, null)),
-                "desc" => sortedRecords.OrderByDescending(s => property.GetValue(s, null)),
-                _ => sortedRecords,
-            };
+            sortDirection = "desc";
+            sortColumn = sortColumn.Substring(1);
         }
+
+        var type = typeof(StreetcodeContent);
+        var parameter = Expression.Parameter(type, "p");
+        var property = Expression.Property(parameter, sortColumn);
+        var lambda = Expression.Lambda(property, parameter);
+
+        streetcodes = sortDirection switch
+        {
+            "asc" => Queryable.OrderBy(sortedRecords, (dynamic)lambda),
+            "desc" => Queryable.OrderByDescending(sortedRecords, (dynamic)lambda),
+            _ => sortedRecords,
+        };
     }
 
     private void ApplyPagination(
-        ref IEnumerable<StreetcodeContent> streetcodes,
+        ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)
     {

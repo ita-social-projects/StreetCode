@@ -8,7 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 
-public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, Result<IEnumerable<StreetcodeDTO>>>
+public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, Result<GetAllStreetcodesResponseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -19,8 +19,10 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<StreetcodeDTO>>> Handle(GetAllStreetcodesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
+        var request = query.request;
+
         var streetcodes = _repositoryWrapper.StreetcodeRepository
             .FindAll();
 
@@ -39,10 +41,17 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             FindFilteredStreetcodes(ref streetcodes, request.Filter);
         }
 
-        ApplyPagination(ref streetcodes, request.Amount, request.Page);
+        int pagesAmount = ApplyPagination(ref streetcodes, request.Amount, request.Page);
 
         var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
-        return Result.Ok(streetcodeDtos);
+
+        var response = new GetAllStreetcodesResponseDTO
+        {
+            Pages = pagesAmount,
+            Streetcodes = streetcodeDtos
+        };
+
+        return Result.Ok(response);
     }
 
     private void FindStreetcodesWithMatchTitle(
@@ -98,7 +107,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         };
     }
 
-    private void ApplyPagination(
+    private int ApplyPagination(
         ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)
@@ -108,5 +117,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         streetcodes = streetcodes
             .Skip((page - 1) * amount)
             .Take(amount);
+
+        return totalPages;
     }
 }

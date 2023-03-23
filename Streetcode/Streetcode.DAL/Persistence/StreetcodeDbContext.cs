@@ -45,6 +45,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Subtitle> Subtitles { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Term> Terms { get; set; }
+    public DbSet<RelatedTerm> RelatedTerms { get; set; }
     public DbSet<Text> Texts { get; set; }
     public DbSet<TimelineItem> TimelineItems { get; set; }
     public DbSet<Toponym> Toponyms { get; set; }
@@ -220,6 +221,11 @@ public class StreetcodeDbContext : DbContext
                 .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
+
+        modelBuilder.Entity<RelatedTerm>()
+            .HasOne(rt => rt.Term)
+            .WithMany(t => t.RelatedTerms)
+            .HasForeignKey(rt => rt.TermId);
 
         modelBuilder.Entity<Coordinate>()
             .HasDiscriminator<string>("CoordinateType")

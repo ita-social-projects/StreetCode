@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -12,6 +13,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery()));
+    }
+
+    [HttpGet("{index:int}")]
+    public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
+    {
+        return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
     }
 
     [HttpGet("{id:int}")]

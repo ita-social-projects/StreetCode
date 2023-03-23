@@ -864,16 +864,21 @@ public static class ModelBuilderExtensions
                          "Академік Імператорської академії мистецтв",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "9 березня 1814 — 10 березня 1861",
                 EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
                 EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
                 FirstName = "Тарас",
                 Rank = "Григорович",
-                LastName = "Шевченко"
+                LastName = "Шевченко",
+                Title = "Тарас Шевченко",
+                Alias = "Кобзар"
             },
             new PersonStreetcode
             {
                 Id = 2,
                 Index = 2,
+                DateString = "9 березня 1814 — 10 березня 1861",
+                Title = "Мико́ла Костома́ров",
                 Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург)" +
                     " — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. " +
                     "\r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство»." +
@@ -884,12 +889,14 @@ public static class ModelBuilderExtensions
                 EventEndOrPersonDeathDate = new DateTime(1885, 4, 7),
                 FirstName = "Мико́ла",
                 Rank = "Іва́нович",
-                LastName = "Костома́ров"
+                LastName = "Костома́ров",
             },
             new PersonStreetcode
             {
                 Id = 3,
                 Index = 3,
+                Title = "Василь Білозерський",
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
                     " і культурний діяч, журналіст.",
                 ViewCount = 0,
@@ -905,6 +912,8 @@ public static class ModelBuilderExtensions
                 Id = 5,
                 Index = 5,
                 Teaser = "some teaser",
+                DateString = "2 січня 1825 — 20 лютого 1899",
+                Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -919,10 +928,13 @@ public static class ModelBuilderExtensions
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Леся",
-                LastName = "Українка"
+                LastName = "Українка",
+                Title = "Леся Українка",
+                Alias = "Лариса Косач"
             },
             new PersonStreetcode
             {
@@ -931,9 +943,11 @@ public static class ModelBuilderExtensions
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Іван",
+                Title = "Іван Мазепа",
                 LastName = "Мазепа"
             });
         modelBuilder.Entity<EventStreetcode>().HasData(
@@ -941,6 +955,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Index = 4,
+                DateString = "11 листопада 2022",
                 Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання" +
                     " Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області" +
                     " та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ" +

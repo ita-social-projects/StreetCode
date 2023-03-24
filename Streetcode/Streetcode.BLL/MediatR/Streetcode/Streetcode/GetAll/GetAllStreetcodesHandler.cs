@@ -21,27 +21,27 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
     public async Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
-        var request = query.request;
+        var filterRequest = query.request;
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
             .FindAll();
 
-        if (request.Title is not null)
+        if (filterRequest.Title is not null)
         {
-            FindStreetcodesWithMatchTitle(ref streetcodes, request.Title);
+            FindStreetcodesWithMatchTitle(ref streetcodes, filterRequest.Title);
         }
 
-        if (request.Sort is not null)
+        if (filterRequest.Sort is not null)
         {
-            FindSortedStreetcodes(ref streetcodes, request.Sort);
+            FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
         }
 
-        if (request.Filter is not null)
+        if (filterRequest.Filter is not null)
         {
-            FindFilteredStreetcodes(ref streetcodes, request.Filter);
+            FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 
-        int pagesAmount = ApplyPagination(ref streetcodes, request.Amount, request.Page);
+        int pagesAmount = ApplyPagination(ref streetcodes, filterRequest.Amount, filterRequest.Page);
 
         var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
 
@@ -75,7 +75,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         streetcodes = streetcodes
             .AsEnumerable()
-            .Where(s => filterValue == s.Status.ToString())
+            .Where(s => filterValue.Contains(s.Status.ToString()))
             .AsQueryable();
     }
 

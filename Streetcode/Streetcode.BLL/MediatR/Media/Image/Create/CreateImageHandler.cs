@@ -35,7 +35,6 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         image.BlobName = $"{hashBlobStorageName}.{request.Image.Extension}";
 
         await _repositoryWrapper.ImageRepository.CreateAsync(image);
-
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
         var createdImage = _mapper.Map<ImageDTO>(image);

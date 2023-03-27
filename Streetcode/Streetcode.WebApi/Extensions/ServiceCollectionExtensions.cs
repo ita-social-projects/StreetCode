@@ -8,7 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 using Hangfire;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.Services.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
 
 namespace Streetcode.WebApi.Extensions;
 

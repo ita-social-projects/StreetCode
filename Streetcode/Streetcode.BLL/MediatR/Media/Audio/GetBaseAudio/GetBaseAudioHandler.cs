@@ -25,7 +25,7 @@ public class GetBaseAudioHandler : IRequestHandler<GetBaseAudioQuery, Result<Mem
             return Result.Fail(new Error($"Cannot find an audio with corresponding id: {request.Id}"));
         }
 
-        var audioFile = _blobStorage.FindFileInStorage(audio.BlobName);
+        var audioFile = _blobStorage.FindFileInStorageAsMemoryStream(audio.BlobName);
 
         return audioFile;
     }

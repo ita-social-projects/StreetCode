@@ -8,7 +8,8 @@ public class ImageProfile : Profile
 {
     public ImageProfile()
     {
-        CreateMap<Image, ImageDTO>();
+        CreateMap<Image, ImageDTO>()
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
 
         CreateMap<ImageFileBaseCreateDTO, Image>()
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))

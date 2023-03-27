@@ -25,7 +25,7 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
             return Result.Fail(new Error($"Cannot find an image with corresponding id: {request.Id}"));
         }
 
-        var imageFile = _blobStorage.FindFileInStorage(image.BlobName);
+        var imageFile = _blobStorage.FindFileInStorageAsMemoryStream(image.BlobName);
 
         return imageFile;
     }

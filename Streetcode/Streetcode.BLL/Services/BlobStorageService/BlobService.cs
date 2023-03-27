@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.BlobStorage;
 
-namespace Streetcode.BLL.Services.BlobStorage;
+namespace Streetcode.BLL.Services.BlobStorageService;
 
 public class BlobService : IBlobService
 {
@@ -17,7 +17,7 @@ public class BlobService : IBlobService
         _blobPath = _envirovment.BlobStorePath;
     }
 
-    public MemoryStream FindFileInStorage(string name)
+    public MemoryStream FindFileInStorageAsMemoryStream(string name)
     {
         string[] splitedName = name.Split('.');
 
@@ -25,7 +25,20 @@ public class BlobService : IBlobService
 
         var image = new MemoryStream(decodedBytes);
 
+        string base64 = Convert.ToBase64String(decodedBytes);
+
         return image;
+    }
+
+    public string FindFileInStorageAsBase64(string name)
+    {
+        string[] splitedName = name.Split('.');
+
+        byte[] decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
+
+        string base64 = Convert.ToBase64String(decodedBytes);
+
+        return base64;
     }
 
     public string SaveFileInStorage(string base64, string name, string extension)

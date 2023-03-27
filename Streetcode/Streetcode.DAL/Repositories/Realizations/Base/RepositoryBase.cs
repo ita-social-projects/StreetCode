@@ -51,6 +51,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Set<T>().Attach(entity);
     }
 
+    public void ExecuteSQL(string sql)
+    {
+        _dbContext.Database.ExecuteSqlRaw(sql);
+    }
+
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
     {
         IIncludableQueryable<T, object>? query = default;

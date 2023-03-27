@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Util;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
@@ -23,55 +24,66 @@ namespace Streetcode.BLL.MediatR.Partners.Update
 
         public async Task<Result<PartnerDTO>> Handle(UpdatePartnerQuery request, CancellationToken cancellationToken)
         {
-            var partner = await _repositoryWrapper.PartnersRepository
+            var partner = _mapper.Map<Partner>(request.Partner);
+            var partnerDb = await _repositoryWrapper.PartnersRepository
                 .GetFirstOrDefaultAsync(
-                    p => p.Id == request.Partner.Id,
-                    include: s => s.Include(s => s.Streetcodes)
-                        .Include(s => s.PartnerSourceLinks));
-            if (partner == null)
+                    p => p.Id == partner.Id,
+                    include: q => q.Include(p => p.PartnerSourceLinks).Include(p => p.Streetcodes));
+
+            if (partnerDb == null || partner == null)
             {
                 return Result.Fail("No such partner");
             }
 
+            partnerDb.Title = partner.Title;
+            partnerDb.Description = partner.Description;
+            partnerDb.IsKeyPartner = partner.IsKeyPartner;
+            partnerDb.TargetUrl = partner.TargetUrl;
+
+            var partnerOldStreetcodesId = partnerDb.Streetcodes.Select(s => s.Id);
+
+            var deletedLinks = partnerDb.PartnerSourceLinks.Except(partner.PartnerSourceLinks, new IdComparer()).ToList();
+            deletedLinks.ForEach(link => _repositoryWrapper.PartnerSourceLinkRepository.Delete(link));
+
             var newPartnerStreetcodeIds = request.Partner.Streetcodes.Select(s => s.Id).ToList();
-
-            var newPartnerStreetcodes = await _repositoryWrapper
-               .StreetcodeRepository
-               .GetAllAsync(
-                s => newPartnerStreetcodeIds
-                    .Contains(s.Id), include: s => s.Include(s => s.Partners));
-
-            var newPartnerLinkIds = request.Partner.PartnerSourceLinks.Select(s => s.Id).ToList();
-            var newPartnerLinks = await _repositoryWrapper
-                .PartnerSourceLinkRepository
-                .GetAllAsync(l => newPartnerLinkIds.Contains(l.Id));
-
-            partner.Streetcodes.Clear();
-            partner.Streetcodes.AddRange(newPartnerStreetcodes);
-
-            partner.IsKeyPartner = request.Partner.IsKeyPartner;
-            partner.TargetUrl = request.Partner.TargetUrl;
-            partner.Description = request.Partner.Description;
-            partner.Title = request.Partner.Title;
-            partner.UrlTitle = request.Partner.UrlTitle;
-
-            var newLinks = _mapper.Map<IEnumerable<PartnerSourceLink>>(
-                    request.Partner.PartnerSourceLinks.Where(p => p.Id == 0)).ToList();
-            newLinks.ForEach(l =>
+            var idsToDelete = partnerOldStreetcodesId.Except(newPartnerStreetcodeIds);
+            var idsToAdd = newPartnerStreetcodeIds.Except(partnerOldStreetcodesId);
+            string ids = "";
+            string idsAdd = "";
+            foreach (int id in idsToDelete)
             {
-                l.Partner = partner;
-                l.PartnerId = partner.Id;
-            });
-            partner.PartnerSourceLinks = newPartnerLinks.ToList();
-            partner.PartnerSourceLinks.AddRange(newLinks);
+                ids += $"{id}, ";
+            }
 
+            foreach (int id in idsToAdd)
+            {
+                idsAdd += $"({partner.Id}, {id}),";
+            }
+
+            string sqlcommand = "";
+            if (ids.Length > 2)
+            {
+                sqlcommand += $"DELETE FROM [streetcode].[streetcode_partners] WHERE PartnersId = {partner.Id} and StreetcodesId IN ({ids.Substring(0, ids.Length - 2)});";
+            } 
+            if(idsAdd.Length > 2)
+            {
+                sqlcommand += $"INSERT INTO [streetcode].[streetcode_partners] (PartnersId, StreetcodesId) VALUES {idsAdd.Substring(0, idsAdd.Length - 1)};";
+            }
+            
             // update logo if base64 is not empty
             try
             {
-                _repositoryWrapper.PartnersRepository.Update(partner);
+                partnerDb.Streetcodes.Clear();
+                partnerDb = _repositoryWrapper.PartnersRepository.Update(partnerDb).Entity;
                 _repositoryWrapper.SaveChanges();
+                if (sqlcommand.Length > 0)
+                {
+                    _repositoryWrapper.PartnersRepository.ExecuteSQL(sqlcommand);
+                }
 
-                return Result.Ok(_mapper.Map<PartnerDTO>(partner));
+                var mappedPartner = _mapper.Map<PartnerDTO>(partnerDb);
+                mappedPartner.Streetcodes = request.Partner.Streetcodes;
+                return Result.Ok(_mapper.Map<PartnerDTO>(mappedPartner));
             }
             catch (Exception ex)
             {

@@ -2,13 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Streetcode.BLL.MediatR.Partners.Delete
 {
@@ -37,7 +31,8 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
                 {
                     _repositoryWrapper.SaveChanges();
                     return Result.Ok(_mapper.Map<PartnerDTO>(partner));
-                }catch(Exception ex)
+                }
+                catch(Exception ex)
                 {
                     return Result.Fail(ex.Message);
                 }

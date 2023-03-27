@@ -8,7 +8,6 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 
-
 namespace Streetcode.BLL.MediatR.Partners.Update
 {
     public class UpdatePartnerHandler : IRequestHandler<UpdatePartnerQuery, Result<PartnerDTO>>
@@ -64,12 +63,13 @@ namespace Streetcode.BLL.MediatR.Partners.Update
             if (ids.Length > 2)
             {
                 sqlcommand += $"DELETE FROM [streetcode].[streetcode_partners] WHERE PartnersId = {partner.Id} and StreetcodesId IN ({ids.Substring(0, ids.Length - 2)});";
-            } 
+            }
+
             if(idsAdd.Length > 2)
             {
                 sqlcommand += $"INSERT INTO [streetcode].[streetcode_partners] (PartnersId, StreetcodesId) VALUES {idsAdd.Substring(0, idsAdd.Length - 1)};";
             }
-            
+
             // update logo if base64 is not empty
             try
             {

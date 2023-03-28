@@ -22,15 +22,6 @@ namespace Streetcode.BLL.MediatR.Partners.Create
         {
             var newPartner = _mapper.Map<Partner>(request.newPartner);
 
-            // add adding phot to blob and getting href for this
-
-            newPartner.Logo = new DAL.Entities.Media.Images.Image()
-            {
-                Alt = newPartner.Title,
-                Title = newPartner.Title,
-                Url = "https://t4.ftcdn.net/jpg/00/97/58/97/360_F_97589769_t45CqXyzjz0KXwoBZT9PRaWGHRk5hQqQ.jpg",
-            };
-
             try
             {
                 newPartner.Streetcodes.Clear();

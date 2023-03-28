@@ -13,7 +13,6 @@ namespace Streetcode.BLL.DTO.Partners
         public string TargetUrl { get; set; }
         public int LogoId { get; set; }
         public string? UrlTitle { get; set; }
-        public string LogoBase64 { get; set; }
         public List<CreatePartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
         public List<StreetcodeShortDTO> Streetcodes { get; set; } = new List<StreetcodeShortDTO>();
     }

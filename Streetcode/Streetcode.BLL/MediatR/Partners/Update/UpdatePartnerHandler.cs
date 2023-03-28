@@ -70,7 +70,6 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                 sqlcommand += $"INSERT INTO [streetcode].[streetcode_partners] (PartnersId, StreetcodesId) VALUES {idsAdd.Substring(0, idsAdd.Length - 1)};";
             }
 
-            // update logo if base64 is not empty
             try
             {
                 partnerDb.Streetcodes.Clear();

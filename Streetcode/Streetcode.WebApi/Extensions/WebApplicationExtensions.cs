@@ -13,19 +13,21 @@ public static class WebApplicationExtensions
         try
         {
             var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
-            var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+            // await streetcodeContext.Database.EnsureDeletedAsync();
 
-            await streetcodeContext.Database.EnsureDeletedAsync();
             await streetcodeContext.Database.MigrateAsync();
 
-            var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
+            // var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
-            foreach (var task in filesContexts)
-            {
-                await streetcodeContext.Database.ExecuteSqlRawAsync(task);
-            }
+            // var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+
+            // var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
+
+            // foreach (var task in filesContexts)
+            // {
+            //    await streetcodeContext.Database.ExecuteSqlRawAsync(task);
+            // }
         }
         catch (Exception ex)
         {

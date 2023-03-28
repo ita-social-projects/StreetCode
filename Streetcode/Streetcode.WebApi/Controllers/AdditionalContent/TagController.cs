@@ -5,7 +5,6 @@ using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.AdditionalContent.Tag.Test;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 
@@ -45,11 +44,6 @@ public class TagController : BaseApiController
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TagDTO tag)
     {
         return Ok();
-    }
-    [HttpGet]
-    public async Task<IActionResult> Test()
-    {
-        return HandleResult(await Mediator.Send(new TestQuery()));
     }
 
     [HttpDelete("{id:int}")]

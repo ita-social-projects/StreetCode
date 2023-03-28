@@ -28,6 +28,7 @@ public interface IRepositoryWrapper
     ISubtitleRepository SubtitleRepository { get; }
     ITagRepository TagRepository { get; }
     ITermRepository TermRepository { get; }
+    IRelatedTermRepository RelatedTermRepository { get; }
     ITextRepository TextRepository { get; }
     ITimelineRepository TimelineRepository { get; }
     IToponymRepository ToponymRepository { get; }

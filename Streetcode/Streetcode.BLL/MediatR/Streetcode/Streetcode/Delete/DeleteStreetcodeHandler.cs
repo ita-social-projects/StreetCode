@@ -31,11 +31,6 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        if (!resultIsSuccess)
-        {
-            return Result.Fail("Failed to delete a streetcode");
-        }
-
-        return Result.Ok(Unit.Value);
+        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a streetcode"));
     }
 }

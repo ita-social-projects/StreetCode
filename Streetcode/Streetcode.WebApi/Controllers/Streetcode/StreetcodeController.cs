@@ -8,23 +8,28 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Requests.Streetcode;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequest request)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(
-            request.Page, request.Amount, request.Title, request.Sort, request.Filter)));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
     }
 
     [HttpGet("{index:int}")]
     public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
+    }
+
+    [HttpGet("{url}")]
+    public async Task<IActionResult> GetByTransliterationUrl([FromRoute] string url)
+    {
+        return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url)));
     }
 
     [HttpGet("{id:int}")]

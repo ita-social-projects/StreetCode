@@ -28,13 +28,9 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 
-        var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
+        var resultIsDeleteSucces = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        if (!resultIsSuccess)
-        {
-            throw new Exception("Failed to delete a streetcode");
-        }
-
-        return Result.Ok(Unit.Value);
+        return resultIsDeleteSucces ? Result.Ok(Unit.Value)
+            : Result.Fail(new Error("Failed to change status of streetcode to deleted"));
     }
 }

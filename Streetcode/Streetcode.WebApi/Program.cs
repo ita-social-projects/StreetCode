@@ -11,7 +11,7 @@ builder.Services.AddCustomServices();
 
 var app = builder.Build();
 
-await app.MigrateAndSeedDbAsync();
+// await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {
@@ -32,11 +32,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard();
-
-// check street codes to delete every minute those that were added status "deleted" 7 days ago
-/*RecurringJob.AddOrUpdate<SoftDeletingUtils>(
-    (sd) => sd.DeleteStreetcodeWithStageDeleted(0),
-    Cron.Minutely);*/
 
 // change Cron.Monthly to set another parsing interval from ukrposhta
 // RecurringJob.AddOrUpdate<WebParsingUtils>(

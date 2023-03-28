@@ -10,6 +10,7 @@ public abstract class StreetcodeDTO
     public string Title { get; set; }
     public string DateString { get; set; }
     public string Alias { get; set; }
+    public string TransliterationUrl { get; set; }
     public StreetcodeStatus Status { get; set; }
     public DateTime EventStartOrPersonBirthDate { get; set; }
     public DateTime EventEndOrPersonDeathDate { get; set; }

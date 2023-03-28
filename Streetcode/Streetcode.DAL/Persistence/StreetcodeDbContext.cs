@@ -123,7 +123,7 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Observer)
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)

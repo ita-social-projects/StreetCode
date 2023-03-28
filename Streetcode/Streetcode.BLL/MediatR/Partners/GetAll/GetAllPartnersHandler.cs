@@ -25,7 +25,8 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
             .PartnersRepository
             .GetAllAsync(
                 include: p => p
-                    .Include(pl => pl.PartnerSourceLinks));
+                    .Include(pl => pl.PartnerSourceLinks)
+                    .Include(p => p.Streetcodes));
 
         if (partners is null)
         {

@@ -49,6 +49,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IRelatedFigureRepository _relatedFigureRepository;
 
+    private IRelatedTermRepository _relatedTermRepository;
+
     private IStreetcodeRepository _streetcodeRepository;
 
     private ISubtitleRepository _subtitleRepository;
@@ -64,6 +66,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IToponymRepository _toponymRepository;
 
     private ITransactLinksRepository _transactLinksRepository;
+
+    private IHistoricalContextRepository _historyContextRepository;
+
+    private IPartnerSourceLinkRepository _partnerSourceLinkRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -314,6 +320,45 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _transactLinksRepository;
+        }
+    }
+
+    public IHistoricalContextRepository HistoricalContextRepository
+    {
+        get
+        {
+            if (_historyContextRepository is null)
+            {
+                _historyContextRepository = new HistoricalContextRepository(_streetcodeDbContext);
+            }
+
+            return _historyContextRepository;
+        }
+    }
+
+    public IPartnerSourceLinkRepository PartnerSourceLinkRepository
+    {
+        get
+        {
+            if (_partnerSourceLinkRepository is null)
+            {
+                _partnerSourceLinkRepository = new PartnersourceLinksRepository(_streetcodeDbContext);
+            }
+
+            return _partnerSourceLinkRepository;
+        }
+    }
+
+    public IRelatedTermRepository RelatedTermRepository
+    {
+        get
+        {
+            if(_relatedTermRepository is null)
+            {
+                _relatedTermRepository = new RelatedTermRepository(_streetcodeDbContext);
+            }
+
+            return _relatedTermRepository;
         }
     }
 

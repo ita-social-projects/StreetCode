@@ -37,7 +37,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object);
             // act
+            
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
+            
             // assert
             Assert.NotNull(result);
 
@@ -60,7 +62,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var request = new GetAllStreetcodesRequestDTO();
 
             // act
+
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
+            
             // assert
             Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
         }

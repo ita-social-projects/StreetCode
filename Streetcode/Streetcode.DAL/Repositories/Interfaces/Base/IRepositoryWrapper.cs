@@ -28,11 +28,13 @@ public interface IRepositoryWrapper
     ISubtitleRepository SubtitleRepository { get; }
     ITagRepository TagRepository { get; }
     ITermRepository TermRepository { get; }
+    IRelatedTermRepository RelatedTermRepository { get; }
     ITextRepository TextRepository { get; }
     ITimelineRepository TimelineRepository { get; }
     IToponymRepository ToponymRepository { get; }
     ITransactLinksRepository TransactLinksRepository { get; }
-
+    IHistoricalContextRepository HistoricalContextRepository { get; }
+    IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

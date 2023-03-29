@@ -1239,6 +1239,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("TransliterationUrl")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1250,6 +1255,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TransliterationUrl")
+                        .IsUnique();
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1295,6 +1303,37 @@ namespace Streetcode.DAL.Persistence.Migrations
                             FactContent = " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес. Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».",
                             ImageId = 5,
                             Title = "Перший Кобзар"
+                        });
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("related_terms", "streetcode");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TermId = 3,
+                            Word = "кріпаків"
                         });
                 });
 
@@ -1378,7 +1417,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             StreetcodeId = 1,
-                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\n\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\n\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\n\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\n\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \n\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\n\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\n\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
+                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\r\n\r\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\r\n\r\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
                             Title = "Дитинство та юність"
                         },
                         new
@@ -1758,7 +1797,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5828),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(424),
                             DateString = "11 листопада 2022",
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1766,6 +1805,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).",
                             Title = "Звільнення Херсона",
+                            TransliterationUrl = "svilnennia-chersonu",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 1000
                         });
@@ -1798,7 +1838,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alias = "Кобзар",
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5527),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(336),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1806,6 +1846,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв",
                             Title = "Тарас Шевченко",
+                            TransliterationUrl = "taras-shevchenko",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Тарас",
@@ -1815,7 +1856,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5745),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(385),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1823,6 +1864,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
                             Title = "Мико́ла Костома́ров",
+                            TransliterationUrl = "mykola-kostomarov",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Мико́ла",
@@ -1832,7 +1874,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5750),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(390),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1840,6 +1882,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.",
                             Title = "Василь Білозерський",
+                            TransliterationUrl = "vasyl-biloservky",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Василь",
@@ -1849,7 +1892,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5763),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(395),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1857,6 +1900,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
+                            TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Володимир-Варфоломей",
@@ -1866,7 +1910,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 6,
                             Alias = "Лариса Косач",
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5768),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(399),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1874,6 +1918,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Леся Українка",
+                            TransliterationUrl = "lesya-ukrainka",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Леся",
@@ -1882,7 +1927,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 3, 3, 19, 26, 34, 442, DateTimeKind.Local).AddTicks(5772),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(403),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1890,6 +1935,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Іван Мазепа",
+                            TransliterationUrl = "ivan-mazepa",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Іван",
@@ -2123,6 +2169,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.TextContent.Term", "Term")
+                        .WithMany("RelatedTerms")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Term");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Text", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -2257,6 +2314,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("TransactionLink");
 
                     b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
+                {
+                    b.Navigation("RelatedTerms");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>

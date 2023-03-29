@@ -30,12 +30,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             _mapperMock = new Mock<IMapper>();
         }
 
-        [Fact]
-        public async Task ShouldReturnSuccessfully_WhenRelatedTermAdded()
+
+        [Theory]
+        [InlineData(2, "example")]
+        public async Task ShouldReturnSuccessfully_WhenRelatedTermAdded(int termId, string word)
         {
             // Arrange
-            var termId = 1;
-            var word = "example";
             var relatedTermDTO = new RelatedTermDTO { TermId = termId, Word = word };
             var entity = new Entity { TermId = termId, Word = word };
             var createRelatedTermCommand = new CreateRelatedTermCommand(relatedTermDTO);
@@ -74,11 +74,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             Assert.Equal("Cannot create new related word for a term!", result.Errors.First().Message);
         }
 
-        [Fact]
-        public async Task Handle_Should_Return_Error_When_Related_Term_Already_Exists()
+        [Theory]
+        [InlineData(1, "test")]
+        public async Task Handle_Should_Return_Error_When_Related_Term_Already_Exists(int termId, string word)
         {
             // Arrange
-            var relatedTerm = new RelatedTermDTO { TermId = 1, Word = "test" };
+            var relatedTerm = new RelatedTermDTO { TermId = termId, Word = word };
             var entity = new Entity { TermId = relatedTerm.TermId, Word = relatedTerm.Word };
             var existingTerms = new List<Entity> { entity };
 
@@ -100,11 +101,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         }
 
 
-        [Fact]
-        public async Task Handle_Should_Return_Error_When_SaveChangesAsync_Fails()
+        [Theory]
+        [InlineData(1, "test")]
+        public async Task Handle_Should_Return_Error_When_SaveChangesAsync_Fails(int termId, string word)
         {
             // Arrange
-            var relatedTerm = new RelatedTermDTO { TermId = 1, Word = "test" };
+            var relatedTerm = new RelatedTermDTO { TermId = termId, Word = word };
             var entity = new Entity { TermId = relatedTerm.TermId, Word = relatedTerm.Word };
             var existingTerms = new List<Entity>();
             var repositoryMock = new Mock<IRepositoryWrapper>();

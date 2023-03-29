@@ -23,13 +23,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
         private readonly Mock<IMapper> _mapperMock;
 
-        //private readonly CreateRelatedTermHandler _sut;
 
         public CreateRelatedTermHandlerTests()
         {
             _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             _mapperMock = new Mock<IMapper>();
-            // _sut = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
         }
 
         [Fact]

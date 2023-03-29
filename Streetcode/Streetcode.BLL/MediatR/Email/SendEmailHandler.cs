@@ -16,7 +16,7 @@ namespace Streetcode.BLL.MediatR.Email
 
         public async Task<Result<Unit>> Handle(SendEmailCommand request, CancellationToken cancellationToken)
         {
-            var message = new Message(new string[] { "maksymbratus12345@gmail.com" }, request.Email.From, "FeedBack", request.Email.Content);
+            var message = new Message(new string[] { "streetcodeua@gmail.com" }, request.Email.From, "FeedBack", request.Email.Content);
             bool isResultSuccess = await _emailService.SendEmailAsync(message);
 
             return isResultSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to send email message"));

@@ -26,25 +26,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly TransactionLink nullValue = null;
+        private readonly TransactLinkDTO nullValueDTO = null;
         public GetTransactLinkByStreetcodeIdHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
         }
+
         async Task SetupRepository(int id)
         {
-
             _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
                It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(getTransaction(id));
-
+                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(new TransactionLink() { Id = id });
         }
 
         async Task SetupMapper(int id)
         {
-
-            _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(getTransactionDTO(id));
-
+            _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(new TransactLinkDTO() { Id = id });
         }
 
         [Theory]
@@ -72,13 +71,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         [InlineData(1)]
         public async Task NotExistingId(int id)
         {
-
             //Arrange
             _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
               It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-               IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(returnNull(id));
+               IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(nullValue);
 
-            _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(returnNullDTO(id));
+            _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(nullValueDTO);
 
             var expectedError = $"Cannot find a transaction link by a streetcode id: {id}";
 
@@ -93,14 +91,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 () => Assert.True(result.IsFailed),
                 () => Assert.Equal(expectedError, result.Errors.First().Message)
             );
-
         }
 
         [Theory]
         [InlineData(1)]
         public async Task CorrectType(int id)
         {
-
             //Arrange
             await SetupMapper(id);
             await SetupRepository(id);
@@ -115,41 +111,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 () => Assert.NotNull(result.ValueOrDefault),
                 () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault)
             );
-
-        }
-
-        private static TransactionLink returnNull(int id)
-        {
-
-            return null;
-
-        }
-
-        private static TransactLinkDTO returnNullDTO(int id)
-        {
-
-            return null;
-
-        }
-
-        private static TransactionLink getTransaction(int id)
-        {
-            
-            return new TransactionLink
-            {
-                Id = id
-            };
-
-        }
-
-        private static TransactLinkDTO getTransactionDTO(int id)
-        {
-
-            return new TransactLinkDTO
-            {
-                Id = id
-            };
-
         }
     }
 }

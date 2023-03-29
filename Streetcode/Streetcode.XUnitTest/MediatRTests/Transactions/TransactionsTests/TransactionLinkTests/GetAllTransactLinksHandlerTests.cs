@@ -23,25 +23,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+
         public GetAllTransactLinksHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
         }
+
         async Task SetupRepository(List<TransactionLink> returnList)
         {
-
             _mockRepo.Setup(repo => repo.TransactLinksRepository.GetAllAsync(
                 It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
                 IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(returnList);
-
         }
 
         async Task SetupMapper(List<TransactLinkDTO> returnList)
         {
-
             _mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
-
         }
 
         [Fact]
@@ -82,7 +80,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         private readonly List<TransactionLink> transactions = new List<TransactionLink>()
         {
-
             new TransactionLink
             {
                 Id = 1,
@@ -101,12 +98,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 UrlTitle = "Title2",
                 StreetcodeId = 2
             }
-
         };
 
         private readonly List<TransactLinkDTO> transactionsDTOs = new List<TransactLinkDTO>()
         {
-
             new TransactLinkDTO
             {
                 Id = 1,
@@ -121,9 +116,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 QrCodeUrl = new UrlDTO{ Href = "URL2", Title = "Title2" },
                 StreetcodeId = 2
             }
-
         };
-
-
     }
 }

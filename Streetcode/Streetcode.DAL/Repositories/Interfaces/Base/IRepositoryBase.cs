@@ -9,7 +9,7 @@ public interface IRepositoryBase<T>
 {
     IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default);
 
-    Task<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>> CreateAsync(T entity);
+    Task<T> CreateAsync(T entity);
 
     T Create(T entity);
 

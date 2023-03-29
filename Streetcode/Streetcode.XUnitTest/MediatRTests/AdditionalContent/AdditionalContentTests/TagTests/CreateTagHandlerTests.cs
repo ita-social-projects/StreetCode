@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
@@ -37,81 +38,25 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             _mockMapper = new Mock<IMapper>();
         }
 
-        async Task SetupRepository(Tag tag)
+        [Fact]
+        public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
         {
-
-            _mockRepo.Setup(repo => repo.TagRepository.CreateAsync(tag));
+            // Arrange
+            _mockRepo.Setup(repo => repo.TagRepository.CreateAsync(new Tag()));
             _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
-        }
+            _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
 
-        async Task SetupMapper(Tag tag)
-        {
-
-            _mockMapper.Setup(x => x.Map<Tag>(It.IsAny<TagDTO>())).Returns(tag);
-
-        }
-
-        [Fact]
-        public async Task ShouldReturnSuccessfully_TypeIsCorrect()
-        {
-
-            // Arrange
-
-            await SetupRepository(GetTag());
-            await SetupMapper(GetTag());
-
-            var exception = new Exception("Database error.");
-
-            _mockRepo.Setup(r => r.TagRepository.CreateAsync(GetTag())).ThrowsAsync(exception);
 
             var handler = new CreateTagHandler(_mockRepo.Object, _mockMapper.Object);
 
             //Act
-            var result = await handler.Handle(new CreateTagQuery(CreateTagDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTagQuery(new CreateTagDTO()), CancellationToken.None);
 
             //Assert
-            Assert.IsType<Unit>(result.Value);
+            Assert.Multiple(
+               () => Assert.IsType<TagDTO>(result.Value),
+               () => Assert.True(result.IsSuccess));
         }
-
-        private static Tag GetTag()
-        {
-            return new Tag();
-        }
-
-        private static TagDTO GetTagDTO()
-        {
-            return new TagDTO();
-        }
-
-        private static CreateTagDTO CreateTagDTO()
-        {
-            return new CreateTagDTO
-            {
-                Title = GetTag().Title
-            };
-        }
-
-
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

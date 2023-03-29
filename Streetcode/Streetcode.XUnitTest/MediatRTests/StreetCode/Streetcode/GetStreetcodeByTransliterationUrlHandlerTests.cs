@@ -24,35 +24,30 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly StreetcodeContent nullValue = null;
+        private readonly StreetcodeDTO nullValueDTO = null;
         public GetStreetcodeByTransliterationUrlHandlerTests()
         {
-
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
-
         }
 
         async Task SetupRepository(string url)
         {
-
             _mockRepo.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
-                IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(getStreetcodeContent(url));
-
+                IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(new StreetcodeContent() { TransliterationUrl = url });
         }
 
         async Task SetupMapper(string url)
         {
-
-            _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(getStreetcodeDTO(url));
-
+            _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(new StreetcodeDTO() { TransliterationUrl = url });
         }
 
         [Theory]
         [InlineData("some")]
         public async Task ExistingUrl(string url)
         {
-
             //Arrange
             await SetupMapper(url);
             await SetupRepository(url);
@@ -68,20 +63,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 () => Assert.True(result.IsSuccess),
                 () => Assert.Equal(result.Value.TransliterationUrl, url)
             );
-
         }
 
         [Theory]
         [InlineData("some")]
         public async Task NotExistingId(string url)
         {
-
             //Arrange
             _mockRepo.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
               It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
-               IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(returnNull(url));
+               IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(nullValue);
 
-            _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(returnNullDTO(url));
+            _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(nullValueDTO);
 
             var expectedError = $"Cannot find streetcode by transliteration url: {url}";
 
@@ -96,14 +89,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 () => Assert.True(result.IsFailed),
                 () => Assert.Equal(expectedError, result.Errors.First().Message)
             );
-
         }
 
         [Theory]
         [InlineData("some")]
         public async Task CorrectType(string url)
         {
-
             //Arrange
             await SetupMapper(url);
             await SetupRepository(url);
@@ -118,44 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 () => Assert.NotNull(result.ValueOrDefault),
                 () => Assert.IsType<StreetcodeDTO>(result.ValueOrDefault)
             );
-
         }
-
-        private static StreetcodeContent returnNull(string url)
-        {
-
-            return null;
-
-        }
-
-        private static StreetcodeDTO returnNullDTO(string url)
-        {
-
-            return null;
-
-        }
-
-        private static StreetcodeContent getStreetcodeContent(string url)
-        {
-
-            return new StreetcodeContent
-            {
-                TransliterationUrl = url
-            };
-
-        }
-        
-
-        private static StreetcodeDTO getStreetcodeDTO(string url)
-        {
-
-            return new StreetcodeDTO
-            {
-                TransliterationUrl = url
-            };
-
-        }
-        
     }
 }
 

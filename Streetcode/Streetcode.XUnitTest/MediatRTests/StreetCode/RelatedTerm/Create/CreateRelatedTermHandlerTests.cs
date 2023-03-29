@@ -1,12 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AutoMapper;
+using FluentAssertions;
+using FluentResults;
+using MediatR;
+using Moq;
+using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create;
+using Entity = Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using System.Threading;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 {
-    internal class CreateRelatedTermHandlerTests
-    {
+    
+        public class CreateRelatedTermHandlerTests
+        {
+           
+            }
+        }
     }
-}

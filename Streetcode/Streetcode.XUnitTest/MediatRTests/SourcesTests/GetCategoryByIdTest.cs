@@ -1,0 +1,92 @@
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
+using Moq;
+using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
+using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
+using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using System.Linq.Expressions;
+using Xunit;
+
+namespace Streetcode.XUnitTest.MediatRTests.SourcesTests;
+
+public class GetCategoryByIdTest
+{
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    public GetCategoryByIdTest()
+    {
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+    }
+    [Fact]
+    public async Task ShouldReturnSuccesfully()
+    {
+        // arrange 
+
+        _mockRepository.Setup(x => x.SourceCategoryRepository
+        .GetFirstOrDefaultAsync(
+           It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+            It.IsAny<Func<IQueryable<SourceLinkCategory>,
+            IIncludableQueryable<SourceLinkCategory, object>>>()))
+        .ReturnsAsync(GetSourceLinkCategory());
+
+        _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+            .Returns(GetSourceDTO());
+
+        var handler = new GetCategoryByIdHandler(_mockRepository.Object, _mockMapper.Object);
+
+        // act
+
+        var result = await handler.Handle(new GetCategoryByIdQuery(1), CancellationToken.None);
+
+        // assert
+        Assert.Multiple(
+        () => Assert.NotNull(result),
+        () => Assert.IsType<SourceLinkCategoryDTO>(result.ValueOrDefault)
+        );
+    }
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldReturnNull_NotExistingId(int id = 1)
+    {
+        // arrange 
+
+        _mockRepository.Setup(x => x.SourceCategoryRepository
+        .GetFirstOrDefaultAsync(
+           It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+            It.IsAny<Func<IQueryable<SourceLinkCategory>,
+            IIncludableQueryable<SourceLinkCategory, object>>>()))
+        .ReturnsAsync(GetSourceLinkCategoryNotExists());
+
+        _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+            .Returns(GetSourceDTO());
+
+        var handler = new GetCategoryByIdHandler(_mockRepository.Object, _mockMapper.Object);
+
+        var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
+        // act
+
+        var result = await handler.Handle(new GetCategoryByIdQuery(1), CancellationToken.None);
+
+        // assert
+
+        Assert.Equal(expectedError, result.Errors.First().Message);
+    }
+
+    private SourceLinkCategoryDTO GetSourceDTO()
+    {
+        return new SourceLinkCategoryDTO() { Id = 1 };
+    }
+
+    private SourceLinkCategory GetSourceLinkCategory()
+    {
+        return new SourceLinkCategory() { Id = 1 };
+    }
+
+    private SourceLinkCategory? GetSourceLinkCategoryNotExists()
+    {
+        return null;
+    }
+}

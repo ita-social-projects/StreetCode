@@ -16,11 +16,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext = context;
     }
 
-    public Task CreateRangeAsync(IEnumerable<T> items)
-    {
-        return _dbContext.Set<T>().AddRangeAsync(items);
-    }
-
     public IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default)
     {
         return GetQueryable(predicate).AsNoTracking();
@@ -36,9 +31,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return _dbContext.Set<T>().Add(entity).Entity;
     }
 
-    public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity)
+    public void Update(T entity)
     {
-        return _dbContext.Set<T>().Update(entity);
+        _dbContext.Set<T>().Update(entity);
     }
 
     public void Delete(T entity)
@@ -49,11 +44,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
     public void Attach(T entity)
     {
         _dbContext.Set<T>().Attach(entity);
-    }
-
-    public void ExecuteSQL(string sql)
-    {
-        _dbContext.Database.ExecuteSqlRaw(sql);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)

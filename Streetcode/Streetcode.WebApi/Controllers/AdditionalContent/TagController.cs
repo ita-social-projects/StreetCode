@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
@@ -43,6 +42,7 @@ public class TagController : BaseApiController
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TagDTO tag)
     {
+        // TODO implement here
         return Ok();
     }
 

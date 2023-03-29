@@ -40,6 +40,8 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         var returnedImaged = _mapper.Map<ImageDTO>(updatedImage);
 
+        returnedImaged.Base64 = _blobService.FindFileInStorageAsBase64(returnedImaged.BlobName);
+
         return resultIsSuccess ? Result.Ok(returnedImaged) : Result.Fail(new Error("Failed to update an image"));
     }
 

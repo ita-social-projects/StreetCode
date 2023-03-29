@@ -25,8 +25,6 @@ public class BlobService : IBlobService
 
         var image = new MemoryStream(decodedBytes);
 
-        string base64 = Convert.ToBase64String(decodedBytes);
-
         return image;
     }
 

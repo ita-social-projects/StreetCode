@@ -39,6 +39,8 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
 
         var createdImage = _mapper.Map<ImageDTO>(image);
 
+        createdImage.Base64 = _blobService.FindFileInStorageAsBase64(createdImage.BlobName);
+
         return resultIsSuccess ? Result.Ok(createdImage) : Result.Fail(new Error("Failed to create an image"));
     }
 }

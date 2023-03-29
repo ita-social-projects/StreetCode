@@ -67,6 +67,10 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ITransactLinksRepository _transactLinksRepository;
 
+    private IHistoricalContextRepository _historyContextRepository;
+
+    private IPartnerSourceLinkRepository _partnerSourceLinkRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -316,6 +320,32 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _transactLinksRepository;
+        }
+    }
+
+    public IHistoricalContextRepository HistoricalContextRepository
+    {
+        get
+        {
+            if (_historyContextRepository is null)
+            {
+                _historyContextRepository = new HistoricalContextRepository(_streetcodeDbContext);
+            }
+
+            return _historyContextRepository;
+        }
+    }
+
+    public IPartnerSourceLinkRepository PartnerSourceLinkRepository
+    {
+        get
+        {
+            if (_partnerSourceLinkRepository is null)
+            {
+                _partnerSourceLinkRepository = new PartnersourceLinksRepository(_streetcodeDbContext);
+            }
+
+            return _partnerSourceLinkRepository;
         }
     }
 

@@ -2,17 +2,10 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetSubCategoriesByCategoryId;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
@@ -26,8 +19,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
         }
-        [Fact]
-        public async Task ShouldReturnSuccesfully()
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccesfully(int id)
         {
             // assert
             _mockRepository.Setup(x => x.SourceSubCategoryRepository.
@@ -45,17 +39,17 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             // act
 
-            var result = await handler.Handle(new GetSubCategoriesByCategoryIdQuery(1), CancellationToken.None);
+            var result = await handler.Handle(new GetSubCategoriesByCategoryIdQuery(id), CancellationToken.None);
 
             Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.IsType<List<SourceLinkSubCategoryDTO>>(result.ValueOrDefault)
-            ) ;
+                () => Assert.NotNull(result),
+                () => Assert.IsType<List<SourceLinkSubCategoryDTO>>(result.ValueOrDefault)
+            );
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnNull_NotExistingId(int id = 1)
+        public async Task ShouldReturnNull_NotExistingId(int id)
         {
             // arrange 
 
@@ -75,7 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             
             // act
 
-            var result = await handler.Handle(new GetSubCategoriesByCategoryIdQuery(1), CancellationToken.None);
+            var result = await handler.Handle(new GetSubCategoriesByCategoryIdQuery(id), CancellationToken.None);
 
             // assert
 

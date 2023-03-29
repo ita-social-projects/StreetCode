@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -20,8 +19,9 @@ public class GetCategoryByIdTest
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
     }
-    [Fact]
-    public async Task ShouldReturnSuccesfully()
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldReturnSuccesfully(int id)
     {
         // arrange 
 
@@ -39,17 +39,17 @@ public class GetCategoryByIdTest
 
         // act
 
-        var result = await handler.Handle(new GetCategoryByIdQuery(1), CancellationToken.None);
+        var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);
 
         // assert
         Assert.Multiple(
-        () => Assert.NotNull(result),
-        () => Assert.IsType<SourceLinkCategoryDTO>(result.ValueOrDefault)
+            () => Assert.NotNull(result),
+            () => Assert.IsType<SourceLinkCategoryDTO>(result.ValueOrDefault)
         );
     }
     [Theory]
     [InlineData(1)]
-    public async Task ShouldReturnNull_NotExistingId(int id = 1)
+    public async Task ShouldReturnNull_NotExistingId(int id)
     {
         // arrange 
 
@@ -68,7 +68,7 @@ public class GetCategoryByIdTest
         var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
         // act
 
-        var result = await handler.Handle(new GetCategoryByIdQuery(1), CancellationToken.None);
+        var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);
 
         // assert
 

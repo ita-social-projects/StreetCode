@@ -1,24 +1,12 @@
 ﻿using AutoMapper;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
-using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.WebApi.Controllers.Source;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
@@ -32,12 +20,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
         }
-        [Fact]
-        public async Task ShouldReturnSuccesfully()
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccesfully(int id)
         {
-
             // arrange 
-            
             _mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
@@ -52,21 +39,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             
             // act
             
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(1), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // assert
             Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault)
+                () => Assert.NotNull(result),
+                () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault)
             );
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnNull_NotExistingId(int id = 1)
+        public async Task ShouldReturnNull_NotExistingId(int id)
         {
             // arrange 
-
             _mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
@@ -82,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var expectedError = $"Cant find any source category with the streetcode id {id}";
             // act
 
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(1), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // assert
 

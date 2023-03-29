@@ -1,21 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
-using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Streetcode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
@@ -28,21 +19,22 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
         }
-        [Fact]
-        public async Task ShouldReturnSuccesfully()
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccesfully(int id)
         {
             // arrange
             _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>>()))
-            .ReturnsAsync(GetStreetCodeContent());
+            .ReturnsAsync(GetStreetCodeContent(id));
 
             var handler = new StreetcodeWithIndexExistHandler(_repository.Object, _mapper.Object);
 
             // act
 
-            var result = await handler.Handle(new StreetcodeWithIndexExistQuery(1), CancellationToken.None);
+            var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id), CancellationToken.None);
 
             // assert
 
@@ -50,10 +42,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 () => Assert.NotNull(result),
                 () => Assert.IsAssignableFrom<Result<bool>>(result),
                 () => Assert.True(result.Value)
-                );
+            );
         }
-        [Fact]
-        public async Task ShouldReturnFalse_NotExistingId()
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnFalse_NotExistingId(int id)
         {
             // arrange
             _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
@@ -66,19 +59,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // act
 
-            var result = await handler.Handle(new StreetcodeWithIndexExistQuery(2), CancellationToken.None);
+            var result = await handler.Handle(new StreetcodeWithIndexExistQuery(id), CancellationToken.None);
 
             // assert
 
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.IsAssignableFrom<Result<bool>>(result),
-                () => Assert.False(result.Value));
+                () => Assert.False(result.Value)
+            );
         }
-
-        private StreetcodeContent GetStreetCodeContent()
+        private StreetcodeContent GetStreetCodeContent(int id)
         {
-            return new StreetcodeContent() { Id = 1 };
+            return new StreetcodeContent() { Id = id };
         }
 
         private StreetcodeContent? GetNull()

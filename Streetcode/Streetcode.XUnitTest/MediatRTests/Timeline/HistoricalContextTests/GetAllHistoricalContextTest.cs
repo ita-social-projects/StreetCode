@@ -25,7 +25,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 		}
 
 		[Fact]
-		public async Task ShouldReturnSuccessfully_CorectType() {
+		public async Task ShouldReturnSuccessfully_CorectType() 
+		{
 			//Arrange
 			(_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper,_mockRepository);
 			var hendler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object);
@@ -41,7 +42,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 		}
 
 		[Fact]
-		public async Task ShouldReturnSuccessfully_CountMatch() {
+		public async Task ShouldReturnSuccessfully_CountMatch() 
+		{
 			//Arrange
 			(_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 			var hendler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object);
@@ -57,7 +59,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 			}
 
 		[Fact]
-		public async Task ShouldThrowException_WhenNotFound() {
+		public async Task ShouldThrowException_WhenNotFound() 
+		{
 			//Arrange
 			_mockRepository.Setup(x => x.HistoricalContextRepository
 				  .GetAllAsync(
@@ -86,7 +89,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
 		private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(
 			Mock<IMapper> mockMapper,
-			Mock<IRepositoryWrapper> mockRepo) {
+			Mock<IRepositoryWrapper> mockRepo) 
+		{
 			mockRepo.Setup(x => x.HistoricalContextRepository
 				.GetAllAsync(
 					It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
@@ -103,7 +107,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 			return (mockMapper, mockRepo);
 		} 
 
-		private static IQueryable<HistoricalContext> GetListHistoricalContext(){
+		private static IQueryable<HistoricalContext> GetListHistoricalContext()
+		{
 			var historicalContexts = new List<HistoricalContext>() {
 				new HistoricalContext{ Id = 1, Title = "HistoricalContext1"},
 				new HistoricalContext{ Id = 2, Title = "HistoricalContext2"},
@@ -121,13 +126,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 			return historicalContextsDTO;
 		}
 
-		private static List<HistoricalContext>? GetNullListHistoricalContext()
-		{
-			return null;
-		}
-		private static List<HistoricalContextDTO>? GetNullListHistoricalContextDTO()
-		{
-			return null;
-		}
+		private static List<HistoricalContext>? GetNullListHistoricalContext() => null;
+		private static List<HistoricalContextDTO>? GetNullListHistoricalContextDTO() => null;
 	}
 }

@@ -21,11 +21,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockRepository = new();
 		}
 
-		[Fact]
-		public async Task ShouldReturnSuccessfully_TypeIsCorrect() {
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNumber) 
+		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTerm());
@@ -39,12 +41,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			Assert.IsType<Unit>(result.Value);
 
 		}
-		
-		[Fact]
-		public async Task ShouldReturnSuccessfully_WhenTermAdded() {
+
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNubmer) 
+		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x=>x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x=>x.SaveChangesAsync()).ReturnsAsync(returnNubmer);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTerm());
@@ -57,12 +61,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			//Assert
 			Assert.True(result.IsSuccess);
 		}
-		
-		[Fact]
-		public async Task ShouldThrowException_WhenTryToAddNull() {
+
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldThrowException_WhenTryToAddNull(int returnNumber) 
+		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetNotExistingTerm()!);
@@ -80,20 +86,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 				);
 		}
 
-		private static Term GetTerm() {
-			return new();
-		}
-		private static TermDTO GetTermDTO()
-		{
-			return new();
-		}
-		private static Term? GetNotExistingTerm()
-		{
-			return null;
-		}
-		private static TermDTO? GetNotExistingTermDTO()
-		{
-			return null;
-		}
+		private static Term GetTerm() => new();
+		private static TermDTO GetTermDTO() => new();
+		private static Term? GetNotExistingTerm() => null;
+		private static TermDTO? GetNotExistingTermDTO() => null;
 	}
 }

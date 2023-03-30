@@ -18,11 +18,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 		}
 
 		[Theory]
-		[InlineData(-1)]
-		public async Task ShouldDeleteSuccessfully(int id) {
+		[InlineData(-1,1)]
+		public async Task ShouldDeleteSuccessfully(int id, int returnNuber) 
+		{
 			//Arrange
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 			var handler = new DeleteTermHandler(_mockRepository.Object);
 
 			//Act
@@ -37,7 +38,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
 		[Theory]
 		[InlineData(2)]
-		public async Task ShouldThrowExeption_IdNotExisting(int id) {
+		public async Task ShouldThrowExeption_IdNotExisting(int id) 
+		{
 			//Arrange
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, false);
 
@@ -52,11 +54,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 		}
 
 		[Theory]
-		[InlineData(2)]
-		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id) {
+		[InlineData(2,0)]
+		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id,int returnNuber) 
+		{
 			//Arange
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
 			var expectedError = "Failed to delete a term";
 			var hendler = new DeleteTermHandler(_mockRepository.Object);
@@ -83,13 +86,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			return mockRepo;
 		} 
 
-		private static Term GetTerm(int id) {
-			return new() { Id = id };
-		}
+		private static Term GetTerm(int id) => new() { Id = id };
 
-		private static Term? GetNotExistingTerm()
-		{
-			return null;
-		}
+		private static Term? GetNotExistingTerm() => null;
 	}
 }

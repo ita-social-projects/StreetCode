@@ -20,12 +20,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockMapper = new();
 		}
 
-		[Fact]
-		public async Task ShouldReturnSuccessfully_WhenUpdated()
+
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldReturnSuccessfully_WhenUpdated(int returnNuber)
 		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 			.Returns(GetTerm());
@@ -43,12 +45,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
 		}
 
-		[Fact]
-		public async Task ShouldThrowExeption_TryMapNullRequest()
+
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldThrowExeption_TryMapNullRequest(int returnNuber)
 		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId()!));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTermWithNotExistId()!);
@@ -67,12 +71,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			);
 		}
 
-		[Fact]
-		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful()
+		[Theory]
+		[InlineData(-1)]
+		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int returnNuber)
 		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTerm());
@@ -90,12 +95,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			); ;
 		}
 
-		[Fact]
-		public async Task ShouldReturnSuccessfully_TypeIsCorrect()
+		[Theory]
+		[InlineData(1)]
+		public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNuber)
 		{
 			//Arrange
 			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTerm());
@@ -108,21 +114,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			//Assert
 			Assert.IsType<Unit>(result.Value);
 		}
-		private static Term GetTerm()
-		{
-			return new();
-		}
-		private static TermDTO GetTermDTO()
-		{
-			return new();
-		}
-		private static Term? GetTermWithNotExistId()
-		{
-			return null;
-		}
-		private static TermDTO? GetTermDTOWithNotExistId()
-		{
-			return null;
-		}
+		private static Term GetTerm() => new();
+		private static TermDTO GetTermDTO() => new();
+		private static Term? GetTermWithNotExistId() => null;
+		private static TermDTO? GetTermDTOWithNotExistId() => null;
 	}
 }

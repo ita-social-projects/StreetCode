@@ -8,6 +8,7 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.BLL.Interfaces.BlobStorage;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 {
@@ -15,11 +16,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
     {
         private Mock<IRepositoryWrapper> _mockRepo;
         private Mock<IMapper> _mockMapper;
+        private Mock<IBlobService> _blobService;
 
         public GetImageByIdTest()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
         }
 
         [Theory]
@@ -28,7 +31,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             GetMockRepositoryAndMapper(GetImage(), GetImageDTO());
-            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByIdQuery(id), CancellationToken.None);
@@ -44,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             GetMockRepositoryAndMapper(GetImage(), GetImageDTO());
-            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByIdQuery(id), CancellationToken.None);
@@ -59,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             GetMockRepositoryAndMapper(null, null);
-            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
             var expectedError = $"Cannot find a image with corresponding id: {id}";
 
             // Act

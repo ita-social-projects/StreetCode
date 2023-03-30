@@ -3,5 +3,6 @@
 public enum StreetcodeStatus
 {
     Draft,
-    Published
+    Published,
+    Deleted
 }

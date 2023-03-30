@@ -1,24 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
+using Streetcode.DAL.Enums;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery()));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
     }
 
     [HttpGet("{index:int}")]
     public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
+    }
+
+    [HttpGet("{url}")]
+    public async Task<IActionResult> GetByTransliterationUrl([FromRoute] string url)
+    {
+        return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url)));
     }
 
     [HttpGet("{id:int}")]
@@ -47,10 +58,23 @@ public class StreetcodeController : BaseApiController
         return Ok();
     }
 
+    [HttpPatch("{id:int}/{status}")]
+    public async Task<IActionResult> PatchStage(
+        [FromRoute] int id,
+        [FromRoute] StreetcodeStatus status)
+    {
+        return HandleResult(await Mediator.Send(new UpdateStatusStreetcodeByIdCommand(id, status)));
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> SoftDelete([FromRoute] int id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteSoftStreetcodeCommand(id)));
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
     }
 }

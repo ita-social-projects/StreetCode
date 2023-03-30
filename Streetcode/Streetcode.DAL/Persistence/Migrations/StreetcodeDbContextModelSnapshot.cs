@@ -1274,6 +1274,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("TransliterationUrl")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1285,6 +1290,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TransliterationUrl")
+                        .IsUnique();
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1346,13 +1354,22 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Word")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TermId");
 
                     b.ToTable("related_terms", "streetcode");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TermId = 3,
+                            Word = "кріпаків"
+                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
@@ -1815,7 +1832,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4794),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(424),
                             DateString = "11 листопада 2022",
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1823,6 +1840,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).",
                             Title = "Звільнення Херсона",
+                            TransliterationUrl = "svilnennia-chersonu",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 1000
                         });
@@ -1855,7 +1873,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alias = "Кобзар",
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4724),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(336),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1863,6 +1881,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв",
                             Title = "Тарас Шевченко",
+                            TransliterationUrl = "taras-shevchenko",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Тарас",
@@ -1872,7 +1891,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4757),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(385),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1880,6 +1899,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
                             Title = "Мико́ла Костома́ров",
+                            TransliterationUrl = "mykola-kostomarov",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Мико́ла",
@@ -1889,7 +1909,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4766),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(390),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1897,6 +1917,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.",
                             Title = "Василь Білозерський",
+                            TransliterationUrl = "vasyl-biloservky",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Василь",
@@ -1906,7 +1927,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4769),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(395),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1914,6 +1935,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
+                            TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Володимир-Варфоломей",
@@ -1923,7 +1945,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 6,
                             Alias = "Лариса Косач",
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4773),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(399),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1931,6 +1953,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Леся Українка",
+                            TransliterationUrl = "lesya-ukrainka",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Леся",
@@ -1939,7 +1962,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 3, 14, 10, 30, 58, 613, DateTimeKind.Local).AddTicks(4777),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(403),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1947,6 +1970,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Status = 0,
                             Teaser = "some teaser",
                             Title = "Іван Мазепа",
+                            TransliterationUrl = "ivan-mazepa",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Іван",

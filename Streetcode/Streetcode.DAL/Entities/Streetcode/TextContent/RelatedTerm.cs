@@ -11,6 +11,7 @@ namespace Streetcode.DAL.Entities.Streetcode.TextContent
         public int Id { get; set; }
 
         [Required]
+        [MaxLength(50)]
         public string Word { get; set; }
         [Required]
         public int TermId { get; set; }

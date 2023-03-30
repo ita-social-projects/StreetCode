@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Streetcode.DAL.Enums
+﻿namespace Streetcode.DAL.Enums
 {
-    internal class UserRoles
+    [Flags]
+    public enum UserRole
     {
+        MainAdministrator,
+        Administrator,
+        Moderator
     }
 }

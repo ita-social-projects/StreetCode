@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Streetcode.BLL.DTO.Users;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.Mapping.Users
 {
-    internal class User
+    public class UserProfile : Profile
     {
+        public UserProfile()
+        {
+            CreateMap<User, UserLoginDTO>().ReverseMap();
+            CreateMap<UserDTO, UserLoginDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+        }
     }
 }

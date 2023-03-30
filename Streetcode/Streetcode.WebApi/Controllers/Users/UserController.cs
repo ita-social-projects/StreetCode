@@ -1,12 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Users;
+using Streetcode.BLL.MediatR.Users.Login;
+using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
+using System.Data;
 
 namespace Streetcode.WebApi.Controllers.Users
 {
-    public class UserController : Controller
+    public class UserController : BaseApiController
     {
-        public IActionResult Index()
+        [HttpPost]
+        public async Task<IActionResult> Login([FromBody] UserLoginDTO loginDTO)
         {
-            return View();
+            return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
+        }
+
+        [HttpGet]
+        [AuthorizeRoles(UserRole.MainAdministrator)]
+        public async Task<IActionResult> GetWithAdmin()
+        {
+            return Ok("text");
         }
     }
 }

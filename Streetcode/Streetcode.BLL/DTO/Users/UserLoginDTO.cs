@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.BLL.DTO.Users
 {
-    internal class UserLoginDTO
+    public class UserLoginDTO
     {
+        [Required]
+        [MaxLength(20)]
+        public string Login { get; set; }
+        [Required]
+        [MaxLength(20)]
+        public string Password { get; set; }
     }
 }

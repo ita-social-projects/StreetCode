@@ -42,8 +42,7 @@ services:
       - .env
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_PID: Express
-      CONNECTION_STRING: "Server=localhost;Database=${DB_NAME};User Id=${DB_USER};Password=${SA_PASSWORD};MultipleActiveResultSets=true"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD}
     healthcheck:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "$$SA_PASSWORD", "-Q", "select 1", " -b", "-o /dev/null"]
       interval: 3s
@@ -52,7 +51,7 @@ services:
       - db-data:/var/lib/mssql/data
       - "./healthchecks:/healthchecks"
     ports:
-      - "${MS_SQL_DB_PORT}:1433/tcp"
+      - "${MS_SQL_DB_PORT}:1433"
     labels:       
       atom: ${DOCKER_ATOM:-Streetcode}
         

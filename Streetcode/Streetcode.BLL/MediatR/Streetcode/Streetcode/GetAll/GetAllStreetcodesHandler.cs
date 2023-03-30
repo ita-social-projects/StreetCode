@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,15 +13,22 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService<GetAllStreetcodesHandler> _loggerService;
 
-    public GetAllStreetcodesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllStreetcodesHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService<GetAllStreetcodesHandler> loggerService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _loggerService = loggerService;
     }
 
     public async Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
+        _loggerService.LogInformation("Entry into GetAllStreetcodesHandler");
+
         var filterRequest = query.request;
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository

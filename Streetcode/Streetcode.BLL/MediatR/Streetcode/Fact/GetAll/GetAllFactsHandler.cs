@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
@@ -10,15 +11,22 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService<GetAllFactsHandler> _loggerService;
 
-    public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllFactsHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService<GetAllFactsHandler> loggerService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _loggerService = loggerService;
     }
 
     public async Task<Result<IEnumerable<FactDTO>>> Handle(GetAllFactsQuery request, CancellationToken cancellationToken)
     {
+        _loggerService.LogInformation("Entry into GetAllFactsHandler");
+
         var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
 
         if (facts is null)

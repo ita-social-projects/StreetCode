@@ -27,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             if (streetcode == null)
             {
-                return new Error("Cannot find streetcode by transliteration url");
+                return new Error($"Cannot find streetcode by transliteration url: {request.url}");
             }
 
             var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);

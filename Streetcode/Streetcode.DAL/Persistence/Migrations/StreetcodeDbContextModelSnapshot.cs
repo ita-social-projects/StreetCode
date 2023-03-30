@@ -531,184 +531,184 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alt = "Портрет Тараса Шевченка",
-                            BlobName = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Тарас Шевченко"
                         },
                         new
                         {
                             Id = 2,
                             Alt = "Тарас Шевченко: Погруддя жінки",
-                            BlobName = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Погруддя жінки"
                         },
                         new
                         {
                             Id = 3,
                             Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                            BlobName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Портрет Павла Васильовича Енгельгардта"
                         },
                         new
                         {
                             Id = 4,
                             Alt = "Тарас Шевченко: Портрет невідомого",
-                            BlobName = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Портрет невідомого"
                         },
                         new
                         {
                             Id = 5,
                             Alt = "Кобзар",
-                            BlobName = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Кобзар"
                         },
                         new
                         {
                             Id = 6,
                             Alt = "Мико́ла Костома́ров",
-                            BlobName = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Мико́ла Костома́ров"
                         },
                         new
                         {
                             Id = 7,
                             Alt = "Василь Білозерський",
-                            BlobName = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Василь Білозерський"
                         },
                         new
                         {
                             Id = 8,
                             Alt = "Звільнення Херсона",
-                            BlobName = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Звільнення Херсона"
                         },
                         new
                         {
                             Id = 9,
                             Alt = "book",
-                            BlobName = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "book"
                         },
                         new
                         {
                             Id = 10,
                             Alt = "video",
-                            BlobName = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "video"
                         },
                         new
                         {
                             Id = 11,
                             Alt = "article",
-                            BlobName = "https://images.laws.com/constitution/constitutional-convention.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "article"
                         },
                         new
                         {
                             Id = 12,
                             Alt = "SoftServe",
-                            BlobName = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "SoftServe"
                         },
                         new
                         {
                             Id = 13,
                             Alt = "Parimatch",
-                            BlobName = "https://static.ua-football.com/img/upload/19/270071.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Parimatch"
                         },
                         new
                         {
                             Id = 14,
                             Alt = "Community Partners",
-                            BlobName = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Community Partners"
                         },
                         new
                         {
                             Id = 15,
                             Alt = "Володимир-Варфоломей",
-                            BlobName = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Володимир-Варфоломей"
                         },
                         new
                         {
                             Id = 16,
                             Alt = "Леся Українка",
-                            BlobName = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Леся Українка"
                         },
                         new
                         {
                             Id = 17,
                             Alt = "Іван Мазепа",
-                            BlobName = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Іван Мазепа"
                         },
                         new
                         {
                             Id = 18,
                             Alt = "Грушевький",
-                            BlobName = "/assets/2296e9b1db2ab72f2db9.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Михайло Грушевський"
                         },
                         new
                         {
                             Id = 19,
                             Alt = "Грушевький",
-                            BlobName = "/assets/35b44f042d027c3a7589.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Грушевський"
                         },
                         new
                         {
                             Id = 20,
                             Alt = "Грушевський",
-                            BlobName = "/assets/c58dac51751395fb3217.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Сучасний Грушевський"
                         },
                         new
                         {
                             Id = 21,
                             Alt = "мурал",
-                            BlobName = "/assets/233c6bbb0b79df230d93.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Мурал Грушевського"
                         },
                         new
                         {
                             Id = 22,
                             Alt = "Козаки на орбіті",
-                            BlobName = "/assets/02b59f4ef917107514e3.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Козаки на орбіті"
                         },
                         new
                         {
                             Id = 23,
                             Alt = "мурал",
-                            BlobName = "/assets/8ecaa9756bac938f8f73.png",
-                            MimeType = "",
+                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            MimeType = "image/jpeg",
                             Title = "Мурал М. Грушевського"
                         });
                 });

@@ -185,197 +185,198 @@ public static class ModelBuilderExtensions
                 Description = "На вулиці Січових стрільців, 75 закінчили малювати мурал Михайла Грушевського на місці малюнка будинку з лелекою."
             });
         modelBuilder.Entity<Image>().HasData(
-            new Image
-            {
-                Id = 1,
-                Title = "Тарас Шевченко",
-                Alt = "Портрет Тараса Шевченка",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 2,
-                Title = "Погруддя жінки",
-                Alt = "Тарас Шевченко: Погруддя жінки",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 3,
-                Title = "Портрет Павла Васильовича Енгельгардта",
-                Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 4,
-                Title = "Портрет невідомого",
-                Alt = "Тарас Шевченко: Портрет невідомого",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 5,
-                Title = "Кобзар",
-                Alt = "Кобзар",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 6,
-                Title = "Мико́ла Костома́ров",
-                Alt = "Мико́ла Костома́ров",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 7,
-                Title = "Василь Білозерський",
-                Alt = "Василь Білозерський",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 8,
-                Title = "Звільнення Херсона",
-                Alt = "Звільнення Херсона",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 9,
-                Title = "book",
-                Alt = "book",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 10,
-                Title = "video",
-                Alt = "video",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 11,
-                Title = "article",
-                Alt = "article",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 12,
-                Title = "SoftServe",
-                Alt = "SoftServe",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 13,
-                Title = "Parimatch",
-                Alt = "Parimatch",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 14,
-                Title = "Community Partners",
-                Alt = "Community Partners",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 15,
-                Title = "Володимир-Варфоломей",
-                Alt = "Володимир-Варфоломей",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 16,
-                Title = "Леся Українка",
-                Alt = "Леся Українка",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 17,
-                Title = "Іван Мазепа",
-                Alt = "Іван Мазепа",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            }, new Image
-            {
-                Id = 18,
-                Title = "Михайло Грушевський",
-                Alt = "Грушевький",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 19,
-                Title = "Грушевський",
-                Alt = "Грушевький",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 20,
-                Title = "Сучасний Грушевський",
-                Alt = "Грушевський",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 21,
-                Title = "Мурал Грушевського",
-                Alt = "мурал",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 22,
-                Title = "Козаки на орбіті",
-                Alt = "Козаки на орбіті",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            },
-            new Image
-            {
-                Id = 23,
-                Title = "Мурал М. Грушевського",
-                Alt = "мурал",
-                BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                MimeType = "image/jpeg"
-            });
+                        new
+                        {
+                            Id = 1,
+                            Alt = "Портрет Тараса Шевченка",
+                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
+                            MimeType = "image/gif",
+                            Title = "Тарас Шевченко"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Alt = "Тарас Шевченко: Погруддя жінки",
+                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Погруддя жінки"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
+                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет Павла Васильовича Енгельгардта"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Alt = "Тарас Шевченко: Портрет невідомого",
+                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет невідомого"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Alt = "Кобзар",
+                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
+                            MimeType = "image/png",
+                            Title = "Кобзар"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Alt = "Мико́ла Костома́ров",
+                            BlobName = "VryHfNFydefxGWzL9Q2TFnykRwBvBjb7g7StwOztV+k=.png",
+                            MimeType = "image/png",
+                            Title = "Мико́ла Костома́ров"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Alt = "Василь Білозерський",
+                            BlobName = "LOJwfRkqVqkjchzf9cLnSsFmTXdYaLUio+iRaDA3vVE=.png",
+                            MimeType = "image/png",
+                            Title = "Василь Білозерський"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Alt = "Звільнення Херсона",
+                            BlobName = "cxU2wbUcQWQMrnC5bMUG4u8am9UIu2yFko+wPg9UBRM=.png",
+                            MimeType = "image/png",
+                            Title = "Звільнення Херсона"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Alt = "book",
+                            BlobName = "i0OXuaqrvuGioxRAD045vizgs6S7rluDPUMuyYm3YyY=.png",
+                            MimeType = "image/png",
+                            Title = "book"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Alt = "video",
+                            BlobName = "6BUOLcI9EwKDZTDi6ZPJyVnU5SaGOYSijBjdQH+4oUU=.png",
+                            MimeType = "image/png",
+                            Title = "video"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Alt = "article",
+                            BlobName = "eQVD_pSkN0maCTFVPAjtX0QvJmsur7VIL9ZYvGAdIQ8=.png",
+                            MimeType = "image/png",
+                            Title = "article"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Alt = "SoftServe",
+                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
+                            MimeType = "image/png",
+                            Title = "SoftServe"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Alt = "Parimatch",
+                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
+                            MimeType = "image/png",
+                            Title = "Parimatch"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Alt = "Community Partners",
+                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
+                            MimeType = "image/png",
+                            Title = "Community Partners"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Alt = "Володимир-Варфоломей",
+                            BlobName = "88VCISdBuZeWwIZSmnVIXsHUGQzFMTh4iPGEbU1+ckQ=.png",
+                            MimeType = "image/png",
+                            Title = "Володимир-Варфоломей"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Alt = "Леся Українка",
+                            BlobName = "U2Sn_n0vXTwdCBabM2XzFPhxLXrff8QoomoLL4xGadc=.png",
+                            MimeType = "image/png",
+                            Title = "Леся Українка"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Alt = "Іван Мазепа",
+                            BlobName = "x8melf2zrE7cURQ1pIzBRu80OVC6uOUpuEvL91ALrjQ=.png",
+                            MimeType = "image/png",
+                            Title = "Іван Мазепа"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Alt = "Грушевький",
+                            BlobName = "hgY63C6vqAXXulRLe9NfvnMmuz_jyqgwTNMK27mMFUA=.png",
+                            MimeType = "image/png",
+                            Title = "Михайло Грушевський"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Alt = "Грушевький",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Грушевський"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Alt = "Грушевський",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Сучасний Грушевський"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Alt = "мурал",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Мурал Грушевського"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Alt = "Козаки на орбіті",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Козаки на орбіті"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Alt = "мурал",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Мурал М. Грушевського"
+                        });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
             {
                 Id = 1,
                 Title = "audio1",
                 Description = "for streetcode1",
-                BlobName = "https://somelink1",
-                MimeType = "",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 1
             },
             new Audio

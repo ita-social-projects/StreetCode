@@ -531,15 +531,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alt = "Портрет Тараса Шевченка",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
+                            MimeType = "image/gif",
                             Title = "Тарас Шевченко"
                         },
                         new
                         {
                             Id = 2,
                             Alt = "Тарас Шевченко: Погруддя жінки",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Погруддя жінки"
                         },
@@ -547,7 +547,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 3,
                             Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Портрет Павла Васильовича Енгельгардта"
                         },
@@ -555,7 +555,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 4,
                             Alt = "Тарас Шевченко: Портрет невідомого",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Портрет невідомого"
                         },
@@ -563,119 +563,119 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 5,
                             Alt = "Кобзар",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
+                            MimeType = "image/png",
                             Title = "Кобзар"
                         },
                         new
                         {
                             Id = 6,
                             Alt = "Мико́ла Костома́ров",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "VryHfNFydefxGWzL9Q2TFnykRwBvBjb7g7StwOztV+k=.png",
+                            MimeType = "image/png",
                             Title = "Мико́ла Костома́ров"
                         },
                         new
                         {
                             Id = 7,
                             Alt = "Василь Білозерський",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "LOJwfRkqVqkjchzf9cLnSsFmTXdYaLUio+iRaDA3vVE=.png",
+                            MimeType = "image/png",
                             Title = "Василь Білозерський"
                         },
                         new
                         {
                             Id = 8,
                             Alt = "Звільнення Херсона",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "cxU2wbUcQWQMrnC5bMUG4u8am9UIu2yFko+wPg9UBRM=.png",
+                            MimeType = "image/png",
                             Title = "Звільнення Херсона"
                         },
                         new
                         {
                             Id = 9,
                             Alt = "book",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "i0OXuaqrvuGioxRAD045vizgs6S7rluDPUMuyYm3YyY=.png",
+                            MimeType = "image/png",
                             Title = "book"
                         },
                         new
                         {
                             Id = 10,
                             Alt = "video",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "6BUOLcI9EwKDZTDi6ZPJyVnU5SaGOYSijBjdQH+4oUU=.png",
+                            MimeType = "image/png",
                             Title = "video"
                         },
                         new
                         {
                             Id = 11,
                             Alt = "article",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "eQVD_pSkN0maCTFVPAjtX0QvJmsur7VIL9ZYvGAdIQ8=.png",
+                            MimeType = "image/png",
                             Title = "article"
                         },
                         new
                         {
                             Id = 12,
                             Alt = "SoftServe",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
+                            MimeType = "image/png",
                             Title = "SoftServe"
                         },
                         new
                         {
                             Id = 13,
                             Alt = "Parimatch",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
+                            MimeType = "image/png",
                             Title = "Parimatch"
                         },
                         new
                         {
                             Id = 14,
                             Alt = "Community Partners",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
+                            MimeType = "image/png",
                             Title = "Community Partners"
                         },
                         new
                         {
                             Id = 15,
                             Alt = "Володимир-Варфоломей",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "88VCISdBuZeWwIZSmnVIXsHUGQzFMTh4iPGEbU1+ckQ=.png",
+                            MimeType = "image/png",
                             Title = "Володимир-Варфоломей"
                         },
                         new
                         {
                             Id = 16,
                             Alt = "Леся Українка",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "U2Sn_n0vXTwdCBabM2XzFPhxLXrff8QoomoLL4xGadc=.png",
+                            MimeType = "image/png",
                             Title = "Леся Українка"
                         },
                         new
                         {
                             Id = 17,
                             Alt = "Іван Мазепа",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "x8melf2zrE7cURQ1pIzBRu80OVC6uOUpuEvL91ALrjQ=.png",
+                            MimeType = "image/png",
                             Title = "Іван Мазепа"
                         },
                         new
                         {
                             Id = 18,
                             Alt = "Грушевький",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "hgY63C6vqAXXulRLe9NfvnMmuz_jyqgwTNMK27mMFUA=.png",
+                            MimeType = "image/png",
                             Title = "Михайло Грушевський"
                         },
                         new
                         {
                             Id = 19,
                             Alt = "Грушевький",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Грушевський"
                         },
@@ -683,7 +683,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 20,
                             Alt = "Грушевський",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Сучасний Грушевський"
                         },
@@ -691,7 +691,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 21,
                             Alt = "мурал",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Мурал Грушевського"
                         },
@@ -699,7 +699,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 22,
                             Alt = "Козаки на орбіті",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Козаки на орбіті"
                         },
@@ -707,7 +707,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 23,
                             Alt = "мурал",
-                            BlobName = "+WgfkssuiM6PNivMIrNEq2vNuWx0gU7immahLJF67qc=.jpeg",
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
                             MimeType = "image/jpeg",
                             Title = "Мурал М. Грушевського"
                         });

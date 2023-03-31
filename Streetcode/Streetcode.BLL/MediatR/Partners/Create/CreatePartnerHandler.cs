@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -21,11 +22,15 @@ namespace Streetcode.BLL.MediatR.Partners.Create
         public async Task<Result<PartnerDTO>> Handle(CreatePartnerQuery request, CancellationToken cancellationToken)
         {
             var newPartner = _mapper.Map<Partner>(request.newPartner);
+            newPartner.Logo = new Image()
+            {
+                Url = "https://www.shutterstock.com/image-photo/mountains-under-mist-morning-amazing-260nw-1725825019.jpg"
+            };
 
             try
             {
                 newPartner.Streetcodes.Clear();
-                newPartner = (await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner)).Entity;
+                newPartner = await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner);
                 _repositoryWrapper.SaveChanges();
                 var streetcodeIds = request.newPartner.Streetcodes.Select(s => s.Id).ToList();
                 newPartner.Streetcodes.AddRange(await _repositoryWrapper

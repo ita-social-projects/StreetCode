@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.WebApi.Extensions;
@@ -10,26 +11,40 @@ public static class WebApplicationExtensions
         string scriptsFolderPath = "./Streetcode.DAL/Persistence/Scripts/")
     {
         using var scope = app.Services.CreateScope();
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
         try
         {
             var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
-            var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
-
-            await streetcodeContext.Database.EnsureDeletedAsync();
             await streetcodeContext.Database.MigrateAsync();
-
-            var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
-
-            foreach (var task in filesContexts)
+            IDbContextTransaction transaction = null;
+            try
             {
-                await streetcodeContext.Database.ExecuteSqlRawAsync(task);
+                var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
+
+                var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+
+                var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
+                transaction = streetcodeContext.Database.BeginTransaction();
+                foreach (var task in filesContexts)
+                {
+                    await streetcodeContext.Database.ExecuteSqlRawAsync(task);
+                }
+
+                streetcodeContext.Database.CommitTransaction();
+            }
+            catch(Exception ex)
+            {
+                if(transaction != null)
+                {
+                    streetcodeContext.Database.RollbackTransaction();
+                    logger.LogError(ex, "An error occured during adding relations");
+                }
             }
         }
         catch (Exception ex)
         {
-            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            
             logger.LogError(ex, "An error occured during startup migration");
         }
     }

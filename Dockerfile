@@ -35,4 +35,4 @@ WORKDIR /app
 COPY --from=publish /app/publish ./
 
 LABEL atom="Streetcode"
-ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll", "--environment=Local"]
+ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]

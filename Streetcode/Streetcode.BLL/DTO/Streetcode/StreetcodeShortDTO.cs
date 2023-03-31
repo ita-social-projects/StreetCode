@@ -9,7 +9,6 @@ namespace Streetcode.BLL.DTO.Streetcode
     public class StreetcodeShortDTO
     {
         public int Id { get; set; }
-        public int Index { get; set; }
         public string Title { get; set; }
     }
 }

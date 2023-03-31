@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.Types;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -73,9 +73,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             _repository.Setup(x => x.StreetcodeRepository.Delete(streetcodeContent));
             _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
-            _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null)).ReturnsAsync(streetcodeContent);
+            _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                 It.IsAny<Func<IQueryable<StreetcodeContent>,
+                    IIncludableQueryable<StreetcodeContent, object>>>()))
+                .ReturnsAsync(streetcodeContent);
 
         }
-
     }
 }

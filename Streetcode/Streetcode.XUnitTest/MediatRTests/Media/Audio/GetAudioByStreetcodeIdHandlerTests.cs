@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Media;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using Model = Streetcode.DAL.Entities.Media.Audio;
+using Streetcode.BLL.Interfaces.BlobStorage;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
@@ -14,11 +15,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<IBlobService> _blobService;
 
         public GetAudioByStreetcodeIdHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
         }
         [Theory]
         [InlineData(1)]
@@ -31,7 +34,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             RepositorySetup(testAudio);
             MapperSetup(testAudioDTO);
 
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object);
             // act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -49,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             RepositorySetup(null);
             MapperSetup(testAudioDTO);
 
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object);
             // act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -67,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             RepositorySetup(testAudio);
             MapperSetup(testAudioDTO);
 
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object);
             // act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
             // assert

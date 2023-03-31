@@ -21,7 +21,10 @@ public class Image
     public string? Alt { get; set; }
 
     [Required]
-    public string Url { get; set; }
+    public string BlobName { get; set; }
+
+    [Required]
+    public string MimeType { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 

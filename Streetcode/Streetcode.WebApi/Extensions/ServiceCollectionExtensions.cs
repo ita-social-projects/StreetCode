@@ -10,6 +10,8 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -28,7 +30,14 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
 
+        services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+
+        services.Configure<BlobEnvirovmentVariables>(options =>
+        {
+            options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
+            options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
+        });
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

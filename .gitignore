@@ -341,3 +341,6 @@ healthchecksdb
 
 # Nuke temp
 *.nuke/temp
+
+# BlobStorage
+BlobStorage/

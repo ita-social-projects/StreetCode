@@ -22,7 +22,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
             var partner = await _repositoryWrapper.PartnersRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (partner == null)
             {
-                return Result.Fail("The partner wasn`t added");
+                return Result.Fail("No partner with such id");
             }
             else
             {

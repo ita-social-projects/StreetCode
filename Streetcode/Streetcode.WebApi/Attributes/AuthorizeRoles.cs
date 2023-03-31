@@ -4,9 +4,9 @@ namespace Streetcode.WebApi.Attributes
 {
     public class AuthorizeRoles : AuthorizeAttribute
     {
-        public AuthorizeRoles(params UserRole[] roles)
+        public AuthorizeRoles(params UserRole[] userRoles)
         {
-            Roles = string.Join(",", roles.Select(r => r.ToString()).ToArray());
+            Roles = string.Join(",", userRoles.Select(r => r.ToString()).ToArray());
         }
     }
 }

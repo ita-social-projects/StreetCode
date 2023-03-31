@@ -17,7 +17,7 @@ namespace Streetcode.WebApi.Controllers.Users
         }
 
         [HttpGet]
-        [AuthorizeRoles(UserRole.MainAdministrator)]
+        [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
         public async Task<IActionResult> GetWithAdmin()
         {
             return Ok("text");

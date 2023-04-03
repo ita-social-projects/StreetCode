@@ -317,7 +317,7 @@ public static class ModelBuilderExtensions
                         {
                             Id = 17,
                             Alt = "Іван Мазепа",
-                            BlobName = "x8melf2zrE7cURQ1pIzBRu80OVC6uOUpuEvL91ALrjQ=.png",
+                            BlobName = "bnIzOC+dFAYy9CtrojbMjl3RlEWIdGIx2TJeSZWC97c=.png",
                             MimeType = "image/png",
                             Title = "Іван Мазепа"
                         },
@@ -325,7 +325,7 @@ public static class ModelBuilderExtensions
                         {
                             Id = 18,
                             Alt = "Грушевький",
-                            BlobName = "hgY63C6vqAXXulRLe9NfvnMmuz_jyqgwTNMK27mMFUA=.png",
+                            BlobName = "eke98jD1VRreBj_lOPQznFFZujua_+esR1R7vHgRk_g=.png",
                             MimeType = "image/png",
                             Title = "Михайло Грушевський"
                         },
@@ -333,40 +333,40 @@ public static class ModelBuilderExtensions
                         {
                             Id = 19,
                             Alt = "Грушевький",
-                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
                             Title = "Грушевський"
                         },
                         new
                         {
                             Id = 20,
                             Alt = "Грушевський",
-                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "8Xw3NUnskB1sDHjSV4tAX74tO+zF1dPQMZ287e3GQbg=.png",
+                            MimeType = "image/png",
                             Title = "Сучасний Грушевський"
                         },
                         new
                         {
                             Id = 21,
                             Alt = "мурал",
-                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
                             Title = "Мурал Грушевського"
                         },
                         new
                         {
                             Id = 22,
                             Alt = "Козаки на орбіті",
-                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
                             Title = "Козаки на орбіті"
                         },
                         new
                         {
                             Id = 23,
                             Alt = "мурал",
-                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
-                            MimeType = "image/jpeg",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
                             Title = "Мурал М. Грушевського"
                         });
         modelBuilder.Entity<Audio>().HasData(
@@ -384,8 +384,8 @@ public static class ModelBuilderExtensions
                 Id = 2,
                 Title = "audio2",
                 Description = "for streetcode2",
-                BlobName = "https://somelink2",
-                MimeType = "",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 2
             },
             new Audio
@@ -393,8 +393,8 @@ public static class ModelBuilderExtensions
                 Id = 3,
                 Title = "audio3",
                 Description = "for streetcode3",
-                BlobName = "https://somelink3",
-                MimeType = "",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 3
             },
             new Audio
@@ -402,8 +402,8 @@ public static class ModelBuilderExtensions
                 Id = 4,
                 Title = "audio4",
                 Description = "for streetcode4",
-                BlobName = "https://somelink4",
-                MimeType = "",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 4
             });
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
@@ -745,7 +745,8 @@ public static class ModelBuilderExtensions
                     "Енгельгардт погодився відпустити кріпака за великі гроші — 2500 рублів. Щоб здобути такі гроші, Карл Брюллов" +
                     " намалював портрет Василя Жуковського — вихователя спадкоємця престолу Олександра Миколайовича, і портрет розіграли" +
                     " в лотереї, у якій взяла участь імператорська родина. Лотерея відбулася 4 травня 1838 року," +
-                    " а 7 травня Шевченкові видали відпускну."
+                    " а 7 травня Шевченкові видали відпускну.",
+                ImageId = 6
             },
             new Fact
             {

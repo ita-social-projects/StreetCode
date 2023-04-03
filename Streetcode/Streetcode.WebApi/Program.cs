@@ -34,8 +34,8 @@ app.UseAuthorization();
 app.UseHangfireDashboard();
 
 // change Cron.Monthly to set another parsing interval from ukrposhta
-/*RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
+// RecurringJob.AddOrUpdate<WebParsingUtils>(
+//    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
 
 app.MapControllers();
 

@@ -859,6 +859,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 1,
                 Index = 1,
+                TransliterationUrl = "taras-shevchenko",
                 Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія," +
                          " Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, " +
                          "Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. " +
@@ -879,6 +880,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 2,
                 Index = 2,
+                TransliterationUrl = "mykola-kostomarov",
                 DateString = "9 березня 1814 — 10 березня 1861",
                 Title = "Мико́ла Костома́ров",
                 Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург)" +
@@ -897,6 +899,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 3,
                 Index = 3,
+                TransliterationUrl = "vasyl-biloservky",
                 Title = "Василь Білозерський",
                 DateString = "2 січня 1825 — 20 лютого 1899",
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
@@ -913,6 +916,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 5,
                 Index = 5,
+                TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
                 Teaser = "some teaser",
                 DateString = "2 січня 1825 — 20 лютого 1899",
                 Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
@@ -927,6 +931,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 6,
                 Index = 6,
+                TransliterationUrl = "lesya-ukrainka",
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
@@ -942,6 +947,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 7,
                 Index = 7,
+                TransliterationUrl = "ivan-mazepa",
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
@@ -957,6 +963,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Index = 4,
+                TransliterationUrl = "svilnennia-chersonu",
                 DateString = "11 листопада 2022",
                 Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання" +
                     " Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області" +
@@ -968,6 +975,14 @@ public static class ModelBuilderExtensions
                 EventStartOrPersonBirthDate = new DateTime(2022, 11, 9),
                 EventEndOrPersonDeathDate = new DateTime(2022, 11, 11),
                 Title = "Звільнення Херсона"
+            });
+
+        modelBuilder.Entity<RelatedTerm>().HasData(
+            new RelatedTerm
+            {
+                Id = 1,
+                Word = "кріпаків",
+                TermId = 3,
             });
 
         modelBuilder.Entity<TimelineItem>().HasData(

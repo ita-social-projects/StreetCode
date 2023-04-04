@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 using Hangfire;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Services.Email;
-using Streetcode.DAL.Entities.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email;
 
 namespace Streetcode.WebApi.Extensions;
 

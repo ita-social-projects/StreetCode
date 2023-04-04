@@ -1,7 +1,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Email;
-using Streetcode.DAL.Entities.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email;
 
 namespace Streetcode.BLL.MediatR.Email
 {

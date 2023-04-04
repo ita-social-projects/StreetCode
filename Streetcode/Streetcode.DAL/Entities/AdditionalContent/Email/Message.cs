@@ -1,6 +1,6 @@
 using MimeKit;
 
-namespace Streetcode.DAL.Entities.Email
+namespace Streetcode.DAL.Entities.AdditionalContent.Email
 {
     public class Message
     {

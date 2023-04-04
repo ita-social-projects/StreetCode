@@ -1,5 +1,4 @@
 using Hangfire;
-using Streetcode.DAL.Entities.Email;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 

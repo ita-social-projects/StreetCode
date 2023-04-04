@@ -1,4 +1,4 @@
-using Streetcode.DAL.Entities.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email;
 
 namespace Streetcode.BLL.Interfaces.Email
 {

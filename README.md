@@ -218,6 +218,10 @@ More usefull information about GitHub Flow can be found <a href="https://docs.gi
 
 [![@LanchevychMaxym](https://avatars.githubusercontent.com/u/47561209?s=100&v=4)](https://github.com/LanchevychMaxym) 
 
+***Business analyst***
+
+[![@vladnvp](https://avatars.githubusercontent.com/u/112704799?v=4)](https://github.com/vladnvp)
+
 ***Dev team***
 
 [![@Kotusyk](https://avatars.githubusercontent.com/u/72945528?s=100&v=4)](https://github.com/Kotusyk) 
@@ -227,6 +231,12 @@ More usefull information about GitHub Flow can be found <a href="https://docs.gi
 [![@MementoMorj](https://avatars.githubusercontent.com/u/98163405?s=100&v=4)](https://github.com/MementoMorj)
 [![@Chynchenko](https://i.ibb.co/LP9n7w3/Svetlana.jpg)](https://github.com/Chynchenko)
 [![@NadiaKishchuk](https://i.ibb.co/s3kgMSM/Nadia.jpg)](https://github.com/NadiaKishchuk)
+
+[![@Dobriyr](https://avatars.githubusercontent.com/u/67451349?v=4)](https://github.com/Dobriyr)
+[![@DanyilTerentiev](https://avatars.githubusercontent.com/u/96494594?v=4)](https://github.com/DanyilTerentiev)
+[![@ValDekh](https://avatars.githubusercontent.com/u/61435019?v=4)](https://github.com/ValDekh)
+[![@ormykhalyshyn](https://avatars.githubusercontent.com/u/92263517?v=4)](https://github.com/ormykhalyshyn)
+[![@MaksBrat](https://avatars.githubusercontent.com/u/113379463?v=4)](https://github.com/MaksBrat)
 
 </div>
 

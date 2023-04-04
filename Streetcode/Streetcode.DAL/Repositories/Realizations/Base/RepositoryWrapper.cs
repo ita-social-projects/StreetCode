@@ -75,6 +75,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IUserRepository _userRepository;
 
+    private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -376,6 +378,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _userRepository;
+        }
+    }
+
+    public IStreetcodeTagIndexRepository StreetcodeTagIndexRepository
+    {
+        get
+        {
+            if (_streetcodeTagIndexRepository is null)
+            {
+                _streetcodeTagIndexRepository = new StreetcodeTagIndexRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeTagIndexRepository;
         }
     }
 

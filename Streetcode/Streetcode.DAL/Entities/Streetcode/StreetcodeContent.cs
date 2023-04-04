@@ -28,13 +28,14 @@ public class StreetcodeContent
     public int Index { get; set; }
 
     [Required]
+    [MaxLength(520)]
     public string Teaser { get; set; }
 
     [Required]
     [MaxLength(50)]
     public string DateString { get; set; }
 
-    [MaxLength(30)]
+    [MaxLength(50)]
     public string? Alias { get; set; }
 
     public StreetcodeStatus Status { get; set; }
@@ -70,7 +71,9 @@ public class StreetcodeContent
 
     public List<Image> Images { get; set; } = new ();
 
-    public List<Tag> Tags { get; set; } = new ();
+    public List<StreetcodeTagIndex> StreetcodeTagIndices { get; set; } = new ();
+
+    public List<Tag> Tags { get; set; } = new();
 
     public List<Subtitle> Subtitles { get; set; } = new ();
 

@@ -376,7 +376,15 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("BlobName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("StreetcodeId")
@@ -385,10 +393,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -401,34 +405,38 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
+                            BlobName = "https://somelink1",
                             Description = "for streetcode1",
+                            MimeType = "",
                             StreetcodeId = 1,
-                            Title = "audio1",
-                            Url = "https://somelink1"
+                            Title = "audio1"
                         },
                         new
                         {
                             Id = 2,
+                            BlobName = "https://somelink2",
                             Description = "for streetcode2",
+                            MimeType = "",
                             StreetcodeId = 2,
-                            Title = "audio2",
-                            Url = "https://somelink2"
+                            Title = "audio2"
                         },
                         new
                         {
                             Id = 3,
+                            BlobName = "https://somelink3",
                             Description = "for streetcode3",
+                            MimeType = "",
                             StreetcodeId = 3,
-                            Title = "audio3",
-                            Url = "https://somelink3"
+                            Title = "audio3"
                         },
                         new
                         {
                             Id = 4,
+                            BlobName = "https://somelink4",
                             Description = "for streetcode4",
+                            MimeType = "",
                             StreetcodeId = 4,
-                            Title = "audio4",
-                            Url = "https://somelink4"
+                            Title = "audio4"
                         });
                 });
 
@@ -502,13 +510,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("BlobName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -519,162 +531,185 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alt = "Портрет Тараса Шевченка",
-                            Title = "Тарас Шевченко",
-                            Url = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg"
+                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
+                            MimeType = "image/gif",
+                            Title = "Тарас Шевченко"
                         },
                         new
                         {
                             Id = 2,
                             Alt = "Тарас Шевченко: Погруддя жінки",
-                            Title = "Погруддя жінки",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg"
+                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Погруддя жінки"
                         },
                         new
                         {
                             Id = 3,
                             Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                            Title = "Портрет Павла Васильовича Енгельгардта",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg"
+                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет Павла Васильовича Енгельгардта"
                         },
                         new
                         {
                             Id = 4,
                             Alt = "Тарас Шевченко: Портрет невідомого",
-                            Title = "Портрет невідомого",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg"
+                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет невідомого"
                         },
                         new
                         {
                             Id = 5,
                             Alt = "Кобзар",
-                            Title = "Кобзар",
-                            Url = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg"
+                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
+                            MimeType = "image/png",
+                            Title = "Кобзар"
                         },
                         new
                         {
                             Id = 6,
                             Alt = "Мико́ла Костома́ров",
-                            Title = "Мико́ла Костома́ров",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg"
+                            BlobName = "VryHfNFydefxGWzL9Q2TFnykRwBvBjb7g7StwOztV+k=.png",
+                            MimeType = "image/png",
+                            Title = "Мико́ла Костома́ров"
                         },
                         new
                         {
                             Id = 7,
                             Alt = "Василь Білозерський",
-                            Title = "Василь Білозерський",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG"
+                            BlobName = "LOJwfRkqVqkjchzf9cLnSsFmTXdYaLUio+iRaDA3vVE=.png",
+                            MimeType = "image/png",
+                            Title = "Василь Білозерський"
                         },
                         new
                         {
                             Id = 8,
                             Alt = "Звільнення Херсона",
-                            Title = "Звільнення Херсона",
-                            Url = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg"
+                            BlobName = "cxU2wbUcQWQMrnC5bMUG4u8am9UIu2yFko+wPg9UBRM=.png",
+                            MimeType = "image/png",
+                            Title = "Звільнення Херсона"
                         },
                         new
                         {
                             Id = 9,
                             Alt = "book",
-                            Title = "book",
-                            Url = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80"
+                            BlobName = "i0OXuaqrvuGioxRAD045vizgs6S7rluDPUMuyYm3YyY=.png",
+                            MimeType = "image/png",
+                            Title = "book"
                         },
                         new
                         {
                             Id = 10,
                             Alt = "video",
-                            Title = "video",
-                            Url = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg"
+                            BlobName = "6BUOLcI9EwKDZTDi6ZPJyVnU5SaGOYSijBjdQH+4oUU=.png",
+                            MimeType = "image/png",
+                            Title = "video"
                         },
                         new
                         {
                             Id = 11,
                             Alt = "article",
-                            Title = "article",
-                            Url = "https://images.laws.com/constitution/constitutional-convention.jpg"
+                            BlobName = "eQVD_pSkN0maCTFVPAjtX0QvJmsur7VIL9ZYvGAdIQ8=.png",
+                            MimeType = "image/png",
+                            Title = "article"
                         },
                         new
                         {
                             Id = 12,
                             Alt = "SoftServe",
-                            Title = "SoftServe",
-                            Url = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png"
+                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
+                            MimeType = "image/png",
+                            Title = "SoftServe"
                         },
                         new
                         {
                             Id = 13,
                             Alt = "Parimatch",
-                            Title = "Parimatch",
-                            Url = "https://static.ua-football.com/img/upload/19/270071.png"
+                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
+                            MimeType = "image/png",
+                            Title = "Parimatch"
                         },
                         new
                         {
                             Id = 14,
                             Alt = "Community Partners",
-                            Title = "Community Partners",
-                            Url = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png"
+                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
+                            MimeType = "image/png",
+                            Title = "Community Partners"
                         },
                         new
                         {
                             Id = 15,
                             Alt = "Володимир-Варфоломей",
-                            Title = "Володимир-Варфоломей",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
+                            BlobName = "88VCISdBuZeWwIZSmnVIXsHUGQzFMTh4iPGEbU1+ckQ=.png",
+                            MimeType = "image/png",
+                            Title = "Володимир-Варфоломей"
                         },
                         new
                         {
                             Id = 16,
                             Alt = "Леся Українка",
-                            Title = "Леся Українка",
-                            Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
+                            BlobName = "U2Sn_n0vXTwdCBabM2XzFPhxLXrff8QoomoLL4xGadc=.png",
+                            MimeType = "image/png",
+                            Title = "Леся Українка"
                         },
                         new
                         {
                             Id = 17,
                             Alt = "Іван Мазепа",
-                            Title = "Іван Мазепа",
-                            Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
+                            BlobName = "x8melf2zrE7cURQ1pIzBRu80OVC6uOUpuEvL91ALrjQ=.png",
+                            MimeType = "image/png",
+                            Title = "Іван Мазепа"
                         },
                         new
                         {
                             Id = 18,
                             Alt = "Грушевький",
-                            Title = "Михайло Грушевський",
-                            Url = "/assets/2296e9b1db2ab72f2db9.png"
+                            BlobName = "hgY63C6vqAXXulRLe9NfvnMmuz_jyqgwTNMK27mMFUA=.png",
+                            MimeType = "image/png",
+                            Title = "Михайло Грушевський"
                         },
                         new
                         {
                             Id = 19,
                             Alt = "Грушевький",
-                            Title = "Грушевський",
-                            Url = "/assets/35b44f042d027c3a7589.png"
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Грушевський"
                         },
                         new
                         {
                             Id = 20,
                             Alt = "Грушевський",
-                            Title = "Сучасний Грушевський",
-                            Url = "/assets/c58dac51751395fb3217.png"
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Сучасний Грушевський"
                         },
                         new
                         {
                             Id = 21,
                             Alt = "мурал",
-                            Title = "Мурал Грушевського",
-                            Url = "/assets/233c6bbb0b79df230d93.png"
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Мурал Грушевського"
                         },
                         new
                         {
                             Id = 22,
                             Alt = "Козаки на орбіті",
-                            Title = "Козаки на орбіті",
-                            Url = "/assets/02b59f4ef917107514e3.png"
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Козаки на орбіті"
                         },
                         new
                         {
                             Id = 23,
                             Alt = "мурал",
-                            Title = "Мурал М. Грушевського",
-                            Url = "/assets/8ecaa9756bac938f8f73.png"
+                            BlobName = "g5pg3u81R4UzzfJ965mZNW6pLBIulF6a7aliAb2LJhQ=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Мурал М. Грушевського"
                         });
                 });
 
@@ -1200,10 +1235,19 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("DateString")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");
@@ -1214,6 +1258,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("StreetcodeType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1221,6 +1268,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<string>("Teaser")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("TransliterationUrl")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -1233,6 +1290,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TransliterationUrl")
+                        .IsUnique();
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1278,6 +1338,37 @@ namespace Streetcode.DAL.Persistence.Migrations
                             FactContent = " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес. Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».",
                             ImageId = 5,
                             Title = "Перший Кобзар"
+                        });
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("related_terms", "streetcode");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            TermId = 3,
+                            Word = "кріпаків"
                         });
                 });
 
@@ -1733,11 +1824,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Streetcode.StreetcodeContent");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-event");
@@ -1746,14 +1832,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6954),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(424),
+                            DateString = "11 листопада 2022",
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 4,
+                            Status = 0,
                             Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).",
+                            Title = "Звільнення Херсона",
+                            TransliterationUrl = "svilnennia-chersonu",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 1000,
-                            Title = "Звільнення Херсона"
+                            ViewCount = 1000
                         });
                 });
 
@@ -1783,11 +1872,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6882),
+                            Alias = "Кобзар",
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(336),
+                            DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 1,
+                            Status = 0,
                             Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв",
+                            Title = "Тарас Шевченко",
+                            TransliterationUrl = "taras-shevchenko",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Тарас",
@@ -1797,11 +1891,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6917),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(385),
+                            DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 2,
+                            Status = 0,
                             Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
+                            Title = "Мико́ла Костома́ров",
+                            TransliterationUrl = "mykola-kostomarov",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Мико́ла",
@@ -1811,11 +1909,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6922),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(390),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 3,
+                            Status = 0,
                             Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.",
+                            Title = "Василь Білозерський",
+                            TransliterationUrl = "vasyl-biloservky",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Василь",
@@ -1825,11 +1927,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6927),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(395),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 5,
+                            Status = 0,
                             Teaser = "some teaser",
+                            Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
+                            TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Володимир-Варфоломей",
@@ -1838,11 +1944,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6931),
+                            Alias = "Лариса Косач",
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(399),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 6,
+                            Status = 0,
                             Teaser = "some teaser",
+                            Title = "Леся Українка",
+                            TransliterationUrl = "lesya-ukrainka",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Леся",
@@ -1851,11 +1962,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6935),
+                            CreatedAt = new DateTime(2023, 3, 23, 14, 36, 11, 905, DateTimeKind.Local).AddTicks(403),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Index = 7,
+                            Status = 0,
                             Teaser = "some teaser",
+                            Title = "Іван Мазепа",
+                            TransliterationUrl = "ivan-mazepa",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ViewCount = 0,
                             FirstName = "Іван",
@@ -2089,6 +2204,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.TextContent.Term", "Term")
+                        .WithMany("RelatedTerms")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Term");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Text", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -2223,6 +2349,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("TransactionLink");
 
                     b.Navigation("Videos");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
+                {
+                    b.Navigation("RelatedTerms");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>

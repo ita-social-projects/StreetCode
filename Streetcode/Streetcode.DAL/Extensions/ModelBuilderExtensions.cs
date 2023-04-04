@@ -185,173 +185,198 @@ public static class ModelBuilderExtensions
                 Description = "На вулиці Січових стрільців, 75 закінчили малювати мурал Михайла Грушевського на місці малюнка будинку з лелекою."
             });
         modelBuilder.Entity<Image>().HasData(
-            new Image
-            {
-                Id = 1,
-                Title = "Тарас Шевченко",
-                Alt = "Портрет Тараса Шевченка",
-                Url = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg"
-            },
-            new Image
-            {
-                Id = 2,
-                Title = "Погруддя жінки",
-                Alt = "Тарас Шевченко: Погруддя жінки",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg"
-            },
-            new Image
-            {
-                Id = 3,
-                Title = "Портрет Павла Васильовича Енгельгардта",
-                Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg"
-            },
-            new Image
-            {
-                Id = 4,
-                Title = "Портрет невідомого",
-                Alt = "Тарас Шевченко: Портрет невідомого",
-                Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg"
-            },
-            new Image
-            {
-                Id = 5,
-                Title = "Кобзар",
-                Alt = "Кобзар",
-                Url = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg"
-            },
-            new Image
-            {
-                Id = 6,
-                Title = "Мико́ла Костома́ров",
-                Alt = "Мико́ла Костома́ров",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg"
-            },
-            new Image
-            {
-                Id = 7,
-                Title = "Василь Білозерський",
-                Alt = "Василь Білозерський",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG"
-            },
-            new Image
-            {
-                Id = 8,
-                Title = "Звільнення Херсона",
-                Alt = "Звільнення Херсона",
-                Url = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg"
-            },
-            new Image
-            {
-                Id = 9,
-                Title = "book",
-                Alt = "book",
-                Url = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80"
-            },
-            new Image
-            {
-                Id = 10,
-                Title = "video",
-                Alt = "video",
-                Url = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg"
-            },
-            new Image
-            {
-                Id = 11,
-                Title = "article",
-                Alt = "article",
-                Url = "https://images.laws.com/constitution/constitutional-convention.jpg"
-            },
-            new Image
-            {
-                Id = 12,
-                Title = "SoftServe",
-                Alt = "SoftServe",
-                Url = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png"
-            },
-            new Image
-            {
-                Id = 13,
-                Title = "Parimatch",
-                Alt = "Parimatch",
-                Url = "https://static.ua-football.com/img/upload/19/270071.png"
-            },
-            new Image
-            {
-                Id = 14,
-                Title = "Community Partners",
-                Alt = "Community Partners",
-                Url = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png"
-            },
-            new Image
-            {
-                Id = 15,
-                Title = "Володимир-Варфоломей",
-                Alt = "Володимир-Варфоломей",
-                Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
-            },
-            new Image
-            {
-                Id = 16,
-                Title = "Леся Українка",
-                Alt = "Леся Українка",
-                Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
-            },
-            new Image
-            {
-                Id = 17,
-                Title = "Іван Мазепа",
-                Alt = "Іван Мазепа",
-                Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
-            }, new Image
-            {
-                Id = 18,
-                Title = "Михайло Грушевський",
-                Alt = "Грушевький",
-                Url = "/assets/2296e9b1db2ab72f2db9.png"
-            },
-            new Image
-            {
-                Id = 19,
-                Title = "Грушевський",
-                Alt = "Грушевький",
-                Url = "/assets/35b44f042d027c3a7589.png"
-            },
-            new Image
-            {
-                Id = 20,
-                Title = "Сучасний Грушевський",
-                Alt = "Грушевський",
-                Url = "/assets/c58dac51751395fb3217.png"
-            },
-            new Image
-            {
-                Id = 21,
-                Title = "Мурал Грушевського",
-                Alt = "мурал",
-                Url = "/assets/233c6bbb0b79df230d93.png"
-            },
-            new Image
-            {
-                Id = 22,
-                Title = "Козаки на орбіті",
-                Alt = "Козаки на орбіті",
-                Url = "/assets/02b59f4ef917107514e3.png"
-            },
-            new Image
-            {
-                Id = 23,
-                Title = "Мурал М. Грушевського",
-                Alt = "мурал",
-                Url = "/assets/8ecaa9756bac938f8f73.png"
-            });
+                        new
+                        {
+                            Id = 1,
+                            Alt = "Портрет Тараса Шевченка",
+                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
+                            MimeType = "image/gif",
+                            Title = "Тарас Шевченко"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Alt = "Тарас Шевченко: Погруддя жінки",
+                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Погруддя жінки"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
+                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет Павла Васильовича Енгельгардта"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Alt = "Тарас Шевченко: Портрет невідомого",
+                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет невідомого"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Alt = "Кобзар",
+                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
+                            MimeType = "image/png",
+                            Title = "Кобзар"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Alt = "Мико́ла Костома́ров",
+                            BlobName = "VryHfNFydefxGWzL9Q2TFnykRwBvBjb7g7StwOztV+k=.png",
+                            MimeType = "image/png",
+                            Title = "Мико́ла Костома́ров"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Alt = "Василь Білозерський",
+                            BlobName = "LOJwfRkqVqkjchzf9cLnSsFmTXdYaLUio+iRaDA3vVE=.png",
+                            MimeType = "image/png",
+                            Title = "Василь Білозерський"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Alt = "Звільнення Херсона",
+                            BlobName = "cxU2wbUcQWQMrnC5bMUG4u8am9UIu2yFko+wPg9UBRM=.png",
+                            MimeType = "image/png",
+                            Title = "Звільнення Херсона"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Alt = "book",
+                            BlobName = "i0OXuaqrvuGioxRAD045vizgs6S7rluDPUMuyYm3YyY=.png",
+                            MimeType = "image/png",
+                            Title = "book"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Alt = "video",
+                            BlobName = "6BUOLcI9EwKDZTDi6ZPJyVnU5SaGOYSijBjdQH+4oUU=.png",
+                            MimeType = "image/png",
+                            Title = "video"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Alt = "article",
+                            BlobName = "eQVD_pSkN0maCTFVPAjtX0QvJmsur7VIL9ZYvGAdIQ8=.png",
+                            MimeType = "image/png",
+                            Title = "article"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Alt = "SoftServe",
+                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
+                            MimeType = "image/png",
+                            Title = "SoftServe"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Alt = "Parimatch",
+                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
+                            MimeType = "image/png",
+                            Title = "Parimatch"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Alt = "Community Partners",
+                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
+                            MimeType = "image/png",
+                            Title = "Community Partners"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Alt = "Володимир-Варфоломей",
+                            BlobName = "88VCISdBuZeWwIZSmnVIXsHUGQzFMTh4iPGEbU1+ckQ=.png",
+                            MimeType = "image/png",
+                            Title = "Володимир-Варфоломей"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Alt = "Леся Українка",
+                            BlobName = "U2Sn_n0vXTwdCBabM2XzFPhxLXrff8QoomoLL4xGadc=.png",
+                            MimeType = "image/png",
+                            Title = "Леся Українка"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Alt = "Іван Мазепа",
+                            BlobName = "bnIzOC+dFAYy9CtrojbMjl3RlEWIdGIx2TJeSZWC97c=.png",
+                            MimeType = "image/png",
+                            Title = "Іван Мазепа"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Alt = "Грушевький",
+                            BlobName = "eke98jD1VRreBj_lOPQznFFZujua_+esR1R7vHgRk_g=.png",
+                            MimeType = "image/png",
+                            Title = "Михайло Грушевський"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Alt = "Грушевький",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
+                            Title = "Грушевський"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Alt = "Грушевський",
+                            BlobName = "8Xw3NUnskB1sDHjSV4tAX74tO+zF1dPQMZ287e3GQbg=.png",
+                            MimeType = "image/png",
+                            Title = "Сучасний Грушевський"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Alt = "мурал",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
+                            Title = "Мурал Грушевського"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Alt = "Козаки на орбіті",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
+                            Title = "Козаки на орбіті"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Alt = "мурал",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
+                            Title = "Мурал М. Грушевського"
+                        });
         modelBuilder.Entity<Audio>().HasData(
             new Audio
             {
                 Id = 1,
                 Title = "audio1",
                 Description = "for streetcode1",
-                Url = "https://somelink1",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 1
             },
             new Audio
@@ -359,7 +384,8 @@ public static class ModelBuilderExtensions
                 Id = 2,
                 Title = "audio2",
                 Description = "for streetcode2",
-                Url = "https://somelink2",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 2
             },
             new Audio
@@ -367,7 +393,8 @@ public static class ModelBuilderExtensions
                 Id = 3,
                 Title = "audio3",
                 Description = "for streetcode3",
-                Url = "https://somelink3",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 3
             },
             new Audio
@@ -375,7 +402,8 @@ public static class ModelBuilderExtensions
                 Id = 4,
                 Title = "audio4",
                 Description = "for streetcode4",
-                Url = "https://somelink4",
+                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                MimeType = "audio/mpeg",
                 StreetcodeId = 4
             });
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
@@ -717,7 +745,8 @@ public static class ModelBuilderExtensions
                     "Енгельгардт погодився відпустити кріпака за великі гроші — 2500 рублів. Щоб здобути такі гроші, Карл Брюллов" +
                     " намалював портрет Василя Жуковського — вихователя спадкоємця престолу Олександра Миколайовича, і портрет розіграли" +
                     " в лотереї, у якій взяла участь імператорська родина. Лотерея відбулася 4 травня 1838 року," +
-                    " а 7 травня Шевченкові видали відпускну."
+                    " а 7 травня Шевченкові видали відпускну.",
+                ImageId = 6
             },
             new Fact
             {
@@ -830,6 +859,7 @@ public static class ModelBuilderExtensions
             {
                 Id = 1,
                 Index = 1,
+                TransliterationUrl = "taras-shevchenko",
                 Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія," +
                          " Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, " +
                          "Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. " +
@@ -837,16 +867,22 @@ public static class ModelBuilderExtensions
                          "Академік Імператорської академії мистецтв",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "9 березня 1814 — 10 березня 1861",
                 EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
                 EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
                 FirstName = "Тарас",
                 Rank = "Григорович",
-                LastName = "Шевченко"
+                LastName = "Шевченко",
+                Title = "Тарас Шевченко",
+                Alias = "Кобзар"
             },
             new PersonStreetcode
             {
                 Id = 2,
                 Index = 2,
+                TransliterationUrl = "mykola-kostomarov",
+                DateString = "9 березня 1814 — 10 березня 1861",
+                Title = "Мико́ла Костома́ров",
                 Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург)" +
                     " — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. " +
                     "\r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство»." +
@@ -857,12 +893,15 @@ public static class ModelBuilderExtensions
                 EventEndOrPersonDeathDate = new DateTime(1885, 4, 7),
                 FirstName = "Мико́ла",
                 Rank = "Іва́нович",
-                LastName = "Костома́ров"
+                LastName = "Костома́ров",
             },
             new PersonStreetcode
             {
                 Id = 3,
                 Index = 3,
+                TransliterationUrl = "vasyl-biloservky",
+                Title = "Василь Білозерський",
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний" +
                     " і культурний діяч, журналіст.",
                 ViewCount = 0,
@@ -877,7 +916,10 @@ public static class ModelBuilderExtensions
             {
                 Id = 5,
                 Index = 5,
+                TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
                 Teaser = "some teaser",
+                DateString = "2 січня 1825 — 20 лютого 1899",
+                Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
@@ -889,24 +931,31 @@ public static class ModelBuilderExtensions
             {
                 Id = 6,
                 Index = 6,
+                TransliterationUrl = "lesya-ukrainka",
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Леся",
-                LastName = "Українка"
+                LastName = "Українка",
+                Title = "Леся Українка",
+                Alias = "Лариса Косач"
             },
             new PersonStreetcode
             {
                 Id = 7,
                 Index = 7,
+                TransliterationUrl = "ivan-mazepa",
                 Teaser = "some teaser",
                 ViewCount = 0,
                 CreatedAt = DateTime.Now,
+                DateString = "2 січня 1825 — 20 лютого 1899",
                 EventStartOrPersonBirthDate = new DateTime(1825, 1, 2),
                 EventEndOrPersonDeathDate = new DateTime(1899, 2, 20),
                 FirstName = "Іван",
+                Title = "Іван Мазепа",
                 LastName = "Мазепа"
             });
         modelBuilder.Entity<EventStreetcode>().HasData(
@@ -914,6 +963,8 @@ public static class ModelBuilderExtensions
             {
                 Id = 4,
                 Index = 4,
+                TransliterationUrl = "svilnennia-chersonu",
+                DateString = "11 листопада 2022",
                 Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання" +
                     " Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області" +
                     " та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ" +
@@ -924,6 +975,14 @@ public static class ModelBuilderExtensions
                 EventStartOrPersonBirthDate = new DateTime(2022, 11, 9),
                 EventEndOrPersonDeathDate = new DateTime(2022, 11, 11),
                 Title = "Звільнення Херсона"
+            });
+
+        modelBuilder.Entity<RelatedTerm>().HasData(
+            new RelatedTerm
+            {
+                Id = 1,
+                Word = "кріпаків",
+                TermId = 3,
             });
 
         modelBuilder.Entity<TimelineItem>().HasData(

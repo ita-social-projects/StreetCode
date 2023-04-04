@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
@@ -33,16 +35,14 @@ public class TagController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TagDTO tag)
+    public async Task<IActionResult> Create([FromBody] CreateTagDTO tagTitle)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateTagQuery(tagTitle)));
     }
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TagDTO tag)
     {
-        // TODO implement here
         return Ok();
     }
 

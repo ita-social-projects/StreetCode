@@ -3,6 +3,7 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -15,11 +16,13 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
     {
         private Mock<IRepositoryWrapper> repository;
         private Mock<IMapper> mockMapper;
+        private Mock<IBlobService> blobService;
 
         public GetStreetcodeArtByStreetcodeIdTest()
         {
             repository = new Mock<IRepositoryWrapper>();
             mockMapper = new Mock<IMapper>();
+            blobService = new Mock<IBlobService>();
         }
 
         private List<StreetcodeArt> GetStreetcodeArtsList()
@@ -31,7 +34,10 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     StreetcodeId = 1,
                     Streetcode = null,
                     ArtId = 1,
-                    Art=null
+                    Art= new DAL.Entities.Media.Images.Art
+                    {
+                        Image = new DAL.Entities.Media.Images.Image()
+                    }
                 },
 
                 new StreetcodeArt()
@@ -40,7 +46,10 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     StreetcodeId = 2,
                     Streetcode = null,
                     ArtId = 2,
-                    Art=null
+                    Art = new DAL.Entities.Media.Images.Art
+                    {
+                        Image = new DAL.Entities.Media.Images.Image()
+                    }
                 }
             };
         }
@@ -55,7 +64,10 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     StreetcodeId = 1,
                     Streetcode = null,
                     ArtId = 1,
-                    Art=null
+                    Art = new ArtDTO
+                    {
+                        Image = new ImageDTO()
+                    }
                 },
 
                 new StreetcodeArtDTO
@@ -64,7 +76,10 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     StreetcodeId = 2,
                     Streetcode = null,
                     ArtId = 2,
-                    Art=null
+                    Art = new ArtDTO
+                    {
+                        Image = new ImageDTO()
+                    }
                 }
             };
         }
@@ -79,7 +94,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
@@ -97,7 +112,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 

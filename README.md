@@ -237,6 +237,7 @@ More usefull information about GitHub Flow can be found <a href="https://docs.gi
 [![@ValDekh](https://avatars.githubusercontent.com/u/61435019?s=100&v=4)](https://github.com/ValDekh)
 [![@ormykhalyshyn](https://avatars.githubusercontent.com/u/92263517?s=100&v=4)](https://github.com/ormykhalyshyn)
 [![@MaksBrat](https://avatars.githubusercontent.com/u/113379463?s=100&v=4)](https://github.com/MaksBrat)
+[![@Lolimkeri](https://avatars.githubusercontent.com/u/57957843?s=100&v=4)](https://github.com/Lolimkeri)
 
 </div>
 

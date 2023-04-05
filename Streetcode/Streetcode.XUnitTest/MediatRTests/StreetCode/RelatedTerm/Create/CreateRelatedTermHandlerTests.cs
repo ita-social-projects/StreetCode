@@ -87,7 +87,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
              () => Assert.True(result.IsFailed),
              () => Assert.Equal("Слово з цим визначенням уже існує", result.Errors.First().Message),
              () => _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never),
-             () => _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never));
+             () => _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never)
+             );
         }
 
         [Theory]
@@ -113,10 +114,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal("Cannot save changes in the database after related word creation!", result.Errors.First().Message);
-            repositoryMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
-            repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+            Assert.Multiple(
+             () => Assert.True(result.IsFailed),
+             () => Assert.Equal("Cannot save changes in the database after related word creation!", result.Errors.First().Message),
+             () => repositoryMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once),
+             () => repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once)
+             );
         }
     }
 }

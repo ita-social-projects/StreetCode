@@ -56,8 +56,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal("Cannot create new related word for a term!", result.Errors.First().Message);
+            Assert.Multiple(
+           () => Assert.True(result.IsFailed),
+           () => Assert.Equal("Cannot create new related word for a term!", result.Errors.First().Message)
+           );
         }
 
         [Theory]
@@ -81,10 +83,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal("Слово з цим визначенням уже існує", result.Errors.First().Message);
-            _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never);
-            _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never);
+            Assert.Multiple(
+             () => Assert.True(result.IsFailed),
+             () => Assert.Equal("Слово з цим визначенням уже існує", result.Errors.First().Message),
+             () => _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never),
+             () => _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never));
         }
 
         [Theory]

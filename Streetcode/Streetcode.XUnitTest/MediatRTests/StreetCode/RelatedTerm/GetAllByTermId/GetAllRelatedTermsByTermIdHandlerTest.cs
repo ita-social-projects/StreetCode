@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using FluentResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
@@ -23,17 +21,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             _mockMapper = new Mock<IMapper>();
         }
 
-
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsError_WhenRepositoryReturnsNull(int id)
         {
             // Arrange
             var query = new GetAllRelatedTermsByTermIdQuery(id);
+
             _mockRepository.Setup(x => x.RelatedTermRepository
             .GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync((IEnumerable<Entity>)null);
+
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
 
             // Act
@@ -50,12 +49,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             // Arrange
             var query = new GetAllRelatedTermsByTermIdQuery(id);
             var relatedTerms = new List<Entity> { new Entity() };
+
             _mockRepository.Setup(x => x.RelatedTermRepository.
             GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
                 .Returns((IEnumerable<RelatedTermDTO>)null);
+
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
 
             // Act
@@ -71,20 +72,26 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
         {
             // Arrange
             var query = new GetAllRelatedTermsByTermIdQuery(id);
+
             var relatedTerms = new List<Entity> { new Entity() };
+
             var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
+
             _mockRepository.Setup(x => x.RelatedTermRepository.GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
+
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal(relatedTermDTOs, result.Value);
+            Assert.Multiple(
+              () => Assert.True(result.IsSuccess),
+              () => Assert.Equal(relatedTermDTOs, result.Value)
+              );
         }
 
         [Theory]
@@ -92,16 +99,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
         public async Task Handle_WhenRelatedTermsFound_ReturnsSuccessResult(int id, int termId, string testWord)
         {
             // Arrange
-            
-            var relatedTerm = new Entity { Id = id, TermId = termId, Word = testWord };
+            var relatedTerm = CreateNewEntity(id, testWord, termId);
             var relatedTerms = new List<Entity> { relatedTerm };
             var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
+
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
 
             _mockRepository.Setup(x => x.RelatedTermRepository.GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
-
 
             var query = new GetAllRelatedTermsByTermIdQuery(termId);
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
@@ -110,12 +116,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.IsAssignableFrom<IEnumerable<RelatedTermDTO>>(result.Value);
-            Assert.Equal(relatedTermDTOs.Count(), result.Value.Count());
-            Assert.Equal(relatedTermDTOs.First().Id, result.Value.First().Id);
-            Assert.Equal(relatedTermDTOs.First().TermId, result.Value.First().TermId);
-            Assert.Equal(relatedTermDTOs.First().Word, result.Value.First().Word);
+            Assert.Multiple(
+             () => Assert.True(result.IsSuccess),
+             () => Assert.IsAssignableFrom<IEnumerable<RelatedTermDTO>>(result.Value),
+             () => Assert.Equal(relatedTermDTOs.Count(), result.Value.Count()),
+             () => Assert.Equal(relatedTermDTOs.First().Id, result.Value.First().Id),
+             () => Assert.Equal(relatedTermDTOs.First().TermId, result.Value.First().TermId),
+             () => Assert.Equal(relatedTermDTOs.First().Word, result.Value.First().Word)
+                );
+        }
+
+        private static Entity CreateNewEntity(int id, string word, int termId)
+        {
+            return new Entity { Id = id, Word = word, TermId = termId };
         }
     }
 }

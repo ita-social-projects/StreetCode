@@ -83,37 +83,6 @@ public class GetPartnerByIdTest
         );
     }
 
-    public async Task ShouldReturnSuccesfully_NotNull ()
-    {
-        //Arrange
-        var testPartner = GetPartner();
-        var expectedError = $"Cannot find any partner with corresponding id: {testPartner.Id}";
-
-        _mockRepository.Setup(x => x.PartnersRepository
-            .GetSingleOrDefaultAsync(
-               It.IsAny<Expression<Func<Partner, bool>>>(),
-                It.IsAny<Func<IQueryable<Partner>,
-                IIncludableQueryable<Partner, object>>>()))
-            .ReturnsAsync(GetPartnerWithNotExistingId());
-
-        _mockMapper
-            .Setup(x => x
-            .Map<PartnerDTO>(It.IsAny<Partner>()))
-            .Returns(GetPartnerDTOWithNotExistingId());
-
-        var handler = new GetPartnerByIdHandler(_mockRepository.Object, _mockMapper.Object);
-
-        //Act
-        var result = await handler.Handle(new GetPartnerByIdQuery(testPartner.Id), CancellationToken.None);
-
-        //Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors.First().Message)
-        );
-    }
-
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {

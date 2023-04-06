@@ -58,7 +58,6 @@ public class StreetcodeDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<Toponym>()

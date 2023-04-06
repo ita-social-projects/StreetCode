@@ -26,9 +26,10 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return GetQueryable(predicate).AsNoTracking();
     }
 
-    public async Task<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T>> CreateAsync(T entity)
+    public async Task<T> CreateAsync(T entity)
     {
-        return await _dbContext.Set<T>().AddAsync(entity);
+        var tmp = await _dbContext.Set<T>().AddAsync(entity);
+        return tmp.Entity;
     }
 
     public T Create(T entity)

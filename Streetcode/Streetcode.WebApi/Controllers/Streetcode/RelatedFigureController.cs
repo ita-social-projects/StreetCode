@@ -16,6 +16,12 @@ public class RelatedFigureController : BaseApiController
         return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId)));
     }
 
+    [HttpGet("{tagId:int}")]
+    public async Task<IActionResult> GetByTagId([FromRoute] int tagId)
+    {
+        return HandleResult(await Mediator.Send(new GetRelatedFiguresByTagIdQuery(tagId)));
+    }
+
     [HttpPost("{ObserverId:int}&{TargetId:int}")]
     public async Task<IActionResult> Create([FromRoute] int ObserverId, int TargetId)
     {

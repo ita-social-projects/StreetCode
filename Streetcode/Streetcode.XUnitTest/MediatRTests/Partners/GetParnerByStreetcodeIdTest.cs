@@ -54,7 +54,6 @@ public class GetParnerByStreetcodeIdTest
 
         //Assert
         Assert.Multiple(
-            () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
             () => Assert.NotEmpty(result.Value)
         );

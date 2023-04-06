@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
@@ -10,11 +11,13 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IBlobService _blobService;
 
-    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _blobService = blobService;
     }
 
     public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -28,6 +31,9 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
         }
 
         var audioDto = _mapper.Map<AudioDTO>(audio);
+
+        audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
+
         return Result.Ok(audioDto);
     }
 }

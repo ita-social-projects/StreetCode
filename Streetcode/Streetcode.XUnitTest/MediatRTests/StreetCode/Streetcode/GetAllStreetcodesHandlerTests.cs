@@ -33,9 +33,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
                 .Returns(testDTO);
 
+            var request = new GetAllStreetcodesRequestDTO();
+
             var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object);
             // act
-            var result = await handler.Handle(new GetAllStreetcodesQuery(), CancellationToken.None);
+            
+            var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
+            
             // assert
             Assert.NotNull(result);
 
@@ -54,10 +58,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             .Returns(testDTOList);
 
             var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object);
+
+            var request = new GetAllStreetcodesRequestDTO();
+
             // act
-            var result = await handler.Handle(new GetAllStreetcodesQuery(), CancellationToken.None);
+
+            var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
+            
             // assert
-            Assert.IsAssignableFrom<IEnumerable<StreetcodeDTO>>(result.Value);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Media;
@@ -10,10 +12,12 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.Streetcode;
 
 [Table("streetcodes", Schema = "streetcode")]
+[Index(nameof(TransliterationUrl), IsUnique = true)]
 public class StreetcodeContent
 {
     [Key]
@@ -25,6 +29,22 @@ public class StreetcodeContent
 
     [Required]
     public string Teaser { get; set; }
+
+    [Required]
+    [MaxLength(50)]
+    public string DateString { get; set; }
+
+    [MaxLength(30)]
+    public string? Alias { get; set; }
+
+    public StreetcodeStatus Status { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string Title { get; set; }
+    [Required]
+    [MaxLength(150)]
+    public string TransliterationUrl { get; set; }
 
     public int ViewCount { get; set; }
 
@@ -69,4 +89,9 @@ public class StreetcodeContent
     public List<Partner> Partners { get; set; } = new ();
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
+
+    public IIncludableQueryable<StreetcodeContent, object> Include(Func<object, object> value)
+    {
+        throw new NotImplementedException();
+    }
 }

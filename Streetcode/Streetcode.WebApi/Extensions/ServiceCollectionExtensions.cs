@@ -16,6 +16,9 @@ using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+using Microsoft.ApplicationInsights.Extensibility;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -35,7 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(currentAssemblies);
 
         services.AddScoped<IBlobService, BlobService>();
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+        services.AddScoped(typeof(ILoggerService), typeof(LoggerService));
         services.AddScoped<IEmailService, EmailService>();
 
         services.Configure<BlobEnvirovmentVariables>(options =>
@@ -43,6 +46,21 @@ public static class ServiceCollectionExtensions
             options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
             options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
         });
+    }
+
+    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((ctx, services, lc) =>
+        {
+            lc.Enrich.FromLogContext();
+            lc.Enrich.WithMachineName();
+            lc.Enrich.WithThreadId();
+            lc.Enrich.WithProperty("ApplicationName", "Streetcode");
+            lc.WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate);
+            lc.WriteTo.Debug();
+        });
+
+        return builder;
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

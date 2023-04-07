@@ -1,4 +1,5 @@
 using Hangfire;
+using Serilog;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 
@@ -9,9 +10,11 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 
+builder.AddSerilog();
+
 var app = builder.Build();
 
-await app.MigrateAndSeedDbAsync();
+// await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

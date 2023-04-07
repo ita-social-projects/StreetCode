@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Streetcode;
@@ -13,12 +14,12 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService<GetAllStreetcodesHandler> _loggerService;
+    private readonly ILoggerService _loggerService;
 
     public GetAllStreetcodesHandler(
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
-        ILoggerService<GetAllStreetcodesHandler> loggerService)
+        ILoggerService loggerService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -36,16 +37,19 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         if (filterRequest.Title is not null)
         {
+            _loggerService.LogInformation("Entry into filterRequest.Title");
             FindStreetcodesWithMatchTitle(ref streetcodes, filterRequest.Title);
         }
 
         if (filterRequest.Sort is not null)
         {
+            _loggerService.LogInformation("Entry into filterRequest.Sort");
             FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
         }
 
         if (filterRequest.Filter is not null)
         {
+            _loggerService.LogInformation("Entry into filterRequest.Filter");
             FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 

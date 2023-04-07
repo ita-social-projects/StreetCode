@@ -11,12 +11,12 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService<GetAllFactsHandler> _loggerService;
+    private readonly ILoggerService _loggerService;
 
     public GetAllFactsHandler(
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
-        ILoggerService<GetAllFactsHandler> loggerService)
+        ILoggerService loggerService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

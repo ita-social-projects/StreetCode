@@ -8,7 +8,7 @@ public static class WebApplicationExtensions
 {
     public static async Task MigrateAndSeedDbAsync(
         this WebApplication app,
-        string scriptsFolderPath = "./Streetcode.DAL/Persistence/Scripts/")
+        string scriptsFolderPath = "./Streetcode.DAL/Persistence/ScriptsSeeding/")
     {
         using var scope = app.Services.CreateScope();
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
@@ -36,6 +36,48 @@ public static class WebApplicationExtensions
             catch(Exception ex)
             {
                 if(transaction != null)
+                {
+                    streetcodeContext.Database.RollbackTransaction();
+                    logger.LogError(ex, "An error occured during adding relations");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occured during startup migration");
+        }
+    }
+
+    public static async Task ApplyMigrations(
+        this WebApplication app,
+        string scriptsFolderPath = "./Streetcode.DAL/Persistence/ScriptsMigration/")
+    {
+        using var scope = app.Services.CreateScope();
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        try
+        {
+            var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
+
+            IDbContextTransaction transaction = null;
+            try
+            {
+                var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
+
+                var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+
+                var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
+                transaction = streetcodeContext.Database.BeginTransaction();
+
+                foreach (var task in filesContexts)
+                {
+                    await streetcodeContext.Database.ExecuteSqlRawAsync(task.Replace("GO", ""));
+                }
+
+                streetcodeContext.Database.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null)
                 {
                     streetcodeContext.Database.RollbackTransaction();
                     logger.LogError(ex, "An error occured during adding relations");

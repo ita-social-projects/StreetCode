@@ -9,8 +9,15 @@ public class ImageProfile : Profile
     public ImageProfile()
     {
         CreateMap<Image, ImageDTO>()
-            .ForPath(dto => dto.Url.Title, conf => conf.MapFrom(ol => ol.Title))
-            .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url))
-            .ForPath(dto => dto.Url.Href, conf => conf.MapFrom(ol => ol.Url));
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
+
+        CreateMap<ImageFileBaseCreateDTO, Image>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
+
+        CreateMap<ImageFileBaseUpdateDTO, Image>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
     }
 }

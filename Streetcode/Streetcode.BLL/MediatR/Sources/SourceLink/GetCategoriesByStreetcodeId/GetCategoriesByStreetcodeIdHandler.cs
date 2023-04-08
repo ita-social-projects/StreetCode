@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
@@ -11,11 +12,13 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IBlobService _blobService;
 
-    public GetCategoriesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetCategoriesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _blobService = blobService;
     }
 
     public async Task<Result<IEnumerable<SourceLinkCategoryDTO>>> Handle(GetCategoriesByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -34,6 +37,12 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
         }
 
         var mappedSrcCategories = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(srcCategories);
+
+        foreach (var srcCategory in mappedSrcCategories)
+        {
+            srcCategory.Image.Base64 = _blobService.FindFileInStorageAsBase64(srcCategory.Image.BlobName);
+        }
+
         return Result.Ok(mappedSrcCategories);
     }
 }

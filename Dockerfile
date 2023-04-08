@@ -8,7 +8,8 @@ RUN apt-get update \
     gpg \
     && rm -rf /var/lib/apt/lists/*
 EXPOSE 5000
-
+EXPOSE 5001
+EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG Configuration=debug
 

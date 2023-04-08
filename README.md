@@ -34,10 +34,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
     - [How to Checkstyle](#how-to-checkstyle)
   - [Documentation](#documentation)
   - [Contributing](#contributing)
-    - [Git flow](#git-flow)
-      - [Step 1](#step-1)
-      - [Step 2](#step-2)
-      - [Step 3](#step-3)
+    - [Git flow](#github-flow)
     - [Issue flow](#issue-flow)
   - [Team](#team)
   - [FAQ](#faq)
@@ -149,23 +146,61 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 
 ## Contributing
 
-### Git flow
-> To get started...
+### GitHub flow
+
+GitHub flow is a lightweight, branch-based workflow. The GitHub flow is useful for everyone, not just developers.
+
+The main idea behind this model is keeping the master code in a constant deployable state and hence can support continuous integration and continuous delivery processes. Also it is great some smaller teams, just like us.
+
 #### Step 1
 
 - **Option 1**
-    - 🍴 Fork this repo!
+    - 🍴 Fork this repo from master and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
 
 - **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode.git`
+    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode_Client.git`
 
 #### Step 2
 
-- **HACK AWAY!** 🔨🔨🔨
+- 🔨 On your branch, make ANY desired changes to the repository.
 
 #### Step 3
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode/compare/" target="_blank">github.com/ita-social-projects/StreetCode</a>.
+- :chart_with_upwards_trend: Commit and push your changes to your branch. 
+Give each commit a descriptive message to help you and future contributors understand what changes the commit contains. 
+For example, `fix typo` or `increase rate limit`.
+
+#### Step 4
+
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode_Client/pulls" target="_blank">*this link*</a>.
+
+#### Step 5
+
+- :raising_hand: Assign reviewers! Reviewers should leave questions, comments, and suggestions. After receiving comments, improve the code. Get Approved status on the request and be satisfied with it! 
+
+#### Step 6
+
+- :tada: Merge your pull request with master! If there are some conflicts, resolve them.
+
+#### Step 7
+
+- :scissors: Delete redundant branch. Done!
+
+### Hotfixes
+
+Oops, some fixed needs to be done immediately? Use this guide for Hotfixes!
+
+Some fixes will be needed due to the nature of GitHub flow. You would have to do a 'hotfix' or something outside of the normal process, but it's simply part of our normal process. 
+
+#### Step 1 
+
+- :fire: To implement an urgent change, a Hotfix branch is created off the Main branch to test and implement the fix.
+
+#### Step 2
+
+- :dancer: Once it’s complete, the Hotfix is merged with the Main branch. Plus, to keep the development branch up to date, the Hotfix is also merged with the Develop branch.
+
+More usefull information about GitHub Flow can be found <a href="https://docs.github.com/en/get-started/quickstart/github-flow" target="_blank">*here*</a>.
 
 ### Issue flow
 
@@ -183,6 +218,10 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 
 [![@LanchevychMaxym](https://avatars.githubusercontent.com/u/47561209?s=100&v=4)](https://github.com/LanchevychMaxym) 
 
+***Business analyst***
+
+[![@vladnvp](https://avatars.githubusercontent.com/u/112704799?s=100&v=4)](https://github.com/vladnvp)
+
 ***Dev team***
 
 [![@Kotusyk](https://avatars.githubusercontent.com/u/72945528?s=100&v=4)](https://github.com/Kotusyk) 
@@ -192,6 +231,13 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 [![@MementoMorj](https://avatars.githubusercontent.com/u/98163405?s=100&v=4)](https://github.com/MementoMorj)
 [![@Chynchenko](https://i.ibb.co/LP9n7w3/Svetlana.jpg)](https://github.com/Chynchenko)
 [![@NadiaKishchuk](https://i.ibb.co/s3kgMSM/Nadia.jpg)](https://github.com/NadiaKishchuk)
+
+[![@Dobriyr](https://avatars.githubusercontent.com/u/67451349?s=100&v=4)](https://github.com/Dobriyr)
+[![@DanyilTerentiev](https://avatars.githubusercontent.com/u/96494594?s=100&v=4)](https://github.com/DanyilTerentiev)
+[![@ValDekh](https://avatars.githubusercontent.com/u/61435019?s=100&v=4)](https://github.com/ValDekh)
+[![@ormykhalyshyn](https://avatars.githubusercontent.com/u/92263517?s=100&v=4)](https://github.com/ormykhalyshyn)
+[![@MaksBrat](https://avatars.githubusercontent.com/u/113379463?s=100&v=4)](https://github.com/MaksBrat)
+[![@Lolimkeri](https://avatars.githubusercontent.com/u/57957843?s=100&v=4)](https://github.com/Lolimkeri)
 
 </div>
 

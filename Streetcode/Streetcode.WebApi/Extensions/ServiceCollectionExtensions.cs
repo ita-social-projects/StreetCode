@@ -16,6 +16,7 @@ using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Microsoft.FeatureManagement;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -29,7 +30,7 @@ public static class ServiceCollectionExtensions
     public static void AddCustomServices(this IServiceCollection services)
     {
         services.AddRepositoryServices();
-
+        services.AddFeatureManagement();
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);

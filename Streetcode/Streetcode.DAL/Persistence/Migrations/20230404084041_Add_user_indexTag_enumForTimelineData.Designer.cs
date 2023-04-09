@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,10 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230404084041_Add_user_indexTag_enumForTimelineData")]
+    partial class Add_user_indexTag_enumForTimelineData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -812,9 +814,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsVisibleEverywhere")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LogoId")
                         .HasColumnType("int");
 
@@ -842,7 +841,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 1,
                             Description = "Український культурний фонд є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи. Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
                             IsKeyPartner = true,
-                            IsVisibleEverywhere = false,
                             LogoId = 12,
                             TargetUrl = "https://www.softserveinc.com/en-us",
                             Title = "SoftServe",
@@ -853,7 +851,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 2,
                             Description = "some text",
                             IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
                             LogoId = 13,
                             TargetUrl = "https://parimatch.com/",
                             Title = "Parimatch"
@@ -862,7 +859,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 3,
                             IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
                             LogoId = 14,
                             TargetUrl = "https://partners.salesforce.com/pdx/s/?language=en_US&redirected=RGSUDODQUL",
                             Title = "comunity partner"
@@ -1294,8 +1290,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Teaser")
                         .IsRequired()
-                        .HasMaxLength(650)
-                        .HasColumnType("nvarchar(650)");
+                        .HasMaxLength(520)
+                        .HasColumnType("nvarchar(520)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1898,7 +1894,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9284),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7460),
                             DateString = "11 листопада 2022",
                             EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1939,7 +1935,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Alias = "Кобзар",
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9129),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7343),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1957,7 +1953,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9207),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7399),
                             DateString = "9 березня 1814 — 10 березня 1861",
                             EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1975,7 +1971,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9214),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7407),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -1993,7 +1989,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9221),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7413),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2011,7 +2007,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 6,
                             Alias = "Лариса Косач",
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9227),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7421),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -2028,7 +2024,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            CreatedAt = new DateTime(2023, 4, 7, 15, 29, 29, 815, DateTimeKind.Local).AddTicks(9240),
+                            CreatedAt = new DateTime(2023, 4, 4, 11, 40, 40, 299, DateTimeKind.Local).AddTicks(7427),
                             DateString = "2 січня 1825 — 20 лютого 1899",
                             EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),

@@ -22,6 +22,9 @@ public class Partner
     public bool IsKeyPartner { get; set; }
 
     [Required]
+    public bool IsVisibleEverywhere { get; set; }
+
+    [Required]
     public string TargetUrl { get; set; }
 
     public string? UrlTitle { get; set; }

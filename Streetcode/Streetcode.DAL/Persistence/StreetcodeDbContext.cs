@@ -63,13 +63,13 @@ public class StreetcodeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
-        modelBuilder.Entity<StreetcodeTagIndex>()
-            .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
-
         modelBuilder.Entity<Tag>()
             .HasMany(t => t.Streetcodes)
             .WithMany(s => s.Tags)
             .UsingEntity<StreetcodeTagIndex>();
+
+        modelBuilder.Entity<StreetcodeTagIndex>()
+           .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
 
         modelBuilder.Entity<Toponym>()
             .HasOne(d => d.Coordinate)

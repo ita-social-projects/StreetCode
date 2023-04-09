@@ -8,5 +8,7 @@ public class TimelineItemDTO
     public string Title { get; set; }
     public string? Description { get; set; }
     public string DateString { get; set; }
+    public DateTime Date { get; set; }
+    public DateViewPattern DateViewPattern { get; set; }
     public IEnumerable<HistoricalContextDTO> HistoricalContexts { get; set; }
 }

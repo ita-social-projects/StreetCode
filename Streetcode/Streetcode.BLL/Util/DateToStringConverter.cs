@@ -8,10 +8,11 @@ namespace Streetcode.BLL.Util
         {
             return pattern switch
             {
-                DateViewPattern.Year => $"{date.Year}",
-                DateViewPattern.MonthYear => $"{date.Month}.{date.Year}",
+                DateViewPattern.Year => date.ToString("yyyy"),
+                DateViewPattern.MonthYear => date.ToString("yyyy, MMMM"),
                 DateViewPattern.SeasonYear => $"{GetSeason(date)} {date.Year}",
-                DateViewPattern.DateMonthYear => $"{date.Day}.{date.Month}.{date.Year}"
+                DateViewPattern.DateMonthYear => date.ToString("yyyy, d MMMM"),
+                _ =>""
             };
         }
 

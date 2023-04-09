@@ -25,7 +25,8 @@ public static class WebApplicationExtensions
                 var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
 
                 var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
-                transaction = streetcodeContext.Database.BeginTransaction();
+
+               // transaction = streetcodeContext.Database.BeginTransaction();
                 foreach (var task in filesContexts)
                 {
                     await streetcodeContext.Database.ExecuteSqlRawAsync(task);
@@ -37,7 +38,7 @@ public static class WebApplicationExtensions
             {
                 if(transaction != null)
                 {
-                    streetcodeContext.Database.RollbackTransaction();
+                   // streetcodeContext.Database.RollbackTransaction();
                     logger.LogError(ex, "An error occured during adding relations");
                 }
             }

@@ -28,7 +28,7 @@ public class StreetcodeContent
     public int Index { get; set; }
 
     [Required]
-    [MaxLength(520)]
+    [MaxLength(650)]
     public string Teaser { get; set; }
 
     [Required]

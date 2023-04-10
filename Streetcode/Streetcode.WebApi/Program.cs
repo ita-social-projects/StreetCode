@@ -8,6 +8,7 @@ builder.Host.ConfigureApplication();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
+builder.Services.ConfigureBlob(builder);
 
 var app = builder.Build();
 

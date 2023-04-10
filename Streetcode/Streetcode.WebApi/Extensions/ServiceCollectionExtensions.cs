@@ -37,12 +37,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
-
-        services.Configure<BlobEnvirovmentVariables>(options =>
-        {
-            options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
-            options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
-        });
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

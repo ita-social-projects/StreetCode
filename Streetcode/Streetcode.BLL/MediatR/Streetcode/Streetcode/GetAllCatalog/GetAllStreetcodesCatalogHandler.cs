@@ -1,0 +1,34 @@
+﻿using AutoMapper;
+using FluentResults;
+using MediatR;
+using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+
+namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
+{
+    public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodesCatalogQuery,
+        Result<IEnumerable<RelatedFigureDTO>>>
+    {
+        private readonly IMapper _mapper;
+        private readonly IRepositoryWrapper _repositoryWrapper;
+
+        public GetAllStreetcodesCatalogHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        {
+            _repositoryWrapper = repositoryWrapper;
+            _mapper = mapper;
+        }
+
+        public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetAllStreetcodesCatalogQuery request, CancellationToken cancellationToken)
+        {
+            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+
+            if (streetcodes != null)
+            {
+                var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);
+                return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped));
+            }
+
+            return Result.Fail("No streetcodes exist now");
+        }
+    }
+}

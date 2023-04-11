@@ -7,8 +7,13 @@ public class Program
 {
     static int Main(string[] args)
     {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
+
         var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables("STREETCODE_")
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
@@ -16,7 +21,7 @@ public class Program
         var upgrader =
             DeployChanges.To
                 .SqlDatabase(connectionString)
-                .WithScriptsFromFileSystem(@"..\..\..\..\Streetcode.DAL\Persistence\ScriptsSeeding\")
+                .WithScriptsFromFileSystem(@"..\..\..\..\Streetcode.DAL\Persistence\ScriptsMigration\")
                 .LogToConsole()
                 .Build();
 

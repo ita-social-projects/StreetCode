@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -72,7 +72,7 @@ public static class ServiceCollectionExtensions
                         ValidAudience = configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                     };
-                });
+                });*/
 
         services.AddCors(opt =>
         {

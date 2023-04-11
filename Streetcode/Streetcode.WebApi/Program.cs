@@ -12,6 +12,9 @@ builder.Services.AddCustomServices();
 var app = builder.Build();
 
 await app.ApplyMigrations();
+await app.MigrateAndSeedDbAsync();
+
+// await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

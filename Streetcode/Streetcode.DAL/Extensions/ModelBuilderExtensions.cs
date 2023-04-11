@@ -23,56 +23,26 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 1,
-                SubtitleText = "some text",
-                StreetcodeId = 1
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
+                StreetcodeId = 4
             },
             new Subtitle
             {
                 Id = 2,
-                SubtitleText = "some text",
-                StreetcodeId = 2
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
+                StreetcodeId = 3
             },
             new Subtitle
             {
                 Id = 3,
-                SubtitleText = "some text",
-                StreetcodeId = 3
-            },
-            new Subtitle
-            {
-                Id = 4,
-                SubtitleText = "some text",
-                StreetcodeId = 1
-            },
-            new Subtitle
-            {
-                Id = 5,
-                SubtitleText = "some text",
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
                 StreetcodeId = 2
             },
             new Subtitle
             {
-                Id = 6,
-                SubtitleText = "some text",
+                Id = 4,
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
                 StreetcodeId = 1
-            },
-            new Subtitle
-            {
-                Id = 7,
-                SubtitleText = "some text",
-                StreetcodeId = 3
-            },
-            new Subtitle
-            {
-                Id = 8,
-                SubtitleText = "some text",
-                StreetcodeId = 4
-            },
-            new Subtitle
-            {
-                Id = 9,
-                SubtitleText = "some text",
-                StreetcodeId = 4
             });
         modelBuilder.Entity<Tag>().HasData(
             new Tag

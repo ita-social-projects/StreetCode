@@ -11,6 +11,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -33,10 +34,17 @@ public class StreetcodeController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
     }
+
     [HttpGet]
     public async Task<IActionResult> GetAllCatalog([FromQuery] int page, [FromQuery] int count)
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesCatalogQuery(page, count)));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCount()
+    {
+        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery()));
     }
 
     [HttpGet("{url}")]

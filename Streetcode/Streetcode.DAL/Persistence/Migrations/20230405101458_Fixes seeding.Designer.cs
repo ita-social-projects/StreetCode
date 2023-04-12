@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,10 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230405101458_Fixes seeding")]
+    partial class Fixesseeding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,27 +138,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("coordinates", "add_content");
 
                     b.HasDiscriminator<string>("CoordinateType").HasValue("coordinate_base");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
-                {
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
-
-                    b.HasKey("StreetcodeId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("streetcode_tag_index", "add_content");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
@@ -812,9 +793,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsVisibleEverywhere")
-                        .HasColumnType("bit");
-
                     b.Property<int>("LogoId")
                         .HasColumnType("int");
 
@@ -842,7 +820,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 1,
                             Description = "Український культурний фонд є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи. Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
                             IsKeyPartner = true,
-                            IsVisibleEverywhere = false,
                             LogoId = 12,
                             TargetUrl = "https://www.softserveinc.com/en-us",
                             Title = "SoftServe",
@@ -853,7 +830,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                             Id = 2,
                             Description = "some text",
                             IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
                             LogoId = 13,
                             TargetUrl = "https://parimatch.com/",
                             Title = "Parimatch"
@@ -862,7 +838,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 3,
                             IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
                             LogoId = 14,
                             TargetUrl = "https://partners.salesforce.com/pdx/s/?language=en_US&redirected=RGSUDODQUL",
                             Title = "comunity partner"
@@ -1263,8 +1238,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Alias")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -1294,8 +1269,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Teaser")
                         .IsRequired()
-                        .HasMaxLength(650)
-                        .HasColumnType("nvarchar(650)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1481,7 +1455,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             StreetcodeId = 1,
-                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\n\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\n\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\n\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\n\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \n\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\n\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\n\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
+                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\r\n\r\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\r\n\r\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
                             Title = "Дитинство та юність"
                         },
                         new
@@ -1553,9 +1527,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DateViewPattern")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -1573,7 +1544,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 1,
                             Date = new DateTime(1831, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1581,7 +1551,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 2,
                             Date = new DateTime(1830, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв, де його наставником став К. Брюллов. За словами Шевченка: «настала найсвітліша доба його життя, незабутні, золоті дні» навчання в Академії мистецтв, яким він присвятив у 1856 році автобіографічну повість «Художник».",
                             Title = "Учень Петербурзької академії мистецтв"
                         },
@@ -1589,7 +1558,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 3,
                             Date = new DateTime(1832, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1597,7 +1565,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 4,
                             Date = new DateTime(1833, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1605,7 +1572,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 5,
                             Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1613,7 +1579,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 6,
                             Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1621,7 +1586,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 7,
                             Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1629,7 +1593,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 8,
                             Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1637,7 +1600,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 9,
                             Date = new DateTime(1835, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         },
@@ -1645,7 +1607,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         {
                             Id = 10,
                             Date = new DateTime(1836, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
                             Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
                             Title = "Перші роки в Петербурзі"
                         });
@@ -1757,44 +1718,19 @@ namespace Streetcode.DAL.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
+            modelBuilder.Entity("StreetcodeContentTag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StreetcodesId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("Role")
+                    b.Property<int>("TagsId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.HasKey("StreetcodesId", "TagsId");
 
-                    b.HasKey("Id");
+                    b.HasIndex("TagsId");
 
-                    b.ToTable("Users", "Users");
+                    b.ToTable("streetcode_tag", "streetcode");
                 });
 
             modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
@@ -2135,25 +2071,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithMany("StreetcodeTagIndices")
-                        .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", "Tag")
-                        .WithMany("StreetcodeTagIndices")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -2323,6 +2240,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("StreetcodeContentTag", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
+                        .WithMany()
+                        .HasForeignKey("StreetcodesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
@@ -2375,11 +2307,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Toponym");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
-                {
-                    b.Navigation("StreetcodeTagIndices");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
                 {
                     b.Navigation("StreetcodeArts");
@@ -2415,8 +2342,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Observers");
 
                     b.Navigation("StreetcodeArts");
-
-                    b.Navigation("StreetcodeTagIndices");
 
                     b.Navigation("Subtitles");
 

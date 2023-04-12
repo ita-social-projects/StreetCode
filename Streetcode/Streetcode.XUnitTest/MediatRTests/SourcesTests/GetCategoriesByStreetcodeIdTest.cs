@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -15,10 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
         public GetCategoriesByStreetcodeIdTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
         }
         [Theory]
         [InlineData(1)]
@@ -35,7 +38,14 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
+<<<<<<< HEAD
             //var handler = new GetCategoriesByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+=======
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object);
+>>>>>>> origin
             
             //// act
             
@@ -63,16 +73,19 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
-            //var handler = new GetCategoriesByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object);
 
-            //var expectedError = $"Cant find any source category with the streetcode id {id}";
-            //// act
+            var expectedError = $"Cant find any source category with the streetcode id {id}";
+            // act
 
-            //var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
-            //// assert
+            // assert
 
-            //Assert.Equal(expectedError, result.Errors.First().Message);
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         private List<SourceLinkCategory>? GetSourceLinkCategoriesNotExists()
@@ -84,16 +97,28 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         {
             return new List<SourceLinkCategory>() 
             {
-                new SourceLinkCategory() { Id = 1 },
-                new SourceLinkCategory() { Id = 2 }
+                new SourceLinkCategory() { 
+                    Id = 1,
+                    Image = new DAL.Entities.Media.Images.Image()
+                },
+                new SourceLinkCategory() {
+                    Id = 2,
+                    Image = new DAL.Entities.Media.Images.Image()
+                }
             };
         }
         private static List<SourceLinkCategoryDTO> GetSourceDTOs()
         {
             return new List<SourceLinkCategoryDTO>()
             {
-                new SourceLinkCategoryDTO() { Id = 1 },
-                new SourceLinkCategoryDTO() { Id = 2 }
+                new SourceLinkCategoryDTO() {
+                    Id = 1,
+                    Image = new BLL.DTO.Media.Images.ImageDTO()
+                },
+                new SourceLinkCategoryDTO() { 
+                    Id = 2,
+                    Image = new BLL.DTO.Media.Images.ImageDTO()
+                }
             };
         }
     }

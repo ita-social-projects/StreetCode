@@ -23,6 +23,10 @@ namespace Streetcode.BLL.MediatR.Partners.Create
         {
             var newPartner = _mapper.Map<Partner>(request.newPartner);
             newPartner.Logo = new Image();
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin
             try
             {
                 newPartner.Streetcodes.Clear();

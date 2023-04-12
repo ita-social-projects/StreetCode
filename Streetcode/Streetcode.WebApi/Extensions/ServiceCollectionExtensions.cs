@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +10,10 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
+using Hangfire;
+using Streetcode.BLL.Interfaces.Email;
+using Streetcode.BLL.Services.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Interfaces.Users;
@@ -35,24 +39,30 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
-
-        services.Configure<BlobEnvirovmentVariables>(options =>
-        {
-            options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
-            options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
-        });
+        services.AddScoped<IEmailService, EmailService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+        services.AddSingleton(emailConfig);
+
         services.AddDbContext<StreetcodeDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), opt =>
+            options.UseSqlServer(connectionString, opt =>
             {
                 opt.MigrationsAssembly(typeof(StreetcodeDbContext).Assembly.GetName().Name);
                 opt.MigrationsHistoryTable("__EFMigrationsHistory", schema: "entity_framework");
             });
         });
+
+        services.AddHangfire(config =>
+        {
+            config.UseSqlServerStorage(connectionString);
+        });
+
+        services.AddHangfireServer();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -87,13 +97,6 @@ public static class ServiceCollectionExtensions
             opt.IncludeSubDomains = true;
             opt.MaxAge = TimeSpan.FromDays(30);
         });
-
-        services.AddHangfire(config =>
-        {
-            config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
-        });
-
-        services.AddHangfireServer();
 
         services.AddLogging();
         services.AddControllers();

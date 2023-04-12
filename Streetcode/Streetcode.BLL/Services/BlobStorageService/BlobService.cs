@@ -7,10 +7,10 @@ namespace Streetcode.BLL.Services.BlobStorageService;
 
 public class BlobService : IBlobService
 {
-    private readonly BlobEnvirovmentVariables _envirovment;
+    private readonly BlobEnvironmentVariables _envirovment;
     private readonly string _keyCrypt;
     private readonly string _blobPath;
-    public BlobService(IOptions<BlobEnvirovmentVariables> envirovment)
+    public BlobService(IOptions<BlobEnvironmentVariables> envirovment)
     {
         _envirovment = envirovment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;

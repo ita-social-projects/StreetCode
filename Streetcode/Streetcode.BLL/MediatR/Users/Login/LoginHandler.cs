@@ -24,7 +24,8 @@ namespace Streetcode.BLL.MediatR.Users.Login
 
         public async Task<Result<LoginResultDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await GetUser(request.UserLogin.Login, request.UserLogin.Password);
+            var user = await _repositoryWrapper.UserRepository
+                .GetFirstOrDefaultAsync(u => u.Password == request.UserLogin.Password && u.Login == request.UserLogin.Login);
             if (user != null)
             {
                 var token = _tokenService.GenerateJWTToken(user);
@@ -38,38 +39,6 @@ namespace Streetcode.BLL.MediatR.Users.Login
             }
 
             return Result.Fail("User not found");
-        }
-
-        private async Task<User> GetUser(string login, string password)
-        {
-            List<User> users = new List<User>
-            {
-                new User()
-                {
-                    Email = "email1@gmail.com",
-                    Id = 1,
-                    Login = "login1",
-                    Name = "name1",
-                    Password = "password1",
-                    Role = DAL.Enums.UserRole.MainAdministrator,
-                    Surname = "surname1"
-                },
-                new User()
-                {
-                    Email = "email2@gmail.com",
-                    Id = 2,
-                    Login = "login2",
-                    Name = "name2",
-                    Password = "password2",
-                    Role = DAL.Enums.UserRole.Administrator,
-                    Surname = "surname2"
-                }
-            };
-            User founded = null;
-            await Task.Run(() =>
-            founded = users.FirstOrDefault(u => password.Equals(u.Password) && login.Equals(u.Login)));
-
-            return founded;
         }
     }
 }

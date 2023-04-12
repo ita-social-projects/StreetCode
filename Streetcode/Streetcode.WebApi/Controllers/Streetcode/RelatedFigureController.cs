@@ -5,6 +5,8 @@ using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
+using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -17,11 +19,12 @@ public class RelatedFigureController : BaseApiController
     }
 
     [HttpPost("{ObserverId:int}&{TargetId:int}")]
+    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromRoute] int ObserverId, int TargetId)
     {
         return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(ObserverId, TargetId)));
     }
-
+    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     [HttpDelete("{ObserverId:int}&{TargetId:int}")]
     public async Task<IActionResult> Delete([FromRoute] int ObserverId, int TargetId)
     {

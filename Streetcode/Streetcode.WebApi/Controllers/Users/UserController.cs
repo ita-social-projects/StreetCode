@@ -21,12 +21,5 @@ namespace Streetcode.WebApi.Controllers.Users
         {
             return HandleResult(await Mediator.Send(new RefreshTokenQuery(token)));
         }
-
-        [HttpGet]
-        [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
-        public async Task<IActionResult> GetWithAdmin()
-        {
-            return Ok("text");
-        }
     }
 }

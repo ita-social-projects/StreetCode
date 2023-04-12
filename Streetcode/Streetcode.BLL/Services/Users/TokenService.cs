@@ -39,7 +39,7 @@ namespace Streetcode.BLL.Services.Users
                 _jwtIssuer,
                 _jwtAudience,
                 claims,
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: _signInCridentials);
         }
 
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.Services.Users
                 _jwtIssuer,
                 _jwtAudience,
                 principles.Claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddHours(1),
                 signingCredentials: _signInCridentials);
         }
 
@@ -74,7 +74,7 @@ namespace Streetcode.BLL.Services.Users
                         return false;
                     }
 
-                    return (DateTime.Now.AddMinutes(10) - expires).Value.TotalSeconds > 0;
+                    return (DateTime.Now.AddHours(1) - expires).Value.TotalSeconds > 0;
                 },
                 ValidateLifetime = true
             };

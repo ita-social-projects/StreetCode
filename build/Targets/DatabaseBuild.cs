@@ -1,9 +1,13 @@
-﻿using System;
-using JetBrains.Annotations;
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.Tooling;
+using JetBrains.Annotations;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
+using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 
 namespace Targets;
 
@@ -40,29 +44,24 @@ partial class Build
     readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
-        .DependsOn(DropDatabase)
         .Executes(() =>
         {
-            EntityFrameworkDatabaseUpdate(_ => _
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .SetMigration(RollbackMigration ? "0" : (UpdMigrName ?? String.Empty))
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration)
+            DotNetRun(s => s
+            .SetProjectFile(DbUpdateDirectory)
+            .SetConfiguration(Configuration)
             );
         });
 
     Target DropDatabase => _ => _
-        .Executes(() =>
-        {
-            EntityFrameworkDatabaseDrop(_ => _
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .EnableForce()
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration)
-            );
-        });
+       .Executes(() =>
+       {
+           EntityFrameworkDatabaseDrop(_ => _
+               .SetProcessWorkingDirectory(SourceDirectory)
+               .EnableForce()
+               .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+               .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
+               .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
+               .SetConfiguration(Configuration)
+           );
+       });
 }

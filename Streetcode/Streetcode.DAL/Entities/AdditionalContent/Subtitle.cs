@@ -10,6 +10,8 @@ public class Subtitle
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+    
+    [MaxLength(500)]
     public string? SubtitleText { get; set; }
 
     [Required]

@@ -1,12 +1,12 @@
-﻿using Nuke.Common;
+﻿using System;
+using Nuke.Common;
 using Nuke.Common.Tooling;
 using JetBrains.Annotations;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
-using Microsoft.Extensions.Configuration;
-using System;
 using System.IO;
 
 namespace Targets;
@@ -50,6 +50,30 @@ partial class Build
             .SetProjectFile(DbUpdateDirectory)
             .SetConfiguration(Configuration)
             );
+        });
+
+    Target CreateSQLScripts => _ => _
+        .Executes(() =>
+        {
+            Console.WriteLine("Select name of SQL script:");
+            string queryName = Console.ReadLine();
+
+            Console.WriteLine("Select SEED or MIGRATE SQL script:");
+            string queryType = Console.ReadLine();
+
+            if (queryType == "SEED")
+            {
+                queryType = "ScriptsSeeding";
+            } 
+            else 
+            {
+                queryType = "ScriptsMigration";
+            }
+
+            var dbPath = Directory.GetCurrentDirectory() + @"\Streetcode.WebApi";
+            var outputScriptPath = Directory.GetCurrentDirectory() + @$"\Streetcode.DAL\Persistence\{queryType}\";
+
+            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}{queryName}.sql  --project {dbPath}");
         });
 
     Target DropDatabase => _ => _

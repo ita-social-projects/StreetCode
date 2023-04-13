@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Streetcode.BLL.Mapping.Streetcode
 {
@@ -23,7 +18,7 @@ namespace Streetcode.BLL.Mapping.Streetcode
 
             CreateMap<PersonStreetcode, RelatedFigureDTO>()
                 .ForPath(dto => dto.Title, conf => conf
-                    .MapFrom(e => $"{e.Rank ?? ""} {e.FirstName} {e.LastName}"))
+                    .MapFrom(e => $"{e.FirstName} {e.LastName}"))
                 .ForPath(dto => dto.Url, conf => conf
                     .MapFrom(e => e.TransliterationUrl))
                 .ForPath(dto => dto.ImageId, conf => conf

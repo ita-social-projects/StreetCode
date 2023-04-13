@@ -5,13 +5,16 @@ public class Program
 {
     static int Main(string[] args)
     {
-        string seedingPath = Directory.GetCurrentDirectory() + @"\Streetcode.DAL\Persistence\ScriptsMigration\";
-        string migrationPath = Directory.GetCurrentDirectory() + @"\Streetcode.DAL\Persistence\ScriptsSeeding\";
+        string seedingPath = Path.Combine(Directory.GetCurrentDirectory(),
+            "Streetcode.DAL", "Persistence", "ScriptsSeeding");
+
+        string migrationPath = Path.Combine(Directory.GetCurrentDirectory(),
+            "Streetcode.DAL", "Persistence", "ScriptsMigration");
 
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory() + @"\Streetcode.WebApi")
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.WebApi"))
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")
@@ -21,16 +24,23 @@ public class Program
 
         string pathToScript = "";
 
-        while (pathToScript != "1" && pathToScript != "2")
+        Console.WriteLine("Enter '-m' to MIGRATE or '-s' to SEED db:");
+        pathToScript = Console.ReadLine();
+
+        if (pathToScript == "-s" || pathToScript == "-seed")
         {
-            Console.WriteLine("Enter '1' to MIGRATE or '2' to SEED db:");
-            pathToScript = Console.ReadLine();
+            pathToScript = seedingPath;
         }
+        else
+        {
+            pathToScript = migrationPath;
+        }
+
 
         var upgrader =
             DeployChanges.To
                 .SqlDatabase(connectionString)
-                .WithScriptsFromFileSystem(pathToScript == "1" ? seedingPath : migrationPath)
+                .WithScriptsFromFileSystem(pathToScript)
                 .LogToConsole()
                 .Build();
 

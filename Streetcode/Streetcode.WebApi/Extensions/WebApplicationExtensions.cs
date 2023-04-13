@@ -22,7 +22,7 @@
                 {
                     var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
-                    var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+                    var scriptFiles = Directory.GetFiles(Path.Combine(projRootDirectory, scriptsFolderPath));
 
                     var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
                     transaction = streetcodeContext.Database.BeginTransaction();
@@ -63,7 +63,7 @@
                 {
                     var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
 
-                    var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
+                    var scriptFiles = Directory.GetFiles(Path.Combine(projRootDirectory, scriptsFolderPath));
 
                     var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
                     transaction = streetcodeContext.Database.BeginTransaction();

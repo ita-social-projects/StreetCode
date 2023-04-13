@@ -38,24 +38,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
-<<<<<<< HEAD
-            //var handler = new GetCategoriesByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
-=======
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object);
->>>>>>> origin
-            
-            //// act
-            
-            //var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
-            //// assert
-            //Assert.Multiple(
-            //    () => Assert.NotNull(result),
-            //    () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault)
-            //);
+            // act
+
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+
+            // assert
+            Assert.Multiple(
+                () => Assert.NotNull(result),
+                () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault)
+            );
         }
 
         [Theory]

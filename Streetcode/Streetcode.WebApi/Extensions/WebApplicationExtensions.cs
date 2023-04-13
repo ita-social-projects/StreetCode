@@ -26,9 +26,9 @@
 
                     var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
                     transaction = streetcodeContext.Database.BeginTransaction();
-                    foreach (var task in filesContexts)
+                    foreach (var singleSqlScript in filesContexts)
                     {
-                        await streetcodeContext.Database.ExecuteSqlRawAsync(task);
+                        await streetcodeContext.Database.ExecuteSqlRawAsync(singleSqlScript);
                     }
 
                     streetcodeContext.Database.CommitTransaction();

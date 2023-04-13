@@ -58,10 +58,10 @@ partial class Build
             Console.WriteLine("Select name of SQL script:");
             string queryName = Console.ReadLine();
 
-            Console.WriteLine("Select SEED or MIGRATE SQL script:");
+            Console.WriteLine("Select -s for SEED or -m for MIGRATE SQL script:");
             string queryType = Console.ReadLine();
 
-            if (queryType == "SEED")
+            if (queryType == "-s")
             {
                 queryType = "ScriptsSeeding";
             } 
@@ -70,9 +70,10 @@ partial class Build
                 queryType = "ScriptsMigration";
             }
 
-            var dbPath = Directory.GetCurrentDirectory() + @"\Streetcode.WebApi";
-            var outputScriptPath = Directory.GetCurrentDirectory() + @$"\Streetcode.DAL\Persistence\{queryType}\";
+            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.WebApi");
+            var outputScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.DAL", "Persistence", queryType);
 
+            PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
             PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}{queryName}.sql  --project {dbPath}");
         });
 

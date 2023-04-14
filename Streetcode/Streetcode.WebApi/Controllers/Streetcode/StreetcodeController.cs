@@ -10,6 +10,8 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.Create;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -52,10 +54,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] StreetcodeDTO streetcode)
+    public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
     [HttpPut("{id:int}")]

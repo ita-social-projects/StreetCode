@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent;
 

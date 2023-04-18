@@ -9,6 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
+using System.Transactions;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -40,4 +41,6 @@ public interface IRepositoryWrapper
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();
+
+    public TransactionScope BeginTransaction();
 }

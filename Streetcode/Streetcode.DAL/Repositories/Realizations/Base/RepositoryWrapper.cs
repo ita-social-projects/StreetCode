@@ -22,6 +22,7 @@ using Streetcode.DAL.Repositories.Realizations.Timeline;
 using Streetcode.DAL.Repositories.Realizations.Toponyms;
 using Streetcode.DAL.Repositories.Realizations.Transactions;
 using Streetcode.DAL.Repositories.Realizations.Users;
+using System.Transactions;
 
 namespace Streetcode.DAL.Repositories.Realizations.Base;
 
@@ -387,5 +388,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     public async Task<int> SaveChangesAsync()
     {
         return await _streetcodeDbContext.SaveChangesAsync();
+    }
+
+    public TransactionScope BeginTransaction()
+    {
+        return new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
     }
 }

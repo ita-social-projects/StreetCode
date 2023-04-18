@@ -9,25 +9,15 @@ namespace Streetcode.BLL.Services.Payment
     public class PaymentService : IPaymentService
     {
         private readonly HttpClient _httpClient;
-        public PaymentService(string Token)
+        public PaymentService()
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(Api.Production);
             _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Add(RequestHeaders.XToken, Token);
+            _httpClient.DefaultRequestHeaders.Add(RequestHeaders.XToken, "mo4jMO2iJmtwCB0RKw8CMBw");
         }
 
         public async Task<InvoiceInfo> CreateInvoiceAsync(Invoice invoice)
-        {
-            var paymentService = new PaymentService("uyV-54sYFBWRUmgHWdNBW6qmz8V35Nzy1rY-Hc3EQ5sY");
-            var result = await paymentService.CreateInvoiceService(new Invoice
-            {
-                Amount = 100
-            });
-            return result;
-        }
-
-        public async Task<InvoiceInfo> CreateInvoiceService(Invoice invoice)
         {
             var (code, body) = await PostAsync(Api.Merchant.Invoice.Create, invoice);
             return code switch
@@ -41,7 +31,7 @@ namespace Streetcode.BLL.Services.Payment
         /// </summary>
         /// <param name="url">the URL path to which the request will be made.</param>
         /// <param name="data">the data which will be POSTed.</param>
-        /// <exception cref="MonobankRequestException">Thrown if request to Monobank's API failed.</exception>
+
         /// <returns>Returns the tuple of HTTP Status Code and JSON Body received in response from Monobank's API.</returns>
         private async Task<(int Code, string Body)> PostAsync<T>(string url, T data)
         {
@@ -74,7 +64,7 @@ namespace Streetcode.BLL.Services.Payment
         /// </summary>
         private static class RequestHeaders
         {
-            public const string XToken = "uyV-54sYFBWRUmgHWdNBW6qmz8V35Nzy1rY-Hc3EQ5sY";
+            public const string XToken = "X-Token";
         }
 
         /// <summary>

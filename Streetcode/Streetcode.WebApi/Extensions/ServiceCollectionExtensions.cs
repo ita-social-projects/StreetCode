@@ -17,6 +17,8 @@ using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Payment;
+using Streetcode.BLL.Services.Payment;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -38,6 +40,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPaymentService, PaymentService>();
 
         services.Configure<BlobEnvirovmentVariables>(options =>
         {

@@ -38,6 +38,8 @@ public interface IRepositoryWrapper
     IHistoricalContextRepository HistoricalContextRepository { get; }
     IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     IUserRepository UserRepository { get; }
+    IStreetcodeTagIndexRepository StreetcodeTagIndexRepository { get; }
+
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

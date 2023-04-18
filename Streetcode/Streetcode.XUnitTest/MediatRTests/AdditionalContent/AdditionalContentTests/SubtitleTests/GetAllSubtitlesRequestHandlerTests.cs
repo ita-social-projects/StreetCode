@@ -27,13 +27,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             new Subtitle
             {
                 Id = 1,
-                Status = SubtitleStatus.Editor,
                 StreetcodeId = 1
             },
             new Subtitle
             {
                 Id = 2,
-                Status = SubtitleStatus.Illustrator,
                 StreetcodeId = 1
             }
         };

@@ -5,9 +5,7 @@
       "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Local",
-        "BlobStoreKey": "SlavaKasterovSuperGoodInshalaKey",
-        "BlobStorePath": "../../BlobStorage/"
+        "ASPNETCORE_ENVIRONMENT": "Local"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000;https://localhost:5001"
@@ -18,9 +16,7 @@
       "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "BlobStoreKey": "",
-        "BlobStorePath": "../../BlobStorage/"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
@@ -29,9 +25,7 @@
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "STREETCODE_ENVIRONMENT": "IntegrationTests",
-        "BlobStoreKey": "",
-        "BlobStorePath": "../../BlobStorage/"
+        "STREETCODE_ENVIRONMENT": "IntegrationTests"
       }
     },
     "Docker": {

@@ -11,22 +11,8 @@ public class Subtitle
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public SubtitleStatus Status { get; set; } = default;
-
-    [Required]
-    [MaxLength(50)]
-    public string FirstName { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public string LastName { get; set; }
-
-    public string? Description { get; set; }
-
-    [MaxLength(50)]
-    public string? Title { get; set; }
-
-    public string? Url { get; set; }
+    [MaxLength(500)]
+    public string? SubtitleText { get; set; }
 
     [Required]
     public int StreetcodeId { get; set; }

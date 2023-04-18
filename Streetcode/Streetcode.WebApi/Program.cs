@@ -8,14 +8,17 @@ builder.Host.ConfigureApplication();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
+builder.Services.ConfigureBlob(builder);
 
 var app = builder.Build();
 
+await app.ApplyMigrations();
 await app.MigrateAndSeedDbAsync();
+
+// await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {
-    builder.Configuration.AddUserSecrets<string>();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }
@@ -34,8 +37,10 @@ app.UseAuthorization();
 app.UseHangfireDashboard();
 
 // change Cron.Monthly to set another parsing interval from ukrposhta
-// RecurringJob.AddOrUpdate<WebParsingUtils>(
-//   wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+BackgroundJob.Schedule<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+RecurringJob.AddOrUpdate<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
 
 app.MapControllers();
 

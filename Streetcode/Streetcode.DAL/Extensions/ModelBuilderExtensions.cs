@@ -23,81 +23,26 @@ public static class ModelBuilderExtensions
             new Subtitle
             {
                 Id = 1,
-                Status = SubtitleStatus.Editor,
-                FirstName = "Dmytro",
-                LastName = "Buchkovsky",
-                Description = "description",
-                Url = "https://t.me/MaisterD",
-                StreetcodeId = 1
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
+                StreetcodeId = 4
             },
             new Subtitle
             {
                 Id = 2,
-                Status = SubtitleStatus.Illustrator,
-                FirstName = "Dmytro",
-                LastName = "Buchkovsky",
-                Description = "description",
-                Url = "https://t.me/MaisterD",
-                StreetcodeId = 2
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
+                StreetcodeId = 3
             },
             new Subtitle
             {
                 Id = 3,
-                Status = SubtitleStatus.Editor,
-                FirstName = "Dmytro",
-                LastName = "Buchkovsky",
-                Description = "description",
-                Url = "https://t.me/MaisterD",
-                StreetcodeId = 3
-            },
-            new Subtitle
-            {
-                Id = 4,
-                Status = SubtitleStatus.Editor,
-                FirstName = "Oleksndr",
-                LastName = "Lazarenko",
-                Description = "description",
-                StreetcodeId = 1
-            },
-            new Subtitle
-            {
-                Id = 5,
-                Status = SubtitleStatus.Editor,
-                FirstName = "Oleksndr",
-                LastName = "Lazarenko",
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
                 StreetcodeId = 2
             },
             new Subtitle
             {
-                Id = 6,
-                Status = SubtitleStatus.Illustrator,
-                FirstName = "Yaroslav",
-                LastName = "Chushenko",
+                Id = 4,
+                SubtitleText = "Developers: StreedCodeTeam, some text, some more text, and more text",
                 StreetcodeId = 1
-            },
-            new Subtitle
-            {
-                Id = 7,
-                Status = SubtitleStatus.Illustrator,
-                FirstName = "Yaroslav",
-                LastName = "Chushenko",
-                StreetcodeId = 3
-            },
-            new Subtitle
-            {
-                Id = 8,
-                Status = SubtitleStatus.Editor,
-                FirstName = "Nazarii",
-                LastName = "Hovdysh",
-                StreetcodeId = 4
-            },
-            new Subtitle
-            {
-                Id = 9,
-                Status = SubtitleStatus.Illustrator,
-                FirstName = "Tatiana",
-                LastName = "Shumylo",
-                StreetcodeId = 4
             });
         modelBuilder.Entity<Tag>().HasData(
             new Tag

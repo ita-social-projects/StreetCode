@@ -40,7 +40,6 @@ partial class Build
     readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
-        .DependsOn(DropDatabase)
         .Executes(() =>
         {
             EntityFrameworkDatabaseUpdate(_ => _

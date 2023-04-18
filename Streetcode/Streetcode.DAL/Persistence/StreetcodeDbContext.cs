@@ -13,6 +13,7 @@ using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
@@ -54,11 +55,21 @@ public class StreetcodeDbContext : DbContext
     public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
     public DbSet<SourceLinkSubCategory> SourceLinkSubCategories { get; set; }
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
+
+        modelBuilder.Entity<Tag>()
+            .HasMany(t => t.Streetcodes)
+            .WithMany(s => s.Tags)
+            .UsingEntity<StreetcodeTagIndex>();
+
+        modelBuilder.Entity<StreetcodeTagIndex>()
+           .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
 
         modelBuilder.Entity<Toponym>()
             .HasOne(d => d.Coordinate)
@@ -176,10 +187,6 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(f => f.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_fact", "streetcode"));
 
-            entity.HasMany(d => d.Tags)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_tag", "streetcode"));
-
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
@@ -231,7 +238,5 @@ public class StreetcodeDbContext : DbContext
             .HasValue<Coordinate>("coordinate_base")
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");
-
-        modelBuilder.SeedData();
     }
 }

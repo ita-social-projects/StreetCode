@@ -1,4 +1,4 @@
-﻿namespace Streetcode.BLL.DTO.AdditionalContent
+namespace Streetcode.BLL.DTO.AdditionalContent
 {
     public class StreetcodeTagDTO
     {

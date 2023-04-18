@@ -44,14 +44,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-                await AddTagsToStreetcode(streetcode, request.Streetcode.Tags);
+                await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
-
+                await CreateRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 var timelineItems = request.Streetcode.TimelineItems;
+
                 var newTimelineItems = _mapper.Map<List<TimelineItem>>(timelineItems);
                 streetcode.TimelineItems.AddRange(newTimelineItems);
-
-                await CreateRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
 
                 await _repositoryWrapper.SaveChangesAsync();
 
@@ -72,12 +71,35 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }
     }
 
-    private async Task AddTagsToStreetcode(StreetcodeContent streetcode, IEnumerable<TagShortDTO> tags)
+    private async Task AddTagsToStreetcode(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)
     {
-        foreach (var tag in tags)
+        var indexedTags = new List<StreetcodeTagIndex>();
+
+        for (int i = 0; i < tags.Count; i++)
         {
-          streetcode.Tags.Add(await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x => x.Id == tag.Id));
+            var newTagIndex = new StreetcodeTagIndex
+            {
+                StreetcodeId = streetcode.Id,
+                TagId = tags[i].Id,
+                IsVisible = tags[i].IsVisible,
+                Index = i,
+            };
+
+            if (tags[i].Id <= 0)
+            {
+                var newTag = _mapper.Map<Tag>(tags[i]);
+                newTag.Id = 0;
+
+                _repositoryWrapper.TagRepository.Create(newTag);
+                await _repositoryWrapper.SaveChangesAsync();
+
+                newTagIndex.TagId = newTag.Id;
+            }
+
+            indexedTags.Add(newTagIndex);
         }
+
+        await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(indexedTags);
     }
 
     private async Task AddPartnersToStreetcode(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)

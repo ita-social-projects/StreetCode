@@ -14,22 +14,17 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService _loggerService;
 
     public GetAllStreetcodesHandler(
         IRepositoryWrapper repositoryWrapper,
-        IMapper mapper,
-        ILoggerService loggerService)
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _loggerService = loggerService;
     }
 
     public async Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
-        _loggerService.LogInformation("Entry into GetAllStreetcodesHandler");
-
         var filterRequest = query.request;
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
@@ -37,19 +32,16 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         if (filterRequest.Title is not null)
         {
-            _loggerService.LogInformation("Entry into filterRequest.Title");
             FindStreetcodesWithMatchTitle(ref streetcodes, filterRequest.Title);
         }
 
         if (filterRequest.Sort is not null)
         {
-            _loggerService.LogInformation("Entry into filterRequest.Sort");
             FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
         }
 
         if (filterRequest.Filter is not null)
         {
-            _loggerService.LogInformation("Entry into filterRequest.Filter");
             FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 

@@ -1,20 +1,24 @@
 ﻿using System.Net.Mime;
 using System.Text;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Streetcode.BLL.Interfaces.Payment;
+using Streetcode.BLL.Services.Payment.Exceptions;
 using Streetcode.DAL.Entities.Payment;
 
 namespace Streetcode.BLL.Services.Payment
 {
     public class PaymentService : IPaymentService
     {
+        private readonly PaymentEnvirovmentVariables _paymentEnvirovment;
         private readonly HttpClient _httpClient;
-        public PaymentService()
+        public PaymentService(IOptions<PaymentEnvirovmentVariables> paymentEnvirovment)
         {
+            _paymentEnvirovment = paymentEnvirovment.Value;
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(Api.Production);
             _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Add(RequestHeaders.XToken, "mo4jMO2iJmtwCB0RKw8CMBw");
+            _httpClient.DefaultRequestHeaders.Add(RequestHeaders.XToken, _paymentEnvirovment.Token);
         }
 
         public async Task<InvoiceInfo> CreateInvoiceAsync(Invoice invoice)
@@ -22,7 +26,10 @@ namespace Streetcode.BLL.Services.Payment
             var (code, body) = await PostAsync(Api.Merchant.Invoice.Create, invoice);
             return code switch
             {
-                200 => JsonConvert.DeserializeObject<InvoiceInfo>(body)
+                200 => JsonToObject<InvoiceInfo>(body),
+                400 => throw new InvalidRequestParameterException(JsonToObject<Error>(body)),
+                403 => throw new InvalidTokenException(),
+                _ => throw new NotSupportedException()
             };
         }
 
@@ -41,6 +48,17 @@ namespace Streetcode.BLL.Services.Payment
                 return (
                     Code: (int)response.StatusCode,
                     Body: await response.Content.ReadAsStringAsync());
+        }
+
+        /// <summary>
+        /// Deserializes given JSON to the .NET type.
+        /// </summary>
+        /// <param name="body">the JSON;</param>
+        /// <typeparam name="T">the .NET type;</typeparam>
+        /// <returns>The deserialized object from the JSON string.</returns>
+        private T JsonToObject<T>(string body)
+        {
+            return JsonConvert.DeserializeObject<T>(body);
         }
 
         /// <summary>

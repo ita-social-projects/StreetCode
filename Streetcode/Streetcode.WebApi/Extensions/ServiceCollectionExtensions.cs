@@ -41,7 +41,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
-    
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

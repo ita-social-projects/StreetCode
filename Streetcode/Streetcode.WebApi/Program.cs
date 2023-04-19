@@ -1,5 +1,6 @@
 using Hangfire;
 using Serilog;
+using Streetcode.BLL.Middleware;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 
@@ -29,11 +30,11 @@ else
 
 app.UseCors();
 app.UseHttpsRedirection();
+app.UseMiddleware<ApiRequestResponseMiddleware>();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseHangfireDashboard();
 
 // change Cron.Monthly to set another parsing interval from ukrposhta

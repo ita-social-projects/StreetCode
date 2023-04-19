@@ -19,6 +19,7 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.ApplicationInsights.Extensibility;
+using Streetcode.BLL.Middleware;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -40,6 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService), typeof(LoggerService));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddTransient<ApiRequestResponseMiddleware>();
 
         services.Configure<BlobEnvirovmentVariables>(options =>
         {

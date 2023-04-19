@@ -231,7 +231,5 @@ public class StreetcodeDbContext : DbContext
             .HasValue<Coordinate>("coordinate_base")
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");
-
-        modelBuilder.SeedData();
     }
 }

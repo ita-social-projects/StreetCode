@@ -1,4 +1,6 @@
-﻿namespace Streetcode.WebApi.Extensions;
+﻿using Streetcode.BLL.Services.BlobStorageService;
+
+namespace Streetcode.WebApi.Extensions;
 
 public static class ConfigureHostBuilderExtensions
 {
@@ -13,5 +15,10 @@ public static class ConfigureHostBuilderExtensions
             config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
             config.AddEnvironmentVariables("STREETCODE_");
         });
+    }
+
+    public static void ConfigureBlob(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<BlobEnvironmentVariables>(builder.Configuration.GetSection("Blob"));
     }
 }

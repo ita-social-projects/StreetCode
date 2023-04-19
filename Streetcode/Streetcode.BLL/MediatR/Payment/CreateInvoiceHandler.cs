@@ -1,11 +1,7 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Payment;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.DAL.Entities.Payment;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 
 namespace Streetcode.BLL.MediatR.Payment
 {

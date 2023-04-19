@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Streetcode.DAL.Entities.Payment
 {
@@ -12,17 +12,9 @@ namespace Streetcode.DAL.Entities.Payment
             RedirectUrl = redirectUrl;
         }
 
-       // Not sure if constructor really needed as this is an input model used to send data.
-
-        /// <summary>
-        /// Gets the amount of the transaction in the minimum units (coins, cents) of the account currency.
-        /// </summary>
         [JsonProperty("amount")]
         public long Amount { get; set; }
 
-        /// <summary>
-        /// Gets or sets the currency code according to ISO 4217. By default it is 980 which is Ukrainian Hryvnia.
-        /// </summary>
         [JsonProperty("ccy")]
         public int? Ccy { get; set; }
 

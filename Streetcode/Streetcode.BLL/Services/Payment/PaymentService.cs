@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -33,13 +33,6 @@ namespace Streetcode.BLL.Services.Payment
             };
         }
 
-        /// <summary>
-        /// POSTs data to the given <see cref="url"/> of Monobank's API.
-        /// </summary>
-        /// <param name="url">the URL path to which the request will be made.</param>
-        /// <param name="data">the data which will be POSTed.</param>
-
-        /// <returns>Returns the tuple of HTTP Status Code and JSON Body received in response from Monobank's API.</returns>
         private async Task<(int Code, string Body)> PostAsync<T>(string url, T data)
         {
                 var jsonString = JsonConvert.SerializeObject(data, Formatting.None);
@@ -50,20 +43,11 @@ namespace Streetcode.BLL.Services.Payment
                     Body: await response.Content.ReadAsStringAsync());
         }
 
-        /// <summary>
-        /// Deserializes given JSON to the .NET type.
-        /// </summary>
-        /// <param name="body">the JSON;</param>
-        /// <typeparam name="T">the .NET type;</typeparam>
-        /// <returns>The deserialized object from the JSON string.</returns>
         private T JsonToObject<T>(string body)
         {
             return JsonConvert.DeserializeObject<T>(body);
         }
 
-        /// <summary>
-        /// Encapsulates constants related to API requests, URLs and URL parts.
-        /// </summary>
         private static class Api
         {
             public const string Production = "https://api.monobank.ua";
@@ -77,17 +61,11 @@ namespace Streetcode.BLL.Services.Payment
             }
         }
 
-        /// <summary>
-        /// Encapsulates constants related to HTTP Headers used when making calls to Monobank's API.
-        /// </summary>
         private static class RequestHeaders
         {
             public const string XToken = "X-Token";
         }
 
-        /// <summary>
-        /// Encapsulates constants used by validation methods and checks.
-        /// </summary>
         private static class Validation
         {
             public const int MaxStatementTimeSpanInSeconds = 2682000;

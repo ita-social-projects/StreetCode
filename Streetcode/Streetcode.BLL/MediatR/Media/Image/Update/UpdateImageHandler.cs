@@ -32,7 +32,13 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         var updatedImage = _mapper.Map<DAL.Entities.Media.Images.Image>(request.Image);
 
-        UpdateFileInStorage(request, existingImage.BlobName, ref updatedImage);
+        string newName = _blobService.UpdateFileInStorage(
+            existingImage.BlobName,
+            request.Image.BaseFormat,
+            request.Image.Title,
+            request.Image.Extension);
+
+        updatedImage.BlobName = $"{newName}.{request.Image.Extension}";
 
         _repositoryWrapper.ImageRepository.Update(updatedImage);
 
@@ -43,20 +49,5 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
         returnedImaged.Base64 = _blobService.FindFileInStorageAsBase64(returnedImaged.BlobName);
 
         return resultIsSuccess ? Result.Ok(returnedImaged) : Result.Fail(new Error("Failed to update an image"));
-    }
-
-    private void UpdateFileInStorage(
-        UpdateImageCommand updatedAudioRequest,
-        string previousBlobName,
-        ref DAL.Entities.Media.Images.Image mappedAudio)
-    {
-        _blobService.DeleteFileInStorage(previousBlobName);
-
-        string hashBlobStorageName = _blobService.SaveFileInStorage(
-        updatedAudioRequest.Image.BaseFormat,
-        updatedAudioRequest.Image.Title,
-        updatedAudioRequest.Image.Extension);
-
-        mappedAudio.BlobName = $"{hashBlobStorageName}.{updatedAudioRequest.Image.Extension}";
     }
 }

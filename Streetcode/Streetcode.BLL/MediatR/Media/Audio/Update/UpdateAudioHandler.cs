@@ -3,7 +3,6 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.MediatR.Media.Audio.Create;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Update;
@@ -33,7 +32,13 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         var updatedAudio = _mapper.Map<DAL.Entities.Media.Audio>(request.Audio);
 
-        UpdateFileInStorage(request, existingAudio.BlobName, ref updatedAudio);
+        string newName = _blobService.UpdateFileInStorage(
+            existingAudio.BlobName,
+            request.Audio.BaseFormat,
+            request.Audio.Title,
+            request.Audio.Extension);
+
+        updatedAudio.BlobName = $"{newName}.{request.Audio.Extension}";
 
         _repositoryWrapper.AudioRepository.Update(updatedAudio);
 
@@ -42,20 +47,5 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
         var createdAudio = _mapper.Map<AudioDTO>(updatedAudio);
 
         return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error("Failed to update an audio"));
-    }
-
-    private void UpdateFileInStorage(
-        UpdateAudioCommand updatedAudioRequest,
-        string previousBlobName,
-        ref DAL.Entities.Media.Audio mappedAudio)
-    {
-        _blobService.DeleteFileInStorage(previousBlobName);
-
-        string hashBlobStorageName = _blobService.SaveFileInStorage(
-        updatedAudioRequest.Audio.BaseFormat,
-        updatedAudioRequest.Audio.Title,
-        updatedAudioRequest.Audio.Extension);
-
-        mappedAudio.BlobName = $"{hashBlobStorageName}.{updatedAudioRequest.Audio.Extension}";
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Streetcode.DAL.Entities.Payment
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class BasketOrder
     {
         [JsonProperty("name")]

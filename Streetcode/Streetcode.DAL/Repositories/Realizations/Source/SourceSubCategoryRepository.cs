@@ -5,7 +5,7 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.DAL.Repositories.Realizations.Source;
 
-public class SourceSubCategoryRepository : RepositoryBase<SourceLinkSubCategory>, ISourceSubCategoryRepository
+public class SourceSubCategoryRepository : RepositoryBase<StreetcodeCategoryContent>, ISourceSubCategoryRepository
 {
     public SourceSubCategoryRepository(StreetcodeDbContext dbContext)
         : base(dbContext)

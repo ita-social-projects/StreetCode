@@ -23,9 +23,7 @@ public class GetSubCategoriesByCategoryIdHandler : IRequestHandler<GetSubCategor
         var sourceLink = await _repositoryWrapper
             .SourceSubCategoryRepository
             .GetAllAsync(
-                predicate: ssc => ssc.SourceLinkCategoryId == request.CategoryId,
-                include: sscl => sscl
-                    .Include(ssc => ssc.SourceLinks));
+                predicate: ssc => ssc.SourceLinkCategoryId == request.CategoryId);
 
         if (sourceLink is null)
         {

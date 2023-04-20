@@ -25,12 +25,12 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         {
             // assert
             _mockRepository.Setup(x => x.SourceSubCategoryRepository.
-            GetAllAsync(It.IsAny<Expression<Func<SourceLinkSubCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkSubCategory>,
-                IIncludableQueryable<SourceLinkSubCategory, object>>>()))
+            GetAllAsync(It.IsAny<Expression<Func<StreetcodeCategoryContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeCategoryContent>,
+                IIncludableQueryable<StreetcodeCategoryContent, object>>>()))
             .ReturnsAsync(GetSourceLinkSubCategories());
 
-            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkSubCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkSubCategory>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkSubCategoryDTO>>(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()))
                 .Returns(GetSourceSubDTOs());
 
             // arrange
@@ -55,12 +55,12 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             _mockRepository.Setup(x => x.SourceSubCategoryRepository
             .GetAllAsync(
-               It.IsAny<Expression<Func<SourceLinkSubCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkSubCategory>,
-                IIncludableQueryable<SourceLinkSubCategory, object>>>()))
+               It.IsAny<Expression<Func<StreetcodeCategoryContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeCategoryContent>,
+                IIncludableQueryable<StreetcodeCategoryContent, object>>>()))
             .ReturnsAsync(GetSourceLinkSubCategoriesNotExists());
 
-            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkSubCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkSubCategory>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkSubCategoryDTO>>(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()))
                 .Returns(GetSourceSubDTOs());
 
             var handler = new GetSubCategoriesByCategoryIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
-        private List<SourceLinkSubCategory>? GetSourceLinkSubCategoriesNotExists()
+        private List<StreetcodeCategoryContent>? GetSourceLinkSubCategoriesNotExists()
         {
             return null;
         }
@@ -90,12 +90,12 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private IEnumerable<SourceLinkSubCategory> GetSourceLinkSubCategories()
+        private IEnumerable<StreetcodeCategoryContent> GetSourceLinkSubCategories()
         {
-            return new List<SourceLinkSubCategory>()
+            return new List<StreetcodeCategoryContent>()
             {
-                new SourceLinkSubCategory() { Id = 1 },
-                new SourceLinkSubCategory() { Id = 2 },
+                new StreetcodeCategoryContent() {  },
+                new StreetcodeCategoryContent() {  },
             };
         }
     }

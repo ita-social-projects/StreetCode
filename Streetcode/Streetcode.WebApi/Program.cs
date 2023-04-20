@@ -12,7 +12,7 @@ builder.Services.ConfigureBlob(builder);
 
 var app = builder.Build();
 
-await app.ApplyMigrations();
+// await app.ApplyMigrations();
 await app.MigrateAndSeedDbAsync();
 
 // await app.MigrateAndSeedDbAsync();

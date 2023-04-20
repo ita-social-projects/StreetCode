@@ -33,7 +33,6 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
     {
         return HandleResult(await Mediator.Send(new CreateImageCommand(image)));

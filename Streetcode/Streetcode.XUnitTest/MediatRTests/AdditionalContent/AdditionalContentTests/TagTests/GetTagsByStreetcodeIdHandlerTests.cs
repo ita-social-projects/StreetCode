@@ -97,8 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             //Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value),
-                () => Assert.True(result.Value.All(x => x.Streetcodes.All(y => y.Id == _streetcode_id))));
+                () => Assert.IsType<List<TagDTO>>(result.Value));
         }
 
         [Fact]

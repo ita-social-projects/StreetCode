@@ -8,8 +8,7 @@ public class SourceLinkSubCategoryProfile : Profile
 {
     public SourceLinkSubCategoryProfile()
     {
-        CreateMap<SourceLinkSubCategory, SourceLinkSubCategoryDTO>()
-            .ForMember(s => s.SourceLinks, c => c.MapFrom(b => b.SourceLinks))
+        CreateMap<StreetcodeCategoryContent, SourceLinkSubCategoryDTO>()
             .ForMember(s => s.SourceLinkCategory, c => c.Ignore())
             .ReverseMap();
     }

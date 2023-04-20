@@ -28,7 +28,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         public async Task Handle_ExistingId_ReturnsSuccess(int id)
         {
             // arrange
-            var testAudio = new Model() { StreetcodeId = id };
+            var testAudio = new Model() {  };
             var testAudioDTO = new AudioDTO { StreetcodeId = id };
 
             RepositorySetup(testAudio);
@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // arrange
-            var testAudio = new Model() { StreetcodeId = id };
+            var testAudio = new Model() { };
             var testAudioDTO = new AudioDTO { StreetcodeId = id };
 
             RepositorySetup(testAudio);

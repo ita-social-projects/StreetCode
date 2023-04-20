@@ -26,7 +26,7 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
             .GetFirstOrDefaultAsync(
                 predicate: sc => sc.Id == request.Id,
                 include: scl => scl
-                    .Include(sc => sc.SubCategories)
+                    .Include(sc => sc.StreetcodeCategoryContents)
                     .Include(sc => sc.Image) !);
 
         if (srcCategories is null)

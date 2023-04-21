@@ -13,5 +13,6 @@ public class SourceLinkCategoryProfile : Profile
             .ForMember(dto => dto.Image, c => c.MapFrom(b => b.Image))
             .ForPath(dto => dto.Image!.Streetcodes, c => c.Ignore())
             .ReverseMap();
+        CreateMap<SourceLinkCategory, CategoryWithNameDTO>().ReverseMap();
     }
 }

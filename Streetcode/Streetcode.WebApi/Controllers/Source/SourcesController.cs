@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetSubCategoriesByCategoryId;
@@ -9,11 +8,18 @@ using Streetcode.BLL.MediatR.Sources.SourceLink.Update;
 using Streetcode.BLL.MediatR.Sources.SourceLink.Delete;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
+using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll;
 
 namespace Streetcode.WebApi.Controllers.Source;
 
 public class SourcesController : BaseApiController
 {
+    [HttpGet]
+    public async Task<IActionResult> GetAllNames()
+    {
+        return HandleResult(await Mediator.Send(new GetAllCategoryNamesQuery()));
+    }
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetCategoryById([FromRoute] int id)
     {

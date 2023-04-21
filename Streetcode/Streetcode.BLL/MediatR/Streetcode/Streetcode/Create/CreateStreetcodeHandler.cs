@@ -11,6 +11,7 @@ using Streetcode.BLL.DTO.Streetcode.Create.TextContent;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -28,8 +29,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
     {
-      _mapper = mapper;
-      _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+        _repositoryWrapper = repositoryWrapper;
     }
 
     public async Task<Result<Unit>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -44,11 +45,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
+                await AddImages(streetcode, request.Streetcode.ImagesId);
                 await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
                 await CreateRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
-                var timelineItems = request.Streetcode.TimelineItems;
+                await AddToponyms(streetcode, request.Streetcode.Toponyms);
 
+                var timelineItems = request.Streetcode.TimelineItems;
                 var newTimelineItems = _mapper.Map<List<TimelineItem>>(timelineItems);
                 streetcode.TimelineItems.AddRange(newTimelineItems);
 
@@ -89,11 +92,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var newTag = _mapper.Map<Tag>(tags[i]);
                 newTag.Id = 0;
-
-                _repositoryWrapper.TagRepository.Create(newTag);
-                await _repositoryWrapper.SaveChangesAsync();
-
-                newTagIndex.TagId = newTag.Id;
+                newTagIndex.Tag = newTag;
             }
 
             indexedTags.Add(newTagIndex);
@@ -121,5 +120,18 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             .ToList();
 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
+    }
+
+    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<string> toponymsName)
+    {
+        streetcode.Toponyms.AddRange(await _repositoryWrapper.ToponymRepository.GetAllAsync(x => toponymsName.Contains(x.StreetName)));
+    }
+
+    private async Task AddImages(StreetcodeContent streetcode, IEnumerable<int> imagesId)
+    {
+        foreach(int id in imagesId)
+        {
+            streetcode.Images.Add(await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == id));
+        }
     }
 }

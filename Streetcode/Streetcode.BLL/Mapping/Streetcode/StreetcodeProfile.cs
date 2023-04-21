@@ -15,7 +15,7 @@ public class StreetcodeProfile : Profile
         CreateMap<StreetcodeCreateDTO, StreetcodeContent>()
           .ForMember(x => x.Tags, conf => conf.Ignore())
           .ForMember(x => x.Partners, conf => conf.Ignore())
-          /*.ForMember(x => x.Text, conf => conf.Ignore())*/
+          .ForMember(x => x.Toponyms, conf => conf.Ignore())
           .ForMember(x => x.TimelineItems, conf => conf.Ignore()).ReverseMap();
     }
 }

@@ -11,7 +11,7 @@ using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.BLL.Interfaces.Email;
-using Streetcode.BLL.Services.Email; 
+using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
@@ -64,7 +64,7 @@ public static class ServiceCollectionExtensions
 
         services.AddHangfireServer();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        /*services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -78,7 +78,7 @@ public static class ServiceCollectionExtensions
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
                         ClockSkew = TimeSpan.Zero
                     };
-                });
+                });*/
 
         services.AddCors(opt =>
         {

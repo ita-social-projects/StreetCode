@@ -40,6 +40,11 @@ app.UseHangfireDashboard();
 /*RecurringJob.AddOrUpdate<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
 
+BackgroundJob.Schedule<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+RecurringJob.AddOrUpdate<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+
 app.MapControllers();
 
 app.Run();

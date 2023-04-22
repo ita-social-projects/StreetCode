@@ -29,8 +29,4 @@
     <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\AdditionalContent\Create\" />
-  </ItemGroup>
-
 </Project>

@@ -83,36 +83,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcode_partners", "streetcode");
                 });
 
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
-                {
-                    b.Property<int>("SourceLinkCategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinkCategoriesId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_source_link_categories", "sources");
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.Property<int>("SourceLinksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubCategoriesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinksId", "SubCategoriesId");
-
-                    b.HasIndex("SubCategoriesId");
-
-                    b.ToTable("source_link_source_link_subcategory", "sources");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate", b =>
                 {
                     b.Property<int>("Id")
@@ -171,7 +141,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubtitleText")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -255,17 +226,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StreetcodeId")
-                        .IsUnique();
 
                     b.ToTable("audios", "media");
 
@@ -613,38 +578,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("partners", "partners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Український культурний фонд є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи. Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
-                            IsKeyPartner = true,
-                            IsVisibleEverywhere = false,
-                            LogoId = 12,
-                            TargetUrl = "https://www.softserveinc.com/en-us",
-                            Title = "SoftServe",
-                            UrlTitle = "go to SoftServe page"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "some text",
-                            IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
-                            LogoId = 13,
-                            TargetUrl = "https://parimatch.com/",
-                            Title = "Parimatch"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsKeyPartner = false,
-                            IsVisibleEverywhere = false,
-                            LogoId = 14,
-                            TargetUrl = "https://partners.salesforce.com/pdx/s/?language=en_US&redirected=RGSUDODQUL",
-                            Title = "comunity partner"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.PartnerSourceLink", b =>
@@ -677,27 +610,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("partner_source_links", "partners");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("source_links", "sources");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -721,27 +633,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("source_link_categories", "sources");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("SourceLinkCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.HasKey("Id");
+                    b.HasKey("SourceLinkCategoryId", "StreetcodeId");
 
-                    b.HasIndex("SourceLinkCategoryId");
+                    b.HasIndex("StreetcodeId");
 
-                    b.ToTable("source_link_subcategories", "sources");
+                    b.ToTable("streetcode_source_link_categories", "sources");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -792,6 +701,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<string>("Alias")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("AudioId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -845,6 +757,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AudioId")
+                        .IsUnique()
+                        .HasFilter("[AudioId] IS NOT NULL");
 
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
@@ -968,36 +884,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("texts", "streetcode");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            StreetcodeId = 1,
-                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\n\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\n\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\n\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\n\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \n\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\n\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\n\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
-                            Title = "Дитинство та юність"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StreetcodeId = 2,
-                            TextContent = "Батьки М. І. Костомарова намагалися прищепити сину вільнолюбні ідеї і дати добру освіту. Тому вже з 10 років М. Костомарова відправили навчатися до Московського пансіону, а згодом до Воронезької гімназії, яку той закінчив 1833 р.\r\n\r\n1833 р. М. І. Костомаров вступає на історико-філологічний факультет Харківського університету. Вже у цьому навчальному закладі він проявив непересічні здібності до навчання.\r\n\r\nВ університеті Микола Костомаров вивчав стародавні й нові мови, цікавився античною історією, німецькою філософією і новою французькою літературою, учився грати на фортепіано, пробував писати вірші. Зближення з гуртком українських романтиків Харківського університету незабаром визначило його захоплення переважно фольклором і козацьким минулим України.\r\n\r\nУ ті роки у Харківському університеті навколо професора-славіста і літератора-романтика І. Срезневського сформувався гурток студентів, захоплених збиранням зразків української народної пісенної творчості. Вони сприймали фольклор як вираження народного духу, самі складали вірші, балади і ліричні пісні, звертаючись до народної творчості.\r\n\r\nКостомаров в університетські роки дуже багато читав. Перевантаження позначилося на його здоров'ї — ще за студентства значно погіршився зір.\r\n\r\nНа світогляд М. І. Костомарова вплинули професор грецької літератури Харківського університету А. О. Валицький та професор всесвітньої історії М. М. Лунін.\r\n\r\n1836 р. М. І. Костомаров закінчив університет, а в січні 1837 р. склав іспити на ступінь кандидата й отримав направлення у Кінбурнський 7-й драгунський полк юнкером.\r\n\r\nУ січні 1837 року Костомаров склав іспити з усіх предметів, і 8 грудня 1837 року його затвердили в статусі кандидата.",
-                            Title = "Юність і навчання"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            StreetcodeId = 3,
-                            TextContent = "Народився у дворянській родині на хуторі Мотронівка (нині у межах с. Оленівка поблизу Борзни).\r\n\r\nУ 1843–1846 роках здобув вищу освіту на історико-філологічному факультеті Київського Імператорського університету св. Володимира.\r\n\r\n1846–1847 — учитель Петровського кадетського корпусу у Полтаві.\r\n\r\nРазом з М. Костомаровим і М. Гулаком був організатором Кирило-Мефодіївського братства. Брав участь у створенні «Статуту Слов'янського братства св. Кирила і Мефодія». Автор «Записки» — пояснень до статуту братства. Розвивав ідеї християнського соціалізму, виступав за об'єднання всіх слов'янських народів у республіканську федерацію, в якій провідну роль відводив Україні.\r\n1847 — 10 квітня був заарештований у Варшаві. Засланий до Олонецької губернії під нагляд поліції. Служив у Петрозаводському губернському правлінні.\r\n\r\n1856 — звільнений із заслання. Оселився у Санкт-Петербурзі, де став активним членом місцевого гуртка українців.\r\n\r\n1861–1862 — редактор першого українського щомісячного журналу «Основа».\r\n\r\nЗгодом служив у Варшаві. Підтримував зв'язки з Галичиною, співпрацював у часописах «Мета» і «Правда».\r\n\r\nОстанні роки життя провів на хуторі Мотронівці.",
-                            Title = "Життєпис"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            StreetcodeId = 4,
-                            TextContent = "Експерти пояснили, що дасть херсонська перемога українським силам\r\n\r\nНа тлі заяв окупантів про відведення військ та сил рф від Херсона та просування ЗСУ на херсонському напрямку українські бійці можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.",
-                            Title = "визволення Херсона"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContext", b =>
@@ -1043,89 +929,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("timeline_items", "timeline");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(1831, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(1830, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв, де його наставником став К. Брюллов. За словами Шевченка: «настала найсвітліша доба його життя, незабутні, золоті дні» навчання в Академії мистецтв, яким він присвятив у 1856 році автобіографічну повість «Художник».",
-                            Title = "Учень Петербурзької академії мистецтв"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(1832, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Date = new DateTime(1833, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Date = new DateTime(1835, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Date = new DateTime(1836, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateViewPattern = 0,
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        });
-
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
@@ -1522,36 +1325,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinkCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLink", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SubCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -1576,17 +1349,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany("Subtitles")
                         .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithOne("Audio")
-                        .HasForeignKey("Streetcode.DAL.Entities.Media.Audio", "StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1648,15 +1410,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", "SourceLinkCategory")
-                        .WithMany("SubCategories")
+                        .WithMany("StreetcodeCategoryContents")
                         .HasForeignKey("SourceLinkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeCategoryContents")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("SourceLinkCategory");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -1695,6 +1465,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Art");
 
                     b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Audio", "Audio")
+                        .WithOne("Streetcode")
+                        .HasForeignKey("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "AudioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Audio");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
@@ -1797,6 +1577,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("StreetcodeTagIndices");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
+                {
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
                 {
                     b.Navigation("StreetcodeArts");
@@ -1820,18 +1605,18 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
-                    b.Navigation("SubCategories");
+                    b.Navigation("StreetcodeCategoryContents");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
-                    b.Navigation("Audio");
-
                     b.Navigation("Coordinates");
 
                     b.Navigation("Observers");
 
                     b.Navigation("StreetcodeArts");
+
+                    b.Navigation("StreetcodeCategoryContents");
 
                     b.Navigation("StreetcodeTagIndices");
 

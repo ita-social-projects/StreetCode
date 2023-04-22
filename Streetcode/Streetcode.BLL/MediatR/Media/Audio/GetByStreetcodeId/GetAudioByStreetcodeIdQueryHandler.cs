@@ -23,7 +23,7 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
     public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var audio = await _repositoryWrapper.AudioRepository
-            .GetFirstOrDefaultAsync(audio => audio.StreetcodeId == request.StreetcodeId);
+            .GetFirstOrDefaultAsync(audio => audio.Streetcode.Id == request.StreetcodeId);
 
         if (audio is null)
         {

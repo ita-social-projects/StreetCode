@@ -21,7 +21,5 @@ public class Audio
     [Required]
     public string MimeType { get; set; }
 
-    public int StreetcodeId { get; set; }
-
     public StreetcodeContent? Streetcode { get; set; }
 }

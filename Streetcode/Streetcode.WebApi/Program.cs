@@ -12,8 +12,8 @@ builder.Services.ConfigureBlob(builder);
 
 var app = builder.Build();
 
-await app.ApplyMigrations();
-await app.MigrateAndSeedDbAsync();
+// await app.ApplyMigrations();
+/*await app.MigrateAndSeedDbAsync();*/
 
 // await app.MigrateAndSeedDbAsync();
 
@@ -40,10 +40,10 @@ app.UseHangfireDashboard();
 /*RecurringJob.AddOrUpdate<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
 
-BackgroundJob.Schedule<WebParsingUtils>(
+/*BackgroundJob.Schedule<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
 RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
 
 app.MapControllers();
 

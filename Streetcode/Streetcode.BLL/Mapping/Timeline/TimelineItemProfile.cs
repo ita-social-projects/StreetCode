@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Util;
@@ -11,8 +11,6 @@ public class TimelineItemProfile : Profile
 {
     public TimelineItemProfile()
     {
-        CreateMap<TimelineItem, TimelineItemDTO>()
-            .ForPath(dto => dto.DateString, conf => conf
-                .MapFrom(t => DateToStringConverter.FromDateToString(t.Date, t.DateViewPattern)));
+        CreateMap<TimelineItem, TimelineItemDTO>().ReverseMap();
     }
 }

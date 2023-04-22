@@ -38,8 +38,8 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id)));
     }
 
+    // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
     {
         return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));

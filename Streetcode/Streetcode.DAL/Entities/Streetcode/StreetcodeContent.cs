@@ -59,6 +59,8 @@ public class StreetcodeContent
     [Required]
     public DateTime EventEndOrPersonDeathDate { get; set; }
 
+    public int? AudioId { get; set; }
+
     public Text? Text { get; set; }
 
     public Audio? Audio { get; set; }
@@ -93,8 +95,5 @@ public class StreetcodeContent
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 
-    public IIncludableQueryable<StreetcodeContent, object> Include(Func<object, object> value)
-    {
-        throw new NotImplementedException();
-    }
+    public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
 }

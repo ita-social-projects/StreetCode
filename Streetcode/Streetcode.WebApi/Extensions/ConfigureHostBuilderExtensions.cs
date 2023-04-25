@@ -1,4 +1,5 @@
 ﻿using Streetcode.BLL.Services.BlobStorageService;
+using Streetcode.BLL.Services.Payment;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -20,5 +21,10 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureBlob(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<BlobEnvironmentVariables>(builder.Configuration.GetSection("Blob"));
+    }
+
+    public static void ConfigurePayment(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<PaymentEnvirovmentVariables>(builder.Configuration.GetSection("Payment"));
     }
 }

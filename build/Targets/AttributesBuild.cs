@@ -20,6 +20,7 @@ partial class Build
     AbsolutePath UnitTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XUnitTest";
     AbsolutePath IntegrationTestsDirectory => RootDirectory / "Streetcode" / "Streetcode.XIntegrationTest";
     AbsolutePath ClientDirectory => RootDirectory / "Streetcode" / "Streetcode.Client";
+    AbsolutePath DbUpdateDirectory => RootDirectory / "Streetcode" / "DbUpdate";
 
     static bool GitHasCleanCopy(AbsolutePath path) =>
         !Git($"status --short {path}", logOutput: false).Any();

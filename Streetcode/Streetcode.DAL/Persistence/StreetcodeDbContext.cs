@@ -15,7 +15,6 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
 

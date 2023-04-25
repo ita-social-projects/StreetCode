@@ -2,6 +2,7 @@ using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
+using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
@@ -13,6 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
+using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
 using Streetcode.DAL.Repositories.Realizations.Partners;
@@ -57,6 +59,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeRepository _streetcodeRepository;
 
     private ISubtitleRepository _subtitleRepository;
+
+    private IStatisticRecordRepository _statisticRecordRepository;
 
     private ITagRepository _tagRepository;
 
@@ -249,6 +253,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _subtitleRepository;
+        }
+    }
+
+    public IStatisticRecordRepository StatisticRecordRepository
+    {
+        get
+        {
+            if (_statisticRecordRepository is null)
+            {
+                _statisticRecordRepository = new StatisticRecordsRepository(_streetcodeDbContext);
+            }
+
+            return _statisticRecordRepository;
         }
     }
 

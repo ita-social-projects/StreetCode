@@ -24,10 +24,6 @@
 
                     var scriptFiles = Directory.GetFiles(Path.Combine(projRootDirectory, scriptsFolderPath));
 
-
-                var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
-
-                foreach (var task in filesContexts)
                     var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
                     transaction = streetcodeContext.Database.BeginTransaction();
                     foreach (var singleSqlScript in filesContexts)
@@ -37,9 +33,9 @@
 
                     streetcodeContext.Database.CommitTransaction();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    if(transaction != null)
+                    if (transaction != null)
                     {
                         streetcodeContext.Database.RollbackTransaction();
                         logger.LogError(ex, "An error occured during adding relations");
@@ -48,10 +44,6 @@
             }
             catch (Exception ex)
             {
-                if(transaction != null)
-                {
-                    logger.LogError(ex, "An error occured during adding relations");
-                }
                 logger.LogError(ex, "An error occured during startup migration");
             }
         }

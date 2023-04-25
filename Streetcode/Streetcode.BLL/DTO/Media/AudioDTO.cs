@@ -9,6 +9,4 @@ public class AudioDTO
     public string BlobName { get; set; }
     public string Base64 { get; set; }
     public string MimeType { get; set; }
-
-    public int StreetcodeId { get; set; }
 }

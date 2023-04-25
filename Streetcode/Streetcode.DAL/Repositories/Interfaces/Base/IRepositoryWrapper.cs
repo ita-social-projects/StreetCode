@@ -9,7 +9,6 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
-
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryWrapper
@@ -23,7 +22,7 @@ public interface IRepositoryWrapper
     IStreetcodeCoordinateRepository StreetcodeCoordinateRepository { get; }
     IPartnersRepository PartnersRepository { get; }
     ISourceCategoryRepository SourceCategoryRepository { get; }
-    ISourceSubCategoryRepository SourceSubCategoryRepository { get; }
+    IStreetcodeCategoryContentRepository StreetcodeCategoryContentRepository { get; }
     IRelatedFigureRepository RelatedFigureRepository { get; }
     IStreetcodeRepository StreetcodeRepository { get; }
     ISubtitleRepository SubtitleRepository { get; }

@@ -28,10 +28,10 @@ public class TermController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateTermCommand(term)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TermDTO term)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] TermDTO term)
     {
-        return HandleResult(await Mediator.Send(new UpdateTermCommand(id, term)));
+        return HandleResult(await Mediator.Send(new UpdateTermCommand(term)));
     }
 
     [HttpDelete("{id:int}")]

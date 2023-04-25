@@ -33,9 +33,9 @@
 
                     streetcodeContext.Database.CommitTransaction();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    if(transaction != null)
+                    if (transaction != null)
                     {
                         streetcodeContext.Database.RollbackTransaction();
                         logger.LogError(ex, "An error occured during adding relations");

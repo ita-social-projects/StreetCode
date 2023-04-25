@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.MediatR.Users.Login;
+using Streetcode.BLL.MediatR.Users.RefreshToken;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
@@ -15,11 +16,10 @@ namespace Streetcode.WebApi.Controllers.Users
             return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
         }
 
-        [HttpGet]
-        [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
-        public async Task<IActionResult> GetWithAdmin()
+        [HttpPost]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO token)
         {
-            return Ok("text");
+            return HandleResult(await Mediator.Send(new RefreshTokenQuery(token)));
         }
     }
 }

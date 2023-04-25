@@ -28,8 +28,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         public async Task Handle_ExistingId_ReturnsSuccess(int id)
         {
             // arrange
-            var testAudio = new Model() { StreetcodeId = id };
-            var testAudioDTO = new AudioDTO { StreetcodeId = id };
+            var testAudio = new Model() {  };
+            var testAudioDTO = new AudioDTO {  };
 
             RepositorySetup(testAudio);
             MapperSetup(testAudioDTO);
@@ -38,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             // act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
-            Assert.Equal(id, result.Value.StreetcodeId);
+            Assert.NotNull(result.Value);
         }
 
         [Theory]
@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // arrange
             string expectedErrorMessage = $"Cannot find an audio with the corresponding streetcode id: {id}";
-            var testAudioDTO = new AudioDTO { StreetcodeId = id };
+            var testAudioDTO = new AudioDTO {  };
 
             RepositorySetup(null);
             MapperSetup(testAudioDTO);
@@ -64,8 +64,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // arrange
-            var testAudio = new Model() { StreetcodeId = id };
-            var testAudioDTO = new AudioDTO { StreetcodeId = id };
+            var testAudio = new Model() { };
+            var testAudioDTO = new AudioDTO {  };
 
             RepositorySetup(testAudio);
             MapperSetup(testAudioDTO);

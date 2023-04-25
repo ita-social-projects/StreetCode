@@ -13,7 +13,8 @@ builder.Services.ConfigurePayment(builder);
 
 var app = builder.Build();
 
-// await app.MigrateAndSeedDbAsync();
+// await app.ApplyMigrations();
+/*await app.MigrateAndSeedDbAsync();*/
 
 if (app.Environment.EnvironmentName == "Local")
 {
@@ -35,10 +36,13 @@ app.UseAuthorization();
 app.UseHangfireDashboard();
 
 // change Cron.Monthly to set another parsing interval from ukrposhta
-BackgroundJob.Schedule<WebParsingUtils>(
+/*RecurringJob.AddOrUpdate<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
+
+/*BackgroundJob.Schedule<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
 RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
 
 app.MapControllers();
 

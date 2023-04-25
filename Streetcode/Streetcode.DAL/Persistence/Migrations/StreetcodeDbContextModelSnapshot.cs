@@ -83,36 +83,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcode_partners", "streetcode");
                 });
 
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
-                {
-                    b.Property<int>("SourceLinkCategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinkCategoriesId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_source_link_categories", "sources");
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.Property<int>("SourceLinksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubCategoriesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinksId", "SubCategoriesId");
-
-                    b.HasIndex("SubCategoriesId");
-
-                    b.ToTable("source_link_source_link_subcategory", "sources");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate", b =>
                 {
                     b.Property<int>("Id")
@@ -138,6 +108,27 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator<string>("CoordinateType").HasValue("coordinate_base");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
+                {
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.HasKey("StreetcodeId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("streetcode_tag_index", "add_content");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
                 {
                     b.Property<int>("Id")
@@ -150,7 +141,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SubtitleText")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -234,19 +226,51 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StreetcodeId")
-                        .IsUnique();
-
                     b.ToTable("audios", "media");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                            Description = "for streetcode1",
+                            MimeType = "audio/mpeg",
+                            StreetcodeId = 1,
+                            Title = "audio1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                            Description = "for streetcode2",
+                            MimeType = "audio/mpeg",
+                            StreetcodeId = 2,
+                            Title = "audio2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                            Description = "for streetcode3",
+                            MimeType = "audio/mpeg",
+                            StreetcodeId = 3,
+                            Title = "audio3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                            Description = "for streetcode4",
+                            MimeType = "audio/mpeg",
+                            StreetcodeId = 4,
+                            Title = "audio4"
+                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -298,6 +322,192 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("images", "media");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Alt = "Портрет Тараса Шевченка",
+                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
+                            MimeType = "image/gif",
+                            Title = "Тарас Шевченко"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Alt = "Тарас Шевченко: Погруддя жінки",
+                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Погруддя жінки"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
+                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет Павла Васильовича Енгельгардта"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Alt = "Тарас Шевченко: Портрет невідомого",
+                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
+                            MimeType = "image/jpeg",
+                            Title = "Портрет невідомого"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Alt = "Кобзар",
+                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
+                            MimeType = "image/png",
+                            Title = "Кобзар"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Alt = "Мико́ла Костома́ров",
+                            BlobName = "VryHfNFydefxGWzL9Q2TFnykRwBvBjb7g7StwOztV+k=.png",
+                            MimeType = "image/png",
+                            Title = "Мико́ла Костома́ров"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Alt = "Василь Білозерський",
+                            BlobName = "LOJwfRkqVqkjchzf9cLnSsFmTXdYaLUio+iRaDA3vVE=.png",
+                            MimeType = "image/png",
+                            Title = "Василь Білозерський"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Alt = "Звільнення Херсона",
+                            BlobName = "cxU2wbUcQWQMrnC5bMUG4u8am9UIu2yFko+wPg9UBRM=.png",
+                            MimeType = "image/png",
+                            Title = "Звільнення Херсона"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Alt = "book",
+                            BlobName = "i0OXuaqrvuGioxRAD045vizgs6S7rluDPUMuyYm3YyY=.png",
+                            MimeType = "image/png",
+                            Title = "book"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Alt = "video",
+                            BlobName = "6BUOLcI9EwKDZTDi6ZPJyVnU5SaGOYSijBjdQH+4oUU=.png",
+                            MimeType = "image/png",
+                            Title = "video"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Alt = "article",
+                            BlobName = "eQVD_pSkN0maCTFVPAjtX0QvJmsur7VIL9ZYvGAdIQ8=.png",
+                            MimeType = "image/png",
+                            Title = "article"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Alt = "SoftServe",
+                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
+                            MimeType = "image/png",
+                            Title = "SoftServe"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Alt = "Parimatch",
+                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
+                            MimeType = "image/png",
+                            Title = "Parimatch"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Alt = "Community Partners",
+                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
+                            MimeType = "image/png",
+                            Title = "Community Partners"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Alt = "Володимир-Варфоломей",
+                            BlobName = "88VCISdBuZeWwIZSmnVIXsHUGQzFMTh4iPGEbU1+ckQ=.png",
+                            MimeType = "image/png",
+                            Title = "Володимир-Варфоломей"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Alt = "Леся Українка",
+                            BlobName = "U2Sn_n0vXTwdCBabM2XzFPhxLXrff8QoomoLL4xGadc=.png",
+                            MimeType = "image/png",
+                            Title = "Леся Українка"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Alt = "Іван Мазепа",
+                            BlobName = "bnIzOC+dFAYy9CtrojbMjl3RlEWIdGIx2TJeSZWC97c=.png",
+                            MimeType = "image/png",
+                            Title = "Іван Мазепа"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Alt = "Грушевький",
+                            BlobName = "eke98jD1VRreBj_lOPQznFFZujua_+esR1R7vHgRk_g=.png",
+                            MimeType = "image/png",
+                            Title = "Михайло Грушевський"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Alt = "Грушевький",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
+                            Title = "Грушевський"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Alt = "Грушевський",
+                            BlobName = "8Xw3NUnskB1sDHjSV4tAX74tO+zF1dPQMZ287e3GQbg=.png",
+                            MimeType = "image/png",
+                            Title = "Сучасний Грушевський"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Alt = "мурал",
+                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
+                            MimeType = "image/png",
+                            Title = "Мурал Грушевського"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Alt = "Козаки на орбіті",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
+                            Title = "Козаки на орбіті"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Alt = "мурал",
+                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
+                            MimeType = "image/png",
+                            Title = "Мурал М. Грушевського"
+                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Video", b =>
@@ -344,6 +554,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<bool>("IsVisibleEverywhere")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LogoId")
                         .HasColumnType("int");
@@ -397,27 +610,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("partner_source_links", "partners");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Title")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("source_links", "sources");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -441,27 +633,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("source_link_categories", "sources");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("SourceLinkCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.HasKey("Id");
+                    b.HasKey("SourceLinkCategoryId", "StreetcodeId");
 
-                    b.HasIndex("SourceLinkCategoryId");
+                    b.HasIndex("StreetcodeId");
 
-                    b.ToTable("source_link_subcategories", "sources");
+                    b.ToTable("streetcode_source_link_categories", "sources");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -510,8 +699,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Alias")
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("AudioId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -541,7 +733,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Teaser")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(650)
+                        .HasColumnType("nvarchar(650)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -564,6 +757,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AudioId")
+                        .IsUnique()
+                        .HasFilter("[AudioId] IS NOT NULL");
 
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
@@ -598,6 +795,22 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("ImageId");
 
                     b.ToTable("facts", "streetcode");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FactContent = "Навесні 1838-го Карл Брюллов і Василь Жуковський вирішили викупити молодого поета з кріпацтва. Енгельгардт погодився відпустити кріпака за великі гроші — 2500 рублів. Щоб здобути такі гроші, Карл Брюллов намалював портрет Василя Жуковського — вихователя спадкоємця престолу Олександра Миколайовича, і портрет розіграли в лотереї, у якій взяла участь імператорська родина. Лотерея відбулася 4 травня 1838 року, а 7 травня Шевченкові видали відпускну.",
+                            ImageId = 6,
+                            Title = "Викуп з кріпацтва"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FactContent = " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес. Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».",
+                            ImageId = 5,
+                            Title = "Перший Кобзар"
+                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
@@ -702,6 +915,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DateViewPattern")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -791,19 +1007,44 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("transaction_links", "transactions");
                 });
 
-            modelBuilder.Entity("StreetcodeContentTag", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
                 {
-                    b.Property<int>("StreetcodesId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TagsId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("StreetcodesId", "TagsId");
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasIndex("TagsId");
+                    b.HasKey("Id");
 
-                    b.ToTable("streetcode_tag", "streetcode");
+                    b.ToTable("Users", "Users");
                 });
 
             modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
@@ -873,6 +1114,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-event");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(618),
+                            DateString = "11 листопада 2022",
+                            EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 4,
+                            Status = 0,
+                            Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).",
+                            Title = "Звільнення Херсона",
+                            TransliterationUrl = "svilnennia-chersonu",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 1000
+                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.PersonStreetcode", b =>
@@ -896,6 +1154,115 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-person");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Alias = "Кобзар",
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(517),
+                            DateString = "9 березня 1814 — 10 березня 1861",
+                            EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 1,
+                            Status = 0,
+                            Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв",
+                            Title = "Тарас Шевченко",
+                            TransliterationUrl = "taras-shevchenko",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Тарас",
+                            LastName = "Шевченко",
+                            Rank = "Григорович"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(571),
+                            DateString = "9 березня 1814 — 10 березня 1861",
+                            EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 2,
+                            Status = 0,
+                            Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
+                            Title = "Мико́ла Костома́ров",
+                            TransliterationUrl = "mykola-kostomarov",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Мико́ла",
+                            LastName = "Костома́ров",
+                            Rank = "Іва́нович"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(576),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
+                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 3,
+                            Status = 0,
+                            Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.",
+                            Title = "Василь Білозерський",
+                            TransliterationUrl = "vasyl-biloservky",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Василь",
+                            LastName = "Білозерський",
+                            Rank = "Михайлович"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(581),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
+                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 5,
+                            Status = 0,
+                            Teaser = "some teaser",
+                            Title = "Володимир-Варфоломей Кропивницький-Шевченківський",
+                            TransliterationUrl = "volodymir-varfolomiy-kropyvnitsky-shevchenkivkyski",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Володимир-Варфоломей",
+                            LastName = "Кропивницький-Шевченківський"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Alias = "Лариса Косач",
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(586),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
+                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 6,
+                            Status = 0,
+                            Teaser = "some teaser",
+                            Title = "Леся Українка",
+                            TransliterationUrl = "lesya-ukrainka",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Леся",
+                            LastName = "Українка"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedAt = new DateTime(2023, 4, 5, 13, 14, 57, 194, DateTimeKind.Local).AddTicks(591),
+                            DateString = "2 січня 1825 — 20 лютого 1899",
+                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Index = 7,
+                            Status = 0,
+                            Teaser = "some teaser",
+                            Title = "Іван Мазепа",
+                            TransliterationUrl = "ivan-mazepa",
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ViewCount = 0,
+                            FirstName = "Іван",
+                            LastName = "Мазепа"
+                        });
                 });
 
             modelBuilder.Entity("FactStreetcodeContent", b =>
@@ -958,34 +1325,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
                 {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinkCategoriesId")
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeTagIndices")
+                        .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLink", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinksId")
+                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", "Tag")
+                        .WithMany("StreetcodeTagIndices")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SubCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Streetcode");
+
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
@@ -993,17 +1349,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany("Subtitles")
                         .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithOne("Audio")
-                        .HasForeignKey("Streetcode.DAL.Entities.Media.Audio", "StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1065,15 +1410,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", "SourceLinkCategory")
-                        .WithMany("SubCategories")
+                        .WithMany("StreetcodeCategoryContents")
                         .HasForeignKey("SourceLinkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeCategoryContents")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("SourceLinkCategory");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -1112,6 +1465,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Art");
 
                     b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Audio", "Audio")
+                        .WithOne("Streetcode")
+                        .HasForeignKey("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "AudioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Audio");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
@@ -1155,21 +1518,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Streetcode");
-                });
-
-            modelBuilder.Entity("StreetcodeContentTag", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
@@ -1224,6 +1572,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Toponym");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
+                {
+                    b.Navigation("StreetcodeTagIndices");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
+                {
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
                 {
                     b.Navigation("StreetcodeArts");
@@ -1247,18 +1605,20 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
-                    b.Navigation("SubCategories");
+                    b.Navigation("StreetcodeCategoryContents");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
-                    b.Navigation("Audio");
-
                     b.Navigation("Coordinates");
 
                     b.Navigation("Observers");
 
                     b.Navigation("StreetcodeArts");
+
+                    b.Navigation("StreetcodeCategoryContents");
+
+                    b.Navigation("StreetcodeTagIndices");
 
                     b.Navigation("Subtitles");
 

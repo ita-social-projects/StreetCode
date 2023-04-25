@@ -7,12 +7,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
 {
     public class DeleteTermHandler : IRequestHandler<DeleteTermCommand, Result<Unit>>
     {
-        private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
 
-        public DeleteTermHandler(IMapper mapper, IRepositoryWrapper repository)
+        public DeleteTermHandler(IRepositoryWrapper repository)
         {
-            _mapper = mapper;
             _repository = repository;
         }
 

@@ -11,12 +11,11 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
+builder.Services.ConfigurePayment(builder);
 
 builder.AddSerilog();
 
 var app = builder.Build();
-
-// await app.MigrateAndSeedDbAsync();
 
 // await app.MigrateAndSeedDbAsync();
 

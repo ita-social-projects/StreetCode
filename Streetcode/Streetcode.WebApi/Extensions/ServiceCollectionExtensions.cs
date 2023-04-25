@@ -21,6 +21,8 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.ApplicationInsights.Extensibility;
 using Streetcode.BLL.Middleware;
 using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Payment;
+using Streetcode.BLL.Services.Payment;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -42,8 +44,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService), typeof(LoggerService));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPaymentService, PaymentService>();
         services.AddTransient<ApiRequestResponseMiddleware>();
-
         services.Configure<BlobEnvirovmentVariables>(options =>
         {
             options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");

@@ -18,6 +18,8 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Payment;
+using Streetcode.BLL.Services.Payment;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -40,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPaymentService, PaymentService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

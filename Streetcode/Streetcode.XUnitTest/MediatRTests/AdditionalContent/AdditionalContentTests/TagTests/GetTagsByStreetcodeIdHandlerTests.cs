@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Types;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
@@ -26,60 +27,68 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private const int _streetcode_id = 1;
 
-        private readonly List<Tag> tags = new List<Tag>()
+        private readonly List<StreetcodeTagIndex> tags = new List<StreetcodeTagIndex>()
         {
-            new Tag
+            new StreetcodeTagIndex
             {
-                Id = 1,
-                Streetcodes = new List<StreetcodeContent> {
-                    new StreetcodeContent {
+                Index = 1,
+                IsVisible = true,
+                Streetcode =  new StreetcodeContent {
                         Id = _streetcode_id
-                    }
+                    },
+                StreetcodeId = _streetcode_id,
+                Tag = new Tag()
+                {
+                    Id  = 1,
+                    Title = "title"
                 }
             },
-            new Tag
+            new StreetcodeTagIndex
             {
-                Id = 2,
-                Streetcodes = new List<StreetcodeContent> {
-                    new StreetcodeContent {
+                Index = 2,
+                IsVisible = true,
+                Streetcode =  new StreetcodeContent {
                         Id = _streetcode_id
-                    }
+                    },
+                StreetcodeId = _streetcode_id,
+                Tag = new Tag()
+                {
+                    Id  = 2,
+                    Title = "title"
                 }
             }
+
+            
         };
-        private readonly List<TagDTO> tagDTOs = new List<TagDTO>()  
+        private readonly List<StreetcodeTagDTO> tagDTOs = new List<StreetcodeTagDTO>()  
         {
-            new TagDTO
+            new StreetcodeTagDTO
             {
                 Id = 1,
-                Streetcodes = new List<StreetcodeDTO> {
-                    new EventStreetcodeDTO {
-                        Id = _streetcode_id
-                    }
-                }
+                Title = "title",
+                IsVisible = true,
+                Index = 1,
             },
-            new TagDTO
+            new StreetcodeTagDTO
             {
                 Id = 2,
-                Streetcodes = new List<StreetcodeDTO> {
-                    new EventStreetcodeDTO {
-                        Id = _streetcode_id
-                    }
-                }
+                Title = "title",
+                IsVisible = true,
+                Index = 2,
             }
         };
 
-        async Task SetupRepository(List<Tag> returnList)
+        async Task SetupRepository(List<StreetcodeTagIndex> returnList)
         {
-            _mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Tag, bool>>>(),
-                It.IsAny<Func<IQueryable<Tag>,
-                IIncludableQueryable<Tag, object>>>()))
+            _mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
+                IIncludableQueryable<StreetcodeTagIndex, object>>>()))
                 .ReturnsAsync(returnList);
         }
-        async Task SetupMapper(List<TagDTO> returnList)
+        async Task SetupMapper(List<StreetcodeTagDTO> returnList)
         {
-            _mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
 
@@ -105,8 +114,8 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         public async Task Handler_Returns_Empty_List()
         {
             //Arrange
-            await SetupRepository(new List<Tag>());
-            await SetupMapper(new List<TagDTO>());
+            await SetupRepository(new List<StreetcodeTagIndex>());
+            await SetupMapper(new List<StreetcodeTagDTO>());
 
             var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
@@ -115,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             //Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value),
+                () => Assert.IsType<List<StreetcodeTagDTO>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
     }

@@ -27,9 +27,7 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
             .SourceCategoryRepository
             .GetAllAsync(
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
-                include: scl => scl
-                    .Include(sc => sc.StreetcodeCategoryContents)
-                    .Include(sc => sc.Image) !);
+                include: scl => scl.Include(sc => sc.Image) !);
 
         if (srcCategories is null)
         {

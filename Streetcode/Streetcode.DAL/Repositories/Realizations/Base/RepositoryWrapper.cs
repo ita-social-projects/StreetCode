@@ -48,7 +48,7 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ISourceCategoryRepository _sourceCategoryRepository;
 
-    private ISourceSubCategoryRepository _sourceSubCategoryRepository;
+    private IStreetcodeCategoryContentRepository _streetcodeCategoryContentRepository;
 
     private IRelatedFigureRepository _relatedFigureRepository;
 
@@ -200,16 +200,16 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public ISourceSubCategoryRepository SourceSubCategoryRepository
+    public IStreetcodeCategoryContentRepository StreetcodeCategoryContentRepository
     {
         get
         {
-            if (_sourceSubCategoryRepository is null)
+            if (_streetcodeCategoryContentRepository is null)
             {
-                _sourceSubCategoryRepository = new SourceSubCategoryRepository(_streetcodeDbContext);
+                _streetcodeCategoryContentRepository = new StreetcodeCategoryContentRepository(_streetcodeDbContext);
             }
 
-            return _sourceSubCategoryRepository;
+            return _streetcodeCategoryContentRepository;
         }
     }
 

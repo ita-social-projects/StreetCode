@@ -18,7 +18,6 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.Toponyms, conf => conf.Ignore())
           .ForMember(x => x.TimelineItems, conf => conf.Ignore())
           .ForMember(x => x.Images, conf => conf.Ignore())
-          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
-          .ForMember(x => x.StreetcodeCategoryContents, conf => conf.Ignore()).ReverseMap();
+          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore()).ReverseMap();
     }
 }

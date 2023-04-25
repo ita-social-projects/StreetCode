@@ -53,7 +53,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
-                await AddCategoryContent(streetcode, request.Streetcode.StreetcodeCategoryContents);
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
 
@@ -146,14 +145,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private void AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemDTO> timelineItems)
     {
         streetcode.TimelineItems.AddRange(_mapper.Map<List<TimelineItem>>(timelineItems));
-    }
-
-    private async Task AddCategoryContent(StreetcodeContent streetcode, IEnumerable<CategoryContentCreateDTO> categoryContents)
-    {
-        foreach (var source in categoryContents)
-        {
-            streetcode.StreetcodeCategoryContents.Add(await _repositoryWrapper.SourceSubCategoryRepository.GetFirstOrDefaultAsync(x => x.SourceLinkCategoryId == source.CategoryId));
-        }
     }
 
     private async Task AddPartnersToStreetcode(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)

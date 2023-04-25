@@ -40,5 +40,5 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
         public IEnumerable<ArtCreateDTO> StreetcodeArts { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
-    }
+  }
 }

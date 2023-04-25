@@ -23,5 +23,5 @@ public class SourceLinkCategory
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
-    public List<SourceLinkSubCategory> SubCategories { get; set; } = new ();
+    public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new ();
 }

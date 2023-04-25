@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -21,15 +22,19 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIdQuery request, CancellationToken cancellationToken)
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: st => st.Id == request.Id,
-            include: source => source.Include(l => l.Tags));
+            predicate: st => st.Id == request.Id);
 
         if (streetcode is null)
         {
             return Result.Fail(new Error($"Cannot find any streetcode with corresponding id: {request.Id}"));
         }
 
+        var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
+                                        .GetAllAsync(
+                                            t => t.StreetcodeId == request.Id,
+                                            include: q => q.Include(ti => ti.Tag));
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
+        streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
         return Result.Ok(streetcodeDto);
     }
 }

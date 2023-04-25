@@ -13,6 +13,7 @@ using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
@@ -40,7 +41,6 @@ public class StreetcodeDbContext : DbContext
     public DbSet<RelatedFigure> RelatedFigures { get; set; }
     public DbSet<Response> Responses { get; set; }
     public DbSet<Donation> Donations { get; set; }
-    public DbSet<SourceLink> SourceLinks { get; set; }
     public DbSet<StreetcodeContent> Streetcodes { get; set; }
     public DbSet<Subtitle> Subtitles { get; set; }
     public DbSet<Tag> Tags { get; set; }
@@ -51,14 +51,23 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Toponym> Toponyms { get; set; }
     public DbSet<TransactionLink> TransactionLinks { get; set; }
     public DbSet<Video> Videos { get; set; }
-    public DbSet<SourceLinkCategory> SourceLinkCategories { get; set; }
-    public DbSet<SourceLinkSubCategory> SourceLinkSubCategories { get; set; }
+    public DbSet<StreetcodeCategoryContent> StreetcodeCategoryContent { get; set; }
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
+
+        modelBuilder.Entity<Tag>()
+            .HasMany(t => t.Streetcodes)
+            .WithMany(s => s.Tags)
+            .UsingEntity<StreetcodeTagIndex>();
+
+        modelBuilder.Entity<StreetcodeTagIndex>()
+           .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
 
         modelBuilder.Entity<Toponym>()
             .HasOne(d => d.Coordinate)
@@ -82,15 +91,10 @@ public class StreetcodeDbContext : DbContext
             .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
 
         modelBuilder.Entity<SourceLinkCategory>()
-            .HasMany(d => d.SubCategories)
+            .HasMany(d => d.StreetcodeCategoryContents)
             .WithOne(p => p.SourceLinkCategory)
             .HasForeignKey(d => d.SourceLinkCategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<SourceLink>()
-            .HasMany(d => d.SubCategories)
-            .WithMany(h => h.SourceLinks)
-            .UsingEntity(j => j.ToTable("source_link_source_link_subcategory", "sources"));
 
         modelBuilder.Entity<Image>(entity =>
         {
@@ -176,10 +180,6 @@ public class StreetcodeDbContext : DbContext
                 .WithMany(f => f.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_fact", "streetcode"));
 
-            entity.HasMany(d => d.Tags)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_tag", "streetcode"));
-
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
                 .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
@@ -194,7 +194,7 @@ public class StreetcodeDbContext : DbContext
 
             entity.HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_source_link_categories", "sources"));
+                .UsingEntity<StreetcodeCategoryContent>(j => j.ToTable("streetcode_source_link_categories", "sources"));
 
             entity.HasMany(d => d.Partners)
                 .WithMany(p => p.Streetcodes)
@@ -207,7 +207,6 @@ public class StreetcodeDbContext : DbContext
 
             entity.HasOne(d => d.Audio)
                 .WithOne(p => p.Streetcode)
-                .HasForeignKey<Audio>(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Text)

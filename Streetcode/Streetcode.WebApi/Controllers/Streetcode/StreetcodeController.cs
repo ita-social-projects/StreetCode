@@ -10,8 +10,11 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
+using Streetcode.WebApi.Attributes;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.Create;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -66,10 +69,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] StreetcodeDTO streetcode)
+    public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
     [HttpPut("{id:int}")]
@@ -80,6 +82,7 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPatch("{id:int}/{status}")]
+    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,
         [FromRoute] StreetcodeStatus status)
@@ -88,12 +91,14 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> SoftDelete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteSoftStreetcodeCommand(id)));
     }
 
     [HttpDelete("{id:int}")]
+    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));

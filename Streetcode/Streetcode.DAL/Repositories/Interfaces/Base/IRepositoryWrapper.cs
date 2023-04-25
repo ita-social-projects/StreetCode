@@ -1,3 +1,4 @@
+using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
@@ -9,7 +10,6 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
-
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryWrapper
@@ -23,7 +23,7 @@ public interface IRepositoryWrapper
     IStreetcodeCoordinateRepository StreetcodeCoordinateRepository { get; }
     IPartnersRepository PartnersRepository { get; }
     ISourceCategoryRepository SourceCategoryRepository { get; }
-    ISourceSubCategoryRepository SourceSubCategoryRepository { get; }
+    IStreetcodeCategoryContentRepository StreetcodeCategoryContentRepository { get; }
     IRelatedFigureRepository RelatedFigureRepository { get; }
     IStreetcodeRepository StreetcodeRepository { get; }
     ISubtitleRepository SubtitleRepository { get; }
@@ -37,7 +37,11 @@ public interface IRepositoryWrapper
     IHistoricalContextRepository HistoricalContextRepository { get; }
     IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     IUserRepository UserRepository { get; }
+    IStreetcodeTagIndexRepository StreetcodeTagIndexRepository { get; }
+
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();
+
+    public TransactionScope BeginTransaction();
 }

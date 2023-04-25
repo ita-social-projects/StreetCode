@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             // act
 
-            var result = await handler.Handle(new GetCategoryContentByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // assert
             Assert.Multiple(
@@ -77,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var expectedError = $"Cant find any source category with the streetcode id {id}";
             // act
 
-            var result = await handler.Handle(new GetCategoryContentByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // assert
 

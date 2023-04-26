@@ -88,7 +88,7 @@ public class StreetcodeDbContext : DbContext
         modelBuilder.Entity<TimelineItem>()
             .HasMany(d => d.HistoricalContexts)
             .WithMany(h => h.TimelineItems)
-            .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
+            .UsingEntity<HistoricalContextTimeline>(j => j.ToTable("timeline_item_historical_context", "timeline"));
 
         modelBuilder.Entity<SourceLinkCategory>()
             .HasMany(d => d.StreetcodeCategoryContents)
@@ -177,20 +177,20 @@ public class StreetcodeDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Facts)
-                .WithMany(f => f.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_fact", "streetcode"));
+                .WithOne(f => f.Streetcode)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
+                .UsingEntity<StreetcodeImage>(j => j.ToTable("streetcode_image", "streetcode"));
 
             entity.HasMany(d => d.TimelineItems)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_timeline_item", "streetcode"));
+                .WithOne(t => t.Streetcode)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Toponyms)
                 .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));
+                .UsingEntity<StreetcodeToponym>(j => j.ToTable("streetcode_toponym", "streetcode"));
 
             entity.HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
@@ -198,7 +198,7 @@ public class StreetcodeDbContext : DbContext
 
             entity.HasMany(d => d.Partners)
                 .WithMany(p => p.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_partners", "streetcode"));
+                .UsingEntity<StreetcodePartner>(j => j.ToTable("streetcode_partners", "streetcode"));
 
             entity.HasMany(d => d.Videos)
                 .WithOne(p => p.Streetcode)

@@ -35,4 +35,6 @@ public class Image
     public Partner? Partner { get; set; }
 
     public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
+
+    public List<StreetcodeImage> StreetcodeImages { get; set; } = new();
 }

@@ -37,5 +37,7 @@ public class Toponym
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
+    public List<StreetcodeToponym> StreetcodeToponyms { get; set; } = new();
+
     public ToponymCoordinate Coordinate { get; set; }
 }

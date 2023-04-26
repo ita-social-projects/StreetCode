@@ -36,4 +36,6 @@ public class Partner
     public List<PartnerSourceLink> PartnerSourceLinks { get; set; } = new ();
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
+
+    public List<StreetcodePartner> StreetcodePartners { get; set; } = new();
 }

@@ -15,4 +15,5 @@ public class HistoricalContext
     public string Title { get; set; }
 
     public List<TimelineItem> TimelineItems { get; set; } = new ();
+    public List<HistoricalContextTimeline> HistoricalContextTimelines { get; set; } = new();
 }

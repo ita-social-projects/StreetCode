@@ -23,53 +23,31 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         }
 
         private const int _streetcode_id = 1;
+        private const int _subtitle_id = 2;
 
-        private readonly List<Subtitle> subtitles = new List<Subtitle>
+        private readonly Subtitle subtitle = new Subtitle { Id = _subtitle_id, StreetcodeId = _streetcode_id };
+
+		private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = _subtitle_id, StreetcodeId = _streetcode_id };
+        async Task SetupRepository(Subtitle returnElement)
         {
-            new Subtitle
-            {
-                Id = 1,
-                StreetcodeId = _streetcode_id
-            },
-            new Subtitle
-            {
-                Id = 2,
-                StreetcodeId = _streetcode_id
-            }
-        };
-        private readonly List<SubtitleDTO> subtitleDTOs = new List<SubtitleDTO>
+			_mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+				It.IsAny<Expression<Func<Subtitle, bool>>>(),
+				It.IsAny<Func<IQueryable<Subtitle>,
+				IIncludableQueryable<Subtitle, object>>>()))
+				.ReturnsAsync(returnElement);
+		}
+        async Task SetupMapper(SubtitleDTO returnElement)
         {
-            new SubtitleDTO
-            {
-                Id = 1,
-                StreetcodeId = _streetcode_id
-            },
-            new SubtitleDTO
-            {
-                Id = 2,
-                StreetcodeId = _streetcode_id
-            }
-        };
-        async Task SetupRepository(List<Subtitle> returnList)
-        {
-            _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Subtitle, bool>>>(),
-                It.IsAny<Func<IQueryable<Subtitle>,
-                IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(returnList);
-        }
-        async Task SetupMapper(List<SubtitleDTO> returnList)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(returnList);
-        }
+            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+                .Returns(returnElement);
+		}
 
         [Fact]
-        public async Task Handler_Returns_NotEmpty_List()
+        public async Task Handler_Returns_NotEmpty_Value()
         {
             //Arrange
-            await SetupRepository(subtitles);
-            await SetupMapper(subtitleDTOs);
+            await SetupRepository(subtitle);
+            await SetupMapper(subtitleDTO);
 
             var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
@@ -78,26 +56,24 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
             //Assert
             Assert.Multiple(
-                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
-                () => Assert.True(result.Value.All(x => x.StreetcodeId == _streetcode_id)));
+                () => Assert.IsType<SubtitleDTO>(result.Value),
+                () => Assert.True(result.Value != null));
         }
 
         [Fact]
-        public async Task Handler_Returns_Empty_List()
-        {
+        public async Task Handler_Returns_corectValue()
+		{
             //Arrange
-            await SetupRepository(new List<Subtitle>());
-            await SetupMapper(new List<SubtitleDTO>());
+			await SetupRepository(subtitle);
+			await SetupMapper(subtitleDTO);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+			var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
-            //Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
+			//Act
+			var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
-            //Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
-                () => Assert.Empty(result.Value));
-        }
+			//Assert
+             Assert.True(result.Value.StreetcodeId == _streetcode_id);
+		}
     }
 }

@@ -65,8 +65,8 @@ public class StreetcodeDbContext : DbContext
             .HasMany(t => t.Streetcodes)
             .WithMany(s => s.Tags)
             .UsingEntity<StreetcodeTagIndex>(
-            sp => sp.HasOne(x => x.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId),
-            sp => sp.HasOne(x => x.Tag).WithMany().HasForeignKey(x => x.TagId));
+            sp => sp.HasOne(x => x.Streetcode).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.StreetcodeId),
+            sp => sp.HasOne(x => x.Tag).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.TagId));
 
         modelBuilder.Entity<StreetcodeTagIndex>()
            .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
@@ -91,8 +91,8 @@ public class StreetcodeDbContext : DbContext
             .HasMany(d => d.HistoricalContexts)
             .WithMany(h => h.TimelineItems)
             .UsingEntity<HistoricalContextTimeline>(
-                mb => mb.HasOne(x => x.HistoricalContext).WithMany().HasForeignKey(x => x.HistoricalContextId),
-                mb => mb.HasOne(x => x.Timeline).WithMany().HasForeignKey(x => x.TimelineId))
+                mb => mb.HasOne(x => x.HistoricalContext).WithMany(x => x.HistoricalContextTimelines).HasForeignKey(x => x.HistoricalContextId),
+                mb => mb.HasOne(x => x.Timeline).WithMany(x => x.HistoricalContextTimelines).HasForeignKey(x => x.TimelineId))
             .ToTable("timeline_item_historical_context", "timeline");
 
         modelBuilder.Entity<SourceLinkCategory>()
@@ -131,7 +131,7 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Observer)
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)
@@ -188,8 +188,8 @@ public class StreetcodeDbContext : DbContext
         entity.HasMany(d => d.Images)
             .WithMany(i => i.Streetcodes)
             .UsingEntity<StreetcodeImage>(
-                si => si.HasOne(i => i.Image).WithMany().HasForeignKey(i => i.ImageId),
-                si => si.HasOne(i => i.Streetcode).WithMany().HasForeignKey(i => i.StreetcodeId))
+                si => si.HasOne(i => i.Image).WithMany(i => i.StreetcodeImages).HasForeignKey(i => i.ImageId),
+                si => si.HasOne(i => i.Streetcode).WithMany(i => i.StreetcodeImages).HasForeignKey(i => i.StreetcodeId))
             .ToTable("streetcode_image", "streetcode");
 
         entity.HasMany(d => d.TimelineItems)
@@ -199,22 +199,22 @@ public class StreetcodeDbContext : DbContext
         entity.HasMany(d => d.Toponyms)
             .WithMany(t => t.Streetcodes)
             .UsingEntity<StreetcodeToponym>(
-                st => st.HasOne(s => s.Toponym).WithMany().HasForeignKey(x => x.ToponymId),
-                st => st.HasOne(s => s.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+                st => st.HasOne(s => s.Toponym).WithMany(t => t.StreetcodeToponyms).HasForeignKey(x => x.ToponymId),
+                st => st.HasOne(s => s.Streetcode).WithMany(s => s.StreetcodeToponyms).HasForeignKey(x => x.StreetcodeId))
             .ToTable("streetcode_toponym", "streetcode");
 
         entity.HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
                 .UsingEntity<StreetcodeCategoryContent>(
-                    scat => scat.HasOne(i => i.SourceLinkCategory).WithMany().HasForeignKey(i => i.SourceLinkCategoryId),
-                    scat => scat.HasOne(i => i.Streetcode).WithMany().HasForeignKey(i => i.StreetcodeId))
+                    scat => scat.HasOne(i => i.SourceLinkCategory).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.SourceLinkCategoryId),
+                    scat => scat.HasOne(i => i.Streetcode).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.StreetcodeId))
                 .ToTable("streetcode_source_link_categories", "sources");
 
         entity.HasMany(d => d.Partners)
                 .WithMany(p => p.Streetcodes)
                 .UsingEntity<StreetcodePartner>(
-                    sp => sp.HasOne(i => i.Partner).WithMany().HasForeignKey(x => x.PartnerId),
-                    sp => sp.HasOne(i => i.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+                    sp => sp.HasOne(i => i.Partner).WithMany(p => p.StreetcodePartners).HasForeignKey(x => x.PartnerId),
+                    sp => sp.HasOne(i => i.Streetcode).WithMany(s => s.StreetcodePartners).HasForeignKey(x => x.StreetcodeId))
                .ToTable("streetcode_partners", "streetcode");
 
         entity.HasMany(d => d.Videos)

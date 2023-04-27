@@ -78,6 +78,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
 
+    private IPartnerStreetcodeRepository _partnerStreetcodeRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -392,6 +394,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _streetcodeTagIndexRepository;
+        }
+    }
+
+    public IPartnerStreetcodeRepository PartnerStreetcodeRepository
+    {
+        get
+        {
+            if(_partnerStreetcodeRepository is null)
+            {
+                _partnerStreetcodeRepository = new PartnerStreetodeRepository(_streetcodeDbContext);
+            }
+
+            return _partnerStreetcodeRepository;
         }
     }
 

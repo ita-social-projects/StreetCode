@@ -45,7 +45,7 @@ public class PartnersController : BaseApiController
     }
 
     [HttpPut]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+    /*[AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
     public async Task<IActionResult> Update([FromBody] CreatePartnerDTO partner)
     {
         return HandleResult(await Mediator.Send(new BLL.MediatR.Partners.Update.UpdatePartnerQuery(partner)));

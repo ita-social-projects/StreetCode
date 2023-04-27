@@ -19,8 +19,6 @@ public interface IRepositoryBase<T>
 
     void Attach(T entity);
 
-    void ExecuteSQL(string sql);
-
     Task CreateRangeAsync(IEnumerable<T> items);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);

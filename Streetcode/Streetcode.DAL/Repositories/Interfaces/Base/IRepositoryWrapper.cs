@@ -38,6 +38,7 @@ public interface IRepositoryWrapper
     IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     IUserRepository UserRepository { get; }
     IStreetcodeTagIndexRepository StreetcodeTagIndexRepository { get; }
+    IPartnerStreetcodeRepository PartnerStreetcodeRepository { get;  }
 
     public int SaveChanges();
 

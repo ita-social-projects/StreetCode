@@ -11,10 +11,10 @@ namespace Streetcode.DAL.Entities.Media.Images
         public int StreetcodeId { get; set; }
 
         [Required]
-        public int ImmageId { get; set; }
+        public int ImageId { get; set; }
 
         public Image Image { get; set; } = new();
 
-        public StreetcodeContent StreetcodeContent { get; set; } = new();
+        public StreetcodeContent Streetcode { get; set; } = new();
     }
 }

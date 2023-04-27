@@ -9,10 +9,10 @@ namespace Streetcode.DAL.Entities.Partners
         public int StreetcodeId { get; set; }
 
         [Required]
-        public int PartnersId { get; set; }
+        public int PartnerId { get; set; }
 
-        public StreetcodeContent StreetcodeContent { get; set; }
+        public StreetcodeContent? Streetcode { get; set; }
 
-        public Partner Partner { get; set; }
+        public Partner? Partner { get; set; }
     }
 }

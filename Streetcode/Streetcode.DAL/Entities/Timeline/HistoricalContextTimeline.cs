@@ -14,6 +14,6 @@ namespace Streetcode.DAL.Entities.Timeline
 
         public HistoricalContext? HistoricalContext { get; set; }
 
-        public TimelineItem? TimelineItem { get; set; }
+        public TimelineItem? Timeline { get; set; }
     }
 }

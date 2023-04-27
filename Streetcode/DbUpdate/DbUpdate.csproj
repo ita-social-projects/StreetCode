@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="DbUp" Version="5.0.8" />
+    <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.30.0" />
   </ItemGroup>
 
   <ItemGroup>

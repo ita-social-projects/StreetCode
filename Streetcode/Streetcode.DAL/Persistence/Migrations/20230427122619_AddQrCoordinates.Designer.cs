@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230425205237_AddStatistic")]
-    partial class AddStatistic
+    [Migration("20230427122619_AddQrCoordinates")]
+    partial class AddQrCoordinates
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -193,16 +193,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("QrId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CoordinateId");
 
-                    b.ToTable("qr_statistics", "analytics");
+                    b.ToTable("qr_coordinates", "coordinates");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Donation", b =>

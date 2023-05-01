@@ -15,6 +15,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -60,6 +61,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
+    }
+
+    [HttpGet("{qrid:int}")]
+    public async Task<IActionResult> GetByQrId([FromRoute] int qrid)
+    {
+        return HandleResult(await Mediator.Send(new GetStreetcodeUrlByQrIdQuery(qrid)));
     }
 
     [HttpGet("{index}")]

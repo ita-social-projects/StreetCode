@@ -1,6 +1,7 @@
 using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
+using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
@@ -27,6 +28,7 @@ public interface IRepositoryWrapper
     IRelatedFigureRepository RelatedFigureRepository { get; }
     IStreetcodeRepository StreetcodeRepository { get; }
     ISubtitleRepository SubtitleRepository { get; }
+    IStatisticRecordRepository StatisticRecordRepository { get; }
     ITagRepository TagRepository { get; }
     ITermRepository TermRepository { get; }
     IRelatedTermRepository RelatedTermRepository { get; }

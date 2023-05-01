@@ -2,6 +2,7 @@
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
@@ -14,7 +15,6 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Extensions;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -43,6 +43,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Donation> Donations { get; set; }
     public DbSet<StreetcodeContent> Streetcodes { get; set; }
     public DbSet<Subtitle> Subtitles { get; set; }
+    public DbSet<StatisticRecord> StatisticRecords { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<Term> Terms { get; set; }
     public DbSet<RelatedTerm> RelatedTerms { get; set; }

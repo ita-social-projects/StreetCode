@@ -109,6 +109,35 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("tags", "add_content");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("CoordinateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QrId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoordinateId");
+
+                    b.ToTable("qr_coordinates", "coordinates");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Donation", b =>
                 {
                     b.Property<int>("Id")
@@ -907,6 +936,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeCoordinate")
+                        .WithMany()
+                        .HasForeignKey("CoordinateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StreetcodeCoordinate");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>

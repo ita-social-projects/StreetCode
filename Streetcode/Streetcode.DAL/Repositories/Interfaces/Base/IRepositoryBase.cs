@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
@@ -13,11 +14,15 @@ public interface IRepositoryBase<T>
 
     T Create(T entity);
 
-    Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity);
+    EntityEntry<T> Update(T entity);
 
     void Delete(T entity);
 
     void Attach(T entity);
+
+    EntityEntry<T> Entry(T entity);
+
+    void Detach(T entity);
 
     Task CreateRangeAsync(IEnumerable<T> items);
 

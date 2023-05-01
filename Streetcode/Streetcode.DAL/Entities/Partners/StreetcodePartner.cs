@@ -11,8 +11,6 @@ namespace Streetcode.DAL.Entities.Partners
         [Required]
         public int PartnerId { get; set; }
 
-        public string? Text { get; set; }
-
         public StreetcodeContent? Streetcode { get; set; }
 
         public Partner? Partner { get; set; }

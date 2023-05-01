@@ -30,5 +30,4 @@ public class TimelineItem
     public StreetcodeContent? Streetcode { get; set; } = new ();
 
     public List<HistoricalContext> HistoricalContexts { get; set; } = new ();
-    public List<HistoricalContextTimeline> HistoricalContextTimelines { get; set; } = new();
 }

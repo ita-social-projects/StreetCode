@@ -95,11 +95,5 @@ public class StreetcodeContent
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 
-    public List<StreetcodePartner> StreetcodePartners { get; set; } = new();
-
     public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
-
-    public List<StreetcodeImage> StreetcodeImages { get; set; } = new();
-
-    public List<StreetcodeToponym> StreetcodeToponyms { get; set; } = new();
 }

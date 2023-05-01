@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class Initital : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -664,8 +664,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 columns: table => new
                 {
                     StreetcodeId = table.Column<int>(type: "int", nullable: false),
-                    PartnerId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PartnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -37,7 +38,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return _dbContext.Set<T>().Add(entity).Entity;
     }
 
-    public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity)
+    public EntityEntry<T> Update(T entity)
     {
         return _dbContext.Set<T>().Update(entity);
     }
@@ -50,6 +51,16 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
     public void Attach(T entity)
     {
         _dbContext.Set<T>().Attach(entity);
+    }
+
+    public EntityEntry<T> Entry(T entity)
+    {
+        return _dbContext.Entry(entity);
+    }
+
+    public void Detach(T entity)
+    {
+        _dbContext.Entry(entity).State = EntityState.Detached;
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
@@ -128,6 +139,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
             query = query.Select(selector);
         }
 
-        return query;
+        return query.AsNoTracking();
     }
 }

@@ -19,7 +19,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
         public async Task<Result<Unit>> Handle(UpdateTermCommand request, CancellationToken cancellationToken)
         {
             var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
-
             if (term is null)
             {
                 return Result.Fail(new Error("Cannot convert null to Term"));
@@ -28,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             _repository.TermRepository.Update(term);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to create a term"));
+            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update a term"));
         }
     }
 }

@@ -8,6 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
+using Streetcode.DAL.Entities.AdditionalContent;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
@@ -79,6 +80,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(streetcode);
+            _repository.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+               It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
+               It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
+               IIncludableQueryable<StreetcodeTagIndex, object>>>()))
+               .ReturnsAsync(new List<StreetcodeTagIndex>());
+
         }
 
         private void MapperSetup(EventStreetcodeDTO streetcodeDTO)

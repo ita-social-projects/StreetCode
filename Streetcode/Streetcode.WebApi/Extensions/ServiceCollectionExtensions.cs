@@ -10,12 +10,16 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
-using Hangfire;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Streetcode.BLL.Interfaces.Users;
+using Streetcode.BLL.Services.Users;
+using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Payment;
+using Streetcode.BLL.Services.Payment;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -29,14 +33,16 @@ public static class ServiceCollectionExtensions
     public static void AddCustomServices(this IServiceCollection services)
     {
         services.AddRepositoryServices();
-
+        services.AddFeatureManagement();
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
 
         services.AddScoped<IBlobService, BlobService>();
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IPaymentService, PaymentService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
@@ -72,7 +78,8 @@ public static class ServiceCollectionExtensions
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

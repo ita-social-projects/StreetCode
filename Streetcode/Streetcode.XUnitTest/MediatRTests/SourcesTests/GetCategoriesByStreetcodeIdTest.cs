@@ -42,9 +42,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object);
-            
+
             // act
-            
+
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // assert

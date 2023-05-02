@@ -5,6 +5,7 @@ using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
+using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -37,6 +38,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mockRepo.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(new StreetcodeContent() { TransliterationUrl = url });
+            _mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+              It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
+              It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
+              IIncludableQueryable<StreetcodeTagIndex, object>>>()))
+              .ReturnsAsync(new List<StreetcodeTagIndex>());
         }
 
         async Task SetupMapper(string url)

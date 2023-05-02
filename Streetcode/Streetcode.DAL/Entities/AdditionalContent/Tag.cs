@@ -14,5 +14,8 @@ public class Tag
     [Required]
     [MaxLength(50)]
     public string Title { get; set; }
-    public List<StreetcodeContent> Streetcodes { get; set; } = new();
+
+    public IEnumerable<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
+
+    public IEnumerable<StreetcodeContent> Streetcodes { get; set; }
 }

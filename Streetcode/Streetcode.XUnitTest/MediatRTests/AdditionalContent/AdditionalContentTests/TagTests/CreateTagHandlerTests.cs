@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using AutoMapper.Internal;
 using FluentAssertions;
 using FluentResults;
@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;

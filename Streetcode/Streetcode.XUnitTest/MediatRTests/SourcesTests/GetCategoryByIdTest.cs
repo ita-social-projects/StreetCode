@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,8 +15,10 @@ public class GetCategoryByIdTest
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IBlobService> _mockBlobService;
     public GetCategoryByIdTest()
     {
+        _mockBlobService = new Mock<IBlobService>();
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
     }
@@ -35,7 +38,10 @@ public class GetCategoryByIdTest
         _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
             .Returns(GetSourceDTO());
 
-        var handler = new GetCategoryByIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetCategoryByIdHandler(
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockBlobService.Object);
 
         // act
 
@@ -63,7 +69,10 @@ public class GetCategoryByIdTest
         _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
             .Returns(GetSourceDTO());
 
-        var handler = new GetCategoryByIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetCategoryByIdHandler(
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockBlobService.Object);
 
         var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
         // act
@@ -77,12 +86,25 @@ public class GetCategoryByIdTest
 
     private SourceLinkCategoryDTO GetSourceDTO()
     {
-        return new SourceLinkCategoryDTO() { Id = 1 };
+        return new SourceLinkCategoryDTO() {
+            Id = 1,
+            Image = new BLL.DTO.Media.Images.ImageDTO()
+            {
+                BlobName = ""
+            }
+        };
     }
 
     private SourceLinkCategory GetSourceLinkCategory()
     {
-        return new SourceLinkCategory() { Id = 1 };
+        return new SourceLinkCategory() {
+            Image = new DAL.Entities.Media.Images.Image()
+            {
+                BlobName = ""
+            },
+
+            Id = 1 
+        };
     }
 
     private SourceLinkCategory? GetSourceLinkCategoryNotExists()

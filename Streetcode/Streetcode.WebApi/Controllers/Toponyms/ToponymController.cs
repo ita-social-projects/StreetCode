@@ -9,9 +9,9 @@ namespace Streetcode.WebApi.Controllers.Toponyms;
 public class ToponymController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllToponymsRequestDTO request)
     {
-        return HandleResult(await Mediator.Send(new GetAllToponymsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllToponymsQuery(request)));
     }
 
     [HttpGet("{id:int}")]

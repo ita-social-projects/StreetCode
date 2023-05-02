@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
 
@@ -8,7 +8,7 @@ public class SubtitleProfile : Profile
 {
    public SubtitleProfile()
    {
-        CreateMap<Subtitle, SubtitleDTO>()
-            .ReverseMap();
-   }
+        CreateMap<Subtitle, SubtitleDTO>().ReverseMap();
+        CreateMap<SubtitleCreateDTO, Subtitle>().ReverseMap();
+  }
 }

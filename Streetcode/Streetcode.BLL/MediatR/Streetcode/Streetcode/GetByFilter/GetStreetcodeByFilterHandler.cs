@@ -126,9 +126,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
             return new StreetcodeFilterResultDTO
             {
                 StreetcodeId = streetcode.Id,
-                StreetcodeUrl = $"http://localhost:3000/streetcode/{streetcode.TransliterationUrl}" + (string.IsNullOrEmpty(blockName) ? "" : $"#{blockName}"),
+                StreetcodeTransliterationUrl = streetcode.TransliterationUrl,
+                StreetcodeIndex = streetcode.Index,
+                BlockName = blockName,
                 Content = content,
-                SourceName = $"Стріткод #{streetcode.Id:0000}" + (string.IsNullOrEmpty(sourceName) ? "" : $"/{sourceName}"),
+                SourceName = sourceName,
             };
         }
     }

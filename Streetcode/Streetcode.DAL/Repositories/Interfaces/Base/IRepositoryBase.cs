@@ -28,7 +28,7 @@ public interface IRepositoryBase<T>
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
-    Task<IEnumerable<T>?> GetAllAsync(
+    Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 

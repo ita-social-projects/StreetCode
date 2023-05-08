@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                 var oldStreetcodes = await _repositoryWrapper.PartnerStreetcodeRepository
                     .GetAllAsync(ps => ps.PartnerId == partner.Id);
 
-                foreach (var old in oldStreetcodes)
+                foreach (var old in oldStreetcodes!)
                 {
                     if (!newStreetcodeIds.Contains(old.StreetcodeId))
                     {
@@ -55,7 +55,7 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                     }
                 }
 
-                foreach (var newCodeId in newStreetcodeIds)
+                foreach (var newCodeId in newStreetcodeIds!)
                 {
                     if (oldStreetcodes.FirstOrDefault(x => x.StreetcodeId == newCodeId) == null)
                     {

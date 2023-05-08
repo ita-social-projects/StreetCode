@@ -20,6 +20,10 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
         public async Task<Result<Unit>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
+            if (category.ImageId != 0)
+            {
+                category.Image = null;
+            }
 
             if (category is null)
             {

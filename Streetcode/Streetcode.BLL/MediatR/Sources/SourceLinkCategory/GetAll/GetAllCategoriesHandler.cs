@@ -2,7 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
@@ -11,10 +14,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        private readonly IBlobService _blobService;
+        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _blobService = blobService;
         }
 
         public async Task<Result<IEnumerable<SourceLinkCategoryDTO>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
@@ -26,7 +31,14 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 return Result.Fail(new Error($"Categories is null"));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories));
+            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);
+
+            foreach (var dto in dtos)
+            {
+                dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
+            }
+
+            return Result.Ok(dtos);
         }
     }
 }

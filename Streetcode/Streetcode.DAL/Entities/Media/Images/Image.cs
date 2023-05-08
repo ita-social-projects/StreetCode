@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
-
+using Streetcode.DAL.Entities.News;
 namespace Streetcode.DAL.Entities.Media.Images;
 
 [Table("images", Schema = "media")]
@@ -35,4 +35,6 @@ public class Image
     public Partner? Partner { get; set; }
 
     public List<SourceLinkCategory> SourceLinkCategories { get; set; } = new ();
+
+    public News.News News { get; set; }
 }

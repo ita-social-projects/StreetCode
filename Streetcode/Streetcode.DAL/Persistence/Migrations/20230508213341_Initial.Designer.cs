@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230501101947_Initial")]
+    [Migration("20230508213341_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,6 +301,42 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("videos", "media");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.News.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("URL")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
+
+                    b.ToTable("news", "news");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
                 {
                     b.Property<int>("Id")
@@ -492,7 +528,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("EventEndOrPersonDeathDate")
+                    b.Property<DateTime?>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EventStartOrPersonBirthDate")
@@ -509,7 +545,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Teaser")
-                        .IsRequired()
                         .HasMaxLength(650)
                         .HasColumnType("nvarchar(650)");
 
@@ -655,6 +690,95 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("texts", "streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.Positions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("positions", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("team_members", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<byte>("LogoType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("TargetUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TeamMemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamMemberId");
+
+                    b.ToTable("team_member_links", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberPositions", b =>
+                {
+                    b.Property<int>("TeamMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TeamMemberId", "PositionsId");
+
+                    b.HasIndex("PositionsId");
+
+                    b.ToTable("team_member_positions", "team");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContext", b =>
@@ -997,6 +1121,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.News.News", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("News")
+                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Logo")
@@ -1156,6 +1291,36 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
+                        .WithMany("TeamMemberLinks")
+                        .HasForeignKey("TeamMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TeamMember");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberPositions", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Team.Positions", "Positions")
+                        .WithMany()
+                        .HasForeignKey("PositionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
+                        .WithMany()
+                        .HasForeignKey("TeamMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Positions");
+
+                    b.Navigation("TeamMember");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContextTimeline", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Timeline.HistoricalContext", "HistoricalContext")
@@ -1259,6 +1424,9 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Facts");
 
+                    b.Navigation("News")
+                        .IsRequired();
+
                     b.Navigation("Partner");
 
                     b.Navigation("SourceLinkCategories");
@@ -1304,6 +1472,11 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
                 {
                     b.Navigation("RelatedTerms");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.Navigation("TeamMemberLinks");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>

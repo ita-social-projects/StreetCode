@@ -27,9 +27,8 @@ public class StreetcodeContent
     [Required]
     public int Index { get; set; }
 
-    [Required]
     [MaxLength(650)]
-    public string Teaser { get; set; }
+    public string? Teaser { get; set; }
 
     [Required]
     [MaxLength(50)]
@@ -56,8 +55,7 @@ public class StreetcodeContent
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
 
-    [Required]
-    public DateTime EventEndOrPersonDeathDate { get; set; }
+    public DateTime? EventEndOrPersonDeathDate { get; set; }
 
     public int? AudioId { get; set; }
 

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -37,7 +38,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return _dbContext.Set<T>().Add(entity).Entity;
     }
 
-    public Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity)
+    public EntityEntry<T> Update(T entity)
     {
         return _dbContext.Set<T>().Update(entity);
     }
@@ -52,9 +53,14 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Set<T>().Attach(entity);
     }
 
-    public void ExecuteSQL(string sql)
+    public EntityEntry<T> Entry(T entity)
     {
-        _dbContext.Database.ExecuteSqlRaw(sql);
+        return _dbContext.Entry(entity);
+    }
+
+    public void Detach(T entity)
+    {
+        _dbContext.Entry(entity).State = EntityState.Detached;
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
@@ -74,11 +80,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
-    public async Task<IEnumerable<T>?> GetAllAsync(
+    public async Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQueryable(predicate, include).ToListAsync() ?? new List<T>();
+        return await GetQueryable(predicate, include).ToListAsync();
     }
 
     public async Task<IEnumerable<T>?> GetAllAsync(
@@ -133,6 +139,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
             query = query.Select(selector);
         }
 
-        return query;
+        return query.AsNoTracking();
     }
 }

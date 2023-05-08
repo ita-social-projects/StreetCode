@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
@@ -13,19 +14,21 @@ public interface IRepositoryBase<T>
 
     T Create(T entity);
 
-    Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> Update(T entity);
+    EntityEntry<T> Update(T entity);
 
     void Delete(T entity);
 
     void Attach(T entity);
 
-    void ExecuteSQL(string sql);
+    EntityEntry<T> Entry(T entity);
+
+    void Detach(T entity);
 
     Task CreateRangeAsync(IEnumerable<T> items);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
-    Task<IEnumerable<T>?> GetAllAsync(
+    Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 

@@ -22,5 +22,7 @@ public class Fact
 
     public Image? Image { get; set; }
 
-    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
+    public int StreetcodeId { get; set; }
+
+    public StreetcodeContent Streetcode { get; set; } = new ();
 }

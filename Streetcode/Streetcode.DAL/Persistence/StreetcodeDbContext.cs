@@ -65,7 +65,9 @@ public class StreetcodeDbContext : DbContext
         modelBuilder.Entity<Tag>()
             .HasMany(t => t.Streetcodes)
             .WithMany(s => s.Tags)
-            .UsingEntity<StreetcodeTagIndex>();
+            .UsingEntity<StreetcodeTagIndex>(
+            sp => sp.HasOne(x => x.Streetcode).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.StreetcodeId),
+            sp => sp.HasOne(x => x.Tag).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.TagId));
 
         modelBuilder.Entity<StreetcodeTagIndex>()
            .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
@@ -89,7 +91,10 @@ public class StreetcodeDbContext : DbContext
         modelBuilder.Entity<TimelineItem>()
             .HasMany(d => d.HistoricalContexts)
             .WithMany(h => h.TimelineItems)
-            .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
+            .UsingEntity<HistoricalContextTimeline>(
+                mb => mb.HasOne(x => x.HistoricalContext).WithMany().HasForeignKey(x => x.HistoricalContextId),
+                mb => mb.HasOne(x => x.Timeline).WithMany().HasForeignKey(x => x.TimelineId))
+            .ToTable("timeline_item_historical_context", "timeline");
 
         modelBuilder.Entity<SourceLinkCategory>()
             .HasMany(d => d.StreetcodeCategoryContents)
@@ -127,7 +132,7 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Observer)
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)
@@ -159,63 +164,75 @@ public class StreetcodeDbContext : DbContext
 
         modelBuilder.Entity<StreetcodeContent>(entity =>
         {
-            entity.Property(s => s.CreatedAt)
-                .HasDefaultValueSql("GETDATE()");
+        entity.Property(s => s.CreatedAt)
+            .HasDefaultValueSql("GETDATE()");
 
-            entity.Property(s => s.UpdatedAt)
-                .HasDefaultValueSql("GETDATE()");
+        entity.Property(s => s.UpdatedAt)
+            .HasDefaultValueSql("GETDATE()");
 
-            entity.Property(s => s.ViewCount)
-                .HasDefaultValue(0);
+        entity.Property(s => s.ViewCount)
+            .HasDefaultValue(0);
 
-            entity.HasDiscriminator<string>("StreetcodeType")
-                .HasValue<StreetcodeContent>("streetcode-base")
-                .HasValue<PersonStreetcode>("streetcode-person")
-                .HasValue<EventStreetcode>("streetcode-event");
+        entity.HasDiscriminator<string>("StreetcodeType")
+            .HasValue<StreetcodeContent>("streetcode-base")
+            .HasValue<PersonStreetcode>("streetcode-person")
+            .HasValue<EventStreetcode>("streetcode-event");
 
-            entity.HasMany(d => d.Coordinates)
-                .WithOne(c => c.Streetcode)
-                .OnDelete(DeleteBehavior.Cascade);
+        entity.HasMany(d => d.Coordinates)
+            .WithOne(c => c.Streetcode)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasMany(d => d.Facts)
-                .WithMany(f => f.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_fact", "streetcode"));
+        entity.HasMany(d => d.Facts)
+            .WithOne(f => f.Streetcode)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasMany(d => d.Images)
-                .WithMany(i => i.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
+        entity.HasMany(d => d.Images)
+            .WithMany(i => i.Streetcodes)
+            .UsingEntity<StreetcodeImage>(
+                si => si.HasOne(i => i.Image).WithMany().HasForeignKey(i => i.ImageId),
+                si => si.HasOne(i => i.Streetcode).WithMany().HasForeignKey(i => i.StreetcodeId))
+            .ToTable("streetcode_image", "streetcode");
 
-            entity.HasMany(d => d.TimelineItems)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_timeline_item", "streetcode"));
+        entity.HasMany(d => d.TimelineItems)
+            .WithOne(t => t.Streetcode)
+            .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasMany(d => d.Toponyms)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));
+        entity.HasMany(d => d.Toponyms)
+            .WithMany(t => t.Streetcodes)
+            .UsingEntity<StreetcodeToponym>(
+                st => st.HasOne(s => s.Toponym).WithMany().HasForeignKey(x => x.ToponymId),
+                st => st.HasOne(s => s.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+            .ToTable("streetcode_toponym", "streetcode");
 
-            entity.HasMany(d => d.SourceLinkCategories)
+        entity.HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
-                .UsingEntity<StreetcodeCategoryContent>(j => j.ToTable("streetcode_source_link_categories", "sources"));
+                .UsingEntity<StreetcodeCategoryContent>(
+                    scat => scat.HasOne(i => i.SourceLinkCategory).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.SourceLinkCategoryId),
+                    scat => scat.HasOne(i => i.Streetcode).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.StreetcodeId))
+                .ToTable("streetcode_source_link_categories", "sources");
 
-            entity.HasMany(d => d.Partners)
+        entity.HasMany(d => d.Partners)
                 .WithMany(p => p.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_partners", "streetcode"));
+                .UsingEntity<StreetcodePartner>(
+                    sp => sp.HasOne(i => i.Partner).WithMany().HasForeignKey(x => x.PartnerId),
+                    sp => sp.HasOne(i => i.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+               .ToTable("streetcode_partners", "streetcode");
 
-            entity.HasMany(d => d.Videos)
+        entity.HasMany(d => d.Videos)
                 .WithOne(p => p.Streetcode)
                 .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Audio)
+        entity.HasOne(d => d.Audio)
                 .WithOne(p => p.Streetcode)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Text)
+        entity.HasOne(d => d.Text)
                 .WithOne(p => p.Streetcode)
                 .HasForeignKey<Text>(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.TransactionLink)
+        entity.HasOne(d => d.TransactionLink)
                 .WithOne(p => p.Streetcode)
                 .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -20,7 +20,7 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
     public async Task<Result<IEnumerable<FactDTO>>> Handle(GetFactByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var fact = await _repositoryWrapper.FactRepository
-            .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId));
+            .GetAllAsync(f => f.StreetcodeId == request.StreetcodeId);
 
         if (fact is null)
         {

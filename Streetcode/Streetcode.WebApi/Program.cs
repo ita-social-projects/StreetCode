@@ -14,7 +14,7 @@ builder.Services.ConfigurePayment(builder);
 var app = builder.Build();
 
 // await app.ApplyMigrations();
-/*await app.MigrateAndSeedDbAsync();*/
+await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

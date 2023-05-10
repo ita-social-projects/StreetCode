@@ -15,7 +15,11 @@ public class Text
     public string Title { get; set; }
 
     [Required]
+    [MaxLength(1000)]
     public string TextContent { get; set; }
+
+    [MaxLength(200)]
+    public string? AdditionalText { get; set; }
 
     [Required]
     public int StreetcodeId { get; set; }

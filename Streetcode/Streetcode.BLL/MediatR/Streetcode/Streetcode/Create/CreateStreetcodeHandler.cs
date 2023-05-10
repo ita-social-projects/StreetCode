@@ -136,6 +136,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         {
             var newArt = _mapper.Map<StreetcodeArt>(art);
             newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.ImageId);
+            newArt.Art.Image.Alt = art.Title;
             artsToCreate.Add(newArt);
         }
 

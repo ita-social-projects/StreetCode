@@ -89,13 +89,6 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] StreetcodeDTO streetcode)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
     [HttpPatch("{id:int}/{status}")]
     [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> PatchStage(

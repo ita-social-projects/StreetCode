@@ -15,10 +15,10 @@ public class Text
     public string Title { get; set; }
 
     [Required]
-    [MaxLength(2000)]
+    [MaxLength(1000)]
     public string TextContent { get; set; }
 
-    [MaxLength(300)]
+    [MaxLength(200)]
     public string? AdditionalText { get; set; }
 
     [Required]

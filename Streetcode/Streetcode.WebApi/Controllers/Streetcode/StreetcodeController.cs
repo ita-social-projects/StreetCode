@@ -78,7 +78,14 @@ public class StreetcodeController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
     {
-        return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
+        try
+        {
+            return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
+        }
+        catch (Exception)
+        {
+            return BadRequest();
+        }
     }
 
     [HttpPut("{id:int}")]

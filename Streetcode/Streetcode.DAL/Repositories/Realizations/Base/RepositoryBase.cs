@@ -80,11 +80,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
-    public async Task<IEnumerable<T>?> GetAllAsync(
+    public async Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQueryable(predicate, include).ToListAsync() ?? new List<T>();
+        return await GetQueryable(predicate, include).ToListAsync();
     }
 
     public async Task<IEnumerable<T>?> GetAllAsync(

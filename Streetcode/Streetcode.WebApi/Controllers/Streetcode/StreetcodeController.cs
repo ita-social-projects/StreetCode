@@ -15,6 +15,8 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter;
+using Streetcode.BLL.DTO.AdditionalContent.Filter;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
 
@@ -38,6 +40,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetShortById(int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id)));
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetByFilter([FromQuery] StreetcodeFilterRequestDTO request)
+    {
+        return HandleResult(await Mediator.Send(new GetStreetcodeByFilterQuery(request)));
     }
 
     [HttpGet("{index:int}")]

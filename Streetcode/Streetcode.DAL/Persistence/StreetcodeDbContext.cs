@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -6,11 +7,13 @@ using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
+using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
@@ -56,16 +59,41 @@ public class StreetcodeDbContext : DbContext
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
-
+    public DbSet<TeamMember> TeamMembers { get; set; }
+    public DbSet<TeamMemberLink> TeamMemberLinks { get; set; }
+    public DbSet<Positions> Positions { get; set; }
+    public DbSet<News> News { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
+        modelBuilder.Entity<News>()
+            .HasOne(x => x.Image)
+            .WithOne(x => x.News)
+            .HasForeignKey<News>(x => x.ImageId);
+
+        modelBuilder.Entity<TeamMember>()
+            .HasMany(x => x.Positions)
+            .WithMany(x => x.TeamMembers)
+            .UsingEntity<TeamMemberPositions>(
+            tp => tp.HasOne(x => x.Positions).WithMany().HasForeignKey(x => x.PositionsId),
+            tp => tp.HasOne(x => x.TeamMember).WithMany().HasForeignKey(x => x.TeamMemberId));
+
+        modelBuilder.Entity<TeamMember>()
+            .HasMany(x => x.TeamMemberLinks)
+            .WithOne(x => x.TeamMember)
+            .HasForeignKey(x => x.TeamMemberId);
+
+        modelBuilder.Entity<TeamMemberPositions>()
+            .HasKey(nameof(TeamMemberPositions.TeamMemberId), nameof(TeamMemberPositions.PositionsId));
+
         modelBuilder.Entity<Tag>()
             .HasMany(t => t.Streetcodes)
             .WithMany(s => s.Tags)
-            .UsingEntity<StreetcodeTagIndex>();
+            .UsingEntity<StreetcodeTagIndex>(
+            sp => sp.HasOne(x => x.Streetcode).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.StreetcodeId),
+            sp => sp.HasOne(x => x.Tag).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.TagId));
 
         modelBuilder.Entity<StreetcodeTagIndex>()
            .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
@@ -89,7 +117,10 @@ public class StreetcodeDbContext : DbContext
         modelBuilder.Entity<TimelineItem>()
             .HasMany(d => d.HistoricalContexts)
             .WithMany(h => h.TimelineItems)
-            .UsingEntity(j => j.ToTable("timeline_item_historical_context", "timeline"));
+            .UsingEntity<HistoricalContextTimeline>(
+                mb => mb.HasOne(x => x.HistoricalContext).WithMany().HasForeignKey(x => x.HistoricalContextId),
+                mb => mb.HasOne(x => x.Timeline).WithMany().HasForeignKey(x => x.TimelineId))
+            .ToTable("timeline_item_historical_context", "timeline");
 
         modelBuilder.Entity<SourceLinkCategory>()
             .HasMany(d => d.StreetcodeCategoryContents)
@@ -127,7 +158,7 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Observer)
                 .WithMany(d => d.Observers)
                 .HasForeignKey(d => d.ObserverId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(d => d.Target)
                 .WithMany(d => d.Targets)
@@ -178,47 +209,59 @@ public class StreetcodeDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Facts)
-                .WithMany(f => f.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_fact", "streetcode"));
+                .WithOne(f => f.Streetcode)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Images)
                 .WithMany(i => i.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_image", "streetcode"));
+                .UsingEntity<StreetcodeImage>(
+                    si => si.HasOne(i => i.Image).WithMany().HasForeignKey(i => i.ImageId),
+                    si => si.HasOne(i => i.Streetcode).WithMany().HasForeignKey(i => i.StreetcodeId))
+                .ToTable("streetcode_image", "streetcode");
 
             entity.HasMany(d => d.TimelineItems)
-                .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_timeline_item", "streetcode"));
+                .WithOne(t => t.Streetcode)
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasMany(d => d.Toponyms)
                 .WithMany(t => t.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_toponym", "streetcode"));
+                .UsingEntity<StreetcodeToponym>(
+                    st => st.HasOne(s => s.Toponym).WithMany().HasForeignKey(x => x.ToponymId),
+                    st => st.HasOne(s => s.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+                .ToTable("streetcode_toponym", "streetcode");
 
             entity.HasMany(d => d.SourceLinkCategories)
-                .WithMany(c => c.Streetcodes)
-                .UsingEntity<StreetcodeCategoryContent>(j => j.ToTable("streetcode_source_link_categories", "sources"));
+                    .WithMany(c => c.Streetcodes)
+                    .UsingEntity<StreetcodeCategoryContent>(
+                        scat => scat.HasOne(i => i.SourceLinkCategory).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.SourceLinkCategoryId),
+                        scat => scat.HasOne(i => i.Streetcode).WithMany(s => s.StreetcodeCategoryContents).HasForeignKey(i => i.StreetcodeId))
+                    .ToTable("streetcode_source_link_categories", "sources");
 
             entity.HasMany(d => d.Partners)
-                .WithMany(p => p.Streetcodes)
-                .UsingEntity(j => j.ToTable("streetcode_partners", "streetcode"));
+                    .WithMany(p => p.Streetcodes)
+                    .UsingEntity<StreetcodePartner>(
+                        sp => sp.HasOne(i => i.Partner).WithMany().HasForeignKey(x => x.PartnerId),
+                        sp => sp.HasOne(i => i.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
+                   .ToTable("streetcode_partners", "streetcode");
 
             entity.HasMany(d => d.Videos)
-                .WithOne(p => p.Streetcode)
-                .HasForeignKey(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                    .WithOne(p => p.Streetcode)
+                    .HasForeignKey(d => d.StreetcodeId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Audio)
-                .WithOne(p => p.Streetcode)
-                .OnDelete(DeleteBehavior.Cascade);
+                    .WithOne(p => p.Streetcode)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Text)
-                .WithOne(p => p.Streetcode)
-                .HasForeignKey<Text>(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                    .WithOne(p => p.Streetcode)
+                    .HasForeignKey<Text>(d => d.StreetcodeId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.TransactionLink)
-                .WithOne(p => p.Streetcode)
-                .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                    .WithOne(p => p.Streetcode)
+                    .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
+                    .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<RelatedTerm>()

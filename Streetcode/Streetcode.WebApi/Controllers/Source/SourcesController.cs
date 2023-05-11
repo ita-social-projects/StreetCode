@@ -20,6 +20,12 @@ public class SourcesController : BaseApiController
         return HandleResult(await Mediator.Send(new GetAllCategoryNamesQuery()));
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAllCategories()
+    {
+        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery()));
+    }
+
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetCategoryById([FromRoute] int id)
     {

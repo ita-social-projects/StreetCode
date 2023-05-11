@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 

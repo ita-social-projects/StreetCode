@@ -40,14 +40,14 @@ public class ImageController : BaseApiController
     }
 
     [HttpPut]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+    /*[AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
     public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDTO image)
     {
         return HandleResult(await Mediator.Send(new UpdateImageCommand(image)));
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+    /*[AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteImageCommand(id)));

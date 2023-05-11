@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
@@ -67,6 +67,11 @@ public class StreetcodeDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
+
+        modelBuilder.Entity<StatisticRecord>()
+              .HasOne(x => x.StreetcodeCoordinate)
+              .WithOne(x => x.StatisticRecord)
+              .HasForeignKey<StatisticRecord>(x => x.StreetcodeCoordinateId);
 
         modelBuilder.Entity<News>()
             .HasOne(x => x.Image)
@@ -262,6 +267,11 @@ public class StreetcodeDbContext : DbContext
                     .WithOne(p => p.Streetcode)
                     .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(d => d.StatisticRecords)
+                    .WithOne(t => t.Streetcode)
+                    .HasForeignKey(t => t.StreetcodeId)
+                    .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<RelatedTerm>()

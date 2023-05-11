@@ -5,6 +5,7 @@ using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Newss;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
@@ -17,6 +18,7 @@ using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
+using Streetcode.DAL.Repositories.Realizations.Newss;
 using Streetcode.DAL.Repositories.Realizations.Partners;
 using Streetcode.DAL.Repositories.Realizations.Source;
 using Streetcode.DAL.Repositories.Realizations.Streetcode;
@@ -83,10 +85,24 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
 
     private IPartnerStreetcodeRepository _partnerStreetcodeRepository;
+    private INewsRepository _newsRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
+    }
+
+    public INewsRepository NewsRepository
+    {
+        get
+        {
+            if (_newsRepository is null)
+            {
+                _newsRepository = new NewsRepository(_streetcodeDbContext);
+            }
+
+            return _newsRepository;
+        }
     }
 
     public IFactRepository FactRepository

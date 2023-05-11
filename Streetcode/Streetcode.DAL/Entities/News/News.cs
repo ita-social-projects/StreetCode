@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.DAL.Entities.News
 {
     [Table("news", Schema = "news")]
+    [Index(nameof(URL), IsUnique = true)]
     public class News
     {
         [Key]
@@ -18,8 +21,8 @@ namespace Streetcode.DAL.Entities.News
         [Required]
         [MaxLength(100)]
         public string URL { get; set; }
-        public int ImageId { get; set; }
-        public Image Image { get; set; }
+        public int? ImageId { get; set; }
+        public Image? Image { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }
     }

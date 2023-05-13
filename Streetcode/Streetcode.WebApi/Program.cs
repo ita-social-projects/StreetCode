@@ -1,5 +1,6 @@
 using Hangfire;
 using Serilog;
+using Serilog.Events;
 using Streetcode.BLL.Middleware;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
@@ -12,11 +13,9 @@ builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
 
-builder.AddSerilog();
+builder.AddSerilog(LogEventLevel.Information);
 
 var app = builder.Build();
-
-// await app.MigrateAndSeedDbAsync();
 
 // await app.MigrateAndSeedDbAsync();
 
@@ -40,10 +39,10 @@ app.UseAuthorization();
 app.UseHangfireDashboard();
 
 // change Cron.Monthly to set another parsing interval from ukrposhta
-BackgroundJob.Schedule<WebParsingUtils>(
+/*BackgroundJob.Schedule<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
 RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
 
 app.MapControllers();
 

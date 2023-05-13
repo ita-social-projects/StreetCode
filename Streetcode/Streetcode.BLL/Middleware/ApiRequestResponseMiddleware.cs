@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.BLL.Middleware;
@@ -28,7 +30,9 @@ public class ApiRequestResponseMiddleware : IMiddleware
 
         var response = await GetResponseAsTextAsync(context.Response);
 
-        _loggerService.LogInformation(response);
+        var filteredResponse = GetResponseWithMaxLegth(response);
+
+        _loggerService.LogInformation(filteredResponse);
 
         await responseBody.CopyToAsync(originalBodyStream);
     }
@@ -59,5 +63,22 @@ public class ApiRequestResponseMiddleware : IMiddleware
         response.Body.Seek(0, SeekOrigin.Begin);
 
         return text;
+    }
+
+    private string? GetResponseWithMaxLegth(string response)
+    {
+        JObject jsonObject = JObject.Parse(response);
+
+        foreach (var property in jsonObject.Properties())
+        {
+            if (property.Value.ToString().Length > 100)
+            {
+                string currentValue = property.Value.ToString();
+
+                property.Value = currentValue.Substring(0, 100);
+            }
+        }
+
+        return jsonObject.ToString();
     }
 }

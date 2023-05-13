@@ -21,6 +21,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.ApplicationInsights.Extensibility;
 using Streetcode.BLL.Middleware;
 using Microsoft.FeatureManagement;
+using Serilog.Events;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -44,23 +45,20 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmailService, EmailService>();
         services.AddTransient<ApiRequestResponseMiddleware>();
 
-        services.Configure<BlobEnvirovmentVariables>(options =>
+        services.Configure<BlobEnvironmentVariables>(options =>
         {
             options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
             options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
         });
     }
 
-    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, LogEventLevel minimumLogLevel)
     {
         builder.Host.UseSerilog((ctx, services, lc) =>
         {
-            lc.Enrich.FromLogContext();
-            lc.Enrich.WithMachineName();
-            lc.Enrich.WithThreadId();
             lc.Enrich.WithProperty("ApplicationName", "Streetcode");
+            lc.MinimumLevel.Is(minimumLogLevel);
             lc.WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate);
-            lc.WriteTo.Debug();
         });
 
         return builder;

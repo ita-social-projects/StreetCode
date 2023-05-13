@@ -11,11 +11,12 @@ builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
+builder.AddSerilog(Serilog.Events.LogEventLevel.Information);
 
 var app = builder.Build();
 
 // await app.ApplyMigrations();
-await app.MigrateAndSeedDbAsync();
+// await app.MigrateAndSeedDbAsync();
 
 if (app.Environment.EnvironmentName == "Local")
 {

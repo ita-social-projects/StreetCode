@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.DAL.Entities.Team
 {
@@ -26,5 +27,8 @@ namespace Streetcode.DAL.Entities.Team
         public bool IsMain { get; set; }
         public List<TeamMemberLink> TeamMemberLinks { get; set; }
         public List<Positions> Positions { get; set; }
+        [Required]
+        public int ImageId { get; set; }
+        public Image Image { get; set; }
     }
 }

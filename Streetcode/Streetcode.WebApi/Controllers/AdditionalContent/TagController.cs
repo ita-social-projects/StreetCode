@@ -39,17 +39,4 @@ public class TagController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new CreateTagQuery(tagTitle)));
     }
-
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TagDTO tag)
-    {
-        return Ok();
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
 }

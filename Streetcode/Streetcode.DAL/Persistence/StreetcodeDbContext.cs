@@ -74,6 +74,11 @@ public class StreetcodeDbContext : DbContext
             .HasForeignKey<News>(x => x.ImageId);
 
         modelBuilder.Entity<TeamMember>()
+            .HasOne(x => x.Image)
+            .WithOne(x => x.TeamMember)
+            .HasForeignKey<TeamMember>(x => x.ImageId);
+
+        modelBuilder.Entity<TeamMember>()
             .HasMany(x => x.Positions)
             .WithMany(x => x.TeamMembers)
             .UsingEntity<TeamMemberPositions>(

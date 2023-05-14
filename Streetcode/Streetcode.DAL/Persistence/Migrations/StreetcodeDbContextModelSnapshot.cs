@@ -666,16 +666,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AdditionalText")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
                     b.Property<string>("TextContent")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(1200)
+                        .HasColumnType("nvarchar(1200)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -726,6 +726,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -735,6 +738,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
                     b.ToTable("team_members", "team");
                 });
@@ -1289,6 +1295,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("TeamMember")
+                        .HasForeignKey("Streetcode.DAL.Entities.Team.TeamMember", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
@@ -1428,6 +1445,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Partner");
 
                     b.Navigation("SourceLinkCategories");
+
+                    b.Navigation("TeamMember")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>

@@ -11,7 +11,9 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllFactsHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

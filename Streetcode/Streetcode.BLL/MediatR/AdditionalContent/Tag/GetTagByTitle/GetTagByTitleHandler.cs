@@ -12,7 +12,9 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetTagByTitleHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTagByTitleHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

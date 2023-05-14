@@ -12,7 +12,9 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetSubtitleByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

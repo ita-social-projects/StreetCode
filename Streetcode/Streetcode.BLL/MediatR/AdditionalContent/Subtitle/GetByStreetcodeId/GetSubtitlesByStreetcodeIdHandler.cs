@@ -11,7 +11,9 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
 
-        public GetSubtitlesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetSubtitlesByStreetcodeIdHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

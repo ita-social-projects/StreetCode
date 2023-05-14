@@ -11,7 +11,9 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
 
-        public CreateTagHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public CreateTagHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

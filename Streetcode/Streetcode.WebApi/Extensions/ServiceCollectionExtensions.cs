@@ -15,9 +15,14 @@ using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+using Microsoft.ApplicationInsights.Extensibility;
+using Streetcode.BLL.Middleware;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
+using Serilog.Events;
 using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 
@@ -37,12 +42,31 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
-
+        
         services.AddScoped<IBlobService, BlobService>();
+        services.AddScoped(typeof(ILoggerService), typeof(LoggerService));
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddTransient<ApiRequestResponseMiddleware>();
+
+        services.Configure<BlobEnvironmentVariables>(options =>
+        {
+            options.BlobStoreKey = Environment.GetEnvironmentVariable("BlobStoreKey");
+            options.BlobStorePath = Environment.GetEnvironmentVariable("BlobStorePath");
+        });
+    }
+
+    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, LogEventLevel minimumLogLevel)
+    {
+        builder.Host.UseSerilog((ctx, services, lc) =>
+        {
+            lc.Enrich.WithProperty("ApplicationName", "Streetcode");
+            lc.MinimumLevel.Is(minimumLogLevel);
+            lc.WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate);
+        });
+
+        return builder;
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

@@ -11,7 +11,9 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public GetTagByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTagByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

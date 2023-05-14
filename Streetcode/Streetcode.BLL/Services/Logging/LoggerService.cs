@@ -1,40 +1,40 @@
-﻿using Microsoft.Extensions.Logging;
-using Streetcode.BLL.Interfaces.Logging;
+﻿using Streetcode.BLL.Interfaces.Logging;
+using Serilog;
 
 namespace Streetcode.BLL.Services.Logging
 {
-    public class LoggerService<T> : ILoggerService<T>
+    public class LoggerService : ILoggerService
     {
-        private ILogger<T> _logger;
+        private readonly ILogger _logger;
 
-        public LoggerService(ILogger<T> logger)
+        public LoggerService(ILogger logger)
         {
             _logger = logger;
         }
 
         public void LogInformation(string msg)
         {
-            _logger.Log(LogLevel.Information, $"{msg}");
+            _logger.Information($"{msg}");
         }
 
         public void LogWarning(string msg)
         {
-            _logger.Log(LogLevel.Warning, $"{msg}");
+            _logger.Warning($"{msg}");
         }
 
         public void LogTrace(string msg)
         {
-            _logger.Log(LogLevel.Trace, $"{msg}");
+            _logger.Information($"{msg}");
         }
 
         public void LogDebug(string msg)
         {
-            _logger.Log(LogLevel.Debug, $"{msg}");
+            _logger.Debug($"{msg}");
         }
 
         public void LogError(string msg)
         {
-            _logger.Log(LogLevel.Error, $"{msg}");
+            _logger.Error($"{msg}");
         }
     }
 }

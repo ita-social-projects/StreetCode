@@ -92,6 +92,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ITeamLinkRepository _teamLinkRepository;
 
+    private ITeamPositionRepository _teamPositionRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -133,6 +135,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _teamRepository;
+        }
+    }
+
+    public ITeamPositionRepository TeamPositionRepository
+    {
+        get
+        {
+            if (_teamPositionRepository is null)
+            {
+                _teamPositionRepository = new TeamPositionRepository(_streetcodeDbContext);
+            }
+
+            return _teamPositionRepository;
         }
     }
 

@@ -32,6 +32,7 @@ public interface IRepositoryWrapper
     IStatisticRecordRepository StatisticRecordRepository { get; }
     ITagRepository TagRepository { get; }
     ITeamRepository TeamRepository { get; }
+    ITeamPositionRepository TeamPositionRepository { get; }
     ITeamLinkRepository TeamLinkRepository { get; }
     ITermRepository TermRepository { get; }
     IRelatedTermRepository RelatedTermRepository { get; }

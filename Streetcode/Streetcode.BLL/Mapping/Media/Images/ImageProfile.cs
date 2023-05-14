@@ -19,5 +19,12 @@ public class ImageProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
+
+        CreateMap<ImageDTO, Image>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Alt))
+            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType))
+            .ForMember(dest => dest.BlobName, opt => opt.MapFrom(src => src.BlobName))
+            .ForMember(dest => dest.Alt, opt => opt.MapFrom(src => src.Alt));
     }
 }

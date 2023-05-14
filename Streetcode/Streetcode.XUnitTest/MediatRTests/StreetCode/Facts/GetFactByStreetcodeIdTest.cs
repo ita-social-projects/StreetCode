@@ -122,7 +122,11 @@ public class GetFactByStreetcodeIdTest
                 Id = 1,
                 Title = "Викуп з кріпацтва",
                 ImageId = null,
-                Streetcodes = GetStreetcodes(),
+                Streetcode = new StreetcodeContent
+            {
+                Id = 1
+            },
+                StreetcodeId = 1,
                 FactContent = "Навесні 1838-го Карл Брюллов..."
             },
         };

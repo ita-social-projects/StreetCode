@@ -1,6 +1,8 @@
+using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
+using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
@@ -12,6 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
+using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
 using Streetcode.DAL.Repositories.Realizations.Partners;
@@ -47,7 +50,7 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ISourceCategoryRepository _sourceCategoryRepository;
 
-    private ISourceSubCategoryRepository _sourceSubCategoryRepository;
+    private IStreetcodeCategoryContentRepository _streetcodeCategoryContentRepository;
 
     private IRelatedFigureRepository _relatedFigureRepository;
 
@@ -56,6 +59,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeRepository _streetcodeRepository;
 
     private ISubtitleRepository _subtitleRepository;
+
+    private IStatisticRecordRepository _statisticRecordRepository;
 
     private ITagRepository _tagRepository;
 
@@ -74,6 +79,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IPartnerSourceLinkRepository _partnerSourceLinkRepository;
 
     private IUserRepository _userRepository;
+
+    private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
+
+    private IPartnerStreetcodeRepository _partnerStreetcodeRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -197,16 +206,16 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public ISourceSubCategoryRepository SourceSubCategoryRepository
+    public IStreetcodeCategoryContentRepository StreetcodeCategoryContentRepository
     {
         get
         {
-            if (_sourceSubCategoryRepository is null)
+            if (_streetcodeCategoryContentRepository is null)
             {
-                _sourceSubCategoryRepository = new SourceSubCategoryRepository(_streetcodeDbContext);
+                _streetcodeCategoryContentRepository = new StreetcodeCategoryContentRepository(_streetcodeDbContext);
             }
 
-            return _sourceSubCategoryRepository;
+            return _streetcodeCategoryContentRepository;
         }
     }
 
@@ -246,6 +255,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _subtitleRepository;
+        }
+    }
+
+    public IStatisticRecordRepository StatisticRecordRepository
+    {
+        get
+        {
+            if (_statisticRecordRepository is null)
+            {
+                _statisticRecordRepository = new StatisticRecordsRepository(_streetcodeDbContext);
+            }
+
+            return _statisticRecordRepository;
         }
     }
 
@@ -379,6 +401,32 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
+    public IStreetcodeTagIndexRepository StreetcodeTagIndexRepository
+    {
+        get
+        {
+            if (_streetcodeTagIndexRepository is null)
+            {
+                _streetcodeTagIndexRepository = new StreetcodeTagIndexRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeTagIndexRepository;
+        }
+    }
+
+    public IPartnerStreetcodeRepository PartnerStreetcodeRepository
+    {
+        get
+        {
+            if(_partnerStreetcodeRepository is null)
+            {
+                _partnerStreetcodeRepository = new PartnerStreetodeRepository(_streetcodeDbContext);
+            }
+
+            return _partnerStreetcodeRepository;
+        }
+    }
+
     public int SaveChanges()
     {
         return _streetcodeDbContext.SaveChanges();
@@ -387,5 +435,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     public async Task<int> SaveChangesAsync()
     {
         return await _streetcodeDbContext.SaveChangesAsync();
+    }
+
+    public TransactionScope BeginTransaction()
+    {
+        return new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
     }
 }

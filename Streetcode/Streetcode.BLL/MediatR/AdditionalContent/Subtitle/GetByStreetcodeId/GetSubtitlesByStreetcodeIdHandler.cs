@@ -6,7 +6,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 {
-    public class GetSubtitlesByStreetcodeIdHandler : IRequestHandler<GetSubtitlesByStreetcodeIdQuery, Result<IEnumerable<SubtitleDTO>>>
+    public class GetSubtitlesByStreetcodeIdHandler : IRequestHandler<GetSubtitlesByStreetcodeIdQuery, Result<SubtitleDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -19,18 +19,18 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetSubtitlesByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<SubtitleDTO>> Handle(GetSubtitlesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var subtitles = await _repositoryWrapper.SubtitleRepository
-                .GetAllAsync(Subtitle => Subtitle.StreetcodeId == request.StreetcodeId);
+            var subtitle = await _repositoryWrapper.SubtitleRepository
+                .GetFirstOrDefaultAsync(Subtitle => Subtitle.StreetcodeId == request.StreetcodeId);
 
-            if (subtitles is null)
+            if (subtitle is null)
             {
                 return Result.Fail(new Error($"Cannot find any subtitle by the streetcode id: {request.StreetcodeId}"));
             }
 
-            var subtitlesDto = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
-            return Result.Ok(subtitlesDto);
+            var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);
+            return Result.Ok(subtitleDto);
         }
     }
 }

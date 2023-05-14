@@ -27,14 +27,14 @@ public class StreetcodeContent
     [Required]
     public int Index { get; set; }
 
-    [Required]
-    public string Teaser { get; set; }
+    [MaxLength(650)]
+    public string? Teaser { get; set; }
 
     [Required]
     [MaxLength(50)]
     public string DateString { get; set; }
 
-    [MaxLength(30)]
+    [MaxLength(50)]
     public string? Alias { get; set; }
 
     public StreetcodeStatus Status { get; set; }
@@ -55,8 +55,9 @@ public class StreetcodeContent
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
 
-    [Required]
-    public DateTime EventEndOrPersonDeathDate { get; set; }
+    public DateTime? EventEndOrPersonDeathDate { get; set; }
+
+    public int? AudioId { get; set; }
 
     public Text? Text { get; set; }
 
@@ -70,7 +71,9 @@ public class StreetcodeContent
 
     public List<Image> Images { get; set; } = new ();
 
-    public List<Tag> Tags { get; set; } = new ();
+    public List<StreetcodeTagIndex> StreetcodeTagIndices { get; set; } = new ();
+
+    public List<Tag> Tags { get; set; } = new();
 
     public List<Subtitle> Subtitles { get; set; } = new ();
 
@@ -90,8 +93,5 @@ public class StreetcodeContent
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 
-    public IIncludableQueryable<StreetcodeContent, object> Include(Func<object, object> value)
-    {
-        throw new NotImplementedException();
-    }
+    public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
 }

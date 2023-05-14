@@ -322,7 +322,6 @@ public static class ModelBuilderExtensions
                 Description = "for streetcode1",
                 BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
                 MimeType = "audio/mpeg",
-                StreetcodeId = 1
             },
             new Audio
             {
@@ -331,7 +330,6 @@ public static class ModelBuilderExtensions
                 Description = "for streetcode2",
                 BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
                 MimeType = "audio/mpeg",
-                StreetcodeId = 2
             },
             new Audio
             {
@@ -340,7 +338,6 @@ public static class ModelBuilderExtensions
                 Description = "for streetcode3",
                 BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
                 MimeType = "audio/mpeg",
-                StreetcodeId = 3
             },
             new Audio
             {
@@ -349,7 +346,6 @@ public static class ModelBuilderExtensions
                 Description = "for streetcode4",
                 BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
                 MimeType = "audio/mpeg",
-                StreetcodeId = 4
             });
         modelBuilder.Entity<StreetcodeCoordinate>().HasData(
             new StreetcodeCoordinate
@@ -519,106 +515,6 @@ public static class ModelBuilderExtensions
                 StreetcodeId = 1,
                 Index = 6,
             });
-        modelBuilder.Entity<SourceLink>().HasData(
-            new SourceLink
-            {
-                Id = 1,
-                Title = "Том 2: Суспільно-політичні твори (1907–1914).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-            },
-            new SourceLink
-            {
-                Id = 2,
-                Title = "Том 3: Суспільно-політичні твори (1907 — березень 1917).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf",
-            },
-            new SourceLink
-            {
-                Id = 3,
-                Title =
-                    "Том 4. Книга 1: Суспільно-політичні твори (доба Української Центральної Ради, березень 1917 — квітень 1918).",
-                Url =
-                    "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-            },
-            new SourceLink
-            {
-                Id = 4,
-                Title = "Том 5: Історичні студії та розвідки (1888–1896).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-            },
-            new SourceLink
-            {
-                Id = 5,
-                Title = "Том 6: Історичні студії та розвідки (1895–1900).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf",
-            },
-            new SourceLink
-            {
-                Id = 6,
-                Title = "Том 7: Історичні студії та розвідки (1900–1906).",
-                Url =
-                    "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-            },
-            new SourceLink
-            {
-                Id = 7,
-                Title = "Том 8: Історичні студії та розвідки (1906–1916).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-            },
-            new SourceLink
-            {
-                Id = 8,
-                Title = "Том 9: Історичні студії та розвідки (1917–1923).",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf",
-            },
-            new SourceLink
-            {
-                Id = 9,
-                Title = "Том 10. Книга 1: Історичні студії та розвідки (1924— 1930)/ упор. О.Юркова.",
-                Url =
-                    "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-            },
-            new SourceLink
-            {
-                Id = 10,
-                Title = "Том 10. Книга 2: Історичні студії та розвідки (1930— 1934)",
-                Url =
-                    "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-            },
-            new SourceLink
-            {
-                Id = 11,
-                Title = "Том 11: Літературно-критичні праці (1883–1931), «По світу»",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-            },
-            new SourceLink
-            {
-                Id = 12,
-                Title = "Том 12: Поезія (1882–1903). Проза, драматичні твори, переклади (1883–1886)",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
-            },
-            new SourceLink
-            {
-                Id = 13,
-                Title = "Том 13 : Серія \"Літературно-критичні та художні твори (1887-1924)\"",
-                Url =
-                    "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf",
-            },
-            new SourceLink
-            {
-                Id = 14,
-                Title = "Том 14: Рецензії та огляди (1888–1897).",
-                Url =
-                    "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html",
-            });
         modelBuilder.Entity<SourceLinkCategory>().HasData(
             new SourceLinkCategory
             {
@@ -638,47 +534,25 @@ public static class ModelBuilderExtensions
                 Title = "Цитати",
                 ImageId = 11,
             });
-        modelBuilder.Entity<SourceLinkSubCategory>().HasData(
-            new SourceLinkSubCategory
+        modelBuilder.Entity<StreetcodeCategoryContent>().HasData(
+            new StreetcodeCategoryContent
             {
-                Id = 1,
-                Title = "Фільми про Т. Г. Шевченко",
+                Text = "Фільми про Т. Г. Шевченко\nХроніки про Т. Г. Шевченко\nБлоги про Т. Г. Шевченко",
                 SourceLinkCategoryId = 2,
             },
-            new SourceLinkSubCategory
+            new StreetcodeCategoryContent
             {
-                Id = 2,
-                Title = "Хроніки про Т. Г. Шевченко",
+                Text = "Хроніки про Т. Г. Шевченко",
                 SourceLinkCategoryId = 2,
             },
-            new SourceLinkSubCategory
+            new StreetcodeCategoryContent
             {
-                Id = 3,
-                Title = "Блоги про Т. Г. Шевченко",
-                SourceLinkCategoryId = 2,
-            },
-            new SourceLinkSubCategory
-            {
-                Id = 4,
-                Title = "Праці Грушевського",
+                Text = "Книги про Грушевського\nСтатті",
                 SourceLinkCategoryId = 1,
             },
-            new SourceLinkSubCategory
+            new StreetcodeCategoryContent
             {
-                Id = 5,
-                Title = "Книги про Грушевського",
-                SourceLinkCategoryId = 1,
-            },
-            new SourceLinkSubCategory
-            {
-                Id = 6,
-                Title = "Статті",
-                SourceLinkCategoryId = 1,
-            },
-            new SourceLinkSubCategory
-            {
-                Id = 7,
-                Title = "Пряма мова",
+                Text = "Пряма мова",
                 SourceLinkCategoryId = 3,
             });
         modelBuilder.Entity<Fact>().HasData(
@@ -819,7 +693,8 @@ public static class ModelBuilderExtensions
                 Rank = "Григорович",
                 LastName = "Шевченко",
                 Title = "Тарас Шевченко",
-                Alias = "Кобзар"
+                Alias = "Кобзар",
+                AudioId = 1,
             },
             new PersonStreetcode
             {
@@ -839,6 +714,7 @@ public static class ModelBuilderExtensions
                 FirstName = "Мико́ла",
                 Rank = "Іва́нович",
                 LastName = "Костома́ров",
+                AudioId = 2,
             },
             new PersonStreetcode
             {

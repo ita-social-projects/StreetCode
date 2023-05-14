@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.Timeline;
 
@@ -16,12 +17,17 @@ public class TimelineItem
     public DateTime Date { get; set; }
 
     [Required]
+    public DateViewPattern DateViewPattern { get; set; }
+
+    [Required]
     [MaxLength(100)]
     public string Title { get; set; }
 
     public string? Description { get; set; }
 
-    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
+    public int StreetcodeId { get; set; }
+
+    public StreetcodeContent? Streetcode { get; set; } = new ();
 
     public List<HistoricalContext> HistoricalContexts { get; set; } = new ();
 }

@@ -60,6 +60,22 @@ public class BlobService : IBlobService
         File.Delete($"{_blobPath}{name}");
     }
 
+    public string UpdateFileInStorage(
+        string previousBlobName,
+        string base64Format,
+        string newBlobName,
+        string extension)
+    {
+        DeleteFileInStorage(previousBlobName);
+
+        string hashBlobStorageName = SaveFileInStorage(
+        base64Format,
+        newBlobName,
+        extension);
+
+        return hashBlobStorageName;
+    }
+
     private string HashFunction(string createdFileName)
     {
         using (var hash = SHA256.Create())

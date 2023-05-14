@@ -10,7 +10,6 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
-using Hangfire;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
@@ -20,6 +19,8 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Microsoft.ApplicationInsights.Extensibility;
 using Streetcode.BLL.Middleware;
+using Streetcode.BLL.Interfaces.Users;
+using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
 using Serilog.Events;
 using Streetcode.BLL.Interfaces.Payment;
@@ -41,9 +42,10 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
-
+        
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped(typeof(ILoggerService), typeof(LoggerService));
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddTransient<ApiRequestResponseMiddleware>();
@@ -100,7 +102,8 @@ public static class ServiceCollectionExtensions
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
 

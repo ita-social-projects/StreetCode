@@ -22,7 +22,7 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
     {
         var timelineItems = await _repositoryWrapper.TimelineRepository
             .GetAllAsync(
-                predicate: f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
+                predicate: f => f.StreetcodeId == request.StreetcodeId,
                 include: ti => ti.Include(til => til.HistoricalContexts));
 
         if (timelineItems is null)

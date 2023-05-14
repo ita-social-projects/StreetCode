@@ -23,6 +23,11 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
                 return Result.Fail($"No news found by entered Id - {id}");
             }
 
+            if (news.Image is not null)
+            {
+                _repositoryWrapper.ImageRepository.Delete(news.Image);
+            }
+
             _repositoryWrapper.NewsRepository.Delete(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete news"));

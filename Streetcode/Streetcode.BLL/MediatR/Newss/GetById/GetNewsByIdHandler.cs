@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
         public async Task<Result<NewsDTO>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
         {
             int id = request.id;
-            var newsDTO = _mapper.Map<NewsDTO>(_repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
+            var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
                 predicate: sc => sc.Id == id,
                 include: scl => scl
                     .Include(sc => sc.Image)));

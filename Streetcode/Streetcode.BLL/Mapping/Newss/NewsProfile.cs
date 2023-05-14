@@ -9,6 +9,7 @@ namespace Streetcode.BLL.Mapping.Newss
         public NewsProfile()
         {
             CreateMap<NewsDTO, News>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
                 .ForMember(dest => dest.ImageId, opt => opt.MapFrom(src => src.ImageId))
                 .ForMember(dest => dest.URL, opt => opt.MapFrom(src => src.URL))

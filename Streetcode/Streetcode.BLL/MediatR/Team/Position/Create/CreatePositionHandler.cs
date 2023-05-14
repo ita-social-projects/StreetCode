@@ -2,8 +2,8 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
 {
@@ -20,30 +20,21 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
         public async Task<Result<PositionDTO>> Handle(CreatePositionQuery request, CancellationToken cancellationToken)
         {
-            var position = _mapper.Map<DAL.Entities.Team.Positions>(request.position);
-
-            if (position is null)
+            var newPosition = await _repository.PositionRepository.CreateAsync(new Positions()
             {
-                return Result.Fail(new Error("Cannot convert null to position"));
+                Position = request.position.Position
+            });
+
+            try
+            {
+                _repository.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.ToString());
             }
 
-            var createdPosition = _repository.PositionRepository.Create(position);
-
-            if (createdPosition is null)
-            {
-                return Result.Fail(new Error("Cannot create position"));
-            }
-
-            var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-
-            if (!resultIsSuccess)
-            {
-                return Result.Fail(new Error("Failed to create a position"));
-            }
-
-            var createdPositionDTO = _mapper.Map<PositionDTO>(createdPosition);
-
-            return createdPositionDTO != null ? Result.Ok(createdPositionDTO) : Result.Fail(new Error("Failed to map created position"));
+            return Result.Ok(_mapper.Map<PositionDTO>(newPosition));
         }
     }
 }

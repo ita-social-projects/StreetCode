@@ -40,7 +40,10 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 team.Positions.Clear();
                 _repositoryWrapper.TeamRepository.Update(team);
                 _repositoryWrapper.SaveChanges();
-                var newPositionsIds = request.TeamMember.Positions.Select(s => s.Id).ToList();
+
+                var newPositions = request.TeamMember.Positions.ToList();
+                var newPositionsIds = newPositions.Select(s => s.Id).ToList();
+
                 var oldPositions = await _repositoryWrapper.TeamPositionRepository
                     .GetAllAsync(ps => ps.TeamMemberId == team.Id);
 
@@ -52,18 +55,28 @@ namespace Streetcode.BLL.MediatR.Team.Update
                     }
                 }
 
-                foreach (var newCodeId in newPositionsIds!)
+                foreach (var newPosition in newPositions)
                 {
-                    if (oldPositions.FirstOrDefault(x => x.PositionsId == newCodeId) == null)
+                    if (newPosition.Id < 0)
+                    {
+                        Positions position = new Positions() { Id = 0, Position = newPosition.Position, TeamMembers = null };
+                        var tpm = _repositoryWrapper.PositionRepository.Create(position);
+
+                        _repositoryWrapper.SaveChanges();
+
+                        _repositoryWrapper.TeamPositionRepository.Create(
+                            new TeamMemberPositions { TeamMemberId = team.Id, PositionsId = tpm.Id });
+                    }
+                    else if (oldPositions.FirstOrDefault(x => x.PositionsId == newPosition.Id) == null)
                     {
                         _repositoryWrapper.TeamPositionRepository.Create(
-                            new TeamMemberPositions() { TeamMemberId = team.Id, PositionsId = newCodeId });
+                            new TeamMemberPositions { TeamMemberId = team.Id, PositionsId = newPosition.Id });
                     }
                 }
 
                 _repositoryWrapper.SaveChanges();
                 var dbo = _mapper.Map<TeamMemberDTO>(team);
-                dbo.Positions = request.TeamMember.Positions;
+                dbo.Positions = newPositions;
                 return Result.Ok(dbo);
             }
             catch (Exception ex)

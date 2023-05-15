@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
-using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
 {
@@ -22,17 +20,59 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
-            var teamMember = _mapper.Map<DAL.Entities.Team.TeamMember>(request.teamMember);
+            var teamMember = _mapper.Map<TeamMember>(request.teamMember);
             try
             {
                 teamMember.Positions.Clear();
-                teamMember.TeamMemberLinks.Clear();
+                var links = await _repository.TeamLinkRepository
+                .GetAllAsync(predicate: l => l.TeamMemberId == request.teamMember.Id);
+
+                var newLinkIds = request.teamMember.TeamMemberLinks.Select(l => l.Id).ToList();
+
+                foreach (var link in links)
+                {
+                    if (!newLinkIds.Contains(link.Id))
+                    {
+                        _repository.TeamLinkRepository.Delete(link);
+                    }
+                }
+
                 teamMember = await _repository.TeamRepository.CreateAsync(teamMember);
                 _repository.SaveChanges();
-                var positionsId = request.teamMember.Positions.Select(s => s.Id).ToList();
-                teamMember.Positions.AddRange(await _repository.PositionRepository.GetAllAsync(s => positionsId.Contains(s.Id)));
-                var linksId = request.teamMember.TeamMemberLinks.Select(l => l.Id).ToList();
-                teamMember.TeamMemberLinks.AddRange(await _repository.TeamLinkRepository.GetAllAsync(l => linksId.Contains(l.Id)));
+
+                var newPositions = request.teamMember.Positions.ToList();
+                var newPositionsIds = newPositions.Select(s => s.Id).ToList();
+
+                var oldPositions = await _repository.TeamPositionRepository
+                    .GetAllAsync(ps => ps.TeamMemberId == teamMember.Id);
+
+                foreach (var old in oldPositions!)
+                {
+                    if (!newPositionsIds.Contains(old.PositionsId))
+                    {
+                        _repository.TeamPositionRepository.Delete(old);
+                    }
+                }
+
+                foreach (var newPosition in newPositions)
+                {
+                    if (newPosition.Id < 0)
+                    {
+                        Positions position = new Positions() { Id = 0, Position = newPosition.Position, TeamMembers = null };
+                        var tpm = _repository.PositionRepository.Create(position);
+
+                        _repository.SaveChanges();
+
+                        _repository.TeamPositionRepository.Create(
+                            new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = tpm.Id });
+                    }
+                    else if (oldPositions.FirstOrDefault(x => x.PositionsId == newPosition.Id) == null)
+                    {
+                        _repository.TeamPositionRepository.Create(
+                            new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = newPosition.Id });
+                    }
+                }
+
                 _repository.SaveChanges();
                 return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
             }

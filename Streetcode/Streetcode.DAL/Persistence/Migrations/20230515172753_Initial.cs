@@ -16,9 +16,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "add_content");
 
             migrationBuilder.EnsureSchema(
-                name: "feedback");
-
-            migrationBuilder.EnsureSchema(
                 name: "streetcode");
 
             migrationBuilder.EnsureSchema(
@@ -35,6 +32,9 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             migrationBuilder.EnsureSchema(
                 name: "coordinates");
+
+            migrationBuilder.EnsureSchema(
+                name: "feedback");
 
             migrationBuilder.EnsureSchema(
                 name: "sources");
@@ -63,19 +63,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_audios", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "donations",
-                schema: "feedback",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_donations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -1096,10 +1083,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "donations",
-                schema: "feedback");
-
             migrationBuilder.DropTable(
                 name: "facts",
                 schema: "streetcode");

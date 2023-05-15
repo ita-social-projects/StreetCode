@@ -122,18 +122,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("CoordinateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<int>("QrId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StreetcodeCoordinateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CoordinateId");
+                    b.HasIndex("StreetcodeCoordinateId")
+                        .IsUnique();
+
+                    b.HasIndex("StreetcodeId");
 
                     b.ToTable("qr_coordinates", "coordinates");
                 });
@@ -1076,10 +1082,18 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeCoordinate")
-                        .WithMany()
-                        .HasForeignKey("CoordinateId")
+                        .WithOne("StatisticRecord")
+                        .HasForeignKey("Streetcode.DAL.Entities.Analytics.StatisticRecord", "StreetcodeCoordinateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StatisticRecords")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeCoordinate");
                 });
@@ -1468,6 +1482,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Observers");
 
+                    b.Navigation("StatisticRecords");
+
                     b.Navigation("StreetcodeArts");
 
                     b.Navigation("StreetcodeCategoryContents");
@@ -1500,6 +1516,12 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
                     b.Navigation("Coordinate")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
+                {
+                    b.Navigation("StatisticRecord")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

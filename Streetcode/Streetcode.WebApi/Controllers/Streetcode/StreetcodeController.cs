@@ -41,7 +41,7 @@ public class StreetcodeController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id)));
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetByFilter([FromQuery] StreetcodeFilterRequestDTO request)
     {

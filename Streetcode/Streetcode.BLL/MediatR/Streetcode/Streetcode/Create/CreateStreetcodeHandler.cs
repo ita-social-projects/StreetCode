@@ -2,12 +2,14 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -44,6 +46,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 await AddImages(streetcode, request.Streetcode.ImagesId);
+                AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
@@ -61,6 +64,21 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 return Result.Fail(new Error("An error occurred while creating a streetcode"));
             }
         }
+    }
+
+    private void AddStatisticRecords(StreetcodeContent streetcode, IEnumerable<StatisticRecordDTO> statisticRecords)
+    {
+        var statisticRecordsToCreate = new List<StatisticRecord>();
+
+        foreach(var statisticRecord in statisticRecords)
+        {
+            var newStatistic = _mapper.Map<StatisticRecord>(statisticRecord);
+            newStatistic.StreetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(
+              x => x.Latitude == newStatistic.StreetcodeCoordinate.Latitude && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+            statisticRecordsToCreate.Add(newStatistic);
+        }
+
+        streetcode.StatisticRecords.AddRange(statisticRecordsToCreate);
     }
 
     private void AddAudio(StreetcodeContent streetcode, int? audioId)

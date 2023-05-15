@@ -67,18 +67,37 @@ public class ApiRequestResponseMiddleware : IMiddleware
 
     private string? GetResponseWithMaxLegth(string response)
     {
-        JObject jsonObject = JObject.Parse(response);
-
-        foreach (var property in jsonObject.Properties())
+        try
         {
-            if (property.Value.ToString().Length > 100)
+            JToken token = JToken.Parse(response);
+
+            if (token.Type == JTokenType.Object)
             {
-                string currentValue = property.Value.ToString();
+                JObject jsonObject = (JObject)token;
 
-                property.Value = currentValue.Substring(0, 100);
+                foreach (var property in jsonObject.Properties())
+                {
+                    if (property.Value.ToString().Length > 100)
+                    {
+                        string currentValue = property.Value.ToString();
+
+                        property.Value = currentValue.Substring(0, 100);
+                    }
+                }
+
+                return jsonObject.ToString();
             }
-        }
+            else if (token.Type == JTokenType.Array)
+            {
+                JArray jsonArray = (JArray)token;
+                return jsonArray.ToString();
+            }
 
-        return jsonObject.ToString();
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 }

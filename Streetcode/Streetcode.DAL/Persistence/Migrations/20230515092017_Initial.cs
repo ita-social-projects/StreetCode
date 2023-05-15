@@ -836,21 +836,28 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CoordinateId = table.Column<int>(type: "int", nullable: false),
                     QrId = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
+                    StreetcodeCoordinateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_qr_coordinates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_qr_coordinates_coordinates_CoordinateId",
-                        column: x => x.CoordinateId,
+                        name: "FK_qr_coordinates_coordinates_StreetcodeCoordinateId",
+                        column: x => x.StreetcodeCoordinateId,
                         principalSchema: "add_content",
                         principalTable: "coordinates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_qr_coordinates_streetcodes_StreetcodeId",
+                        column: x => x.StreetcodeId,
+                        principalSchema: "streetcode",
+                        principalTable: "streetcodes",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -934,10 +941,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_qr_coordinates_CoordinateId",
+                name: "IX_qr_coordinates_StreetcodeCoordinateId",
                 schema: "coordinates",
                 table: "qr_coordinates",
-                column: "CoordinateId");
+                column: "StreetcodeCoordinateId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_qr_coordinates_StreetcodeId",
+                schema: "coordinates",
+                table: "qr_coordinates",
+                column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_related_figures_TargetId",

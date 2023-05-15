@@ -16,7 +16,7 @@ namespace Streetcode.WebApi.Controllers.Newss
             return HandleResult(await Mediator.Send(new GetAllNewsQuery()));
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id)));
@@ -29,7 +29,7 @@ namespace Streetcode.WebApi.Controllers.Newss
             return HandleResult(await Mediator.Send(new CreateNewsCommand(partner)));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         /*[AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
         public async Task<IActionResult> Delete(int id)
         {

@@ -15,7 +15,7 @@ namespace Streetcode.BLL.Mapping.Newss
                 .ForMember(dest => dest.URL, opt => opt.MapFrom(src => src.URL))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Text, opt => opt.MapFrom(src => src.Text))
-                .ForMember(dest => dest.CreationDate, opt => opt.MapFrom(src => src.CreationDate));
+                .ForMember(dest => dest.CreationDate, opt => opt.Ignore());
 
             CreateMap<News, NewsDTO>().ReverseMap();
         }

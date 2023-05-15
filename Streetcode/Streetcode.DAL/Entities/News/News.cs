@@ -24,6 +24,6 @@ namespace Streetcode.DAL.Entities.News
         public int? ImageId { get; set; }
         public Image? Image { get; set; }
         [Required]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
     }
 }

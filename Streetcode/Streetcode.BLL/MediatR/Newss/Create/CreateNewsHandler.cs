@@ -27,6 +27,11 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail("Cannot convert null to news");
             }
 
+            if (newNews.ImageId == 0)
+            {
+                newNews.ImageId = null;
+            }
+
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             return resultIsSuccess ? Result.Ok(_mapper.Map<NewsDTO>(entity)) : Result.Fail(new Error("Failed to create a news"));

@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230515090737_newSizeOfTextFieldInDb")]
-    partial class newSizeOfTextFieldInDb
+    [Migration("20230515224252_NewSizeOfTextFields")]
+    partial class NewSizeOfTextFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

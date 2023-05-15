@@ -25,25 +25,4 @@ public class TextController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] TextDTO text)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] TextDTO fact)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
 }

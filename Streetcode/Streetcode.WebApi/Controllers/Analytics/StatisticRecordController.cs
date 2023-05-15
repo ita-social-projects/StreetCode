@@ -4,6 +4,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll;
+using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount;
 
@@ -27,6 +28,12 @@ namespace Streetcode.WebApi.Controllers.Analytics
         public async Task<IActionResult> ExistByQrId(int id)
         {
             return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id)));
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetAllByStreetcodeId(int id)
+        {
+            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
         }
 
         [HttpPost]

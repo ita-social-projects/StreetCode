@@ -6,7 +6,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 {
-    public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<Unit>>
+    public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<DAL.Entities.Sources.SourceLinkCategory>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -17,7 +17,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             _mapper = mapper;
         }
 
-        public async Task<Result<Unit>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<DAL.Entities.Sources.SourceLinkCategory>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category.ImageId != 0)
@@ -30,10 +30,9 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
                 return Result.Fail(new Error("Cannot convert null to Category"));
             }
 
-            _repositoryWrapper.SourceCategoryRepository.Create(category);
-
+            var returned = _repositoryWrapper.SourceCategoryRepository.Create(category);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to create a category"));
+            return resultIsSuccess ? Result.Ok(returned) : Result.Fail(new Error("Failed to create a category"));
         }
     }
 }

@@ -11,14 +11,14 @@ public class Text
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(500)]
+    [MaxLength(300)]
     public string Title { get; set; }
 
     [Required]
-    [MaxLength(5000)]
+    [MaxLength(3000)]
     public string TextContent { get; set; }
 
-    [MaxLength(1500)]
+    [MaxLength(500)]
     public string? AdditionalText { get; set; }
 
     [Required]

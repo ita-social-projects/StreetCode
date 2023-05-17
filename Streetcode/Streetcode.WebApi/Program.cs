@@ -1,4 +1,6 @@
 using Hangfire;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 
@@ -13,8 +15,9 @@ builder.Services.ConfigurePayment(builder);
 
 var app = builder.Build();
 
-await app.ApplyMigrations();
-await app.MigrateAndSeedDbAsync();
+await app.GenerateScript();
+
+// await app.ApplyMigrations();
 
 if (app.Environment.EnvironmentName == "Local")
 {
@@ -35,14 +38,10 @@ app.UseAuthorization();
 
 app.UseHangfireDashboard();
 
-// change Cron.Monthly to set another parsing interval from ukrposhta
-/*RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
-
-/*BackgroundJob.Schedule<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
-RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);*/
+// BackgroundJob.Schedule<WebParsingUtils>(
+//    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+// RecurringJob.AddOrUpdate<WebParsingUtils>(
+//    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
 
 app.MapControllers();
 

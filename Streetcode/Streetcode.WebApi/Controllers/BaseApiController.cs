@@ -19,8 +19,7 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            return (result.Value is null) ?
-                NotFound("Found result matching null") : Ok(result.Value);
+            return Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)

@@ -24,7 +24,15 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
 
         if (transactLink is null)
         {
-            return Result.Fail(new Error($"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}"));
+            if (await _repositoryWrapper.StreetcodeRepository
+                .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
+            {
+                return Result.Fail(new Error($"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
+            }
+            else
+            {
+                return Result.Ok();
+            }
         }
 
         var mappedTransactLink = _mapper.Map<TransactLinkDTO>(transactLink);

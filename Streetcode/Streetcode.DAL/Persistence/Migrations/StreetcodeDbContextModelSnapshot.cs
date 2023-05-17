@@ -8,7 +8,7 @@ using Streetcode.DAL.Persistence;
 
 #nullable disable
 
-namespace Streetcode.DAL.Persistence.Migrations
+namespace Streetcode.DAL.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
     partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
@@ -682,7 +682,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(3000)
                         .HasColumnType("nvarchar(3000)");
-
 
                     b.Property<string>("Title")
                         .IsRequired()

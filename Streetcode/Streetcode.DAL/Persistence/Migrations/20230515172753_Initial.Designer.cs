@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230515104050_Initial")]
+    [Migration("20230515172753_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,19 +144,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("StreetcodeId");
 
                     b.ToTable("qr_coordinates", "coordinates");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Donation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("donations", "feedback");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>

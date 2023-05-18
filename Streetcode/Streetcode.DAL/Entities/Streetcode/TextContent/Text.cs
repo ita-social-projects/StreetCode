@@ -16,6 +16,7 @@ public class Text
 
     [Required]
     [MaxLength(3000)]
+
     public string TextContent { get; set; }
 
     [MaxLength(500)]

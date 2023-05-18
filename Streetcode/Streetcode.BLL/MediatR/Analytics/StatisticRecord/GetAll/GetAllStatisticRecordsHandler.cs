@@ -35,7 +35,9 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
                 return Result.Fail(new Error("Cannot map records"));
             }
 
-            return Result.Ok(mappedEntities);
+            var sortedEntities = mappedEntities.OrderByDescending((x) => x.Count).AsEnumerable();
+
+            return Result.Ok(sortedEntities);
         }
     }
 }

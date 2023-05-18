@@ -25,25 +25,4 @@ public class SubtitleController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetSubtitlesByStreetcodeIdQuery(streetcodeId)));
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] SubtitleDTO subtitle)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] SubtitleDTO subtitle)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -10,7 +11,6 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-
         public UpdateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
@@ -20,7 +20,6 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
         public async Task<Result<Unit>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
-
             if (category is null)
             {
                 return Result.Fail(new Error("Cannot convert null to Category"));

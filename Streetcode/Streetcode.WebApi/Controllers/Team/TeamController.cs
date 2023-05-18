@@ -19,6 +19,12 @@ namespace Streetcode.WebApi.Controllers.Team
             return HandleResult(await Mediator.Send(new GetAllTeamQuery()));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllMain()
+        {
+            return HandleResult(await Mediator.Send(new GetAllMainTeamQuery()));
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {

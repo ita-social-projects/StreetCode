@@ -82,9 +82,9 @@ public class StreetcodeController : BaseApiController
         {
             return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return BadRequest();
+            return BadRequest(ex.Message);
         }
     }
 

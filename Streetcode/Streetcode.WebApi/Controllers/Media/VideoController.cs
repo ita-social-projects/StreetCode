@@ -25,25 +25,4 @@ public class VideoController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new GetVideoByIdQuery(id)));
     }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] VideoDTO video)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] VideoDTO video)
-    {
-        // TODO implement here
-        return Ok();
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id)
-    {
-        // TODO implement here
-        return Ok();
-    }
 }

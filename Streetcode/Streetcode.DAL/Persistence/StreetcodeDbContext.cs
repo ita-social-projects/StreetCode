@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -43,7 +42,6 @@ public class StreetcodeDbContext : DbContext
     public DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
     public DbSet<RelatedFigure> RelatedFigures { get; set; }
     public DbSet<Response> Responses { get; set; }
-    public DbSet<Donation> Donations { get; set; }
     public DbSet<StreetcodeContent> Streetcodes { get; set; }
     public DbSet<Subtitle> Subtitles { get; set; }
     public DbSet<StatisticRecord> StatisticRecords { get; set; }
@@ -68,10 +66,20 @@ public class StreetcodeDbContext : DbContext
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
+        modelBuilder.Entity<StatisticRecord>()
+              .HasOne(x => x.StreetcodeCoordinate)
+              .WithOne(x => x.StatisticRecord)
+              .HasForeignKey<StatisticRecord>(x => x.StreetcodeCoordinateId);
+
         modelBuilder.Entity<News>()
             .HasOne(x => x.Image)
             .WithOne(x => x.News)
             .HasForeignKey<News>(x => x.ImageId);
+
+        modelBuilder.Entity<TeamMember>()
+            .HasOne(x => x.Image)
+            .WithOne(x => x.TeamMember)
+            .HasForeignKey<TeamMember>(x => x.ImageId);
 
         modelBuilder.Entity<TeamMember>()
             .HasMany(x => x.Positions)
@@ -262,6 +270,11 @@ public class StreetcodeDbContext : DbContext
                     .WithOne(p => p.Streetcode)
                     .HasForeignKey<TransactionLink>(d => d.StreetcodeId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(d => d.StatisticRecords)
+                    .WithOne(t => t.Streetcode)
+                    .HasForeignKey(t => t.StreetcodeId)
+                    .OnDelete(DeleteBehavior.NoAction);
         });
 
         modelBuilder.Entity<RelatedTerm>()

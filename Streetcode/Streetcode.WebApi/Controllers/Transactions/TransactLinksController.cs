@@ -17,7 +17,8 @@ public class TransactLinksController : BaseApiController
     [HttpGet("{streetcodeId:int}")]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId)));
+        var res = await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId));
+        return HandleResult(res);
     }
 
     [HttpGet("{id:int}")]

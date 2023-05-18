@@ -3,6 +3,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
 
@@ -19,7 +20,13 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            if(result is NullResult<T>)
+            {
+                return Ok(result.Value);
+            }
+
+            return (result.Value is null) ?
+                NotFound("Found result matching null") : Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)

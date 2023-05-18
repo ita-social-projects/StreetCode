@@ -1,9 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage;
-using Polly;
-using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.WebApi.Extensions;

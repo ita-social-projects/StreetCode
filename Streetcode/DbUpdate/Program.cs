@@ -5,9 +5,6 @@ public class Program
 {
     static int Main(string[] args)
     {
-        string seedingPath = Path.Combine(Directory.GetCurrentDirectory(),
-            "Streetcode.DAL", "Persistence", "ScriptsSeeding");
-
         string migrationPath = Path.Combine(Directory.GetCurrentDirectory(),
             "Streetcode.DAL", "Persistence", "ScriptsMigration");
 
@@ -27,16 +24,8 @@ public class Program
         Console.WriteLine("Enter '-m' to MIGRATE or '-s' to SEED db:");
         pathToScript = Console.ReadLine();
 
-        if (pathToScript == "-s" || pathToScript == "-seed")
-        {
-            pathToScript = seedingPath;
-        }
-        else
-        {
-            pathToScript = migrationPath;
-        }
-
-
+        pathToScript = migrationPath;
+        
         var upgrader =
             DeployChanges.To
                 .SqlDatabase(connectionString)

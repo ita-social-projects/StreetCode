@@ -104,6 +104,7 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPut("{id:int}/{status}")]
+
     // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,

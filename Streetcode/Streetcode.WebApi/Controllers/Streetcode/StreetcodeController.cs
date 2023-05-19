@@ -103,8 +103,8 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
-    [HttpPatch("{id:int}/{status}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+    [HttpPut("{id:int}/{status}")]
+    // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,
         [FromRoute] StreetcodeStatus status)
@@ -120,7 +120,8 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+
+    // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));

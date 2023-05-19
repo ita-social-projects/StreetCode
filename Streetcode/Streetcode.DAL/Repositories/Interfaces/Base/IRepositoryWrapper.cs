@@ -3,6 +3,7 @@ using Repositories.Interfaces;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Newss;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
@@ -45,6 +46,7 @@ public interface IRepositoryWrapper
     IUserRepository UserRepository { get; }
     IStreetcodeTagIndexRepository StreetcodeTagIndexRepository { get; }
     IPartnerStreetcodeRepository PartnerStreetcodeRepository { get;  }
+    INewsRepository NewsRepository { get; }
     IPositionRepository PositionRepository { get; }
     public int SaveChanges();
 

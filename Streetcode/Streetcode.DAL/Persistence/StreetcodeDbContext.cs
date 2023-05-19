@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -43,7 +42,6 @@ public class StreetcodeDbContext : DbContext
     public DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
     public DbSet<RelatedFigure> RelatedFigures { get; set; }
     public DbSet<Response> Responses { get; set; }
-    public DbSet<Donation> Donations { get; set; }
     public DbSet<StreetcodeContent> Streetcodes { get; set; }
     public DbSet<Subtitle> Subtitles { get; set; }
     public DbSet<StatisticRecord> StatisticRecords { get; set; }
@@ -66,6 +64,7 @@ public class StreetcodeDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<StatisticRecord>()

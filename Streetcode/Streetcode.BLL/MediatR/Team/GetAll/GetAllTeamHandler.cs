@@ -2,10 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
-using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetAll

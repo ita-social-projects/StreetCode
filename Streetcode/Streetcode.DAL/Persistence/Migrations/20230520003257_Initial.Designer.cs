@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230511151236_AllowNullsForImageId")]
-    partial class AllowNullsForImageId
+    [Migration("20230520003257_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,33 +124,26 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("CoordinateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<int>("QrId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CoordinateId");
-
-                    b.ToTable("qr_coordinates", "coordinates");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Donation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StreetcodeCoordinateId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("donations", "feedback");
+                    b.HasIndex("StreetcodeCoordinateId")
+                        .IsUnique();
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("qr_coordinates", "coordinates");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>
@@ -334,6 +327,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("ImageId")
                         .IsUnique()
                         .HasFilter("[ImageId] IS NOT NULL");
+
+                    b.HasIndex("URL")
+                        .IsUnique();
 
                     b.ToTable("news", "news");
                 });
@@ -669,16 +665,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AdditionalText")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
                     b.Property<string>("TextContent")
                         .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasMaxLength(1200)
+                        .HasColumnType("nvarchar(1200)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -729,6 +725,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
@@ -738,6 +737,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
                     b.ToTable("team_members", "team");
                 });
@@ -1073,10 +1075,18 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeCoordinate")
-                        .WithMany()
-                        .HasForeignKey("CoordinateId")
+                        .WithOne("StatisticRecord")
+                        .HasForeignKey("Streetcode.DAL.Entities.Analytics.StatisticRecord", "StreetcodeCoordinateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StatisticRecords")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeCoordinate");
                 });
@@ -1290,6 +1300,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("TeamMember")
+                        .HasForeignKey("Streetcode.DAL.Entities.Team.TeamMember", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
@@ -1429,6 +1450,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Partner");
 
                     b.Navigation("SourceLinkCategories");
+
+                    b.Navigation("TeamMember")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
@@ -1448,6 +1472,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Facts");
 
                     b.Navigation("Observers");
+
+                    b.Navigation("StatisticRecords");
 
                     b.Navigation("StreetcodeArts");
 
@@ -1481,6 +1507,12 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
                     b.Navigation("Coordinate")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
+                {
+                    b.Navigation("StatisticRecord")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

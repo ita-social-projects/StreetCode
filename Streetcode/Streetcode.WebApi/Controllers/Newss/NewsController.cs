@@ -4,6 +4,7 @@ using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Delete;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.BLL.MediatR.Newss.GetById;
+using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
 using Streetcode.BLL.MediatR.Newss.Update;
 
 namespace Streetcode.WebApi.Controllers.Newss
@@ -20,6 +21,12 @@ namespace Streetcode.WebApi.Controllers.Newss
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id)));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SortedByDateTime()
+        {
+            return HandleResult(await Mediator.Send(new SortedByDateTimeQuery()));
         }
 
         [HttpPost]

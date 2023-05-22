@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Org.BouncyCastle.Crypto;
 using Streetcode.BLL.DTO.News;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 

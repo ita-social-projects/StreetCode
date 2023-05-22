@@ -575,8 +575,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TextContent = table.Column<string>(type: "nvarchar(1200)", maxLength: 1200, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    TextContent = table.Column<string>(type: "nvarchar(max)", maxLength: 15000, nullable: false),
                     AdditionalText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },

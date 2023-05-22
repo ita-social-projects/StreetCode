@@ -24,7 +24,7 @@ namespace Streetcode.WebApi.Controllers.Newss
         }
 
         [HttpGet]
-        public async Task<IActionResult> SortedByDateTime()
+        public async Task<IActionResult> SortedNewsByDateTime()
         {
             return HandleResult(await Mediator.Send(new SortedByDateTimeQuery()));
         }

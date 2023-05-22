@@ -19,6 +19,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter;
 using Streetcode.BLL.DTO.AdditionalContent.Filter;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
@@ -59,6 +60,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
+    }
+
+    [HttpGet("{url}")]
+    public async Task<IActionResult> ExistWithUrl([FromRoute] string url)
+    {
+        return HandleResult(await Mediator.Send(new StreetcodeWithUrlExistQuery(url)));
     }
 
     [HttpGet]
@@ -103,7 +110,7 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
-    [HttpPatch("{id:int}/{status}")]
+    [HttpPut("{id:int}/{status}")]
     [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,

@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230517195952_Initial")]
+    [Migration("20230521194343_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -305,7 +305,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ImageId")
+                    b.Property<int?>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -325,6 +325,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId")
+                        .IsUnique()
+                        .HasFilter("[ImageId] IS NOT NULL");
+
+                    b.HasIndex("URL")
                         .IsUnique();
 
                     b.ToTable("news", "news");
@@ -669,13 +673,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("TextContent")
                         .IsRequired()
-                        .HasMaxLength(1200)
-                        .HasColumnType("nvarchar(1200)");
+                        .HasMaxLength(15000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 
@@ -1132,9 +1136,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
                         .WithOne("News")
-                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId");
 
                     b.Navigation("Image");
                 });

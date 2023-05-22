@@ -263,7 +263,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     URL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -274,8 +274,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         column: x => x.ImageId,
                         principalSchema: "media",
                         principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -576,8 +575,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TextContent = table.Column<string>(type: "nvarchar(1200)", maxLength: 1200, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    TextContent = table.Column<string>(type: "nvarchar(max)", maxLength: 15000, nullable: false),
                     AdditionalText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -920,6 +919,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "news",
                 table: "news",
                 column: "ImageId",
+                unique: true,
+                filter: "[ImageId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_news_URL",
+                schema: "news",
+                table: "news",
+                column: "URL",
                 unique: true);
 
             migrationBuilder.CreateIndex(

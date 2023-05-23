@@ -45,7 +45,6 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));

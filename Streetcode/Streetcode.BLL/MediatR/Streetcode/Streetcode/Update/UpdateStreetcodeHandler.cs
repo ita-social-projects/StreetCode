@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.Update;
@@ -21,7 +21,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
 		public Task<Result<StreetcodeUpdateDTO>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+
+            throw new NotImplementedException();
 		}
 	}
 }

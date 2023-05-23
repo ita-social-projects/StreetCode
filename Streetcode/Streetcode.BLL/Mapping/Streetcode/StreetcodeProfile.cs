@@ -1,6 +1,7 @@
 using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
@@ -25,5 +26,8 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.Images, conf => conf.Ignore())
           .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
           .ForMember(x => x.StreetcodeArts, conf => conf.Ignore()).ReverseMap();
+
+        CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
+            .ReverseMap();
     }
 }

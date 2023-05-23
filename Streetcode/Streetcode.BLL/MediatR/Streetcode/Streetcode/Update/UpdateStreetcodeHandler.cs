@@ -19,9 +19,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 			_repositoryWrapper = repositoryWrapper;
 		}
 
-		public Task<Result<StreetcodeUpdateDTO>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
+		public async Task<Result<StreetcodeUpdateDTO>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
 		{
-			throw new NotImplementedException();
+			var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
+			_repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+			_repositoryWrapper.SaveChanges();
+
+			// code to remove after implementation
+			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == streetcodeToUpdate.Id);
+			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
+			return updatedDTO;
 		}
 	}
 }

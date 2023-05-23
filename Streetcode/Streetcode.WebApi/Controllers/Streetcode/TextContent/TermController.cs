@@ -25,7 +25,6 @@ public class TermController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] TermDTO term)
     {
         return HandleResult(await Mediator.Send(new CreateTermCommand(term)));

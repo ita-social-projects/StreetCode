@@ -1,4 +1,6 @@
-﻿using Streetcode.DAL.Enums;
+using Streetcode.BLL.DTO.Streetcode.Update.Media;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
@@ -15,5 +17,8 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
 		public DateTime UpdatedAt { get; set; }
 		public DateTime EventStartOrPersonBirthDate { get; set; }
 		public DateTime? EventEndOrPersonDeathDate { get; set; }
+        public IEnumerable<FactUpdateDTO> Facts { get; set; }
+        public IEnumerable<VideoUpdateDTO> Videos { get; set; }
+        public IEnumerable<StreetcodeDTO> RelatedFigures { get; set; }
 	}
 }

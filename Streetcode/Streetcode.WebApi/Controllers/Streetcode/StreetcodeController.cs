@@ -135,6 +135,7 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
     }
 
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));

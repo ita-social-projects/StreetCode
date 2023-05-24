@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
@@ -23,5 +25,7 @@ public class RelatedFigureProfile : Profile
                 .MapFrom(e => e.TransliterationUrl))
             .ForPath(dto => dto.ImageId, conf => conf
                 .MapFrom(e => e.Images.Select(i => i.Id).LastOrDefault()));
+
+        CreateMap<RelatedFigureUpdateDTO, RelatedFigure>();
     }
 }

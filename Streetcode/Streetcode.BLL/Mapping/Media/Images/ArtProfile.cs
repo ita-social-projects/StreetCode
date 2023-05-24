@@ -18,5 +18,5 @@ public class ArtProfile : Profile
             .ForPath(x => x.Art.Image.MimeType, src => src.MapFrom(x => x.MimeType))
             .ForPath(x => x.Art.Image.Title, src => src.MapFrom(x => x.Title))
             .ReverseMap();
-  }
+    }
 }

@@ -47,6 +47,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 await AddImages(streetcode, request.Streetcode.ImagesId);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
+                AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
                 await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
@@ -63,6 +64,20 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 return Result.Fail(new Error("An error occurred while creating a streetcode"));
             }
+        }
+    }
+
+    private void AddTransactionLink(StreetcodeContent streetcode, string? url)
+    {
+        if(url != null)
+        {
+            streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
+            {
+                QrCodeUrl = url,
+                QrCodeUrlTitle = url,
+                Url = url,
+                UrlTitle = url,
+            };
         }
     }
 

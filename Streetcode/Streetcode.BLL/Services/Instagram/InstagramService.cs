@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Payment.Exceptions;
-using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Instagram;
-using Streetcode.DAL.Entities.Payment;
 
 namespace Streetcode.BLL.Services.Instagram
 {

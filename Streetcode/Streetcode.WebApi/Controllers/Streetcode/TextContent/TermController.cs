@@ -37,7 +37,6 @@ public class TermController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteTermCommand(id)));

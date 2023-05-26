@@ -25,13 +25,11 @@ public class RelatedFigureController : BaseApiController
     }
 
     [HttpPost("{ObserverId:int}&{TargetId:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromRoute] int ObserverId, int TargetId)
     {
         return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(ObserverId, TargetId)));
     }
 
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     [HttpDelete("{ObserverId:int}&{TargetId:int}")]
     public async Task<IActionResult> Delete([FromRoute] int ObserverId, int TargetId)
     {

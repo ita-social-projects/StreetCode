@@ -51,14 +51,12 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> UpdateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new UpdateCategoryCommand(category)));
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteCategoryCommand(id)));

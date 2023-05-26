@@ -7,7 +7,6 @@ namespace Streetcode.BLL.MediatR.Instagram.GetAll
 {
     public class GetAllPostsHandler : IRequestHandler<GetAllPostsQuery, Result<IEnumerable<InstagramPost>>>
     {
-        private const int _limit = 10;
         private readonly IInstagramService _instagramService;
         public GetAllPostsHandler(IInstagramService instagramService)
         {

@@ -1,37 +1,48 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.Instagram;
-using Streetcode.BLL.Services.Payment.Exceptions;
 using Streetcode.DAL.Entities.Instagram;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.Services.Instagram
 {
     public class InstagramService : IInstagramService
     {
-        public async Task<IEnumerable<InstagramPost>> GetPostsAsync()
+        private readonly HttpClient _httpClient;
+        private readonly InstagramEnvirovmentVariables _envirovment;
+        private readonly string _userId;
+        private readonly string _accessToken;
+
+        public InstagramService(IOptions<InstagramEnvirovmentVariables> instagramEnvirovment)
         {
-            var userId = "";
-            var accessToken = "";
-            var postLimit = 10;
-
-            using (HttpClient client = new HttpClient())
-            {
-                var baseAddress = $"https://graph.instagram.com/{userId}/media?fields=id,media_type,media_url,caption&limit=${postLimit}&access_token=${accessToken}";
-                HttpResponseMessage response = await client.GetAsync(baseAddress);
-                (int Code, string Body) result = (Code: (int)response.StatusCode, Body: await response.Content.ReadAsStringAsync());
-
-                return result.Code switch
-                {
-                    200 => JsonToObject<IEnumerable<InstagramPost>>(result.Body),
-                    400 => throw new InvalidRequestParameterException(JsonToObject<Error>(result.Body)),
-                    403 => throw new InvalidTokenException(),
-                    _ => throw new NotSupportedException()
-                };
-            }
+            _httpClient = new HttpClient();
+            _envirovment = instagramEnvirovment.Value;
+            _userId = _envirovment.InstagramID;
+            _accessToken = _envirovment.InstagramToken;
         }
 
-        private T JsonToObject<T>(string body)
+        public async Task<IEnumerable<InstagramPost>> GetPostsAsync()
         {
-            return JsonConvert.DeserializeObject<T>(body);
+            var postLimit = 10;
+
+            string apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={postLimit}&access_token={_accessToken}";
+
+            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+            response.EnsureSuccessStatusCode();
+
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                IgnoreNullValues = true
+            };
+
+            var postResponse = JsonSerializer.Deserialize<InstagramPostResponse>(jsonResponse, jsonOptions);
+
+            IEnumerable<InstagramPost> posts = postResponse.Data.OrderByDescending(p => p.IsPinned);
+
+            return posts;
         }
     }
 }

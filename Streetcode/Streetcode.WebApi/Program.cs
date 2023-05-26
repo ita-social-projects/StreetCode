@@ -12,6 +12,7 @@ builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
+builder.Services.ConfigureInstagram(builder);
 
 var app = builder.Build();
 

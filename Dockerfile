@@ -20,6 +20,7 @@ COPY ./Streetcode/Streetcode.BLL/*.csproj ./Streetcode.BLL/
 COPY ./Streetcode/Streetcode.DAL/*.csproj ./Streetcode.DAL/
 COPY ./Streetcode/Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
 COPY ./Streetcode/Streetcode.XIntegrationTest/*.csproj ./Streetcode.XIntegrationTest/
+COPY ./Streetcode/DbUpdate/*.csproj ./DbUpdate/
 RUN dotnet restore
 
 # copying other neccessary data and building application
@@ -35,4 +36,4 @@ WORKDIR /app
 COPY --from=publish /app/publish ./
 
 LABEL atom="Streetcode"
-ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll", "--environment=Local"]

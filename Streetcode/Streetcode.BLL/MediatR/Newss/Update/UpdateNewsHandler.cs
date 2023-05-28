@@ -38,7 +38,10 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             {
                 var img = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == response.ImageId);
                 response.Image = null;
-                _repositoryWrapper.ImageRepository.Delete(img);
+                if (img != null)
+                {
+                    _repositoryWrapper.ImageRepository.Delete(img);
+                }
             }
 
             _repositoryWrapper.NewsRepository.Update(news);

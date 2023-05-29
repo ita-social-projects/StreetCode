@@ -29,7 +29,7 @@ namespace Streetcode.WebApi.Controllers.Newss
         {
             return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url)));
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> SortedByDateTime()
         {

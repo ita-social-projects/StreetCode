@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.DAL.Entities.Instagram;
-using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.Services.Instagram
 {
@@ -42,7 +41,12 @@ namespace Streetcode.BLL.Services.Instagram
 
             IEnumerable<InstagramPost> posts = postResponse.Data.OrderByDescending(p => p.IsPinned);
 
-            return posts;
+            return await RemoveVideoMediaType(posts);
+        }
+
+        public async Task<IEnumerable<InstagramPost>> RemoveVideoMediaType(IEnumerable<InstagramPost> posts)
+        {
+            return posts.Where(p => p.MediaType != "VIDEO");
         }
     }
 }

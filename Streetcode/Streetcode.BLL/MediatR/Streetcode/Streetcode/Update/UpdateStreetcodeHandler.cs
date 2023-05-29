@@ -36,7 +36,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 		{
 			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
 				x => x.Include(s => s.Text)
-				.Include(s => s.Subtitles));
+				.Include(s => s.Subtitles)
+				.Include(s => s.TransactionLink));
+
 			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
 			return updatedDTO;
 		}

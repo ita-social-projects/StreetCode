@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Instagram\" />
+  </ItemGroup>
+
 </Project>

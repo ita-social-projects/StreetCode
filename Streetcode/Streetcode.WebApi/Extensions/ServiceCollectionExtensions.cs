@@ -20,6 +20,8 @@ using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
 using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
+using Streetcode.BLL.Interfaces.Instagram;
+using Streetcode.BLL.Services.Instagram;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -43,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IInstagramService, InstagramService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

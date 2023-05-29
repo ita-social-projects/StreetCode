@@ -11,6 +11,7 @@ namespace Streetcode.BLL.Services.Instagram
         private readonly InstagramEnvirovmentVariables _envirovment;
         private readonly string _userId;
         private readonly string _accessToken;
+        private int postLimit = 10;
 
         public InstagramService(IOptions<InstagramEnvirovmentVariables> instagramEnvirovment)
         {
@@ -24,7 +25,7 @@ namespace Streetcode.BLL.Services.Instagram
         {
             var postLimit = 10;
 
-            string apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={postLimit}&access_token={_accessToken}";
+            string apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={2 * postLimit}&access_token={_accessToken}";
 
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
             response.EnsureSuccessStatusCode();
@@ -39,14 +40,14 @@ namespace Streetcode.BLL.Services.Instagram
 
             var postResponse = JsonSerializer.Deserialize<InstagramPostResponse>(jsonResponse, jsonOptions);
 
-            IEnumerable<InstagramPost> posts = postResponse.Data.OrderByDescending(p => p.IsPinned);
+            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse.Data);
 
-            return await RemoveVideoMediaType(posts);
+            return posts;
         }
 
-        public async Task<IEnumerable<InstagramPost>> RemoveVideoMediaType(IEnumerable<InstagramPost> posts)
+        public IEnumerable<InstagramPost> RemoveVideoMediaType(IEnumerable<InstagramPost> posts)
         {
-            return posts.Where(p => p.MediaType != "VIDEO");
+            return posts.Where(p => p.MediaType != "VIDEO").Take(postLimit);
         }
     }
 }

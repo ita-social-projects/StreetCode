@@ -31,13 +31,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
             _repositoryWrapper.SaveChanges();
 
-			// code to remove after inmplementation
-			return await GetOld(1);
+            // code to remove after inmplementation
+            return await GetOld(streetcodeToUpdate.Id);
 		}
 
 		private async Task<StreetcodeUpdateDTO> GetOld(int id)
 		{
-            var updatedDTO = new StreetcodeUpdateDTO();
+			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
+				x => x.Include(s => s.Text)
+				.Include(s => s.Subtitles)
+				.Include(s => s.TransactionLink));
+
+			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
 			return updatedDTO;
 		}
 

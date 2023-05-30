@@ -1,11 +1,10 @@
 using Streetcode.BLL.DTO.Streetcode.Update.Interface;
+using Streetcode.BLL.DTO.Timeline;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
-    public class RelatedFigureUpdateDTO : RelatedFigureDTO, IChanged
+    public class TimelineItemUpdateDTO : TimelineItemDTO, IChanged
     {
         public bool? Changed { get; set; }
-        public int ObserverId { get; set; }
-        public int TargetId { get; set; }
-	}
+    }
 }

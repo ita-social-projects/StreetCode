@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
+using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -17,6 +18,7 @@ public interface IRepositoryBase<T>
     EntityEntry<T> Update(T entity);
 
     void Delete(T entity);
+    void DeleteRange(IEnumerable<T> items);
 
     void Attach(T entity);
 
@@ -27,6 +29,8 @@ public interface IRepositoryBase<T>
     Task CreateRangeAsync(IEnumerable<T> items);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
+
+    void UpdateManyToMany(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate);
 
     Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,

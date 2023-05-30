@@ -91,6 +91,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
 
     private IPartnerStreetcodeRepository _partnerStreetcodeRepository;
+
     private INewsRepository _newsRepository;
 
     private ITeamLinkRepository _teamLinkRepository;

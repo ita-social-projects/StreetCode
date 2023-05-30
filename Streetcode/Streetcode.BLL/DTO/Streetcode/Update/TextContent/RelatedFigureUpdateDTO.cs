@@ -4,7 +4,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
     public class RelatedFigureUpdateDTO : RelatedFigureDTO, IChanged
     {
-        public bool? Changed { get; set; }
+        public bool? IsChanged { get; set; }
         public int ObserverId { get; set; }
         public int TargetId { get; set; }
 	}

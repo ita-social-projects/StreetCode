@@ -5,6 +5,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
     public class StreetcodeArtUpdateDTO : StreetcodeArtDTO, IChanged
     {
-        public bool? Changed { get; set; }
+        public bool? IsChanged { get; set; }
     }
 }

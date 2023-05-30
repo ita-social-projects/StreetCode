@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+using AutoMapper;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.DAL.Entities.Timeline;
 
@@ -9,5 +10,6 @@ public class HistoricalContextProfile : Profile
     public HistoricalContextProfile()
     {
         CreateMap<HistoricalContext, HistoricalContextDTO>().ReverseMap();
+        CreateMap<HistoricalContextUpdateDTO, HistoricalContext>().ReverseMap();
     }
 }

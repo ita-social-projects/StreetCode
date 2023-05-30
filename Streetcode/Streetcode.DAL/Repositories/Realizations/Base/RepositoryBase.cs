@@ -17,6 +17,12 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext = context;
     }
 
+    public void UpdateManyToMany(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate)
+    {
+        DeleteRange(itemsToDelete);
+        CreateRangeAsync(itemsToCreate);
+    }
+
     public Task CreateRangeAsync(IEnumerable<T> items)
     {
         return _dbContext.Set<T>().AddRangeAsync(items);
@@ -46,6 +52,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
     public void Delete(T entity)
     {
         _dbContext.Set<T>().Remove(entity);
+    }
+
+    public void DeleteRange(IEnumerable<T> items)
+    {
+      _dbContext.Set<T>().RemoveRange(items);
     }
 
     public void Attach(T entity)

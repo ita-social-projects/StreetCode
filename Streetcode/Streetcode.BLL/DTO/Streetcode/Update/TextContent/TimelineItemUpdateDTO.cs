@@ -5,6 +5,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
     public class TimelineItemUpdateDTO : TimelineItemDTO, IChanged
     {
-        public bool? Changed { get; set; }
+        public bool? IsChanged { get; set; }
     }
 }

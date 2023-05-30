@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.Interface
 {
 	public interface IChanged
 	{
-		public bool? Changed { get; set; }
+		public bool? IsChanged { get; set; }
 	}
 }

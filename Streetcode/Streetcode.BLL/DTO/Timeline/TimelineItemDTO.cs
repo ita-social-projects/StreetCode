@@ -10,5 +10,4 @@ public class TimelineItemDTO
     public DateTime Date { get; set; }
     public DateViewPattern DateViewPattern { get; set; }
     public IEnumerable<HistoricalContextDTO> HistoricalContexts { get; set; }
-    public bool IsDeleted { get; set; } = false;
 }

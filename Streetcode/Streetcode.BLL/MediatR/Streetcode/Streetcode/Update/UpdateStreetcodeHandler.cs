@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interface;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.Streetcode;
@@ -35,6 +36,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return await GetOld(streetcodeToUpdate.Id);
 		}
 
+        public void UpdateTimelineItems(IEnumerable<TimelineItemUpdateDTO> timelineItems)
+        {
+            var timelineItemsToCreate = timelineItems.Where(x => x.IsChanged == true);
+            var timelinesItemsToDelete = timelineItems.Except(timelineItemsToCreate);
+        }
+
 		private async Task<StreetcodeUpdateDTO> GetOld(int id)
 		{
 			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
@@ -51,7 +58,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             foreach(var entity in entities)
             {
-				if (entity?.Changed == false)
+				if (entity?.IsChanged == false)
                 {
                     if(entity.GetType() == typeof(DAL.Entities.Streetcode.TextContent.Fact))
                     {

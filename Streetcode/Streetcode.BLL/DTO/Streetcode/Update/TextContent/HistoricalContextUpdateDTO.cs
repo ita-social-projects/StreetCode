@@ -5,6 +5,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
     public class HistoricalContextUpdateDTO : HistoricalContextDTO, IChanged
     {
-        public bool? Changed { get; set; } = false;
+        public bool? IsChanged { get; set; } = false;
     }
 }

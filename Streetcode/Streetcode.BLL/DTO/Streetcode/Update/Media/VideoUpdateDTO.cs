@@ -5,6 +5,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update.Media
 {
     public class VideoUpdateDTO : VideoDTO, IChanged
     {
-        public bool? Changed { get; set; }
+        public bool? IsChanged { get; set; }
     }
 }

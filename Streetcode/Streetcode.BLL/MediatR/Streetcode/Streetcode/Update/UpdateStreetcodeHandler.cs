@@ -3,9 +3,9 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update.Interfaces;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -47,11 +47,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 		}
 
 		private void Delete<T>(IEnumerable<T> entities)
-              where T : IDeleted
+              where T : IChanged
         {
             foreach(var entity in entities)
             {
-                if (entity.IsDeleted)
+				if (entity?.Changed == false)
                 {
                     if(entity.GetType() == typeof(DAL.Entities.Streetcode.TextContent.Fact))
                     {

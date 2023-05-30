@@ -1,10 +1,10 @@
+using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 using Streetcode.BLL.DTO.Timeline;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update.Interfaces;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
-    public class TimelineItemUpdateDTO : TimelineItemDTO, IDeleted
+    public class TimelineItemUpdateDTO : TimelineItemDTO, IChanged
     {
-        public bool IsDeleted { get; set; } = false;
+        public bool? Changed { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update.Interfaces;
+using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update.TextContent
 {
-    public class RelatedFigureUpdateDTO : RelatedFigureDTO, IDeleted
+    public class RelatedFigureUpdateDTO : RelatedFigureDTO, IChanged
     {
-        public bool IsDeleted { get; set; }
-    }
+		public bool? Changed { get; set; }
+	}
 }

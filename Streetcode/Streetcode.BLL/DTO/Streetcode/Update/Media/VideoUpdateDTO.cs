@@ -1,10 +1,10 @@
 using Streetcode.BLL.DTO.Media;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update.Interfaces;
+using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update.Media
 {
-    public class VideoUpdateDTO : VideoDTO, IDeleted
+    public class VideoUpdateDTO : VideoDTO, IChanged
     {
-        public bool IsDeleted { get; set; } = false;
+        public bool? Changed { get; set; }
     }
 }

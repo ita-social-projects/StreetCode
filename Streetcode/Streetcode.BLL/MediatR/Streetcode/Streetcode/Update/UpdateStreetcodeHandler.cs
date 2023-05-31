@@ -2,10 +2,14 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+
+using Model = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -24,13 +28,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 		{
 			var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
-			_repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+			// _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+
+			UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
 
 			_repositoryWrapper.SaveChanges();
 
 			// code to remove after inmplementation
 			return await GetOld(streetcodeToUpdate.Id);
 		}
+
+		private void UpdateRelatedFiguresRelation(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
+		{
+            foreach (var relatedFigureUpdate in relatedFigureUpdates)
+            {
+                var newRelation = _mapper.Map<Model>(relatedFigureUpdate);
+                _repositoryWrapper.RelatedFigureRepository.Create(newRelation);
+            }
+        }
 
 		private async Task<StreetcodeUpdateDTO> GetOld(int id)
 		{
@@ -40,5 +55,5 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
 			return updatedDTO;
 		}
-	}
+    }
 }

@@ -2,6 +2,8 @@ using Streetcode.DAL.Enums;
 using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
 using Streetcode.BLL.DTO.Streetcode.Update.AdditionalContent;
 using Streetcode.BLL.DTO.Streetcode.Update.Media;
+using Streetcode.DAL.Entities.Transactions;
+using Streetcode.BLL.DTO.Streetcode.Update.Transactions;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
@@ -26,5 +28,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
 		public IEnumerable<VideoUpdateDTO> Videos { get; set; }
 		public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; }
 		public IEnumerable<PartnersUpdateDTO> Partners { get; set; }
+		public IEnumerable<TimelineItemUpdateDTO> TimelineItems { get; set; }
 	}
 }

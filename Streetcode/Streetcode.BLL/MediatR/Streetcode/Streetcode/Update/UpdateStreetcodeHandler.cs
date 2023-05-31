@@ -1,13 +1,17 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.BLL.DTO.Streetcode.Update.Interface;
+using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
 using Model = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
@@ -26,17 +30,21 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
 		public async Task<Result<StreetcodeUpdateDTO>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
 		{
-			var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
+            var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
-			// _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+            UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
+            _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+            _repositoryWrapper.SaveChanges();
 
-			UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
-
-			_repositoryWrapper.SaveChanges();
-
-			// code to remove after inmplementation
-			return await GetOld(streetcodeToUpdate.Id);
+            // code to remove after inmplementation
+            return await GetOld(streetcodeToUpdate.Id);
 		}
+
+		public void UpdateTimelineItems(IEnumerable<TimelineItemUpdateDTO> timelineItems)
+        {
+            var timelineItemsToCreate = timelineItems.Where(x => x.IsChanged == true);
+            var timelinesItemsToDelete = timelineItems.Except(timelineItemsToCreate);
+        }
 
 		private void UpdateRelatedFiguresRelation(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
 		{
@@ -51,9 +59,27 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 		{
 			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
 				x => x.Include(s => s.Text)
-				.Include(s => s.Subtitles));
+				.Include(s => s.Subtitles)
+				.Include(s => s.TransactionLink));
+
 			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
 			return updatedDTO;
 		}
+
+		private void Delete<T>(IEnumerable<T> entities)
+              where T : IChanged
+        {
+            foreach(var entity in entities)
+            {
+				if (entity?.IsChanged == false)
+                {
+                    if(entity.GetType() == typeof(DAL.Entities.Streetcode.TextContent.Fact))
+                    {
+                        var fact = _mapper.Map<DAL.Entities.Streetcode.TextContent.Fact>(entity);
+                        _repositoryWrapper.FactRepository.Delete(fact);
+                    }
+                }
+            }
+        }
     }
 }

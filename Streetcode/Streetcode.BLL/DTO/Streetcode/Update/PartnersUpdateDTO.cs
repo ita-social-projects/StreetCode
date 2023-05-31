@@ -1,9 +1,9 @@
-﻿using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update.Interfaces;
+﻿using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
-    public class PartnersUpdateDTO : IDeleted
+    public class PartnersUpdateDTO : IChanged
     {
-        bool IDeleted.IsDeleted { get; set; }
+        public bool? IsChanged { get; set; }
     }
 }

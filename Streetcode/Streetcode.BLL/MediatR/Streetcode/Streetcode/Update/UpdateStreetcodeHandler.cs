@@ -37,10 +37,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
             UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);
-
-			// UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
-			// UpdatePartnersRelation(request.Streetcode.Partners);
-
+            UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
+            UpdatePartnersRelation(request.Streetcode.Partners);
             _repositoryWrapper.SaveChanges();
 
             // code to remove after inmplementation

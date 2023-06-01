@@ -374,6 +374,7 @@ namespace Streetcode.WebApi.Extensions
                         new Art
                         {
                             ImageId = 20,
+                            Description = "Анатолій Федірко, «Український супрематичний політичний діяч Михайло Грушевський», 2019-2020 роки."
                         },
                         new Art
                         {
@@ -590,25 +591,25 @@ namespace Streetcode.WebApi.Extensions
                         {
                             ArtId = 7,
                             StreetcodeId = 2,
-                            Index = 7,
+                            Index = 1,
                         },
                         new StreetcodeArt
                         {
                             ArtId = 4,
                             StreetcodeId = 2,
-                            Index = 8,
+                            Index = 2,
                         },
                         new StreetcodeArt
                         {
                             ArtId = 5,
                             StreetcodeId = 2,
-                            Index = 9,
+                            Index = 3,
                         },
                         new StreetcodeArt
                         {
                             ArtId = 6,
                             StreetcodeId = 2,
-                            Index = 10,
+                            Index = 4,
                         });
                     await dbContext.SaveChangesAsync();
                 }

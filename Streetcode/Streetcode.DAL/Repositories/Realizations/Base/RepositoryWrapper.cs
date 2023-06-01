@@ -100,6 +100,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IHistoricalContextTimelineRepository _historicalContextTimelineRepository;
 
+    private IStreetcodeToponymRepository _streetcodeToponymRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -520,6 +522,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _historicalContextTimelineRepository;
         }
     }
+
+    public IStreetcodeToponymRepository StreetcodeToponymRepository
+	{
+		get
+		{
+			if (_streetcodeToponymRepository is null)
+			{
+				_streetcodeToponymRepository = new StreetcodeToponymRepository(_streetcodeDbContext);
+			}
+
+			return _streetcodeToponymRepository;
+		}
+	}
 
     public int SaveChanges()
     {

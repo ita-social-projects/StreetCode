@@ -4,13 +4,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
-using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.BLL.DTO.Streetcode.Update.Toponyms;
 using Streetcode.BLL.DTO.Timeline.Update;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
+using RelatedFigureModel = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -32,6 +34,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
 
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+            UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);
+            UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
+            UpdatePartnersRelation(request.Streetcode.Partners);
             _repositoryWrapper.SaveChanges();
 
             return await GetOld(streetcodeToUpdate.Id);
@@ -68,8 +73,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 })
                 .ToList();
 
-                 _repositoryWrapper.HistoricalContextTimelineRepository.DeleteRange(deletedItems);
-                await _repositoryWrapper.HistoricalContextTimelineRepository.CreateRangeAsync(createdItems);              
+                _repositoryWrapper.HistoricalContextTimelineRepository.DeleteRange(deletedItems);
+                await _repositoryWrapper.HistoricalContextTimelineRepository.CreateRangeAsync(createdItems);
             }
 
             streetcode.TimelineItems.AddRange(timelineItemsUpdated);
@@ -92,18 +97,73 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             streetcode.TimelineItems.AddRange(timelineItemsCreated);
 
-            _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));   
+            _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
+        }
+
+		private void UpdateStreetcodeToponym(IEnumerable<StreetcodeToponymUpdateDTO> streetcodeToponymsDTO)
+		{
+            var toDelete = streetcodeToponymsDTO.Where(_ => _.ModelState == Enums.ModelState.Deleted);
+            var toCreate = streetcodeToponymsDTO.Where(_ => _.ModelState == Enums.ModelState.Created);
+
+            foreach (var streetcodeToponymToDelete in toDelete)
+			{
+                var streetcodeToponym = _mapper.Map<StreetcodeToponym>(streetcodeToponymToDelete);
+                _repositoryWrapper.StreetcodeToponymRepository.Delete(streetcodeToponym);
+			}
+
+            foreach (var streetcodeToponymToCreate in toCreate)
+			{
+                var streetcodeToponym = _mapper.Map<StreetcodeToponym>(streetcodeToponymToCreate);
+                _repositoryWrapper.StreetcodeToponymRepository.Create(streetcodeToponym);
+			}
+		}
+
+		private void UpdateRelatedFiguresRelation(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
+		{
+            var relationsToCreate = relatedFigureUpdates.Where(_ => _.ModelState == Enums.ModelState.Created);
+            var relationsToDelete = relatedFigureUpdates.Where(_ => _.ModelState == Enums.ModelState.Deleted);
+
+            foreach (var relationToCreate in relationsToCreate)
+            {
+                var relation = _mapper.Map<RelatedFigureModel>(relationToCreate);
+                _repositoryWrapper.RelatedFigureRepository.Create(relation);
+            }
+
+            foreach(var relationToDelete in relationsToDelete)
+            {
+                var relation = _mapper.Map<RelatedFigureModel>(relationToDelete);
+                _repositoryWrapper.RelatedFigureRepository.Delete(relation);
+            }
+        }
+
+		private void UpdatePartnersRelation(IEnumerable<PartnersUpdateDTO> partnersUpdateDTOs)
+        {
+            var relationsToCreate = partnersUpdateDTOs.Where(_ => _.ModelState == Enums.ModelState.Created);
+            var relationsToDelete = partnersUpdateDTOs.Where(_ => _.ModelState == Enums.ModelState.Deleted);
+
+            foreach (var relationToCreate in relationsToCreate)
+            {
+                var relation = _mapper.Map<StreetcodePartner>(relationToCreate);
+                _repositoryWrapper.PartnerStreetcodeRepository.Create(relation);
+            }
+
+            foreach (var relationToDelete in relationsToDelete)
+            {
+                var relation = _mapper.Map<StreetcodePartner>(relationToDelete);
+                _repositoryWrapper.PartnerStreetcodeRepository.Delete(relation);
+            }
         }
 
 		private async Task<StreetcodeUpdateDTO> GetOld(int id)
-		{
-			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
-				x => x.Include(s => s.Text)
-				.Include(s => s.Subtitles)
-				.Include(s => s.TransactionLink));
+        {
+            var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
+                x => x.Include(s => s.Text)
+                .Include(s => s.Subtitles)
+                .Include(s => s.TransactionLink)
+                .Include(s => s.Toponyms));
 
-			var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
-			return updatedDTO;
+            var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
+            return updatedDTO;
 		}
 
 		private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)

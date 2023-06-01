@@ -1,9 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
@@ -31,7 +30,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         var partners = await _repositoryWrapper.PartnersRepository
             .GetAllAsync(
-                predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id) || p.IsVisibleEverywhere,
+                predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id),
                 include: p => p.Include(pl => pl.PartnerSourceLinks));
 
         if (partners is null)

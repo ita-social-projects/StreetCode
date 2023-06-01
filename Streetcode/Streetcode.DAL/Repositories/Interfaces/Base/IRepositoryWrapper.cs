@@ -49,6 +49,7 @@ public interface IRepositoryWrapper
     INewsRepository NewsRepository { get; }
     IPositionRepository PositionRepository { get; }
     IHistoricalContextTimelineRepository HistoricalContextTimelineRepository { get; }
+    IStreetcodeToponymRepository StreetcodeToponymRepository { get; }
 
     public int SaveChanges();
 

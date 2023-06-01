@@ -35,9 +35,9 @@ public class StreetcodeProfile : Profile
 					new StreetcodeToponymUpdateDTO { StreetcodeId = s.Id, ToponymId = t.Id })));
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>();
 
-		/* CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
-          /*.ForMember(x => x.TimelineItems, conf => conf.Ignore())
-          .ForMember(x => x.Partners, conf => conf.Ignore())
-            .ReverseMap();*/
+	CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
+        	.ForMember(x => x.TimelineItems, conf => conf.Ignore())
+        	.ForMember(x => x.Partners, conf => conf.Ignore())
+        	.ReverseMap();
     }
 }

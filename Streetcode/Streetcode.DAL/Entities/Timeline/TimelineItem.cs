@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
@@ -29,5 +29,5 @@ public class TimelineItem
 
     public StreetcodeContent? Streetcode { get; set; } = new ();
 
-    public List<HistoricalContext> HistoricalContexts { get; set; } = new ();
+    public List<HistoricalContextTimeline> HistoricalContextTimelines { get; set; } = new ();
 }

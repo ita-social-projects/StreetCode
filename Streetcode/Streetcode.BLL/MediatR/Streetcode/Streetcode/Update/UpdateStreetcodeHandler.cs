@@ -3,9 +3,9 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.Update;
-using Streetcode.BLL.DTO.Streetcode.Update.Interface;
-using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
-	internal class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, Result<StreetcodeUpdateDTO>>
+    internal class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, Result<StreetcodeUpdateDTO>>
 	{
 		private readonly IMapper _mapper;
 		private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,17 +29,70 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 		{
             var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
+            await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
+
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
             _repositoryWrapper.SaveChanges();
 
-            // code to remove after inmplementation
             return await GetOld(streetcodeToUpdate.Id);
 		}
 
-        public void UpdateTimelineItems(IEnumerable<TimelineItemUpdateDTO> timelineItems)
+		public async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
         {
-            var timelineItemsToCreate = timelineItems.Where(x => x.IsChanged == true);
-            var timelinesItemsToDelete = timelineItems.Except(timelineItemsToCreate);
+            var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
+            var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);
+            await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
+            await _repositoryWrapper.SaveChangesAsync();
+
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemUpdateDTO>(timelineItems);
+
+            var timelineItemsUpdated = new List<TimelineItem>();
+            foreach(var timelineItem in toUpdate)
+            {
+                timelineItemsUpdated.Add(_mapper.Map<TimelineItem>(timelineItem));
+                var (historicalContextToUpdate, historicalContextToCreate, historicalContextToDelete) = CategorizeItems<HistoricalContextUpdateDTO>(timelineItem.HistoricalContexts);
+
+                var deletedItems = historicalContextToDelete.Select(x => new HistoricalContextTimeline
+                {
+                    TimelineId = timelineItem.Id,
+                    HistoricalContextId = x.Id,
+                })
+                .ToList();
+
+                var createdItems = historicalContextToCreate.Select(x => new HistoricalContextTimeline
+                {
+                    TimelineId = timelineItem.Id,
+                    HistoricalContextId = x.Id == 0
+                        ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                        : x.Id
+                })
+                .ToList();
+
+                 _repositoryWrapper.HistoricalContextTimelineRepository.DeleteRange(deletedItems);
+                await _repositoryWrapper.HistoricalContextTimelineRepository.CreateRangeAsync(createdItems);              
+            }
+
+            streetcode.TimelineItems.AddRange(timelineItemsUpdated);
+
+            var timelineItemsCreated = new List<TimelineItem>();
+            foreach(var timelineItem in toCreate)
+            {
+                var timelineItemCreate = _mapper.Map<TimelineItem>(timelineItem);
+                timelineItemCreate.HistoricalContextTimelines = timelineItem.HistoricalContexts
+                  .Select(x => new HistoricalContextTimeline
+                  {
+                      HistoricalContextId = x.Id == 0
+                          ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                          : x.Id
+                  })
+                 .ToList();
+
+                timelineItemsCreated.Add(timelineItemCreate);
+            }
+
+            streetcode.TimelineItems.AddRange(timelineItemsCreated);
+
+            _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));   
         }
 
 		private async Task<StreetcodeUpdateDTO> GetOld(int id)
@@ -53,20 +106,30 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 			return updatedDTO;
 		}
 
-		private void Delete<T>(IEnumerable<T> entities)
-              where T : IChanged
+		private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)
+              where T : IModelState
         {
-            foreach(var entity in entities)
+            var toUpdate = new List<T>();
+            var toCreate = new List<T>();
+            var toDelete = new List<T>();
+
+            foreach (var item in items)
             {
-				if (entity?.IsChanged == false)
+                if (item.ModelState == Enums.ModelState.Updated)
                 {
-                    if(entity.GetType() == typeof(DAL.Entities.Streetcode.TextContent.Fact))
-                    {
-                        var fact = _mapper.Map<DAL.Entities.Streetcode.TextContent.Fact>(entity);
-                        _repositoryWrapper.FactRepository.Delete(fact);
-                    }
+                    toUpdate.Add(item);
+                }
+                else if (item.ModelState == Enums.ModelState.Created)
+                {
+                    toCreate.Add(item);
+                }
+                else
+                {
+                    toDelete.Add(item);
                 }
             }
+
+            return (toUpdate, toCreate, toDelete);
         }
     }
 }

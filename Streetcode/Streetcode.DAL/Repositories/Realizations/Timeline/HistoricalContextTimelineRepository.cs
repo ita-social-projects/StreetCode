@@ -5,9 +5,9 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.DAL.Repositories.Realizations.Timeline
 {
-    public class HistoricalContextRepository : RepositoryBase<HistoricalContext>, IHistoricalContextRepository
+    public class HistoricalContextTimelineRepository : RepositoryBase<HistoricalContextTimeline>, IHistoricalContextTimelineRepository
     {
-        public HistoricalContextRepository(StreetcodeDbContext dbContext)
+        public HistoricalContextTimelineRepository(StreetcodeDbContext dbContext)
         : base(dbContext)
         {
         }

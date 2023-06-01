@@ -1,10 +1,11 @@
 using Streetcode.BLL.DTO.Media;
-using Streetcode.BLL.DTO.Streetcode.Update.Interface;
+using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
+using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update.Media
 {
-    public class VideoUpdateDTO : VideoDTO, IChanged
-    {
-        public bool? IsChanged { get; set; }
+    public class VideoUpdateDTO : VideoDTO, IModelState
+  {
+        public ModelState ModelState { get; set; }
     }
 }

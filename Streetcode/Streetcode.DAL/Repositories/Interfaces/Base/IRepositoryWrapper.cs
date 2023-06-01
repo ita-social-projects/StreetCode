@@ -48,6 +48,8 @@ public interface IRepositoryWrapper
     IPartnerStreetcodeRepository PartnerStreetcodeRepository { get;  }
     INewsRepository NewsRepository { get; }
     IPositionRepository PositionRepository { get; }
+    IHistoricalContextTimelineRepository HistoricalContextTimelineRepository { get; }
+
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

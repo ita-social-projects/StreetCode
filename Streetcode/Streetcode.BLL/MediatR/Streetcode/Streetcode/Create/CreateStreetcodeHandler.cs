@@ -168,28 +168,20 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
         await _repositoryWrapper.SaveChangesAsync();
         List<TimelineItem> newTimelines = new List<TimelineItem>();
-        TimelineItem current;
-        HistoricalContext currentHistoricalContext;
+
         foreach (TimelineItemDTO timelineItem in timelineItems)
         {
-           current = _mapper.Map<TimelineItem>(timelineItem);
-           current.HistoricalContexts.Clear();
-           newTimelines.Add(current);
-           foreach (HistoricalContextDTO historicalContext in timelineItem.HistoricalContexts)
-           {
-                if (historicalContext.Id == 0)
-                {
-                    currentHistoricalContext = newContextsDb.FirstOrDefault(x => x.Title.Equals(historicalContext.Title));
-                    if(currentHistoricalContext != null)
-                    {
-                        current.HistoricalContexts.Add(currentHistoricalContext);
-                    }
-                }
-                else
-                {
-                    current.HistoricalContexts.Add(_mapper.Map<HistoricalContext>(historicalContext));
-                }
-           }
+           var newTimeline = _mapper.Map<TimelineItem>(timelineItem);
+           newTimeline.HistoricalContextTimelines = timelineItem.HistoricalContexts
+              .Select(x => new HistoricalContextTimeline
+              {
+                  HistoricalContextId = x.Id == 0
+                      ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                      : x.Id
+              })
+              .ToList();
+
+           newTimelines.Add(newTimeline);
         }
 
         streetcode.TimelineItems.AddRange(newTimelines);

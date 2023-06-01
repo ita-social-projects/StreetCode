@@ -2,6 +2,7 @@ using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.DTO.Streetcode.Update.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
@@ -28,9 +29,15 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
           .ReverseMap();
 
-        CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
-          /*.ForMember(x => x.TimelineItems, conf => conf.Ignore())*/
-          .ForMember(x => x.Partners, conf => conf.Ignore())
-            .ReverseMap();
+        CreateMap<StreetcodeContent, StreetcodeUpdateDTO>()
+			.ForMember(su => su.StreetcodeToponym, conf => conf
+				.MapFrom(s => s.Toponyms.Select(t =>
+					new StreetcodeToponymUpdateDTO { StreetcodeId = s.Id, ToponymId = t.Id })));
+        CreateMap<StreetcodeUpdateDTO, StreetcodeContent>();
+
+	CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
+        	.ForMember(x => x.TimelineItems, conf => conf.Ignore())
+        	.ForMember(x => x.Partners, conf => conf.Ignore())
+        	.ReverseMap();
     }
 }

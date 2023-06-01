@@ -2,15 +2,19 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interface;
 using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
+using PartnersModel = Streetcode.DAL.Entities.Partners.Partner;
+using RelatedFigureModel = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -30,19 +34,59 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+
+            UpdateRelatedFiguresRelation(request.Streetcode.RelatedFigures);
+            UpdatePartnersRelation(request.Streetcode.Partners);
+
             _repositoryWrapper.SaveChanges();
 
             // code to remove after inmplementation
             return await GetOld(streetcodeToUpdate.Id);
 		}
 
-        public void UpdateTimelineItems(IEnumerable<TimelineItemUpdateDTO> timelineItems)
+		public void UpdateTimelineItems(IEnumerable<TimelineItemUpdateDTO> timelineItems)
         {
             var timelineItemsToCreate = timelineItems.Where(x => x.IsChanged == true);
             var timelinesItemsToDelete = timelineItems.Except(timelineItemsToCreate);
         }
 
-		private async Task<StreetcodeUpdateDTO> GetOld(int id)
+		private void UpdateRelatedFiguresRelation(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
+		{
+            var relationsToCreate = relatedFigureUpdates.Where(_ => _.IsChanged == true);
+            var relationsToDelete = relatedFigureUpdates.Where(_ => _.IsChanged == false);
+
+            foreach (var relationToCreate in relationsToCreate)
+            {
+                var relation = _mapper.Map<RelatedFigureModel>(relationToCreate);
+                _repositoryWrapper.RelatedFigureRepository.Create(relation);
+            }
+
+            foreach(var relationToDelete in relationsToDelete)
+            {
+                var relation = _mapper.Map<RelatedFigureModel>(relationToDelete);
+                _repositoryWrapper.RelatedFigureRepository.Delete(relation);
+            }
+        }
+
+		private void UpdatePartnersRelation(IEnumerable<PartnersUpdateDTO> partnersUpdateDTOs)
+        {
+            var relationsToCreate = partnersUpdateDTOs.Where(_ => _.IsChanged == true);
+            var relationsToDelete = partnersUpdateDTOs.Where(_ => _.IsChanged == false);
+
+            foreach (var relationToCreate in relationsToCreate)
+            {
+                var relation = _mapper.Map<StreetcodePartner>(relationToCreate);
+                _repositoryWrapper.PartnerStreetcodeRepository.Create(relation);
+            }
+
+            foreach (var relationToDelete in relationsToDelete)
+            {
+                var relation = _mapper.Map<StreetcodePartner>(relationToDelete);
+                _repositoryWrapper.PartnerStreetcodeRepository.Delete(relation);
+            }
+        }
+
+        private async Task<StreetcodeUpdateDTO> GetOld(int id)
 		{
 			var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
 				x => x.Include(s => s.Text)

@@ -25,10 +25,12 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.TimelineItems, conf => conf.Ignore())
           .ForMember(x => x.Images, conf => conf.Ignore())
           .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
-          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore()).ReverseMap();
+          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
+          .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
           /*.ForMember(x => x.TimelineItems, conf => conf.Ignore())*/
+          .ForMember(x => x.Partners, conf => conf.Ignore())
             .ReverseMap();
     }
 }

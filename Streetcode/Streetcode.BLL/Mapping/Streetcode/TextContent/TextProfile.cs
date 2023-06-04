@@ -1,7 +1,5 @@
 using AutoMapper;
-using Streetcode.BLL.DTO.Streetcode.Create.TextContent;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 
 namespace Streetcode.BLL.Mapping.Streetcode.TextContent;

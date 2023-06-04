@@ -1,6 +1,5 @@
 using AutoMapper;
-using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.DTO.Streetcode.Update.TextContent;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 

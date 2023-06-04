@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.Streetcode.Update.Transactions;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.DAL.Entities.Transactions;
 

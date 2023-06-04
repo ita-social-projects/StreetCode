@@ -50,7 +50,7 @@ public class GetParnerByStreetcodeIdTest
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
 
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -86,7 +86,7 @@ public class GetParnerByStreetcodeIdTest
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
 
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -124,7 +124,7 @@ public class GetParnerByStreetcodeIdTest
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
 
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(

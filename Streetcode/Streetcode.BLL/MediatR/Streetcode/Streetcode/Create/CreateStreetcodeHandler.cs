@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -133,13 +134,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(indexedTags);
     }
 
-    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<StreetcodeDTO> relatedFigures)
+    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
     {
         var relatedFiguresToCreate = relatedFigures
             .Select(relatedFigure => new DAL.Entities.Streetcode.RelatedFigure
             {
                 ObserverId = streetcode.Id,
-                TargetId = relatedFigure.Id,
+                TargetId = relatedFigure.TargetId,
             })
             .ToList();
 

@@ -17,10 +17,10 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext = context;
     }
 
-    public void UpdateManyToMany(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate)
+    public async Task UpdateManyToManyAsync(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate)
     {
         DeleteRange(itemsToDelete);
-        CreateRangeAsync(itemsToCreate);
+        await CreateRangeAsync(itemsToCreate);
     }
 
     public Task CreateRangeAsync(IEnumerable<T> items)

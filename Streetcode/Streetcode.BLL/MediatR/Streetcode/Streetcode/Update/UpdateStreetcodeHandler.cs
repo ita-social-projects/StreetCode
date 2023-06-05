@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Streetcode.Update;
@@ -33,6 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
             await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
+            /*await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);*/
 
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
             /*UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);*/
@@ -43,7 +45,37 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return await GetOld(streetcodeToUpdate.Id);
 		}
 
-		public async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
+		private async Task UpdateStreetcodeArtsAsync(StreetcodeContent streetcode, IEnumerable<StreetcodeArtUpdateDTO> arts)
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<StreetcodeArtUpdateDTO>(arts);
+
+            var artsToCreate = new List<StreetcodeArt>();
+
+            foreach(var art in toCreate)
+            {
+                var newArt = _mapper.Map<StreetcodeArt>(art);
+                newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.Art.ImageId);
+                newArt.Art.Image.Alt = art.Art.Title;
+                artsToCreate.Add(newArt);
+            }
+
+            /*var artsToUpdate = new List<StreetcodeArt>();
+
+            foreach(var art in toUpdate)
+            {
+                var newArt = _mapper.Map<StreetcodeArt>(art);
+                newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.ImageId);
+                newArt.Art.Image.Alt = art.Title;
+                artsToUpdate.Add(newArt);
+            }*/
+
+            var art2 = _mapper.Map<List<StreetcodeArt>>(toUpdate);
+            streetcode.StreetcodeArts.AddRange(artsToCreate);
+
+           /* _repositoryWrapper.StreetcodeArtRepository.DeleteRange(art2);*/
+        }
+
+		private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
         {
             var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
             var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);

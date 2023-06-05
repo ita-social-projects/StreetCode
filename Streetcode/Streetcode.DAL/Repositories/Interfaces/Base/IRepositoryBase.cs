@@ -31,7 +31,7 @@ public interface IRepositoryBase<T>
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
-    void UpdateManyToManyAsync(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate);
+    void UpdateManyToMany(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate);
 
     Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,

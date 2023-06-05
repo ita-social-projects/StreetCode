@@ -35,13 +35,13 @@ app.UseAuthorization();
 
 app.UseHangfireDashboard();
 
-if (app.Environment.EnvironmentName != "Local")
+/*if (app.Environment.EnvironmentName != "Local")
 {
     BackgroundJob.Schedule<WebParsingUtils>(
       wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
     RecurringJob.AddOrUpdate<WebParsingUtils>(
       wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
-}
+}*/
 
 app.MapControllers();
 

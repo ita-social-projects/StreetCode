@@ -5,6 +5,7 @@ using Streetcode.BLL.MediatR.Newss.Delete;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
+using Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl;
 using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
 using Streetcode.BLL.MediatR.Newss.Update;
 
@@ -28,6 +29,12 @@ namespace Streetcode.WebApi.Controllers.Newss
         public async Task<IActionResult> GetByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url)));
+        }
+
+        [HttpGet("{url}")]
+        public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
+        {
+            return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
         }
 
         [HttpGet]

@@ -27,7 +27,7 @@ public class TimelineItem
 
     public int StreetcodeId { get; set; }
 
-    public StreetcodeContent? Streetcode { get; set; } = new ();
+    public StreetcodeContent? Streetcode { get; set; }
 
-    public List<HistoricalContext> HistoricalContexts { get; set; } = new ();
+    public List<HistoricalContext>? HistoricalContexts { get; set; }
 }

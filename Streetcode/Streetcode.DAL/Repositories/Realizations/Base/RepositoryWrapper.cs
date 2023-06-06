@@ -98,7 +98,10 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private ITeamPositionRepository _teamPositionRepository;
 
+    private IHistoricalContextTimelineRepository _historicalContextTimelineRepository;
+
     private IStreetcodeToponymRepository _streetcodeToponymRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -504,6 +507,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _teamLinkRepository;
+        }
+    }
+
+    public IHistoricalContextTimelineRepository HistoricalContextTimelineRepository
+    {
+        get
+        {
+            if (_historicalContextTimelineRepository is null)
+            {
+                _historicalContextTimelineRepository = new HistoricalContextTimelineRepository(_streetcodeDbContext);
+            }
+
+            return _historicalContextTimelineRepository;
         }
     }
 

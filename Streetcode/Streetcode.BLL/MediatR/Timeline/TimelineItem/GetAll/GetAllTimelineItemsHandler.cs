@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +22,10 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
     public async Task<Result<IEnumerable<TimelineItemDTO>>> Handle(GetAllTimelineItemsQuery request, CancellationToken cancellationToken)
     {
         var timelineItems = await _repositoryWrapper
-            .TimelineRepository
-            .GetAllAsync(
-                include: ti => ti.Include(til => til.HistoricalContexts));
+            .TimelineRepository.GetAllAsync(
+                include: ti => ti
+                  .Include(til => til.HistoricalContextTimelines)
+                    .ThenInclude(x => x.HistoricalContext)!);
 
         if (timelineItems is null)
         {

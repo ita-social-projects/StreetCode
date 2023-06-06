@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.DTO.Sources;
@@ -45,14 +45,14 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+/*    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
     public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));
     }
 
     [HttpPut("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
+/*    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]*/
     public async Task<IActionResult> UpdateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new UpdateCategoryCommand(category)));

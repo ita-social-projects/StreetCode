@@ -2,6 +2,7 @@
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
@@ -12,7 +13,7 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 {
-    public class GetStreetcodeArtByStreetcodeIdTest
+  public class GetStreetcodeArtByStreetcodeIdTest
     {
         private Mock<IRepositoryWrapper> repository;
         private Mock<IMapper> mockMapper;

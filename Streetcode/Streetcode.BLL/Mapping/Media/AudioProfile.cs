@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.DAL.Entities.Media;
 
 namespace Streetcode.BLL.Mapping.Media;

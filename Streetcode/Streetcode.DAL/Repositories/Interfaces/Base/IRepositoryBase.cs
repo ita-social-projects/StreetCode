@@ -11,22 +11,23 @@ public interface IRepositoryBase<T>
 {
     IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default);
 
+    T Create(T entity);
+
     Task<T> CreateAsync(T entity);
 
-    T Create(T entity);
+    Task CreateRangeAsync(IEnumerable<T> items);
 
     EntityEntry<T> Update(T entity);
 
     void Delete(T entity);
+
     void DeleteRange(IEnumerable<T> items);
 
     void Attach(T entity);
 
-    EntityEntry<T> Entry(T entity);
-
     void Detach(T entity);
 
-    Task CreateRangeAsync(IEnumerable<T> items);
+    EntityEntry<T> Entry(T entity);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 

@@ -33,6 +33,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; }
     public IEnumerable<PartnersUpdateDTO> Partners { get; set; }
     public IEnumerable<TimelineItemUpdateDTO> TimelineItems { get; set; }
-    /*public IEnumerable<StreetcodeArtUpdateDTO> StreetcodeArts { get; set; }*/
+    public IEnumerable<StreetcodeArtUpdateDTO> StreetcodeArts { get; set; }
   }
 }

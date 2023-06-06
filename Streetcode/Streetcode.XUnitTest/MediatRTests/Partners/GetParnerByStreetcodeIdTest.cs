@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
@@ -50,7 +50,7 @@ public class GetParnerByStreetcodeIdTest
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
 
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -86,7 +86,7 @@ public class GetParnerByStreetcodeIdTest
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
 
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(
@@ -122,9 +122,9 @@ public class GetParnerByStreetcodeIdTest
             .Returns(GetPartnerDTOListWithNotExistingId());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
-
+    
         //Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdToUpdateQuery(testStreetcodeContent.Id), CancellationToken.None);
+        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
         //Assert
         Assert.Multiple(

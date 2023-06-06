@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -32,7 +31,6 @@ namespace Streetcode.WebApi.Extensions
 
                 if (!dbContext.Images.Any())
                 {
-                    string[] files = Directory.GetFiles(blobPath);
                     var images = new List<Image>()
                     {
                         new Image

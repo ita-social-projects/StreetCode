@@ -2,6 +2,8 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update;
+using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
@@ -9,6 +11,8 @@ using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
@@ -38,8 +42,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
             /*UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);*/
-            UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
-            UpdatePartnersRelationAsync(request.Streetcode.Partners);
+            await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
+            await UpdatePartnersRelationAsync(request.Streetcode.Partners);
+            await UpdateStatisticRecords(request.Streetcode.StatisticRecords);
+            await UpdateCoordinates(request.Streetcode.StreetcodeCoordinates);
             _repositoryWrapper.SaveChanges();
 
             return await GetOld(streetcodeToUpdate.Id);
@@ -131,6 +137,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             streetcode.TimelineItems.AddRange(timelineItemsCreated);
 
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
+        }
+
+		private async Task UpdateCoordinates(IEnumerable<StreetcodeCoordinateUpdateDTO> streetcodeCoordinates)
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<StreetcodeCoordinateUpdateDTO>(streetcodeCoordinates);
+
+            await _repositoryWrapper.StreetcodeCoordinateRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeCoordinate>>(toCreate));
+
+            // update ?
+            _repositoryWrapper.StreetcodeCoordinateRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodeCoordinate>>(toDelete));
+        }
+
+		private async Task UpdateStatisticRecords(IEnumerable<StatisticRecordUpdateDTO> statisticRecords)
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<StatisticRecordUpdateDTO>(statisticRecords);
+
+            await _repositoryWrapper.StatisticRecordRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StatisticRecord>>(toCreate));
+            _repositoryWrapper.StatisticRecordRepository.DeleteRange(_mapper.Map<IEnumerable<StatisticRecord>>(toDelete));
         }
 
 		private void UpdateStreetcodeToponym(IEnumerable<StreetcodeToponymUpdateDTO> streetcodeToponymsDTO)

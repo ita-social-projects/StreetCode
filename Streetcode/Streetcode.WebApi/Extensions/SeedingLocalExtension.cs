@@ -247,6 +247,32 @@ namespace Streetcode.WebApi.Extensions
                         }
                     }
 
+                    List<Audio> audios = new List<Audio>()
+                        {
+                            new Audio
+                            {
+                                Title = "audio1",
+                                Description = "for streetcode1",
+                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                                MimeType = "audio/mpeg",
+                            },
+                            new Audio
+                            {
+                                Title = "audio2",
+                                Description = "for streetcode2",
+                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
+                                MimeType = "audio/mpeg",
+                            }
+                        };
+                    foreach (var audio in audios)
+                    {
+                        string filePath = Path.Combine(blobPath, audio.BlobName);
+                        if (!File.Exists(filePath))
+                        {
+                            return;
+                        }
+                    }
+
                     dbContext.Images.AddRange(images);
 
                     await dbContext.SaveChangesAsync();
@@ -503,21 +529,7 @@ namespace Streetcode.WebApi.Extensions
 
                     if (!dbContext.Audios.Any())
                     {
-                        dbContext.Audios.AddRange(
-                            new Audio
-                            {
-                                Title = "audio1",
-                                Description = "for streetcode1",
-                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
-                                MimeType = "audio/mpeg",
-                            },
-                            new Audio
-                            {
-                                Title = "audio2",
-                                Description = "for streetcode2",
-                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
-                                MimeType = "audio/mpeg",
-                            });
+                        dbContext.Audios.AddRange(audios);
 
                         await dbContext.SaveChangesAsync();
 

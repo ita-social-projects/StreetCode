@@ -18,7 +18,7 @@ using RelatedFigureModel = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
-    internal class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, Result<StreetcodeUpdateDTO>>
+    public class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, Result<int>>
 	{
 		private readonly IMapper _mapper;
 		private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,20 +29,39 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 			_repositoryWrapper = repositoryWrapper;
 		}
 
-		public async Task<Result<StreetcodeUpdateDTO>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
+		public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
 		{
-            var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
+            using(var transactionScope = _repositoryWrapper.BeginTransaction())
+            {
+                try
+                {
+                    var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
-            await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
-            /*await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);*/
+                    await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
+                    await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
 
-            _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
-            /*UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);*/
-            UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
-            UpdatePartnersRelationAsync(request.Streetcode.Partners);
-            _repositoryWrapper.SaveChanges();
+                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+                    /*UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);*/
+                    UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
+                    UpdatePartnersRelationAsync(request.Streetcode.Partners);
 
-            return await GetOld(streetcodeToUpdate.Id);
+                    var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
+
+                    if (isResultSuccess)
+                    {
+                        transactionScope.Complete();
+                        return Result.Ok(streetcodeToUpdate.Id);
+                    }
+                    else
+                    {
+                        return Result.Fail(new Error("Failed to update a streetcode"));
+                    }
+                }
+                catch(Exception ex)
+                {
+                    return Result.Fail(new Error("An error occurred while updating streetcode"));
+                }
+            }
 		}
 
 		private async Task UpdateStreetcodeArtsAsync(StreetcodeContent streetcode, IEnumerable<StreetcodeArtUpdateDTO> arts)
@@ -59,20 +78,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 artsToCreate.Add(newArt);
             }
 
-            /*var artsToUpdate = new List<StreetcodeArt>();
-
-            foreach(var art in toUpdate)
-            {
-                var newArt = _mapper.Map<StreetcodeArt>(art);
-                newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.ImageId);
-                newArt.Art.Image.Alt = art.Title;
-                artsToUpdate.Add(newArt);
-            }*/
-
-            var art2 = _mapper.Map<List<StreetcodeArt>>(toUpdate);
             streetcode.StreetcodeArts.AddRange(artsToCreate);
+            streetcode.StreetcodeArts.AddRange(_mapper.Map<List<StreetcodeArt>>(toUpdate));
 
-           /* _repositoryWrapper.StreetcodeArtRepository.DeleteRange(art2);*/
+            _repositoryWrapper.StreetcodeArtRepository.DeleteRange(_mapper.Map<List<StreetcodeArt>>(toDelete));
         }
 
 		private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
@@ -166,18 +175,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodePartner>>(toCreate));
             _repositoryWrapper.PartnerStreetcodeRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodePartner>>(toDelete));
         }
-
-		private async Task<StreetcodeUpdateDTO> GetOld(int id)
-        {
-            var updatedStreetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == id, include:
-                x => x.Include(s => s.Text)
-                .Include(s => s.Subtitles)
-                .Include(s => s.TransactionLink)
-                .Include(s => s.Toponyms));
-
-            var updatedDTO = _mapper.Map<StreetcodeUpdateDTO>(updatedStreetcode);
-            return updatedDTO;
-		}
 
 		private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)
               where T : IModelState

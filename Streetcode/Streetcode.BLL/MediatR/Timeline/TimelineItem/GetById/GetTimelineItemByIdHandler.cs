@@ -27,7 +27,7 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
                     .Include(til => til.HistoricalContextTimelines)
                         .ThenInclude(x => x.HistoricalContext)!);
 
-    if (timelineItem is null)
+        if (timelineItem is null)
         {
             return Result.Fail(new Error($"Cannot find a timeline item with corresponding id: {request.Id}"));
         }

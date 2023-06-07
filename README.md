@@ -154,11 +154,11 @@ Gitflow is an alternative Git branching model that involves the use of feature b
 
 #### Step 1
 
-- First step is checkout to `developers-master` branch and pull the recent changes.
+- First step is checkout to `developer` branch and pull the recent changes.
 
 #### Step 2
 
-- 🍴 Fork this repo from `developers-master` branch and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
+- 🍴 Fork this repo from `developer` branch and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
 
 #### Step 3
 
@@ -172,7 +172,7 @@ For example, `fix typo` or `increase rate limit`. Note: you don't need to commit
 
 #### Step 5
 
-- Before creating pull request you need to check the `developers-master` branch state! To avoid conflicts, you should merge `developers-master` branch to your local branch! And resolve your local conflicts. Mini manual: checkout to your local branch and write in console `git merge developers-master`.
+- Before creating pull request you need to check the `developer` branch state! To avoid conflicts, you should merge `developer` branch to your local branch! And resolve your local conflicts. Mini manual: checkout to your local branch and write in console `git merge developer`.
 
 #### Step 6
 
@@ -184,7 +184,7 @@ For example, `fix typo` or `increase rate limit`. Note: you don't need to commit
 
 #### Step 8
 
-- :tada: After 3 approved reviews, merge your pull request with `developers-master` branch! Also, it is important to wait for your scrum master to approve your changes. If there are some conflicts, resolve them, again.
+- :tada: After 3 approved reviews, merge your pull request with `developer` branch! Also, it is important to wait for your scrum master to approve your changes. If there are some conflicts, resolve them, again.
 
 #### Step 9
 
@@ -198,11 +198,11 @@ Some fixes will be needed due to the nature of Gitflow. You would have to do a '
 
 #### Step 1 
 
-- :fire: To implement an urgent change, a Hotfix branch is created off the developers master branch to test and implement the fix.
+- :fire: To implement an urgent change, a Hotfix branch is created off the `developer` branch to test and implement the fix.
 
 #### Step 2
 
-- :dancer: Once it’s complete, the Hotfix is merged with the developers master branch.
+- :dancer: Once it’s complete, the Hotfix is merged with the `developer` branch.
 
 ### Issue flow
 

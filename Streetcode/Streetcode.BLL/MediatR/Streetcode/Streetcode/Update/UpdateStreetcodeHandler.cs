@@ -144,19 +144,19 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
         }
 
-		private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> streetcodeToponymsDTO)
+		private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
         {
-            await UpdateEntitiesAsync(streetcodeToponymsDTO, _repositoryWrapper.StreetcodeToponymRepository);
+            await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
         }
 
-		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
+		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
         {
-            await UpdateEntitiesAsync(relatedFigureUpdates, _repositoryWrapper.RelatedFigureRepository);
+            await UpdateEntitiesAsync(relatedFigures, _repositoryWrapper.RelatedFigureRepository);
         }
 
-		private async Task UpdatePartnersRelationAsync(IEnumerable<PartnersUpdateDTO> partnersUpdateDTOs)
+		private async Task UpdatePartnersRelationAsync(IEnumerable<PartnersUpdateDTO> partners)
         {
-            await UpdateEntitiesAsync(partnersUpdateDTOs, _repositoryWrapper.PartnerStreetcodeRepository);
+            await UpdateEntitiesAsync(partners, _repositoryWrapper.PartnerStreetcodeRepository);
         }
 
 		private async Task UpdateEntitiesAsync<T, U>(IEnumerable<U> updates, IRepositoryBase<T> repository)

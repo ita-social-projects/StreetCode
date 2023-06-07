@@ -61,34 +61,19 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             {
                 if (newsIndex + 1 == arrCount - 1 || newsIndex == arrCount - 1)
                 {
-                    var randomNews = await
-                        _repositoryWrapper
-                        .NewsRepository
-                        .GetFirstOrDefaultAsync(
-                            predicate: sc => sc.Id == news[newsIndex - 2].Id);
-                    randomNewsTitleAndLink.RandomNewsUrl = randomNews.URL;
-                    randomNewsTitleAndLink.Title = randomNews.Title;
+                    randomNewsTitleAndLink.RandomNewsUrl = news[newsIndex - 2].URL;
+                    randomNewsTitleAndLink.Title = news[newsIndex - 2].Title;
                 }
                 else
                 {
-                    var randomNews = await
-                        _repositoryWrapper
-                        .NewsRepository
-                        .GetFirstOrDefaultAsync(
-                            predicate: sc => sc.Id == news[arrCount - 1].Id);
-                    randomNewsTitleAndLink.RandomNewsUrl = randomNews.URL;
-                    randomNewsTitleAndLink.Title = randomNews.Title;
+                    randomNewsTitleAndLink.RandomNewsUrl = news[arrCount - 1].URL;
+                    randomNewsTitleAndLink.Title = news[arrCount - 1].Title;
                 }
             }
             else
             {
-                var randomNews = await
-                        _repositoryWrapper
-                        .NewsRepository
-                        .GetFirstOrDefaultAsync(
-                            predicate: sc => sc.Id == news[newsIndex].Id);
-                randomNewsTitleAndLink.RandomNewsUrl = randomNews.URL;
-                randomNewsTitleAndLink.Title = randomNews.Title;
+                randomNewsTitleAndLink.RandomNewsUrl = news[newsIndex].URL;
+                randomNewsTitleAndLink.Title = news[newsIndex].Title;
             }
 
             var newsDTOWithUrls = new NewsDTOWithURLs();

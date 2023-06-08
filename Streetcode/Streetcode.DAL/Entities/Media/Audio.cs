@@ -21,5 +21,8 @@ public class Audio
     [Required]
     public string MimeType { get; set; }
 
+    [NotMapped]
+    public string? Base64 { get; set; }
+
     public StreetcodeContent? Streetcode { get; set; }
 }

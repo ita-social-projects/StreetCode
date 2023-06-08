@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Text;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -28,252 +30,34 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var blobService = new BlobService(blobOptions);
-
+                string initialDataImagePath = "../Streetcode.DAL/InitialData/images.json";
+                string initialDataAudioPath = "../Streetcode.DAL/InitialData/audios.json";
                 if (!dbContext.Images.Any())
                 {
-                    var images = new List<Image>()
-                    {
-                        new Image
-                        {
-                            Alt = "Портрет Тараса Шевченка",
-                            BlobName = "ea97sDiJCukzoLUoYZhE4fyOPxsJQeFCgmI9Ub3_iVw=.gif",
-                            MimeType = "image/gif",
-                            Title = "Тарас Шевченко"
-                        },
-                        new Image
-                        {
-                            Alt = "Тарас Шевченко: Погруддя жінки",
-                            BlobName = "LS0Ag4HI4nu+EWFsPgNg5a+1B08kWdcOWw2sMbpimVk=.jpeg",
-                            MimeType = "image/jpeg",
-                            Title = "Погруддя жінки"
-                        },
-                        new Image
-                        {
-                            Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                            BlobName = "okhbqu+U3+ErGdOK0RA7V5yF80BaDOh+hBadZ0zMI3w=.jpeg",
-                            MimeType = "image/jpeg",
-                            Title = "Портрет Павла Васильовича Енгельгардта"
-                        },
-                        new Image
-                        {
-                            Alt = "Тарас Шевченко: Портрет невідомого",
-                            BlobName = "VXvgD9+F+iuYCHIn4pZrRyPa+ljB2XHepOJAeUIy39g=.jpeg",
-                            MimeType = "image/jpeg",
-                            Title = "Портрет невідомого"
-                        },
-                        new Image
-                        {
-                            Alt = "Кобзар",
-                            BlobName = "ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png",
-                            MimeType = "image/png",
-                            Title = "Кобзар"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "pMzXVP54K+mot55Sy2+OsBbXyxaa2O1ofD1KOQX5PJg=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "PCxzjR5Jj7pporJxZw5EfeuOT0LqXhVXwZonzPmJhGE=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "hiIHbA_CNtABgX8PDbTTC7n+QKIDT8n_hqQM9pBpNzk=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "book",
-                            BlobName = "EB1IQbNM7mfTECpyrz+5T7nn1gxdrXtbdxkVXJ4Ad1k=.png",
-                            MimeType = "image/png",
-                            Title = "book"
-                        },
-                        new Image
-                        {
-                            Alt = "video",
-                            BlobName = "6RbedbbN2SQlv_8NPMUPuwzz4gb2T0GSQ1KZFxPcbyk=.png",
-                            MimeType = "image/png",
-                            Title = "video"
-                        },
-                        new Image
-                        {
-                            Alt = "article",
-                            BlobName = "Khjap7YCnUmuw_UkCVZUaLS2jeMMS27ZQEvyR8rZHow=.png",
-                            MimeType = "image/png",
-                            Title = "article"
-                        },
-                        new Image
-                        {
-                            Alt = "SoftServe",
-                            BlobName = "4w2OMhGbkdKizWWAUsMBfCygW0HMhLcvwVtvGrZtdhc=.png",
-                            MimeType = "image/png",
-                            Title = "SoftServe"
-                        },
-                        new Image
-                        {
-                            Alt = "Parimatch",
-                            BlobName = "t3DupxlKv0+h0tYIjUMgnzn7BXxBcYzj1WAdBUBlkjs=.png",
-                            MimeType = "image/png",
-                            Title = "Parimatch"
-                        },
-                        new Image
-                        {
-                            Alt = "Community Partners",
-                            BlobName = "nfuYLRSVuaGDTGjKLuerynSNVtyI3npHR+q65KNanKQ=.png",
-                            MimeType = "image/png",
-                            Title = "Community Partners"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "sFODJzwgk95Rxk_jhsn2_bJu8SSobvpVaYj3sfkzjR4=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "iUE61nCa4BaCgGdfcwVprH_eCCmMr4+PXP8xbV0I+Eg=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "Роман Ратушний",
-                            BlobName = "HyugB5ihOoNVbRTm6bsKl+Gykc_2NHohfD9yLRW8DKc=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Роман Ратушний"
-                        },
-                        new Image
-                        {
-                            Alt = "Вулиця імені Ратушного",
-                            BlobName = "q83CryiUZNU9lb_PxEb+B6ZKYAKlytE2CC9hl1lgUgY=.jpg",
-                            MimeType = "image/jpeg",
-                            Title = "Вулиця імені Ратушного"
-                        },
-                        new Image
-                        {
-                            Alt = "Грушевський",
-                            BlobName = "8Xw3NUnskB1sDHjSV4tAX74tO+zF1dPQMZ287e3GQbg=.png",
-                            MimeType = "image/png",
-                            Title = "Сучасний Грушевський"
-                        },
-                        new Image
-                        {
-                            Alt = "мурал",
-                            BlobName = "vk9ydYvn4hjSlRuW+K9XDwJ68n+7GLx0tz6djJCj__Q=.png",
-                            MimeType = "image/png",
-                            Title = "Мурал Грушевського"
-                        },
-                        new Image
-                        {
-                            Alt = "Козаки на орбіті",
-                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
-                            MimeType = "image/png",
-                            Title = "Козаки на орбіті"
-                        },
-                        new Image
-                        {
-                            Alt = "мурал",
-                            BlobName = "QdH_sDDsthyCnLA_X4kfIo9PzwR5_MKTPMJbsujA3T4=.png",
-                            MimeType = "image/png",
-                            Title = "Мурал М. Грушевського"
-                        },
-                        new Image
-                        {
-                            Title = "Портрет Романа Ратушного",
-                            Alt = "Портрет Романа Ратушного",
-                            BlobName = "jMcLyNbPSASJ1SzklUZ7f_LWOJQl_sdNocvEHVwRtvE=.png",
-                            MimeType = "image/png"
-                        },
-                        new Image
-                        {
-                            Alt = "Streetcode",
-                            Title = "First Streetcode",
-                            MimeType = "image/png",
-                            BlobName = "8_DH7V7XhQjc1NcnAEyetflXFs9TA8KQBqmzyGPMxXE=.png"
-                        },
-                        new Image
-                        {
-                            Title = "Team Member",
-                            Alt = "Team Member",
-                            BlobName = "u+pHGFrgLj9_9HKrZC0miwE+nNNLpkJ9kLqgqCVuHtE=.png",
-                            MimeType = "image/png"
-                        },
-                        new Image
-                        {
-                            Title = "Team Member",
-                            Alt = "Team Member",
-                            BlobName = "u+pHGFrgLj9_9HKrZC0miwE+nNNLpkJ9kLqgqCVuHtE=.png",
-                            MimeType = "image/png"
-                        },
-                        new Image
-                        {
-                            Title = "Team Member",
-                            Alt = "Team Member",
-                            BlobName = "u+pHGFrgLj9_9HKrZC0miwE+nNNLpkJ9kLqgqCVuHtE=.png",
-                            MimeType = "image/png"
-                        },
-                        new Image
-                        {
-                            Title = "Team Member",
-                            Alt = "Team Member",
-                            BlobName = "u+pHGFrgLj9_9HKrZC0miwE+nNNLpkJ9kLqgqCVuHtE=.png",
-                            MimeType = "image/png"
-                        },
-                        new Image
-                        {
-                            Title = "Team Member",
-                            Alt = "Team Member",
-                            BlobName = "u+pHGFrgLj9_9HKrZC0miwE+nNNLpkJ9kLqgqCVuHtE=.png",
-                            MimeType = "image/png"
-                        }
-                    };
-                    DirectoryInfo directory = new DirectoryInfo(blobPath);
-                    foreach (var img in images)
+                    string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
+                    string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
+                    var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
+                    var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+
+                    foreach (var img in imgfromJson)
                     {
                         string filePath = Path.Combine(blobPath, img.BlobName);
                         if (!File.Exists(filePath))
                         {
-                            return;
+                            blobService.SaveFileInStorageBase64(img.Base64, img.BlobName.Split('.')[0], img.BlobName.Split('.')[1]);
                         }
                     }
 
-                    List<Audio> audios = new List<Audio>()
-                        {
-                            new Audio
-                            {
-                                Title = "audio1",
-                                Description = "for streetcode1",
-                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
-                                MimeType = "audio/mpeg",
-                            },
-                            new Audio
-                            {
-                                Title = "audio2",
-                                Description = "for streetcode2",
-                                BlobName = "tCK3PO79PB2mT_HbQAtlqfHnL0N8mHu2el_vZF2uj0g=.mp3",
-                                MimeType = "audio/mpeg",
-                            }
-                        };
-                    foreach (var audio in audios)
+                    foreach (var audio in audiosfromJson)
                     {
                         string filePath = Path.Combine(blobPath, audio.BlobName);
                         if (!File.Exists(filePath))
                         {
-                            return;
+                            blobService.SaveFileInStorageBase64(audio.Base64, audio.BlobName.Split('.')[0], audio.BlobName.Split('.')[1]);
                         }
                     }
 
-                    dbContext.Images.AddRange(images);
+                    dbContext.Images.AddRange(imgfromJson);
 
                     await dbContext.SaveChangesAsync();
 
@@ -529,7 +313,7 @@ namespace Streetcode.WebApi.Extensions
 
                     if (!dbContext.Audios.Any())
                     {
-                        dbContext.Audios.AddRange(audios);
+                        dbContext.Audios.AddRange(audiosfromJson);
 
                         await dbContext.SaveChangesAsync();
 

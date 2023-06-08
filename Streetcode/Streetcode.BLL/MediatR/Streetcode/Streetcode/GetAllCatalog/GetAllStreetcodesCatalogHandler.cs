@@ -22,6 +22,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
         public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetAllStreetcodesCatalogQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
+                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Tags).Include(item => item.Images));
 
             if (streetcodes != null)

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
+using Streetcode.BLL.Services.BlobStorageService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -43,6 +44,8 @@ if (app.Environment.EnvironmentName != "Local")
       wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
     RecurringJob.AddOrUpdate<WebParsingUtils>(
       wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+    RecurringJob.AddOrUpdate<BlobService>(
+        b => b.CleanBlobStorage(), Cron.Monthly);
 }
 
 app.MapControllers();

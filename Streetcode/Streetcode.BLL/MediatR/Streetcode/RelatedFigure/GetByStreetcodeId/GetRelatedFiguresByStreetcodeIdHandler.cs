@@ -27,12 +27,9 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error($"Cannot find any related figures by a streetcode id: {request.StreetcodeId}"));
         }
 
-        var relatedFigures = await _repositoryWrapper.StreetcodeRepository
-            .GetAllAsync(
-                predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
-                include: scl => scl
-                    .Include(sc => sc.Images)
-                    .Include(sc => sc.Tags));
+        var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
+          predicate: sc => relatedFigureIds.Any(id => id == sc.Id) && sc.Status == DAL.Enums.StreetcodeStatus.Published,
+          include: scl => scl.Include(sc => sc.Images).Include(sc => sc.Tags));
 
         if (relatedFigures is null)
         {

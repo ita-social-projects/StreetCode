@@ -39,6 +39,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
+                    await UpdateImages(streetcodeToUpdate, request.Streetcode.ImagesId);
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     /*UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);*/
@@ -167,6 +168,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
             repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
+        }
+
+		private async Task UpdateImages(StreetcodeContent streetcode, IEnumerable<int> imagesId)
+        {
+            streetcode.Images = (await _repositoryWrapper.ImageRepository.GetAllAsync(x => imagesId.Contains(x.Id))).ToList();
         }
 
 		private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)

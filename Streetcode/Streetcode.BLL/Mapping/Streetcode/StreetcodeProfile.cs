@@ -37,6 +37,7 @@ public class StreetcodeProfile : Profile
         	    .ForMember(x => x.TimelineItems, conf => conf.Ignore())
         	    .ForMember(x => x.Partners, conf => conf.Ignore())
                 .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
-        	    .ReverseMap();
+                .ForMember(x => x.Tags, conf => conf.Ignore())
+              .ReverseMap();
     }
 }

@@ -15,5 +15,7 @@ public class TagProfile : Profile
         CreateMap<StreetcodeTagIndex, StreetcodeTagDTO>()
             .ForMember(x => x.Id, conf => conf.MapFrom(ti => ti.TagId))
             .ForMember(x => x.Title, conf => conf.MapFrom(ti => ti.Tag.Title ?? ""));
+
+        CreateMap<Tag, StreetcodeTagUpdateDTO>().ReverseMap();
     }
 }

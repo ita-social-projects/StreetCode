@@ -7,6 +7,8 @@ using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
@@ -26,7 +28,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public DateTime EventStartOrPersonBirthDate { get; set; }
     public DateTime? EventEndOrPersonDeathDate { get; set; }
     public TextUpdateDTO? Text { get; set; }
-    /*public IEnumerable<StreetcodeToponymUpdateDTO> StreetcodeToponym { get; set; }*/
+    public IEnumerable<StreetcodeToponymUpdateDTO> StreetcodeToponym { get; set; }
     public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; }
     public IEnumerable<FactUpdateDTO> Facts { get; set; }
     public IEnumerable<VideoUpdateDTO> Videos { get; set; }
@@ -34,5 +36,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public IEnumerable<PartnersUpdateDTO> Partners { get; set; }
     public IEnumerable<TimelineItemUpdateDTO> TimelineItems { get; set; }
     public IEnumerable<StreetcodeArtUpdateDTO> StreetcodeArts { get; set; }
+    public IEnumerable<StreetcodeTagUpdateDTO> StreetcodeTags { get; set; }
   }
 }

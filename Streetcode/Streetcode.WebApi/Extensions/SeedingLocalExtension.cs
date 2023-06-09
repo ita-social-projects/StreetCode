@@ -26,6 +26,7 @@ namespace Streetcode.WebApi.Extensions
         {
             using (var scope = app.Services.CreateScope())
             {
+                Directory.CreateDirectory(app.Configuration.GetValue<string>("Blob:BlobStorePath"));
                 var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");

@@ -62,6 +62,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 }
                 catch
                 {
+                    // Logger
+                    Console.WriteLine(ex.Message);
                     return Result.Fail(new Error("An error occurred while updating streetcode"));
                 }
             }
@@ -148,38 +150,29 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
         }
 
-		private void UpdateStreetcodeToponym(IEnumerable<StreetcodeToponymUpdateDTO> streetcodeToponymsDTO)
-		{
-            var toDelete = streetcodeToponymsDTO.Where(_ => _.ModelState == Enums.ModelState.Deleted);
-            var toCreate = streetcodeToponymsDTO.Where(_ => _.ModelState == Enums.ModelState.Created);
-
-            foreach (var streetcodeToponymToDelete in toDelete)
-			{
-                var streetcodeToponym = _mapper.Map<StreetcodeToponym>(streetcodeToponymToDelete);
-                _repositoryWrapper.StreetcodeToponymRepository.Delete(streetcodeToponym);
-			}
-
-            foreach (var streetcodeToponymToCreate in toCreate)
-			{
-                var streetcodeToponym = _mapper.Map<StreetcodeToponym>(streetcodeToponymToCreate);
-                _repositoryWrapper.StreetcodeToponymRepository.Create(streetcodeToponym);
-			}
-		}
-
-		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigureUpdates)
-		{
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<RelatedFigureUpdateDTO>(relatedFigureUpdates);
-
-            await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(_mapper.Map<IEnumerable<RelatedFigureModel>>(toCreate));
-            _repositoryWrapper.RelatedFigureRepository.DeleteRange(_mapper.Map<IEnumerable<RelatedFigureModel>>(toDelete));
+		private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
+        {
+            await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
         }
 
-		private async Task UpdatePartnersRelationAsync(IEnumerable<PartnersUpdateDTO> partnersUpdateDTOs)
+		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<PartnersUpdateDTO>(partnersUpdateDTOs);
+            await UpdateEntitiesAsync(relatedFigures, _repositoryWrapper.RelatedFigureRepository);
+        }
 
-            await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodePartner>>(toCreate));
-            _repositoryWrapper.PartnerStreetcodeRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodePartner>>(toDelete));
+		private async Task UpdatePartnersRelationAsync(IEnumerable<PartnersUpdateDTO> partners)
+        {
+            await UpdateEntitiesAsync(partners, _repositoryWrapper.PartnerStreetcodeRepository);
+        }
+
+		private async Task UpdateEntitiesAsync<T, U>(IEnumerable<U> updates, IRepositoryBase<T> repository)
+            where T : class
+            where U : IModelState
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<U>(updates);
+
+            await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
+            repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
         }
 
 		private async Task UpdateStreetcodeTagsAsync(IEnumerable<StreetcodeTagUpdateDTO> streetcodeTagsUpdateDTOs)

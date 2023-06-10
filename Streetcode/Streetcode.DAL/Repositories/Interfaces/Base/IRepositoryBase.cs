@@ -19,6 +19,8 @@ public interface IRepositoryBase<T>
 
     EntityEntry<T> Update(T entity);
 
+    public void UpdateRange(IEnumerable<T> items);
+
     void Delete(T entity);
 
     void DeleteRange(IEnumerable<T> items);
@@ -30,8 +32,6 @@ public interface IRepositoryBase<T>
     EntityEntry<T> Entry(T entity);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
-
-    void UpdateManyToMany(IEnumerable<T> itemsToDelete, IEnumerable<T> itemsToCreate);
 
     Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,

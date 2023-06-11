@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update;
+using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Partners.Update;
@@ -45,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
             await UpdatePartnersRelationAsync(request.Streetcode.Partners);
             await UpdateStatisticRecords(request.Streetcode.StatisticRecords);
-            await UpdateCoordinates(request.Streetcode.StreetcodeCoordinates);
+            // await UpdateCoordinates(request.Streetcode.StreetcodeCoordinates);
             _repositoryWrapper.SaveChanges();
 
             return await GetOld(streetcodeToUpdate.Id);
@@ -139,14 +140,25 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
         }
 
-		private async Task UpdateCoordinates(IEnumerable<StreetcodeCoordinateUpdateDTO> streetcodeCoordinates)
+		private async Task UpdateStatisticRecordsWithCoordinates(IEnumerable<>)
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<StreetcodeCoordinateUpdateDTO>(streetcodeCoordinates);
 
-            await _repositoryWrapper.StreetcodeCoordinateRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeCoordinate>>(toCreate));
+        }
 
-            // update ?
-            _repositoryWrapper.StreetcodeCoordinateRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodeCoordinate>>(toDelete));
+		private void AddStatisticRecords(StreetcodeContent streetcode, IEnumerable<StatisticRecordDTO> statisticRecords)
+        {
+            var statisticRecordsToCreate = new List<StatisticRecord>();
+
+            foreach (var statisticRecord in statisticRecords)
+            {
+                var newStatistic = _mapper.Map<StatisticRecord>(statisticRecord);
+
+                // newStatistic.StreetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(
+                //  x => x.Latitude == newStatistic.StreetcodeCoordinate.Latitude && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+                statisticRecordsToCreate.Add(newStatistic);
+            }
+
+            streetcode.StatisticRecords.AddRange(statisticRecordsToCreate);
         }
 
 		private async Task UpdateStatisticRecords(IEnumerable<StatisticRecordUpdateDTO> statisticRecords)

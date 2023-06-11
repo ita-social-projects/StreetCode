@@ -1,5 +1,3 @@
-using Streetcode.BLL.DTO.Streetcode;
-
 namespace Streetcode.BLL.DTO.Media.Art
 {
     public class StreetcodeArtDTO

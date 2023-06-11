@@ -41,7 +41,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 AddAudio(streetcode, request.Streetcode.AudioId);
-                await AddArts(streetcode, request.Streetcode.StreetcodeArts);
+                /*await AddArts(streetcode, request.Streetcode.StreetcodeArts);*/
                 await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
@@ -134,13 +134,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(indexedTags);
     }
 
-    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
+    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<RelatedFigureShortDTO> relatedFigures)
     {
         var relatedFiguresToCreate = relatedFigures
             .Select(relatedFigure => new DAL.Entities.Streetcode.RelatedFigure
             {
                 ObserverId = streetcode.Id,
-                TargetId = relatedFigure.TargetId,
+                TargetId = relatedFigure.Id,
             })
             .ToList();
 

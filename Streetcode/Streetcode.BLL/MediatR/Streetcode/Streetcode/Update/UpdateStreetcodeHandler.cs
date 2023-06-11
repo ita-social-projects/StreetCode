@@ -43,7 +43,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
-                    UpdateStreetcodeToponym(request.Streetcode.StreetcodeToponym);
                     await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
                     await UpdatePartnersRelationAsync(request.Streetcode.Partners);
                     await UpdateStreetcodeTagsAsync(request.Streetcode.StreetcodeTags);
@@ -63,7 +62,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 catch
                 {
                     // Logger
-                    Console.WriteLine(ex.Message);
+                    // Console.WriteLine(ex.Message);
                     return Result.Fail(new Error("An error occurred while updating streetcode"));
                 }
             }

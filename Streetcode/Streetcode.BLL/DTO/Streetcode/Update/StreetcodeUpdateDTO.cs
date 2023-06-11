@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.DTO.Media.Art;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {

@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230529224205_Initial")]
+    [Migration("20230609102603_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -570,6 +570,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("AudioId")
                         .IsUnique()
                         .HasFilter("[AudioId] IS NOT NULL");
+
+                    b.HasIndex("Index")
+                        .IsUnique();
 
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();

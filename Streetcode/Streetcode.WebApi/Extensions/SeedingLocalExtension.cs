@@ -17,6 +17,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.WebApi.Extensions
 {
@@ -30,7 +31,8 @@ namespace Streetcode.WebApi.Extensions
                 var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
-                var blobService = new BlobService(blobOptions);
+                var repo = new RepositoryWrapper(dbContext);
+                var blobService = new BlobService(blobOptions, repo);
                 string initialDataImagePath = "../Streetcode.DAL/InitialData/images.json";
                 string initialDataAudioPath = "../Streetcode.DAL/InitialData/audios.json";
                 if (!dbContext.Images.Any())

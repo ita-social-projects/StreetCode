@@ -1024,6 +1024,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 filter: "[AudioId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_streetcodes_Index",
+                schema: "streetcode",
+                table: "streetcodes",
+                column: "Index",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_streetcodes_TransliterationUrl",
                 schema: "streetcode",
                 table: "streetcodes",

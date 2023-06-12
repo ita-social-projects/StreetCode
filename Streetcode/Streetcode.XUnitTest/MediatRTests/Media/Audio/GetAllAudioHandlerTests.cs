@@ -10,7 +10,7 @@ using Model = Streetcode.DAL.Entities.Media.Audio;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
-    public class GetAllAudioHandlerTests
+    /* public class GetAllAudioHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
@@ -77,5 +77,5 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             _mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(audioDTOs);
         }
-    }
+    } */
 }

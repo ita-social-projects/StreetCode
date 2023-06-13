@@ -10,10 +10,11 @@ using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Analytics.Update;
+using Streetcode.BLL.DTO.Sources.Update;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
-  public class StreetcodeUpdateDTO
+    public class StreetcodeUpdateDTO
   {
     public int Id { get; set; }
     public string? FirstName { get; set; }
@@ -41,5 +42,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public IEnumerable<StreetcodeArtUpdateDTO> StreetcodeArts { get; set; }
     public IEnumerable<StreetcodeTagUpdateDTO> StreetcodeTags { get; set; }
     public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
-  }
+    public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
+    }
 }

@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Partners.Update;
+using Streetcode.BLL.DTO.Sources.Update;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
@@ -45,11 +46,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             {
                 try
                 {
-
                     var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                     _mapper.Map(request.Streetcode, streetcodeToUpdate);
-
-                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
 
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
@@ -57,8 +55,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdatePartnersRelationAsync(request.Streetcode.Partners);
                     await UpdateStreetcodeTagsAsync(request.Streetcode.StreetcodeTags);
                     await UpdateStatisticRecordsAsync(streetcodeToUpdate, request.Streetcode.StatisticRecords);
+                    await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
 
-                    
+                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
 
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
@@ -72,10 +71,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error("Failed to update a streetcode"));
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     // Logger
-                    // Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message);
                     return Result.Fail(new Error("An error occurred while updating streetcode"));
                 }
             }
@@ -100,9 +99,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             _repositoryWrapper.StreetcodeArtRepository.DeleteRange(_mapper.Map<List<StreetcodeArt>>(toDelete));
         }
-
-		private IEnumerable<StreetcodeCoordinate> PullCoordinates(IEnumerable<StatisticRecordUpdateDTO> statisticRecords) =>
-           _mapper.Map<IEnumerable<StreetcodeCoordinate>>(statisticRecords.Select(sr => sr.StreetcodeCoordinate));
 
 		private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
         {
@@ -192,8 +188,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 var record = _mapper.Map<StatisticRecord>(recordToDelete);
                 _repositoryWrapper.StreetcodeCoordinateRepository.Delete(record.StreetcodeCoordinate);
                 _repositoryWrapper.StatisticRecordRepository.Delete(record);
-                streetcode.StatisticRecords.Remove(record);
            }
+        }
+
+		private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)
+        {
+            await UpdateEntitiesAsync(categoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
         }
 
 		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)

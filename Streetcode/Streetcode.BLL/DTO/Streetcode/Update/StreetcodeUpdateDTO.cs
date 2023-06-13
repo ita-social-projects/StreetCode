@@ -27,7 +27,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public string? Alias { get; set; }
     public StreetcodeType StreetcodeType { get; set; }
     public StreetcodeStatus Status { get; set; }
-    public StreetcodeType StreetcodeType { get; set; }
     public string Title { get; set; }
     public string TransliterationUrl { get; set; }
     public DateTime UpdatedAt { get; set; }

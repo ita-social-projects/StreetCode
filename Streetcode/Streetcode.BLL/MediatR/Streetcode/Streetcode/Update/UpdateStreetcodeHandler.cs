@@ -60,7 +60,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateStatisticRecordsAsync(streetcodeToUpdate, request.Streetcode.StatisticRecords);
                     await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
                     await UpdateImagesAsync(request.Streetcode.StreetcodeImageUpdateDTOs);
-                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);                   
+                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
 
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
@@ -167,7 +167,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
         }
 
-		private async Task UpdateStatisticRecordsAsync(StreetcodeContent streetcode, IEnumerable<StatisticRecordUpdateDTO> records)
+        private async Task UpdateStatisticRecordsAsync(StreetcodeContent streetcode, IEnumerable<StatisticRecordUpdateDTO> records)
         {
            var (toUpdate, toCreate, toDelete) = CategorizeItems<StatisticRecordUpdateDTO>(records);
 
@@ -192,12 +192,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
            }
         }
 
-		private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)
+        private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)
         {
             await UpdateEntitiesAsync(categoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
         }
 
-		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
+        private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
         {
             await UpdateEntitiesAsync(relatedFigures, _repositoryWrapper.RelatedFigureRepository);
         }

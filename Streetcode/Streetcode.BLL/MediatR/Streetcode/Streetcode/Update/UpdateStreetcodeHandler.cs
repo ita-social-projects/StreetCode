@@ -4,23 +4,31 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners.Update;
+using Streetcode.BLL.DTO.Sources.Update;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Realizations.Base;
+using RelatedFigureModel = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -41,17 +49,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             {
                 try
                 {
-                    var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
+                    var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
+                    _mapper.Map(request.Streetcode, streetcodeToUpdate);
                     await UpdateAudioAsync(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
-                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
-                    await UpdateStreetcodeToponymAsync(request.Streetcode.StreetcodeToponym);
                     await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
                     await UpdatePartnersRelationAsync(request.Streetcode.Partners);
                     await UpdateStreetcodeTagsAsync(request.Streetcode.StreetcodeTags);
-
+                    await UpdateStatisticRecordsAsync(streetcodeToUpdate, request.Streetcode.StatisticRecords);
+                    await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
                     await UpdateImagesAsync(request.Streetcode.StreetcodeImageUpdateDTOs);
+                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);                   
 
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
@@ -65,7 +74,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error("Failed to update a streetcode"));
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
                     return Result.Fail(new Error("An error occurred while updating streetcode"));
                 }
@@ -158,7 +167,37 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
         }
 
-        private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
+		private async Task UpdateStatisticRecordsAsync(StreetcodeContent streetcode, IEnumerable<StatisticRecordUpdateDTO> records)
+        {
+           var (toUpdate, toCreate, toDelete) = CategorizeItems<StatisticRecordUpdateDTO>(records);
+
+           foreach (var recordToCreate in toCreate)
+           {
+                var coordinate = _repositoryWrapper.StreetcodeCoordinateRepository
+                    .Create(_mapper.Map<StreetcodeCoordinate>(recordToCreate.StreetcodeCoordinate));
+
+                var record = _mapper.Map<StatisticRecord>(recordToCreate);
+
+                record.StreetcodeId = streetcode.Id;
+                record.StreetcodeCoordinateId = coordinate.Id;
+
+                await _repositoryWrapper.StatisticRecordRepository.CreateAsync(record);
+           }
+
+           foreach (var recordToDelete in toDelete)
+           {
+                var record = _mapper.Map<StatisticRecord>(recordToDelete);
+                _repositoryWrapper.StreetcodeCoordinateRepository.Delete(record.StreetcodeCoordinate);
+                _repositoryWrapper.StatisticRecordRepository.Delete(record);
+           }
+        }
+
+		private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)
+        {
+            await UpdateEntitiesAsync(categoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
+        }
+
+		private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
         {
             await UpdateEntitiesAsync(relatedFigures, _repositoryWrapper.RelatedFigureRepository);
         }

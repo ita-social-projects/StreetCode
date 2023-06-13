@@ -21,5 +21,11 @@ public class AudioProfile : Profile
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
-    }
+
+        CreateMap<AudioUpdateDTO, Audio>()
+            .ForMember(a => a.Id, opt => opt.MapFrom(a => a.AudioId))
+            .ForMember(a => a.BlobName, opt => opt.MapFrom(x => string.Empty))
+            .ForMember(a => a.MimeType, opt => opt.MapFrom(x => string.Empty));
+
+	}
 }

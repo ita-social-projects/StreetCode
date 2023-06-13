@@ -34,40 +34,19 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
 		public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
 		{
-            using(var transactionScope = _repositoryWrapper.BeginTransaction())
-            {
-                try
-                {
                     var streetcodeToUpdate = _mapper.Map<StreetcodeContent>(request.Streetcode);
 
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
-                    await UpdateStreetcodeToponymAsync(request.Streetcode.StreetcodeToponym);
+                    await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms);
                     await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
                     await UpdatePartnersRelationAsync(request.Streetcode.Partners);
                     await UpdateStreetcodeTagsAsync(request.Streetcode.Tags);
 
-                    var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-
-                    if (isResultSuccess)
-                    {
-                        transactionScope.Complete();
-                        return Result.Ok(streetcodeToUpdate.Id);
-                    }
-                    else
-                    {
-                        return Result.Fail(new Error("Failed to update a streetcode"));
-                    }
-                }
-                catch(Exception ex)
-                {
-                    // Logger
-                    Console.WriteLine(ex.Message);
-                    return Result.Fail(new Error("An error occurred while updating streetcode"));
-                }
-            }
+                    await _repositoryWrapper.SaveChangesAsync();
+                    return Result.Ok(streetcodeToUpdate.Id);
 		}
 
 		private async Task UpdateStreetcodeArtsAsync(StreetcodeContent streetcode, IEnumerable<StreetcodeArtUpdateDTO> arts)

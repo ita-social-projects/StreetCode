@@ -30,7 +30,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public TextUpdateDTO? Text { get; set; }
     public int? AudioId { get; set; }
     public IEnumerable<int> ImagesId { get; set; }
-    public IEnumerable<StreetcodeToponymUpdateDTO> StreetcodeToponym { get; set; }
+    public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
     public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; }
     public IEnumerable<FactUpdateDTO> Facts { get; set; }
     public IEnumerable<VideoUpdateDTO> Videos { get; set; }

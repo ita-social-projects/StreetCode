@@ -2,6 +2,7 @@ using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 
@@ -29,10 +30,10 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
           .ReverseMap();
 
-        /*CreateMap<StreetcodeContent, StreetcodeUpdateDTO>()
-			.ForMember(su => su.StreetcodeToponym, conf => conf
+        CreateMap<StreetcodeContent, StreetcodeUpdateDTO>()
+			.ForMember(su => su.Toponyms, conf => conf
 				.MapFrom(s => s.Toponyms.Select(t =>
-					new StreetcodeToponymUpdateDTO { StreetcodeId = s.Id, ToponymId = t.Id })));*/
+					new StreetcodeToponymUpdateDTO { StreetcodeId = s.Id, ToponymId = t.Id })));
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
         	    .ForMember(x => x.TimelineItems, conf => conf.Ignore())
@@ -40,7 +41,10 @@ public class StreetcodeProfile : Profile
                 .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
                 .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
                 .ForMember(x => x.StreetcodeCategoryContents, conf => conf.Ignore())
-        	    .ReverseMap();
+                .ForMember(x => x.Toponyms, conf => conf.Ignore())
+                .ForMember(x => x.Tags, conf => conf.Ignore())
+                .ForMember(x => x.Facts, conf => conf.Ignore())
+              .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, PersonStreetcode>()
           .ForMember(x => x.Tags, conf => conf.Ignore())
@@ -49,7 +53,21 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.TimelineItems, conf => conf.Ignore())
           .ForMember(x => x.Images, conf => conf.Ignore())
           .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
+          .ForMember(x => x.StreetcodeCategoryContents, conf => conf.Ignore())
           .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
+          .ForMember(x => x.Facts, conf => conf.Ignore())
+        .ReverseMap();
+
+        CreateMap<StreetcodeUpdateDTO, EventStreetcode>()
+          .ForMember(x => x.Tags, conf => conf.Ignore())
+          .ForMember(x => x.Partners, conf => conf.Ignore())
+          .ForMember(x => x.Toponyms, conf => conf.Ignore())
+          .ForMember(x => x.TimelineItems, conf => conf.Ignore())
+          .ForMember(x => x.Images, conf => conf.Ignore())
+          .ForMember(x => x.StreetcodeCategoryContents, conf => conf.Ignore())
+          .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
+          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
+          .ForMember(x => x.Facts, conf => conf.Ignore())
         .ReverseMap();
     }
 }

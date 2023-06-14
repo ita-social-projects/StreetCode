@@ -5,6 +5,7 @@ namespace Streetcode.BLL.DTO.Timeline.Update
 {
     public class HistoricalContextUpdateDTO : HistoricalContextDTO, IModelState
     {
+        public int TimelineId { get; set; }
         public ModelState ModelState { get; set; } = ModelState.Updated;
     }
 }

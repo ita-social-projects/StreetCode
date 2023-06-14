@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.DTO.Sources.Update;
 using Streetcode.DAL.Entities.Sources;
@@ -12,7 +12,8 @@ namespace Streetcode.BLL.Mapping.Sources
             CreateMap<StreetcodeCategoryContent, StreetcodeCategoryContentDTO>()
                 .ReverseMap();
 
-            CreateMap<StreetcodeCategoryContent, StreetcodeCategoryContentUpdateDTO>()
+            CreateMap<StreetcodeCategoryContentUpdateDTO, StreetcodeCategoryContent>()
+              .ForMember(x => x.Streetcode, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

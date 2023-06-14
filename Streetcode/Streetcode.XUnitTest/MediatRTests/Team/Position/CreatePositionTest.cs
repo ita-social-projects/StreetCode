@@ -18,35 +18,32 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 {
-    public class CreatePositionTests
+    public class CreatePositionTest
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepository;
 
-        public CreatePositionTests()
+        public CreatePositionTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
         }
 
         [Fact]
-        public async Task ShouldReturnSuccessfully_TypeIsCorrect()
+        public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
         {
             //Arrange
             var testPositions = GetPositions();
 
             _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
                 .Returns(testPositions);
-            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Partner>()))
+            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
                 .Returns(GetPositionsDTO());
 
             _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPositions.Id)))
                 .ReturnsAsync(testPositions);
-            _mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
-                .ReturnsAsync(new List<StreetcodeContent>());
             _mockRepository.Setup(x => x.SaveChanges())
                 .Returns(1);
-
             var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
 
             //Act
@@ -69,8 +66,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 
             _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPositions.Id)))
                 .ReturnsAsync(testPositions);
-            _mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
-                .ReturnsAsync(new List<StreetcodeContent>());
             _mockRepository.Setup(x => x.SaveChanges())
                 .Returns(1);
 
@@ -84,11 +79,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_SaveChangesIsNotSuccessful()
+        public async Task ShouldThrowExeption_WhenSaveChangesIsNotSuccessful()
         {
             //Arrange
             var testPositions = GetPositions();
-            var expectedError = "Failed to create a Position";
+            const string expectedError = "Failed to create a Position";
 
             _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
                 .Returns(testPositions);

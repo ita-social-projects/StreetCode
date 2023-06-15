@@ -4,8 +4,6 @@ using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Newss.GetAll;
-using Streetcode.BLL.Services.BlobStorageService;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;

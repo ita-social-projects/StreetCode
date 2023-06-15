@@ -1,17 +1,8 @@
-﻿using AutoMapper;
-using Moq;
+﻿using Moq;
 using Streetcode.BLL.DTO.News;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.MediatR.Newss.Delete;
-using Streetcode.BLL.MediatR.Partners.Delete;
-using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.News;

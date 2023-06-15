@@ -5,7 +5,6 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL;
-//using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -75,34 +74,6 @@ public class CreateNewsTest
         Assert.True(result.IsSuccess);
     }
 
-    /*
-    public async Task ShouldThrowExeption_SaveChangesIsNotSuccessful()
-    {
-        //Arrange
-        var testNews = GetNews();
-        var expectedError = "Failed to create a news";
-
-        _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
-            .Returns(testNews);
-        _mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
-            .Returns(GetNewsDTO());
-
-        _mockRepository.Setup(x => x.NewsRepository.Create(It.Is<DAL.Entities.News.News>(y => y.Id == testNews.Id)))
-            .Returns(testNews);
-        //?
-        _mockRepository.Setup(x => x.SaveChangesAsync())
-            .Throws(new Exception(expectedError));
-
-        var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object);
-
-        //Act
-        var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
-
-        //Assert
-        Assert.Equal(expectedError, result.Errors.First().Message);
-
-        //_mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
-    }*/
     [Fact]
     public async Task ShouldThrowExeption_SaveChangesIsNotSuccessful()
     {

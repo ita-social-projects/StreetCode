@@ -29,14 +29,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
         {
             //Arrange
-            _mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
-                .ReturnsAsync(GetTeamMemberLinksList());
-
-            _mockMapper
-                .Setup(x => x.Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()))
-                .Returns(GetListTeamMemberLinkDTO());
+            SetupMapMethod(GetListTeamMemberLinkDTO());
+            SetupGetAllAsyncMethod(GetTeamMemberLinksList());
 
             var handler = new GetAllTeamLinkHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -54,15 +48,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         public async Task ShouldReturnSuccessfully_WhenCountMatch()
         {
             //Arrange
-            _mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
-                .ReturnsAsync(GetTeamMemberLinksList());
-
-            _mockMapper
-                .Setup(x => x
-                .Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()))
-                .Returns(GetListTeamMemberLinkDTO());
+            SetupMapMethod(GetListTeamMemberLinkDTO());
+            SetupGetAllAsyncMethod(GetTeamMemberLinksList());
 
             var handler = new GetAllTeamLinkHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -81,11 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             //Arrange
             const string expectedError = "Cannot find any team links";
-
-            _mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
-                .ReturnsAsync(GetTeamMemberLinksListWithNotExistingId());
+            SetupMapMethod(GetTeamMemberLinksListWithNotExistingId());
 
             var handler = new GetAllTeamLinkHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -98,21 +81,40 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             _mockMapper.Verify(x => x.Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()), Times.Never);
         }
 
+        private void SetupMapMethod(IEnumerable<TeamMemberLinkDTO> teamMemberLinksDTO)
+        {
+            _mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()))
+                .Returns(teamMemberLinksDTO);
+        }
+
+        private void SetupMapMethod(IEnumerable<TeamMemberLink> teamMemberLinks)
+        {
+            _mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
+                null,
+                It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
+                .ReturnsAsync(teamMemberLinks);
+        }
+
+        private void SetupGetAllAsyncMethod(IEnumerable<TeamMemberLink> teamMemberLinks)
+        {
+            _mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
+                null,
+                It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
+                .ReturnsAsync(teamMemberLinks);
+        }
+
         private static IEnumerable<TeamMemberLink> GetTeamMemberLinksList()
         {
-            var partners = new List<TeamMemberLink>
-        {
-            new TeamMemberLink
-            {
-                Id = 1
-            },
-
-            new TeamMemberLink
-            {
-                Id = 2
-            }
-        };
-
+            var partners = new List<TeamMemberLink>{
+                new TeamMemberLink
+                {
+                    Id = 1
+                },
+                new TeamMemberLink
+                {
+                    Id = 2
+                }
+            };
             return partners;
         }
 
@@ -123,19 +125,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 
         private static List<TeamMemberLinkDTO> GetListTeamMemberLinkDTO()
         {
-            var partnersDTO = new List<TeamMemberLinkDTO>
-        {
-            new TeamMemberLinkDTO
-            {
-                Id = 1
-            },
-
-            new TeamMemberLinkDTO
-            {
-                Id = 2,
-            }
-        };
-
+            var partnersDTO = new List<TeamMemberLinkDTO>{
+                new TeamMemberLinkDTO
+                {
+                    Id = 1
+                },
+                new TeamMemberLinkDTO
+                {
+                    Id = 2,
+                }
+            };
             return partnersDTO;
         }
     }

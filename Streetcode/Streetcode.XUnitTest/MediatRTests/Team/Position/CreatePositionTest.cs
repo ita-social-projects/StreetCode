@@ -35,15 +35,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             //Arrange
             var testPositions = GetPositions();
 
-            _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
-                .Returns(testPositions);
-            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
-                .Returns(GetPositionsDTO());
+            SetupMapMethod(testPositions);
+            SetupCreateAsyncMethod(testPositions);
+            SetupSaveChangesMethod();
 
-            _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPositions.Id)))
-                .ReturnsAsync(testPositions);
-            _mockRepository.Setup(x => x.SaveChanges())
-                .Returns(1);
             var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
 
             //Act
@@ -59,15 +54,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             //Arrange
             var testPositions = GetPositions();
 
-            _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
-                .Returns(testPositions);
-            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
-                .Returns(GetPositionsDTO());
-
-            _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPositions.Id)))
-                .ReturnsAsync(testPositions);
-            _mockRepository.Setup(x => x.SaveChanges())
-                .Returns(1);
+            SetupMapMethod(testPositions);
+            SetupCreateAsyncMethod(testPositions);
+            SetupSaveChangesMethod();
 
             var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
 
@@ -85,16 +74,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             var testPositions = GetPositions();
             const string expectedError = "Failed to create a Position";
 
-            _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
-                .Returns(testPositions);
-            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
-                .Returns(GetPositionsDTO());
-
-            _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPositions.Id)))
-                .ReturnsAsync(testPositions);
-
-            _mockRepository.Setup(x => x.SaveChanges())
-                .Throws(new Exception(expectedError));
+            SetupMapMethod(testPositions);
+            SetupCreateAsyncMethod(testPositions);
+            SetupSaveChangesMethodWithErrorThrow(expectedError);
 
             var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
 
@@ -105,6 +87,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             Assert.Equal(expectedError, result.Errors.First().Message);
 
             _mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
+        }
+
+        private void SetupMapMethod(Positions positions)
+        {
+            _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
+                .Returns(positions);
+            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+                .Returns(GetPositionsDTO());
+        }
+
+        private void SetupCreateAsyncMethod(Positions positions)
+        {
+            _mockRepository.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == positions.Id)))
+                .ReturnsAsync(positions);
+        }
+
+        private void SetupSaveChangesMethod() 
+        {
+            _mockRepository.Setup(x => x.SaveChanges())
+                .Returns(1);
+        }
+
+        private void SetupSaveChangesMethodWithErrorThrow(string expectedError)
+        {
+            _mockRepository.Setup(x => x.SaveChanges())
+                 .Throws(new Exception(expectedError));
         }
 
         private static Positions GetPositions()

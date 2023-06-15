@@ -31,14 +31,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
         {
             //Arrange
-            _mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
-                .ReturnsAsync(GetPositionsList());
-
-            _mockMapper
-                .Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
-                .Returns(GetListPositionDTO());
+            SetupMapMethod(GetListPositionDTO());
+            SetupGetAllAsyncMethod(GetPositionsList());
 
             var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -56,15 +50,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         public async Task ShouldReturnSuccessfully_WhenCountMatch()
         {
             //Arrange
-            _mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
-                .ReturnsAsync(GetPositionsList());
-
-            _mockMapper
-                .Setup(x => x
-                .Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
-                .Returns(GetListPositionDTO());
+            SetupMapMethod(GetListPositionDTO());
+            SetupGetAllAsyncMethod(GetPositionsList());
 
             var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -84,10 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             //Arrange
             const string expectedError = "Cannot find any positions";
 
-            _mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
-                .ReturnsAsync(GetPositionsListWithNotExistingId());
+            SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
 
             var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
 
@@ -100,21 +84,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             _mockMapper.Verify(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()), Times.Never);
         }
 
+        private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
+        {
+            _mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+                .Returns(positionDTOs);
+        }
+
+        private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
+        {
+            _mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
+                null,
+                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
+                .ReturnsAsync(positions);
+        }
+
         private static IEnumerable<Positions> GetPositionsList()
         {
-            var partners = new List<Positions>
-        {
-            new Positions
-            {
-                Id = 1
-            },
-
-            new Positions
-            {
-                Id = 2
-            }
-        };
-
+            var partners = new List<Positions>{
+                new Positions
+                {
+                    Id = 1
+                },
+                new Positions
+                {
+                    Id = 2
+                }
+            };
             return partners;
         }
 
@@ -125,19 +120,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 
         private static List<PositionDTO> GetListPositionDTO()
         {
-            var PositionDTO = new List<PositionDTO>
-        {
-            new PositionDTO
-            {
-                Id = 1
-            },
-
-            new PositionDTO
-            {
-                Id = 2,
-            }
-        };
-
+            var PositionDTO = new List<PositionDTO>{
+                new PositionDTO
+                {
+                    Id = 1
+                },
+                new PositionDTO
+                {
+                    Id = 2,
+                }
+            };
             return PositionDTO;
         }
     }

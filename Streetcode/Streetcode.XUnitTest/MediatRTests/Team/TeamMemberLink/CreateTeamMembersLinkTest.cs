@@ -33,16 +33,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
-                .Returns(testTeamMemberLink);
-            _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
-                .Returns(GetTeamMemberLinkDTO());
-
-            _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
-                .Returns(testTeamMemberLink);
-
-            _mockRepository.Setup(x => x.SaveChangesAsync())
-                .ReturnsAsync(1);
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethod();
 
             var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
 
@@ -59,16 +52,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
-                .Returns(testTeamMemberLink);
-            _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
-                .Returns(GetTeamMemberLinkDTO());
-
-            _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
-                .Returns(testTeamMemberLink);
-
-            _mockRepository.Setup(x => x.SaveChangesAsync())
-                .ReturnsAsync(1);
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethod();
 
             var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
 
@@ -86,14 +72,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
-                .Returns(testTeamMemberLink);
-
-            _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
-                .Returns(testTeamMemberLink);
-
-            _mockRepository.Setup(x => x.SaveChanges())
-                .Throws(new Exception(expectedErrorMessage));
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethodWithErrorThrow(expectedErrorMessage);
 
             var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
 
@@ -113,10 +94,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
-                .Returns(testTeamMemberLink);
+            SetupMapMethod(testTeamMemberLink);
 
-            //The setup of the 'Map' method returned null, causing an error.
+            //The specific setup of the 'Create' method returned null, causing an error.
             _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
                 .Returns((TeamMemberLink)null);
 
@@ -136,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             const string expectedErrorMessage = "Cannot convert null to team link";
             //Arrange
-            //The setup of the 'Map' method returned null, causing an error.
+            //The specific setup of the 'Map' method returned null, causing an error.
             _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
                 .Returns((TeamMemberLink)null);
 
@@ -149,6 +129,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
 
             _mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
+        }
+
+        private void SetupMapMethod(TeamMemberLink teamMemberLink)
+        {
+            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
+                .Returns(teamMemberLink);
+            _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
+                .Returns(GetTeamMemberLinkDTO());
+        }
+
+        private void SetupCreateMethod(TeamMemberLink teamMemberLink)
+        {
+            _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == teamMemberLink.Id)))
+                .Returns(teamMemberLink);
+        }
+
+        private void SetupSaveChangesMethod()
+        {
+            _mockRepository.Setup(x => x.SaveChangesAsync())
+                .ReturnsAsync(1);
+        }
+
+        private void SetupSaveChangesMethodWithErrorThrow(string expectedError)
+        {
+            _mockRepository.Setup(x => x.SaveChanges())
+                .Throws(new Exception(expectedError));
         }
 
         private static TeamMemberLink GetTeamMemberLink()

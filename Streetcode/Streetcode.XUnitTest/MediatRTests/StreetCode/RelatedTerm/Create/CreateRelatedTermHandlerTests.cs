@@ -16,6 +16,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
     {
         private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
         private readonly Mock<IMapper> _mapperMock;
+
         public CreateRelatedTermHandlerTests()
         {
             _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
@@ -30,13 +31,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var relatedTermDTO = new RelatedTermDTO { TermId = termId, Word = word };
             var entity = new Entity { TermId = termId, Word = word };
             var createRelatedTermCommand = new CreateRelatedTermCommand(relatedTermDTO);
-            _repositoryWrapperMock.Setup(m => m.RelatedTermRepository.Create(entity));
-            _repositoryWrapperMock.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+
+            _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Create(entity));
+            _repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             _mapperMock.Setup(m => m.Map<Entity>(relatedTermDTO)).Returns(entity);
+
             var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
 
             // Act
-            var result = await handler.Handle(createRelatedTermCommand, default);
+            var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
 
             // Assert
             result.IsSuccess.Should().BeTrue();
@@ -56,10 +59,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(
-           () => Assert.True(result.IsFailed),
-           () => Assert.Equal("Cannot create new related word for a term!", result.Errors.First().Message)
-           );
+            result.IsFailed.Should().BeTrue();
+            result.Errors.First().Message.Should().Be("Cannot create new related word for a term!");
         }
 
         [Theory]
@@ -67,28 +68,27 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         public async Task Handle_Should_Return_Error_When_Related_Term_Already_Exists(int termId, string word)
         {
             // Arrange
-            var relatedTerm = new RelatedTermDTO { TermId = termId, Word = word };
-            var entity = new Entity { TermId = relatedTerm.TermId, Word = relatedTerm.Word };
+            var relatedTermDTO = new RelatedTermDTO { TermId = termId, Word = word };
+            var entity = new Entity { TermId = relatedTermDTO.TermId, Word = relatedTermDTO.Word };
             var existingTerms = new List<Entity> { entity };
 
             _mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermDTO>())).Returns(entity);
-            _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.
-                GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
-                It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
-            .ReturnsAsync(existingTerms);
+            _repositoryWrapperMock.Setup(r => r.RelatedTermRepository
+                .GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
+                    It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
+                .ReturnsAsync(existingTerms);
+
             var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
-            var command = new CreateRelatedTermCommand(relatedTerm);
+            var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(
-             () => Assert.True(result.IsFailed),
-             () => Assert.Equal("Слово з цим визначенням уже існує", result.Errors.First().Message),
-             () => _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never),
-             () => _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never)
-             );
+            result.IsFailed.Should().BeTrue();
+            result.Errors.First().Message.Should().Be("Слово з цим визначенням уже існує");
+            _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never);
+            _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
 
         [Theory]
@@ -96,30 +96,32 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         public async Task Handle_Should_Return_Error_When_SaveChangesAsync_Fails(int termId, string word)
         {
             // Arrange
-            var relatedTerm = new RelatedTermDTO { TermId = termId, Word = word };
-            var entity = new Entity { TermId = relatedTerm.TermId, Word = relatedTerm.Word };
+            var relatedTermDTO = new RelatedTermDTO { TermId = termId, Word = word };
+            var entity = new Entity { TermId = relatedTermDTO.TermId, Word = relatedTermDTO.Word };
             var existingTerms = new List<Entity>();
             var repositoryMock = new Mock<IRepositoryWrapper>();
             var mapperMock = new Mock<IMapper>();
+
             mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermDTO>())).Returns(entity);
-            _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
-                It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
-            .ReturnsAsync(existingTerms);
+            _repositoryWrapperMock.Setup(r => r.RelatedTermRepository
+                .GetAllAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
+                    It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
+                .ReturnsAsync(existingTerms);
+
             repositoryMock.Setup(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()));
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
+
             var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object);
-            var command = new CreateRelatedTermCommand(relatedTerm);
+            var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            Assert.Multiple(
-             () => Assert.True(result.IsFailed),
-             () => Assert.Equal("Cannot save changes in the database after related word creation!", result.Errors.First().Message),
-             () => repositoryMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once),
-             () => repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once)
-             );
+            result.IsFailed.Should().BeTrue();
+            result.Errors.First().Message.Should().Be("Cannot save changes in the database after related word creation!");
+            repositoryMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
+            repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
     }
 }

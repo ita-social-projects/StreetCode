@@ -1,5 +1,6 @@
 ﻿// using FluentResults;
 
+using System.Resources;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,15 @@ namespace Streetcode.WebApi.Controllers;
 public class BaseApiController : ControllerBase
 {
     private IMediator? _mediator;
+    private readonly ResourceManager _resourceManager;
 
     protected IMediator Mediator => _mediator ??=
         HttpContext.RequestServices.GetService<IMediator>()!;
+
+    public BaseApiController(ResourceManager resourceManager)
+    {
+        _resourceManager = resourceManager;
+    }
 
     protected ActionResult HandleResult<T>(Result<T> result)
     {
@@ -26,12 +33,12 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
-                NotFound("Found result matching null") : Ok(result.Value);
+                NotFound(_resourceManager.GetString("NotFound")) : Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)
         {
-            if (item.Message.Contains("Cannot find an audio with the corresponding streetcode id"))
+            if (item.Message.Contains(_resourceManager.GetString("Cannot find an audio")))
             {
                 return Ok();
             }

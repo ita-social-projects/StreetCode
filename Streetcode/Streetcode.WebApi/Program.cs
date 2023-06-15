@@ -1,3 +1,6 @@
+using System.Resources;
+using System.Reflection;
+using System.Globalization;
 using Hangfire;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +9,12 @@ using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
 
 var builder = WebApplication.CreateBuilder(args);
+var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("uk-UA") };
+var requestLocalizationOptions = new RequestLocalizationOptions
+{
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+};
 builder.Host.ConfigureApplication();
 
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -15,8 +24,10 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 
+string baseName = "WebApi.Controllers.Streetcode.StreetcodeController.";
+builder.Services.AddSingleton(new ResourceManager(baseName, Assembly.GetExecutingAssembly()));
 var app = builder.Build();
-
+app.UseRequestLocalization(requestLocalizationOptions);
 if (app.Environment.EnvironmentName == "Local")
 {
     app.UseSwagger();
@@ -32,10 +43,8 @@ else
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseHangfireDashboard();
 
 if (app.Environment.EnvironmentName != "Local")

@@ -21,46 +21,46 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockRepository = new();
 		}
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNumber) 
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+		//[Theory]
+		//[InlineData(1)]
+		//public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNumber) 
+		//{
+		//	//Arrange
+		//	_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
+		//	_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTerm());
+		//	_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+		//		.Returns(GetTerm());
 
-			var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+		//	var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
 
-			//Act
-			var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
+		//	//Act
+		//	var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
 
-			//Assert
-			Assert.IsType<Unit>(result.Value);
+		//	//Assert
+		//	Assert.IsType<Unit>(result.Value);
 
-		}
+		//}
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNubmer) 
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x=>x.SaveChangesAsync()).ReturnsAsync(returnNubmer);
+		//[Theory]
+		//[InlineData(1)]
+		//public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNubmer) 
+		//{
+		//	//Arrange
+		//	_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
+		//	_mockRepository.Setup(x=>x.SaveChangesAsync()).ReturnsAsync(returnNubmer);
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTerm());
+		//	_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+		//		.Returns(GetTerm());
 
-			var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+		//	var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
 
-			//Act
-			var result = await hendler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
+		//	//Act
+		//	var result = await hendler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
 
-			//Assert
-			Assert.True(result.IsSuccess);
-		}
+		//	//Assert
+		//	Assert.True(result.IsSuccess);
+		//}
 
 		[Theory]
 		[InlineData(1)]

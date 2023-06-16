@@ -1,12 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Options;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
+using Xunit;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    internal class SaveFileInStorageTests
+    public class SaveFileInStorageTests
     {
+        private readonly IBlobService blobService;
+        private readonly IOptions<BlobEnvironmentVariables> environmentVariables;
+        private readonly string blobPath = "../../BlobStorageTest/";
+        private readonly string blobKey = "somethingForTest";
+
+        public SaveFileInStorageTests()
+        {
+            environmentVariables = Options.Create(new BlobEnvironmentVariables());
+            environmentVariables.Value.BlobStorePath = blobPath;
+            environmentVariables.Value.BlobStoreKey = blobKey;
+
+            blobService = new BlobService(environmentVariables);
+        }
+
+        [Fact]
+        public void SaveFileInStorage_ReturnsSuccess()
+        {
+            
+        }
+
+        [Fact]
+        public void SaveFileInStorage_ReturnsError()
+        {
+
+        }
+
     }
 }

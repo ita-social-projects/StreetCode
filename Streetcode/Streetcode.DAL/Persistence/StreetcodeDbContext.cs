@@ -38,6 +38,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Fact> Facts { get; set; }
     public DbSet<HistoricalContext> HistoricalContexts { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<AdditionalImageInfo> AdditionalImageInfos { get; set; }
     public DbSet<Partner> Partners { get; set; }
     public DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
     public DbSet<RelatedFigure> RelatedFigures { get; set; }
@@ -147,6 +148,11 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Art)
                 .WithOne(a => a.Image)
                 .HasForeignKey<Art>(a => a.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(im => im.AdditionalImageInfo)
+                .WithOne(info => info.Image)
+                .HasForeignKey<Image>(a => a.AdditionalImageInfoId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Partner)

@@ -78,8 +78,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
                 new Image()
                 {
                     Id = 1,
-                    Title= "Title1",
-                    Alt = "Alt1",
                     BlobName = "https://",
                     MimeType = ""
 
@@ -87,8 +85,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
                 new Image()
                 {
                     Id = 2,
-                    Title= "Title2",
-                    Alt = "Alt2",
                     BlobName = "https://",
                     MimeType = ""
                 },

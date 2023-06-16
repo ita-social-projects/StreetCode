@@ -13,6 +13,8 @@ public class Art
 
     public string? Description { get; set; }
 
+    public string? Title { get; set; }
+
     public int ImageId { get; set; }
 
     public Image? Image { get; set; }

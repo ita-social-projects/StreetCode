@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Options;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    internal class CleanBlobServiceTests
+    public class CleanBlobServiceTests
     {
+
     }
 }

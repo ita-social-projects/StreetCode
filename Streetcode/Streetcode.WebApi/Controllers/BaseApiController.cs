@@ -4,6 +4,7 @@ using System.Resources;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
@@ -12,17 +13,19 @@ namespace Streetcode.WebApi.Controllers;
 [Route("api/[controller]/[action]")]
 public class BaseApiController : ControllerBase
 {
+    private readonly IStringLocalizer _stringLocalizer;
     private IMediator? _mediator;
-    private readonly ResourceManager _resourceManager;
+    public BaseApiController(IStringLocalizer<BaseApiController> stringLocalizer)
+    {
+        _stringLocalizer = stringLocalizer;
+    }
+
+    public BaseApiController()
+    {
+    }
 
     protected IMediator Mediator => _mediator ??=
         HttpContext.RequestServices.GetService<IMediator>()!;
-
-    public BaseApiController(ResourceManager resourceManager)
-    {
-        _resourceManager = resourceManager;
-    }
-
     protected ActionResult HandleResult<T>(Result<T> result)
     {
         if (result.IsSuccess)
@@ -33,12 +36,12 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
-                NotFound(_resourceManager.GetString("NotFound")) : Ok(result.Value);
+                NotFound(_stringLocalizer["NotFound"]) : Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)
         {
-            if (item.Message.Contains(_resourceManager.GetString("Cannot find an audio")))
+            if (item.Message.Contains("Found result matching null"))
             {
                 return Ok();
             }

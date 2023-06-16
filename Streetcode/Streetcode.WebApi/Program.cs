@@ -17,6 +17,7 @@ var requestLocalizationOptions = new RequestLocalizationOptions
 };
 builder.Host.ConfigureApplication();
 
+builder.Services.AddLocalization();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
@@ -24,8 +25,8 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 
-string baseName = "WebApi.Controllers.Streetcode.StreetcodeController.";
-builder.Services.AddSingleton(new ResourceManager(baseName, Assembly.GetExecutingAssembly()));
+//string baseName = "WebApi.Controllers.Streetcode.StreetcodeController.";
+//builder.Services.AddSingleton(new ResourceManager(baseName, Assembly.GetExecutingAssembly()));
 var app = builder.Build();
 app.UseRequestLocalization(requestLocalizationOptions);
 if (app.Environment.EnvironmentName == "Local")

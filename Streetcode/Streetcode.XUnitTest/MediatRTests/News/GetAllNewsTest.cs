@@ -8,132 +8,123 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.News;
-
-public class GetAllNewsTest
+namespace Streetcode.XUnitTest.MediatRTests.News
 {
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
-    private readonly Mock<IBlobService> _blobService;
-
-    public GetAllNewsTest()
+    public class GetAllNewsTest
     {
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _blobService = new Mock<IBlobService>();
-    }
+        private Mock<IRepositoryWrapper> _mockRepository;
+        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
 
-    [Fact]
-    public async Task ShouldReturnSuccessfully_CorrectType()
-    {
-        //Arrange
-        _mockRepository.Setup(x => x.NewsRepository.GetAllAsync(
-            null,
-            It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
-            .ReturnsAsync(GetNewsList());
-
-        _mockMapper
-            .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
-        .Returns(GetListNewsDTO());
-
-        var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
-
-        //Act
-        var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
-
-        //Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.IsType<List<NewsDTO>>(result.ValueOrDefault)
-        );
-    }
-
-    [Fact]
-    public async Task ShouldReturnSuccessfully_CountMatch()
-    {
-        //Arrange
-        _mockRepository.Setup(x => x.NewsRepository.GetAllAsync(
-            null,
-            It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
-            .ReturnsAsync(GetNewsList());
-
-        _mockMapper
-            .Setup(x => x
-            .Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
-            .Returns(GetListNewsDTO());
-
-        var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
-
-        //Act
-        var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
-
-        //Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.Equal(GetNewsList().Count(), result.Value.Count())
-        );
-    }
-
-    [Fact]
-    public async Task ShouldThrowExeption_IdNotExist()
-    {
-        //Arrange
-        var expectedError = "There are no news in the database";
-
-        _mockRepository.Setup(x => x.NewsRepository.GetAllAsync(
-            null,
-            It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
-            .ReturnsAsync(GetNewsListWithNotExistingId());
-
-        var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
-
-        //Act
-        var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
-
-        //Assert
-        Assert.Equal(expectedError, result.Errors.First().Message);
-
-        _mockMapper.Verify(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()), Times.Never);
-    }
-
-    private static IEnumerable<DAL.Entities.News.News> GetNewsList()
-    {
-        var news = new List<DAL.Entities.News.News>
+        public GetAllNewsTest()
         {
-            new DAL.Entities.News.News
-            {
-                Id = 1
-            },
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
+        }
 
-            new DAL.Entities.News.News
-            {
-                Id = 2
-            }
-        };
-
-        return news;
-    }
-
-    private static List<DAL.Entities.News.News>? GetNewsListWithNotExistingId()
-    {
-        return null;
-    }
-
-    private static List<NewsDTO> GetListNewsDTO()
-    {
-        var newsDTO = new List<NewsDTO>
+        [Fact]
+        public async Task ShouldReturnSuccessfully_CorrectType()
         {
-            new NewsDTO
-            {
-                Id = 1
-            },
+            // Arrange
+            SetupMockRepositoryGetAllAsync(GetNewsList());
+            _mockMapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
+                .Returns(GetListNewsDTO());
 
-            new NewsDTO
-            {
-                Id = 2,
-            }
-        };
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
 
-        return newsDTO;
+            // Act
+            var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.NotNull(result),
+                () => Assert.IsType<List<NewsDTO>>(result.ValueOrDefault)
+            );
+        }
+
+        [Fact]
+        public async Task ShouldReturnSuccessfully_CountMatch()
+        {
+            // Arrange
+            SetupMockRepositoryGetAllAsync(GetNewsList());
+            _mockMapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
+                .Returns(GetListNewsDTO());
+
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+
+            // Act
+            var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.NotNull(result),
+                () => Assert.Equal(GetNewsList().Count(), result.Value.Count())
+            );
+        }
+
+        [Fact]
+        public async Task ShouldThrowException_IdNotExist()
+        {
+            // Arrange
+            var expectedError = "There are no news in the database";
+            SetupMockRepositoryGetAllAsync(GetNewsListWithNotExistingId());
+
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+
+            // Act
+            var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
+
+            // Assert
+            Assert.Equal(expectedError, result.Errors.First().Message);
+            _mockMapper.Verify(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()), Times.Never);
+        }
+
+        private void SetupMockRepositoryGetAllAsync(IEnumerable<DAL.Entities.News.News> newsList)
+        {
+            _mockRepository.Setup(x => x.NewsRepository.GetAllAsync(
+                    null,
+                    It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
+                .ReturnsAsync(newsList);
+        }
+
+        private static IEnumerable<DAL.Entities.News.News> GetNewsList()
+        {
+            var news = new List<DAL.Entities.News.News>
+            {
+                new DAL.Entities.News.News
+                {
+                    Id = 1
+                },
+                new DAL.Entities.News.News
+                {
+                    Id = 2
+                }
+            };
+
+            return news;
+        }
+
+        private static List<DAL.Entities.News.News>? GetNewsListWithNotExistingId()
+        {
+            return null;
+        }
+
+        private static List<NewsDTO> GetListNewsDTO()
+        {
+            var newsDTO = new List<NewsDTO>
+            {
+                new NewsDTO
+                {
+                    Id = 1
+                },
+                new NewsDTO
+                {
+                    Id = 2,
+                }
+            };
+
+            return newsDTO;
+        }
     }
 }

@@ -63,6 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
+                () => Assert.NotNull(result.Value),
                 () => Assert.IsType<List<TeamMemberDTO>>(result.ValueOrDefault)
             );
         }
@@ -85,6 +86,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
+                () => Assert.NotNull(result.Value),
                 () => Assert.Equal(GetTeamList().Count(), result.Value.Count())
             );
         }

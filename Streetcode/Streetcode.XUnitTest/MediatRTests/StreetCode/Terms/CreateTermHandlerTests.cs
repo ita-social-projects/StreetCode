@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using FluentResults;
 using MediatR;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Term.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
@@ -38,29 +38,30 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
 
 			//Assert
-			Assert.IsType<Unit>(result.Value);
+            Assert.IsType<Result<TermDTO>>(result);
 
-		}
+        }
 
 		[Theory]
 		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNubmer) 
+		public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNumber) 
 		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x=>x.SaveChangesAsync()).ReturnsAsync(returnNubmer);
+            // Arrange
+            var createdTerm = GetTerm();
+            _mockRepository.Setup(x => x.TermRepository.Create(It.IsAny<Term>())).Returns(createdTerm);
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTerm());
+            _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>())).Returns(createdTerm);
+            _mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
 
-			var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
 
-			//Act
-			var result = await hendler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
 
 			//Assert
-			Assert.True(result.IsSuccess);
-		}
+            Assert.True(result.IsSuccess);
+        }
 
 		[Theory]
 		[InlineData(1)]

@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
 
             // Assert
-            result.IsSuccess.Should().BeTrue();
+            Assert.True(result.IsSuccess);
             _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
             _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
@@ -59,8 +59,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            result.IsFailed.Should().BeTrue();
-            result.Errors.First().Message.Should().Be("Cannot create new related word for a term!");
+            Assert.True(result.IsFailed);
+            Assert.Equal("Cannot create new related word for a term!", result.Errors.First().Message);
         }
 
         [Theory]
@@ -85,8 +85,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            result.IsFailed.Should().BeTrue();
-            result.Errors.First().Message.Should().Be("Слово з цим визначенням уже існує");
+            Assert.True(result.IsFailed);
+            Assert.Equal("Слово з цим визначенням уже існує", result.Errors.First().Message);
             _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Never);
             _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
@@ -118,8 +118,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(command, CancellationToken.None);
 
             // Assert
-            result.IsFailed.Should().BeTrue();
-            result.Errors.First().Message.Should().Be("Cannot save changes in the database after related word creation!");
+            Assert.True(result.IsFailed);
+            Assert.Equal("Cannot save changes in the database after related word creation!", result.Errors.First().Message);
             repositoryMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
             repositoryMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }

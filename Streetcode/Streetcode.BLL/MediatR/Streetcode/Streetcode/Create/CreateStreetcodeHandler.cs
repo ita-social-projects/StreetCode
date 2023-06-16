@@ -6,10 +6,12 @@ using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -49,6 +51,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
                 await _repositoryWrapper.SaveChangesAsync();
+                await UpdateFactImageDescription(request.Streetcode.Facts);
 
                 if (isResultSuccess)
                 {
@@ -65,6 +68,25 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 return Result.Fail(new Error("An error occurred while creating a streetcode"));
             }
         }
+    }
+
+    private async Task UpdateFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    {
+        Image? image;
+        foreach(FactUpdateCreateDto fact in facts)
+        {
+            if(fact.ImageDescription != null)
+            {
+                image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == fact.ImageId);
+                if(image != null)
+                {
+                    image.Alt = fact.ImageDescription;
+                    _repositoryWrapper.ImageRepository.Update(image);
+                }
+            }
+        }
+
+        await _repositoryWrapper.SaveChangesAsync();
     }
 
     private void AddTransactionLink(StreetcodeContent streetcode, string? url)

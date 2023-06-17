@@ -14,6 +14,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 [![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues)
 [![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls)
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=alert_status)](https://sonarcloud.io/project/overview?id=ita-social-projects_StreetCode) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=coverage)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=bugs)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=code_smells)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=security_rating)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode)
 ---
 
 ## Table of Contents 

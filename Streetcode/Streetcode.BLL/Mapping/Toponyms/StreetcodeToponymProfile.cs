@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Toponyms;
 
@@ -8,7 +8,7 @@ namespace Streetcode.BLL.Mapping.Toponyms
 	{
 		public StreetcodeToponymProfile()
 		{
-			CreateMap<StreetcodeToponym, StreetcodeToponymUpdateDTO>().ReverseMap();
+			CreateMap<StreetcodeToponym, StreetcodeToponymCreateUpdateDTO>().ReverseMap();
 		}
 	}
 }

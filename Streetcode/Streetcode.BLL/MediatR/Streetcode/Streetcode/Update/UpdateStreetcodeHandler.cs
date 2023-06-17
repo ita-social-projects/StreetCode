@@ -14,8 +14,6 @@ using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
-using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -40,9 +38,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
             _mapper.Map(request.Streetcode, streetcodeToUpdate);
 
-            await UpdateStreetcodeArtsAsync(streetcodeToUpdate, request.Streetcode.StreetcodeArts);
+            await UpdateStreetcodeArtsAsync(request.Streetcode.StreetcodeArts);
             await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms);
-            await UpdateStatisticRecordsAsync(streetcodeToUpdate, request.Streetcode.StatisticRecords);
+            await UpdateStatisticRecordsAsync(request.Streetcode.StatisticRecords);
             await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
             await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
             UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
@@ -58,25 +56,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return 1;
         }
 
-        private async Task UpdateStreetcodeArtsAsync(StreetcodeContent streetcode, IEnumerable<StreetcodeArtUpdateDTO> arts)
+        private async Task UpdateStreetcodeArtsAsync(IEnumerable<StreetcodeArtCreateUpdateDTO> arts)
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<StreetcodeArtUpdateDTO>(arts);
-
-            var artsToCreate = new List<StreetcodeArt>();
-
-            foreach (var art in toCreate)
-            {
-                // check this
-                var newArt = _mapper.Map<StreetcodeArt>(art);
-                newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.Art.ImageId);
-                newArt.Art.Image.Alt = art.Art.Title;
-                artsToCreate.Add(newArt);
-            }
-
-            streetcode.StreetcodeArts.AddRange(artsToCreate);
-            streetcode.StreetcodeArts.AddRange(_mapper.Map<List<StreetcodeArt>>(toUpdate));
-
-            _repositoryWrapper.StreetcodeArtRepository.DeleteRange(_mapper.Map<List<StreetcodeArt>>(toDelete));
+            await UpdateEntitiesAsync(arts, _repositoryWrapper.StreetcodeArtRepository);
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
@@ -97,34 +79,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<IEnumerable<TimelineItem>>(toDelete));
         }
 
-        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
+        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
         {
             await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
         }
 
-        private async Task UpdateStatisticRecordsAsync(StreetcodeContent streetcode, IEnumerable<StatisticRecordUpdateDTO> records)
+        private async Task UpdateStatisticRecordsAsync(IEnumerable<StatisticRecordUpdateDTO> records)
         {
-           var (_, toCreate, toDelete) = CategorizeItems<StatisticRecordUpdateDTO>(records);
-
-           foreach (var recordToCreate in toCreate)
-           {
-                var coordinate = _repositoryWrapper.StreetcodeCoordinateRepository
-                    .Create(_mapper.Map<StreetcodeCoordinate>(recordToCreate.StreetcodeCoordinate));
-
-                var record = _mapper.Map<StatisticRecord>(recordToCreate);
-
-                record.StreetcodeId = streetcode.Id;
-                record.StreetcodeCoordinateId = coordinate.Id;
-
-                await _repositoryWrapper.StatisticRecordRepository.CreateAsync(record);
-           }
-
-           foreach (var recordToDelete in toDelete)
-           {
-                var record = _mapper.Map<StatisticRecord>(recordToDelete);
-                _repositoryWrapper.StreetcodeCoordinateRepository.Delete(record.StreetcodeCoordinate);
-                _repositoryWrapper.StatisticRecordRepository.Delete(record);
-           }
+            await UpdateEntitiesAsync(records, _repositoryWrapper.StreetcodeCoordinateRepository);
         }
 
         private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)

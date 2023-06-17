@@ -40,7 +40,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public IEnumerable<AudioUpdateDTO> Audios { get; set; }
         public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnersUpdateDTO> Partners { get; set; }
-        public IEnumerable<TimelineItemUpdateDTO> TimelineItems { get; set; }
+        public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
         public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; }
         public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }

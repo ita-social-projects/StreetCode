@@ -159,7 +159,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.StreetcodeArts.AddRange(_mapper.Map<IEnumerable<StreetcodeArt>>(arts));
     }
 
-    private void AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
+    private void AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
     {
         streetcode.TimelineItems.AddRange(_mapper.Map<IEnumerable<TimelineItem>>(timelineItems));
     }

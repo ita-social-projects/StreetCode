@@ -45,7 +45,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
         public IEnumerable<FactDTO> Facts { get; set; }
         public IEnumerable<VideoCreateDTO> Videos { get; set; }
-        public IEnumerable<TimelineItemUpdateDTO> TimelineItems { get; set; } // change name
+        public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; } // change name
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
         public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }

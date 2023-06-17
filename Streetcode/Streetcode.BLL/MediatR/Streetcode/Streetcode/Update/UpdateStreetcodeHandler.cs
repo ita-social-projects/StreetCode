@@ -61,9 +61,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await UpdateEntitiesAsync(arts, _repositoryWrapper.StreetcodeArtRepository);
         }
 
-        private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemUpdateDTO> timelineItems)
+        private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemUpdateDTO>(timelineItems);
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemCreateUpdateDTO>(timelineItems);
 
             var timelineItemsUpdated = new List<TimelineItem>();
             foreach(var timelineItem in toUpdate)

@@ -27,7 +27,7 @@ public class Image
 
     public int? AdditionalImageInfoId { get; set; }
 
-    public AdditionalImageInfo? AdditionalImageInfo { get; set; }
+    public ImageDetails? AdditionalImageInfo { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 

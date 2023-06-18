@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Streetcode.DAL.Entities.Media.Images
 {
     [Table("additional_image_info", Schema = "media")]
-    public class AdditionalImageInfo
+    public class ImageDetails
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

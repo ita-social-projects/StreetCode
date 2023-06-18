@@ -150,9 +150,9 @@ public class StreetcodeDbContext : DbContext
                 .HasForeignKey<Art>(a => a.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(im => im.AdditionalImageInfo)
+            entity.HasOne(im => im.ImageDetails)
                 .WithOne(info => info.Image)
-                .HasForeignKey<Image>(a => a.AdditionalImageInfoId)
+                .HasForeignKey<Image>(a => a.ImageDetailsId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Partner)

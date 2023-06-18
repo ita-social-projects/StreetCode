@@ -98,12 +98,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
                 new ImageDTO
                 {
                     Id = 1,
-                    Alt = "Alt1",
                 },
                 new ImageDTO
                 {
                     Id = 2,
-                    Alt = "Alt2",
                 },
             };
         }

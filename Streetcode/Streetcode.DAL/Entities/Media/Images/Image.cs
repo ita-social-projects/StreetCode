@@ -4,7 +4,6 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Team;
 
 namespace Streetcode.DAL.Entities.Media.Images;
@@ -20,14 +19,16 @@ public class Image
     public string? Base64 { get; set; }
 
     [Required]
+    [MaxLength(100)]
     public string? BlobName { get; set; }
 
     [Required]
+    [MaxLength(10)]
     public string? MimeType { get; set; }
 
-    public int? AdditionalImageInfoId { get; set; }
+    public int? ImageDetailsId { get; set; }
 
-    public ImageDetails? AdditionalImageInfo { get; set; }
+    public ImageDetails? ImageDetails { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 

@@ -10,15 +10,18 @@ public class TransactionLink
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
+    [MaxLength(255)]
     public string? UrlTitle { get; set; }
 
     [Required]
-    public string Url { get; set; }
+    [MaxLength(255)]
+    public string? Url { get; set; }
 
     [Required]
-    public string QrCodeUrl { get; set; }
+    [MaxLength(255)]
+    public string? QrCodeUrl { get; set; }
 
+    [MaxLength(255)]
     public string? QrCodeUrlTitle { get; set; }
 
     [Required]

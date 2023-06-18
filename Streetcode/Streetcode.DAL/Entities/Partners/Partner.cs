@@ -13,6 +13,7 @@ public class Partner
     public int Id { get; set; }
 
     [Required]
+    [MaxLength(255)]
     public string Title { get; set; }
 
     [Required]
@@ -25,10 +26,12 @@ public class Partner
     public bool IsVisibleEverywhere { get; set; }
 
     [Required]
+    [MaxLength(255)]
     public string TargetUrl { get; set; }
 
+    [MaxLength(255)]
     public string? UrlTitle { get; set; }
-
+    [MaxLength(400)]
     public string? Description { get; set; }
 
     public Image? Logo { get; set; }

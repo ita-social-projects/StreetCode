@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Streetcode.DAL.Entities.Media.Images
 {
-    [Table("additional_image_info", Schema = "media")]
+    [Table("image_details", Schema = "media")]
     public class ImageDetails
     {
         [Key]

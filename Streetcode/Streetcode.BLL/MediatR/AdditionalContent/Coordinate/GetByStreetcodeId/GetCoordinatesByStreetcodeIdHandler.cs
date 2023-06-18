@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -10,11 +11,13 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer? _stringLocalizer;
 
-    public GetCoordinatesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetCoordinatesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetCoordinatesByStreetcodeIdHandler> stringLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<IEnumerable<StreetcodeCoordinateDTO>>> Handle(GetCoordinatesByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -24,7 +27,7 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 
         if (coordinates is null)
         {
-            return Result.Fail(new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error(_stringLocalizer?["CannotFindCoordinates", request.StreetcodeId].Value));
         }
 
         var coordinatesDto = _mapper.Map<IEnumerable<StreetcodeCoordinateDTO>>(coordinates);

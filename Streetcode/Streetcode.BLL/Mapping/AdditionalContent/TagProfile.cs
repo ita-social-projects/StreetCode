@@ -1,8 +1,6 @@
 using AutoMapper;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
-using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.DAL.Entities.AdditionalContent;
 
 namespace Streetcode.BLL.Mapping.AdditionalContent;
@@ -24,5 +22,8 @@ public class TagProfile : Profile
         CreateMap<StreetcodeTagUpdateDTO, Tag>()
             .ForMember(t => t.Id, conf => conf.MapFrom(stu => stu.Id))
             .ForMember(t => t.Title, conf => conf.MapFrom(stu => stu.Title));
+
+        CreateMap<StreetcodeTagDTO, StreetcodeTagUpdateDTO>().ReverseMap();
+        CreateMap<Tag, StreetcodeTagUpdateDTO>().ReverseMap();
     }
 }

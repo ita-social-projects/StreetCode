@@ -1,11 +1,11 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
-using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update
 {
-    public class StreetcodeCoordinateUpdateDTO : StreetcodeCoordinateDTO, IModelState
+    public class StreetcodeCoordinateUpdateDTO
     {
-        public ModelState ModelState { get; set; }
+        public int StreetcodeId { get; set; }
+        public int Id { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longtitude { get; set; }
     }
 }

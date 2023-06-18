@@ -19,6 +19,8 @@ public interface IRepositoryBase<T>
 
     EntityEntry<T> Update(T entity);
 
+    public void UpdateRange(IEnumerable<T> items);
+
     void Delete(T entity);
 
     void DeleteRange(IEnumerable<T> items);

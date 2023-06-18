@@ -7,5 +7,6 @@ namespace Streetcode.BLL.DTO.Streetcode.TextContent.Fact
   public class FactUpdateDTO : FactDTO, IModelState
   {
     public ModelState ModelState { get; set; }
+    public int StreetcodeId { get; set; }
   }
 }

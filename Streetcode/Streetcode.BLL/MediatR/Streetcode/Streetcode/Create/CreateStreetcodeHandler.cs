@@ -1,16 +1,22 @@
 using AutoMapper;
 using FluentResults;
+using MailKit.Net.Imap;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Create;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -39,16 +45,17 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-                await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
+                AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 AddAudio(streetcode, request.Streetcode.AudioId);
-                /*await AddArts(streetcode, request.Streetcode.StreetcodeArts);*/
-                await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
+                AddArts(streetcode, request.Streetcode.StreetcodeArts);
+                await AddTags(streetcode, request.Streetcode.Tags.ToList());
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
-                await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
-                await AddToponyms(streetcode, request.Streetcode.Toponyms);
-                await AddImages(streetcode, request.Streetcode.ImagesId);
+                await AddPartners(streetcode, request.Streetcode.Partners);
+                /*await AddToponyms(streetcode, request.Streetcode.Toponyms);*/
+                AddImages(streetcode, request.Streetcode.Images);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
+
                 await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
@@ -102,12 +109,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.AudioId = audioId;
     }
 
-    private async Task AddImages(StreetcodeContent streetcode, IEnumerable<int> imagesId)
+    private void AddImages(StreetcodeContent streetcode, IEnumerable<ImageDTO> images)
     {
-        streetcode.Images.AddRange(await _repositoryWrapper.ImageRepository.GetAllAsync(x => imagesId.Contains(x.Id)));
+        streetcode.Images.AddRange(_mapper.Map<IEnumerable<Image>>(images));
     }
 
-    private async Task AddTagsToStreetcode(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)
+    private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)
     {
         var indexedTags = new List<StreetcodeTagIndex>();
 
@@ -147,52 +154,25 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArts(StreetcodeContent streetcode, IEnumerable<ArtCreateDTO> arts)
+    private void AddArts(StreetcodeContent streetcode, IEnumerable<StreetcodeArtCreateUpdateDTO> arts)
     {
-        var artsToCreate = new List<StreetcodeArt>();
-
-        foreach(var art in arts)
-        {
-            var newArt = _mapper.Map<StreetcodeArt>(art);
-            newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.ImageId);
-            newArt.Art.Image.Alt = art.Title;
-            artsToCreate.Add(newArt);
-        }
-
-        streetcode.StreetcodeArts.AddRange(artsToCreate);
+        streetcode.StreetcodeArts.AddRange(_mapper.Map<IEnumerable<StreetcodeArt>>(arts));
     }
 
-    private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemDTO> timelineItems)
+    private void AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
     {
-        var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
-        var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);
-        await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
-        await _repositoryWrapper.SaveChangesAsync();
-        List<TimelineItem> newTimelines = new List<TimelineItem>();
-
-        foreach (TimelineItemDTO timelineItem in timelineItems)
-        {
-           var newTimeline = _mapper.Map<TimelineItem>(timelineItem);
-           newTimeline.HistoricalContextTimelines = timelineItem.HistoricalContexts
-              .Select(x => new HistoricalContextTimeline
-              {
-                  HistoricalContextId = x.Id == 0
-                      ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
-                      : x.Id
-              })
-              .ToList();
-
-           newTimelines.Add(newTimeline);
-        }
-
-        streetcode.TimelineItems.AddRange(newTimelines);
+        streetcode.TimelineItems.AddRange(_mapper.Map<IEnumerable<TimelineItem>>(timelineItems));
     }
 
-    private async Task AddPartnersToStreetcode(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)
+    private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)
     {
-        var partnerIds = partners.Select(p => p.Id);
-        streetcode.Partners.AddRange(await _repositoryWrapper.PartnersRepository
-            .GetAllAsync(p => partnerIds.Contains(p.Id)));
+        var partnersToCreate = partners.Select(partner => new StreetcodePartner
+            {
+                StreetcodeId = streetcode.Id,
+                PartnerId = partner.Id
+            })
+          .ToList();
+        await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);
     }
 
     private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<string> toponymsName)

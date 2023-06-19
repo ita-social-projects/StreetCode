@@ -117,10 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotConvertNull" xml:space="preserve">
-    <value>Cannot convert null to streetcodeCoordinate</value>
-  </data>
-  <data name="FailedToCreate" xml:space="preserve">
-    <value>Failed to create a streetcodeCoordinate</value>
+  <data name="CannotFindCoordinates" xml:space="preserve">
+    <value>Cannot find a coordinates by a streetcode id: {0}</value>
   </data>
 </root>

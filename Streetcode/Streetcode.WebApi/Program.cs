@@ -10,14 +10,21 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
-var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("uk-UA") };
+//var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("uk-UA") };
 
-var requestLocalizationOptions = new RequestLocalizationOptions
+//var requestLocalizationOptions = new RequestLocalizationOptions
+//{
+//    SupportedCultures = supportedCultures,
+//    SupportedUICultures = supportedCultures
+//};
+//requestLocalizationOptions.DefaultRequestCulture = new RequestCulture("uk-UA");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
-};
-requestLocalizationOptions.DefaultRequestCulture = new RequestCulture("uk-UA");
+    var supportedCultures = new[] { "en-US", "uk-UA" };
+    options.SetDefaultCulture(supportedCultures[1])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
 builder.Host.ConfigureApplication();
 
 builder.Services.AddLocalization();
@@ -31,7 +38,10 @@ builder.Services.ConfigureInstagram(builder);
 //string baseName = "WebApi.Controllers.Streetcode.StreetcodeController.";
 //builder.Services.AddSingleton(new ResourceManager(baseName, Assembly.GetExecutingAssembly()));
 var app = builder.Build();
-app.UseRequestLocalization(requestLocalizationOptions);
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    ApplyCurrentCultureToResponseHeaders = true
+});
 if (app.Environment.EnvironmentName == "Local")
 {
     app.UseSwagger();

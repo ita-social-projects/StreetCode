@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.Resources.WebApi.Controllers.BaseApiController.en-US1", typeof(WebApi_Controllers_BaseApiController_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.WebApi.Controllers.BaseApiController.en-US", typeof(WebApi_Controllers_BaseApiController_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

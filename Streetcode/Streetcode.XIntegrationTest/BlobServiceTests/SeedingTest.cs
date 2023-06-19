@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
+﻿using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
 using Xunit;
-using System.IO;
 
 namespace Streetcode.XIntegrationTest.Tests
 {
@@ -12,7 +10,7 @@ namespace Streetcode.XIntegrationTest.Tests
         {
             // Arrange
             var blobPath = "../../../BlobServiceTests/Utils/BlobStorageTest/";
-            var fixture = new BlobStorageFixture(blobPath);
+            var fixture = new BlobStorageFixture();
 
             // Act
             fixture.Seed();

@@ -12,28 +12,29 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
     {
         private readonly BlobService blobService;
         private readonly IOptions<BlobEnvironmentVariables> environmentVariables;
-        // private bool isInitialized;
+        private readonly string blobPath;
+        private readonly string blobKey;
 
-        public BlobStorageFixture(string blobPath = "../../BlobStorageTest/", string blobKey = "somethingForTest")
+        public BlobStorageFixture()
         {
             environmentVariables = Options.Create(new BlobEnvironmentVariables());
-            environmentVariables.Value.BlobStorePath = blobPath;
-            environmentVariables.Value.BlobStoreKey = blobKey;
-            //isInitialized = false;
+            blobPath = environmentVariables.Value.BlobStorePath;
+            blobKey = environmentVariables.Value.BlobStoreKey;
 
             blobService = new BlobService(environmentVariables);
+            Directory.CreateDirectory(blobPath);
         }
 
         public void Seed()
         {
-            //if (!isInitialized)
-            string blobPath = environmentVariables.Value.BlobStorePath;
             if(!Directory.EnumerateFiles(blobPath).Any())
             {
                 string initialDataImagePath = "../../../../Streetcode.DAL/InitialData/images.json";
                 string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
+
                 string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
                 string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
+
                 var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
                 var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
 
@@ -54,7 +55,6 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
                         blobService.SaveFileInStorageBase64(audio.Base64, audio.BlobName.Split('.')[0], audio.BlobName.Split('.')[1]);
                     }
                 }
-                //isInitialized = true;
             }
         }
     }

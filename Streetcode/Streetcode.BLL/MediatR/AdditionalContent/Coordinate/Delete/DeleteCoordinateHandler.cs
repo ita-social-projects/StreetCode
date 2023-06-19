@@ -1,8 +1,8 @@
-﻿using FluentResults;
+﻿using System.Xml.Linq;
+using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Xml.Linq;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Coordinate.Delete;
 

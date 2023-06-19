@@ -9,7 +9,7 @@ namespace Streetcode.XIntegrationTest.Tests
         public void Seed_ShouldCreateTestFilesInBlobStorage()
         {
             // Arrange
-            var blobPath = "../../../BlobServiceTests/Utils/BlobStorageTest/";
+            var blobPath = "../../BlobServiceTests/";
             var fixture = new BlobStorageFixture();
 
             // Act

@@ -26,7 +26,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.Coordinate));
-
+        toponyms.DistinctBy(x => x.StreetName);
         if (toponyms is null)
         {
             return Result.Fail(new Error($"Cannot find any toponym by the streetcode id: {request.StreetcodeId}"));

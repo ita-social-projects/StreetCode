@@ -22,6 +22,9 @@ public class Image
     [MaxLength(100)]
     public string? Alt { get; set; }
 
+    [NotMapped]
+    public string? Base64 { get; set; }
+
     [Required]
     public string BlobName { get; set; }
 

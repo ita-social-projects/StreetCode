@@ -38,7 +38,6 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id)));
     }
 
-    // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
     {
@@ -46,14 +45,12 @@ public class AudioController : BaseApiController
     }
 
     [HttpPut]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDTO audio)
     {
         return HandleResult(await Mediator.Send(new UpdateAudioCommand(audio)));
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteAudioCommand(id)));

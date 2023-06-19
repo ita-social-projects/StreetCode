@@ -14,7 +14,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 [![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues)
 [![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls)
 
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=alert_status)](https://sonarcloud.io/project/overview?id=ita-social-projects_StreetCode) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=coverage)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=bugs)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=code_smells)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=security_rating)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode)
 ---
 
 ## Table of Contents 
@@ -146,43 +146,47 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 
 ## Contributing
 
-### GitHub flow
+### Gitflow
 
-GitHub flow is a lightweight, branch-based workflow. The GitHub flow is useful for everyone, not just developers.
+Gitflow is a lightweight, branch-based workflow.
 
-The main idea behind this model is keeping the master code in a constant deployable state and hence can support continuous integration and continuous delivery processes. Also it is great some smaller teams, just like us.
+Gitflow is an alternative Git branching model that involves the use of feature branches and multiple primary branches.
 
 #### Step 1
 
-- **Option 1**
-    - 🍴 Fork this repo from master and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
-
-- **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode_Client.git`
+- First step is checkout to `developer` branch and pull the recent changes.
 
 #### Step 2
 
-- 🔨 On your branch, make ANY desired changes to the repository.
+- 🍴 Fork this repo from `developer` branch and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
 
 #### Step 3
 
-- :chart_with_upwards_trend: Commit and push your changes to your branch. 
-Give each commit a descriptive message to help you and future contributors understand what changes the commit contains. 
-For example, `fix typo` or `increase rate limit`.
+- 🔨 On your branch, make ANY reasonable & desired changes to the repository.
 
 #### Step 4
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode_Client/pulls" target="_blank">*this link*</a>.
+- :chart_with_upwards_trend: Commit and push your changes to your branch. 
+Give each commit a descriptive message to help you and future contributors understand what changes the commit contains. 
+For example, `fix typo` or `increase rate limit`. Note: you don't need to commit every line of your code in separate commits.
 
 #### Step 5
 
-- :raising_hand: Assign reviewers! Reviewers should leave questions, comments, and suggestions. After receiving comments, improve the code. Get Approved status on the request and be satisfied with it! 
+- Before creating pull request you need to check the `developer` branch state! To avoid conflicts, you should merge `developer` branch to your local branch! And resolve your local conflicts. Mini manual: checkout to your local branch and write in console `git merge developer`.
 
 #### Step 6
 
-- :tada: Merge your pull request with master! If there are some conflicts, resolve them.
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode_Client/pulls" target="_blank">*this link*</a>.
 
 #### Step 7
+
+- :raising_hand: Assign reviewers! Reviewers should leave questions, comments, and suggestions. After receiving comments, improve the code. Get Approved status on the request and be satisfied with it! 
+
+#### Step 8
+
+- :tada: After 3 approved reviews, merge your pull request with `developer` branch! Also, it is important to wait for your scrum master to approve your changes. If there are some conflicts, resolve them, again.
+
+#### Step 9
 
 - :scissors: Delete redundant branch. Done!
 
@@ -190,17 +194,15 @@ For example, `fix typo` or `increase rate limit`.
 
 Oops, some fixed needs to be done immediately? Use this guide for Hotfixes!
 
-Some fixes will be needed due to the nature of GitHub flow. You would have to do a 'hotfix' or something outside of the normal process, but it's simply part of our normal process. 
+Some fixes will be needed due to the nature of Gitflow. You would have to do a 'hotfix' or something outside of the normal process, but it's simply part of our normal process. 
 
 #### Step 1 
 
-- :fire: To implement an urgent change, a Hotfix branch is created off the Main branch to test and implement the fix.
+- :fire: To implement an urgent change, a Hotfix branch is created off the `developer` branch to test and implement the fix.
 
 #### Step 2
 
-- :dancer: Once it’s complete, the Hotfix is merged with the Main branch. Plus, to keep the development branch up to date, the Hotfix is also merged with the Develop branch.
-
-More usefull information about GitHub Flow can be found <a href="https://docs.github.com/en/get-started/quickstart/github-flow" target="_blank">*here*</a>.
+- :dancer: Once it’s complete, the Hotfix is merged with the `developer` branch.
 
 ### Issue flow
 

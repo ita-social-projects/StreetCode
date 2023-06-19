@@ -2,28 +2,33 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Media.Audio;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
-  public class GetAllAudioHandlerTests
+     public class GetAllAudioHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<IBlobService> _blob;
 
         public GetAllAudioHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
+            _blob = new Mock<IBlobService>();
         }
 
         [Theory]
-        [InlineData(1)]
-        public async Task Handle_ReturnsSuccess(int id)
+        [InlineData(1, "base64-encoded-audio")]
+        public async Task Handle_ReturnsSuccess(int id, string expectedBase64)
         {   
             // arrange 
             var testAudioList = new List<Model>()
@@ -38,8 +43,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
             RepositorySetup(testAudio, testAudioList);
             MapperSetup(testAudioListDTO);
+            BlobSetup(expectedBase64);
 
-            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object);
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
             // assert
@@ -53,8 +59,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             string expectedErrorMessage = "Cannot find any audios";
             RepositorySetup(null, null);
             MapperSetup(null);
-
-            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object);
+            BlobSetup(null);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object);
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
             // assert
@@ -77,5 +83,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             _mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(audioDTOs);
         }
-    }
+        private void BlobSetup(string? expectedBase64)
+        {
+            _blob.Setup(blob => blob.FindFileInStorageAsBase64(It.IsAny<string>()))
+                .Returns(expectedBase64);
+        }
+    } 
 }

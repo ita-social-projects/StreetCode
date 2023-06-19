@@ -2,6 +2,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.BlobStorageService;
 
@@ -10,11 +11,14 @@ public class BlobService : IBlobService
     private readonly BlobEnvironmentVariables _envirovment;
     private readonly string _keyCrypt;
     private readonly string _blobPath;
-    public BlobService(IOptions<BlobEnvironmentVariables> envirovment)
+    private readonly IRepositoryWrapper _repositoryWrapper;
+
+    public BlobService(IOptions<BlobEnvironmentVariables> envirovment, IRepositoryWrapper repositoryWrapper)
     {
         _envirovment = envirovment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;
         _blobPath = _envirovment.BlobStorePath;
+        _repositoryWrapper = repositoryWrapper;
     }
 
     public MemoryStream FindFileInStorageAsMemoryStream(string name)
@@ -55,6 +59,13 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
+    public void SaveFileInStorageBase64(string base64, string name, string extension)
+    {
+        byte[] imageBytes = Convert.FromBase64String(base64);
+        Directory.CreateDirectory(_blobPath);
+        EncryptFile(imageBytes, extension, name);
+    }
+
     public void DeleteFileInStorage(string name)
     {
         File.Delete($"{_blobPath}{name}");
@@ -74,6 +85,33 @@ public class BlobService : IBlobService
         extension);
 
         return hashBlobStorageName;
+    }
+
+    public async Task CleanBlobStorage()
+    {
+        var base64Files = GetAllBlobNames();
+
+        var existingImagesInDatabase = await _repositoryWrapper.ImageRepository.GetAllAsync();
+        var existingAudiosInDatabase = await _repositoryWrapper.AudioRepository.GetAllAsync();
+
+        List<string> existingMedia = new ();
+        existingMedia.AddRange(existingImagesInDatabase.Select(img => img.BlobName));
+        existingMedia.AddRange(existingAudiosInDatabase.Select(img => img.BlobName));
+
+        var filesToRemove = base64Files.Except(existingMedia).ToList();
+
+        foreach (var file in filesToRemove)
+        {
+            Console.WriteLine($"Deleting {file}...");
+            DeleteFileInStorage(file);
+        }
+    }
+
+    private IEnumerable<string> GetAllBlobNames()
+    {
+        var paths = Directory.EnumerateFiles(_blobPath);
+
+        return paths.Select(p => Path.GetFileName(p));
     }
 
     private string HashFunction(string createdFileName)

@@ -32,14 +32,12 @@ public class FactController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] FactDTO fact)
     {
         return HandleResult(await Mediator.Send(new CreateFactCommand(fact)));
     }
 
     [HttpPut("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] FactDTO fact)
     {
         fact.Id = id;
@@ -47,7 +45,6 @@ public class FactController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteFactCommand(id)));

@@ -9,10 +9,10 @@ using Streetcode.DAL.Persistence;
 
 #nullable disable
 
-namespace Streetcode.DAL.Migrations
+namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230619072159_Initial")]
+    [Migration("20230619144627_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,8 +257,8 @@ namespace Streetcode.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Alt")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int>("ImageId")
                         .HasColumnType("int");

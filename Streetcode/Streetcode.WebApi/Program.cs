@@ -7,14 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("uk-UA") };
+
 var requestLocalizationOptions = new RequestLocalizationOptions
 {
     SupportedCultures = supportedCultures,
     SupportedUICultures = supportedCultures
 };
+requestLocalizationOptions.DefaultRequestCulture = new RequestCulture("uk-UA");
 builder.Host.ConfigureApplication();
 
 builder.Services.AddLocalization();

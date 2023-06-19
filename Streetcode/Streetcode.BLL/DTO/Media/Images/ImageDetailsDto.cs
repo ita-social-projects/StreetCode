@@ -11,5 +11,7 @@ namespace Streetcode.BLL.DTO.Media.Images
 
         [MaxLength(200)]
         public string? Alt { get; set; }
+
+        public int ImageId { get; set; }
     }
 }

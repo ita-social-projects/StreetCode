@@ -42,7 +42,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 AddAudio(streetcode, request.Streetcode.AudioId);
-                await AddArts(streetcode, request.Streetcode.StreetcodeArts);
+                AddArts(streetcode, request.Streetcode.StreetcodeArts);
                 await AddTagsToStreetcode(streetcode, request.Streetcode.Tags.ToList());
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 await AddPartnersToStreetcode(streetcode, request.Streetcode.Partners);
@@ -51,7 +51,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
                 await _repositoryWrapper.SaveChangesAsync();
-                await UpdateFactImageDescription(request.Streetcode.Facts);
+                await AddFactImageDescription(request.Streetcode.Facts);
 
                 if (isResultSuccess)
                 {
@@ -65,23 +65,21 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             }
             catch(Exception ex)
             {
-                return Result.Fail(new Error("An error occurred while creating a streetcode"));
+                return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
             }
         }
     }
 
-    private async Task UpdateFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
     {
-        Image? image;
         foreach(FactUpdateCreateDto fact in facts)
         {
             if(fact.ImageDescription != null)
             {
-                image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == fact.ImageId);
-                if(image != null)
+                _repositoryWrapper.ImageDetailsRepository.Create(new ImageDetails()
                 {
-                    _repositoryWrapper.ImageRepository.Update(image);
-                }
+                    Alt = fact.ImageDescription, ImageId = fact.ImageId
+                });
             }
         }
 
@@ -167,14 +165,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArts(StreetcodeContent streetcode, IEnumerable<ArtCreateDTO> arts)
+    private void AddArts(StreetcodeContent streetcode, IEnumerable<ArtCreateDTO> arts)
     {
         var artsToCreate = new List<StreetcodeArt>();
 
         foreach(var art in arts)
         {
             var newArt = _mapper.Map<StreetcodeArt>(art);
-            newArt.Art.Image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == art.ImageId);
             artsToCreate.Add(newArt);
         }
 

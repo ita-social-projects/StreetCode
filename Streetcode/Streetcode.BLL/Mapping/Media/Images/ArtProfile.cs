@@ -15,7 +15,7 @@ public class ArtProfile : Profile
             .ForMember(x => x.Index, src => src.MapFrom(x => x.Index))
             .ForPath(x => x.Art.ImageId, src => src.MapFrom(x => x.ImageId))
             .ForPath(x => x.Art.Description, src => src.MapFrom(x => x.Description))
-            .ForPath(x => x.Art.Image.MimeType, src => src.MapFrom(x => x.MimeType))
+            .ForPath(x => x.Art.Title, src => src.MapFrom(x => x.Title))
             .ReverseMap();
   }
 }

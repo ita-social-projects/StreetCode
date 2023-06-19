@@ -26,8 +26,6 @@ public class Image
     [MaxLength(10)]
     public string? MimeType { get; set; }
 
-    public int? ImageDetailsId { get; set; }
-
     public ImageDetails? ImageDetails { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();

@@ -8,7 +8,5 @@ public class ImageDTO
     public string? BlobName { get; set; }
     public string? Base64 { get; set; }
     public string? MimeType { get; set; }
-    public int? ImageDetailsId { get; set; }
     public ImageDetailsDto? ImageDetails { get; set; }
-    public IEnumerable<StreetcodeDTO>? Streetcodes { get; set; }
 }

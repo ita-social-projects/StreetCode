@@ -236,19 +236,12 @@ namespace Streetcode.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ImageDetailsId")
-                        .HasColumnType("int");
-
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageDetailsId")
-                        .IsUnique()
-                        .HasFilter("[ImageDetailsId] IS NOT NULL");
 
                     b.ToTable("images", "media");
                 });
@@ -265,11 +258,17 @@ namespace Streetcode.DAL.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
                     b.ToTable("image_details", "media");
                 });
@@ -1136,14 +1135,15 @@ namespace Streetcode.DAL.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Image", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.ImageDetails", b =>
                 {
-                    b.HasOne("Streetcode.DAL.Entities.Media.Images.ImageDetails", "ImageDetails")
-                        .WithOne("Image")
-                        .HasForeignKey("Streetcode.DAL.Entities.Media.Images.Image", "ImageDetailsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("ImageDetails")
+                        .HasForeignKey("Streetcode.DAL.Entities.Media.Images.ImageDetails", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("ImageDetails");
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.StreetcodeImage", b =>
@@ -1488,6 +1488,8 @@ namespace Streetcode.DAL.Migrations
 
                     b.Navigation("Facts");
 
+                    b.Navigation("ImageDetails");
+
                     b.Navigation("News");
 
                     b.Navigation("Partner");
@@ -1495,11 +1497,6 @@ namespace Streetcode.DAL.Migrations
                     b.Navigation("SourceLinkCategories");
 
                     b.Navigation("TeamMember");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.ImageDetails", b =>
-                {
-                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>

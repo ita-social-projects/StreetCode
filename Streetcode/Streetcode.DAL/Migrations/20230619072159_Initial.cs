@@ -79,18 +79,18 @@ namespace Streetcode.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "image_details",
+                name: "images",
                 schema: "media",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Alt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true)
+                    BlobName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MimeType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_image_details", x => x.Id);
+                    table.PrimaryKey("PK_images", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,24 +229,145 @@ namespace Streetcode.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "images",
+                name: "arts",
                 schema: "media",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BlobName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    MimeType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    ImageDetailsId = table.Column<int>(type: "int", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_images", x => x.Id);
+                    table.PrimaryKey("PK_arts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_images_image_details_ImageDetailsId",
-                        column: x => x.ImageDetailsId,
+                        name: "FK_arts_images_ImageId",
+                        column: x => x.ImageId,
                         principalSchema: "media",
-                        principalTable: "image_details",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "image_details",
+                schema: "media",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Alt = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_image_details", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_image_details_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "news",
+                schema: "news",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    URL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_news", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_news_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "partners",
+                schema: "partners",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    LogoId = table.Column<int>(type: "int", nullable: false),
+                    IsKeyPartner = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsVisibleEverywhere = table.Column<bool>(type: "bit", nullable: false),
+                    TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    UrlTitle = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_partners", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_partners_images_LogoId",
+                        column: x => x.LogoId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "source_link_categories",
+                schema: "sources",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_source_link_categories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_source_link_categories_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "team_members",
+                schema: "team",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    IsMain = table.Column<bool>(type: "bit", nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_team_members", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_team_members_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -306,6 +427,37 @@ namespace Streetcode.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "facts",
+                schema: "streetcode",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FactContent = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: true),
+                    StreetcodeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_facts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_facts_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_facts_streetcodes_StreetcodeId",
+                        column: x => x.StreetcodeId,
+                        principalSchema: "streetcode",
+                        principalTable: "streetcodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "related_figures",
                 schema: "streetcode",
                 columns: table => new
@@ -326,6 +478,33 @@ namespace Streetcode.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_related_figures_streetcodes_TargetId",
                         column: x => x.TargetId,
+                        principalSchema: "streetcode",
+                        principalTable: "streetcodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "streetcode_image",
+                schema: "streetcode",
+                columns: table => new
+                {
+                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_streetcode_image", x => new { x.ImageId, x.StreetcodeId });
+                    table.ForeignKey(
+                        name: "FK_streetcode_image_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_streetcode_image_streetcodes_StreetcodeId",
+                        column: x => x.StreetcodeId,
                         principalSchema: "streetcode",
                         principalTable: "streetcodes",
                         principalColumn: "Id",
@@ -509,243 +688,6 @@ namespace Streetcode.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "arts",
-                schema: "media",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    ImageId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_arts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_arts_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "facts",
-                schema: "streetcode",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FactContent = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: true),
-                    StreetcodeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_facts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_facts_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_facts_streetcodes_StreetcodeId",
-                        column: x => x.StreetcodeId,
-                        principalSchema: "streetcode",
-                        principalTable: "streetcodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "news",
-                schema: "news",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    URL = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_news", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_news_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "partners",
-                schema: "partners",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    LogoId = table.Column<int>(type: "int", nullable: false),
-                    IsKeyPartner = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    IsVisibleEverywhere = table.Column<bool>(type: "bit", nullable: false),
-                    TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    UrlTitle = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_partners", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_partners_images_LogoId",
-                        column: x => x.LogoId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "source_link_categories",
-                schema: "sources",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_source_link_categories", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_source_link_categories_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "streetcode_image",
-                schema: "streetcode",
-                columns: table => new
-                {
-                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_streetcode_image", x => new { x.ImageId, x.StreetcodeId });
-                    table.ForeignKey(
-                        name: "FK_streetcode_image_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_streetcode_image_streetcodes_StreetcodeId",
-                        column: x => x.StreetcodeId,
-                        principalSchema: "streetcode",
-                        principalTable: "streetcodes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "team_members",
-                schema: "team",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    IsMain = table.Column<bool>(type: "bit", nullable: false),
-                    ImageId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_team_members", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_team_members_images_ImageId",
-                        column: x => x.ImageId,
-                        principalSchema: "media",
-                        principalTable: "images",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "qr_coordinates",
-                schema: "coordinates",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    QrId = table.Column<int>(type: "int", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
-                    StreetcodeCoordinateId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_qr_coordinates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_qr_coordinates_coordinates_StreetcodeCoordinateId",
-                        column: x => x.StreetcodeCoordinateId,
-                        principalSchema: "add_content",
-                        principalTable: "coordinates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_qr_coordinates_streetcodes_StreetcodeId",
-                        column: x => x.StreetcodeId,
-                        principalSchema: "streetcode",
-                        principalTable: "streetcodes",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "timeline_item_historical_context",
-                schema: "timeline",
-                columns: table => new
-                {
-                    HistoricalContextId = table.Column<int>(type: "int", nullable: false),
-                    TimelineId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_timeline_item_historical_context", x => new { x.HistoricalContextId, x.TimelineId });
-                    table.ForeignKey(
-                        name: "FK_timeline_item_historical_context_historical_contexts_HistoricalContextId",
-                        column: x => x.HistoricalContextId,
-                        principalSchema: "timeline",
-                        principalTable: "historical_contexts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_timeline_item_historical_context_timeline_items_TimelineId",
-                        column: x => x.TimelineId,
-                        principalSchema: "timeline",
-                        principalTable: "timeline_items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "streetcode_art",
                 schema: "streetcode",
                 columns: table => new
@@ -902,6 +844,64 @@ namespace Streetcode.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "qr_coordinates",
+                schema: "coordinates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QrId = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    StreetcodeId = table.Column<int>(type: "int", nullable: false),
+                    StreetcodeCoordinateId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_qr_coordinates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_qr_coordinates_coordinates_StreetcodeCoordinateId",
+                        column: x => x.StreetcodeCoordinateId,
+                        principalSchema: "add_content",
+                        principalTable: "coordinates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_qr_coordinates_streetcodes_StreetcodeId",
+                        column: x => x.StreetcodeId,
+                        principalSchema: "streetcode",
+                        principalTable: "streetcodes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "timeline_item_historical_context",
+                schema: "timeline",
+                columns: table => new
+                {
+                    HistoricalContextId = table.Column<int>(type: "int", nullable: false),
+                    TimelineId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_timeline_item_historical_context", x => new { x.HistoricalContextId, x.TimelineId });
+                    table.ForeignKey(
+                        name: "FK_timeline_item_historical_context_historical_contexts_HistoricalContextId",
+                        column: x => x.HistoricalContextId,
+                        principalSchema: "timeline",
+                        principalTable: "historical_contexts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_timeline_item_historical_context_timeline_items_TimelineId",
+                        column: x => x.TimelineId,
+                        principalSchema: "timeline",
+                        principalTable: "timeline_items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_arts_ImageId",
                 schema: "media",
@@ -936,12 +936,11 @@ namespace Streetcode.DAL.Migrations
                 column: "StreetcodeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_images_ImageDetailsId",
+                name: "IX_image_details_ImageId",
                 schema: "media",
-                table: "images",
-                column: "ImageDetailsId",
-                unique: true,
-                filter: "[ImageDetailsId] IS NOT NULL");
+                table: "image_details",
+                column: "ImageId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_news_ImageId",
@@ -1124,6 +1123,10 @@ namespace Streetcode.DAL.Migrations
                 schema: "streetcode");
 
             migrationBuilder.DropTable(
+                name: "image_details",
+                schema: "media");
+
+            migrationBuilder.DropTable(
                 name: "news",
                 schema: "news");
 
@@ -1254,10 +1257,6 @@ namespace Streetcode.DAL.Migrations
             migrationBuilder.DropTable(
                 name: "streetcodes",
                 schema: "streetcode");
-
-            migrationBuilder.DropTable(
-                name: "image_details",
-                schema: "media");
 
             migrationBuilder.DropTable(
                 name: "audios",

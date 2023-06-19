@@ -5,6 +5,7 @@ using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
@@ -37,21 +38,14 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 return Result.Fail(new Error($"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}"));
             }
 
-            var imageDetailsIds = arts.Where(a => a.Image != null).Select(a => a.Image!.ImageDetailsId);
-
-            var imageDetailsTask = _repositoryWrapper.ImageDetailsRepository.GetAllAsync(i => imageDetailsIds.Contains(i.Id));
+            var imageIds = arts.Where(a => a.Image != null).Select(a => a.Image!.Id);
 
             var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
-            var imageDetails = await imageDetailsTask;
             foreach (var artDto in artsDto)
             {
                 if (artDto.Image != null && artDto.Image.BlobName != null)
                 {
                     artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
-                    if(artDto.Image.ImageDetailsId != 0)
-                    {
-                        artDto.Image.ImageDetails = _mapper.Map<ImageDetailsDto?>(imageDetails.FirstOrDefault(d => d.Id == artDto.Image.ImageDetailsId));
-                    }
                 }
             }
 

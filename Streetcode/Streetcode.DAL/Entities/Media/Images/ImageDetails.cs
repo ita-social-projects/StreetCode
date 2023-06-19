@@ -13,8 +13,11 @@ namespace Streetcode.DAL.Entities.Media.Images
         [MaxLength(100)]
         public string? Title { get; set; }
 
-        [MaxLength(200)]
+        [MaxLength(300)]
         public string? Alt { get; set; }
+
+        [Required]
+        public int ImageId { get; set; }
 
         public Image? Image { get; set; }
     }

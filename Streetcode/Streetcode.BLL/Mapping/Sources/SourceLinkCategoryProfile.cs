@@ -11,7 +11,6 @@ public class SourceLinkCategoryProfile : Profile
     {
         CreateMap<SourceLinkCategory, SourceLinkCategoryDTO>()
             .ForMember(dto => dto.Image, c => c.MapFrom(b => b.Image))
-            .ForPath(dto => dto.Image!.Streetcodes, c => c.Ignore())
             .ReverseMap();
         CreateMap<SourceLinkCategory, CategoryWithNameDTO>().ReverseMap();
         CreateMap<SourceLinkCategory, ImageDTO>()

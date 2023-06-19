@@ -28,8 +28,6 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
-            _mockMapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
-                .Returns(GetListNewsDTO());
 
             var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
 
@@ -48,8 +46,6 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
-            _mockMapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
-                .Returns(GetListNewsDTO());
 
             var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
 
@@ -86,6 +82,8 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                     null,
                     It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
                 .ReturnsAsync(newsList);
+            _mockMapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
+               .Returns(GetListNewsDTO());
         }
 
         private static IEnumerable<DAL.Entities.News.News> GetNewsList()

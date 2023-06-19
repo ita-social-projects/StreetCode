@@ -22,7 +22,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Arrange
             var testNews = GetNews();
             SetupMockRepositoryGetFirstOrDefault(testNews);
-            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+            SetupMockRepositorySaveChangesReturns(1);
 
             var handler = new DeleteNewsHandler(_mockRepository.Object);
 
@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var testNews = GetNews();
             var expectedError = "Failed to delete news";
             SetupMockRepositoryGetFirstOrDefault(testNews);
-            _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
+            SetupMockRepositorySaveChangesException(expectedError);
 
             var handler = new DeleteNewsHandler(_mockRepository.Object);
 
@@ -80,6 +80,14 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(), null))
                 .ReturnsAsync(news);
+        }
+        private void SetupMockRepositorySaveChangesException(string expectedError)
+        {
+            _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
+        }
+        private void SetupMockRepositorySaveChangesReturns(int number)
+        {
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
         }
 
         private static DAL.Entities.News.News GetNews()

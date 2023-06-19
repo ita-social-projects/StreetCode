@@ -33,7 +33,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public TextUpdateDTO? Text { get; set; }
-        public IEnumerable<StreetcodeToponymCreateUpdateDTO> Toponyms { get; set; }
+        public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; }
         public IEnumerable<FactUpdateDTO> Facts { get; set; }
         public IEnumerable<VideoUpdateDTO> Videos { get; set; }

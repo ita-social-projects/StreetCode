@@ -18,7 +18,9 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using System.Linq;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -37,9 +39,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
             _mapper.Map(request.Streetcode, streetcodeToUpdate);
-
             await UpdateStreetcodeArtsAsync(request.Streetcode.StreetcodeArts);
-            await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms);
+            await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms, streetcodeToUpdate);
             await UpdateStatisticRecordsAsync(request.Streetcode.StatisticRecords);
             await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
             await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
@@ -79,10 +80,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<IEnumerable<TimelineItem>>(toDelete));
         }
 
-        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
+        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> toponymsUpdateDTOs, StreetcodeContent streetcodeContent)
         {
-            await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
-        }
+            // comming soon
+		}
 
         private async Task UpdateStatisticRecordsAsync(IEnumerable<StatisticRecordUpdateDTO> records)
         {

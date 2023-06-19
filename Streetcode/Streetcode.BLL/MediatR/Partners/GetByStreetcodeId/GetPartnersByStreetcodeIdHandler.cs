@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -12,11 +13,13 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer _stringLocalizer;
 
-    public GetPartnersByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public GetPartnersByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IStringLocalizer<GetPartnersByStreetcodeIdHandler> stringLocalizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -26,7 +29,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error(_stringLocalizer?["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value));
         }
 
         var partners = await _repositoryWrapper.PartnersRepository
@@ -36,7 +39,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (partners is null)
         {
-            return Result.Fail(new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error(_stringLocalizer?["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value));
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);

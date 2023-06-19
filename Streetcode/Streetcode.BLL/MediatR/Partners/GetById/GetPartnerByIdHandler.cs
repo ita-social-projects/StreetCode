@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer? _stringLocalizer;
 
-    public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetPartnerByIdHandler> stringLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<PartnerDTO>> Handle(GetPartnerByIdQuery request, CancellationToken cancellationToken)
@@ -29,7 +32,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
         if (partner is null)
         {
-            return Result.Fail(new Error($"Cannot find any partner with corresponding id: {request.Id}"));
+            return Result.Fail(new Error(_stringLocalizer?["CannotFindAnyPartner", request.Id].Value));
         }
 
         var partnerDto = _mapper.Map<PartnerDTO>(partner);

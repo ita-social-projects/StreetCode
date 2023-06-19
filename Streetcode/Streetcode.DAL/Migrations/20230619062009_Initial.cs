@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Streetcode.DAL.Persistence.Migrations
+namespace Streetcode.DAL.Migrations
 {
     public partial class Initial : Migration
     {
@@ -599,7 +599,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     IsVisibleEverywhere = table.Column<bool>(type: "bit", nullable: false),
                     TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     UrlTitle = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true)
                 },
                 constraints: table =>
                 {

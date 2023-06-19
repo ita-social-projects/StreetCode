@@ -31,7 +31,7 @@ public class Partner
 
     [MaxLength(255)]
     public string? UrlTitle { get; set; }
-    [MaxLength(400)]
+    [MaxLength(600)]
     public string? Description { get; set; }
 
     public Image? Logo { get; set; }

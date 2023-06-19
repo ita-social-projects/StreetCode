@@ -30,18 +30,29 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 .GetAllAsync(
                 predicate: sc => sc.StreetcodeArts.Any(s => s.StreetcodeId == request.StreetcodeId),
                 include: scl => scl
-                    .Include(sc => sc.Image)!);
+                    .Include(sc => sc.Image) !);
 
             if (arts is null)
             {
                 return Result.Fail(new Error($"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}"));
             }
 
-            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
+            var imageDetailsIds = arts.Where(a => a.Image != null).Select(a => a.Image!.ImageDetailsId);
 
+            var imageDetailsTask = _repositoryWrapper.ImageDetailsRepository.GetAllAsync(i => imageDetailsIds.Contains(i.Id));
+
+            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
+            var imageDetails = await imageDetailsTask;
             foreach (var artDto in artsDto)
             {
-                artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
+                if (artDto.Image != null && artDto.Image.BlobName != null)
+                {
+                    artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
+                    if(artDto.Image.ImageDetailsId != 0)
+                    {
+                        artDto.Image.ImageDetails = _mapper.Map<ImageDetailsDto?>(imageDetails.FirstOrDefault(d => d.Id == artDto.Image.ImageDetailsId));
+                    }
+                }
             }
 
             return Result.Ok(artsDto);

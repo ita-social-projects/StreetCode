@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.Resources.BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US1", typeof(BLL_MediatR_Partners_GetAll_GetAllPartnersHandler_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US1", typeof(BLL_MediatR_Partners_GetAll_GetAllPartnersHandler_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

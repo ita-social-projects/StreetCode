@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,6 +8,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="BLL.MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.resx</DependentUpon>
+    </Compile>
     <Compile Update="BLL.MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -28,14 +53,49 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>BLL.MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resource1.Designer.cs">
+    <Compile Update="BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resource1.resx</DependentUpon>
+      <DependentUpon>BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="BLL.MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="BLL.MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BLL.MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs</LastGenOutput>
@@ -55,9 +115,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>BLL.MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resource1.resx">
+    <EmbeddedResource Update="BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+      <LastGenOutput>BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

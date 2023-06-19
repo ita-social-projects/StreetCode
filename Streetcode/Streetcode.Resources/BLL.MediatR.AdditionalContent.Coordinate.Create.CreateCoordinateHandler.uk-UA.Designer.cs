@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BLL.MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA", typeof(BLL_MediatR_AdditionalContent_Coordinate_Create_CreateCoordinateHandler_uk_UA).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA", typeof(BLL_MediatR_AdditionalContent_Coordinate_Create_CreateCoordinateHandler_uk_UA).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
@@ -17,12 +18,31 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
 
         public BlobStorageFixture()
         {
-            environmentVariables = Options.Create(new BlobEnvironmentVariables());
+            (string, string) blobInfo = Configuration();
+            environmentVariables = Options.Create(new BlobEnvironmentVariables 
+            { 
+                BlobStoreKey = blobInfo.Item1, BlobStorePath = blobInfo.Item2
+            });
             blobPath = environmentVariables.Value.BlobStorePath;
             blobKey = environmentVariables.Value.BlobStoreKey;
-
             blobService = new BlobService(environmentVariables);
             Directory.CreateDirectory(blobPath);
+        }
+        
+        private static (string, string) Configuration()
+        {
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var relativePath = "../../../../Streetcode.WebApi/appsettings.IntegrationTests.json";
+            var configPath = Path.GetFullPath(Path.Combine(currentDirectory, relativePath));
+
+            var config = new ConfigurationBuilder()
+                .AddJsonFile(configPath)
+                .Build();
+
+            var blobSection = config.GetSection("Blob");
+            string blobStorePath = blobSection["BlobStorePath"];
+            string blobStoreKey = blobSection["BlobStoreKey"];
+            return (blobStoreKey, blobStorePath);
         }
 
         public void Seed()

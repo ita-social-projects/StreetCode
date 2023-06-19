@@ -25,7 +25,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail("Cannot convert null to news");
             }
 
-            if (newNews.Image is null)
+            if (newNews.ImageId == 0)
             {
                 newNews.ImageId = null;
             }

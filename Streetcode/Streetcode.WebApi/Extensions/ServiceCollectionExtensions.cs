@@ -22,6 +22,7 @@ using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
+using System.Linq;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -85,24 +86,12 @@ public static class ServiceCollectionExtensions
                         ClockSkew = TimeSpan.Zero
                     };
                 });
-        /*
-        services.AddCors(opt =>
-        {
-            opt.AddDefaultPolicy(policy =>
-            {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.SetPreflightMaxAge(TimeSpan.FromDays(1));
-            });
-        });*/
 
         var corsConfig = configuration.GetSection("CORS").Get<CorsConfiguration>();
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.AllowCredentials();
                 policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
                 policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
                 policy.WithMethods(corsConfig.AllowedMethods.ToArray());

@@ -22,6 +22,10 @@ using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
+using Streetcode.BLL.Middleware;
+using Serilog.Events;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -46,6 +50,19 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
+        services.AddTransient(typeof(ApiRequestResponseMiddleware<>));
+    }
+
+    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, LogEventLevel minimumLogLevel)
+    {
+        builder.Host.UseSerilog((ctx, services, lc) =>
+        {
+            lc.Enrich.WithProperty("ApplicationName", "Streetcode");
+            lc.MinimumLevel.Is(minimumLogLevel);
+            lc.WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate);
+        });
+
+        return builder;
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
+using Streetcode.BLL.Middleware;
+using Streetcode.BLL.Services.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -14,6 +16,7 @@ builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
+builder.AddSerilog(Serilog.Events.LogEventLevel.Information);
 
 var app = builder.Build();
 
@@ -31,6 +34,7 @@ else
 
 app.UseCors();
 app.UseHttpsRedirection();
+app.UseMiddleware<ApiRequestResponseMiddleware<LoggerService<ILogger>>>();
 app.UseRouting();
 
 app.UseAuthentication();

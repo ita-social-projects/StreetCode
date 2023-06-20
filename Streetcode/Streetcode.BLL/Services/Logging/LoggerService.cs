@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Streetcode.BLL.Interfaces.Logging;
+using Serilog;
 
 namespace Streetcode.BLL.Services.Logging
 {

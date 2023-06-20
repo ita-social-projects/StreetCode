@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
@@ -9,7 +8,7 @@ using System.Text;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
 {
-    public class BlobStorageFixture
+    public class BlobStorageFixture : IntegrationTestBase
     {
         private readonly BlobService blobService;
         private readonly IOptions<BlobEnvironmentVariables> environmentVariables;
@@ -18,31 +17,15 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
 
         public BlobStorageFixture()
         {
-            (string, string) blobInfo = Configuration();
             environmentVariables = Options.Create(new BlobEnvironmentVariables 
             { 
-                BlobStoreKey = blobInfo.Item1, BlobStorePath = blobInfo.Item2
+                BlobStoreKey = Configuration.GetValue<string>("Blob:BlobStoreKey"),
+                BlobStorePath = Configuration.GetValue<string>("Blob:BlobStorePath")
             });
             blobPath = environmentVariables.Value.BlobStorePath;
             blobKey = environmentVariables.Value.BlobStoreKey;
             blobService = new BlobService(environmentVariables);
             Directory.CreateDirectory(blobPath);
-        }
-        
-        private static (string, string) Configuration()
-        {
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var relativePath = "../../../../Streetcode.WebApi/appsettings.IntegrationTests.json";
-            var configPath = Path.GetFullPath(Path.Combine(currentDirectory, relativePath));
-
-            var config = new ConfigurationBuilder()
-                .AddJsonFile(configPath)
-                .Build();
-
-            var blobSection = config.GetSection("Blob");
-            string blobStorePath = blobSection["BlobStorePath"];
-            string blobStoreKey = blobSection["BlobStoreKey"];
-            return (blobStoreKey, blobStorePath);
         }
 
         public void Seed()

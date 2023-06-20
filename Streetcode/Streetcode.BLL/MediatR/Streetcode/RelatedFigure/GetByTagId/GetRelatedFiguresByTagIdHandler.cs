@@ -24,7 +24,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
-                predicate: sc => sc.Tags.Select(t => t.Id).Any(tag => tag == request.tagId),
+                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published &&
+                  sc.Tags.Select(t => t.Id).Any(tag => tag == request.tagId),
                 include: scl => scl
                     .Include(sc => sc.Images)
                     .Include(sc => sc.Tags));

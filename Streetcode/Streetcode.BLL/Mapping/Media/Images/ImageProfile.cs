@@ -1,5 +1,4 @@
 using AutoMapper;
-using FluentResults;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -10,23 +9,11 @@ public class ImageProfile : Profile
 {
     public ImageProfile()
     {
-        CreateMap<Image, ImageDTO>()
-            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
+        CreateMap<Image, ImageDTO>().ReverseMap();
 
-        CreateMap<ImageFileBaseCreateDTO, Image>()
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
+        CreateMap<ImageFileBaseCreateDTO, Image>();
 
-        CreateMap<ImageFileBaseUpdateDTO, Image>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
-            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType));
-
-        CreateMap<ImageDTO, Image>();
-            /*.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Alt))
-            .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.MimeType))
-            .ForMember(dest => dest.BlobName, opt => opt.MapFrom(src => src.BlobName))
-            .ForMember(dest => dest.Alt, opt => opt.MapFrom(src => src.Alt));*/
+        CreateMap<ImageFileBaseUpdateDTO, Image>();
 
         CreateMap<StreetcodeImageUpdateDTO, Image>();
 

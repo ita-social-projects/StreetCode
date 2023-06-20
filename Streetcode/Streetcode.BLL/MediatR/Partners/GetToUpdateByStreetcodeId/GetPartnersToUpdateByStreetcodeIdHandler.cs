@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
             if (partners is null)
             {
-                return Result.Fail(new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}"));
+                return Result.Fail(new Error($"Cannot find a partners by a streetcode id: {request.StreetcodeId}"));
             }
 
             var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);

@@ -572,6 +572,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[AudioId] IS NOT NULL");
 
+                    b.HasIndex("Index")
+                        .IsUnique();
+
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
 
@@ -815,7 +818,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("HistoricalContextId");
 
-                    b.ToTable("HistoricalContextTimelines");
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>

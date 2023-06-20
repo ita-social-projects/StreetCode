@@ -25,7 +25,6 @@ public class TermController : BaseApiController
     }
 
     [HttpPost]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Create([FromBody] TermDTO term)
     {
         return HandleResult(await Mediator.Send(new CreateTermCommand(term)));
@@ -38,7 +37,6 @@ public class TermController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
-    [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteTermCommand(id)));

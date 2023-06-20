@@ -61,7 +61,11 @@ public class StreetcodeDbContext : DbContext
     public DbSet<TeamMemberLink> TeamMemberLinks { get; set; }
     public DbSet<Positions> Positions { get; set; }
     public DbSet<News> News { get; set; }
-    public DbSet<HistoricalContextTimeline> HistoricalContextTimelines { get; set; }
+    public DbSet<SourceLinkCategory> SourceLinks { get; set; }
+    public DbSet<StreetcodeImage> StreetcodeImages { get; set; }
+    public DbSet<HistoricalContextTimeline> HistoricalContextsTimelines { get; set; }
+    public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
+    public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

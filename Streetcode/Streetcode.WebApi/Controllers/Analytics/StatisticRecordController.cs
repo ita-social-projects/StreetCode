@@ -38,7 +38,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPost]
 
-        // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
         public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDTO)
         {
             return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDTO)));
@@ -46,7 +45,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPut("{id:int}")]
 
-        // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
         public async Task<IActionResult> Update(int id)
         {
             return HandleResult(await Mediator.Send(new UpdateCountStatisticRecordCommand(id)));
@@ -54,7 +52,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpDelete("{id:int}")]
 
-        // [AuthorizeRoles(UserRole.MainAdministrator, UserRole.Administrator)]
         public async Task<IActionResult> Delete(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteStatisticRecordCommand(id)));

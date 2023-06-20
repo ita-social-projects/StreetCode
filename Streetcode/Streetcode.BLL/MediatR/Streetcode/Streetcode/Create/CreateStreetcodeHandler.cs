@@ -12,6 +12,7 @@ using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.DTO.Timeline.Update;
+using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
@@ -45,17 +46,15 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-                AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
+                await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 AddArts(streetcode, request.Streetcode.StreetcodeArts);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 await AddPartners(streetcode, request.Streetcode.Partners);
-                /*await AddToponyms(streetcode, request.Streetcode.Toponyms);*/
-                AddImages(streetcode, request.Streetcode.Images);
+                await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
-
                 await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
@@ -159,9 +158,30 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.StreetcodeArts.AddRange(_mapper.Map<IEnumerable<StreetcodeArt>>(arts));
     }
 
-    private void AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
+    private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
     {
-        streetcode.TimelineItems.AddRange(_mapper.Map<IEnumerable<TimelineItem>>(timelineItems));
+        var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
+        var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);
+        await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
+        await _repositoryWrapper.SaveChangesAsync();
+        List<TimelineItem> newTimelines = new List<TimelineItem>();
+
+        foreach (var timelineItem in timelineItems)
+        {
+           var newTimeline = _mapper.Map<TimelineItem>(timelineItem);
+           newTimeline.HistoricalContextTimelines = timelineItem.HistoricalContexts
+              .Select(x => new HistoricalContextTimeline
+              {
+                  HistoricalContextId = x.Id == 0
+                      ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                      : x.Id
+              })
+              .ToList();
+
+           newTimelines.Add(newTimeline);
+        }
+
+        streetcode.TimelineItems.AddRange(newTimelines);
     }
 
     private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)
@@ -175,8 +195,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);
     }
 
-    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<string> toponymsName)
+    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
     {
+        var toponymsName = toponyms.Select(x => x.StreetName);
         streetcode.Toponyms.AddRange(await _repositoryWrapper.ToponymRepository.GetAllAsync(x => toponymsName.Contains(x.StreetName)));
     }
 }

@@ -10,8 +10,6 @@ public class StreetcodeArtProfile : Profile
     public StreetcodeArtProfile()
     {
         CreateMap<StreetcodeArt, StreetcodeArtDTO>().ReverseMap();
-        CreateMap<StreetcodeArtCreateUpdateDTO, StreetcodeArt>()
-        .ForMember(x => x.Art, opt => opt.MapFrom(src => src.Art))
-      .ReverseMap();
-  }
+        CreateMap<StreetcodeArtCreateUpdateDTO, StreetcodeArt>().ReverseMap();
+    }
 }

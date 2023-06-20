@@ -12,10 +12,5 @@ public class HistoricalContextProfile : Profile
     {
         CreateMap<HistoricalContext, HistoricalContextDTO>().ReverseMap();
         CreateMap<HistoricalContext, HistoricalContextCreateUpdateDTO>().ReverseMap();
-
-        CreateMap<HistoricalContextCreateUpdateDTO, HistoricalContextTimeline>()
-          .ForMember(x => x.TimelineId, conf => conf.MapFrom(src => src.TimelineId))
-          .ForMember(x => x.HistoricalContextId, conf => conf.MapFrom(src => src.Id))
-          .ForMember(dest => dest.HistoricalContext, conf => conf.MapFrom(src => src.Id <= 0 ? new HistoricalContext() { Id = src.Id, Title = src.Title } : null));
     }
 }

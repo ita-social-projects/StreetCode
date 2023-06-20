@@ -4,7 +4,7 @@
 
 namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class ManyToManyTimeline : Migration
+    public partial class New : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,21 +31,28 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.RenameTable(
                 name: "timeline_item_historical_context",
                 schema: "timeline",
-                newName: "HistoricalContextTimelines");
+                newName: "HistoricalContextsTimelines");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Title",
+                schema: "media",
+                table: "arts",
+                type: "nvarchar(max)",
+                nullable: true);
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_HistoricalContextTimelines",
-                table: "HistoricalContextTimelines",
+                name: "PK_HistoricalContextsTimelines",
+                table: "HistoricalContextsTimelines",
                 columns: new[] { "TimelineId", "HistoricalContextId" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_HistoricalContextTimelines_HistoricalContextId",
-                table: "HistoricalContextTimelines",
+                name: "IX_HistoricalContextsTimelines_HistoricalContextId",
+                table: "HistoricalContextsTimelines",
                 column: "HistoricalContextId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HistoricalContextTimelines_historical_contexts_HistoricalContextId",
-                table: "HistoricalContextTimelines",
+                name: "FK_HistoricalContextsTimelines_historical_contexts_HistoricalContextId",
+                table: "HistoricalContextsTimelines",
                 column: "HistoricalContextId",
                 principalSchema: "timeline",
                 principalTable: "historical_contexts",
@@ -53,8 +60,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HistoricalContextTimelines_timeline_items_TimelineId",
-                table: "HistoricalContextTimelines",
+                name: "FK_HistoricalContextsTimelines_timeline_items_TimelineId",
+                table: "HistoricalContextsTimelines",
                 column: "TimelineId",
                 principalSchema: "timeline",
                 principalTable: "timeline_items",
@@ -65,23 +72,28 @@ namespace Streetcode.DAL.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_HistoricalContextTimelines_historical_contexts_HistoricalContextId",
-                table: "HistoricalContextTimelines");
+                name: "FK_HistoricalContextsTimelines_historical_contexts_HistoricalContextId",
+                table: "HistoricalContextsTimelines");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HistoricalContextTimelines_timeline_items_TimelineId",
-                table: "HistoricalContextTimelines");
+                name: "FK_HistoricalContextsTimelines_timeline_items_TimelineId",
+                table: "HistoricalContextsTimelines");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_HistoricalContextTimelines",
-                table: "HistoricalContextTimelines");
+                name: "PK_HistoricalContextsTimelines",
+                table: "HistoricalContextsTimelines");
 
             migrationBuilder.DropIndex(
-                name: "IX_HistoricalContextTimelines_HistoricalContextId",
-                table: "HistoricalContextTimelines");
+                name: "IX_HistoricalContextsTimelines_HistoricalContextId",
+                table: "HistoricalContextsTimelines");
+
+            migrationBuilder.DropColumn(
+                name: "Title",
+                schema: "media",
+                table: "arts");
 
             migrationBuilder.RenameTable(
-                name: "HistoricalContextTimelines",
+                name: "HistoricalContextsTimelines",
                 newName: "timeline_item_historical_context",
                 newSchema: "timeline");
 

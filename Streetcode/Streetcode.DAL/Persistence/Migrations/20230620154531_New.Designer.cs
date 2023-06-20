@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230606195615_ArtTitle")]
-    partial class ArtTitle
+    [Migration("20230620154531_New")]
+    partial class New
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -574,6 +574,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[AudioId] IS NOT NULL");
 
+                    b.HasIndex("Index")
+                        .IsUnique();
+
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
 
@@ -817,7 +820,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("HistoricalContextId");
 
-                    b.ToTable("HistoricalContextTimelines");
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>

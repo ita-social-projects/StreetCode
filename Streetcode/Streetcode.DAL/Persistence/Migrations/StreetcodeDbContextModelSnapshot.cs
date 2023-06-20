@@ -818,7 +818,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("HistoricalContextId");
 
-                    b.ToTable("HistoricalContextTimelines");
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>

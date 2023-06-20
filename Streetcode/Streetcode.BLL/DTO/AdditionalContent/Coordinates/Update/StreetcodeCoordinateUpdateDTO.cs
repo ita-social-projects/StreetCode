@@ -1,4 +1,3 @@
-
 namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update
 {
     public class StreetcodeCoordinateUpdateDTO

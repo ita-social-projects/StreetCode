@@ -30,11 +30,6 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
           .ReverseMap();
 
-        CreateMap<StreetcodeContent, StreetcodeUpdateDTO>()
-			.ForMember(su => su.Toponyms, conf => conf
-				.MapFrom(s => s.Toponyms.Select(t =>
-					new StreetcodeToponymCreateUpdateDTO { StreetcodeId = s.Id, ToponymId = t.Id })));
-
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
         	.ForMember(x => x.Tags, conf => conf.Ignore())
             .ForMember(x => x.Partners, conf => conf.Ignore())

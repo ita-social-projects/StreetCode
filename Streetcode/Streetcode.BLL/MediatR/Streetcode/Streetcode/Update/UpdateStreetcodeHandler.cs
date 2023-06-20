@@ -1,15 +1,9 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Tag;
-using Streetcode.BLL.DTO.Analytics.Update;
-using Streetcode.BLL.DTO.Media.Art;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Partners.Update;
-using Streetcode.BLL.DTO.Sources.Update;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
@@ -18,9 +12,8 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -37,82 +30,132 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
         {
-            var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
-            _mapper.Map(request.Streetcode, streetcodeToUpdate);
-            await UpdateStreetcodeArtsAsync(request.Streetcode.StreetcodeArts);
-            await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms, streetcodeToUpdate);
-            await UpdateStatisticRecordsAsync(request.Streetcode.StatisticRecords);
-            await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
-            await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
-            UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
-            await UpdateFactsAsync(request.Streetcode.Facts);
-            await UpdateRelatedFiguresRelationAsync(request.Streetcode.RelatedFigures);
-            await UpdatePartnersRelationAsync(request.Streetcode.Partners);
-            await UpdateImagesAsync(request.Streetcode.Images);
-            await UpdateStreetcodeTagsAsync(request.Streetcode.Tags);
-            _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+            using (var transactionScope = _repositoryWrapper.BeginTransaction())
+            {
+                try
+                {
+                    var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
+                    _mapper.Map(request.Streetcode, streetcodeToUpdate);
 
-            await _repositoryWrapper.SaveChangesAsync();
+                    await UpdateEntitiesAsync(request.Streetcode.StreetcodeArts, _repositoryWrapper.StreetcodeArtRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.StatisticRecords, _repositoryWrapper.StreetcodeCoordinateRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.StreetcodeCategoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.RelatedFigures, _repositoryWrapper.RelatedFigureRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
 
-            return 1;
-        }
+                    await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
+                    await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
+                    UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
+                    await UpdateImagesAsync(request.Streetcode.Images);
 
-        private async Task UpdateStreetcodeArtsAsync(IEnumerable<StreetcodeArtCreateUpdateDTO> arts)
-        {
-            await UpdateEntitiesAsync(arts, _repositoryWrapper.StreetcodeArtRepository);
+                    _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+                    var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
+
+                    if (isResultSuccess)
+                    {
+                      transactionScope.Complete();
+                      return Result.Ok(streetcodeToUpdate.Id);
+                    }
+                    else
+                    {
+                      return Result.Fail(new Error("Failed to create a streetcode"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                  return Result.Fail(new Error("An error occurred while creating a streetcode"));
+                }
+            }
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
         {
+            var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
+            var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);
+            await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
+            await _repositoryWrapper.SaveChangesAsync();
+
             var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemCreateUpdateDTO>(timelineItems);
 
             var timelineItemsUpdated = new List<TimelineItem>();
             foreach(var timelineItem in toUpdate)
             {
-                var timelineItemToUpdate = _mapper.Map<TimelineItem>(timelineItem);
-                timelineItemToUpdate.HistoricalContextTimelines = null;
-                timelineItemsUpdated.Add(timelineItemToUpdate);
-                await UpdateEntitiesAsync(timelineItem.HistoricalContexts, _repositoryWrapper.HistoricalContextTimelineRepository);
+                timelineItemsUpdated.Add(_mapper.Map<TimelineItem>(timelineItem));
+                var (historicalContextToUpdate, historicalContextToCreate, historicalContextToDelete) = CategorizeItems<HistoricalContextCreateUpdateDTO>(timelineItem.HistoricalContexts);
+
+                var deletedItems = historicalContextToDelete.Select(x => new HistoricalContextTimeline
+                {
+                    TimelineId = timelineItem.Id,
+                    HistoricalContextId = x.Id,
+                })
+                .ToList();
+
+                var createdItems = historicalContextToCreate.Select(x => new HistoricalContextTimeline
+                {
+                    TimelineId = timelineItem.Id,
+                    HistoricalContextId = x.Id == 0
+                        ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                        : x.Id
+                })
+                .ToList();
+
+                _repositoryWrapper.HistoricalContextTimelineRepository.DeleteRange(deletedItems);
+                await _repositoryWrapper.HistoricalContextTimelineRepository.CreateRangeAsync(createdItems);
             }
 
             streetcode.TimelineItems.AddRange(timelineItemsUpdated);
-            streetcode.TimelineItems.AddRange(_mapper.Map<IEnumerable<TimelineItem>>(toCreate));
-            _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<IEnumerable<TimelineItem>>(toDelete));
+
+            var timelineItemsCreated = new List<TimelineItem>();
+            foreach(var timelineItem in toCreate)
+            {
+                var timelineItemCreate = _mapper.Map<TimelineItem>(timelineItem);
+                timelineItemCreate.HistoricalContextTimelines = timelineItem.HistoricalContexts
+                  .Select(x => new HistoricalContextTimeline
+                  {
+                      HistoricalContextId = x.Id == 0
+                          ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                          : x.Id
+                  })
+                 .ToList();
+
+                timelineItemsCreated.Add(timelineItemCreate);
+            }
+
+            streetcode.TimelineItems.AddRange(timelineItemsCreated);
+
+            _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
         }
 
-        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymUpdateDTO> toponymsUpdateDTOs, StreetcodeContent streetcodeContent)
+        private async Task UpdateStreetcodeToponymAsync(StreetcodeContent streetcodeContent, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
         {
-            // comming soon
+            var (_, toCreate, toDelete) = CategorizeItems(toponyms);
+            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+
+            // TODO: add options (delete not working)
+            using (var context = new StreetcodeDbContext())
+            {
+                var rowsModified = context.Database.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            }
+
+            var toponymsNameToCreate = toCreate.Select(x => x.StreetName);
+            var toponymsToAdd = await _repositoryWrapper.ToponymRepository
+                    .GetAllAsync(predicate: t => toponymsNameToCreate.Contains(t.StreetName));
+
+            streetcodeContent.Toponyms.AddRange(toponymsToAdd);
 		}
 
-        private async Task UpdateStatisticRecordsAsync(IEnumerable<StatisticRecordUpdateDTO> records)
+        private string GetToponymDeleteQuery(int streetcodeId, IEnumerable<string> toponymsName)
         {
-            await UpdateEntitiesAsync(records, _repositoryWrapper.StreetcodeCoordinateRepository);
-        }
+            string query = "DELETE st FROM streetcode.streetcode_toponym AS st " +
+                           "LEFT JOIN toponyms.toponyms AS t ON st.ToponymId = t.Id " +
+                           $"WHERE st.StreetcodeId = {streetcodeId} AND (";
 
-        private async Task UpdateCategoryContentsAsync(IEnumerable<StreetcodeCategoryContentUpdateDTO> categoryContents)
-        {
-            await UpdateEntitiesAsync(categoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
-        }
+            string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
+            query += condition + ")";
 
-        private async Task UpdateRelatedFiguresRelationAsync(IEnumerable<RelatedFigureUpdateDTO> relatedFigures)
-        {
-            await UpdateEntitiesAsync(relatedFigures, _repositoryWrapper.RelatedFigureRepository);
-        }
-
-        private async Task UpdatePartnersRelationAsync(IEnumerable<PartnersUpdateDTO> partners)
-        {
-            await UpdateEntitiesAsync(partners, _repositoryWrapper.PartnerStreetcodeRepository);
-        }
-
-        private async Task UpdateFactsAsync(IEnumerable<FactUpdateDTO> facts)
-        {
-            await UpdateEntitiesAsync(facts, _repositoryWrapper.FactRepository);
-        }
-
-        private async Task UpdateStreetcodeTagsAsync(IEnumerable<StreetcodeTagUpdateDTO> tags)
-        {
-            await UpdateEntitiesAsync(tags, _repositoryWrapper.StreetcodeTagIndexRepository);
+            return query;
         }
 
         private async Task UpdateImagesAsync(IEnumerable<StreetcodeImageUpdateDTO> images)

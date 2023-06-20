@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
@@ -39,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _mapper.Map(request.Streetcode, streetcodeToUpdate);
 
             await UpdateStreetcodeArtsAsync(request.Streetcode.StreetcodeArts);
-            await UpdateStreetcodeToponymAsync(request.Streetcode.Toponyms);
+            await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
             await UpdateStatisticRecordsAsync(request.Streetcode.StatisticRecords);
             await UpdateCategoryContentsAsync(request.Streetcode.StreetcodeCategoryContents);
             await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
@@ -79,9 +80,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<IEnumerable<TimelineItem>>(toDelete));
         }
 
-        private async Task UpdateStreetcodeToponymAsync(IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
+        private async Task UpdateStreetcodeToponymAsync(StreetcodeContent streetcodeContent, IEnumerable<StreetcodeToponymCreateUpdateDTO> toponymsUpdateDTOs)
         {
-            await UpdateEntitiesAsync(toponyms, _repositoryWrapper.StreetcodeToponymRepository);
+            var (_, toCreate, toDelete) = CategorizeItems(toponymsUpdateDTOs);
+            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+
+            var toponymsToDelete = (await _repositoryWrapper.StreetcodeToponymRepository
+                .GetAllAsync(
+                predicate: x => x.StreetcodeId == streetcodeContent.Id,
+                include: i => i.Include(x => x.Toponym)))
+                .Where(x => toponymsNameToDelete.Contains(x.Toponym.StreetName));
+
+            _repositoryWrapper.StreetcodeToponymRepository.DeleteRange(toponymsToDelete);
+
+            var toponymsName = toCreate.Select(x => x.StreetName);
+            var toponymsToAdd = await _repositoryWrapper.ToponymRepository
+                    .GetAllAsync(predicate: t => toponymsName.Contains(t.StreetName));
+
+            streetcodeContent.Toponyms.AddRange(toponymsToAdd);
         }
 
         private async Task UpdateStatisticRecordsAsync(IEnumerable<StatisticRecordUpdateDTO> records)

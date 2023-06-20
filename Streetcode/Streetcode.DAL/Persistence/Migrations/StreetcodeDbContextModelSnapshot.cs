@@ -569,6 +569,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[AudioId] IS NOT NULL");
 
+                    b.HasIndex("Index")
+                        .IsUnique();
+
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
 

@@ -47,4 +47,28 @@
     <None Remove="..\.dockerignore" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\Controllers.BaseApiController.en-US.Designer.cs">
+      <DependentUpon>Controllers.BaseApiController.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\Controllers.BaseApiController.uk-UA.Designer.cs">
+      <DependentUpon>Controllers.BaseApiController.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Controllers.BaseApiController.en-US.resx">
+      <LastGenOutput>Controllers.BaseApiController.en-US.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Controllers.BaseApiController.uk-UA.resx">
+      <LastGenOutput>Controllers.BaseApiController.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

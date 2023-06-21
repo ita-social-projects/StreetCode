@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -10,11 +11,13 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<GetAllSubtitlesHandler> _stringLocalizer;
 
-    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllSubtitlesHandler> stringLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetAllSubtitlesQuery request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 
         if (subtitles is null)
         {
-            return Result.Fail(new Error($"Cannot find any subtitles"));
+            return Result.Fail(new Error(_stringLocalizer?["CannotFindAnySubtitles"].Value));
         }
 
         var subtitleDtos = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);

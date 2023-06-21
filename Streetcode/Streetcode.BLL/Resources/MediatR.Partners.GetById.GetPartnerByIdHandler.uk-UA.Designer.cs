@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Streetcode.Resources {
+namespace Streetcode.BLL.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class WebApi_Controllers_BaseApiController_uk_UA {
+    internal class MediatR_Partners_GetById_GetPartnerByIdHandler_uk_UA {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal WebApi_Controllers_BaseApiController_uk_UA() {
+        internal MediatR_Partners_GetById_GetPartnerByIdHandler_uk_UA() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.WebApi.Controllers.BaseApiController.uk-UA", typeof(WebApi_Controllers_BaseApiController_uk_UA).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.Partners.GetById.GetPartnerByIdHandler", typeof(MediatR_Partners_GetById_GetPartnerByIdHandler_uk_UA).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,11 @@ namespace Streetcode.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Знайдено результат, що відповідає null.
+        ///   Looks up a localized string similar to Не вдалося знайти партнера з відповідним ідентифікатором: {0}.
         /// </summary>
-        internal static string NotFound {
+        internal static string CannotFindAnyPartner {
             get {
-                return ResourceManager.GetString("NotFound", resourceCulture);
+                return ResourceManager.GetString("CannotFindAnyPartner", resourceCulture);
             }
         }
     }

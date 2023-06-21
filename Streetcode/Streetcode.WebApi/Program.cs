@@ -10,24 +10,17 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
-//var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("uk-UA") };
 
-//var requestLocalizationOptions = new RequestLocalizationOptions
+//builder.Services.Configure<RequestLocalizationOptions>(options =>
 //{
-//    SupportedCultures = supportedCultures,
-//    SupportedUICultures = supportedCultures
-//};
-//requestLocalizationOptions.DefaultRequestCulture = new RequestCulture("uk-UA");
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { "en-US", "uk-UA" };
-    options.SetDefaultCulture(supportedCultures[1])
-        .AddSupportedCultures(supportedCultures)
-        .AddSupportedUICultures(supportedCultures);
-});
+//    var supportedCultures = new[] { "en-US", "uk-UA" };
+//    options.SetDefaultCulture(supportedCultures[1])
+//        .AddSupportedCultures(supportedCultures)
+//        .AddSupportedUICultures(supportedCultures);
+//});
 builder.Host.ConfigureApplication();
 
-builder.Services.AddLocalization();
+builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
@@ -36,8 +29,16 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 
 var app = builder.Build();
+var supportedCulture = new[]
+{
+    new CultureInfo("en-US"),
+    new CultureInfo("uk-UA")
+};
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
+    DefaultRequestCulture = new RequestCulture("uk-UA"),
+    SupportedCultures = supportedCulture,
+    SupportedUICultures = supportedCulture,
     ApplyCurrentCultureToResponseHeaders = true
 });
 if (app.Environment.EnvironmentName == "Local")

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Streetcode.Resources {
+namespace Streetcode.BLL.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class BLL_MediatR_Partners_GetAllPartnerShort_GetAllPartnerShortHandler_en_US {
+    internal class MediatR_AdditionalContent_Coordinate_Delete_DeleteCoordinateHandler_en_US {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal BLL_MediatR_Partners_GetAllPartnerShort_GetAllPartnerShortHandler_en_US() {
+        internal MediatR_AdditionalContent_Coordinate_Delete_DeleteCoordinateHandler_en_US() {
         }
         
         /// <summary>
@@ -39,8 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHa" +
-                            "ndler.en-US1", typeof(BLL_MediatR_Partners_GetAllPartnerShort_GetAllPartnerShortHandler_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler", typeof(MediatR_AdditionalContent_Coordinate_Delete_DeleteCoordinateHandler_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,11 +61,20 @@ namespace Streetcode.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot find any partners.
+        ///   Looks up a localized string similar to Cannot find coordinate with corresponding categoryId: {0}.
         /// </summary>
-        internal static string CannotConvertNull {
+        internal static string CannotFindCoordinate {
             get {
-                return ResourceManager.GetString("CannotConvertNull", resourceCulture);
+                return ResourceManager.GetString("CannotFindCoordinate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to delete a streetcodeCoordinate.
+        /// </summary>
+        internal static string FailedToDeleteCoordinate {
+            get {
+                return ResourceManager.GetString("FailedToDeleteCoordinate", resourceCulture);
             }
         }
     }

@@ -12,7 +12,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly IStringLocalizer? _stringLocalizer;
+    private readonly IStringLocalizer<GetPartnerByIdHandler>? _stringLocalizer;
 
     public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetPartnerByIdHandler> stringLocalizer)
     {
@@ -32,6 +32,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
         if (partner is null)
         {
+            var text = _stringLocalizer?["CannotFindAnyPartner", request.Id].Value;
             return Result.Fail(new Error(_stringLocalizer?["CannotFindAnyPartner", request.Id].Value));
         }
 

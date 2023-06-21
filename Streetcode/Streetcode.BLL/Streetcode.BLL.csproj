@@ -34,4 +34,192 @@
     <Folder Include="DTO\Instagram\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs">
+      <DependentUpon>MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.resx">
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.resx">
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.resx">
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.resx">
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx">
+      <LastGenOutput>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.resx">
+      <LastGenOutput>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.resx">
+      <LastGenOutput>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.resx">
+      <LastGenOutput>MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.resx">
+      <SubType>Designer</SubType>
+      <LastGenOutput>MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

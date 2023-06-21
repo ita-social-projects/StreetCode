@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -11,11 +12,13 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<GetSubtitleByIdHandler> _stringLocalizer;
 
-    public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetSubtitleByIdHandler> stringLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<SubtitleDTO>> Handle(GetSubtitleByIdQuery request, CancellationToken cancellationToken)
@@ -24,7 +27,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 
         if (subtitle is null)
         {
-            return Result.Fail(new Error($"Cannot find a subtitle with corresponding id: {request.Id}"));
+            return Result.Fail(_stringLocalizer["CannotFindSubtitleWithCorrespondingId", request.Id]);
         }
 
         var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);

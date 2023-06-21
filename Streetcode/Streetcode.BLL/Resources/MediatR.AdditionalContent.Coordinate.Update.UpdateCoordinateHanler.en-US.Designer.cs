@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Streetcode.Resources {
+namespace Streetcode.BLL.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class UpdateCoordinateHanler_uk_UA {
+    internal class MediatR_AdditionalContent_Coordinate_Update_UpdateCoordinateHanler_en_US {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal UpdateCoordinateHanler_uk_UA() {
+        internal MediatR_AdditionalContent_Coordinate_Update_UpdateCoordinateHanler_en_US() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA", typeof(UpdateCoordinateHanler_uk_UA).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler", typeof(MediatR_AdditionalContent_Coordinate_Update_UpdateCoordinateHanler_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,24 @@ namespace Streetcode.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot convert null to streetcodeCoordinate.
+        /// </summary>
+        internal static string CannotConvertNull {
+            get {
+                return ResourceManager.GetString("CannotConvertNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create a streetcodeCoordinate.
+        /// </summary>
+        internal static string FailedToCreate {
+            get {
+                return ResourceManager.GetString("FailedToCreate", resourceCulture);
             }
         }
     }

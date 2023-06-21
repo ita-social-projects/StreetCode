@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class WebApi_Controllers_BaseApiController_en_US {
+    internal class MediatR_AdditionalContent_Coordinate_GetByStreetcodeId_GetCoordinatesByStreetcodeIdHandler_en_US {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal WebApi_Controllers_BaseApiController_en_US() {
+        internal MediatR_AdditionalContent_Coordinate_GetByStreetcodeId_GetCoordinatesByStreetcodeIdHandler_en_US() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.WebApi.Controllers.BaseApiController.en-US", typeof(WebApi_Controllers_BaseApiController_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler", typeof(MediatR_AdditionalContent_Coordinate_GetByStreetcodeId_GetCoordinatesByStreetcodeIdHandler_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,15 +57,6 @@ namespace Streetcode.Resources {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Found result matching null.
-        /// </summary>
-        internal static string NotFound {
-            get {
-                return ResourceManager.GetString("NotFound", resourceCulture);
             }
         }
     }

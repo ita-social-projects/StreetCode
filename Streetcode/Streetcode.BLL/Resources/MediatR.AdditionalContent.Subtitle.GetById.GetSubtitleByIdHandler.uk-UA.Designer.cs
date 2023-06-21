@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Streetcode.Resources {
+namespace Streetcode.BLL.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class BLL_MediatR_Partners_GetById_GetPartnerByIdHandler_en_US {
+    internal class MediatR_AdditionalContent_Subtitle_GetById_GetSubtitleByIdHandler_uk_UA {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal BLL_MediatR_Partners_GetById_GetPartnerByIdHandler_en_US() {
+        internal MediatR_AdditionalContent_Subtitle_GetById_GetSubtitleByIdHandler_uk_UA() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.MediatR.Partners.GetById.GetPartnerByIdHandler.en-US", typeof(BLL_MediatR_Partners_GetById_GetPartnerByIdHandler_en_US).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA", typeof(MediatR_AdditionalContent_Subtitle_GetById_GetSubtitleByIdHandler_uk_UA).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

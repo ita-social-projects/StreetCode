@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Streetcode.Resources {
+namespace Streetcode.BLL.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Streetcode.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource1 {
+    internal class MediatR_Partners_GetByStreetcodeId_GetPartnersByStreetcodeIdHandler_uk_UA {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resource1() {
+        internal MediatR_Partners_GetByStreetcodeId_GetPartnersByStreetcodeIdHandler_uk_UA() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.Resources.Resource1", typeof(Resource1).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler", typeof(MediatR_Partners_GetByStreetcodeId_GetPartnersByStreetcodeIdHandler_uk_UA).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,24 @@ namespace Streetcode.Resources {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не вдалося знайти будь-який стріткод з відповідним ідентифікатором стріткоду: {0}.
+        /// </summary>
+        internal static string CannotFindAnyStreetcodeWithCorrespondingStreetcodeId {
+            get {
+                return ResourceManager.GetString("CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Не вдалося знайти партнерів за ідентифікатором стріткоду: {0}.
+        /// </summary>
+        internal static string CannotFindPartnersByStreetcodeId {
+            get {
+                return ResourceManager.GetString("CannotFindPartnersByStreetcodeId", resourceCulture);
             }
         }
     }

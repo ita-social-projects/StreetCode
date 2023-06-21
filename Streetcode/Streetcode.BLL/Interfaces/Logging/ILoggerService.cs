@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.Interfaces.Logging
 {
-    public interface ILoggerService<out T>
+    public interface ILoggerService
     {
         void LogInformation(string msg);
         void LogWarning(string msg);

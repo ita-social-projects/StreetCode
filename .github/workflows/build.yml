@@ -19,7 +19,7 @@ jobs:
       - name: Build and test
         run: dotnet build ./Streetcode/Streetcode.sln
       - name: SonarCloud Analysis
-        uses: SonarSource/sonarcloud-github-action@v1.8
+        uses: SonarSource/sonarcloud-github-action@v1.9.1
         with:
           args: >
             -Dsonar.organization=ita-social-projects

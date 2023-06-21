@@ -31,6 +31,8 @@ public interface IRepositoryBase<T>
 
     EntityEntry<T> Entry(T entity);
 
+    public Task ExecuteSqlRaw(string query);
+
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
     Task<IEnumerable<T>> GetAllAsync(

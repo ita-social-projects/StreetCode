@@ -12,7 +12,6 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
@@ -30,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
         {
-            using (var transactionScope = _repositoryWrapper.BeginTransaction())
+            using(var transactionScope = _repositoryWrapper.BeginTransaction())
             {
                 try
                 {
@@ -55,26 +54,27 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
                     if (isResultSuccess)
                     {
-                      transactionScope.Complete();
-                      return Result.Ok(streetcodeToUpdate.Id);
+                        transactionScope.Complete();
+                        return Result.Ok(streetcodeToUpdate.Id);
                     }
                     else
                     {
-                      return Result.Fail(new Error("Failed to create a streetcode"));
+                        return Result.Fail(new Error("Failed to update a streetcode"));
                     }
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
-                  return Result.Fail(new Error("An error occurred while creating a streetcode"));
+                    Console.WriteLine(ex.Message);
+                    return Result.Fail(new Error("An error occurred while updating a streetcode"));
                 }
             }
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
         {
-            var newContexts = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
-            var newContextsDb = _mapper.Map<IEnumerable<HistoricalContext>>(newContexts);
-            await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
+            var contextToCreate = timelineItems.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title);
+            var createdContext = _mapper.Map<IEnumerable<HistoricalContext>>(contextToCreate);
+            await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(createdContext);
             await _repositoryWrapper.SaveChangesAsync();
 
             var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemCreateUpdateDTO>(timelineItems);
@@ -96,7 +96,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                        ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -115,7 +115,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? newContextsDb.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                          ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -131,13 +131,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private async Task UpdateStreetcodeToponymAsync(StreetcodeContent streetcodeContent, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
         {
             var (_, toCreate, toDelete) = CategorizeItems(toponyms);
-            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
 
-            // TODO: add options (delete not working)
-            using (var context = new StreetcodeDbContext())
-            {
-                var rowsModified = context.Database.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
-            }
+            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+            await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
 
             var toponymsNameToCreate = toCreate.Select(x => x.StreetName);
             var toponymsToAdd = await _repositoryWrapper.ToponymRepository
@@ -187,12 +183,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             where U : IModelState
         {
             var (toUpdate, toCreate, toDelete) = CategorizeItems<U>(updates);
-            var create = _mapper.Map<IEnumerable<T>>(toCreate);
-            var delete = _mapper.Map<IEnumerable<T>>(toDelete);
-            var update = _mapper.Map<IEnumerable<T>>(toUpdate);
-            await repository.CreateRangeAsync(create);
-            repository.DeleteRange(delete);
-            repository.UpdateRange(update);
+
+            await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
+            repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
+            repository.UpdateRange(_mapper.Map<IEnumerable<T>>(toUpdate));
         }
 
         private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)

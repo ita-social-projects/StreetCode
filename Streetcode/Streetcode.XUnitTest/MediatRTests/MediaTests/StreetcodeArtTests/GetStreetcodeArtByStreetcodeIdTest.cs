@@ -29,7 +29,8 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         private List<StreetcodeArt> GetStreetcodeArtsList()
         {
             return new List<StreetcodeArt>
-            { new StreetcodeArt()
+            {
+                new StreetcodeArt()
                 {
                     Index = 1,
                     StreetcodeId = 1,
@@ -59,12 +60,10 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         {
             return new List<StreetcodeArtDTO>()
             {
-                /*new StreetcodeArtDTO
+                new StreetcodeArtDTO
                 {
                     Index = 1,
                     StreetcodeId = 1,
-                    Streetcode = null,
-                    ArtId = 1,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
@@ -75,13 +74,11 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 {
                     Index = 2,
                     StreetcodeId = 2,
-                    Streetcode = null,
-                    ArtId = 2,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
                     }
-                }*/
+                }
             };
         }
 

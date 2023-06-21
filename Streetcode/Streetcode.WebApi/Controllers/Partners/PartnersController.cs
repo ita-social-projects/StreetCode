@@ -40,7 +40,7 @@ public class PartnersController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    public async Task<IActionResult> GetToUpdateByStreetcodeId([FromRoute] int streetcodeId)
+    public async Task<IActionResult> GetPartnersToUpdateByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetPartnersToUpdateByStreetcodeIdQuery(streetcodeId)));
     }

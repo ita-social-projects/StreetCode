@@ -74,9 +74,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Entry(entity).State = EntityState.Detached;
     }
 
-    public void ExecuteQuery(string query)
-    { 
-        
+    public Task ExecuteSqlRaw(string query)
+    {
+        return _dbContext.Database.ExecuteSqlRawAsync(query);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)

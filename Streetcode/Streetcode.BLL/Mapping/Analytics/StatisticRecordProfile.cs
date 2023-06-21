@@ -25,8 +25,8 @@ namespace Streetcode.BLL.Mapping.Analytics
                     Address = sru.Address,
                     StreetcodeId = sru.StreetcodeId,
                     StreetcodeCoordinateId = sru.StreetcodeCoordinate.Id,
-                    Streetcode = null,
-                    StreetcodeCoordinate = null
+                    /*Streetcode = null,
+                    StreetcodeCoordinate = null*/
                 }));
         }
     }

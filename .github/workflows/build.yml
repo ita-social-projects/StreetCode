@@ -15,9 +15,9 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Build and test
-        run: dotnet build --configuration Release
+        run: dotnet build ./Streetcode/Streetcode.sln
       - name: SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@v1.8
         with:

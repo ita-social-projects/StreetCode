@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Streetcode.WebApi.Extensions.Config;
+using Streetcode.WebApi.Extensions;
 
 namespace Streetcode.XIntegrationTest
 {

@@ -1,4 +1,4 @@
-﻿namespace Streetcode.WebApi.Extensions.Config
+﻿namespace Streetcode.WebApi.Extensions
 {
     public static class ConfigurationBuilderExtensions
     {

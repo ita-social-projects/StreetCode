@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public GetStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public GetStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<StatisticRecordDTO>> Handle(GetStatisticRecordByQrIdQuery request, CancellationToken cancellationToken)
@@ -27,16 +30,23 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 
             if (statRecord == null)
             {
-                return Result.Fail(new Error("Cannot find record with qrId"));
+                const string errorMsg = $"Cannot find record with qrId";
+                _logger?.LogError("GetStatisticRecordByQrIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var statRecordDTO = _mapper.Map<StatisticRecordDTO>(statRecord);
 
             if(statRecordDTO == null)
             {
-                return Result.Fail(new Error("Cannot map record"));
+                const string errorMsg = $"Cannot map record";
+                _logger?.LogError("GetStatisticRecordByQrIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
+            _logger?.LogInformation($"GetStatisticRecordByQrIdQuery handled successfully");
             return Result.Ok(statRecordDTO);
         }
     }

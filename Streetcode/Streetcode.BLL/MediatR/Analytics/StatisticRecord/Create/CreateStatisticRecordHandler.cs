@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
@@ -12,11 +13,14 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public CreateStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+
+        public CreateStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<StatisticRecordDTO>> Handle(CreateStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -25,30 +29,43 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (statRecord == null)
             {
-                return Result.Fail(new Error("Mapped record is null"));
+                const string errorMsg = "Mapped record is null";
+                _logger?.LogError("CreateStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRecord = _repositoryWrapper.StatisticRecordRepository.Create(statRecord);
 
             if (createdRecord == null)
             {
-                return Result.Fail(new Error("Created record is null"));
+                const string errorMsg = "Created record is null";
+                _logger?.LogError("CreateStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error("Cannot save created record"));
+                const string errorMsg = "Cannot save created record";
+                _logger?.LogError("CreateStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var mappedCreatedRecord = _mapper.Map<StatisticRecordDTO>(createdRecord);
 
             if (mappedCreatedRecord == null)
             {
-                return Result.Fail(new Error("Mapped created record is null"));
+                const string errorMsg = "Mapped created record is null";
+                _logger?.LogError("CreateStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
+            _logger?.LogInformation($"CreateStatisticRecordCommand handled successfully");
             return Result.Ok(mappedCreatedRecord);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
@@ -9,11 +10,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService? _logger;
 
-        public ExistStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repository)
+        public ExistStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<bool>> Handle(ExistStatisticRecordByQrIdCommand request, CancellationToken cancellationToken)
@@ -21,6 +24,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
             var statRecord = await _repository.StatisticRecordRepository
                 .GetFirstOrDefaultAsync(predicate: (sr) => sr.QrId == request.qrId);
 
+            _logger?.LogInformation($"ExistStatisticRecordByQrIdCommand handled successfully");
             return statRecord is null ? Result.Ok(false) : Result.Ok(true);
         }
     }

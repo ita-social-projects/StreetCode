@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
 
@@ -10,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public DeleteStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public DeleteStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(DeleteStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -24,14 +27,28 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 
             if (statRecord is null)
             {
-                return Result.Fail(new Error("Cannot find record for qrId"));
+                const string errorMsg = "Cannot find record for qrId";
+                _logger?.LogError("DeleteStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repositoryWrapper.StatisticRecordRepository.Delete(statRecord);
 
             var resultIsSuccess = _repositoryWrapper.SaveChanges() > 0;
 
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Cannot delete the record"));
+            if(resultIsSuccess)
+            {
+                _logger?.LogInformation($"DeleteStatisticRecordCommand handled successfully");
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                const string errorMsg = "Cannot delete the record";
+                _logger?.LogError("DeleteStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

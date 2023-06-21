@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
@@ -9,11 +10,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCountStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -23,7 +26,10 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (statRecord == null)
             {
-                return Result.Fail(new Error("Cannot find record by qrId"));
+                const string errorMsg = $"Cannot find record by qrId";
+                _logger?.LogError("UpdateCountStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             statRecord.Count++;
@@ -34,9 +40,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error("Cannot save the data"));
+                const string errorMsg = $"Cannot save the data";
+                _logger?.LogError("UpdateCountStatisticRecordCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
+            _logger?.LogInformation($"UpdateCountStatisticRecordCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
     }

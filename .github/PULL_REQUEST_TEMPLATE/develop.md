@@ -6,11 +6,12 @@ dev
 
 ## Code reviewers
 
-- [ ] @github_username
+- [ ] @Lv-734-03.StreetCode
+- [ ] @Lv-734-04.StreetCode
 
 ### Second Level Review
 
-- [ ] @github_username
+- [ ] @LanchevychMaxym
 
 ## Summary of issue
 
@@ -23,11 +24,11 @@ ToDo
 ## Testing approach
 
 ToDo
-
 ## CHECK LIST
-- [ ]  СI passed
-- [ ]  Сode coverage >=95%
+- [ ]  СI passed (project builds without errors)
+- [ ]  Test code coverage >=80%
 - [ ]  PR is reviewed manually again (to make sure you have 100% ready code)
 - [ ]  All reviewers agreed to merge the PR
-- [ ]  I've checked new feature as logged in and logged out user if needed
-- [ ]  PR meets all conventions
+- [ ]  New sql query generated (if migrations were updated) and reviewed
+- [ ]  All acceptance criteria are met
+- [ ]  Documentation created/updated

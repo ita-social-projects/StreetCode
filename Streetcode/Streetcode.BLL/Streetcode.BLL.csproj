@@ -75,6 +75,46 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs">
       <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -186,6 +226,38 @@
     <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx">
       <LastGenOutput>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs</LastGenOutput>

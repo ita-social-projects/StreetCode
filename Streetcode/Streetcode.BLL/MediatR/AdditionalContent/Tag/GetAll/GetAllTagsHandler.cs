@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -11,11 +12,13 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<GetAllTagsHandler> _stringLocalizer;
 
-    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllTagsHandler> stringLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
@@ -24,7 +27,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 
         if (tags is null)
         {
-            return Result.Fail(new Error($"Cannot find any tags"));
+            return Result.Fail(_stringLocalizer?["CannotFindAnyTags"].Value);
         }
 
         var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);

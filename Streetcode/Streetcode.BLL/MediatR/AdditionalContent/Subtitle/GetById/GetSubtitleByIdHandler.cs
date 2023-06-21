@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.GetById;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger = null;
 
-    public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<SubtitleDTO>> Handle(GetSubtitleByIdQuery request, CancellationToken cancellationToken)
@@ -24,9 +27,13 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 
         if (subtitle is null)
         {
-            return Result.Fail(new Error($"Cannot find a subtitle with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find a subtitle with corresponding id: {request.Id}";
+            _logger?.LogError("GetSubtitleByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
+        _logger?.LogInformation("GetSubtitleByIdQuery handled successfully");
         var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);
         return Result.Ok(subtitleDto);
     }

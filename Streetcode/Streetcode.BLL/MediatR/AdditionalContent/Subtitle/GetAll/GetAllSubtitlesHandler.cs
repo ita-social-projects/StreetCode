@@ -11,9 +11,9 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService _logger;
+    private readonly ILoggerService? _logger;
 
-    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -27,12 +27,18 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
         if (subtitles is null)
         {
             const string errorMsg = $"Cannot find any subtitles";
-            _logger.LogError(errorMsg);
+
+            _logger?.LogError("GetAllSubtitlesQuery handled with an error");
+            _logger?.LogError(errorMsg);
+
             return Result.Fail(new Error(errorMsg));
         }
 
         var subtitleDtos = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
-        _logger.LogWarning("Success");
+
+        _logger?.LogInformation("GetAllSubtitlesQuery handled successfully");
+        _logger?.LogInformation($"Retrieved {subtitleDtos.Count()} subtitles");
+
         return Result.Ok(subtitleDtos);
     }
 }

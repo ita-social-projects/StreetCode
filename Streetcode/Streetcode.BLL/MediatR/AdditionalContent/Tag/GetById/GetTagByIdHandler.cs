@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
@@ -10,11 +11,13 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetTagByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTagByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<TagDTO>> Handle(GetTagByIdQuery request, CancellationToken cancellationToken)
@@ -23,10 +26,14 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
 
         if (tag is null)
         {
-            return Result.Fail(new Error($"Cannot find a Tag with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find a Tag with corresponding id: {request.Id}";
+            _logger?.LogError("GetTagByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var tagDto = _mapper.Map<TagDTO>(tag);
+        _logger?.LogInformation($"GetTagByIdQuery handled successfully");
         return Result.Ok(tagDto);
     }
 }

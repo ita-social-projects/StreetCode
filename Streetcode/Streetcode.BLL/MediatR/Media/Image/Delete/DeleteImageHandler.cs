@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
-    public DeleteImageHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+    public DeleteImageHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(DeleteImageCommand request, CancellationToken cancellationToken)
@@ -27,7 +30,10 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 
         if (image is null)
         {
-            return Result.Fail(new Error($"Cannot find an image with corresponding categoryId: {request.Id}"));
+            string errorMsg = $"Cannot find an image with corresponding categoryId: {request.Id}";
+            _logger?.LogError("DeleteImageCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         _repositoryWrapper.ImageRepository.Delete(image);
@@ -39,6 +45,17 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
             _blobService.DeleteFileInStorage(image.BlobName);
         }
 
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete an image"));
+        if(resultIsSuccess)
+        {
+            _logger?.LogInformation($"DeleteImageCommand handled successfully");
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = $"Failed to delete an image";
+            _logger?.LogError("DeleteImageCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

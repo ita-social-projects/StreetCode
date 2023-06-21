@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetBaseImage;
@@ -9,11 +10,13 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
 {
     private readonly IBlobService _blobStorage;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper)
+    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper, ILoggerService? logger)
     {
         _blobStorage = blobService;
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<MemoryStream>> Handle(GetBaseImageQuery request, CancellationToken cancellationToken)
@@ -22,11 +25,15 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
 
         if (image is null)
         {
-            return Result.Fail(new Error($"Cannot find an image with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find an image with corresponding id: {request.Id}";
+            _logger?.LogError("GetBaseImageQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var imageFile = _blobStorage.FindFileInStorageAsMemoryStream(image.BlobName);
 
+        _logger?.LogInformation($"GetBaseImageQuery handled successfully");
         return imageFile;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetById;
@@ -10,11 +12,13 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetArtByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetArtByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<ArtDTO>> Handle(GetArtByIdQuery request, CancellationToken cancellationToken)
@@ -23,10 +27,14 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
 
         if (art is null)
         {
-            return Result.Fail(new Error($"Cannot find an art with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find an art with corresponding id: {request.Id}";
+            _logger?.LogError("GetArtByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var artDto = _mapper.Map<ArtDTO>(art);
+        _logger?.LogInformation($"GetArtByIdQuery handled successfully");
         return Result.Ok(artDto);
     }
 }

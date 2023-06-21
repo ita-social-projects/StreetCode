@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Create;
@@ -12,15 +13,18 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
     public CreateImageHandler(
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
-        IMapper mapper)
+        IMapper mapper,
+        ILoggerService? logger)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
@@ -41,6 +45,17 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
 
         createdImage.Base64 = _blobService.FindFileInStorageAsBase64(createdImage.BlobName);
 
-        return resultIsSuccess ? Result.Ok(createdImage) : Result.Fail(new Error("Failed to create an image"));
+        if(resultIsSuccess)
+        {
+            _logger?.LogInformation($"CreateImageCommand handled successfully");
+            return Result.Ok(createdImage);
+        }
+        else
+        {
+            const string errorMsg = $"Failed to create an image";
+            _logger?.LogError("CreateImageCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

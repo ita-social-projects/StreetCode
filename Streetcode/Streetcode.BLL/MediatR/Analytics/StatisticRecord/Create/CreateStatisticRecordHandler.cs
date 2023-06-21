@@ -15,7 +15,6 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService? _logger;
 
-
         public CreateStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;

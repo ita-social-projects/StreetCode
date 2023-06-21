@@ -5,6 +5,7 @@ using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
@@ -13,15 +14,18 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
         public GetArtsByStreetcodeIdHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
-            IBlobService blobService)
+            IBlobService blobService,
+            ILoggerService? logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -34,7 +38,10 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
             if (arts is null)
             {
-                return Result.Fail(new Error($"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}"));
+                string errorMsg = $"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}";
+                _logger?.LogError("GetArtsByStreetcodeIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
@@ -44,6 +51,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
             }
 
+            _logger?.LogInformation($"GetArtsByStreetcodeIdQuery handled successfully");
             return Result.Ok(artsDto);
         }
     }

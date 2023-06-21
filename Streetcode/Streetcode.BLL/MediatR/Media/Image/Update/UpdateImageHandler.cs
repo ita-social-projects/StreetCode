@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Update;
@@ -12,12 +13,14 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
-    public UpdateImageHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+    public UpdateImageHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<ImageDTO>> Handle(UpdateImageCommand request, CancellationToken cancellationToken)
@@ -27,7 +30,10 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         if (existingImage is null)
         {
-            return Result.Fail(new Error($"Cannot find an image with corresponding categoryId: {request.Image.Id}"));
+            string errorMsg = $"Cannot find an image with corresponding categoryId: {request.Image.Id}";
+            _logger?.LogError("UpdateImageCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var updatedImage = _mapper.Map<DAL.Entities.Media.Images.Image>(request.Image);
@@ -48,6 +54,17 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         returnedImaged.Base64 = _blobService.FindFileInStorageAsBase64(returnedImaged.BlobName);
 
-        return resultIsSuccess ? Result.Ok(returnedImaged) : Result.Fail(new Error("Failed to update an image"));
+        if(resultIsSuccess)
+        {
+            _logger?.LogInformation($"UpdateImageCommand handled successfully");
+            return Result.Ok(returnedImaged);
+        }
+        else
+        {
+            const string errorMsg = $"Failed to update an image";
+            _logger?.LogError("UpdateImageCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

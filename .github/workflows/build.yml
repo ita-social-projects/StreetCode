@@ -1,14 +1,25 @@
 name: SonarCloud
-
-on: [push]
-
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Build and test
+        run: dotnet build --configuration Release
       - name: SonarCloud Analysis
-        uses: sonarsource/sonarcloud-github-action@v1.8
+        uses: SonarSource/sonarcloud-github-action@v1.8
         with:
           args: >
             -Dsonar.organization=ita-social-projects

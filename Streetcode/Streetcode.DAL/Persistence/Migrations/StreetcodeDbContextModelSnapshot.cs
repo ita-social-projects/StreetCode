@@ -211,6 +211,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId")
@@ -805,17 +808,17 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContextTimeline", b =>
                 {
-                    b.Property<int>("HistoricalContextId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TimelineId")
                         .HasColumnType("int");
 
-                    b.HasKey("HistoricalContextId", "TimelineId");
+                    b.Property<int>("HistoricalContextId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("TimelineId");
+                    b.HasKey("TimelineId", "HistoricalContextId");
 
-                    b.ToTable("timeline_item_historical_context", "timeline");
+                    b.HasIndex("HistoricalContextId");
+
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
@@ -1345,13 +1348,13 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContextTimeline", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Timeline.HistoricalContext", "HistoricalContext")
-                        .WithMany()
+                        .WithMany("HistoricalContextTimelines")
                         .HasForeignKey("HistoricalContextId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", "Timeline")
-                        .WithMany()
+                        .WithMany("HistoricalContextTimelines")
                         .HasForeignKey("TimelineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1503,6 +1506,16 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
                 {
                     b.Navigation("TeamMemberLinks");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContext", b =>
+                {
+                    b.Navigation("HistoricalContextTimelines");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
+                {
+                    b.Navigation("HistoricalContextTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>

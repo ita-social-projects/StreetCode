@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
 using Moq;
-using Streetcode.DAL.Entities.News;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
-using Streetcode.DAL.Entities.News;
-using Streetcode.DAL;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
-using Streetcode.DAL.Entities.Streetcode;
-using AutoMapper.Execution;
 
 namespace Streetcode.XUnitTest.MediatRTests.News
 {
@@ -72,11 +66,11 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object);
 
-            // Act and Assert
-            await Assert.ThrowsAsync<Exception>(async () =>
-            {
-                await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
-            });
+            // Act
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            
+            // Assert
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         private void SetupMockMapping(DAL.Entities.News.News testNews)

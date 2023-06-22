@@ -93,11 +93,18 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeTagIndexRepository _streetcodeTagIndexRepository;
 
     private IPartnerStreetcodeRepository _partnerStreetcodeRepository;
+
     private INewsRepository _newsRepository;
 
     private ITeamLinkRepository _teamLinkRepository;
 
     private ITeamPositionRepository _teamPositionRepository;
+
+    private IHistoricalContextTimelineRepository _historicalContextTimelineRepository;
+
+    private IStreetcodeToponymRepository _streetcodeToponymRepository;
+
+    private IStreetcodeImageRepository _streetcodeImageRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -508,6 +515,45 @@ public class RepositoryWrapper : IRepositoryWrapper
     }
 
     public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository??=new ImageDetailsRepository(_streetcodeDbContext);
+
+    public IHistoricalContextTimelineRepository HistoricalContextTimelineRepository
+    {
+        get
+        {
+            if (_historicalContextTimelineRepository is null)
+            {
+                _historicalContextTimelineRepository = new HistoricalContextTimelineRepository(_streetcodeDbContext);
+            }
+
+            return _historicalContextTimelineRepository;
+        }
+    }
+
+    public IStreetcodeToponymRepository StreetcodeToponymRepository
+	{
+		get
+		{
+			if (_streetcodeToponymRepository is null)
+			{
+				_streetcodeToponymRepository = new StreetcodeToponymRepository(_streetcodeDbContext);
+			}
+
+			return _streetcodeToponymRepository;
+		}
+	}
+
+    public IStreetcodeImageRepository StreetcodeImageRepository
+	{
+		get
+		{
+			if (_streetcodeImageRepository is null)
+			{
+				_streetcodeImageRepository = new StreetcodeImageRepository(_streetcodeDbContext);
+			}
+
+			return _streetcodeImageRepository;
+		}
+	}
 
     public int SaveChanges()
     {

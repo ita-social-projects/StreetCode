@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +23,9 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
         var timelineItem = await _repositoryWrapper.TimelineRepository
             .GetFirstOrDefaultAsync(
                 predicate: ti => true,
-                include: ti => ti.Include(til => til.HistoricalContexts));
+                include: ti => ti
+                    .Include(til => til.HistoricalContextTimelines)
+                        .ThenInclude(x => x.HistoricalContext)!);
 
         if (timelineItem is null)
         {

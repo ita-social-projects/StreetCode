@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Streetcode;
+using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.DAL.Entities.Timeline
 {

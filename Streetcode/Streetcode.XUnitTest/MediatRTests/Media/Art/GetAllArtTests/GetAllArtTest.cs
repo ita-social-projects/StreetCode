@@ -1,6 +1,5 @@
 ﻿using Moq;
 using Streetcode.BLL.MediatR.Media.Art.GetAll;
-using Streetcode.BLL.DTO.Media.Images;
 using AutoMapper;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -8,10 +7,11 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using FluentResults;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.BLL.DTO.Media.Art;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
-    public class GetAllArtsTest
+  public class GetAllArtsTest
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;

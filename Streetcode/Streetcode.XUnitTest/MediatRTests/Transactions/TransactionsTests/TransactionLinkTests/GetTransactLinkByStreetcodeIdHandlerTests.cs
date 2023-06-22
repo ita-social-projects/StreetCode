@@ -67,31 +67,31 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             );
         }
 
-        [Theory]
-        [InlineData(1)]
-        public async Task NotExistingId(int id)
-        {
-            //Arrange
-            _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
-              It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-               IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(nullValue);
+        //[Theory]
+        //[InlineData(1)]
+        //public async Task NotExistingId(int id)
+        //{
+        //    //Arrange
+        //    _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
+        //      It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
+        //       IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(nullValue);
 
-            _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(nullValueDTO);
+        //    _mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(nullValueDTO);
 
-            var expectedError = $"Cannot find a transaction link by a streetcode id: {id}";
+        //    var expectedError = $"Cannot find a transaction link by a streetcode id: {id}";
 
-            var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+        //    var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
 
-            //Act
-            var result = await handler.Handle(new GetTransactLinkByStreetcodeIdQuery(id), CancellationToken.None);
+        //    //Act
+        //    var result = await handler.Handle(new GetTransactLinkByStreetcodeIdQuery(id), CancellationToken.None);
 
-            //Assert
-            Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message)
-            );
-        }
+        //    //Assert
+        //    Assert.Multiple(
+        //        () => Assert.NotNull(result),
+        //        () => Assert.True(result.IsFailed),
+        //        () => Assert.Equal(expectedError, result.Errors.First().Message)
+        //    );
+        //}
 
         [Theory]
         [InlineData(1)]

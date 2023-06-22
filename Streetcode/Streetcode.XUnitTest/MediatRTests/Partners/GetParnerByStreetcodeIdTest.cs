@@ -101,7 +101,7 @@ public class GetParnerByStreetcodeIdTest
     {
         //Arrange
         var testStreetcodeContent = GetStreetcodeList().First();
-        var expectedError = $"Cannot find a coordinates by a streetcode id: {testStreetcodeContent.Id}";
+        var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
 
         _mockRepository.Setup(x => x.StreetcodeRepository
             .GetSingleOrDefaultAsync(

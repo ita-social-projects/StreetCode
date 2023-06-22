@@ -56,9 +56,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BlobName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MimeType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    BlobName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MimeType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,10 +85,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Alt = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    BlobName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MimeType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    BlobName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MimeType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,7 +116,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -148,7 +145,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -238,7 +235,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     ImageId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -246,6 +244,29 @@ namespace Streetcode.DAL.Persistence.Migrations
                     table.PrimaryKey("PK_arts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_arts_images_ImageId",
+                        column: x => x.ImageId,
+                        principalSchema: "media",
+                        principalTable: "images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "image_details",
+                schema: "media",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Alt = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
+                    ImageId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_image_details", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_image_details_images_ImageId",
                         column: x => x.ImageId,
                         principalSchema: "media",
                         principalTable: "images",
@@ -284,13 +305,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     LogoId = table.Column<int>(type: "int", nullable: false),
                     IsKeyPartner = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     IsVisibleEverywhere = table.Column<bool>(type: "bit", nullable: false),
-                    TargetUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UrlTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    UrlTitle = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -334,7 +355,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     IsMain = table.Column<bool>(type: "bit", nullable: false),
                     ImageId = table.Column<int>(type: "int", nullable: false)
@@ -413,7 +434,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FactContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FactContent = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: false),
                     ImageId = table.Column<int>(type: "int", nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -602,7 +623,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DateViewPattern = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -624,10 +645,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UrlTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QrCodeUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QrCodeUrlTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UrlTitle = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     StreetcodeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -703,7 +722,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LogoType = table.Column<byte>(type: "tinyint", nullable: false),
-                    TargetUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PartnerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -781,7 +800,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LogoType = table.Column<byte>(type: "tinyint", nullable: false),
-                    TargetUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TargetUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     TeamMemberId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -855,8 +874,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "timeline_item_historical_context",
-                schema: "timeline",
+                name: "HistoricalContextsTimelines",
                 columns: table => new
                 {
                     HistoricalContextId = table.Column<int>(type: "int", nullable: false),
@@ -864,16 +882,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_timeline_item_historical_context", x => new { x.HistoricalContextId, x.TimelineId });
+                    table.PrimaryKey("PK_HistoricalContextsTimelines", x => new { x.TimelineId, x.HistoricalContextId });
                     table.ForeignKey(
-                        name: "FK_timeline_item_historical_context_historical_contexts_HistoricalContextId",
+                        name: "FK_HistoricalContextsTimelines_historical_contexts_HistoricalContextId",
                         column: x => x.HistoricalContextId,
                         principalSchema: "timeline",
                         principalTable: "historical_contexts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_timeline_item_historical_context_timeline_items_TimelineId",
+                        name: "FK_HistoricalContextsTimelines_timeline_items_TimelineId",
                         column: x => x.TimelineId,
                         principalSchema: "timeline",
                         principalTable: "timeline_items",
@@ -913,6 +931,18 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode",
                 table: "facts",
                 column: "StreetcodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoricalContextsTimelines_HistoricalContextId",
+                table: "HistoricalContextsTimelines",
+                column: "HistoricalContextId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_image_details_ImageId",
+                schema: "media",
+                table: "image_details",
+                column: "ImageId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_news_ImageId",
@@ -1070,12 +1100,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_timeline_item_historical_context_TimelineId",
-                schema: "timeline",
-                table: "timeline_item_historical_context",
-                column: "TimelineId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_timeline_items_StreetcodeId",
                 schema: "timeline",
                 table: "timeline_items",
@@ -1100,6 +1124,13 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "facts",
                 schema: "streetcode");
+
+            migrationBuilder.DropTable(
+                name: "HistoricalContextsTimelines");
+
+            migrationBuilder.DropTable(
+                name: "image_details",
+                schema: "media");
 
             migrationBuilder.DropTable(
                 name: "news",
@@ -1166,10 +1197,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "streetcode");
 
             migrationBuilder.DropTable(
-                name: "timeline_item_historical_context",
-                schema: "timeline");
-
-            migrationBuilder.DropTable(
                 name: "transaction_links",
                 schema: "transactions");
 
@@ -1180,6 +1207,14 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "videos",
                 schema: "media");
+
+            migrationBuilder.DropTable(
+                name: "historical_contexts",
+                schema: "timeline");
+
+            migrationBuilder.DropTable(
+                name: "timeline_items",
+                schema: "timeline");
 
             migrationBuilder.DropTable(
                 name: "coordinates",
@@ -1214,12 +1249,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "team");
 
             migrationBuilder.DropTable(
-                name: "historical_contexts",
-                schema: "timeline");
-
-            migrationBuilder.DropTable(
-                name: "timeline_items",
-                schema: "timeline");
+                name: "streetcodes",
+                schema: "streetcode");
 
             migrationBuilder.DropTable(
                 name: "toponyms",
@@ -1228,10 +1259,6 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "images",
                 schema: "media");
-
-            migrationBuilder.DropTable(
-                name: "streetcodes",
-                schema: "streetcode");
 
             migrationBuilder.DropTable(
                 name: "audios",

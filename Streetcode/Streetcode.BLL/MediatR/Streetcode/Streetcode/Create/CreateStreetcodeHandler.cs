@@ -1,16 +1,13 @@
 using AutoMapper;
 using FluentResults;
-using MailKit.Net.Imap;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
-using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
@@ -21,6 +18,7 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -49,13 +47,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 AddArts(streetcode, request.Streetcode.StreetcodeArts);
+
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
+
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 await AddPartners(streetcode, request.Streetcode.Partners);
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
                 await _repositoryWrapper.SaveChangesAsync();
+                await AddFactImageDescription(request.Streetcode.Facts);
 
                 if (isResultSuccess)
                 {
@@ -69,9 +70,25 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             }
             catch(Exception ex)
             {
-                return Result.Fail(new Error("An error occurred while creating a streetcode"));
+                return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
             }
         }
+    }
+
+    private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    {
+        foreach(FactUpdateCreateDto fact in facts)
+        {
+            if(fact.ImageDescription != null)
+            {
+                _repositoryWrapper.ImageDetailsRepository.Create(new ImageDetails()
+                {
+                    Alt = fact.ImageDescription, ImageId = fact.ImageId
+                });
+            }
+        }
+
+        await _repositoryWrapper.SaveChangesAsync();
     }
 
     private void AddTransactionLink(StreetcodeContent streetcode, string? url)
@@ -80,8 +97,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         {
             streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
             {
-                QrCodeUrl = url,
-                QrCodeUrlTitle = url,
                 Url = url,
                 UrlTitle = url,
             };

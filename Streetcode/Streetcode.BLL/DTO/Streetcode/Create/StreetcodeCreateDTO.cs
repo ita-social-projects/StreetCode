@@ -40,7 +40,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<ImageDTO> Images { get; set; }
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; }
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
-        public IEnumerable<FactDTO> Facts { get; set; }
+        public IEnumerable<FactUpdateCreateDto> Facts { get; set; }
         public IEnumerable<VideoCreateDTO> Videos { get; set; }
         public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }

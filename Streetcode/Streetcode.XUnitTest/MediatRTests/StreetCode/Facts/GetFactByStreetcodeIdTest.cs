@@ -36,7 +36,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -66,7 +66,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -78,7 +78,7 @@ public class GetFactByStreetcodeIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
+            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault)
         );
     }
 
@@ -96,7 +96,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
@@ -150,15 +150,15 @@ public class GetFactByStreetcodeIdTest
     {
         return null;
     }
-    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
+    private static List<FactDto>? GetListFactsDTOWithNotExistingId()
     {
         return null;
     }
-    private static List<FactDTO> GetListFactDTO()
+    private static List<FactDto> GetListFactDTO()
     {
-        var facts = new List<FactDTO>
+        var facts = new List<FactDto>
         {
-            new FactDTO
+            new FactDto
             {
                 Id = 1
             },

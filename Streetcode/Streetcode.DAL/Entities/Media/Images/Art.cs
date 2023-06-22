@@ -11,9 +11,11 @@ public class Art
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    public string? Title { get; set; }
-
+    [MaxLength(400)]
     public string? Description { get; set; }
+
+    [MaxLength(150)]
+    public string? Title { get; set; }
 
     public int ImageId { get; set; }
 

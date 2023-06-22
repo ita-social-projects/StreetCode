@@ -35,7 +35,7 @@ public class GetAllFactsTest
         //Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
+            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault)
         );
     }
 
@@ -70,7 +70,7 @@ public class GetAllFactsTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = "Cannot find any fact";
@@ -97,7 +97,7 @@ public class GetAllFactsTest
 
         mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         return (mockMapper, mockRepository);
@@ -123,20 +123,20 @@ public class GetAllFactsTest
     {
         return null;
     }
-    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
+    private static List<FactDto>? GetListFactsDTOWithNotExistingId()
     {
         return null;
     }
-    private static List<FactDTO> GetListFactDTO()
+    private static List<FactDto> GetListFactDTO()
     {
-        var factsDTO = new List<FactDTO>
+        var factsDTO = new List<FactDto>
         {
-            new FactDTO
+            new FactDto
             {
                 Id = 1
             },
 
-            new FactDTO
+            new FactDto
             {
                 Id = 2,
             }

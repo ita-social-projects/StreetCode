@@ -16,7 +16,7 @@ namespace Streetcode.DAL.Entities.Team
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
-        public string Position { get; set; }
-        public List<TeamMember> TeamMembers { get; set; }
+        public string? Position { get; set; }
+        public List<TeamMember>? TeamMembers { get; set; }
     }
 }

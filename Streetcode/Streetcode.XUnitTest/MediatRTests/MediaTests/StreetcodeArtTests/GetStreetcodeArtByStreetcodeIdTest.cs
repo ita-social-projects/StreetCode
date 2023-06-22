@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            /*Assert.Equal(streetcodeId, result.Value.First().ArtId);*/
+            Assert.Equal(streetcodeId, result.Value.First().StreetcodeId);
         }
 
         [Theory]

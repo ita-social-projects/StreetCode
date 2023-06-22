@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 .GetAllAsync(
                 predicate: sc => sc.StreetcodeArts.Any(s => s.StreetcodeId == request.StreetcodeId),
                 include: scl => scl
-                    .Include(sc => sc.Image)!);
+                    .Include(sc => sc.Image) !);
 
             if (arts is null)
             {
@@ -44,11 +44,15 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
+            var imageIds = arts.Where(a => a.Image != null).Select(a => a.Image!.Id);
 
+            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
             foreach (var artDto in artsDto)
             {
-                artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
+                if (artDto.Image != null && artDto.Image.BlobName != null)
+                {
+                    artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
+                }
             }
 
             _logger?.LogInformation($"GetArtsByStreetcodeIdQuery handled successfully");

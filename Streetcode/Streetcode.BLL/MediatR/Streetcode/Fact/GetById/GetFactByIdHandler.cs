@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
 
-public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactDTO>>
+public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -20,7 +20,7 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
         _logger = logger;
     }
 
-    public async Task<Result<FactDTO>> Handle(GetFactByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<FactDto>> Handle(GetFactByIdQuery request, CancellationToken cancellationToken)
     {
         var facts = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
@@ -31,7 +31,7 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
             _logger?.LogError(errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
-
+        
         var factsDto = _mapper.Map<FactDTO>(facts);
         _logger?.LogInformation($"GetFactByIdQuery handled successfully");
         return Result.Ok(factsDto);

@@ -11,6 +11,7 @@ public class ArtProfile : Profile
     public ArtProfile()
     {
         CreateMap<Art, ArtDTO>().ReverseMap();
+
         CreateMap<ArtCreateUpdateDTO, Art>()
         .ForMember(x => x.Image, opt => opt.Ignore())
         .ForMember(x => x.ImageId, opt => opt.MapFrom(src => src.Image.Id))

@@ -44,6 +44,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IImageRepository _imageRepository;
 
+    private IImageDetailsRepository _imageDetailsRepository;
+
     private IArtRepository _artRepository;
 
     private IStreetcodeArtRepository _streetcodeArtRepository;
@@ -511,6 +513,8 @@ public class RepositoryWrapper : IRepositoryWrapper
             return _teamLinkRepository;
         }
     }
+
+    public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository??=new ImageDetailsRepository(_streetcodeDbContext);
 
     public IHistoricalContextTimelineRepository HistoricalContextTimelineRepository
     {

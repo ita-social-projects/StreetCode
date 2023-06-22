@@ -14,7 +14,7 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
     private readonly IBlobService _blobService;
     private readonly ILoggerService? _logger;
 
-    public DeleteImageHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger)
+    public DeleteImageHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;

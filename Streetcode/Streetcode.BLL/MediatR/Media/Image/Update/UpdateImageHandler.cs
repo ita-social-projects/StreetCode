@@ -15,7 +15,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
     private readonly IBlobService _blobService;
     private readonly ILoggerService? _logger;
 
-    public UpdateImageHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger)
+    public UpdateImageHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;

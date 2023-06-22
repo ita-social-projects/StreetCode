@@ -12,7 +12,7 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService? _logger;
 
-    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper, ILoggerService? logger)
+    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
     {
         _blobStorage = blobService;
         _repositoryWrapper = repositoryWrapper;

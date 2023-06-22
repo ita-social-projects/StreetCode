@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetById;
@@ -12,12 +13,14 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
-    public GetAudioByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+    public GetAudioByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null )
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<AudioDTO>> Handle(GetAudioByIdQuery request, CancellationToken cancellationToken)
@@ -26,13 +29,17 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
 
         if (audio is null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find an audio with corresponding id: {request.Id}";
+            _logger?.LogError("GetAudioByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var audioDto = _mapper.Map<AudioDTO>(audio);
 
         audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
 
+        _logger?.LogInformation($"GetAudioByIdQuery handled successfully");
         return Result.Ok(audioDto);
     }
 }

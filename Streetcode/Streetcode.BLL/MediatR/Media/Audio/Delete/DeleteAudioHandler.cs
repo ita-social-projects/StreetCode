@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Delete;
@@ -9,11 +10,13 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
-    public DeleteAudioHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+    public DeleteAudioHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(DeleteAudioCommand request, CancellationToken cancellationToken)
@@ -22,7 +25,10 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
 
         if (audio is null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with corresponding categoryId: {request.Id}"));
+            string errorMsg = $"Cannot find an audio with corresponding categoryId: {request.Id}";
+            _logger?.LogError("DeleteAudioCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         _repositoryWrapper.AudioRepository.Delete(audio);
@@ -34,6 +40,17 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
             _blobService.DeleteFileInStorage(audio.BlobName);
         }
 
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete an audio"));
+        if (resultIsSuccess)
+        {
+            _logger?.LogInformation($"DeleteAudioCommand handled successfully");
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            string errorMsg = $"Failed to delete an audio";
+            _logger?.LogError("DeleteAudioCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             IBlobService blobService,
-            ILoggerService? logger)
+            ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

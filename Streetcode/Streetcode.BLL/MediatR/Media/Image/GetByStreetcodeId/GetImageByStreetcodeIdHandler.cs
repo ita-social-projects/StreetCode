@@ -16,7 +16,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService? _logger;
 
-    public GetImageByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger)
+    public GetImageByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

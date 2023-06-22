@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Update;
@@ -12,12 +13,14 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
-    public UpdateAudioHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+    public UpdateAudioHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<AudioDTO>> Handle(UpdateAudioCommand request, CancellationToken cancellationToken)
@@ -27,7 +30,10 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         if (existingAudio is null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with corresponding categoryId: {request.Audio.Id}"));
+            string errorMsg = $"Cannot find an audio with corresponding categoryId: {request.Audio.Id}";
+            _logger?.LogError("UpdateAudioCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var updatedAudio = _mapper.Map<DAL.Entities.Media.Audio>(request.Audio);
@@ -46,6 +52,17 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(updatedAudio);
 
-        return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error("Failed to update an audio"));
+        if (resultIsSuccess)
+        {
+            _logger?.LogInformation($"UpdateAudioCommand handled successfully");
+            return Result.Ok(createdAudio);
+        }
+        else
+        {
+            const string errorMsg = "Failed to update an audio";
+            _logger?.LogError("UpdateAudioCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

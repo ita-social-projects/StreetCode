@@ -19,7 +19,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
-        ILoggerService? logger)
+        ILoggerService? logger = null)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;

@@ -9,6 +9,7 @@ using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
+using NewsModel = Streetcode.DAL.Entities.News.News;
 
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
@@ -111,16 +112,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             );
         }
 
-        private void RepositorySetup(News? news)
+        private void RepositorySetup(NewsModel? news)
         {
             _mockRepository.Setup(repo => repo.NewsRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<News, bool>>>(), It.IsAny<Func<IQueryable<News>,
-                IIncludableQueryable<News, object>>>())).ReturnsAsync(news);
+                It.IsAny<Expression<Func<NewsModel, bool>>>(), It.IsAny<Func<IQueryable<NewsModel>,
+                IIncludableQueryable<NewsModel, object>>>())).ReturnsAsync(news);
         }
 
         private void MapperSetup(NewsDTO? news)
         {
-            _mockMapper.Setup(mapper => mapper.Map<NewsDTO>(It.IsAny<News>()))
+            _mockMapper.Setup(mapper => mapper.Map<NewsDTO>(It.IsAny<NewsModel>()))
                 .Returns(news);
         }
 
@@ -138,9 +139,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             };
         }
 
-        private static News GetNews(int id)
+        private static NewsModel GetNews(int id)
         {
-            return new News
+            return new NewsModel
             {
                 Id = id
             };

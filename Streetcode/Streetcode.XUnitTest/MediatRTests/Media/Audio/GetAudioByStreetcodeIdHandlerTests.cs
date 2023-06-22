@@ -3,15 +3,15 @@ using Moq;
 using AutoMapper;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
-using Streetcode.BLL.DTO.Media;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using Model = Streetcode.DAL.Entities.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.DTO.Media.Audio;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
-    public class GetAudioByStreetcodeIdHandlerTests
+  public class GetAudioByStreetcodeIdHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;

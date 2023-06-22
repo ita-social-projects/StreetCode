@@ -101,15 +101,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             new TransactLinkDTO
             {
                 Id = 1,
-                Url = new UrlDTO{ Href = "URL", Title = "Title" },
-                QrCodeUrl = new UrlDTO{ Href = "URL", Title = "Title" },
+                Url = "URL",
+                QrCodeUrl = "URL",
                 StreetcodeId = 1
             },
             new TransactLinkDTO
             {
                 Id = 2,
-                Url = new UrlDTO{ Href = "URL2", Title = "Title2" },
-                QrCodeUrl = new UrlDTO{ Href = "URL2", Title = "Title2" },
+                Url = "URL2",
+                QrCodeUrl = "URL2",
                 StreetcodeId = 2
             }
         };

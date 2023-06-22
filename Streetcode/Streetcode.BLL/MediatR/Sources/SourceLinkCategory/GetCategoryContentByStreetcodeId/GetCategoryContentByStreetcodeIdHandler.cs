@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentByStreetcodeId
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public GetCategoryContentByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetCategoryContentByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<StreetcodeCategoryContentDTO>> Handle(GetCategoryContentByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -23,7 +26,10 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
             if((await _repositoryWrapper.StreetcodeRepository
                 .GetFirstOrDefaultAsync(s => s.Id == request.streetcodeId)) == null)
             {
-                return Result.Fail(new Error($"No such streetcode with id = {request.streetcodeId}"));
+                string errorMsg = $"No such streetcode with id = {request.streetcodeId}";
+                _logger?.LogError("GetCategoryContentByStreetcodeIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var streetcodeContent = await _repositoryWrapper.StreetcodeCategoryContentRepository
@@ -32,9 +38,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
 
             if (streetcodeContent == null)
             {
-                return Result.Fail(new Error("The streetcode content is null"));
+                string errorMsg = "The streetcode content is null";
+                _logger?.LogError("GetCategoryContentByStreetcodeIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
+            _logger?.LogInformation($"GetCategoryContentByStreetcodeIdQuery handled successfully");
             return Result.Ok(_mapper.Map<StreetcodeCategoryContentDTO>(streetcodeContent));
         }
     }

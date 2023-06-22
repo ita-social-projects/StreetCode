@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -15,11 +16,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
-        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+        private readonly ILoggerService? _logger;
+        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<SourceLinkCategoryDTO>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
@@ -28,7 +31,10 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 include: cat => cat.Include(img => img.Image) !);
             if (allCategories == null)
             {
-                return Result.Fail(new Error($"Categories is null"));
+                const string errorMsg = $"Categories is null";
+                _logger?.LogError("GetAllCategoriesQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);
@@ -38,6 +44,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
             }
 
+            _logger?.LogInformation($"GetAllCategoriesQuery handled successfully");
             return Result.Ok(dtos);
         }
     }

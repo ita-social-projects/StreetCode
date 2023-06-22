@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,15 +15,18 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService? _logger;
 
     public GetCategoryByIdHandler(
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
-        IBlobService blobService)
+        IBlobService blobService,
+        ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<SourceLinkCategoryDTO>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
@@ -37,13 +41,17 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
 
         if (srcCategories is null)
         {
-            return Result.Fail(new Error($"Cannot find any srcCategory by the corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find any srcCategory by the corresponding id: {request.Id}";
+            _logger?.LogError("GetCategoryByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var mappedSrcCategories = _mapper.Map<SourceLinkCategoryDTO>(srcCategories);
 
         mappedSrcCategories.Image.Base64 = _blobService.FindFileInStorageAsBase64(mappedSrcCategories.Image.BlobName);
 
+        _logger?.LogInformation($"GetCategoryByIdQuery handled successfully");
         return Result.Ok(mappedSrcCategories);
     }
 }

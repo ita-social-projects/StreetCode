@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 
@@ -10,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService? _logger;
 
-        public DeleteRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper)
+        public DeleteRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService? logger = null)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
@@ -23,13 +26,27 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 
             if (relatedTerm is null)
             {
-                return Result.Fail(new Error($"Cannot find a related term with corresponding id: {request.id}"));
+                string errorMsg = $"Cannot find a related term with corresponding id: {request.id}";
+                _logger?.LogError("DeleteRelatedTermCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repository.RelatedTermRepository.Delete(relatedTerm);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a related term"));
+            if(resultIsSuccess)
+            {
+                _logger?.LogInformation($"DeleteRelatedTermCommand handled successfully");
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                string errorMsg = "Failed to delete a related term";
+                _logger?.LogError("DeleteRelatedTermCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

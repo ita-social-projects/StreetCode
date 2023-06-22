@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,10 +12,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        public UpdateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        private readonly ILoggerService? _logger;
+        public UpdateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
@@ -22,13 +25,27 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category is null)
             {
-                return Result.Fail(new Error("Cannot convert null to Category"));
+                const string errorMsg = "Cannot convert null to Category";
+                _logger?.LogError("UpdateCategoryCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repositoryWrapper.SourceCategoryRepository.Update(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update a category"));
+            if(resultIsSuccess)
+            {
+                _logger?.LogInformation($"UpdateCategoryCommand handled successfully");
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                const string errorMsg = "Failed to update a category";
+                _logger?.LogError("UpdateCategoryCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

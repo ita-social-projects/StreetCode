@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService? _logger;
 
-        public GetAllRelatedTermsByTermIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public GetAllRelatedTermsByTermIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repository = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<RelatedTermDTO>>> Handle(GetAllRelatedTermsByTermIdQuery request, CancellationToken cancellationToken)
@@ -27,16 +30,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
 
             if (relatedTerms is null)
             {
-                return new Error("Cannot get words by term id");
+                const string errorMsg = "Cannot get words by term id";
+                _logger?.LogError("GetAllRelatedTermsByTermIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return new Error(errorMsg);
             }
 
             var relatedTermsDTO = _mapper.Map<IEnumerable<RelatedTermDTO>>(relatedTerms);
 
             if (relatedTermsDTO is null)
             {
-                return new Error("Cannot create DTOs for related words!");
+                const string errorMsg = "Cannot create DTOs for related words!";
+                _logger?.LogError("GetAllRelatedTermsByTermIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return new Error(errorMsg);
             }
 
+            _logger?.LogInformation($"GetAllRelatedTermsByTermIdQuery handled successfully");
             return Result.Ok(relatedTermsDTO);
         }
     }

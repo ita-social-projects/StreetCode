@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Entity = Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm;
@@ -12,11 +13,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService? _logger;
 
-        public CreateRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper)
+        public CreateRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService? logger = null)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<RelatedTermDTO>> Handle(CreateRelatedTermCommand request, CancellationToken cancellationToken)
@@ -25,7 +28,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (relatedTerm is null)
             {
-                return Result.Fail(new Error("Cannot create new related word for a term!"));
+                const string errorMsg = "Cannot create new related word for a term!";
+                _logger?.LogError("CreateRelatedTermCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var existingTerms = await _repository.RelatedTermRepository
@@ -34,7 +40,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (existingTerms is null || existingTerms.Any())
             {
-                return Result.Fail(new Error("Слово з цим визначенням уже існує"));
+                const string errorMsg = "Слово з цим визначенням уже існує";
+                _logger?.LogError("CreateRelatedTermCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRelatedTerm = _repository.RelatedTermRepository.Create(relatedTerm);
@@ -43,11 +52,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if(!isSuccessResult)
             {
-                return Result.Fail(new Error("Cannot save changes in the database after related word creation!"));
+                const string errorMsg = "Cannot save changes in the database after related word creation!";
+                _logger?.LogError("CreateRelatedTermCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRelatedTermDTO = _mapper.Map<RelatedTermDTO>(createdRelatedTerm);
 
+            _logger?.LogInformation($"CreateRelatedTermCommand handled successfully");
             return createdRelatedTermDTO != null ? Result.Ok(createdRelatedTermDTO) : Result.Fail(new Error("Cannot map entity!"));
         }
     }

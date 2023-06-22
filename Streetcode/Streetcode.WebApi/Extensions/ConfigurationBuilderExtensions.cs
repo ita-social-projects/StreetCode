@@ -2,9 +2,8 @@
 {
     public static class ConfigurationBuilderExtensions
     {
-        public static ConfigurationBuilder CustomConfigure(this ConfigurationBuilder builder)
+        public static IConfigurationBuilder CustomConfigure(this IConfigurationBuilder builder, string environment)
         {
-            var environment = Environment.GetEnvironmentVariable("STREETCODE_ENVIRONMENT") ?? "Local";
             builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)

@@ -10,19 +10,18 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
             _fixture.Seeding(_seededFileName);
         }
 
-        // rewrite
         [Theory]
-        [InlineData("delete-test", "png")]
-        public void ShouldDeleteFileFromStorage_ExistingFile(string fileName, string extension)
+        [InlineData("png")]
+        public void ShouldDeleteFileFromStorage_ExistingFile(string extension)
         {
             // Arrange
-            string filePath = Path.Combine(_fixture.blobPath, fileName);
+            string fileName = $"{_seededFileName}.{extension}";
 
             // Act
-            _fixture.blobService.DeleteFileInStorage($"{fileName}.{extension}");
+            _fixture.blobService.DeleteFileInStorage(fileName);
 
             // Assert
-            Assert.False(File.Exists(filePath));
+            Assert.False(File.Exists(_filePath));
         }
 
         [Theory]

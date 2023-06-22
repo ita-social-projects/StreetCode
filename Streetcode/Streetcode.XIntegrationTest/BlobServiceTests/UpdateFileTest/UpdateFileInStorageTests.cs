@@ -20,11 +20,9 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
             string jsonContents = File.ReadAllText(testDataFilePath);
             Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
 
-            string previousBlobName = _seededFileName;
             string extension = jsonData.MimeType.Split('/')[1];
             string base64 = jsonData.Base64;
-
-            string previousFullName = $"{previousBlobName}.{extension}";
+            string previousFullName = $"{_seededFileName}.{extension}";
 
             // Act
             string hashedResult = _fixture.blobService.UpdateFileInStorage(previousFullName, base64, newBlobName, extension);

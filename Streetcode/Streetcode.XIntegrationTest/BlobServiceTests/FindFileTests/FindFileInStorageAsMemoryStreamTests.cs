@@ -11,10 +11,11 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("find-as-memory-stream-test.png")]
-        public void ShouldReturnValidMemoryStream_FileExists(string validFileName)
+        [InlineData("png")]
+        public void ShouldReturnValidMemoryStream_FileExists(string extension)
         {
             // Act
+            string validFileName = $"{_seededFileName}.{extension}";
             MemoryStream memoryStream = _fixture.blobService.FindFileInStorageAsMemoryStream(validFileName);
 
             // Assert

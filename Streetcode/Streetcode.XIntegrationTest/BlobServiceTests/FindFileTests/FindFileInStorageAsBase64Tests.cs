@@ -13,10 +13,11 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("find-as-base64-test.png", "../../../BlobServiceTests/Utils/testData.json")]
-        public void ShouldReturnValidBase64_FileExists(string validFileName, string testDataFilePath)
+        [InlineData("png", "../../../BlobServiceTests/Utils/testData.json")]
+        public void ShouldReturnValidBase64_FileExists(string extension, string testDataFilePath)
         {
             // Arrange
+            string validFileName = $"{_seededFileName}.{extension}";
             string jsonContents = File.ReadAllText(testDataFilePath);
             Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
             string expactedBase64 = jsonData.Base64;

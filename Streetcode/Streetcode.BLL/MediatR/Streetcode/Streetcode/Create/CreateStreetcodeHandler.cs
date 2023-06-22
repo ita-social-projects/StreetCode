@@ -97,8 +97,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         {
             streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
             {
-                QrCodeUrl = url,
-                QrCodeUrlTitle = url,
                 Url = url,
                 UrlTitle = url,
             };

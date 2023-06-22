@@ -1059,13 +1059,11 @@ namespace Streetcode.WebApi.Extensions
                                     new TransactionLink
                                     {
                                         Url = "https://streetcode/1",
-                                        QrCodeUrl = "https://qrcode/1",
                                         StreetcodeId = 1
                                     },
                                     new TransactionLink
                                     {
                                         Url = "https://streetcode/2",
-                                        QrCodeUrl = "https://qrcode/2",
                                         StreetcodeId = 2
                                     });
 

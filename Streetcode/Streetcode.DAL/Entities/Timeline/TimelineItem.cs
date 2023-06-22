@@ -21,8 +21,9 @@ public class TimelineItem
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
+    [MaxLength(600)]
     public string? Description { get; set; }
 
     public int StreetcodeId { get; set; }

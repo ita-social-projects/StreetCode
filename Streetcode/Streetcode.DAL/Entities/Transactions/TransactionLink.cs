@@ -18,13 +18,6 @@ public class TransactionLink
     public string? Url { get; set; }
 
     [Required]
-    [MaxLength(255)]
-    public string? QrCodeUrl { get; set; }
-
-    [MaxLength(255)]
-    public string? QrCodeUrlTitle { get; set; }
-
-    [Required]
     public int StreetcodeId { get; set; }
 
     public StreetcodeContent? Streetcode { get; set; }

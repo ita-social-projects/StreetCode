@@ -16,7 +16,6 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
     private readonly IBlobService _blobService;
     private readonly ILoggerService? _logger;
 
-
     public GetAllAudiosHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
@@ -42,7 +41,6 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
         {
             audio.Base64 = _blobService.FindFileInStorageAsBase64(audio.BlobName);
         }
-
 
         _logger?.LogInformation($"GetAllAudiosQuery handled successfully");
         return Result.Ok(audioDtos);

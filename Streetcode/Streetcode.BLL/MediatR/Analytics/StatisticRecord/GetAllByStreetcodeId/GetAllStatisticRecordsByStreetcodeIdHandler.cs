@@ -14,7 +14,6 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
         private readonly IMapper _mapper;
         private readonly ILoggerService? _logger;
 
-
         public GetAllStatisticRecordsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repository = repositoryWrapper;

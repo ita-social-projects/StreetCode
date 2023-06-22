@@ -2,7 +2,9 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -13,11 +15,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public GetRelatedFiguresByTagIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetRelatedFiguresByTagIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
@@ -32,10 +36,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
             if (streetcodes is null)
             {
-                return Result.Fail(new Error($"Cannot find any streetcode with corresponding tagid: {request.tagId}"));
+                string errorMsg = $"Cannot find any streetcode with corresponding tagid: {request.tagId}";
+                _logger?.LogError("GetRelatedFiguresByTagIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var relatedFigureDTO = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);
+
+            _logger?.LogInformation($"GetRelatedFiguresByTagIdQuery handled successfully");
+            _logger?.LogInformation($"Retrieved {relatedFigureDTO.Count()} related figures");
             return Result.Ok(relatedFigureDTO);
         }
     }

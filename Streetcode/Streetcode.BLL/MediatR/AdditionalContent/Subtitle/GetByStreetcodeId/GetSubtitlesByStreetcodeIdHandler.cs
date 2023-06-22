@@ -13,7 +13,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
 
-        public GetSubtitlesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public GetSubtitlesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

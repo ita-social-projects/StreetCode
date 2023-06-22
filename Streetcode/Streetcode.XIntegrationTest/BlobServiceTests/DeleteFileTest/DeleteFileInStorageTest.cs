@@ -3,13 +3,11 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    public class DeleteFileInStorageTest : IClassFixture<BlobStorageFixture>
+    public class DeleteFileInStorageTest : BlobServiceTestBase
     {
-        private readonly BlobStorageFixture _fixture;
-        public DeleteFileInStorageTest()
+        public DeleteFileInStorageTest() : base(new BlobStorageFixture(), "delete-test")
         {
-            _fixture = new BlobStorageFixture();
-            _fixture.Seeding("delete-test");
+            _fixture.Seeding(_seededFileName);
         }
 
         // rewrite

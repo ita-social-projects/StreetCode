@@ -3,30 +3,15 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    public class FindFileInStorageAsMemoryStreamTests : IClassFixture<BlobStorageFixture>, IDisposable
+    public class FindFileInStorageAsMemoryStreamTests : BlobServiceTestBase
     {
-        private readonly BlobStorageFixture _fixture;
-        const string seededFileName = "find-as-memory-stream-test";
-        private string? _filePath;
-
-        public FindFileInStorageAsMemoryStreamTests()
+        public FindFileInStorageAsMemoryStreamTests() : base(new BlobStorageFixture(), "find-as-memory-stream-test")
         {
-            _fixture = new BlobStorageFixture();
-            _fixture.Seeding(seededFileName);
-        }
-
-        public void Dispose()
-        {
-            _filePath = Path.Combine(_fixture.blobPath, $"{seededFileName}.png");
-
-            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
-            {
-                File.Delete(_filePath);
-            }
+            _fixture.Seeding(_seededFileName);
         }
 
         [Theory]
-        [InlineData($"{seededFileName}.png")]
+        [InlineData("find-as-memory-stream-test.png")]
         public void ShouldReturnValidMemoryStream_FileExists(string validFileName)
         {
             // Act

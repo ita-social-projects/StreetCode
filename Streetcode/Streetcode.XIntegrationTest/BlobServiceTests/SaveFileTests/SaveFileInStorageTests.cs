@@ -5,23 +5,10 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    public class SaveFileInStorageTests : IClassFixture<BlobStorageFixture>, IDisposable
+    public class SaveFileInStorageTests : BlobServiceTestBase
     {
-
-        private readonly BlobStorageFixture _fixture;
-        private string? _filePath;
-
-        public SaveFileInStorageTests()
+        public SaveFileInStorageTests() : base(new BlobStorageFixture(), "saved-image")
         {
-            _fixture = new BlobStorageFixture();
-        }
-
-        public void Dispose()
-        {
-            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
-            {
-                File.Delete(_filePath);
-            }
         }
 
         [Theory]
@@ -32,7 +19,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
             string jsonContents = File.ReadAllText(testDataFilePath);
             Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
 
-            string fileName = jsonData.BlobName;
+            string fileName = _seededFileName;
             string extension = jsonData.MimeType.Split('/')[1];
             string base64 = jsonData.Base64;
 

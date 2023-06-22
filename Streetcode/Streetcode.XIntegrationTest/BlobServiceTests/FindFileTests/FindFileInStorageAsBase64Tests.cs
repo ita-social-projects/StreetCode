@@ -5,30 +5,15 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.BlobServiceTests
 {
-    public class FindFileInStorageAsBase64Tests : IClassFixture<BlobStorageFixture>, IDisposable
+    public class FindFileInStorageAsBase64Tests : BlobServiceTestBase
     {
-        private readonly BlobStorageFixture _fixture;
-        const string seededFileName = "find-as-base64-test";
-        private string? _filePath;
-
-        public FindFileInStorageAsBase64Tests()
+        public FindFileInStorageAsBase64Tests() : base(new BlobStorageFixture(), "find-as-base64-test")
         {
-            _fixture = new BlobStorageFixture();
-            _fixture.Seeding(seededFileName);
-        }
-
-        public void Dispose()
-        {
-            _filePath = Path.Combine(_fixture.blobPath, $"{seededFileName}.png");
-
-            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
-            {
-                File.Delete(_filePath);
-            }
+            _fixture.Seeding(_seededFileName);
         }
 
         [Theory]
-        [InlineData($"{seededFileName}.png", "../../../BlobServiceTests/Utils/testData.json")]
+        [InlineData("find-as-base64-test.png", "../../../BlobServiceTests/Utils/testData.json")]
         public void ShouldReturnValidBase64_FileExists(string validFileName, string testDataFilePath)
         {
             // Arrange

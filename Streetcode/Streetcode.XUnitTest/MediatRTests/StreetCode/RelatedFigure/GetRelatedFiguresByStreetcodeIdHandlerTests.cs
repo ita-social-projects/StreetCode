@@ -3,16 +3,16 @@ using AutoMapper;
 using Xunit;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Streetcode;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using Entities = Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 
 namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 {
-    public class GetRelatedFiguresByStreetcodeIdHandlerTests
+  public class GetRelatedFiguresByStreetcodeIdHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;

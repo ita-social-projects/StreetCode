@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
+using MimeKit;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -17,14 +18,14 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext = context;
     }
 
-    public Task CreateRangeAsync(IEnumerable<T> items)
-    {
-        return _dbContext.Set<T>().AddRangeAsync(items);
-    }
-
     public IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default)
     {
         return GetQueryable(predicate).AsNoTracking();
+    }
+
+    public T Create(T entity)
+    {
+        return _dbContext.Set<T>().Add(entity).Entity;
     }
 
     public async Task<T> CreateAsync(T entity)
@@ -33,9 +34,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return tmp.Entity;
     }
 
-    public T Create(T entity)
+    public Task CreateRangeAsync(IEnumerable<T> items)
     {
-        return _dbContext.Set<T>().Add(entity).Entity;
+        return _dbContext.Set<T>().AddRangeAsync(items);
     }
 
     public EntityEntry<T> Update(T entity)
@@ -43,9 +44,19 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return _dbContext.Set<T>().Update(entity);
     }
 
+    public void UpdateRange(IEnumerable<T> items)
+    {
+        _dbContext.Set<T>().UpdateRange(items);
+    }
+
     public void Delete(T entity)
     {
         _dbContext.Set<T>().Remove(entity);
+    }
+
+    public void DeleteRange(IEnumerable<T> items)
+    {
+        _dbContext.Set<T>().RemoveRange(items);
     }
 
     public void Attach(T entity)
@@ -61,6 +72,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
     public void Detach(T entity)
     {
         _dbContext.Entry(entity).State = EntityState.Detached;
+    }
+
+    public Task ExecuteSqlRaw(string query)
+    {
+        return _dbContext.Database.ExecuteSqlRawAsync(query);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)

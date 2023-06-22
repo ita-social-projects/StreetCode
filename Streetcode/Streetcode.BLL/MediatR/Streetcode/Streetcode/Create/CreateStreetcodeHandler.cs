@@ -70,7 +70,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
             }
         }

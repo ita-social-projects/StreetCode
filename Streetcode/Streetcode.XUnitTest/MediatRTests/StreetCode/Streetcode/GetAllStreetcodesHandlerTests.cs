@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Moq;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Streetcode.BLL.DTO.Streetcode;
@@ -78,8 +78,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Fact]
         public async Task FindStreetCodeWithMatchTitleTest()
         {
-            // arrange
-
+            // Arrange
             var request = new GetAllStreetcodesRequestDTO
             {
                 Title = "Some Title"
@@ -87,49 +86,33 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var query = new GetAllStreetcodesQuery(request);
 
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var streetcodeRepositoryMock = new Mock<IStreetcodeRepository>();
-            var mapperMock = new Mock<IMapper>();
+            var (handler, repositoryWrapperMock) = SetupMockObjectsAndGetHandler(out var streetcodeRepositoryMock, out var mapperMock);
 
-            repositoryWrapperMock.Setup(x => x.StreetcodeRepository).Returns(streetcodeRepositoryMock.Object);
-
-            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object);
-
-            IQueryable<StreetcodeContent> streetcodes = new List<StreetcodeContent>().AsQueryable(); 
+            IQueryable<StreetcodeContent> streetcodes = new List<StreetcodeContent>().AsQueryable();
 
             // Act
-
             var result = await handler.Handle(query, default);
 
             // Assert
-
             Assert.NotNull(result);
-
             Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Value); 
+            Assert.NotNull(result.Value);
 
             var response = result.Value;
-            Assert.NotNull(response.Streetcodes); 
+            Assert.NotNull(response.Streetcodes);
         }
         [Fact]
         public async Task FindSortedStreetcodesTest()
         {
             // Arrange
-
             var request = new GetAllStreetcodesRequestDTO
             {
-                Sort = "-Title" 
+                Sort = "-Title"
             };
 
             var query = new GetAllStreetcodesQuery(request);
 
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var streetcodeRepositoryMock = new Mock<IStreetcodeRepository>();
-            var mapperMock = new Mock<IMapper>();
-
-            repositoryWrapperMock.Setup(x => x.StreetcodeRepository).Returns(streetcodeRepositoryMock.Object);
-
-            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object);
+            var (handler, repositoryWrapperMock) = SetupMockObjectsAndGetHandler(out var streetcodeRepositoryMock, out var mapperMock);
 
             var streetcodes = new List<StreetcodeContent>
             {
@@ -139,15 +122,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             }.AsQueryable();
 
             // Assert
-
             var result = await handler.Handle(query, default);
             var methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
             var parameters = new object[] { streetcodes, request.Sort };
+
             methodInfo.Invoke(handler, parameters);
-            var sortedStreetcodes = (IQueryable<StreetcodeContent>)parameters[0]; 
+            var sortedStreetcodes = (IQueryable<StreetcodeContent>)parameters[0];
 
             // Act
-
             var resultList = sortedStreetcodes.ToList();
 
             Assert.Equal("Streetcode 3", resultList[0].Title);
@@ -158,7 +140,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task FindFilteredStreetcodesTest()
         {
             // Arrange
-
             var request = new GetAllStreetcodesRequestDTO
             {
                 Filter = "filter:Filter"
@@ -166,26 +147,28 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var query = new GetAllStreetcodesQuery(request);
 
+            var (handler, repositoryWrapperMock) = SetupMockObjectsAndGetHandler(out var streetcodeRepositoryMock, out var mapperMock);
+            IQueryable<StreetcodeContent> streetcodes = new List<StreetcodeContent>().AsQueryable();
+
+            // Act
+            var result = await handler.Handle(query, default);
+            var findFilteredStreetcodesMethod = typeof(GetAllStreetcodesHandler).GetMethod("FindFilteredStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
+            findFilteredStreetcodesMethod.Invoke(handler, new object[] { streetcodes, request.Filter });
+
+            // Assert
+            Assert.Empty(streetcodes);
+        }
+        private (GetAllStreetcodesHandler handler, Mock<IRepositoryWrapper> repositoryWrapperMock) SetupMockObjectsAndGetHandler(out Mock<IStreetcodeRepository> streetcodeRepositoryMock, out Mock<IMapper> mapperMock)
+        {
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var streetcodeRepositoryMock = new Mock<IStreetcodeRepository>();
-            var mapperMock = new Mock<IMapper>();
+            streetcodeRepositoryMock = new Mock<IStreetcodeRepository>();
+            mapperMock = new Mock<IMapper>();
 
             repositoryWrapperMock.Setup(x => x.StreetcodeRepository).Returns(streetcodeRepositoryMock.Object);
 
             var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object);
 
-            IQueryable<StreetcodeContent> streetcodes = new List<StreetcodeContent>().AsQueryable();
-
-            // Act
-
-            var result = await handler.Handle(query, default);
-            var findFilteredStreetcodesMethod = typeof(GetAllStreetcodesHandler).GetMethod("FindFilteredStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
-            findFilteredStreetcodesMethod.Invoke(handler, new object[] { streetcodes, request.Filter });
-
-            // Assert 
-
-            Assert.Empty(streetcodes);
-
+            return (handler, repositoryWrapperMock);
         }
     }
 }

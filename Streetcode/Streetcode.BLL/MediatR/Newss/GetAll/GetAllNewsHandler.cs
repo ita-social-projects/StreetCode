@@ -5,6 +5,8 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
@@ -13,12 +15,14 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobService;
+        private readonly ILoggerService? _logger;
 
-        public GetAllNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+        public GetAllNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
@@ -27,7 +31,10 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 include: cat => cat.Include(img => img.Image));
             if (news == null)
             {
-                return Result.Fail("There are no news in the database");
+                const string errorMsg = "There are no news in the database";
+                _logger?.LogError("GetAllNewsQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var newsDTOs = _mapper.Map<IEnumerable<NewsDTO>>(news);
@@ -40,6 +47,8 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 }
             }
 
+            _logger?.LogInformation($"GetAllNewsQuery handled successfully");
+            _logger?.LogInformation($"Retrieved {newsDTOs.Count()} news");
             return Result.Ok(newsDTOs);
         }
     }

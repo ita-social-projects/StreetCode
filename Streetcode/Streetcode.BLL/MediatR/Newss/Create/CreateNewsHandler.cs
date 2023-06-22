@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,10 +12,12 @@ namespace Streetcode.BLL.MediatR.Newss.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        public CreateNewsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        private readonly ILoggerService? _logger;
+        public CreateNewsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
@@ -22,7 +25,10 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
-                return Result.Fail("Cannot convert null to news");
+                const string errorMsg = $"Cannot convert null to news";
+                _logger?.LogError("CreateNewsCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             if (newNews.ImageId == 0)
@@ -32,7 +38,18 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(_mapper.Map<NewsDTO>(entity)) : Result.Fail(new Error("Failed to create a news"));
+            if(resultIsSuccess)
+            {
+                _logger?.LogInformation($"CreateNewsCommand handled successfully");
+                return Result.Ok(_mapper.Map<NewsDTO>(entity));
+            }
+            else
+            {
+                const string errorMsg = $"Failed to create a news";
+                _logger?.LogError("CreateNewsCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

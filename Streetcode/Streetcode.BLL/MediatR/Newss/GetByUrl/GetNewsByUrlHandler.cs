@@ -6,6 +6,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.BLL.MediatR.Newss.GetByUrl
 {
@@ -14,11 +15,13 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
-        public GetNewsByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+        private readonly ILoggerService? _logger;
+        public GetNewsByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _blobService = blobService;
+            _logger = logger;
         }
 
         public async Task<Result<NewsDTO>> Handle(GetNewsByUrlQuery request, CancellationToken cancellationToken)
@@ -30,7 +33,10 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
                     .Include(sc => sc.Image)));
             if(newsDTO is null)
             {
-                return Result.Fail($"No news by entered Url - {url}");
+                string errorMsg = $"No news by entered Url - {url}";
+                _logger?.LogError("GetNewsByUrlQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             if (newsDTO.Image is not null)
@@ -38,6 +44,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
                 newsDTO.Image.Base64 = _blobService.FindFileInStorageAsBase64(newsDTO.Image.BlobName);
             }
 
+            _logger?.LogInformation($"GetNewsByUrlQuery handled successfully");
             return Result.Ok(newsDTO);
         }
     }

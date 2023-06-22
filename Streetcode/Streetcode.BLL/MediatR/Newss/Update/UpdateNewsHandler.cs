@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,11 +14,13 @@ namespace Streetcode.BLL.MediatR.Newss.Update
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobSevice;
-        public UpdateNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+        private readonly ILoggerService? _logger;
+        public UpdateNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobSevice = blobService;
+            _logger = logger;
         }
 
         public async Task<Result<NewsDTO>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
@@ -25,7 +28,10 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             var news = _mapper.Map<News>(request.news);
             if (news is null)
             {
-                return Result.Fail(new Error("Cannot convert null to news"));
+                const string errorMsg = $"Cannot convert null to news";
+                _logger?.LogError("UpdateNewsCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var response = _mapper.Map<NewsDTO>(news);
@@ -45,7 +51,19 @@ namespace Streetcode.BLL.MediatR.Newss.Update
 
             _repositoryWrapper.NewsRepository.Update(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(response) : Result.Fail(new Error("Failed to update news"));
+
+            if(resultIsSuccess)
+            {
+                _logger?.LogInformation($"UpdateNewsCommand handled successfully");
+                return Result.Ok(response);
+            }
+            else
+            {
+                const string errorMsg = $"Failed to update news";
+                _logger?.LogError("UpdateNewsCommand handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

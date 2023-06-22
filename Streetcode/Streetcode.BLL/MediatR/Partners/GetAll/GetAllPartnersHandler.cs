@@ -2,7 +2,9 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,11 +14,13 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
@@ -30,10 +34,16 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         if (partners is null)
         {
-            return Result.Fail(new Error($"Cannot find any partners"));
+            const string errorMsg = $"Cannot find any partners";
+            _logger?.LogError("GetAllPartnersQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
+
+        _logger?.LogInformation($"GetAllPartnersQuery handled successfully");
+        _logger?.LogInformation($"Retrieved {partnerDtos.Count()} partners");
         return Result.Ok(partnerDtos);
     }
 }

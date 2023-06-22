@@ -2,7 +2,9 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
@@ -11,11 +13,13 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetPartnersByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public GetPartnersByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -25,7 +29,10 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any partners with corresponding streetcode id: {request.StreetcodeId}"));
+            string errorMsg = $"Cannot find any partners with corresponding streetcode id: {request.StreetcodeId}";
+            _logger?.LogError("GetPartnersByStreetcodeIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var partners = await _repositoryWrapper.PartnersRepository
@@ -35,10 +42,16 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (partners is null)
         {
-            return Result.Fail(new Error($"Cannot find a partners by a streetcode id: {request.StreetcodeId}"));
+            string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
+            _logger?.LogError("GetPartnersByStreetcodeIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
+
+        _logger?.LogInformation($"GetPartnersByStreetcodeIdQuery handled successfully");
+        _logger?.LogInformation($"Retrieved {partnerDtos.Count()} partners");
         return Result.Ok(value: partnerDtos);
     }
 }

@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Partners.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public UpdatePartnerHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UpdatePartnerHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<PartnerDTO>> Handle(UpdatePartnerQuery request, CancellationToken cancellationToken)
@@ -64,10 +67,14 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                 _repositoryWrapper.SaveChanges();
                 var dbo = _mapper.Map<PartnerDTO>(partner);
                 dbo.Streetcodes = request.Partner.Streetcodes;
+
+                _logger?.LogInformation($"UpdatePartnerQuery handled successfully");
                 return Result.Ok(dbo);
             }
             catch (Exception ex)
             {
+                _logger?.LogError("UpdatePartnerQuery handled with an error");
+                _logger?.LogError(ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

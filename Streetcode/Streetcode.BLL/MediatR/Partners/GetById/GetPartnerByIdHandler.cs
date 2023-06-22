@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetById;
@@ -11,11 +12,13 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<PartnerDTO>> Handle(GetPartnerByIdQuery request, CancellationToken cancellationToken)
@@ -29,10 +32,15 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
         if (partner is null)
         {
-            return Result.Fail(new Error($"Cannot find any partner with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find any partner with corresponding id: {request.Id}";
+            _logger?.LogError("GetPartnerByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var partnerDto = _mapper.Map<PartnerDTO>(partner);
+
+        _logger?.LogInformation($"GetPartnerByIdQuery handled successfully");
         return Result.Ok(partnerDto);
     }
 }

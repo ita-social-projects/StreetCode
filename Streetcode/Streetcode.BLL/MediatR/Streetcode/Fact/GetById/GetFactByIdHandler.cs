@@ -31,8 +31,8 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
             _logger?.LogError(errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
-        
-        var factsDto = _mapper.Map<FactDTO>(facts);
+
+        var factsDto = _mapper.Map<FactDto>(facts);
         _logger?.LogInformation($"GetFactByIdQuery handled successfully");
         return Result.Ok(factsDto);
     }

@@ -33,7 +33,7 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
             return Result.Fail(new Error(errorMsg));
         }
 
-        var factDtos = _mapper.Map<IEnumerable<FactDTO>>(facts);
+        var factDtos = _mapper.Map<IEnumerable<FactDto>>(facts);
         _logger?.LogInformation($"GetAllFactsQuery handled successfully");
         _logger?.LogInformation($"Retrieved {factDtos.Count()} facts");
         return Result.Ok(factDtos);

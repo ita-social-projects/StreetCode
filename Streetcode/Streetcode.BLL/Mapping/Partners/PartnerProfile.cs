@@ -15,6 +15,7 @@ public class PartnerProfile : Profile
             .ForPath(dto => dto.TargetUrl.Href, conf => conf.MapFrom(ol => ol.TargetUrl));
         CreateMap<Partner, CreatePartnerDTO>().ReverseMap();
         CreateMap<Partner, PartnerShortDTO>().ReverseMap();
-        CreateMap<PartnersUpdateDTO, StreetcodePartner>().ReverseMap();
+        CreateMap<PartnersUpdateDTO, StreetcodePartner>()
+          .ReverseMap();
     }
 }

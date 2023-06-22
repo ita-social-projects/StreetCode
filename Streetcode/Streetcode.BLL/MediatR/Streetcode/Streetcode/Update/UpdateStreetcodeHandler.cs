@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
 
-                    await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
+                   /* await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);*/
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
@@ -96,7 +96,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -115,7 +115,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -150,7 +150,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
-
+          
             return query;
         }
 

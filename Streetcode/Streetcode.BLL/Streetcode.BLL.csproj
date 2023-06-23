@@ -115,6 +115,16 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\MediatR.Analytics.StatisticRecord.Create.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Analytics.StatisticRecord.Create.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Analytics.StatisticRecord.Create.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Analytics.StatisticRecord.Create.uk-UA.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs">
       <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -258,6 +268,14 @@
     <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Analytics.StatisticRecord.Create.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Analytics.StatisticRecord.Create.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Analytics.StatisticRecord.Create.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Analytics.StatisticRecord.Create.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx">
       <LastGenOutput>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs</LastGenOutput>

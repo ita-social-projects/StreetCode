@@ -46,11 +46,11 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped(typeof(ILoggerService<>), typeof(LoggerService<>));
+        services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
-        services.AddTransient(typeof(ApiRequestResponseMiddleware<>));
+        services.AddTransient(typeof(ApiRequestResponseMiddleware));
     }
 
     public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, LogEventLevel minimumLogLevel)

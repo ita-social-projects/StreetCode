@@ -16,8 +16,7 @@ builder.Services.AddCustomServices();
 builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
-builder.AddSerilog(Serilog.Events.LogEventLevel.Information);
-
+builder.Services.ConfigureSerilog(builder);
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")
@@ -34,7 +33,7 @@ else
 
 app.UseCors();
 app.UseHttpsRedirection();
-app.UseMiddleware<ApiRequestResponseMiddleware<LoggerService<ILogger>>>();
+app.UseMiddleware<ApiRequestResponseMiddleware>();
 app.UseRouting();
 
 app.UseAuthentication();

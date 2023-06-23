@@ -1,110 +1,127 @@
-﻿using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.Logging;
 
-namespace Streetcode.BLL.Middleware;
-
-public class ApiRequestResponseMiddleware<T> : IMiddleware
+namespace Streetcode.BLL.Middleware
 {
-    private readonly ILoggerService<T> _loggerService;
-
-    public ApiRequestResponseMiddleware(ILoggerService<T> loggerService)
+    public class ApiRequestResponseMiddleware : IMiddleware
     {
-        _loggerService = loggerService;
-    }
+        private readonly ILoggerService _loggerService;
+        private readonly IConfiguration _configuration;
+        private string[] _loggerPropertiesExceptions = { "password" };
 
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-    {
-        var originalBodyStream = context.Response.Body;
-
-        var request = await GetRequestAsTextAsync(context.Request);
-
-        _loggerService.LogInformation(request);
-
-        await using var responseBody = new MemoryStream();
-        context.Response.Body = responseBody;
-
-        await next(context);
-
-        var response = await GetResponseAsTextAsync(context.Response);
-
-        var filteredResponse = GetResponseWithMaxLegth(response);
-
-        _loggerService.LogInformation(filteredResponse);
-
-        await responseBody.CopyToAsync(originalBodyStream);
-    }
-
-    private async Task<string> GetRequestAsTextAsync(HttpRequest request)
-    {
-        var requestBody = request.Body;
-
-        request.EnableBuffering();
-
-        var buffer = new byte[Convert.ToInt32(request.ContentLength)];
-
-        await request.Body.ReadAsync(buffer, 0, buffer.Length);
-
-        var bodyAsText = Encoding.UTF8.GetString(buffer);
-
-        request.Body = requestBody;
-
-        return $"{request.Scheme} {request.Host} {request.Path} {request.QueryString} {bodyAsText}";
-    }
-
-    private async Task<string> GetResponseAsTextAsync(HttpResponse response)
-    {
-        response.Body.Seek(0, SeekOrigin.Begin);
-
-        var text = await new StreamReader(response.Body).ReadToEndAsync();
-
-        response.Body.Seek(0, SeekOrigin.Begin);
-
-        return text;
-    }
-
-    private string? GetResponseWithMaxLegth(string response)
-    {
-        try
+        public ApiRequestResponseMiddleware(ILoggerService loggerService, IConfiguration configuration)
         {
-            var jsonObject = JToken.Parse(response);
+            _loggerService = loggerService;
+            _configuration = configuration;
+        }
 
-            if (jsonObject.Type == JTokenType.Array)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        {
+            var originalBodyStream = context.Response.Body;
+
+            var request = await GetRequestAsTextAsync(context.Request);
+
+            _loggerService.LogInformation(request);
+
+            await using var responseBody = new MemoryStream();
+            context.Response.Body = responseBody;
+
+            await next(context);
+
+            var response = await GetResponseAsTextAsync(context.Response);
+
+            var filteredResponse = GetResponseWithMaxLength(response, context.Request.Path);
+
+            _loggerService.LogInformation(filteredResponse);
+
+            await responseBody.CopyToAsync(originalBodyStream);
+        }
+
+        private async Task<string> GetRequestAsTextAsync(HttpRequest request)
+        {
+            var requestBody = request.Body;
+
+            request.EnableBuffering();
+
+            var buffer = new byte[Convert.ToInt32(request.ContentLength)];
+
+            await request.Body.ReadAsync(buffer, 0, buffer.Length);
+
+            var bodyAsText = Encoding.UTF8.GetString(buffer);
+
+            request.Body = requestBody;
+
+            return $"{request.Scheme} {request.Host} {request.Path} {request.QueryString} {bodyAsText}";
+        }
+
+        private async Task<string> GetResponseAsTextAsync(HttpResponse response)
+        {
+            response.Body.Seek(0, SeekOrigin.Begin);
+
+            var encoding = Encoding.UTF8;
+
+            var text = await new StreamReader(response.Body, encoding).ReadToEndAsync();
+
+            response.Body.Seek(0, SeekOrigin.Begin);
+
+            return text;
+        }
+
+        private string GetResponseWithMaxLength(string response, string requestPath)
+        {
+            try
             {
-                var jsonArray = (JArray)jsonObject;
+                var jsonObject = JToken.Parse(response);
 
-                foreach (var item in jsonArray)
+                if (jsonObject.Type == JTokenType.Array)
                 {
-                    TruncateProperties(item);
+                    var jsonArray = (JArray)jsonObject;
+
+                    foreach (var item in jsonArray)
+                    {
+                        TruncateProperties(item);
+                    }
                 }
-            }
-            else if (jsonObject.Type == JTokenType.Object)
-            {
-                TruncateProperties(jsonObject);
-            }
+                else if (jsonObject.Type == JTokenType.Object)
+                {
+                    TruncateProperties(jsonObject);
+                }
 
-            return jsonObject.ToString();
-        }
-        catch (Exception ex)
-        {
-            return response;
-        }
-    }
-
-    private void TruncateProperties(JToken token)
-    {
-        foreach (var property in token.Children<JProperty>())
-        {
-            if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > 100)
-            {
-                property.Value = new JValue(property.Value.ToString().Substring(0, 100));
+                return jsonObject.ToString();
             }
-            else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
+            catch (Exception ex)
             {
-                TruncateProperties(property.Value);
+                return null;
+            }
+        }
+
+        private void TruncateProperties(JToken token)
+        {
+            foreach (var property in token.Children<JProperty>().ToList())
+            {
+                if (!_loggerPropertiesExceptions.Contains(property.Name.ToString()))
+                {
+                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > 100)
+                    {
+                        property.Value = new JValue(property.Value.ToString().Substring(0, 100));
+                    }
+                    else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
+                    {
+                        TruncateProperties(property.Value);
+                    }
+                }
+                else
+                {
+                    property.Remove();
+                }
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿using Streetcode.BLL.Services.BlobStorageService;
+﻿using Serilog;
+using Streetcode.BLL.Middleware;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
 
@@ -32,5 +34,20 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureInstagram(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<InstagramEnvirovmentVariables>(builder.Configuration.GetSection("Instagram"));
+    }
+
+    public static void ConfigureSerilog(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        var filterExpression = builder.Configuration["Serilog:Filter:ByExcluding"];
+
+        builder.Host.UseSerilog((ctx, services, loggerConfiguration) =>
+        {
+            loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+
+            if (!string.IsNullOrEmpty(filterExpression))
+            {
+                loggerConfiguration.Filter.ByExcluding(filterExpression);
+            }
+        });
     }
 }

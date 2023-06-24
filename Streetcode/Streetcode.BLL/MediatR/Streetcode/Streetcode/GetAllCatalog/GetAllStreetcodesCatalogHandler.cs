@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
@@ -12,11 +13,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public GetAllStreetcodesCatalogHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetAllStreetcodesCatalogHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetAllStreetcodesCatalogQuery request, CancellationToken cancellationToken)
@@ -28,10 +31,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
             if (streetcodes != null)
             {
                 var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);
+                _logger?.LogInformation($"GetAllStreetcodesCatalogQuery handled successfully");
                 return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped));
             }
 
-            return Result.Fail("No streetcodes exist now");
+            const string errorMsg = $"Cannot find any subtitles";
+            _logger?.LogError("GetAllStreetcodesCatalogQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(errorMsg);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
@@ -7,10 +8,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStreetcodeByIdCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper)
+    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(UpdateStatusStreetcodeByIdCommand request, CancellationToken cancellationToken)
@@ -20,7 +23,10 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any streetcode with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find any streetcode with corresponding id: {request.Id}";
+            _logger?.LogError("UpdateStatusStreetcodeByIdCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         streetcode.Status = request.Status;
@@ -30,6 +36,17 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         var resultIsSuccessChangeStatus = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        return resultIsSuccessChangeStatus ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update status of streetcode"));
+        if(resultIsSuccessChangeStatus)
+        {
+            _logger?.LogInformation($"UpdateStatusStreetcodeByIdCommand handled successfully");
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = "Failed to update status of streetcode";
+            _logger?.LogError("UpdateStatusStreetcodeByIdCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

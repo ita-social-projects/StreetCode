@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -20,11 +21,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -55,17 +58,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     if (isResultSuccess)
                     {
                         transactionScope.Complete();
+                        _logger?.LogInformation($"UpdateStreetcodeCommand handled successfully");
                         return Result.Ok(streetcodeToUpdate.Id);
                     }
                     else
                     {
-                        return Result.Fail(new Error("Failed to update a streetcode"));
+                        const string errorMsg = "Failed to update a streetcode";
+                        _logger?.LogError("UpdateStreetcodeCommand handled with an error");
+                        _logger?.LogError(errorMsg);
+                        return Result.Fail(new Error(errorMsg));
                     }
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    return Result.Fail(new Error("An error occurred while updating a streetcode"));
+                    const string errorMsg = "An error occurred while updating a streetcode";
+                    _logger?.LogError("UpdateStreetcodeCommand handled with an error");
+                    _logger?.LogError(errorMsg);
+                    return Result.Fail(new Error(errorMsg));
                 }
             }
         }

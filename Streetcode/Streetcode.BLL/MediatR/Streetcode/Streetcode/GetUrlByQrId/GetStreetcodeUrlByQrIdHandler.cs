@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
@@ -8,9 +9,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
     public class GetStreetcodeUrlByQrIdHandler : IRequestHandler<GetStreetcodeUrlByQrIdQuery, Result<string>>
     {
         private readonly IRepositoryWrapper _repository;
-        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository)
+        private readonly ILoggerService? _logger;
+        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService? logger = null)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<string>> Handle(GetStreetcodeUrlByQrIdQuery request, CancellationToken cancellationToken)
@@ -22,16 +25,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if (statisticRecord == null)
             {
-                return Result.Fail(new Error("Cannot find record by qrid"));
+                const string errorMsg = "Cannot find record by qrid";
+                _logger?.LogError("GetStreetcodeUrlByQrIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync((s) => s.Id == statisticRecord.StreetcodeCoordinate.StreetcodeId);
 
             if(streetcode == null)
             {
-                return Result.Fail(new Error("Cannot find streetcode by id"));
+                const string errorMsg = "Cannot find streetcode by id";
+                _logger?.LogError("GetStreetcodeUrlByQrIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
+            _logger?.LogInformation($"GetStreetcodeUrlByQrIdQuery handled successfully");
             return Result.Ok(streetcode.TransliterationUrl);
         }
     }

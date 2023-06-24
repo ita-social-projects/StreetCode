@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
@@ -7,10 +8,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper)
+    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(DeleteSoftStreetcodeCommand request, CancellationToken cancellationToken)
@@ -20,7 +23,10 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            throw new Exception($"Cannot find a streetcode with corresponding categoryId: {request.Id}");
+            string errorMsg = $"Cannot find a streetcode with corresponding categoryId: {request.Id}";
+            _logger?.LogError("DeleteSoftStreetcodeCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            throw new Exception(errorMsg);
         }
 
         streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;
@@ -30,7 +36,17 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         var resultIsDeleteSucces = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        return resultIsDeleteSucces ? Result.Ok(Unit.Value)
-            : Result.Fail(new Error("Failed to change status of streetcode to deleted"));
+        if(resultIsDeleteSucces)
+        {
+            _logger?.LogInformation($"DeleteSoftStreetcodeCommand handled successfully");
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = "Failed to change status of streetcode to deleted";
+            _logger?.LogError("DeleteSoftStreetcodeCommand handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

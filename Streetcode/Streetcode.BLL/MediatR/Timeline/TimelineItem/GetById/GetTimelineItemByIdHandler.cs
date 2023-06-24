@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetById;
@@ -11,11 +12,14 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetTimelineItemByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetTimelineItemByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
+
     }
 
     public async Task<Result<TimelineItemDTO>> Handle(GetTimelineItemByIdQuery request, CancellationToken cancellationToken)
@@ -29,10 +33,14 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
 
         if (timelineItem is null)
         {
-            return Result.Fail(new Error($"Cannot find a timeline item with corresponding id: {request.Id}"));
+            string errorMsg = $"Cannot find a timeline item with corresponding id: {request.Id}";
+            _logger?.LogError("GetTimelineItemByIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var timelineItemDto = _mapper.Map<TimelineItemDTO>(timelineItem);
+        _logger?.LogInformation($"GetTimelineItemByIdQuery handled successfully");
         return Result.Ok(timelineItemDto);
     }
 }

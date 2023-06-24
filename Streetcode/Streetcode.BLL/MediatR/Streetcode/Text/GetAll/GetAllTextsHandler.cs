@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +13,13 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetAllTextsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllTextsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<TextDTO>>> Handle(GetAllTextsQuery request, CancellationToken cancellationToken)
@@ -24,10 +28,15 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
 
         if (texts is null)
         {
-            return Result.Fail(new Error($"Cannot find any text"));
+            const string errorMsg = $"Cannot find any text";
+            _logger?.LogError("GetAllTextsQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var textDtos = _mapper.Map<IEnumerable<TextDTO>>(texts);
+        _logger?.LogInformation($"GetAllTextsQuery handled successfully");
+        _logger?.LogInformation($"Retrieved {textDtos.Count()} texts");
         return Result.Ok(textDtos);
     }
 }

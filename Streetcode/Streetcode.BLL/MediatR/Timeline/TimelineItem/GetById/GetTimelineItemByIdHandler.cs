@@ -19,7 +19,6 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-
     }
 
     public async Task<Result<TimelineItemDTO>> Handle(GetTimelineItemByIdQuery request, CancellationToken cancellationToken)

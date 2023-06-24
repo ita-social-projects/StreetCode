@@ -21,7 +21,6 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-
     }
 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIdQuery request, CancellationToken cancellationToken)

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +13,13 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService? _logger;
 
-    public GetAllVideosHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllVideosHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<VideoDTO>>> Handle(GetAllVideosQuery request, CancellationToken cancellationToken)
@@ -24,10 +28,15 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 
         if (videos is null)
         {
-            return Result.Fail(new Error($"Cannot find any videos"));
+            const string errorMsg = $"Cannot find any videos";
+            _logger?.LogError("GetAllVideosQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var videoDtos = _mapper.Map<IEnumerable<VideoDTO>>(videos);
+        _logger?.LogInformation($"GetAllVideosQuery handled successfully");
+        _logger?.LogInformation($"Retrieved {videoDtos.Count()} videos");
         return Result.Ok(videoDtos);
     }
 }

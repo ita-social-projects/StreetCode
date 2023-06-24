@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Users;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,12 +15,14 @@ namespace Streetcode.BLL.MediatR.Users.Login
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
+        private readonly ILoggerService? _logger;
 
-        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService)
+        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         public async Task<Result<LoginResultDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -30,6 +33,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
             {
                 var token = _tokenService.GenerateJWTToken(user);
                 var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
+                _logger?.LogInformation($"LoginQuery handled successfully");
                 return Result.Ok(new LoginResultDTO()
                 {
                     User = _mapper.Map<UserDTO>(user),
@@ -38,7 +42,10 @@ namespace Streetcode.BLL.MediatR.Users.Login
                 });
             }
 
-            return Result.Fail("User not found");
+            const string errorMsg = "User not found";
+            _logger?.LogError("LoginQuery handled with an error");
+            _logger?.LogError(errorMsg);
+            return Result.Fail(errorMsg);
         }
     }
 }

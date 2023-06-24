@@ -20,7 +20,6 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-
     }
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetToponymsByStreetcodeIdQuery request, CancellationToken cancellationToken)

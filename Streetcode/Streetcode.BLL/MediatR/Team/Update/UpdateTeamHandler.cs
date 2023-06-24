@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Team.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public UpdateTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UpdateTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
@@ -77,10 +80,13 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 _repositoryWrapper.SaveChanges();
                 var dbo = _mapper.Map<TeamMemberDTO>(team);
                 dbo.Positions = newPositions;
+                _logger?.LogInformation($"GetAllSubtitlesQuery handled successfully");
                 return Result.Ok(dbo);
             }
             catch (Exception ex)
             {
+                _logger?.LogError("GetAllSubtitlesQuery handled with an error");
+                _logger?.LogError(ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.Delete;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,11 +13,13 @@ namespace Streetcode.BLL.MediatR.Team.Delete
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService? _logger;
 
-        public DeleteTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public DeleteTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(DeleteTeamQuery request, CancellationToken cancellationToken)
@@ -24,7 +27,10 @@ namespace Streetcode.BLL.MediatR.Team.Delete
             var team = await _repositoryWrapper.TeamRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (team == null)
             {
-                return Result.Fail("No team with such id");
+                const string errorMsg = "No team with such id";
+                _logger?.LogError("DeleteTeamQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(errorMsg);
             }
             else
             {
@@ -32,10 +38,13 @@ namespace Streetcode.BLL.MediatR.Team.Delete
                 try
                 {
                     _repositoryWrapper.SaveChanges();
+                    _logger?.LogInformation($"DeleteTeamQuery handled successfully");
                     return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
                 }
                 catch (Exception ex)
                 {
+                    _logger?.LogError("DeleteTeamQuery handled with an error");
+                    _logger?.LogError(ex.Message);
                     return Result.Fail(ex.Message);
                 }
             }

@@ -46,32 +46,29 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
 
         public async Task DbAndStorageSeeding()
         {
-            if (!TestDbContext.Images.Any())
+            string initialDataImagePath = "../../../../Streetcode.DAL/InitialData/images.json";
+            string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
+            string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
+            string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
+            var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
+            var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+
+            foreach (var img in imgfromJson)
             {
-                string initialDataImagePath = "../../../../Streetcode.DAL/InitialData/images.json";
-                string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
-                string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
-                string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
-                var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
-                var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
-
-                foreach (var img in imgfromJson)
-                {
-                    string[] fullName = img.BlobName.Split('.');
-                    SaveFileIfNotExist(img.Base64, fullName[0], fullName[1]);
-                }
-
-                foreach (var audio in audiosfromJson)
-                {
-                    string[] fullName = audio.BlobName.Split('.');
-                    SaveFileIfNotExist(audio.Base64, fullName[0], fullName[1]);
-                }
-
-                TestDbContext.Images.AddRange(imgfromJson);
-                TestDbContext.Audios.AddRange(audiosfromJson);
-
-                await TestDbContext.SaveChangesAsync();
+                string[] fullName = img.BlobName.Split('.');
+                SaveFileIfNotExist(img.Base64, fullName[0], fullName[1]);
             }
+
+            foreach (var audio in audiosfromJson)
+            {
+                string[] fullName = audio.BlobName.Split('.');
+                SaveFileIfNotExist(audio.Base64, fullName[0], fullName[1]);
+            }
+
+            TestDbContext.Images.AddRange(imgfromJson);
+            TestDbContext.Audios.AddRange(audiosfromJson);
+
+            await TestDbContext.SaveChangesAsync();
         }
 
         private void SaveFileIfNotExist(string base64, string blobName, string extension)

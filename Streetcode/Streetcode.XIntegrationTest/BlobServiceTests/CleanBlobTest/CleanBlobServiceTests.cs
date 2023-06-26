@@ -15,13 +15,12 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("Parimatch")]
-        public async Task ShouldRemoveUnusedFilesFromBlobStorage(string title)
+        [InlineData("ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png")]
+        public async Task ShouldRemoveUnusedFilesFromBlobStorage(string blobName)
         {
             // Arrange
             await _fixture.DbAndStorageSeeding();
-            Image imgToRemove = _fixture.TestDbContext.Images.FirstOrDefault(x => x.Title == title);
-            string blobName = imgToRemove.BlobName;
+            Image imgToRemove = _fixture.TestDbContext.Images.FirstOrDefault(x => x.BlobName == blobName);
             _fixture.TestDbContext.Images.Remove(imgToRemove);
             await _fixture.TestDbContext.SaveChangesAsync();
 
@@ -33,13 +32,12 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("Parimatch")]
-        public async Task NothingToRemoveFromBlobStorage(string title)
+        [InlineData("ED_kNMjZkMDz6_syM5klb8HGDyfU72Q6Sdz_Y4DmCJ8=.png")]
+        public async Task NothingToRemoveFromBlobStorage(string blobName)
         {
             // Arrange
             await _fixture.DbAndStorageSeeding();
-            Image imgToRemove = _fixture.TestDbContext.Images.FirstOrDefault(x => x.Title == title);
-            string blobName = imgToRemove.BlobName;
+            Image imgToRemove = _fixture.TestDbContext.Images.FirstOrDefault(x => x.BlobName == blobName);
 
             // Act
             await _fixture.blobService.CleanBlobStorage();

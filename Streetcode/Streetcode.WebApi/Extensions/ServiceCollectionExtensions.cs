@@ -53,18 +53,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(ApiRequestResponseMiddleware));
     }
 
-    public static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, LogEventLevel minimumLogLevel)
-    {
-        builder.Host.UseSerilog((ctx, services, lc) =>
-        {
-            lc.Enrich.WithProperty("ApplicationName", "Streetcode");
-            lc.MinimumLevel.Is(minimumLogLevel);
-            lc.WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Literate);
-        });
-
-        return builder;
-    }
-
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");

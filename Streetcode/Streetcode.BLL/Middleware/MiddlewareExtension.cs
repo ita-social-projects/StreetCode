@@ -5,10 +5,9 @@ namespace Streetcode.BLL.Middleware
 {
     public static class MiddlewareExtension
     {
-        public static IApplicationBuilder UseMiddleware<T>(this IApplicationBuilder app )
-            where T : IMiddleware
+        public static IApplicationBuilder UseRequestResponseMiddleware(this IApplicationBuilder app)
         {
-            return app.UseMiddleware(typeof(T));
+            return app.UseMiddleware<ApiRequestResponseMiddleware>();
         }
     }
 }

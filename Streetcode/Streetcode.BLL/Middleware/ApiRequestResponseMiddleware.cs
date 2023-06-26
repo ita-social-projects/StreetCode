@@ -14,13 +14,12 @@ namespace Streetcode.BLL.Middleware
     public class ApiRequestResponseMiddleware : IMiddleware
     {
         private readonly ILoggerService _loggerService;
-        private readonly IConfiguration _configuration;
-        private string[] _loggerPropertiesExceptions = { "password" };
+        private string[] _loggerPropertiesExceptions;
 
         public ApiRequestResponseMiddleware(ILoggerService loggerService, IConfiguration configuration)
         {
             _loggerService = loggerService;
-            _configuration = configuration;
+            _loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore").Get<string[]>();
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -38,7 +37,7 @@ namespace Streetcode.BLL.Middleware
 
             var response = await GetResponseAsTextAsync(context.Response);
 
-            var filteredResponse = GetResponseWithMaxLength(response, context.Request.Path);
+            var filteredResponse = GetFilteredResponse(response);
 
             _loggerService.LogInformation(filteredResponse);
 
@@ -75,7 +74,7 @@ namespace Streetcode.BLL.Middleware
             return text;
         }
 
-        private string GetResponseWithMaxLength(string response, string requestPath)
+        private string GetFilteredResponse(string response)
         {
             try
             {
@@ -107,7 +106,7 @@ namespace Streetcode.BLL.Middleware
         {
             foreach (var property in token.Children<JProperty>().ToList())
             {
-                if (!_loggerPropertiesExceptions.Contains(property.Name.ToString()))
+                if (!_loggerPropertiesExceptions.Contains(property.Name.ToString().ToLower()))
                 {
                     if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > 100)
                     {

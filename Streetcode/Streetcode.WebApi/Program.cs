@@ -33,7 +33,7 @@ else
 
 app.UseCors();
 app.UseHttpsRedirection();
-app.UseMiddleware<ApiRequestResponseMiddleware>();
+app.UseRequestResponseMiddleware();
 app.UseRouting();
 
 app.UseAuthentication();

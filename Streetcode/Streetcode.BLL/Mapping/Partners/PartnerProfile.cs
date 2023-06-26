@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.DTO.Partners.Create;
+using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.DAL.Entities.Partners;
 
 namespace Streetcode.BLL.Mapping.Partners;
@@ -13,5 +15,7 @@ public class PartnerProfile : Profile
             .ForPath(dto => dto.TargetUrl.Href, conf => conf.MapFrom(ol => ol.TargetUrl));
         CreateMap<Partner, CreatePartnerDTO>().ReverseMap();
         CreateMap<Partner, PartnerShortDTO>().ReverseMap();
+        CreateMap<PartnersUpdateDTO, StreetcodePartner>()
+          .ReverseMap();
     }
 }

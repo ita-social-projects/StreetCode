@@ -525,16 +525,19 @@ namespace Streetcode.WebApi.Extensions
                                     new Art
                                     {
                                         ImageId = 19,
+                                        Title = "Анатолій Федірко",
                                         Description = "Анатолій Федірко, «Український супрематичний політичний діяч Михайло Грушевський», 2019-2020 роки."
                                     },
                                     new Art
                                     {
                                         ImageId = 20,
+                                        Title = "Анатолій Федірко",
                                         Description = "Анатолій Федірко, «Український супрематичний політичний діяч Михайло Грушевський», 2019-2020 роки."
                                     },
                                     new Art
                                     {
                                         ImageId = 21,
+                                        Title = "Назар Дубів",
                                         Description = "Назар Дубів опублікував серію малюнків, у яких перетворив класиків української літератури та політичних діячів на сучасних модників"
                                     },
                                     new Art
@@ -544,31 +547,37 @@ namespace Streetcode.WebApi.Extensions
                                     new Art
                                     {
                                         ImageId = 22,
+                                        Title = "Козаки на орбіті",
                                         Description = "«Козаки на орбіті» поєднує не тільки тему козаків, а й апелює до космічної тематики."
                                     },
                                     new Art
                                     {
                                         ImageId = 21,
+                                        Title = "Січових стрільців",
                                         Description = "На вулиці Січових стрільців, 75 закінчили малювати мурал Михайла Грушевського на місці малюнка будинку з лелекою."
                                     },
                                     new Art
                                     {
                                         ImageId = 16,
+                                        Title = "Січових стрільців",
                                         Description = "Some Description"
                                     },
                                     new Art
                                     {
                                         ImageId = 17,
+                                        Title = "Січових стрільців",
                                         Description = "Some Description"
                                     },
                                     new Art
                                     {
                                         ImageId = 18,
+                                        Title = "Січових стрільців",
                                         Description = "Some Description"
                                     },
                                     new Art
                                     {
                                         ImageId = 19,
+                                        Title = "Січових стрільців",
                                         Description = "Some Description"
                                     });
 
@@ -1050,13 +1059,11 @@ namespace Streetcode.WebApi.Extensions
                                     new TransactionLink
                                     {
                                         Url = "https://streetcode/1",
-                                        QrCodeUrl = "https://qrcode/1",
                                         StreetcodeId = 1
                                     },
                                     new TransactionLink
                                     {
                                         Url = "https://streetcode/2",
-                                        QrCodeUrl = "https://qrcode/2",
                                         StreetcodeId = 2
                                     });
 
@@ -1183,8 +1190,30 @@ namespace Streetcode.WebApi.Extensions
                                         ImageId = 17,
                                         StreetcodeId = 2
                                     });
-
                                 await dbContext.SaveChangesAsync();
+                                dbContext.ImageDetailses.AddRange(new[]
+                                {
+                                     new ImageDetails()
+                                     {
+                                         ImageId = 6,
+                                         Alt = "Additional inforamtaion for  wow-fact photo 1"
+                                     },
+                                     new ImageDetails()
+                                     {
+                                         ImageId = 16,
+                                         Alt = "Additional inforamtaion for  wow-fact photo 2"
+                                     },
+                                     new ImageDetails()
+                                     {
+                                         ImageId = 17,
+                                         Alt = "Additional inforamtaion for  wow-fact photo 3"
+                                     },
+                                     new ImageDetails()
+                                     {
+                                         ImageId = 19,
+                                         Alt = "Additional inforamtaion for  wow-fact photo 3"
+                                     },
+                                });
                             }
 
                             if (!dbContext.SourceLinks.Any())

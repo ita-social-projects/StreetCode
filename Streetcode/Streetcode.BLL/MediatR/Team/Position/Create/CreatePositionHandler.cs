@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.ToString());
+                return Result.Fail(ex.Message);
             }
 
             return Result.Ok(_mapper.Map<PositionDTO>(newPosition));

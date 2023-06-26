@@ -39,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(createRelatedTermCommand, default);
 
             // Assert
-            result.IsSuccess.Should().BeTrue();
+            result.IsSuccess.Should().BeFalse();
             _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
             _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }

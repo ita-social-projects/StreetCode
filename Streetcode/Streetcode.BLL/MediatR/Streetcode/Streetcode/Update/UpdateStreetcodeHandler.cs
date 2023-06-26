@@ -150,7 +150,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
-          
             return query;
         }
 

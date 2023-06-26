@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Polly;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.XIntegrationTest.Base

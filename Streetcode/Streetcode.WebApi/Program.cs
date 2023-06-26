@@ -46,7 +46,7 @@ if (app.Environment.EnvironmentName == "Local")
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
     await app.ApplyMigrations();
-    await app.SeedDataAsync();
+/*    await app.SeedDataAsync();*/
 }
 else
 {
@@ -58,7 +58,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard();
+
+app.UseHangfireDashboard("/dash");
 
 if (app.Environment.EnvironmentName != "Local")
 {

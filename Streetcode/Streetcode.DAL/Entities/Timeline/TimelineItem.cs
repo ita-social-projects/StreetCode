@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
@@ -21,13 +21,14 @@ public class TimelineItem
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
+    [MaxLength(600)]
     public string? Description { get; set; }
 
     public int StreetcodeId { get; set; }
 
     public StreetcodeContent? Streetcode { get; set; }
 
-    public List<HistoricalContext>? HistoricalContexts { get; set; }
+    public List<HistoricalContextTimeline> HistoricalContextTimelines { get; set; } = new ();
 }

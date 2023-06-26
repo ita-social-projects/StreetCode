@@ -59,6 +59,13 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
+    public void SaveFileInStorageBase64(string base64, string name, string extension)
+    {
+        byte[] imageBytes = Convert.FromBase64String(base64);
+        Directory.CreateDirectory(_blobPath);
+        EncryptFile(imageBytes, extension, name);
+    }
+
     public void DeleteFileInStorage(string name)
     {
         File.Delete($"{_blobPath}{name}");

@@ -5,31 +5,16 @@ namespace Streetcode.WebApi.Extensions;
 
 public static class WebApplicationExtensions
 {
-    public static async Task MigrateAndSeedDbAsync(
-        this WebApplication app,
-        string scriptsFolderPath = "./Streetcode.DAL/Persistence/Scripts/")
+    public static async Task ApplyMigrations(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
         try
         {
-            var streetcodeContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
-            var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
-
-            var scriptFiles = Directory.GetFiles($"{projRootDirectory}/{scriptsFolderPath}");
-
-            await streetcodeContext.Database.EnsureDeletedAsync();
+            var streetcodeContext = app.Services.GetRequiredService<StreetcodeDbContext>();
             await streetcodeContext.Database.MigrateAsync();
-
-            var filesContexts = await Task.WhenAll(scriptFiles.Select(file => File.ReadAllTextAsync(file)));
-
-            foreach (var task in filesContexts)
-            {
-                await streetcodeContext.Database.ExecuteSqlRawAsync(task);
-            }
         }
         catch (Exception ex)
         {
-            var logger = app.Services.GetRequiredService<ILogger<Program>>();
             logger.LogError(ex, "An error occured during startup migration");
         }
     }

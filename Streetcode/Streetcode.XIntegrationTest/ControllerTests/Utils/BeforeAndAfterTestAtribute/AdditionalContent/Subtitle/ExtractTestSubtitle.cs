@@ -42,10 +42,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             {
                 SubtitleForTest = sqlDbHelper.AddNewItem(new DAL.Entities.AdditionalContent.Subtitle()
                 {
-                    FirstName = "FirstName",
-                    LastName = "LastName",
-                    Description = "Description",
-                    Status = DAL.Enums.SubtitleStatus.Editor,
+                    SubtitleText = "text",
                     StreetcodeId = streetcodeId,
                 });
             }

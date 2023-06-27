@@ -1,10 +1,10 @@
-﻿using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
-using Xunit;
-
-namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
+    using Streetcode.BLL.DTO.Media.Art;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+    using Xunit;
+
     public class StreetcodeArtControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)

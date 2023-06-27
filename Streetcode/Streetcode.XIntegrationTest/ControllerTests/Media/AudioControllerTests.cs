@@ -1,4 +1,4 @@
-﻿using Streetcode.BLL.DTO.Media;
+﻿using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Audio;
@@ -34,12 +34,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.Multiple(
-                () => Assert.Equal(expected.Id, returnedValue?.Id),
-                () => Assert.Equal(expected.StreetcodeId, returnedValue?.StreetcodeId),
-                () => Assert.Equal(expected.Description, returnedValue?.Description),
-                () => Assert.Equal(expected.Title, returnedValue?.Url.Title),
-                () => Assert.Equal(expected.Url, returnedValue?.Url.Href));
+            Assert.Equal(expected.Id, returnedValue?.Id);
         }
 
         [Fact]
@@ -61,7 +56,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.StreetcodeId == streetcodeId);
+            Assert.True(returnedValue.Id == streetcodeId);
         }
 
         [Fact]

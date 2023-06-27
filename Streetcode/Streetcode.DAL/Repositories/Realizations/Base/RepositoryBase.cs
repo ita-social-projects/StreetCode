@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
+using MimeKit;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -21,19 +23,30 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return GetQueryable(predicate).AsNoTracking();
     }
 
-    public async Task<EntityState> CreateAsync(T entity)
+    public T Create(T entity)
     {
-        return (await _dbContext.Set<T>().AddAsync(entity)).State;
+        return _dbContext.Set<T>().Add(entity).Entity;
     }
 
-    public void Create(T entity)
+    public async Task<T> CreateAsync(T entity)
     {
-        _dbContext.Set<T>().Add(entity);
+        var tmp = await _dbContext.Set<T>().AddAsync(entity);
+        return tmp.Entity;
     }
 
-    public void Update(T entity)
+    public Task CreateRangeAsync(IEnumerable<T> items)
     {
-        _dbContext.Set<T>().Update(entity);
+        return _dbContext.Set<T>().AddRangeAsync(items);
+    }
+
+    public EntityEntry<T> Update(T entity)
+    {
+        return _dbContext.Set<T>().Update(entity);
+    }
+
+    public void UpdateRange(IEnumerable<T> items)
+    {
+        _dbContext.Set<T>().UpdateRange(items);
     }
 
     public void Delete(T entity)
@@ -41,9 +54,29 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Set<T>().Remove(entity);
     }
 
+    public void DeleteRange(IEnumerable<T> items)
+    {
+        _dbContext.Set<T>().RemoveRange(items);
+    }
+
     public void Attach(T entity)
     {
         _dbContext.Set<T>().Attach(entity);
+    }
+
+    public EntityEntry<T> Entry(T entity)
+    {
+        return _dbContext.Entry(entity);
+    }
+
+    public void Detach(T entity)
+    {
+        _dbContext.Entry(entity).State = EntityState.Detached;
+    }
+
+    public Task ExecuteSqlRaw(string query)
+    {
+        return _dbContext.Database.ExecuteSqlRawAsync(query);
     }
 
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
@@ -63,11 +96,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
-    public async Task<IEnumerable<T>?> GetAllAsync(
+    public async Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return await GetQueryable(predicate, include).ToListAsync() ?? new List<T>();
+        return await GetQueryable(predicate, include).ToListAsync();
     }
 
     public async Task<IEnumerable<T>?> GetAllAsync(
@@ -122,6 +155,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
             query = query.Select(selector);
         }
 
-        return query;
+        return query.AsNoTracking();
     }
 }

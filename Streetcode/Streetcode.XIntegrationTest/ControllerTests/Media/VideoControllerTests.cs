@@ -1,6 +1,7 @@
 ﻿namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     using Streetcode.BLL.DTO.Media;
+    using Streetcode.BLL.DTO.Media.Audio;
     using Streetcode.XIntegrationTest.ControllerTests.Utils;
     using Xunit;
 

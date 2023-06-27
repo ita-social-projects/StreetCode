@@ -1,4 +1,5 @@
 using Hangfire;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 
@@ -8,16 +9,17 @@ builder.Host.ConfigureApplication();
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
+builder.Services.ConfigureBlob(builder);
+builder.Services.ConfigurePayment(builder);
+builder.Services.ConfigureInstagram(builder);
 
 var app = builder.Build();
-
-await app.MigrateAndSeedDbAsync();
-
 if (app.Environment.EnvironmentName == "Local")
 {
-    builder.Configuration.AddUserSecrets<string>();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
+    await app.ApplyMigrations();
+/*    await app.SeedDataAsync();*/
 }
 else
 {
@@ -31,11 +33,17 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/dash");
 
-// change Cron.Monthly to set another parsing interval from ukrposhta
-RecurringJob.AddOrUpdate<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+if (app.Environment.EnvironmentName != "Local")
+{
+    BackgroundJob.Schedule<WebParsingUtils>(
+      wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+    RecurringJob.AddOrUpdate<WebParsingUtils>(
+      wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+    RecurringJob.AddOrUpdate<BlobService>(
+        b => b.CleanBlobStorage(), Cron.Monthly);
+}
 
 app.MapControllers();
 

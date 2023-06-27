@@ -37,10 +37,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             Assert.NotNull(returnedValue);
             Assert.Multiple(
                 () => Assert.Equal(expectedSubtitle.Id, returnedValue?.Id),
-                () => Assert.Equal(expectedSubtitle.LastName, returnedValue?.LastName),
-                () => Assert.Equal(expectedSubtitle.FirstName, returnedValue?.FirstName),
-                () => Assert.Equal(expectedSubtitle.Description, returnedValue?.Description),
-                () => Assert.Equal((int)expectedSubtitle.Status, (int)returnedValue?.SubtitleStatus));
+                () => Assert.Equal(expectedSubtitle.SubtitleText, returnedValue?.SubtitleText));
         }
 
         [Fact]
@@ -59,11 +56,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
 
             Assert.True(response.IsSuccessful);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(s => s.StreetcodeId == streetcodeId));
+            Assert.Equal(streetcodeId, returnedValue.StreetcodeId);
         }
     }
 }

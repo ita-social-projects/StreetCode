@@ -24,9 +24,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 
                 ImageForTest = sqlDbHelper.AddNewItem(new DAL.Entities.Media.Images.Image()
                 {
-                    Alt = "AltString",
-                    Title = "title",
-                    Url = "imageUrl",
+                    Base64 = "prettybase64",
+                    BlobName = "blobName",
                     Art = ExtractTestArt.ArtForTest,
                 });
                 sqlDbHelper.SaveChanges();

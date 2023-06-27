@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Image.GetAll;
+using Streetcode.BLL.MediatR.Media.Image.GetBaseImage;
 using Streetcode.BLL.MediatR.Media.Image.GetById;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Media.Image.Create;
+using Streetcode.BLL.MediatR.Media.Image.Delete;
+using Streetcode.BLL.MediatR.Media.Image.Update;
+using Streetcode.WebApi.Attributes;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -27,23 +33,26 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ImageDTO image)
+    public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateImageCommand(image)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] ImageDTO image)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDTO image)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new UpdateImageCommand(image)));
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteImageCommand(id)));
+    }
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetBaseImage([FromRoute] int id)
+    {
+        return HandleResult(await Mediator.Send(new GetBaseImageQuery(id)));
     }
 }

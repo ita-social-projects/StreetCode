@@ -37,9 +37,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.NotNull(returnedValue);
             Assert.Multiple(
                 () => Assert.Equal(expectedImage.Id, returnedValue.Id),
-                () => Assert.Equal(expectedImage.Title, returnedValue.Url.Title),
-                () => Assert.Equal(expectedImage.Alt, returnedValue.Alt),
-                () => Assert.Equal(expectedImage.Url, returnedValue.Url.Href));
+                () => Assert.Equal(expectedImage.BlobName, returnedValue.BlobName),
+                () => Assert.Equal(expectedImage.ImageDetails?.Id, returnedValue.ImageDetails?.Id));
         }
 
         [Fact]
@@ -63,7 +62,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(i => i.Streetcodes.Any(s => s.Id == streetcodeId)));
         }
 
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()

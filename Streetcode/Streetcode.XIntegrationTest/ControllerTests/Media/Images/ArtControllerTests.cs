@@ -1,9 +1,7 @@
-﻿using Streetcode.BLL.DTO.Media.Images;
+﻿using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art;
-using System.Net.Http.Json;
-using System.Text.Json;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
@@ -62,7 +60,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(t => t.Streetcodes.All(s => s.Id == streetcodeId)));
         }
 
         [Fact]

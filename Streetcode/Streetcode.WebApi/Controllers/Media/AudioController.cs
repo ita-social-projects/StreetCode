@@ -1,8 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.MediatR.Media.Audio.Create;
+using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
+using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
+using Streetcode.BLL.MediatR.Media.Audio.Update;
+using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
@@ -26,24 +32,27 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] AudioDTO audio)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetBaseAudio([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new GetBaseAudioQuery(id)));
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] AudioDTO audio)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDTO audio)
+    {
+        return HandleResult(await Mediator.Send(new UpdateAudioCommand(audio)));
     }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        // TODO implement here
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteAudioCommand(id)));
     }
 }

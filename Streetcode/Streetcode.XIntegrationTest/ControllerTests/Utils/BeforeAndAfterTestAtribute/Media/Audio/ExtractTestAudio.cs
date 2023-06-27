@@ -7,10 +7,11 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Audio
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestAudio: BeforeAfterTestAttribute
+    internal class ExtractTestAudio : BeforeAfterTestAttribute
     {
-        public static DAL.Entities.Media.Audio AudioForTest;
+        public static DAL.Entities.Media.Audio? AudioForTest;
 
+        /// <inheritdoc/>
         public override void Before(MethodInfo methodUnderTest)
         {
             var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
@@ -19,14 +20,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             {
                 if (ExtractTestStreetcode.StreetcodeForTest == null)
                 {
-                    new ExtractTestStreetcode().Before(null);
+                    new ExtractTestStreetcode().Before(methodUnderTest);
                 }
 
                 sqlDbHelper.SaveChanges();
                 sqlDbHelper.AddNewItem(new DAL.Entities.Media.Audio()
                 {
-                    Url = "imageUrl",
-                    StreetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id,
+                    BlobName = "nicebase64",
+                    Title = "Title",
+                    MimeType = "mpeg",
                 });
                 sqlDbHelper.SaveChanges();
             }

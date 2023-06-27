@@ -27,8 +27,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 new ExtractTestStreetcode().Before(methodUnderTest);
                 TransactionLinkForTest = sqlDbHelper.AddNewItem(new TransactionLink()
                 {
-                    QrCodeUrl = "qrcodeurl",
-                    QrCodeUrlTitle = "QrCodeUrlTitle",
                     Url = "url",
                     UrlTitle = "url title",
                     StreetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id

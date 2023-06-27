@@ -1,6 +1,7 @@
 ﻿namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     using Streetcode.BLL.DTO.AdditionalContent;
+    using Streetcode.BLL.DTO.AdditionalContent.Tag;
     using Streetcode.DAL.Entities.AdditionalContent;
     using Streetcode.DAL.Entities.Streetcode.TextContent;
     using Streetcode.XIntegrationTest.ControllerTests.Utils;
@@ -57,11 +58,10 @@
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
         {
             var response = await client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(t => t.Streetcodes.Any(s => s.Id == streetcodeId)));
         }
 
         [Fact]

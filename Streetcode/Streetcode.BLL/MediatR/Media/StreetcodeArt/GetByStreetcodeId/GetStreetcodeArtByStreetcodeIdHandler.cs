@@ -2,20 +2,26 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 {
-    public class GetStreetcodeArtByStreetcodeIdHandler : IRequestHandler<GetStreetcodeArtByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtDTO>>>
+  public class GetStreetcodeArtByStreetcodeIdHandler : IRequestHandler<GetStreetcodeArtByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtDTO>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IBlobService _blobService;
 
-        public GetStreetcodeArtByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetStreetcodeArtByStreetcodeIdHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            IBlobService blobService)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _blobService = blobService;
         }
 
         public async Task<Result<IEnumerable<StreetcodeArtDTO>>> Handle(GetStreetcodeArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -39,8 +45,14 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
                 return Result.Fail(new Error($"Cannot find an art with corresponding streetcode id: {request.StreetcodeId}"));
             }
 
-            var artDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(art);
-            return Result.Ok(artDto);
+            var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(art);
+
+            foreach (var artDto in artsDto)
+            {
+                artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
+            }
+
+            return Result.Ok(artsDto);
         }
     }
 }

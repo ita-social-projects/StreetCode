@@ -23,96 +23,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("FactStreetcodeContent", b =>
-                {
-                    b.Property<int>("FactsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("FactsId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_fact", "streetcode");
-                });
-
-            modelBuilder.Entity("HistoricalContextTimelineItem", b =>
-                {
-                    b.Property<int>("HistoricalContextsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimelineItemsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("HistoricalContextsId", "TimelineItemsId");
-
-                    b.HasIndex("TimelineItemsId");
-
-                    b.ToTable("timeline_item_historical_context", "timeline");
-                });
-
-            modelBuilder.Entity("ImageStreetcodeContent", b =>
-                {
-                    b.Property<int>("ImagesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImagesId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_image", "streetcode");
-                });
-
-            modelBuilder.Entity("PartnerStreetcodeContent", b =>
-                {
-                    b.Property<int>("PartnersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PartnersId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_partners", "streetcode");
-                });
-
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
-                {
-                    b.Property<int>("SourceLinkCategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinkCategoriesId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("streetcode_source_link_categories", "sources");
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.Property<int>("SourceLinksId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubCategoriesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SourceLinksId", "SubCategoriesId");
-
-                    b.HasIndex("SubCategoriesId");
-
-                    b.ToTable("source_link_source_link_subcategory", "sources");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Coordinate", b =>
                 {
                     b.Property<int>("Id")
@@ -138,6 +48,27 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator<string>("CoordinateType").HasValue("coordinate_base");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
+                {
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsVisible")
+                        .HasColumnType("bit");
+
+                    b.HasKey("StreetcodeId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("streetcode_tag_index", "add_content");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
                 {
                     b.Property<int>("Id")
@@ -146,118 +77,18 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
-
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("SubtitleText")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StreetcodeId");
 
                     b.ToTable("subtitles", "add_content");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "description",
-                            FirstName = "Dmytro",
-                            LastName = "Buchkovsky",
-                            Status = (byte)0,
-                            StreetcodeId = 1,
-                            Url = "https://t.me/MaisterD"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "description",
-                            FirstName = "Dmytro",
-                            LastName = "Buchkovsky",
-                            Status = (byte)1,
-                            StreetcodeId = 2,
-                            Url = "https://t.me/MaisterD"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "description",
-                            FirstName = "Dmytro",
-                            LastName = "Buchkovsky",
-                            Status = (byte)0,
-                            StreetcodeId = 3,
-                            Url = "https://t.me/MaisterD"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "description",
-                            FirstName = "Oleksndr",
-                            LastName = "Lazarenko",
-                            Status = (byte)0,
-                            StreetcodeId = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            FirstName = "Oleksndr",
-                            LastName = "Lazarenko",
-                            Status = (byte)0,
-                            StreetcodeId = 2
-                        },
-                        new
-                        {
-                            Id = 6,
-                            FirstName = "Yaroslav",
-                            LastName = "Chushenko",
-                            Status = (byte)1,
-                            StreetcodeId = 1
-                        },
-                        new
-                        {
-                            Id = 7,
-                            FirstName = "Yaroslav",
-                            LastName = "Chushenko",
-                            Status = (byte)1,
-                            StreetcodeId = 3
-                        },
-                        new
-                        {
-                            Id = 8,
-                            FirstName = "Nazarii",
-                            LastName = "Hovdysh",
-                            Status = (byte)0,
-                            StreetcodeId = 4
-                        },
-                        new
-                        {
-                            Id = 9,
-                            FirstName = "Tatiana",
-                            LastName = "Shumylo",
-                            Status = (byte)1,
-                            StreetcodeId = 4
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
@@ -276,46 +107,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tags", "add_content");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "writer"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "artist"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Title = "composer"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Title = "wictory"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Title = "Наукова школа"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Title = "Історія"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Title = "Політика"
-                        });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Donation", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,9 +117,31 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QrId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeCoordinateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("donations", "feedback");
+                    b.HasIndex("StreetcodeCoordinateId")
+                        .IsUnique();
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("qr_coordinates", "coordinates");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>
@@ -337,7 +153,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -351,21 +168,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("responses", "feedback");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Good Job",
-                            Email = "dmytrobuchkovsky@gmail.com"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Nice project",
-                            Email = "mail@gmail.com",
-                            Name = "Dmytro"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
@@ -376,60 +178,23 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("BlobName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("StreetcodeId")
-                        .IsUnique();
-
                     b.ToTable("audios", "media");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "for streetcode1",
-                            StreetcodeId = 1,
-                            Title = "audio1",
-                            Url = "https://somelink1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "for streetcode2",
-                            StreetcodeId = 2,
-                            Title = "audio2",
-                            Url = "https://somelink2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "for streetcode3",
-                            StreetcodeId = 3,
-                            Title = "audio3",
-                            Url = "https://somelink3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "for streetcode4",
-                            StreetcodeId = 4,
-                            Title = "audio4",
-                            Url = "https://somelink4"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -441,10 +206,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
@@ -452,42 +222,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("arts", "media");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Анатолій Федірко, «Український супрематичний політичний діяч Михайло Грушевський», 2019-2020 роки.",
-                            ImageId = 18
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ImageId = 19
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Назар Дубів опублікував серію малюнків, у яких перетворив класиків української літератури та політичних діячів на сучасних модників",
-                            ImageId = 20
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ImageId = 21
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "«Козаки на орбіті» поєднує не тільки тему козаків, а й апелює до космічної тематики.",
-                            ImageId = 22
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "На вулиці Січових стрільців, 75 закінчили малювати мурал Михайла Грушевського на місці малюнка будинку з лелекою.",
-                            ImageId = 23
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Image", b =>
@@ -498,184 +232,61 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Alt")
+                    b.Property<string>("BlobName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("images", "media");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.ImageDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Alt")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("images", "media");
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Alt = "Портрет Тараса Шевченка",
-                            Title = "Тарас Шевченко",
-                            Url = "http://www.univ.kiev.ua/tpl/img/photo-osobystosti/foto-shevchenko.jpg"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Alt = "Тарас Шевченко: Погруддя жінки",
-                            Title = "Погруддя жінки",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/1/10/Taras_Shevchenko_painting_0001.jpg"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Alt = "Тарас Шевченко: Портрет Павла Васильовича Енгельгардта",
-                            Title = "Портрет Павла Васильовича Енгельгардта",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Enhelhard_by_Shevchenko.jpg"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Alt = "Тарас Шевченко: Портрет невідомого",
-                            Title = "Портрет невідомого",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD_%D1%96_%D0%BC%D0%B0%D0%BB%D1%8E%D0%BD%D0%BA%D1%96%D0%B2_%D0%A2%D0%B0%D1%80%D0%B0%D1%81%D0%B0_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%B0#/media/%D0%A4%D0%B0%D0%B9%D0%BB:Portret_nevidomoho_Shevchenko_.jpg"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Alt = "Кобзар",
-                            Title = "Кобзар",
-                            Url = "https://www.megakniga.com.ua/uploads/cache/Products/Product_images_343456/d067b1_w1600.jpg"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Alt = "Мико́ла Костома́ров",
-                            Title = "Мико́ла Костома́ров",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/2/21/PGRS_2_051_Kostomarov_-_crop.jpg"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Alt = "Василь Білозерський",
-                            Title = "Василь Білозерський",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/6/6a/%D0%91%D0%B5%D0%BB%D0%BE%D0%B7%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D0%B8%D0%B9.JPG"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Alt = "Звільнення Херсона",
-                            Title = "Звільнення Херсона",
-                            Url = "https://img.tsn.ua/cached/907/tsn-15890496c3fba55a55e21f0ca3090d06/thumbs/x/3e/1a/97fe20f34f78c6f13ea84dbf15ee1a3e.jpeg"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Alt = "book",
-                            Title = "book",
-                            Url = "https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8b3BlbiUyMGJvb2t8ZW58MHx8MHx8&w=1000&q=80"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Alt = "video",
-                            Title = "video",
-                            Url = "https://www.earnmydegree.com/sites/all/files/public/video-prod-image.jpg"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Alt = "article",
-                            Title = "article",
-                            Url = "https://images.laws.com/constitution/constitutional-convention.jpg"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Alt = "SoftServe",
-                            Title = "SoftServe",
-                            Url = "https://itukraine.org.ua/files/img/illus/members/softserve%20logo.png"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Alt = "Parimatch",
-                            Title = "Parimatch",
-                            Url = "https://static.ua-football.com/img/upload/19/270071.png"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Alt = "Community Partners",
-                            Title = "Community Partners",
-                            Url = "https://communitypartnersinc.org/wp-content/uploads/2018/03/CP_Logo_RGB_Horizontal-e1520810390513.png"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Alt = "Володимир-Варфоломей",
-                            Title = "Володимир-Варфоломей",
-                            Url = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg/800px-Ecumenical_Patriarch_Bartholomew_in_the_Vatican_2021_%28cropped%29.jpg"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Alt = "Леся Українка",
-                            Title = "Леся Українка",
-                            Url = "https://api.culture.pl/sites/default/files/styles/embed_image_360/public/2022-03/lesya_ukrainka_portrait_public_domain.jpg?itok=1jAIv48D"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Alt = "Іван Мазепа",
-                            Title = "Іван Мазепа",
-                            Url = "https://reibert.info/attachments/hetmans_catalog-1-4-scaled-jpg.18981447/"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Alt = "Грушевький",
-                            Title = "Михайло Грушевський",
-                            Url = "/assets/2296e9b1db2ab72f2db9.png"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Alt = "Грушевький",
-                            Title = "Грушевський",
-                            Url = "/assets/35b44f042d027c3a7589.png"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Alt = "Грушевський",
-                            Title = "Сучасний Грушевський",
-                            Url = "/assets/c58dac51751395fb3217.png"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Alt = "мурал",
-                            Title = "Мурал Грушевського",
-                            Url = "/assets/233c6bbb0b79df230d93.png"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Alt = "Козаки на орбіті",
-                            Title = "Козаки на орбіті",
-                            Url = "/assets/02b59f4ef917107514e3.png"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Alt = "мурал",
-                            Title = "Мурал М. Грушевського",
-                            Url = "/assets/8ecaa9756bac938f8f73.png"
-                        });
+                    b.ToTable("image_details", "media");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.StreetcodeImage", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageId", "StreetcodeId");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("streetcode_image", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Video", b =>
@@ -705,39 +316,46 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("StreetcodeId");
 
                     b.ToTable("videos", "media");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "for streetcode1",
-                            StreetcodeId = 2,
-                            Title = "audio1",
-                            Url = "https://somelink1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StreetcodeId = 1,
-                            Title = "Біографія Т.Г.Шевченка",
-                            Url = "https://www.youtube.com/watch?v=VVFEi6lTpZk&ab_channel=%D0%9E%D1%81%D1%82%D0%B0%D0%BD%D0%BD%D1%96%D0%B9%D0%93%D0%B5%D1%82%D1%8C%D0%BC%D0%B0%D0%BD"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "За виконанням Богдана Ступки",
-                            StreetcodeId = 1,
-                            Title = "Вірш: Мені Однаково",
-                            Url = "https://www.youtube.com/watch?v=f55dHPEY-0U&ab_channel=%D0%86%D0%B3%D0%BE%D1%80%D0%9E%D0%BF%D0%B0%D1%86%D1%8C%D0%BA%D0%B8%D0%B9"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "За виконанням Богдана Ступки",
-                            StreetcodeId = 4,
-                            Title = "Вірш: Мені Однаково",
-                            Url = "https://youtu.be/v3siIQi4nCQ"
-                        });
+            modelBuilder.Entity("Streetcode.DAL.Entities.News.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("URL")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique()
+                        .HasFilter("[ImageId] IS NOT NULL");
+
+                    b.HasIndex("URL")
+                        .IsUnique();
+
+                    b.ToTable("news", "news");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
@@ -749,26 +367,33 @@ namespace Streetcode.DAL.Persistence.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
 
                     b.Property<bool>("IsKeyPartner")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsVisibleEverywhere")
+                        .HasColumnType("bit");
+
                     b.Property<int>("LogoId")
                         .HasColumnType("int");
 
                     b.Property<string>("TargetUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UrlTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -776,35 +401,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("partners", "partners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Український культурний фонд є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи. Мистецький арсенал є флагманською українською інституцією культури, яка у своїй діяльності інтегрує різні види мистецтва – від сучасного мистецтва, нової музики й театру до літератури та музейної справи.",
-                            IsKeyPartner = true,
-                            LogoId = 12,
-                            TargetUrl = "https://www.softserveinc.com/en-us",
-                            Title = "SoftServe",
-                            UrlTitle = "go to SoftServe page"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "some text",
-                            IsKeyPartner = false,
-                            LogoId = 13,
-                            TargetUrl = "https://parimatch.com/",
-                            Title = "Parimatch"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsKeyPartner = false,
-                            LogoId = 14,
-                            TargetUrl = "https://partners.salesforce.com/pdx/s/?language=en_US&redirected=RGSUDODQUL",
-                            Title = "comunity partner"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.PartnerSourceLink", b =>
@@ -823,7 +419,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("TargetUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -835,139 +432,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("PartnerId");
 
                     b.ToTable("partner_source_links", "partners");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            LogoType = (byte)0,
-                            PartnerId = 1,
-                            TargetUrl = "https://twitter.com/SoftServeInc",
-                            Title = "Twitter"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            LogoType = (byte)1,
-                            PartnerId = 1,
-                            TargetUrl = "https://www.instagram.com/softserve_people/",
-                            Title = "Instagram"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            LogoType = (byte)2,
-                            PartnerId = 1,
-                            TargetUrl = "https://www.facebook.com/SoftServeCompany",
-                            Title = "facebook"
-                        });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLink", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Partners.StreetcodePartner", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PartnerId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Title")
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                    b.HasKey("PartnerId", "StreetcodeId");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("StreetcodeId");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("source_links", "sources");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "Том 2: Суспільно-політичні твори (1907–1914).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "Том 3: Суспільно-політичні твори (1907 — березень 1917).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Title = "Том 4. Книга 1: Суспільно-політичні твори (доба Української Центральної Ради, березень 1917 — квітень 1918).",
-                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Title = "Том 5: Історичні студії та розвідки (1888–1896).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Title = "Том 6: Історичні студії та розвідки (1895–1900).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Title = "Том 7: Історичні студії та розвідки (1900–1906).",
-                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Title = "Том 8: Історичні студії та розвідки (1906–1916).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Title = "Том 9: Історичні студії та розвідки (1917–1923).",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Title = "Том 10. Книга 1: Історичні студії та розвідки (1924— 1930)/ упор. О.Юркова.",
-                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Title = "Том 10. Книга 2: Історичні студії та розвідки (1930— 1934)",
-                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Title = "Том 11: Літературно-критичні праці (1883–1931), «По світу»",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Title = "Том 12: Поезія (1882–1903). Проза, драматичні твори, переклади (1883–1886)",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE_%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Title = "Том 13 : Серія \"Літературно-критичні та художні твори (1887-1924)\"",
-                            Url = "https://uk.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:%D0%A2%D0%B0%D1%80%D0%B0%D1%81_%D0%A8%D0%B5%D0%B2%D1%87%D0%B5%D0%BD%D0%BA%D0%BE._%D0%9A%D0%BE%D0%B1%D0%B7%D0%B0%D1%80._1840.pdf"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Title = "Том 14: Рецензії та огляди (1888–1897).",
-                            Url = "https://tsn.ua/ukrayina/z-pisnyami-i-tostami-zvilnennya-hersona-svyatkuyut-v-inshih-mistah-ukrayini-i-navit-za-kordonom-video-2200096.html"
-                        });
+                    b.ToTable("streetcode_partners", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
@@ -991,93 +470,26 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("ImageId");
 
                     b.ToTable("source_link_categories", "sources");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ImageId = 9,
-                            Title = "Книги"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ImageId = 10,
-                            Title = "Фільми"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ImageId = 11,
-                            Title = "Цитати"
-                        });
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("SourceLinkCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Title")
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.HasKey("Id");
+                    b.HasKey("SourceLinkCategoryId", "StreetcodeId");
 
-                    b.HasIndex("SourceLinkCategoryId");
+                    b.HasIndex("StreetcodeId");
 
-                    b.ToTable("source_link_subcategories", "sources");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            SourceLinkCategoryId = 2,
-                            Title = "Фільми про Т. Г. Шевченко"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            SourceLinkCategoryId = 2,
-                            Title = "Хроніки про Т. Г. Шевченко"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            SourceLinkCategoryId = 2,
-                            Title = "Блоги про Т. Г. Шевченко"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            SourceLinkCategoryId = 1,
-                            Title = "Праці Грушевського"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            SourceLinkCategoryId = 1,
-                            Title = "Книги про Грушевського"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            SourceLinkCategoryId = 1,
-                            Title = "Статті"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            SourceLinkCategoryId = 3,
-                            Title = "Пряма мова"
-                        });
+                    b.ToTable("streetcode_source_link_categories", "sources");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -1093,43 +505,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("TargetId");
 
                     b.ToTable("related_figures", "streetcode");
-
-                    b.HasData(
-                        new
-                        {
-                            ObserverId = 1,
-                            TargetId = 2
-                        },
-                        new
-                        {
-                            ObserverId = 1,
-                            TargetId = 3
-                        },
-                        new
-                        {
-                            ObserverId = 2,
-                            TargetId = 3
-                        },
-                        new
-                        {
-                            ObserverId = 1,
-                            TargetId = 4
-                        },
-                        new
-                        {
-                            ObserverId = 5,
-                            TargetId = 1
-                        },
-                        new
-                        {
-                            ObserverId = 6,
-                            TargetId = 1
-                        },
-                        new
-                        {
-                            ObserverId = 7,
-                            TargetId = 1
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArt", b =>
@@ -1152,44 +527,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("ArtId", "StreetcodeId");
 
                     b.ToTable("streetcode_art", "streetcode");
-
-                    b.HasData(
-                        new
-                        {
-                            ArtId = 1,
-                            StreetcodeId = 1,
-                            Index = 1
-                        },
-                        new
-                        {
-                            ArtId = 2,
-                            StreetcodeId = 1,
-                            Index = 2
-                        },
-                        new
-                        {
-                            ArtId = 3,
-                            StreetcodeId = 1,
-                            Index = 3
-                        },
-                        new
-                        {
-                            ArtId = 4,
-                            StreetcodeId = 1,
-                            Index = 4
-                        },
-                        new
-                        {
-                            ArtId = 5,
-                            StreetcodeId = 1,
-                            Index = 5
-                        },
-                        new
-                        {
-                            ArtId = 6,
-                            StreetcodeId = 1,
-                            Index = 6
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
@@ -1200,12 +537,24 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Alias")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("AudioId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<DateTime>("EventEndOrPersonDeathDate")
+                    b.Property<string>("DateString")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("EventStartOrPersonBirthDate")
@@ -1214,13 +563,26 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("StreetcodeType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Teaser")
+                        .HasMaxLength(650)
+                        .HasColumnType("nvarchar(650)");
+
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("TransliterationUrl")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -1233,6 +595,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasDefaultValue(0);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AudioId")
+                        .IsUnique()
+                        .HasFilter("[AudioId] IS NOT NULL");
+
+                    b.HasIndex("Index")
+                        .IsUnique();
+
+                    b.HasIndex("TransliterationUrl")
+                        .IsUnique();
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1249,9 +621,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("FactContent")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
 
                     b.Property<int?>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -1263,22 +639,32 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("ImageId");
 
-                    b.ToTable("facts", "streetcode");
+                    b.HasIndex("StreetcodeId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            FactContent = "Навесні 1838-го Карл Брюллов і Василь Жуковський вирішили викупити молодого поета з кріпацтва. Енгельгардт погодився відпустити кріпака за великі гроші — 2500 рублів. Щоб здобути такі гроші, Карл Брюллов намалював портрет Василя Жуковського — вихователя спадкоємця престолу Олександра Миколайовича, і портрет розіграли в лотереї, у якій взяла участь імператорська родина. Лотерея відбулася 4 травня 1838 року, а 7 травня Шевченкові видали відпускну.",
-                            Title = "Викуп з кріпацтва"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            FactContent = " Ознайомившись випадково з рукописними творами Шевченка й вражений ними, П. Мартос виявив до них великий інтерес. Він порадився із Є. Гребінкою і запропонував Шевченку видати їх окремою книжкою, яку згодом назвали «Кобзарем».",
-                            ImageId = 5,
-                            Title = "Перший Кобзар"
-                        });
+                    b.ToTable("facts", "streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("TermId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Word")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TermId");
+
+                    b.ToTable("related_terms", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
@@ -1291,7 +677,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1301,32 +688,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("terms", "streetcode");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Етнографія — суспільствознавча наука, об'єктом дослідження якої є народи, їхня культура і побут, походження, розселення, процеси культурно-побутових відносин на всіх етапах історії людства.",
-                            Title = "етнограф"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Гра́фіка — вид образотворчого мистецтва, для якого характерна перевага ліній і штрихів, використання контрастів білого та чорного та менше, ніж у живописі, використання кольору. Твори можуть мати як монохромну, так і поліхромну гаму.",
-                            Title = "гравер"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Кріпа́цтво, або кріпосне́ право, у вузькому сенсі — правова система, або система правових норм при феодалізмі, яка встановлювала залежність селянина від феодала й неповну власність феодала на селянина.",
-                            Title = "кріпак"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Ма́чуха — нерідна матір для дітей чоловіка від його попереднього шлюбу.",
-                            Title = "мачуха"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Text", b =>
@@ -1337,17 +698,22 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("AdditionalText")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
                     b.Property<string>("TextContent")
                         .IsRequired()
+                        .HasMaxLength(15000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 
@@ -1355,36 +721,101 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("texts", "streetcode");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            StreetcodeId = 1,
-                            TextContent = "Тарас Шевченко народився 9 березня 1814 року в селі Моринці Пединівської волості Звенигородського повіту Київської губернії. Був третьою дитиною селян-кріпаків Григорія Івановича Шевченка та Катерини Якимівни після сестри Катерини (1804 — близько 1848) та брата Микити (1811 — близько 1870).\r\n\r\n                    За родинними переказами, Тарасові діди й прадіди з батьківського боку походили від козака Андрія, який на початку XVIII століття прийшов із Запорізької Січі. Батьки його матері, Катерини Якимівни Бойко, були переселенцями з Прикарпаття.\r\n\r\n                    1816 року сім'я Шевченків переїхала до села Кирилівка Звенигородського повіту, звідки походив Григорій Іванович. Дитячі роки Тараса пройшли в цьому селі. 1816 року народилася Тарасова сестра Ярина, 1819 року — сестра Марія, а 1821 року народився Тарасів брат Йосип.\r\n\r\n                    Восени 1822 року Тарас Шевченко почав учитися грамоти у дяка Совгиря. Тоді ж ознайомився з творами Григорія Сковороди.\r\n\r\n                    10 лютого 1823 року його старша сестра Катерина вийшла заміж за Антона Красицького — селянина із Зеленої Діброви, а 1 вересня 1823 року від тяжкої праці й злиднів померла мати Катерина. \r\n\r\n                    19 жовтня 1823 року батько одружився вдруге з удовою Оксаною Терещенко, в якої вже було троє дітей. Вона жорстоко поводилася з нерідними дітьми, зокрема з малим Тарасом. 1824 року народилася Тарасова сестра Марія — від другого батькового шлюбу.\r\n\r\n                    Хлопець чумакував із батьком. Бував у Звенигородці, Умані, Єлисаветграді (тепер Кропивницький). 21 березня (2 квітня) 1825 року батько помер, і невдовзі мачуха повернулася зі своїми трьома дітьми до Моринців. Зрештою Тарас змушений був залишити домівку. Деякий час Тарас жив у свого дядька Павла, який після смерті його батька став опікуном сиріт. Дядько Павло був «великий катюга»; Тарас працював у нього, разом із наймитом у господарстві, але у підсумку не витримав тяжких умов життя й пішов у найми до нового кирилівського дяка Петра Богорського.\r\n\r\n                    Як попихач носив воду, опалював школу, обслуговував дяка, читав псалтир над померлими і вчився. Не стерпівши знущань Богорського й відчуваючи великий потяг до живопису, Тарас утік від дяка й почав шукати в навколишніх селах учителя-маляра. Кілька днів наймитував і «вчився» малярства в диякона Єфрема. Також мав учителів-малярів із села Стеблева, Канівського повіту та із села Тарасівки Звенигородського повіту. 1827 року він пас громадську отару в Кирилівці й там зустрічався з Оксаною Коваленко. Згодом подругу свого дитинства поет не раз згадає у своїх творах і присвятить їй поему «Мар'яна-черниця».",
-                            Title = "Дитинство та юність"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StreetcodeId = 2,
-                            TextContent = "Батьки М. І. Костомарова намагалися прищепити сину вільнолюбні ідеї і дати добру освіту. Тому вже з 10 років М. Костомарова відправили навчатися до Московського пансіону, а згодом до Воронезької гімназії, яку той закінчив 1833 р.\r\n\r\n1833 р. М. І. Костомаров вступає на історико-філологічний факультет Харківського університету. Вже у цьому навчальному закладі він проявив непересічні здібності до навчання.\r\n\r\nВ університеті Микола Костомаров вивчав стародавні й нові мови, цікавився античною історією, німецькою філософією і новою французькою літературою, учився грати на фортепіано, пробував писати вірші. Зближення з гуртком українських романтиків Харківського університету незабаром визначило його захоплення переважно фольклором і козацьким минулим України.\r\n\r\nУ ті роки у Харківському університеті навколо професора-славіста і літератора-романтика І. Срезневського сформувався гурток студентів, захоплених збиранням зразків української народної пісенної творчості. Вони сприймали фольклор як вираження народного духу, самі складали вірші, балади і ліричні пісні, звертаючись до народної творчості.\r\n\r\nКостомаров в університетські роки дуже багато читав. Перевантаження позначилося на його здоров'ї — ще за студентства значно погіршився зір.\r\n\r\nНа світогляд М. І. Костомарова вплинули професор грецької літератури Харківського університету А. О. Валицький та професор всесвітньої історії М. М. Лунін.\r\n\r\n1836 р. М. І. Костомаров закінчив університет, а в січні 1837 р. склав іспити на ступінь кандидата й отримав направлення у Кінбурнський 7-й драгунський полк юнкером.\r\n\r\nУ січні 1837 року Костомаров склав іспити з усіх предметів, і 8 грудня 1837 року його затвердили в статусі кандидата.",
-                            Title = "Юність і навчання"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            StreetcodeId = 3,
-                            TextContent = "Народився у дворянській родині на хуторі Мотронівка (нині у межах с. Оленівка поблизу Борзни).\r\n\r\nУ 1843–1846 роках здобув вищу освіту на історико-філологічному факультеті Київського Імператорського університету св. Володимира.\r\n\r\n1846–1847 — учитель Петровського кадетського корпусу у Полтаві.\r\n\r\nРазом з М. Костомаровим і М. Гулаком був організатором Кирило-Мефодіївського братства. Брав участь у створенні «Статуту Слов'янського братства св. Кирила і Мефодія». Автор «Записки» — пояснень до статуту братства. Розвивав ідеї християнського соціалізму, виступав за об'єднання всіх слов'янських народів у республіканську федерацію, в якій провідну роль відводив Україні.\r\n1847 — 10 квітня був заарештований у Варшаві. Засланий до Олонецької губернії під нагляд поліції. Служив у Петрозаводському губернському правлінні.\r\n\r\n1856 — звільнений із заслання. Оселився у Санкт-Петербурзі, де став активним членом місцевого гуртка українців.\r\n\r\n1861–1862 — редактор першого українського щомісячного журналу «Основа».\r\n\r\nЗгодом служив у Варшаві. Підтримував зв'язки з Галичиною, співпрацював у часописах «Мета» і «Правда».\r\n\r\nОстанні роки життя провів на хуторі Мотронівці.",
-                            Title = "Життєпис"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            StreetcodeId = 4,
-                            TextContent = "Експерти пояснили, що дасть херсонська перемога українським силам\r\n\r\nНа тлі заяв окупантів про відведення військ та сил рф від Херсона та просування ЗСУ на херсонському напрямку українські бійці можуть отримати вогневий контроль над найважливішими дорогами Криму. Більше того, звільнення облцентру переріже постачання зброї для росії.",
-                            Title = "визволення Херсона"
-                        });
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.Positions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("positions", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ImageId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageId")
+                        .IsUnique();
+
+                    b.ToTable("team_members", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<byte>("LogoType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("TargetUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("TeamMemberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamMemberId");
+
+                    b.ToTable("team_member_links", "team");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberPositions", b =>
+                {
+                    b.Property<int>("TeamMemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TeamMemberId", "PositionsId");
+
+                    b.HasIndex("PositionsId");
+
+                    b.ToTable("team_member_positions", "team");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContext", b =>
@@ -1403,23 +834,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("historical_contexts", "timeline");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "Дитинство"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "Студентство"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Title = "Життя в Петербурзі"
-                        });
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContextTimeline", b =>
+                {
+                    b.Property<int>("TimelineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HistoricalContextId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TimelineId", "HistoricalContextId");
+
+                    b.HasIndex("HistoricalContextId");
+
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
@@ -1433,8 +862,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DateViewPattern")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -1443,79 +879,24 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("timeline_items", "timeline");
+                    b.HasIndex("StreetcodeId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(1831, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(1830, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв, де його наставником став К. Брюллов. За словами Шевченка: «настала найсвітліша доба його життя, незабутні, золоті дні» навчання в Академії мистецтв, яким він присвятив у 1856 році автобіографічну повість «Художник».",
-                            Title = "Учень Петербурзької академії мистецтв"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(1832, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Date = new DateTime(1833, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Date = new DateTime(1834, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Date = new DateTime(1835, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Date = new DateTime(1836, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, а щоб згодом мати зиск на художніх творах власного «покоєвого художника», підписав контракт й віддав його в науку на чотири роки до живописця В. Ширяєва, у якого й замешкав Тарас до 1838 року.",
-                            Title = "Перші роки в Петербурзі"
-                        });
+                    b.ToTable("timeline_items", "timeline");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.StreetcodeToponym", b =>
+                {
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToponymId")
+                        .HasColumnType("int");
+
+                    b.HasKey("StreetcodeId", "ToponymId");
+
+                    b.HasIndex("ToponymId");
+
+                    b.ToTable("streetcode_toponym", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
@@ -1569,22 +950,17 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("QrCodeUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QrCodeUrlTitle")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("UrlTitle")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -1592,81 +968,46 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("transaction_links", "transactions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            QrCodeUrl = "https://qrcode/1",
-                            StreetcodeId = 1,
-                            Url = "https://streetcode/1"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            QrCodeUrl = "https://qrcode/2",
-                            StreetcodeId = 2,
-                            Url = "https://streetcode/2"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            QrCodeUrl = "https://qrcode/3",
-                            StreetcodeId = 3,
-                            Url = "https://streetcode/3"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            QrCodeUrl = "https://qrcode/4",
-                            StreetcodeId = 4,
-                            Url = "https://streetcode/4"
-                        });
                 });
 
-            modelBuilder.Entity("StreetcodeContentTag", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
                 {
-                    b.Property<int>("StreetcodesId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TagsId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("StreetcodesId", "TagsId");
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.HasIndex("TagsId");
+                    b.HasKey("Id");
 
-                    b.ToTable("streetcode_tag", "streetcode");
-                });
-
-            modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
-                {
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimelineItemsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("StreetcodesId", "TimelineItemsId");
-
-                    b.HasIndex("TimelineItemsId");
-
-                    b.ToTable("streetcode_timeline_item", "streetcode");
-                });
-
-            modelBuilder.Entity("StreetcodeContentToponym", b =>
-                {
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ToponymsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("StreetcodesId", "ToponymsId");
-
-                    b.HasIndex("ToponymsId");
-
-                    b.ToTable("streetcode_toponym", "streetcode");
+                    b.ToTable("Users", "Users");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
@@ -1681,36 +1022,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("coordinates", "add_content");
 
                     b.HasDiscriminator().HasValue("coordinate_streetcode");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 6,
-                            Latitude = 49.8429m,
-                            Longtitude = 24.0311m,
-                            StreetcodeId = 1
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Latitude = 50.4550m,
-                            Longtitude = 30.5238m,
-                            StreetcodeId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Latitude = 50.4690m,
-                            Longtitude = 30.5328m,
-                            StreetcodeId = 3
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Latitude = 46.3950m,
-                            Longtitude = 32.3738m,
-                            StreetcodeId = 4
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.ToponymCoordinate", b =>
@@ -1733,28 +1044,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Streetcode.StreetcodeContent");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-event");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6954),
-                            EventEndOrPersonDeathDate = new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(2022, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 4,
-                            Teaser = "Звільнення Херсона (11 листопада 2022) — відвоювання Збройними силами України (ЗСУ) міста Херсона та інших районів Херсонської області та частини Миколаївської області на правому березі Дніпра, тоді як збройні сили РФ Сили відійшли на лівий берег (відомий як відхід росіян з Херсона, 9–11 листопада 2022 р.).",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 1000,
-                            Title = "Звільнення Херсона"
-                        });
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.PersonStreetcode", b =>
@@ -1778,179 +1070,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-person");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6882),
-                            EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 1,
-                            Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія, Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. Академік Імператорської академії мистецтв",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Тарас",
-                            LastName = "Шевченко",
-                            Rank = "Григорович"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6917),
-                            EventEndOrPersonDeathDate = new DateTime(1885, 4, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1817, 5, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 2,
-                            Teaser = "Мико́ла Іва́нович Костома́ров (4 (16) травня 1817, с. Юрасівка, Острогозький повіт, Воронезька губернія — 7 (19) квітня 1885, Петербург) — видатний український[8][9][10][11][12] історик, етнограф, прозаїк, поет-романтик, мислитель, громадський діяч, етнопсихолог[13][14][15]. \r\n\r\nБув співзасновником та активним учасником слов'янофільсько-українського київського об'єднання «Кирило - Мефодіївське братство». У 1847 році за участь в українофільському братстві Костомарова арештовують та перевозять з Києва до Петербурга,де він і провів решту свого життя.",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Мико́ла",
-                            LastName = "Костома́ров",
-                            Rank = "Іва́нович"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6922),
-                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 3,
-                            Teaser = "Білозерський Василь Михайлович (1825, хутір Мотронівка, Чернігівщина — 20 лютого (4 березня) 1899) — український громадсько-політичний і культурний діяч, журналіст.",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Василь",
-                            LastName = "Білозерський",
-                            Rank = "Михайлович"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6927),
-                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 5,
-                            Teaser = "some teaser",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Володимир-Варфоломей",
-                            LastName = "Кропивницький-Шевченківський"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6931),
-                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 6,
-                            Teaser = "some teaser",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Леся",
-                            LastName = "Українка"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            CreatedAt = new DateTime(2023, 2, 1, 17, 42, 51, 482, DateTimeKind.Local).AddTicks(6935),
-                            EventEndOrPersonDeathDate = new DateTime(1899, 2, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EventStartOrPersonBirthDate = new DateTime(1825, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Index = 7,
-                            Teaser = "some teaser",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ViewCount = 0,
-                            FirstName = "Іван",
-                            LastName = "Мазепа"
-                        });
                 });
 
-            modelBuilder.Entity("FactStreetcodeContent", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.StreetcodeTagIndex", b =>
                 {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", null)
-                        .WithMany()
-                        .HasForeignKey("FactsId")
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeTagIndices")
+                        .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("HistoricalContextTimelineItem", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Timeline.HistoricalContext", null)
-                        .WithMany()
-                        .HasForeignKey("HistoricalContextsId")
+                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", "Tag")
+                        .WithMany("StreetcodeTagIndices")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", null)
-                        .WithMany()
-                        .HasForeignKey("TimelineItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                    b.Navigation("Streetcode");
 
-            modelBuilder.Entity("ImageStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", null)
-                        .WithMany()
-                        .HasForeignKey("ImagesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PartnerStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Partners.Partner", null)
-                        .WithMany()
-                        .HasForeignKey("PartnersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SourceLinkCategoryStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinkCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SourceLinkSourceLinkSubCategory", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLink", null)
-                        .WithMany()
-                        .HasForeignKey("SourceLinksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", null)
-                        .WithMany()
-                        .HasForeignKey("SubCategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Tag");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Subtitle", b =>
@@ -1964,15 +1102,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Analytics.StatisticRecord", b =>
                 {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithOne("Audio")
-                        .HasForeignKey("Streetcode.DAL.Entities.Media.Audio", "StreetcodeId")
+                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", "StreetcodeCoordinate")
+                        .WithOne("StatisticRecord")
+                        .HasForeignKey("Streetcode.DAL.Entities.Analytics.StatisticRecord", "StreetcodeCoordinateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StatisticRecords")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Streetcode");
+
+                    b.Navigation("StreetcodeCoordinate");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -1986,6 +1132,36 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.ImageDetails", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("ImageDetails")
+                        .HasForeignKey("Streetcode.DAL.Entities.Media.Images.ImageDetails", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.StreetcodeImage", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany()
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Video", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -1995,6 +1171,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.News.News", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("News")
+                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId");
+
+                    b.Navigation("Image");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
@@ -2019,6 +1204,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Partner");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Partners.StreetcodePartner", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Partners.Partner", "Partner")
+                        .WithMany()
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany()
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partner");
+
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
@@ -2030,15 +1234,23 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Image");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkSubCategory", b =>
+            modelBuilder.Entity("Streetcode.DAL.Entities.Sources.StreetcodeCategoryContent", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Sources.SourceLinkCategory", "SourceLinkCategory")
-                        .WithMany("SubCategories")
+                        .WithMany("StreetcodeCategoryContents")
                         .HasForeignKey("SourceLinkCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeCategoryContents")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("SourceLinkCategory");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -2079,6 +1291,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Audio", "Audio")
+                        .WithOne("Streetcode")
+                        .HasForeignKey("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "AudioId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Audio");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
@@ -2086,7 +1308,26 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasForeignKey("ImageId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("Facts")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Image");
+
+                    b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.TextContent.Term", "Term")
+                        .WithMany("RelatedTerms")
+                        .HasForeignKey("TermId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Term");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Text", b =>
@@ -2100,6 +1341,96 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
+                        .WithOne("TeamMember")
+                        .HasForeignKey("Streetcode.DAL.Entities.Team.TeamMember", "ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Image");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberLink", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
+                        .WithMany("TeamMemberLinks")
+                        .HasForeignKey("TeamMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TeamMember");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMemberPositions", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Team.Positions", "Positions")
+                        .WithMany()
+                        .HasForeignKey("PositionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Team.TeamMember", "TeamMember")
+                        .WithMany()
+                        .HasForeignKey("TeamMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Positions");
+
+                    b.Navigation("TeamMember");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContextTimeline", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Timeline.HistoricalContext", "HistoricalContext")
+                        .WithMany("HistoricalContextTimelines")
+                        .HasForeignKey("HistoricalContextId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", "Timeline")
+                        .WithMany("HistoricalContextTimelines")
+                        .HasForeignKey("TimelineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("HistoricalContext");
+
+                    b.Navigation("Timeline");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("TimelineItems")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.StreetcodeToponym", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany()
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Toponyms.Toponym", "Toponym")
+                        .WithMany()
+                        .HasForeignKey("ToponymId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Streetcode");
+
+                    b.Navigation("Toponym");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Transactions.TransactionLink", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -2109,51 +1440,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Streetcode");
-                });
-
-            modelBuilder.Entity("StreetcodeContentTag", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.AdditionalContent.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StreetcodeContentTimelineItem", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", null)
-                        .WithMany()
-                        .HasForeignKey("TimelineItemsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("StreetcodeContentToponym", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Toponyms.Toponym", null)
-                        .WithMany()
-                        .HasForeignKey("ToponymsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
@@ -2178,6 +1464,16 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Toponym");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
+                {
+                    b.Navigation("StreetcodeTagIndices");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
+                {
+                    b.Navigation("Streetcode");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
                 {
                     b.Navigation("StreetcodeArts");
@@ -2189,9 +1485,15 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Facts");
 
+                    b.Navigation("ImageDetails");
+
+                    b.Navigation("News");
+
                     b.Navigation("Partner");
 
                     b.Navigation("SourceLinkCategories");
+
+                    b.Navigation("TeamMember");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>
@@ -2201,18 +1503,24 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Sources.SourceLinkCategory", b =>
                 {
-                    b.Navigation("SubCategories");
+                    b.Navigation("StreetcodeCategoryContents");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
-                    b.Navigation("Audio");
-
                     b.Navigation("Coordinates");
+
+                    b.Navigation("Facts");
 
                     b.Navigation("Observers");
 
+                    b.Navigation("StatisticRecords");
+
                     b.Navigation("StreetcodeArts");
+
+                    b.Navigation("StreetcodeCategoryContents");
+
+                    b.Navigation("StreetcodeTagIndices");
 
                     b.Navigation("Subtitles");
 
@@ -2220,14 +1528,42 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Navigation("Text");
 
+                    b.Navigation("TimelineItems");
+
                     b.Navigation("TransactionLink");
 
                     b.Navigation("Videos");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Term", b =>
+                {
+                    b.Navigation("RelatedTerms");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Team.TeamMember", b =>
+                {
+                    b.Navigation("TeamMemberLinks");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.HistoricalContext", b =>
+                {
+                    b.Navigation("HistoricalContextTimelines");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
+                {
+                    b.Navigation("HistoricalContextTimelines");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
                     b.Navigation("Coordinate")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
+                {
+                    b.Navigation("StatisticRecord")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

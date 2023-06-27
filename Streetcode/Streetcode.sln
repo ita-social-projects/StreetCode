@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "..\build\_build.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Streetcode.XIntegrationTest", "Streetcode.XIntegrationTest\Streetcode.XIntegrationTest.csproj", "{F2345CDB-3BCB-4741-9A3E-CE45D9BDFE5E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbUpdate", "DbUpdate\DbUpdate.csproj", "{525A61D2-EA8D-40B1-B47A-5C8B3F9FD629}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{F2345CDB-3BCB-4741-9A3E-CE45D9BDFE5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2345CDB-3BCB-4741-9A3E-CE45D9BDFE5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2345CDB-3BCB-4741-9A3E-CE45D9BDFE5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{525A61D2-EA8D-40B1-B47A-5C8B3F9FD629}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{525A61D2-EA8D-40B1-B47A-5C8B3F9FD629}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{525A61D2-EA8D-40B1-B47A-5C8B3F9FD629}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{525A61D2-EA8D-40B1-B47A-5C8B3F9FD629}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

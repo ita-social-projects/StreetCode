@@ -8,7 +8,8 @@ RUN apt-get update \
     gpg \
     && rm -rf /var/lib/apt/lists/*
 EXPOSE 5000
-
+EXPOSE 5001
+EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG Configuration=debug
 
@@ -19,6 +20,7 @@ COPY ./Streetcode/Streetcode.BLL/*.csproj ./Streetcode.BLL/
 COPY ./Streetcode/Streetcode.DAL/*.csproj ./Streetcode.DAL/
 COPY ./Streetcode/Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
 COPY ./Streetcode/Streetcode.XIntegrationTest/*.csproj ./Streetcode.XIntegrationTest/
+COPY ./Streetcode/DbUpdate/*.csproj ./DbUpdate/
 RUN dotnet restore
 
 # copying other neccessary data and building application
@@ -34,4 +36,4 @@ WORKDIR /app
 COPY --from=publish /app/publish ./
 
 LABEL atom="Streetcode"
-ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll"]
+ENTRYPOINT ["dotnet", "Streetcode.WebApi.dll", "--environment=Production"]

@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 
-public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQuery, Result<IEnumerable<FactDTO>>>
+public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeIdQuery, Result<IEnumerable<FactDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -17,17 +17,17 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<FactDTO>>> Handle(GetFactByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<FactDto>>> Handle(GetFactByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var fact = await _repositoryWrapper.FactRepository
-            .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId));
+            .GetAllAsync(f => f.StreetcodeId == request.StreetcodeId);
 
         if (fact is null)
         {
             return Result.Fail(new Error($"Cannot find any fact by the streetcode id: {request.StreetcodeId}"));
         }
 
-        var factDto = _mapper.Map<IEnumerable<FactDTO>>(fact);
+        var factDto = _mapper.Map<IEnumerable<FactDto>>(fact);
         return Result.Ok(factDto);
     }
 }

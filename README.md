@@ -14,7 +14,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 [![Github Issues](https://img.shields.io/github/issues/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/issues)
 [![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/StreetCode?style=flat-square)](https://github.com/ita-social-projects/StreetCode/pulls)
 
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=alert_status)](https://sonarcloud.io/project/overview?id=ita-social-projects_StreetCode) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=coverage)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=bugs)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=code_smells)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=ita-social-projects_StreetCode&metric=security_rating)](https://sonarcloud.io/dashboard?id=ita-social-projects_StreetCode)
 ---
 
 ## Table of Contents 
@@ -34,10 +34,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
     - [How to Checkstyle](#how-to-checkstyle)
   - [Documentation](#documentation)
   - [Contributing](#contributing)
-    - [Git flow](#git-flow)
-      - [Step 1](#step-1)
-      - [Step 2](#step-2)
-      - [Step 3](#step-3)
+    - [Git flow](#github-flow)
     - [Issue flow](#issue-flow)
   - [Team](#team)
   - [FAQ](#faq)
@@ -149,23 +146,63 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 
 ## Contributing
 
-### Git flow
-> To get started...
+### Gitflow
+
+Gitflow is a lightweight, branch-based workflow.
+
+Gitflow is an alternative Git branching model that involves the use of feature branches and multiple primary branches.
+
 #### Step 1
 
-- **Option 1**
-    - 🍴 Fork this repo!
-
-- **Option 2**
-    - 👯 Clone this repo to your local machine using `https://github.com/ita-social-projects/StreetCode.git`
+- First step is checkout to `developer` branch and pull the recent changes.
 
 #### Step 2
 
-- **HACK AWAY!** 🔨🔨🔨
+- 🍴 Fork this repo from `developer` branch and name it! A short, descriptive branch name enables your collaborators to see ongoing work at a glance. For example, `increase-test-timeout` or `add-code-of-conduct`. 
 
 #### Step 3
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode/compare/" target="_blank">github.com/ita-social-projects/StreetCode</a>.
+- 🔨 On your branch, make ANY reasonable & desired changes to the repository.
+
+#### Step 4
+
+- :chart_with_upwards_trend: Commit and push your changes to your branch. 
+Give each commit a descriptive message to help you and future contributors understand what changes the commit contains. 
+For example, `fix typo` or `increase rate limit`. Note: you don't need to commit every line of your code in separate commits.
+
+#### Step 5
+
+- Before creating pull request you need to check the `developer` branch state! To avoid conflicts, you should merge `developer` branch to your local branch! And resolve your local conflicts. Mini manual: checkout to your local branch and write in console `git merge developer`.
+
+#### Step 6
+
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/StreetCode_Client/pulls" target="_blank">*this link*</a>.
+
+#### Step 7
+
+- :raising_hand: Assign reviewers! Reviewers should leave questions, comments, and suggestions. After receiving comments, improve the code. Get Approved status on the request and be satisfied with it! 
+
+#### Step 8
+
+- :tada: After 3 approved reviews, merge your pull request with `developer` branch! Also, it is important to wait for your scrum master to approve your changes. If there are some conflicts, resolve them, again.
+
+#### Step 9
+
+- :scissors: Delete redundant branch. Done!
+
+### Hotfixes
+
+Oops, some fixed needs to be done immediately? Use this guide for Hotfixes!
+
+Some fixes will be needed due to the nature of Gitflow. You would have to do a 'hotfix' or something outside of the normal process, but it's simply part of our normal process. 
+
+#### Step 1 
+
+- :fire: To implement an urgent change, a Hotfix branch is created off the `developer` branch to test and implement the fix.
+
+#### Step 2
+
+- :dancer: Once it’s complete, the Hotfix is merged with the `developer` branch.
 
 ### Issue flow
 
@@ -183,9 +220,26 @@ Learn more about our documentation <a href="https://github.com/ita-social-projec
 
 [![@LanchevychMaxym](https://avatars.githubusercontent.com/u/47561209?s=100&v=4)](https://github.com/LanchevychMaxym) 
 
+***Business analyst***
+
+[![@vladnvp](https://avatars.githubusercontent.com/u/112704799?s=100&v=4)](https://github.com/vladnvp)
+
 ***Dev team***
 
-[![@PingvinAustr](https://avatars.githubusercontent.com/u/94307620?size=100&v=4)](https://github.com/PingvinAustr) [![@EyR1oN](https://avatars.githubusercontent.com/u/91558615?s=100&v=4)](https://github.com/EyR1oN) [![@Tatiana2424](https://avatars.githubusercontent.com/u/92846322?s=100&v=4)](https://github.com/Tatiana2424) [![@AleXLaeR](https://avatars.githubusercontent.com/u/99609396?s=100&v=4)](https://github.com/AleXLaeR) [![@dimasster](https://avatars.githubusercontent.com/u/65833018?s=100&v=4)](https://github.com/dimasster) [![@grygorenkod](https://avatars.githubusercontent.com/u/113851742?s=100&v=4)](https://github.com/grygorenkod) [![@valllentine](https://avatars.githubusercontent.com/u/90246019?s=100&v=4)](https://github.com/valllentine)
+[![@Kotusyk](https://avatars.githubusercontent.com/u/72945528?s=100&v=4)](https://github.com/Kotusyk) 
+[![@Kasterov](https://avatars.githubusercontent.com/u/96317477?s=100&v=4)](https://github.com/Kasterov)
+[![@Katerix](https://avatars.githubusercontent.com/u/92515141?s=100&v=4)](https://github.com/Katerix)
+[![@Tysyatsky](https://avatars.githubusercontent.com/u/77460353?s=100&v=4)](https://github.com/Tysyatsky)
+[![@MementoMorj](https://avatars.githubusercontent.com/u/98163405?s=100&v=4)](https://github.com/MementoMorj)
+[![@Chynchenko](https://i.ibb.co/LP9n7w3/Svetlana.jpg)](https://github.com/Chynchenko)
+[![@NadiaKishchuk](https://i.ibb.co/s3kgMSM/Nadia.jpg)](https://github.com/NadiaKishchuk)
+
+[![@Dobriyr](https://avatars.githubusercontent.com/u/67451349?s=100&v=4)](https://github.com/Dobriyr)
+[![@DanyilTerentiev](https://avatars.githubusercontent.com/u/96494594?s=100&v=4)](https://github.com/DanyilTerentiev)
+[![@ValDekh](https://avatars.githubusercontent.com/u/61435019?s=100&v=4)](https://github.com/ValDekh)
+[![@ormykhalyshyn](https://avatars.githubusercontent.com/u/92263517?s=100&v=4)](https://github.com/ormykhalyshyn)
+[![@MaksBrat](https://avatars.githubusercontent.com/u/113379463?s=100&v=4)](https://github.com/MaksBrat)
+[![@Lolimkeri](https://avatars.githubusercontent.com/u/57957843?s=100&v=4)](https://github.com/Lolimkeri)
 
 </div>
 

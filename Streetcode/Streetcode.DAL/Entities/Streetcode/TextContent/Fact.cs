@@ -13,14 +13,17 @@ public class Fact
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required]
-    public string FactContent { get; set; }
+    [MaxLength(600)]
+    public string? FactContent { get; set; }
 
     public int? ImageId { get; set; }
 
     public Image? Image { get; set; }
 
-    public List<StreetcodeContent> Streetcodes { get; set; } = new ();
+    public int StreetcodeId { get; set; }
+
+    public StreetcodeContent? Streetcode { get; set; }
 }

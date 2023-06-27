@@ -1,12 +1,13 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
 
-public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQuery, Result<IEnumerable<TagDTO>>>
+public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQuery, Result<IEnumerable<StreetcodeTagDTO>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -17,23 +18,19 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<TagDTO>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<StreetcodeTagDTO>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
-        {
-            return Result.Fail(
-                new Error($"Cannot find a tags by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
-        }
+        var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
+            .GetAllAsync(
+                t => t.StreetcodeId == request.StreetcodeId,
+                include: q => q.Include(t => t.Tag));
 
-        var tags = await _repositoryWrapper.TagRepository
-            .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId));
-
-        if (tags is null)
+        if (tagIndexed is null)
         {
             return Result.Fail(new Error($"Cannot find any tag by the streetcode id: {request.StreetcodeId}"));
         }
 
-        var tagDto = _mapper.Map<IEnumerable<TagDTO>>(tags);
+        var tagDto = _mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index));
         return Result.Ok(tagDto);
     }
 }

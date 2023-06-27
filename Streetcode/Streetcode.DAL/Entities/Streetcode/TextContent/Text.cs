@@ -9,16 +9,15 @@ public class Text
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
     [Required]
-    [MaxLength(100)]
-    public string Title { get; set; }
-
+    [MaxLength(300)]
+    public string? Title { get; set; }
     [Required]
-    public string TextContent { get; set; }
-
+    [MaxLength(15000)]
+    public string? TextContent { get; set; }
+    [MaxLength(500)]
+    public string? AdditionalText { get; set; }
     [Required]
     public int StreetcodeId { get; set; }
-
     public StreetcodeContent? Streetcode { get; set; }
 }

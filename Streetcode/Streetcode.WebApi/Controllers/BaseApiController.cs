@@ -3,6 +3,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
 
@@ -19,8 +20,21 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
+            if(result is NullResult<T>)
+            {
+                return Ok(result.Value);
+            }
+
             return (result.Value is null) ?
                 NotFound("Found result matching null") : Ok(result.Value);
+        }
+
+        foreach (var item in result.Reasons)
+        {
+            if (item.Message.Contains("Cannot find an audio with the corresponding streetcode id"))
+            {
+                return Ok();
+            }
         }
 
         return BadRequest(result.Reasons);

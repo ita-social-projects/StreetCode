@@ -45,6 +45,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
+                await AddImagesAsync(streetcode, request.Streetcode.Images);
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 AddArts(streetcode, request.Streetcode.StreetcodeArts);
 
@@ -123,9 +124,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.AudioId = audioId;
     }
 
-    private void AddImages(StreetcodeContent streetcode, IEnumerable<ImageDTO> images)
+    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<ImageDTO> images)
     {
-        streetcode.Images.AddRange(_mapper.Map<IEnumerable<Image>>(images));
+        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(images.Select(i => new StreetcodeImage()
+        {
+            ImageId = i.Id,
+            StreetcodeId = streetcode.Id,
+        }));
     }
 
     private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)

@@ -1,7 +1,7 @@
-﻿using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
+﻿using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTest
 {
     public class DeleteFileInStorageTest : BlobServiceTestBase
     {

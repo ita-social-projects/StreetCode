@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
+using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTests
 {
     public class FindFileInStorageAsBase64Tests : BlobServiceTestBase
     {
@@ -13,14 +13,14 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("png", "../../../BlobServiceTests/Utils/testData.json")]
+        [InlineData("png", "../../../ServiceTests/BlobServiceTests/Utils/testData.json")]
         public void ShouldReturnValidBase64_FileExists(string extension, string testDataFilePath)
         {
             // Arrange
             string validFileName = $"{_seededFileName}.{extension}";
             string jsonContents = File.ReadAllText(testDataFilePath);
             Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
-            string expactedBase64 = jsonData.Base64;
+            string expectedBase64 = jsonData.Base64;
 
             // Act
             string result = _fixture.blobService.FindFileInStorageAsBase64(validFileName);
@@ -29,7 +29,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
             Assert.Multiple(() =>
             {
                 Assert.NotNull(result);
-                Assert.Equal(expactedBase64, result);
+                Assert.Equal(expectedBase64, result);
             });
         }
 
@@ -38,7 +38,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         public void ShouldReturnError_NoSuchFile(string nonExistingFileName)
         {
             // Arrange
-            string result = "";
+            string result = string.Empty;
 
             // Act
             void action() => result = _fixture.blobService.FindFileInStorageAsBase64(nonExistingFileName);
@@ -56,7 +56,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         public void ShouldThrowException_WhenInvalidFileName(string notValidFileName)
         {
             // Arrange
-            string result = "";
+            string result = string.Empty;
 
             // Act
             void action() => result = _fixture.blobService.FindFileInStorageAsBase64(notValidFileName);

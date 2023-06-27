@@ -12,7 +12,7 @@ public static class ConfigureHostBuilderExtensions
 
         host.ConfigureAppConfiguration((_, config) =>
         {
-            config.CustomConfigure(environment);
+            config.ConfigureCustom(environment);
         });
     }
 

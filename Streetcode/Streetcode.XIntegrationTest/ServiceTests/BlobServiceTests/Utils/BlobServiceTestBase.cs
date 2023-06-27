@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 {
     public class BlobServiceTestBase : IClassFixture<BlobStorageFixture>, IDisposable
     {
@@ -8,7 +8,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
         protected string _seededFileName;
         protected string _filePath;
 
-        public BlobServiceTestBase(BlobStorageFixture fixture, string seededFileName="")
+        public BlobServiceTestBase(BlobStorageFixture fixture, string seededFileName = "")
         {
             _fixture = fixture;
             _seededFileName = seededFileName;

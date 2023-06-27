@@ -1,9 +1,9 @@
 ﻿using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.XIntegrationTest.Base;
-using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
+using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.CleanBlobTest
 {
     public class CleanBlobServiceTests : BlobServiceTestBase, IClassFixture<TestDBFixture>
     {

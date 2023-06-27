@@ -13,7 +13,7 @@ namespace Streetcode.XIntegrationTest
             var environment = Environment.GetEnvironmentVariable("STREETCODE_ENVIRONMENT") ?? "Local";
 
             IConfigurationBuilder configBuilder = new ConfigurationBuilder()
-                .CustomConfigure(environment);
+                .ConfigureCustom(environment);
 
             Configuration = configBuilder.Build();
         }

@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.XIntegrationTest.BlobServiceTests.Utils;
+using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.SaveFileTests
 {
     public class SaveFileInStorageTests : BlobServiceTestBase
     {
@@ -12,7 +12,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests
         }
 
         [Theory]
-        [InlineData("../../../BlobServiceTests/Utils/testData.json")]
+        [InlineData("../../../ServiceTests/BlobServiceTests/Utils/testData.json")]
         public void ShouldSaveFileToBlobStorage_AllValid(string testDataFilePath)
         {
             // Arrange

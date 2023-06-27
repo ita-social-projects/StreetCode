@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.XIntegrationTest.Base;
 using System.Text;
 
-namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
+namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 {
     public class BlobStorageFixture : IntegrationTestBase
     {
@@ -37,7 +37,7 @@ namespace Streetcode.XIntegrationTest.BlobServiceTests.Utils
 
         public void Seeding(string givenBlobName)
         {
-            string testDataImagePath = "../../../BlobServiceTests/Utils/testData.json";
+            string testDataImagePath = "../../../ServiceTests/BlobServiceTests/Utils/testData.json";
             string imageJson = File.ReadAllText(testDataImagePath, Encoding.UTF8);
             Image imgfromJson = JsonConvert.DeserializeObject<Image>(imageJson);
             imgfromJson.BlobName = givenBlobName;

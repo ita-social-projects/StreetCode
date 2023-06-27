@@ -2,7 +2,7 @@
 {
     public static class ConfigurationBuilderExtensions
     {
-        public static IConfigurationBuilder CustomConfigure(this IConfigurationBuilder builder, string environment)
+        public static IConfigurationBuilder ConfigureCustom(this IConfigurationBuilder builder, string environment)
         {
             builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

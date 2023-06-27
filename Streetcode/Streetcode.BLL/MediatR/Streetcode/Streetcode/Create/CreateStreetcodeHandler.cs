@@ -124,7 +124,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.AudioId = audioId;
     }
 
-    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<ImageDTO> images)
+    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<ImageCreateUpdateDTO> images)
     {
         await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(images.Select(i => new StreetcodeImage()
         {

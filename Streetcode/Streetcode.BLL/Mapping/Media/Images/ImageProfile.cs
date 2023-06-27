@@ -15,11 +15,10 @@ public class ImageProfile : Profile
 
         CreateMap<ImageFileBaseUpdateDTO, Image>();
 
-        CreateMap<StreetcodeImageUpdateDTO, Image>();
+        CreateMap<ImageCreateUpdateDTO, Image>();
 
-        CreateMap<StreetcodeImageUpdateDTO, StreetcodeImage>()
+        CreateMap<ImageCreateUpdateDTO, StreetcodeImage>()
             .ForMember(sim => sim.ImageId, opt => opt.MapFrom(siu => siu.Id))
-            .ForMember(sim => sim.StreetcodeId, opt => opt.MapFrom(siu => siu.StreetcodeId))
             .ForMember(sim => sim.Image, opt => opt.MapFrom(src => null as Image))
             .ForMember(sim => sim.Streetcode, opt => opt.MapFrom(src => null as StreetcodeContent));
 	}

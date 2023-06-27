@@ -12,9 +12,9 @@ namespace Streetcode.DAL.Entities.Streetcode.TextContent
 
         [Required]
         [MaxLength(50)]
-        public string Word { get; set; }
+        public string? Word { get; set; }
         [Required]
         public int TermId { get; set; }
-        public Term Term { get; set; }
+        public Term? Term { get; set; }
     }
 }

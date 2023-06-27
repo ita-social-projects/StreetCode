@@ -38,6 +38,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Fact> Facts { get; set; }
     public DbSet<HistoricalContext> HistoricalContexts { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<ImageDetails> ImageDetailses { get; set; }
     public DbSet<Partner> Partners { get; set; }
     public DbSet<PartnerSourceLink> PartnerSourceLinks { get; set; }
     public DbSet<RelatedFigure> RelatedFigures { get; set; }
@@ -66,6 +67,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<HistoricalContextTimeline> HistoricalContextsTimelines { get; set; }
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -128,13 +130,16 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue("false");
         });
 
-        modelBuilder.Entity<TimelineItem>()
-            .HasMany(d => d.HistoricalContexts)
-            .WithMany(h => h.TimelineItems)
-            .UsingEntity<HistoricalContextTimeline>(
-                mb => mb.HasOne(x => x.HistoricalContext).WithMany().HasForeignKey(x => x.HistoricalContextId),
-                mb => mb.HasOne(x => x.Timeline).WithMany().HasForeignKey(x => x.TimelineId))
-            .ToTable("timeline_item_historical_context", "timeline");
+        modelBuilder.Entity<HistoricalContextTimeline>()
+             .HasKey(ht => new { ht.TimelineId, ht.HistoricalContextId });
+        modelBuilder.Entity<HistoricalContextTimeline>()
+            .HasOne(ht => ht.Timeline)
+            .WithMany(x => x.HistoricalContextTimelines)
+            .HasForeignKey(x => x.TimelineId);
+        modelBuilder.Entity<HistoricalContextTimeline>()
+            .HasOne(ht => ht.HistoricalContext)
+            .WithMany(x => x.HistoricalContextTimelines)
+            .HasForeignKey(x => x.HistoricalContextId);
 
         modelBuilder.Entity<SourceLinkCategory>()
             .HasMany(d => d.StreetcodeCategoryContents)
@@ -147,6 +152,11 @@ public class StreetcodeDbContext : DbContext
             entity.HasOne(d => d.Art)
                 .WithOne(a => a.Image)
                 .HasForeignKey<Art>(a => a.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(im => im.ImageDetails)
+                .WithOne(info => info.Image)
+                .HasForeignKey<ImageDetails>(a => a.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Partner)

@@ -6,7 +6,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.News
+namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
     public class CreateNewsTest
     {
@@ -68,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
-            
+
             // Assert
             Assert.Equal(expectedError, result.Errors.First().Message);
         }

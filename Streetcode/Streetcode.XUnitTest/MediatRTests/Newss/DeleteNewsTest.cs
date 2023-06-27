@@ -5,7 +5,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.News
+namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
     public class DeleteNewsTest
     {

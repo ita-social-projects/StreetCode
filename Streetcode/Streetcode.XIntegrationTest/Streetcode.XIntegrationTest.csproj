@@ -21,4 +21,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
+    <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
+    <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
+  </ItemGroup>
+
 </Project>

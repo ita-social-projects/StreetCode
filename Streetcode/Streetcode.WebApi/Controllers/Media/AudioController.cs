@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media;
+using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.MediatR.Media.Audio.Create;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;

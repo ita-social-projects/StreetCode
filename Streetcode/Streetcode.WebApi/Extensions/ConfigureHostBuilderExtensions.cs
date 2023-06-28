@@ -15,10 +15,7 @@ public static class ConfigureHostBuilderExtensions
 
         host.ConfigureAppConfiguration((_, config) =>
         {
-            config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-            config.AddEnvironmentVariables("STREETCODE_");
+            config.ConfigureCustom(environment);
         });
     }
 

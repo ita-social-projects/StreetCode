@@ -46,8 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
-
-                   /* await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);*/
+                    await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
@@ -141,8 +140,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             var (_, toCreate, toDelete) = CategorizeItems(toponyms);
 
-            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
-            await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            if (toDelete.Any())
+            {
+                var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+                await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            }
 
             var toponymsNameToCreate = toCreate.Select(x => x.StreetName);
             var toponymsToAdd = await _repositoryWrapper.ToponymRepository
@@ -159,7 +161,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
-
             return query;
         }
 

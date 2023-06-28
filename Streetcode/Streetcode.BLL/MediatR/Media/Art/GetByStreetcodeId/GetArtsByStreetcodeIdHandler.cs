@@ -14,13 +14,13 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
         public GetArtsByStreetcodeIdHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             IBlobService blobService,
-            ILoggerService? logger = null)
+            ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

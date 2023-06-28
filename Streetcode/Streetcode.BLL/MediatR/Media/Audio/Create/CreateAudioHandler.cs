@@ -13,13 +13,13 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
-    private readonly ILoggerService? _logger;
+    private readonly ILoggerService _logger;
 
     public CreateAudioHandler(
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
-        ILoggerService? logger = null)
+        ILoggerService logger)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;

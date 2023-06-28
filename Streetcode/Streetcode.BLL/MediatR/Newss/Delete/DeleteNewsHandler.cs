@@ -10,8 +10,8 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
     public class DeleteNewsHandler : IRequestHandler<DeleteNewsCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
-        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+        private readonly ILoggerService _logger;
+        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;

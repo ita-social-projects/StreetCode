@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Delete;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -10,10 +11,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
     public class DeleteNewsTest
     {
         private Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public DeleteNewsTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -24,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryGetFirstOrDefault(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -47,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var expectedError = $"No news found by entered Id - {testNews.Id}";
             SetupMockRepositoryGetFirstOrDefault(null);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -66,7 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryGetFirstOrDefault(testNews);
             SetupMockRepositorySaveChangesException(expectedError);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -10,12 +11,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
     public class CreateNewsTest
     {
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         public CreateNewsTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -27,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
@@ -45,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
@@ -64,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesException(expectedError);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);

@@ -15,8 +15,8 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService? _logger;
-    public GetTransactLinkByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
+    private readonly ILoggerService _logger;
+    public GetTransactLinkByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

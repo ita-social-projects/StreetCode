@@ -11,9 +11,9 @@ public class GetToponymByIdHandler : IRequestHandler<GetToponymByIdQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService? _logger;
+    private readonly ILoggerService _logger;
 
-    public GetToponymByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
+    public GetToponymByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

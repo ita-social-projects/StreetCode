@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -17,11 +18,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetCategoriesByStreetcodeIdTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
         }
         [Theory]
         [InlineData(1)]
@@ -41,7 +44,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
-                _blobService.Object);
+                _blobService.Object,
+                _mockLogger.Object);
 
             // act
 
@@ -72,7 +76,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
-                _blobService.Object);
+                _blobService.Object,
+                _mockLogger.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";
             // act

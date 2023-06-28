@@ -8,9 +8,9 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
     public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public DeleteCategoryHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+        public DeleteCategoryHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;

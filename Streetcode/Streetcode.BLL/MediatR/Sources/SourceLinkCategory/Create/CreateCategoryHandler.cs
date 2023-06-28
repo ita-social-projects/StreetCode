@@ -11,9 +11,9 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public CreateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
+        public CreateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

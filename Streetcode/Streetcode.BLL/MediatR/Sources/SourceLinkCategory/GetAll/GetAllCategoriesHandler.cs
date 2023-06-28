@@ -16,8 +16,8 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
-        private readonly ILoggerService? _logger;
-        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService? logger = null)
+        private readonly ILoggerService _logger;
+        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

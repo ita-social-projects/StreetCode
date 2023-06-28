@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -16,10 +17,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetCoordinatesByStreetcodeIdHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         private const int _streetcode_id = 1;
@@ -73,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             await SetupRepository(coordinates);
             await SetupMapper(coordinateDTOs);
                 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
@@ -91,7 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             await SetupRepository(new List<StreetcodeCoordinate>());
             await SetupMapper(new List<StreetcodeCoordinateDTO>());
 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);

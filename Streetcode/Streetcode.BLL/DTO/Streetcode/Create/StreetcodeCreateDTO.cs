@@ -37,7 +37,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
         public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
-        public IEnumerable<ImageCreateUpdateDTO> Images { get; set; }
+        public IEnumerable<int> Images { get; set; }
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; }
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
         public IEnumerable<FactUpdateCreateDto> Facts { get; set; }

@@ -44,7 +44,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
         public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; }
         public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
-        public IEnumerable<ImageCreateUpdateDTO> Images { get; set; }
+        public IEnumerable<ImageUpdateDTO> Images { get; set; }
         public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
     }
 }

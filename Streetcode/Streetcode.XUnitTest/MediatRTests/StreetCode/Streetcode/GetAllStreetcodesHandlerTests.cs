@@ -2,6 +2,7 @@
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Types;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -15,10 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetAllStreetcodesHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
         [Fact]
         public async Task Handle_ReturnsSuccess()
@@ -35,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var request = new GetAllStreetcodesRequestDTO();
 
-            var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object, _mockLogger.Object);
             // act
             
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
@@ -57,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
             .Returns(testDTOList);
 
-            var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object);
+            var handler = new GetAllStreetcodesHandler(_repository.Object, _mapper.Object, _mockLogger.Object);
 
             var request = new GetAllStreetcodesRequestDTO();
 

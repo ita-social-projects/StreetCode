@@ -10,9 +10,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public UpdateRelatedTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService? logger = null)
+        public UpdateRelatedTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;

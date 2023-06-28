@@ -15,9 +15,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
     public class GetStreetcodeByFilterHandler : IRequestHandler<GetStreetcodeByFilterQuery, Result<List<StreetcodeFilterResultDTO>>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public GetStreetcodeByFilterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+        public GetStreetcodeByFilterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;

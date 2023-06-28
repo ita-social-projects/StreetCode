@@ -9,9 +9,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
 public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService? _logger;
+    private readonly ILoggerService _logger;
 
-    public DeleteStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+    public DeleteStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;

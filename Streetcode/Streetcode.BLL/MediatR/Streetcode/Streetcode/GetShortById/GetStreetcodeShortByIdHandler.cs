@@ -11,9 +11,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService? logger = null)
+        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;

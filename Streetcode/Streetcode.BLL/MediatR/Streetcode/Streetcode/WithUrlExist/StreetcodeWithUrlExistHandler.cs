@@ -8,9 +8,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist
     public class StreetcodeWithUrlExistHandler : IRequestHandler<StreetcodeWithUrlExistQuery, Result<bool>>
     {
         private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public StreetcodeWithUrlExistHandler(IRepositoryWrapper repository, ILoggerService? logger = null)
+        public StreetcodeWithUrlExistHandler(IRepositoryWrapper repository, ILoggerService logger)
         {
             _repository = repository;
             _logger = logger;

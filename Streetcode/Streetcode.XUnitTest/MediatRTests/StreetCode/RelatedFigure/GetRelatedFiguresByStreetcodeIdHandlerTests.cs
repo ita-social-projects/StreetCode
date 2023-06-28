@@ -9,6 +9,7 @@ using Entities = Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 {
@@ -16,10 +17,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetRelatedFiguresByStreetcodeIdHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
         [Theory]
         [InlineData(1)]
@@ -51,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             _mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testRelatedDTOList);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -84,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             RepositorySetup(testRelatedFigureList.AsQueryable(), testStreetcodeContentList);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -103,7 +106,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             RepositorySetup(testRelatedFigureEmptyList.AsQueryable(), null);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -121,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             RepositorySetup(null, null);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert

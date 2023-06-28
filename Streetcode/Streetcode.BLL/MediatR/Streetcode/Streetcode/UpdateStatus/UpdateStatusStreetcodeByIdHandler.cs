@@ -8,9 +8,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStreetcodeByIdCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService? _logger;
+    private readonly ILoggerService _logger;
 
-    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;

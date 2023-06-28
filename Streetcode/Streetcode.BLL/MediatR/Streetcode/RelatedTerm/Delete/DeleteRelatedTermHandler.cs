@@ -11,9 +11,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public DeleteRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService? logger = null)
+        public DeleteRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger)
         {
             _repository = repository;
             _mapper = mapper;

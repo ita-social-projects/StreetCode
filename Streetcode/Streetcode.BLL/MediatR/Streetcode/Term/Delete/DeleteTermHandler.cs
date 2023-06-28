@@ -9,9 +9,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
     public class DeleteTermHandler : IRequestHandler<DeleteTermCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public DeleteTermHandler(IRepositoryWrapper repository, ILoggerService? logger = null)
+        public DeleteTermHandler(IRepositoryWrapper repository, ILoggerService logger)
         {
             _repository = repository;
             _logger = logger;

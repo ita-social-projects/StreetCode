@@ -9,8 +9,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
     public class GetStreetcodeUrlByQrIdHandler : IRequestHandler<GetStreetcodeUrlByQrIdQuery, Result<string>>
     {
         private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService? _logger;
-        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService? logger = null)
+        private readonly ILoggerService _logger;
+        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService? logger)
         {
             _repository = repository;
             _logger = logger;

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -12,9 +13,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     public class DeleteStreetcodeHandlerTests
     {   
         private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<ILoggerService> _mockLogger;
         public DeleteStreetcodeHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Theory]
@@ -27,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(testStreetcode, testSaveChangesSuccess);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert
@@ -44,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(null, testSaveChangesSuccess);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert
@@ -62,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(testStreetcode, testSaveChangesFailed);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert

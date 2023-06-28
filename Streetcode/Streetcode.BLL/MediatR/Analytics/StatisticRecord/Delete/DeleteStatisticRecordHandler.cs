@@ -11,9 +11,9 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public DeleteStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+        public DeleteStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;

@@ -10,9 +10,9 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService? logger = null)
+        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;

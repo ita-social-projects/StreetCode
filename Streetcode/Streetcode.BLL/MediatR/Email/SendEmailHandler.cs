@@ -9,9 +9,9 @@ namespace Streetcode.BLL.MediatR.Email
     public class SendEmailHandler : IRequestHandler<SendEmailCommand, Result<Unit>>
     {
         private readonly IEmailService _emailService;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public SendEmailHandler(IEmailService emailService, ILoggerService? logger = null)
+        public SendEmailHandler(IEmailService emailService, ILoggerService logger)
         {
             _emailService = emailService;
             _logger = logger;

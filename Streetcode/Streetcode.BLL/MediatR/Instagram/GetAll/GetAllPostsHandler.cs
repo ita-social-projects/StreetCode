@@ -9,9 +9,9 @@ namespace Streetcode.BLL.MediatR.Instagram.GetAll
     public class GetAllPostsHandler : IRequestHandler<GetAllPostsQuery, Result<IEnumerable<InstagramPost>>>
     {
         private readonly IInstagramService _instagramService;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public GetAllPostsHandler(IInstagramService instagramService, ILoggerService? logger = null)
+        public GetAllPostsHandler(IInstagramService instagramService, ILoggerService logger)
         {
             _instagramService = instagramService;
             _logger = logger;

@@ -12,9 +12,9 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
-        private readonly ILoggerService? _logger;
+        private readonly ILoggerService _logger;
 
-        public GetAllStatisticRecordsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger = null)
+        public GetAllStatisticRecordsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repository = repositoryWrapper;
             _mapper = mapper;

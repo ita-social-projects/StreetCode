@@ -1,37 +1,63 @@
-name: SonarCloud
+name: .Net 6 CI Build
+
 on:
   push:
-    branches:
-      - master
-      - develop
+    branches: [ master ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ master ]
 
 jobs:
-  sonarcloud:
+  build:
     runs-on: ubuntu-latest
+    name: CI Build
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-      - name: Build and test
-        run: |
-          dotnet build ./Streetcode/Streetcode.sln
-          dotnet test ./Streetcode/Streetcode.sln --logger "trx;LogFileName=testresults.trx"
-      - name: Code Coverage
-        run: |
-          dotnet tool install -g coverlet.console
-          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
-          cp -r ./Streetcode/**/coverage.cobertura.xml $GITHUB_WORKSPACE/coverage.cobertura.xml
-      - name: SonarCloud Analysis
-        uses: SonarSource/sonarcloud-github-action@v1.9.1
-        with:
-          args: >
-            -Dsonar.organization=ita-social-projects
-            -Dsonar.projectKey=ita-social-projects_StreetCode
-            -Dsonar.cs.opencover.reportsPaths=coverage.cobertura.xml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore Dependencies
+      run: dotnet restore src/Example.sln
+
+    - name: Build
+      run: dotnet build src/Example.sln --configuration Release --no-restore
+
+    - name: Test and Code Coverage
+      run: |
+        dotnet test src/Example.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+        dotnet tool install -g coverlet.console
+        dotnet test src/Example.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage/**/coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '60 80'
+
+    - name: SonarCloud Analysis
+      uses: SonarSource/sonarcloud-github-action@v1.9.1
+      with:
+        args: >
+          -Dsonar.organization=ita-social-projects
+          -Dsonar.projectKey=ita-social-projects_StreetCode
+          -Dsonar.cs.opencover.reportsPaths=coverage/**/coverage.cobertura.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md

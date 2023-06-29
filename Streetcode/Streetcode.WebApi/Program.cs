@@ -5,7 +5,11 @@ using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Middleware;
+using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Services.Logging;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using k8s.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -17,6 +21,7 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
+
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")
@@ -35,6 +40,22 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();
 app.UseRouting();
+
+var options = new HealthCheckOptions();
+options.ResponseWriter = async (c, r) =>
+{
+    c.Response.ContentType = "application/json";
+
+    var result = JsonConvert.SerializeObject(new
+    {
+        status = r.Status.ToString(),
+        errors = r.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
+    });
+
+    await c.Response.WriteAsync(result);
+};
+
+app.UseHealthChecks("/healthz", options);
 
 app.UseAuthentication();
 app.UseAuthorization();

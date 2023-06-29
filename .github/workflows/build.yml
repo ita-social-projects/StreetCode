@@ -5,42 +5,57 @@ on:
     branches:
       - master
       - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  sonarcloud_pull_request:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-
-      - name: Restore
-        run: dotnet restore $(Parameters.RestoreBuildProjects)
-
-      - name: Prepare analysis on SonarCloud
+      - name: Build and test
+        run: dotnet build ./Streetcode/Streetcode.sln
+      - name: Run tests with code coverage
+        run: dotnet test ./Streetcode/Streetcode.sln --collect "Code Coverage"
+      - name: SonarCloud Pull Request Analysis
         uses: SonarSource/sonarcloud-github-action@v1.9.1
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           organization: 'ita-social-projects'
           projectKey: 'ita-social-projects_StreetCode'
-          projectName: 'StreetCode'
-
-      - name: Build
-        run: dotnet build $(Parameters.RestoreBuildProjects) --configuration ${{ env.BUILD_CONFIGURATION }}
-
-      - name: Test
-        run: dotnet test $(Parameters.projects) --collect "Code Coverage"
-
-      - name: Run Code Analysis
-        uses: SonarSource/sonarcloud-github-action@v1.9.1
+          projectBaseDir: './Streetcode'
+          pullRequestBranch: ${{ github.head_ref }}
+          pullRequestKey: ${{ github.event.pull_request.number }}
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Publish Quality Gate Result
+  sonarcloud_branch:
+    runs-on: ubuntu-latest
+    needs: sonarcloud_pull_request
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Build and test
+        run: dotnet build ./Streetcode/Streetcode.sln
+      - name: Run tests with code coverage
+        run: dotnet test ./Streetcode/Streetcode.sln --collect "Code Coverage"
+      - name: SonarCloud Branch Analysis
+        if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
         uses: SonarSource/sonarcloud-github-action@v1.9.1
+        with:
+          organization: 'ita-social-projects'
+          projectKey: 'ita-social-projects_StreetCode'
+          projectBaseDir: './Streetcode'
+          coverageExclusions: '**/*'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

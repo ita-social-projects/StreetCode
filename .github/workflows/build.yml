@@ -37,9 +37,6 @@ jobs:
     - name: SonarScanner Analysis
       run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-    - name: Publish Code Coverage to SonarClouds
-      run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./coverage/**/coverage.cobertura.xml" && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-    
     - name: Add Coverage PR Comment
       uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'

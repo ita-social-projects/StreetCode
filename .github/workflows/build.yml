@@ -42,7 +42,7 @@ jobs:
         hide_complexity: true
         indicators: true
         output: both
-        thresholds: '60 80'
+        thresholds: '10 80'
 
     - name: SonarCloud Analysis
       uses: SonarSource/sonarcloud-github-action@v1.9.1

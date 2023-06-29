@@ -6,9 +6,9 @@ on:
       - develop
   pull_request:
     types: [opened, synchronize, reopened]
-    
+
 jobs:
-  sonarcloud:
+  sonarcloud_pull_request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,8 +18,32 @@ jobs:
           dotnet-version: 6.0.x
       - name: Build and test
         run: dotnet build ./Streetcode/Streetcode.sln
-      - name: SonarCloud Analysis
-        if: ${{ github.event_name != 'pull_request' }}  # Skip analysis for pull requests
+      - name: SonarCloud Pull Request Analysis
+        uses: SonarSource/sonarcloud-github-action@v1.9.1
+        with:
+          args: >
+            -Dsonar.organization=ita-social-projects
+            -Dsonar.projectKey=ita-social-projects_StreetCode
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  sonarcloud_branch:
+    runs-on: ubuntu-latest
+    needs: sonarcloud_pull_request
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Build and test
+        run: dotnet build ./Streetcode/Streetcode.sln
+      - name: SonarCloud Branch Analysis
+        if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
         uses: SonarSource/sonarcloud-github-action@v1.9.1
         with:
           args: >

@@ -24,7 +24,7 @@ jobs:
       - name: Generate code coverage report
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool
-          reportgenerator "-reports:$(Agent.TempDirectory)/**/*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:./Streetcode/**/coverage*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Pull Request Analysis
         run: |
           docker run \
@@ -57,7 +57,7 @@ jobs:
       - name: Generate code coverage report
         run: |
           dotnet tool install --global dotnet-reportgenerator-globaltool
-          reportgenerator "-reports:$(Agent.TempDirectory)/**/*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:./Streetcode/**/coverage*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Branch Analysis
         if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
         run: |

@@ -13,38 +13,44 @@ jobs:
     runs-on: ubuntu-latest
     name: CI Build
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
 
-    - name: Restore Dependencies
-      run: dotnet restore ./Streetcode/Streetcode.sln
+      - name: Restore Dependencies
+        run: dotnet restore ./Streetcode/Streetcode.sln
 
-    - name: Build
-      run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
+      - name: Build
+        run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
-    - name: Test and Code Coverage
-      run: |
-        dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
-        dotnet tool install -g coverlet.console
-        dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+      - name: Test and Code Coverage
+        run: |
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+          dotnet tool install -g coverlet.console
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
 
-    - name: Install SonarScanner
-      run: dotnet tool install --global dotnet-sonarscanner
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
-    - name: SonarScanner Analysis
-      run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+      - name: SonarScanner Analysis
+        run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-    - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: code-coverage-results.md
-        message: 'Code coverage results'
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+          message: 'Code coverage results'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Code Coverage Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Code Coverage Report
+          path: ./coverage

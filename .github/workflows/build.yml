@@ -45,3 +45,6 @@ jobs:
       with:
         recreate: true
         path: code-coverage-results.md
+        message: 'Code coverage results'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

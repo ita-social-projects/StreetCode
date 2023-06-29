@@ -44,6 +44,9 @@ jobs:
         output: both
         thresholds: '0 20'
 
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
+
     - name: SonarScanner Analysis
       run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths="./coverage/**/coverage.cobertura.xml" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 

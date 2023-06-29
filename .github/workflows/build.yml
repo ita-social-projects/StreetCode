@@ -1,5 +1,4 @@
 name: SonarCloud
-
 on:
   push:
     branches:
@@ -9,7 +8,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  sonarcloud_pull_request:
+  sonarcloud:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,41 +17,21 @@ jobs:
         with:
           dotnet-version: 6.0.x
       - name: Build and test
-        run: dotnet build ./Streetcode/Streetcode.sln
-      - name: Run tests with code coverage
-        run: dotnet test ./Streetcode/Streetcode.sln --collect "Code Coverage"
-      - name: SonarCloud Pull Request Analysis
+        run: |
+          dotnet build ./Streetcode/Streetcode.sln
+          dotnet test ./Streetcode/Streetcode.sln --logger "trx;LogFileName=testresults.trx"
+      - name: Code Coverage
+        run: |
+          dotnet tool install -g coverlet.console
+          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+          cp -r ./Streetcode/**/coverage.cobertura.xml $GITHUB_WORKSPACE/coverage.cobertura.xml
+      - name: SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@v1.9.1
         with:
           args: >
             -Dsonar.organization=ita-social-projects
             -Dsonar.projectKey=ita-social-projects_StreetCode
-            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  sonarcloud_branch:
-    runs-on: ubuntu-latest
-    needs: sonarcloud_pull_request
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-      - name: Build and test
-        run: dotnet build ./Streetcode/Streetcode.sln
-      - name: Run tests with code coverage
-        run: dotnet test ./Streetcode/Streetcode.sln --collect "Code Coverage"
-      - name: SonarCloud Branch Analysis
-        if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
-        uses: SonarSource/sonarcloud-github-action@v1.9.1
-        with:
-          args: >
-            -Dsonar.organization=ita-social-projects
-            -Dsonar.projectKey=ita-social-projects_StreetCode
-            -Dsonar.coverage.exclusions=**/*
+            -Dsonar.cs.opencover.reportsPaths=coverage.cobertura.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

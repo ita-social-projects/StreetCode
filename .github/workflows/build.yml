@@ -20,13 +20,11 @@ jobs:
       - name: Build and test
         run: |
           dotnet build ./Streetcode/Streetcode.sln
-          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" --logger trx
-      - name: Publish code coverage results
+          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" --logger:trx
+      - name: Generate code coverage report
         run: |
-          dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-reportgenerator-globaltool
-          dotnet test ./Streetcode/Streetcode.sln --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
-          reportgenerator "-reports:./coverage.xml" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:$(Agent.TempDirectory)/**/*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Pull Request Analysis
         run: |
           docker run \
@@ -39,7 +37,7 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
             -Dsonar.pullrequest.branch=${{ github.head_ref }} \
             -Dsonar.pullrequest.base=${{ github.base_ref }} \
-            -Dsonar.coverageReportPaths=**/coveragereport/coverage.opencover.xml
+            -Dsonar.coverageReportPaths=**/coveragereport/*.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,13 +53,11 @@ jobs:
       - name: Build and test
         run: |
           dotnet build ./Streetcode/Streetcode.sln
-          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" --logger trx
-      - name: Publish code coverage results
+          dotnet test ./Streetcode/Streetcode.sln --collect:"XPlat Code Coverage" --logger:trx
+      - name: Generate code coverage report
         run: |
-          dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-reportgenerator-globaltool
-          dotnet test ./Streetcode/Streetcode.sln --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
-          reportgenerator "-reports:./coverage.xml" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:$(Agent.TempDirectory)/**/*.trx" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Branch Analysis
         if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
         run: |
@@ -72,6 +68,6 @@ jobs:
             sonarsource/sonar-scanner-cli \
             -Dsonar.organization=ita-social-projects \
             -Dsonar.projectKey=ita-social-projects_StreetCode \
-            -Dsonar.coverageReportPaths=**/coveragereport/coverage.opencover.xml
+            -Dsonar.coverageReportPaths=**/coveragereport/*.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

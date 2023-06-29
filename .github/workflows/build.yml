@@ -26,7 +26,7 @@ jobs:
           dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-reportgenerator-globaltool
           dotnet test ./Streetcode/Streetcode.sln --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=../lcov
-          reportgenerator "-reports:lcov.info" "-targetdir:coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:./lcov.info" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Pull Request Analysis
         uses: SonarSource/sonarcloud-github-action@v1.9.1
         with:
@@ -36,7 +36,7 @@ jobs:
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
             -Dsonar.pullrequest.branch=${{ github.head_ref }}
             -Dsonar.pullrequest.base=${{ github.base_ref }}
-            -Dsonar.cs.vscoveragexml.reportsPaths=**/coverage.cobertura.xml
+            -Dsonar.cs.vscoveragexml.reportsPaths=./coveragereport/coverage.cobertura.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -59,7 +59,7 @@ jobs:
           dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-reportgenerator-globaltool
           dotnet test ./Streetcode/Streetcode.sln --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=../lcov
-          reportgenerator "-reports:lcov.info" "-targetdir:coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
+          reportgenerator "-reports:./lcov.info" "-targetdir:./coveragereport" "-reporttypes:HtmlInline_AzurePipelines"
       - name: SonarCloud Branch Analysis
         if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
         uses: SonarSource/sonarcloud-github-action@v1.9.1
@@ -67,7 +67,7 @@ jobs:
           args: >
             -Dsonar.organization=ita-social-projects
             -Dsonar.projectKey=ita-social-projects_StreetCode
-            -Dsonar.cs.vscoveragexml.reportsPaths=**/coverage.cobertura.xml
+            -Dsonar.cs.vscoveragexml.reportsPaths=./coveragereport/coverage.cobertura.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

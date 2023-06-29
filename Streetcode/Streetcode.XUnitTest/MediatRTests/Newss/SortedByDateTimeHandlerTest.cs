@@ -14,6 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq;
 using System.Linq.Expressions;
 using Xunit;
+using NewsModel = Streetcode.DAL.Entities.News.News;
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
@@ -35,13 +36,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task Handle_ReturnsSuccess(string expectedBase64)
         {
             // arrange
-            var testNews = new List<News>
+            var testNews = new List<NewsModel>
             {
-                new News { Id = 1, CreationDate = new DateTime(2023, 6, 1, 10, 25, 0) },
-                new News { Id = 2, CreationDate = new DateTime(2022, 5, 1, 12, 56, 12) },
-                new News { Id = 3, CreationDate = new DateTime(2024, 7, 1, 13, 17, 0) },
-                new News { Id = 4, CreationDate = new DateTime(2023, 1, 1, 22, 2, 2) },
-                new News { Id = 5, CreationDate = new DateTime(2023, 6, 1, 10, 24, 0) }
+                new NewsModel { Id = 1, CreationDate = new DateTime(2023, 6, 1, 10, 25, 0) },
+                new NewsModel { Id = 2, CreationDate = new DateTime(2022, 5, 1, 12, 56, 12) },
+                new NewsModel { Id = 3, CreationDate = new DateTime(2024, 7, 1, 13, 17, 0) },
+                new NewsModel { Id = 4, CreationDate = new DateTime(2023, 1, 1, 22, 2, 2) },
+                new NewsModel { Id = 5, CreationDate = new DateTime(2023, 6, 1, 10, 24, 0) }
             };
 
             var expectedNews = new List<NewsDTO>
@@ -82,16 +83,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
-        private void RepositorySetup(List<News> news)
+        private void RepositorySetup(List<NewsModel> news)
         {
             _repository.Setup(repo => repo.NewsRepository
-                .GetAllAsync(It.IsAny<Expression<Func<News, bool>>>(), It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>>()))
+                .GetAllAsync(It.IsAny<Expression<Func<NewsModel, bool>>>(), It.IsAny<Func<IQueryable<NewsModel>, IIncludableQueryable<NewsModel, object>>>()))
                 .ReturnsAsync(news);
         }
-        private void MapperSetup(List<News> news)
+        private void MapperSetup(List<NewsModel> news)
         {
-            _mapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<News>>()))
-                .Returns((IEnumerable<News> source) => source.Select(n => new NewsDTO { Id = n.Id, CreationDate = n.CreationDate }));
+            _mapper.Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<NewsModel>>()))
+                .Returns((IEnumerable<NewsModel> source) => source.Select(n => new NewsDTO { Id = n.Id, CreationDate = n.CreationDate }));
         }
         private void BlobSetup(string? expectedBase64)
         {

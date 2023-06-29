@@ -1,9 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
@@ -26,7 +25,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find any partners with corresponding streetcode id: {request.StreetcodeId}"));
         }
 
         var partners = await _repositoryWrapper.PartnersRepository
@@ -36,7 +35,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (partners is null)
         {
-            return Result.Fail(new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}"));
+            return Result.Fail(new Error($"Cannot find a partners by a streetcode id: {request.StreetcodeId}"));
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);

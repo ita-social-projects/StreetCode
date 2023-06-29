@@ -13,10 +13,11 @@ public class Fact
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required]
-    public string FactContent { get; set; }
+    [MaxLength(600)]
+    public string? FactContent { get; set; }
 
     public int? ImageId { get; set; }
 

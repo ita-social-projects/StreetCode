@@ -44,16 +44,8 @@ jobs:
         output: both
         thresholds: '0 20'
 
-    - name: SonarCloud Analysis
-      uses: SonarSource/sonarcloud-github-action@v1.9.1
-      with:
-        args: >
-          -Dsonar.organization=ita-social-projects
-          -Dsonar.projectKey=ita-social-projects_StreetCode
-          -Dsonar.cs.opencover.reportsPaths=coverage/**/coverage.cobertura.xml
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: SonarScanner Analysis
+      run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.coverageReportPaths="./coverage/**/coverage.cobertura.xml" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
     - name: Add Coverage PR Comment
       uses: marocchino/sticky-pull-request-comment@v2

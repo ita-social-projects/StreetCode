@@ -19,6 +19,7 @@ jobs:
       - name: Build and test
         run: dotnet build ./Streetcode/Streetcode.sln
       - name: SonarCloud Analysis
+        if: ${{ github.event_name != 'pull_request' }}  # Skip analysis for pull requests
         uses: SonarSource/sonarcloud-github-action@v1.9.1
         with:
           args: >

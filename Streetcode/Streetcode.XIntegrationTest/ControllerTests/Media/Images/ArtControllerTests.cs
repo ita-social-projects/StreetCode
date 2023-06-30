@@ -2,6 +2,7 @@
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
@@ -51,10 +52,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        [Theory]
-        [InlineData(1)]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
+        [Fact]
+        [ExtractTestStreetcode]
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
+            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
 

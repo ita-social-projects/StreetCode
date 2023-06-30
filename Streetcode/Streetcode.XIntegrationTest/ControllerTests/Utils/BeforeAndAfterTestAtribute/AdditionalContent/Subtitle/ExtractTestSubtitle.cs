@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Streetcode.DAL.Entities;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Persistence;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle
@@ -26,12 +27,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             int streetcodeId;
             if (streetCode == null)
             {
-                streetcodeId = sqlDbHelper.AddNewItem<StreetcodeContent>(new StreetcodeContent()
-                {
-                    CreatedAt = DateTime.Now,
-                    Index = 0,
-                    ViewCount = 0
-                }).Id;
+                new ExtractTestStreetcode().Before(methodUnderTest);
+                streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             }
             else
             {

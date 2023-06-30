@@ -1,5 +1,6 @@
 ﻿using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -10,19 +11,24 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     {
         public static DAL.Entities.Media.Images.Image ImageForTest;
 
-        public override void Before(MethodInfo methodUnderTest)
+        public override async void Before(MethodInfo methodUnderTest)
         {
             var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
             ImageForTest = sqlDbHelper.GetExistItem<DAL.Entities.Media.Images.Image>();
 
             if (ImageForTest == null)
             {
-                ImageForTest = sqlDbHelper.AddNewItem(new DAL.Entities.Media.Images.Image()
-                {
-                    Base64 = "prettybase64",
-                    BlobName = "blobName",
-                });
+                var blobFixture = new BlobStorageFixture();
+                ImageForTest = blobFixture.SeedImage(Guid.NewGuid().ToString());
+                ImageForTest.BlobName += $".{ImageForTest.MimeType?.Split('/')[1]}";
+                sqlDbHelper.AddNewItem(ImageForTest);
                 sqlDbHelper.SaveChanges();
+                new ExtractTestStreetcode().Before(methodUnderTest);
+                StreetcodeImage streetcodeImage = new StreetcodeImage()
+                {
+                    ImageId = ImageForTest.Id,
+                    StreetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id,
+                };
             }
         }
 

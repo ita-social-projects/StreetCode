@@ -47,14 +47,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            idProp?.SetValue(newItem, 0);
+            object value = idProp?.GetValue(newItem);
+            if (value != null && (int)value != 0)
+            {
+                idProp?.SetValue(newItem, 0);
+            }
             return this.dbContext.Set<T>().Add(newItem).Entity;
         }
 
         public T GetExistItem<T>(Func<T, bool>? predicate = default)
             where T : class, new()
         {
-            var idProp = typeof(T).GetProperty("Id");
             if (predicate != null)
             {
                 return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate);

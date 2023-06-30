@@ -53,10 +53,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode));
         }
 
-        [Theory]
+        [Fact]
+        [ExtractTestStreetcode]
         [ExtractTestSubtitle]
-        public async Task GetByStreetcodeId_ReturnSuccess(int streetcodeId)
+        public async Task GetByStreetcodeId_ReturnSuccess()
         {
+            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);

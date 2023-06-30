@@ -2,6 +2,7 @@
 using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Audio;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
@@ -48,15 +49,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        [Theory]
-        [InlineData(1)]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
+        [Fact]
+        [ExtractTestAudio]
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
+            int streetcodeId = ExtractTestAudio.StreetcodeWithAudio.Id;
+            int audioId = ExtractTestAudio.AudioForTest.Id;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.Id == streetcodeId);
+            Assert.True(returnedValue.Id == audioId);
         }
 
         [Fact]

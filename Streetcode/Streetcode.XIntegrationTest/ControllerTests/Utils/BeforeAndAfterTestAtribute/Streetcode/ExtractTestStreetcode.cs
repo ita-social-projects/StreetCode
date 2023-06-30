@@ -17,13 +17,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             {
                 StreetcodeForTest = sqlDbHelper.AddNewItem(new StreetcodeContent()
                 {
-                    Index = 10,
+                    Index = new Random().Next(0, 1000000),
                     UpdatedAt = DateTime.Now,
                     CreatedAt = DateTime.Now,
                     EventStartOrPersonBirthDate = DateTime.Now,
                     EventEndOrPersonDeathDate = DateTime.Now,
                     ViewCount = 1,
-                    DateString = "20 травня 2023" ,
+                    DateString = "20 травня 2023",
                     Alias = "dsf",
                     Title = "Title",
                     TransliterationUrl = Guid.NewGuid().ToString(),

@@ -1,7 +1,6 @@
-﻿using Streetcode.DAL.Entities.Media.Images;
+﻿
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Image;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art

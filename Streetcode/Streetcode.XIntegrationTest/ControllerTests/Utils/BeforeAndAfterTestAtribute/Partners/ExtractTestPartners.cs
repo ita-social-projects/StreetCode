@@ -21,7 +21,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             PartnerForTest = sqlDbHelper.GetExistItem<Partner>();
             if (PartnerForTest == null)
             {
-                new ExtractTestImage().Before(null);
+                new ExtractTestImage().Before(methodUnderTest);
                 PartnerForTest = sqlDbHelper.AddNewItem(new Partner()
                 {
                     Description = "PartnerDescription",
@@ -30,6 +30,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     Title = "PartnerTitle",
                     UrlTitle = "PartnerUrl",
                     LogoId = ExtractTestImage.ImageForTest.Id,
+                    IsVisibleEverywhere = true,
                 });
                 sqlDbHelper.SaveChanges();
             }

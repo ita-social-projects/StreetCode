@@ -17,16 +17,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 
             if (ImageForTest == null)
             {
-                if (ExtractTestArt.ArtForTest == null)
-                {
-                    new ExtractTestArt().Before(null);
-                }
-
                 ImageForTest = sqlDbHelper.AddNewItem(new DAL.Entities.Media.Images.Image()
                 {
                     Base64 = "prettybase64",
                     BlobName = "blobName",
-                    Art = ExtractTestArt.ArtForTest,
                 });
                 sqlDbHelper.SaveChanges();
             }

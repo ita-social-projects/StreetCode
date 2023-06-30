@@ -29,6 +29,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     BlobName = "nicebase64",
                     Title = "Title",
                     MimeType = "mpeg",
+                    Streetcode = ExtractTestStreetcode.StreetcodeForTest,
                 });
                 sqlDbHelper.SaveChanges();
             }

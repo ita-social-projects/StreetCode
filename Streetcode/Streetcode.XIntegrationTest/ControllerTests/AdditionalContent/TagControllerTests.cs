@@ -6,6 +6,7 @@
     using Streetcode.DAL.Entities.Streetcode.TextContent;
     using Streetcode.XIntegrationTest.ControllerTests.Utils;
     using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
     using Xunit;
 
     public class TagControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
@@ -53,10 +54,12 @@
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        [Theory]
-        [InlineData(1)]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode(int streetcodeId)
+        [Fact]
+        [ExtractTestStreetcode]
+        [ExtractTestTag]
+        public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
+            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
 

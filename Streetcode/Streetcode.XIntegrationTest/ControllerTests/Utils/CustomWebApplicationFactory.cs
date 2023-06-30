@@ -1,11 +1,8 @@
 ﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
+    using System;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc.Testing;
-    using Microsoft.Extensions.Configuration;
-    using Streetcode.WebApi.Extensions;
-    using System;
-    using System.Drawing;
 
     public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
         where TProgram : class

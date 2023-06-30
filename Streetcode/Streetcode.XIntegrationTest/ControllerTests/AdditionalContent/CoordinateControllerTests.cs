@@ -1,10 +1,10 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
-using Xunit;
-
-namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
+    using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+    using Xunit;
+
     public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)

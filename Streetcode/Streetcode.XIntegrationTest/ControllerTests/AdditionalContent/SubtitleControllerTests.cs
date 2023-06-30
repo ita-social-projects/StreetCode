@@ -2,6 +2,7 @@
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using System.Net;
 using Xunit;
 
@@ -24,9 +25,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
+        [ExtractTestStreetcode]
         [ExtractTestSubtitle]
         public async Task GetById_ReturnSuccessContent()
         {
+            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             Subtitle expectedSubtitle = ExtractTestSubtitle.SubtitleForTest;
 
             var response = await this.client.GetByIdAsync(expectedSubtitle.Id);
@@ -51,7 +54,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Theory]
-        [InlineData(1)]
+        [ExtractTestSubtitle]
         public async Task GetByStreetcodeId_ReturnSuccess(int streetcodeId)
         {
             var response = await this.client.GetByStreetcodeId(streetcodeId);

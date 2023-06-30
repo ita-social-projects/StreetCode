@@ -56,6 +56,7 @@ public static class ServiceCollectionExtensions
                         .AddCheck<StartUpHealthChecks>("StartupProbe")
                         .AddCheck<ReadinessHealthChecks>("ReadinessProbe")
                         .AddCheck<LivenessHealthChecks>("LivenessProbe");
+        services.AddHealthChecksUI().AddInMemoryStorage();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

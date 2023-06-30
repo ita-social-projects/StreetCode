@@ -10,6 +10,7 @@ using Streetcode.BLL.Services.Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using k8s.Models;
 using Newtonsoft.Json;
+using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -41,21 +42,22 @@ app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();
 app.UseRouting();
 
-var options = new HealthCheckOptions();
-options.ResponseWriter = async (c, r) =>
+app.MapHealthChecksUI();
+app.MapHealthChecks("/healthz", new()
 {
-    c.Response.ContentType = "application/json";
-
-    var result = JsonConvert.SerializeObject(new
-    {
-        status = r.Status.ToString(),
-        errors = r.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
-    });
-
-    await c.Response.WriteAsync(result);
-};
-
-app.UseHealthChecks("/healthz", options);
+    Predicate = check => check.Name == "StartupProbe",
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecks("/health/ready", new()
+{
+    Predicate = check => check.Name == "ReadinessProbe",
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+app.MapHealthChecks("/health/live", new()
+{
+    Predicate = check => check.Name == "LivenessProbe",
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

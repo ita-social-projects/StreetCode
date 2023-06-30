@@ -15,6 +15,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
             MemoryMetrics metrics;
 
             var watch = new Stopwatch();
+            watch.Start();
             if (IsUnix())
             {
                 metrics = GetUnixMetrics();

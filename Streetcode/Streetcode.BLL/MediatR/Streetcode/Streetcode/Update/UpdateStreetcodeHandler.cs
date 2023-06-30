@@ -68,7 +68,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
                     const string errorMsg = "An error occurred while updating a streetcode";
                     _logger?.LogError("UpdateStreetcodeCommand handled with an error");

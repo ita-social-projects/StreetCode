@@ -164,7 +164,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return query;
         }
 
-        private async Task UpdateImagesAsync(IEnumerable<StreetcodeImageUpdateDTO> images)
+        private async Task UpdateImagesAsync(IEnumerable<ImageUpdateDTO> images)
         {
             var (_, toCreate, toDelete) = CategorizeItems(images);
 

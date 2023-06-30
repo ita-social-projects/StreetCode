@@ -16,12 +16,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221221-03" />
     <PackageReference Include="RestSharp" Version="109.0.0-preview.1" />
-	  <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+	<PrivateAssets>all</PrivateAssets>
+	<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.30.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
@@ -36,10 +35,9 @@
     </PackageReference>
   </ItemGroup>
 
-	
   <ItemGroup>
+    <ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
+    <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
     <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
-	
-	
 </Project>

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace Streetcode.XUnitTest.MediatRTests.News
+namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
     public class UpdateNewsTests
     {

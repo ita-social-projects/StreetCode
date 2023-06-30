@@ -8,7 +8,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.News
+namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
     public class GetAllNewsTest
     {

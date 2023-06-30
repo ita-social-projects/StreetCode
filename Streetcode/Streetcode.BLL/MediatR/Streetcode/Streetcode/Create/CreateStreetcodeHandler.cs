@@ -4,9 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
-using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
@@ -45,6 +43,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
+                await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 AddArts(streetcode, request.Streetcode.StreetcodeArts);
 
@@ -123,9 +122,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.AudioId = audioId;
     }
 
-    private void AddImages(StreetcodeContent streetcode, IEnumerable<ImageDTO> images)
+    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
     {
-        streetcode.Images.AddRange(_mapper.Map<IEnumerable<Image>>(images));
+        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
+        {
+            ImageId = imageId,
+            StreetcodeId = streetcode.Id,
+        }));
     }
 
     private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)

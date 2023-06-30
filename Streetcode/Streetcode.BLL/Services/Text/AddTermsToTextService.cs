@@ -8,19 +8,22 @@ namespace Streetcode.BLL.Services.Text
     public class AddTermsToTextService : ITextService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly Regex _pattern = new("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
+
         private readonly StringBuilder _text = new StringBuilder();
 
         public AddTermsToTextService(IRepositoryWrapper repositoryWrapper)
         {
             _repositoryWrapper = repositoryWrapper;
+            Pattern = new("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
         }
+
+        public Regex Pattern { get; private set; }
 
         public async Task<string> AddTermsTag(string text)
         {
             _text.Clear();
 
-            var splittedText = _pattern.Split(text);
+            var splittedText = Pattern.Split(text);
 
             foreach (var word in splittedText)
             {

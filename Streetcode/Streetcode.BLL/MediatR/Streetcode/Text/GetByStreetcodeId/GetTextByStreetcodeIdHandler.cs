@@ -44,7 +44,7 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
         }
 
         NullResult<TextDTO?> result = new NullResult<TextDTO?>();
-        text.TextContent = await _textService.AddTermsTag(text.TextContent);
+        text.TextContent = await _textService.AddTermsTag(text?.TextContent ?? "");
         result.WithValue(_mapper.Map<TextDTO?>(text));
         return result;
     }

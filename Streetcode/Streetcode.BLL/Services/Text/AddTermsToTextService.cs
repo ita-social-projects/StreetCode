@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -7,7 +8,8 @@ namespace Streetcode.BLL.Services.Text
     public class AddTermsToTextService : ITextService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly Regex _pattern = new("(\\s)|(<[^>]*>)");
+        private readonly Regex _pattern = new("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
+        private readonly StringBuilder _text = new StringBuilder();
 
         public AddTermsToTextService(IRepositoryWrapper repositoryWrapper)
         {
@@ -16,15 +18,15 @@ namespace Streetcode.BLL.Services.Text
 
         public async Task<string> AddTermsTag(string text)
         {
-            var resultText = string.Empty;
+            _text.Clear();
 
             var splittedText = _pattern.Split(text);
 
             foreach (var word in splittedText)
             {
-                if (word.Contains('<') || word.Equals(" ") || word.Equals(string.Empty))
+                if (word.Contains('<') || string.IsNullOrWhiteSpace(word) || string.IsNullOrEmpty(word))
                 {
-                    resultText += word;
+                    _text.Append(word);
                     continue;
                 }
 
@@ -46,7 +48,7 @@ namespace Streetcode.BLL.Services.Text
                 if (term == null)
                 {
                     var buffer = await AddRelatedAsync(clearedWord);
-                    if (!buffer.Equals(string.Empty))
+                    if (!string.IsNullOrEmpty(buffer))
                     {
                         resultedWord = buffer;
                     }
@@ -56,10 +58,10 @@ namespace Streetcode.BLL.Services.Text
                     resultedWord = MarkTermWithDescription(term.Title, term.Description);
                 }
 
-                resultText += resultedWord + extras;
+                _text.Append(resultedWord + extras);
             }
 
-            return resultText;
+            return _text.ToString();
         }
 
         private static string MarkTermWithDescription(string word, string description) => $"<Popover><Term>{word}</Term><Desc>{description}</Desc></Popover>";

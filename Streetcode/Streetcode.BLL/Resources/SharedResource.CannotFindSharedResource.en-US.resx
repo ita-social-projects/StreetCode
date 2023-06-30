@@ -144,6 +144,12 @@
   <data name="CannotFindAnyAudios" xml:space="preserve">
     <value>Cannot find any audios</value>
   </data>
+  <data name="CannotFindAnyFact" xml:space="preserve">
+    <value>Cannot find any fact</value>
+  </data>
+  <data name="CannotFindAnyFactByTheStreetcodeId" xml:space="preserve">
+    <value>Cannot find any fact by the streetcode id: {0}</value>
+  </data>
   <data name="CannotFindAnyFactWithCorrespondingId" xml:space="preserve">
     <value>Cannot find any fact with corresponding id: {0}</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="CannotFindAnyPartnerWithCorrespondingId" xml:space="preserve">
     <value>Cannot find any partner with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindAnyRelatedFiguresByStreetcodeId" xml:space="preserve">
+    <value>Cannot find any related figures by a streetcode id: {0}</value>
   </data>
   <data name="CannotFindAnySrcCategoryByTheCorrespondingId" xml:space="preserve">
     <value>Cannot find any srcCategory by the corresponding id: {0}</value>
@@ -189,6 +198,12 @@
   <data name="CannotFindAnyTeamLinks" xml:space="preserve">
     <value>Cannot find any team links</value>
   </data>
+  <data name="CannotFindAnyTerm" xml:space="preserve">
+    <value>Cannot find any term</value>
+  </data>
+  <data name="CannotFindAnyTermWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find any term with corresponding id: {0}</value>
+  </data>
   <data name="CannotFindAnyVideoByTheStreetcodeId" xml:space="preserve">
     <value>Cannot find any video by the streetcode id: {0}</value>
   </data>
@@ -216,6 +231,9 @@
   <data name="CannotFindRecordWithQrId" xml:space="preserve">
     <value>Cannot find record with qrId</value>
   </data>
+  <data name="CannotFindRelatedTermWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find a related term with corresponding id: {0}</value>
+  </data>
   <data name="CannotFindStreetcodeById" xml:space="preserve">
     <value>Cannot find streetcode by id</value>
   </data>
@@ -231,29 +249,11 @@
   <data name="CannotFindTagWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a Tag with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindTransactionLinkByStreetcodeId" xml:space="preserve">
+    <value>Cannot find a transaction link by a streetcode id: {0}</value>
+  </data>
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a video with corresponding id: {0}</value>
-  </data>
-  <data name="String40" xml:space="preserve">
-    <value>Cannot find any fact by the streetcode id: {0}</value>
-  </data>
-  <data name="String41" xml:space="preserve">
-    <value>Cannot find any fact</value>
-  </data>
-  <data name="String42" xml:space="preserve">
-    <value>Cannot find any related figures by a streetcode id: {0}</value>
-  </data>
-  <data name="String43" xml:space="preserve">
-    <value>Cannot find any term with corresponding id: {0}</value>
-  </data>
-  <data name="String44" xml:space="preserve">
-    <value>Cannot find any term</value>
-  </data>
-  <data name="String45" xml:space="preserve">
-    <value>Cannot find a related term with corresponding id: {0}</value>
-  </data>
-  <data name="String46" xml:space="preserve">
-    <value>Cannot find a transaction link by a streetcode id: {0}</value>
   </data>
   <data name="String47" xml:space="preserve">
     <value>Cannot find any text with corresponding id: {0}</value>

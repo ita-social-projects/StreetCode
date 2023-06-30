@@ -27,6 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
         }
+
         [Fact]
         public async Task Handle_ReturnsSuccess()
         {
@@ -51,6 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(result);
 
         }
+
         [Fact]
         public async Task Handle_ReturnsCorrectType()
         {
@@ -69,12 +71,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var request = new GetAllStreetcodesRequestDTO();
 
             // act
-
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
 
             // assert
             Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
         }
+
         [Fact]
         public async Task FindStreetCodeWithMatchTitleTest()
         {
@@ -97,10 +99,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
             Assert.NotNull(result.Value);
-
-            var response = result.Value;
-            Assert.NotNull(response.Streetcodes);
+            Assert.NotNull(result.Value.Streetcodes);
         }
+
         [Fact]
         public async Task FindSortedStreetcodesTest()
         {
@@ -136,6 +137,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.Equal("Streetcode 2", resultList[1].Title);
             Assert.Equal("Streetcode 1", resultList[2].Title);
         }
+
         [Fact]
         public async Task FindFilteredStreetcodesTest()
         {
@@ -148,7 +150,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var query = new GetAllStreetcodesQuery(request);
 
             var (handler, repositoryWrapperMock) = SetupMockObjectsAndGetHandler(out var streetcodeRepositoryMock, out var mapperMock);
-            IQueryable<StreetcodeContent> streetcodes = new List<StreetcodeContent>().AsQueryable();
+            var streetcodes = new List<StreetcodeContent>().AsQueryable();
 
             // Act
             var result = await handler.Handle(query, default);
@@ -158,6 +160,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.Empty(streetcodes);
         }
+
         private (GetAllStreetcodesHandler handler, Mock<IRepositoryWrapper> repositoryWrapperMock) SetupMockObjectsAndGetHandler(out Mock<IStreetcodeRepository> streetcodeRepositoryMock, out Mock<IMapper> mapperMock)
         {
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();

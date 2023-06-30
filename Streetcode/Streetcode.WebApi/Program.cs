@@ -22,7 +22,6 @@ if (app.Environment.EnvironmentName == "Local")
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
     await app.ApplyMigrations();
-/*    await app.SeedDataAsync();*/
 }
 else
 {
@@ -38,15 +37,12 @@ app.UseAuthorization();
 
 app.UseHangfireDashboard("/dash");
 
-if (app.Environment.EnvironmentName != "Local")
-{
-    BackgroundJob.Schedule<WebParsingUtils>(
-      wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
-    RecurringJob.AddOrUpdate<WebParsingUtils>(
-      wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
-    RecurringJob.AddOrUpdate<BlobService>(
-        b => b.CleanBlobStorage(), Cron.Monthly);
-}
+BackgroundJob.Schedule<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+RecurringJob.AddOrUpdate<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+RecurringJob.AddOrUpdate<BlobService>(
+    b => b.CleanBlobStorage(), Cron.Monthly);
 
 app.MapControllers();
 

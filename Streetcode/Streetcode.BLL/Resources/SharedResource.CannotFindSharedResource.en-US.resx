@@ -153,6 +153,9 @@
   <data name="CannotFindAnyFactWithCorrespondingId" xml:space="preserve">
     <value>Cannot find any fact with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindAnyHistoricalContexts" xml:space="preserve">
+    <value>Cannot find any historical contexts</value>
+  </data>
   <data name="CannotFindAnyImage" xml:space="preserve">
     <value>Cannot find any image</value>
   </data>
@@ -162,8 +165,14 @@
   <data name="CannotFindAnyPartnerWithCorrespondingId" xml:space="preserve">
     <value>Cannot find any partner with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindAnyPositions" xml:space="preserve">
+    <value>Cannot find any positions</value>
+  </data>
   <data name="CannotFindAnyRelatedFiguresByStreetcodeId" xml:space="preserve">
     <value>Cannot find any related figures by a streetcode id: {0}</value>
+  </data>
+  <data name="CannotFindAnySourceCategoryWithTheStreetcodeId" xml:space="preserve">
+    <value>Cannot find any source category with the streetcode id {0}</value>
   </data>
   <data name="CannotFindAnySrcCategoryByTheCorrespondingId" xml:space="preserve">
     <value>Cannot find any srcCategory by the corresponding id: {0}</value>
@@ -198,11 +207,38 @@
   <data name="CannotFindAnyTeamLinks" xml:space="preserve">
     <value>Cannot find any team links</value>
   </data>
+  <data name="CannotFindAnyTeamWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find any team with corresponding id: {0}</value>
+  </data>
   <data name="CannotFindAnyTerm" xml:space="preserve">
     <value>Cannot find any term</value>
   </data>
   <data name="CannotFindAnyTermWithCorrespondingId" xml:space="preserve">
     <value>Cannot find any term with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindAnyText" xml:space="preserve">
+    <value>Cannot find any text</value>
+  </data>
+  <data name="CannotFindAnyTextWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find any text with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindAnyTimelineItem" xml:space="preserve">
+    <value>Cannot find any timelineItem</value>
+  </data>
+  <data name="CannotFindAnyTimelineItemByTheStreetcodeId" xml:space="preserve">
+    <value>Cannot find any timeline item by the streetcode id: {0}</value>
+  </data>
+  <data name="CannotFindAnyToponymByTheStreetcodeId" xml:space="preserve">
+    <value>Cannot find any toponym by the streetcode id: {0}</value>
+  </data>
+  <data name="CannotFindAnyToponymWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find any toponym with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindAnyTransactionLink" xml:space="preserve">
+    <value>Cannot find any transaction link</value>
+  </data>
+  <data name="CannotFindAnyTransactionLinkWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find any transaction link with corresponding id: {0}</value>
   </data>
   <data name="CannotFindAnyVideoByTheStreetcodeId" xml:space="preserve">
     <value>Cannot find any video by the streetcode id: {0}</value>
@@ -234,6 +270,9 @@
   <data name="CannotFindRelatedTermWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a related term with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindRelationBetweenStreetcodesWithCorrespondingIds" xml:space="preserve">
+    <value>Cannot find a relation between streetcodes with corresponding ids: {0} &amp; {1}</value>
+  </data>
   <data name="CannotFindStreetcodeById" xml:space="preserve">
     <value>Cannot find streetcode by id</value>
   </data>
@@ -249,55 +288,16 @@
   <data name="CannotFindTagWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a Tag with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindTextWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Cannot find a text with corresponding categoryId: {0}</value>
+  </data>
+  <data name="CannotFindTimelineItemWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find a timeline item with corresponding id: {0}</value>
+  </data>
   <data name="CannotFindTransactionLinkByStreetcodeId" xml:space="preserve">
     <value>Cannot find a transaction link by a streetcode id: {0}</value>
   </data>
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a video with corresponding id: {0}</value>
-  </data>
-  <data name="String47" xml:space="preserve">
-    <value>Cannot find any text with corresponding id: {0}</value>
-  </data>
-  <data name="String48" xml:space="preserve">
-    <value>Cannot find any text</value>
-  </data>
-  <data name="String49" xml:space="preserve">
-    <value>Cannot find any timeline item by the streetcode id: {0}</value>
-  </data>
-  <data name="String50" xml:space="preserve">
-    <value>Cannot find any team with corresponding id: {0}</value>
-  </data>
-  <data name="String51" xml:space="preserve">
-    <value>Cannot find any source category with the streetcode id {0}</value>
-  </data>
-  <data name="String52" xml:space="preserve">
-    <value>Cannot find a relation between streetcodes with corresponding ids: {0} &amp; {1}</value>
-  </data>
-  <data name="String53" xml:space="preserve">
-    <value>Cannot find any toponym by the streetcode id: {0}</value>
-  </data>
-  <data name="String54" xml:space="preserve">
-    <value>Cannot find a timeline item with corresponding id: {0}</value>
-  </data>
-  <data name="String55" xml:space="preserve">
-    <value>Cannot find any historical contexts</value>
-  </data>
-  <data name="String56" xml:space="preserve">
-    <value>Cannot find any toponym with corresponding id: {0}</value>
-  </data>
-  <data name="String57" xml:space="preserve">
-    <value>Cannot find any timelineItem</value>
-  </data>
-  <data name="String58" xml:space="preserve">
-    <value>Cannot find any transaction link with corresponding id: {0}</value>
-  </data>
-  <data name="String59" xml:space="preserve">
-    <value>Cannot find a text with corresponding categoryId: {0}</value>
-  </data>
-  <data name="String60" xml:space="preserve">
-    <value>Cannot find any transaction link</value>
-  </data>
-  <data name="String61" xml:space="preserve">
-    <value>Cannot find any positions</value>
   </data>
 </root>

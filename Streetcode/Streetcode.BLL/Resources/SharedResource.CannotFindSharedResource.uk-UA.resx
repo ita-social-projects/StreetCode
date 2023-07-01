@@ -1,101 +1,303 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CannotFindAnArtWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти арт з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnAudioWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти аудіо з відповідною CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindAnAudioWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти аудіо з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnAudioWithTheCorrespondingStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти аудіо з відповідним ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnImageWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти зображення з відповідною CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindAnImageWithTheCorrespondingStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти зображення з відповідним ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyArts" xml:space="preserve">
+    <value>Не вдалося знайти жодних артів</value>
+  </data>
+  <data name="CannotFindAnyArtWithCorrespondingStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодного арту з відповідним ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyAudios" xml:space="preserve">
+    <value>Не вдалося знайти жодного аудіо</value>
+  </data>
+  <data name="CannotFindAnyFact" xml:space="preserve">
+    <value>Не вдалося знайти жодного факту</value>
+  </data>
+  <data name="CannotFindAnyFactByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодного факту за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyFactWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодного факту з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyHistoricalContexts" xml:space="preserve">
+    <value>Не вдалося знайти жодного історичного контексту</value>
+  </data>
+  <data name="CannotFindAnyImage" xml:space="preserve">
+    <value>Не вдалося знайти жодного зображення</value>
+  </data>
+  <data name="CannotFindAnyPartners" xml:space="preserve">
+    <value>Не вдалося знайти партнерів</value>
+  </data>
+  <data name="CannotFindAnyPartnerWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти партнера з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyPositions" xml:space="preserve">
+    <value>Не вдалося знайти жодної позиції</value>
+  </data>
+  <data name="CannotFindAnyRelatedFiguresByStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти будь-які пов'язані цифри за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnySourceCategoryWithTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодної вихідної категорії з ідентифікатором стріткоду {0}</value>
+  </data>
+  <data name="CannotFindAnySrcCategoryByTheCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодної srcCategory за відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyStreetcodeWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодний стріткод з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyStreetcodeWithCorrespondingIndex" xml:space="preserve">
+    <value>Не вдалося знайти жодний стріткод з відповідним індексом: {0}</value>
+  </data>
+  <data name="CannotFindAnyStreetcodeWithCorrespondingStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодний стріткод з відповідним ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyStreetcodeWithCorrespondingTagId" xml:space="preserve">
+    <value>Не вдалося знайти жодний стріткод з відповідним TagId: {0}</value>
+  </data>
+  <data name="CannotFindAnySubtitleByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодного субтитра за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnySubtitles" xml:space="preserve">
+    <value>Не вдалося знайти субтитри</value>
+  </data>
+  <data name="CannotFindAnyTagByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодного тега за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyTags" xml:space="preserve">
+    <value>Не вдалося знайти жодних теґів</value>
+  </data>
+  <data name="CannotFindAnyTeam" xml:space="preserve">
+    <value>Не вдалося знайти жодної команди</value>
+  </data>
+  <data name="CannotFindAnyTeamLinks" xml:space="preserve">
+    <value>Не вдалося знайти посилання команди</value>
+  </data>
+  <data name="CannotFindAnyTeamWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодної команди з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyTerm" xml:space="preserve">
+    <value>Не вдалося знайти жодного терміна</value>
+  </data>
+  <data name="CannotFindAnyTermWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодного терміна з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyText" xml:space="preserve">
+    <value>Не вдалося знайти жодного тексту</value>
+  </data>
+  <data name="CannotFindAnyTextWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодного тексту з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyTimelineItem" xml:space="preserve">
+    <value>Неможливо знайти жодного timelineItem</value>
+  </data>
+  <data name="CannotFindAnyTimelineItemByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти жодного елемента часової шкали за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyToponymByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти топонім за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyToponymWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодного топоніма з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyTransactionLink" xml:space="preserve">
+    <value>Не вдалося знайти посилання на транзакцію</value>
+  </data>
+  <data name="CannotFindAnyTransactionLinkWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти жодного посилання на транзакцію з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindAnyVideoByTheStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти відео за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindAnyVideos" xml:space="preserve">
+    <value>Не вдалося знайти жодного відео</value>
+  </data>
+  <data name="CannotFindCategoryWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти категорію з відповідним CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindCoordinatesByStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти координати за стріткод ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindCoordinateWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти координату з відповідним CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindFactWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти факт з відповідним CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindImageWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти зображення з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindPartnersByStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти партнерів за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindRecordWithQrId" xml:space="preserve">
+    <value>Не вдалося знайти запис з Qr - ідентифікатором</value>
+  </data>
+  <data name="CannotFindRelatedTermWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти пов'язаний термін з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindRelationBetweenStreetcodesWithCorrespondingIds" xml:space="preserve">
+    <value>Не вдалося знайти відношення між стріткодами з відповідними ідентифікаторами: {0} &amp; {1}</value>
+  </data>
+  <data name="CannotFindStreetcodeById" xml:space="preserve">
+    <value>Не вдалося знайти стріткод за id</value>
+  </data>
+  <data name="CannotFindStreetcodeByTransliterationUrl" xml:space="preserve">
+    <value>Не вдалося знайти стріткод за адресою транслітерації: {0}</value>
+  </data>
+  <data name="CannotFindStreetcodeWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти стріткод з відповідною категорієюId: {0}</value>
+  </data>
+  <data name="CannotFindSubtitleWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти підзаголовок з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindTagWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти мітку з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindTextWithCorrespondingCategoryId" xml:space="preserve">
+    <value>Не вдалося знайти текст з відповідною CategoryId: {0}</value>
+  </data>
+  <data name="CannotFindTimelineItemWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти елемент часової шкали з відповідним ідентифікатором: {0}</value>
+  </data>
+  <data name="CannotFindTransactionLinkByStreetcodeId" xml:space="preserve">
+    <value>Не вдалося знайти посилання на транзакцію за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти відео з відповідним ідентифікатором: {0}</value>
+  </data>
 </root>

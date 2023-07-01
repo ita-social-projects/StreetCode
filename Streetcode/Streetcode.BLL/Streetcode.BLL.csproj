@@ -195,6 +195,26 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Factories.Streetcode.StreetcodeFactory.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Factories.Streetcode.StreetcodeFactory.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Factories.Streetcode.StreetcodeFactory.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Factories.Streetcode.StreetcodeFactory.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Email.SendEmailHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Email.SendEmailHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Email.SendEmailHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Email.SendEmailHandler.uk-UA.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -204,6 +224,36 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Users.Login.LoginHandler.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Users.Login.LoginHandler.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services.Payment.Exceptions.InvalidTokenException.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Services.Payment.Exceptions.InvalidTokenException.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services.Payment.Exceptions.InvalidTokenException.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Services.Payment.Exceptions.InvalidTokenException.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services.Users.TokenService.en-UK.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Services.Users.TokenService.en-UK.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services.Users.TokenService.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Services.Users.TokenService.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\SharedResource.AnErrorOccurredSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -244,6 +294,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResource.CannotFindSharedResource.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.CannotGetSharedResource.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotGetSharedResource.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.CannotGetSharedResource.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotGetSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\SharedResource.CannotMapSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -420,6 +480,22 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Factories.Streetcode.StreetcodeFactory.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Factories.Streetcode.StreetcodeFactory.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Factories.Streetcode.StreetcodeFactory.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Factories.Streetcode.StreetcodeFactory.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Email.SendEmailHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Email.SendEmailHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Email.SendEmailHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Email.SendEmailHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.Designer.cs</LastGenOutput>
@@ -427,6 +503,30 @@
     <EmbeddedResource Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Users.Login.LoginHandler.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services.Payment.Exceptions.InvalidTokenException.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Services.Payment.Exceptions.InvalidTokenException.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services.Payment.Exceptions.InvalidTokenException.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Services.Payment.Exceptions.InvalidTokenException.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services.Users.TokenService.en-UK.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Services.Users.TokenService.en-UK.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services.Users.TokenService.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Services.Users.TokenService.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.AnErrorOccurredSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -459,6 +559,14 @@
     <EmbeddedResource Update="Resources\SharedResource.CannotFindSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResource.CannotFindSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.CannotGetSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotGetSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.CannotGetSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotGetSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.CannotMapSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>

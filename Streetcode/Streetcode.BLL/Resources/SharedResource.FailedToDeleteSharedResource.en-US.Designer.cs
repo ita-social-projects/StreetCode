@@ -22,14 +22,14 @@ namespace Streetcode.BLL.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SharedResource_FailedToDeleteSharedResource_en_US1 {
+    internal class SharedResource_FailedToDeleteSharedResource_en_US {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SharedResource_FailedToDeleteSharedResource_en_US1() {
+        internal SharedResource_FailedToDeleteSharedResource_en_US() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Streetcode.BLL.Resources.SharedResource.FailedToDeleteSharedResource.en-US1", typeof(SharedResource_FailedToDeleteSharedResource_en_US1).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SharedResource.FailedToDeleteSharedResource.en-US", typeof(SharedResource_FailedToDeleteSharedResource_en_US).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

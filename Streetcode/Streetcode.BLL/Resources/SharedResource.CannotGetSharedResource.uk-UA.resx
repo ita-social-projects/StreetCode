@@ -117,16 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CannotMapEntity" xml:space="preserve">
-    <value>Cannot map entity</value>
+  <data name="CannotGetRecords" xml:space="preserve">
+    <value>Не вдається отримати записи</value>
   </data>
-  <data name="CannotMapRecord" xml:space="preserve">
-    <value>Cannot map record</value>
-  </data>
-  <data name="CannotMapRecords" xml:space="preserve">
-    <value>Cannot map records</value>
-  </data>
-  <data name="CannotMapStreetcodeToShortDTO" xml:space="preserve">
-    <value>Cannot map streetcode to shortDTO</value>
+  <data name="CannotGetWordsByTermId" xml:space="preserve">
+    <value>Не вдається отримати слова за ідентифікатором терміна</value>
   </data>
 </root>

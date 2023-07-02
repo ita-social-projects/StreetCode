@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.MediatR.ResultVariations;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -29,12 +31,8 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
         var video = await _repositoryWrapper.VideoRepository
             .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.StreetcodeId);
 
-        if (video is null)
-        {
-            return Result.Fail(new Error($"Cannot find any video by the streetcode id: {request.StreetcodeId}"));
-        }
-
-        var videoDto = _mapper.Map<VideoDTO>(video);
-        return Result.Ok(videoDto);
+        NullResult<VideoDTO> result = new NullResult<VideoDTO>();
+        result.WithValue(_mapper.Map<VideoDTO>(video));
+        return result;
     }
 }

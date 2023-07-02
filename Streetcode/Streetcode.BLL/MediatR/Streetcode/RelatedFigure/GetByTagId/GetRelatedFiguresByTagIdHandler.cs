@@ -43,9 +43,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
             }
 
             var relatedFigureDTO = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);
-
-            _logger?.LogInformation($"GetRelatedFiguresByTagIdQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {relatedFigureDTO.Count()} related figures");
+            _logger?.LogInformation($"GetRelatedFiguresByTagIdQuery handled successfully. Retrieved {relatedFigureDTO.Count()} related figures");
             return Result.Ok(relatedFigureDTO);
         }
     }

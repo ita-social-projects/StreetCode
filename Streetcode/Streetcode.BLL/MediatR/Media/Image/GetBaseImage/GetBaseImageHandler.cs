@@ -31,9 +31,7 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
             return Result.Fail(new Error(errorMsg));
         }
 
-        var imageFile = _blobStorage.FindFileInStorageAsMemoryStream(image.BlobName);
-
         _logger?.LogInformation($"GetBaseImageQuery handled successfully");
-        return imageFile;
+        return _blobStorage.FindFileInStorageAsMemoryStream(image.BlobName);
     }
 }

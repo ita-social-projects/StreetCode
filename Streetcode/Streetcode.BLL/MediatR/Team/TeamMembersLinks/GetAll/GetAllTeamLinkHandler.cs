@@ -37,8 +37,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.GetAll
 
             var teamLinksDtos = _mapper.Map<IEnumerable<TeamMemberLinkDTO>>(teamLinks);
 
-            _logger?.LogInformation($"GetAllTeamLinkQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {teamLinksDtos.Count()} teamLinks");
+            _logger?.LogInformation($"GetAllTeamLinkQuery handled successfully. Retrieved {teamLinksDtos.Count()} teamLinks");
             return Result.Ok(teamLinksDtos);
         }
     }

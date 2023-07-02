@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetAllStatisticRecordsByStreetcodeIdQuery handled successfully");
+            _logger?.LogInformation($"GetAllStatisticRecordsByStreetcodeIdQuery handled successfully. Retrieved {statisticRecordsDTOs.Count()} statisctic records");
             return Result.Ok(statisticRecordsDTOs);
         }
     }

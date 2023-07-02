@@ -10,7 +10,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
     {
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
-        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService? logger)
+        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService logger)
         {
             _repository = repository;
             _logger = logger;

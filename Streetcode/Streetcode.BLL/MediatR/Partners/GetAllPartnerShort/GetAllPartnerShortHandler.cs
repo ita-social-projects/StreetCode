@@ -33,8 +33,9 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetAllPartnersShortQuery handled successfully");
-            return Result.Ok(_mapper.Map<IEnumerable<PartnerShortDTO>>(partners));
+            var partnerShortDtos = _mapper.Map<IEnumerable<PartnerShortDTO>>(partners);
+            _logger?.LogInformation($"GetAllPartnersShortQuery handled successfully. Retrieved {partnerShortDtos.Count()} short partners");
+            return Result.Ok(partnerShortDtos);
         }
     }
 }

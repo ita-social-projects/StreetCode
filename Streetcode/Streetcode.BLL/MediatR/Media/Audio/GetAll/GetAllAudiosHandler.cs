@@ -42,7 +42,7 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
             audio.Base64 = _blobService.FindFileInStorageAsBase64(audio.BlobName);
         }
 
-        _logger?.LogInformation($"GetAllAudiosQuery handled successfully");
+        _logger?.LogInformation($"GetAllAudiosQuery handled successfully. Retrieved {audioDtos.Count()} audios");
         return Result.Ok(audioDtos);
     }
 }

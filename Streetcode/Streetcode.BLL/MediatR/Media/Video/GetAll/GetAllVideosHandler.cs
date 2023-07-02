@@ -35,8 +35,7 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
         }
 
         var videoDtos = _mapper.Map<IEnumerable<VideoDTO>>(videos);
-        _logger?.LogInformation($"GetAllVideosQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {videoDtos.Count()} videos");
+        _logger?.LogInformation($"GetAllVideosQuery handled successfully. Retrieved {videoDtos.Count()} videos");
         return Result.Ok(videoDtos);
     }
 }

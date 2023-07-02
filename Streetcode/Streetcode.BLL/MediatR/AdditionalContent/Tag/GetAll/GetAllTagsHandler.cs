@@ -35,8 +35,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
         }
 
         var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);
-        _logger?.LogInformation($"GetAllTagsQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {tagDtos.Count()} tags");
+        _logger?.LogInformation($"GetAllTagsQuery handled successfully. Retrieved {tagDtos.Count()} tags");
         return Result.Ok(tagDtos);
     }
 }

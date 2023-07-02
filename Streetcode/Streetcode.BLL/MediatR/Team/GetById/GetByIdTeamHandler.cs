@@ -40,9 +40,8 @@ namespace Streetcode.BLL.MediatR.Team.GetById
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var teamDto = _mapper.Map<TeamMemberDTO>(team);
             _logger?.LogInformation($"GetByIdTeamQuery handled successfully");
-            return Result.Ok(teamDto);
+            return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
         }
     }
 }

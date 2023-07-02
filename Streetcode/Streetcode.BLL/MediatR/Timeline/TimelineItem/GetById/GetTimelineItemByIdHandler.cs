@@ -38,8 +38,7 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
             return Result.Fail(new Error(errorMsg));
         }
 
-        var timelineItemDto = _mapper.Map<TimelineItemDTO>(timelineItem);
         _logger?.LogInformation($"GetTimelineItemByIdQuery handled successfully");
-        return Result.Ok(timelineItemDto);
+        return Result.Ok(_mapper.Map<TimelineItemDTO>(timelineItem));
     }
 }

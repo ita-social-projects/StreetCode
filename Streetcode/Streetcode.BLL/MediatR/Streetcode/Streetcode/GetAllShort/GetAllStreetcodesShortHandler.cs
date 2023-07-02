@@ -26,8 +26,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
             if (streetcodes != null)
             {
-                _logger?.LogInformation($"GetAllStreetcodesShortQuery handled successfully");
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
+                var streetcodesShort = _mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes);
+                _logger?.LogInformation($"GetAllStreetcodesShortQuery handled successfully. Retrieved {streetcodesShort.Count()} streetcodes");
+                return Result.Ok(streetcodesShort);
             }
 
             const string errorMsg = "No streetcodes exist now";

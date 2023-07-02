@@ -34,8 +34,7 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
             return Result.Fail(new Error(errorMsg));
         }
 
-        var videoDto = _mapper.Map<VideoDTO>(video);
         _logger?.LogInformation($"GetVideoByStreetcodeIdQuery handled successfully");
-        return Result.Ok(videoDto);
+        return Result.Ok(_mapper.Map<VideoDTO>(video));
     }
 }

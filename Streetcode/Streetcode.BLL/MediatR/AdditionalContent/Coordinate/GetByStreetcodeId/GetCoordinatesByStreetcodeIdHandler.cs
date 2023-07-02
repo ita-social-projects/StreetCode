@@ -29,6 +29,7 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
         {
             string errorMsg = $"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}";
             _logger?.LogError("GetCoordinatesByStreetcodeIdQuery handled with an error");
+            _logger?.LogError(errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

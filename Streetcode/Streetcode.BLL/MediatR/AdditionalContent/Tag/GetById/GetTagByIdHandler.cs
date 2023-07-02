@@ -32,8 +32,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
             return Result.Fail(new Error(errorMsg));
         }
 
-        var tagDto = _mapper.Map<TagDTO>(tag);
         _logger?.LogInformation($"GetTagByIdQuery handled successfully");
-        return Result.Ok(tagDto);
+        return Result.Ok(_mapper.Map<TagDTO>(tag));
     }
 }

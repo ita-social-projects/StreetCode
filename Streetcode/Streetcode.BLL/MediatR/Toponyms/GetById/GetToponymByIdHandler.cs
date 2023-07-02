@@ -33,8 +33,7 @@ public class GetToponymByIdHandler : IRequestHandler<GetToponymByIdQuery, Result
             return Result.Fail(new Error(errorMsg));
         }
 
-        var toponymDto = _mapper.Map<ToponymDTO>(toponym);
         _logger?.LogInformation($"GetToponymByIdQuery handled successfully");
-        return Result.Ok(toponymDto);
+        return Result.Ok(_mapper.Map<ToponymDTO>(toponym));
     }
 }

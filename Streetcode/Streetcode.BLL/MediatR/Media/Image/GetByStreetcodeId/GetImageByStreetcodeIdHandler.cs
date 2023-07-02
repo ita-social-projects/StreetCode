@@ -44,8 +44,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
             image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
         }
 
-        _logger?.LogInformation($"GetImageByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {imageDtos.Count()} images");
+        _logger?.LogInformation($"GetImageByStreetcodeIdQuery handled successfully. Retrieved {imageDtos.Count()} images");
         return Result.Ok(imageDtos);
     }
 }

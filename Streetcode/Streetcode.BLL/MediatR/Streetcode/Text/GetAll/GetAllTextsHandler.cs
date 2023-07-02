@@ -35,8 +35,7 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
         }
 
         var textDtos = _mapper.Map<IEnumerable<TextDTO>>(texts);
-        _logger?.LogInformation($"GetAllTextsQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {textDtos.Count()} texts");
+        _logger?.LogInformation($"GetAllTextsQuery handled successfully. Retrieved {textDtos.Count()} texts");
         return Result.Ok(textDtos);
     }
 }

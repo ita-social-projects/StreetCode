@@ -32,8 +32,7 @@ public class GetTextByIdHandler : IRequestHandler<GetTextByIdQuery, Result<TextD
             return Result.Fail(new Error(errorMsg));
         }
 
-        var textDto = _mapper.Map<TextDTO>(text);
         _logger?.LogInformation($"GetTextByIdQuery handled successfully");
-        return Result.Ok(textDto);
+        return Result.Ok(_mapper.Map<TextDTO>(text));
     }
 }

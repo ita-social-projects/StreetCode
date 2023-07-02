@@ -34,8 +34,7 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
         }
 
         var factDtos = _mapper.Map<IEnumerable<FactDto>>(facts);
-        _logger?.LogInformation($"GetAllFactsQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {factDtos.Count()} facts");
+        _logger?.LogInformation($"GetAllFactsQuery handled successfully. Retrieved {factDtos.Count()} facts");
         return Result.Ok(factDtos);
     }
 }

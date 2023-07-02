@@ -40,8 +40,7 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
         }
 
         var timelineItemDto = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
-        _logger?.LogInformation($"GetTimelineItemsByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {timelineItemDto.Count()} timelineItems");
+        _logger?.LogInformation($"GetTimelineItemsByStreetcodeIdQuery handled successfully. Retrieved {timelineItemDto.Count()} timelineItems");
         return Result.Ok(timelineItemDto);
     }
 }

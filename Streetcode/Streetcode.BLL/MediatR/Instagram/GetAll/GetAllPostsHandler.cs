@@ -21,7 +21,7 @@ namespace Streetcode.BLL.MediatR.Instagram.GetAll
         {
             var result = await _instagramService.GetPostsAsync();
 
-            _logger?.LogInformation($"GetAllPostsQuery handled successfully");
+            _logger?.LogInformation($"GetAllPostsQuery handled successfully. Retrieved {result.Count()} posts");
             return Result.Ok(result);
         }
     }

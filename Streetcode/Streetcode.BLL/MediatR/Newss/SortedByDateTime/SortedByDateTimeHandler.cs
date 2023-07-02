@@ -47,8 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
                 }
             }
 
-            _logger?.LogInformation($"SortedByDateTimeQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {newsDTOs.Count} news");
+            _logger?.LogInformation($"SortedByDateTimeQuery handled successfully. Retrieved {newsDTOs.Count} news");
             return Result.Ok(newsDTOs);
         }
     }

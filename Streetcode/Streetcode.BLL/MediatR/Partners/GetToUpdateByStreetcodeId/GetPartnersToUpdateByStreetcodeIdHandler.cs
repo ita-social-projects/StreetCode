@@ -49,9 +49,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
             }
 
             var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
-
-            _logger?.LogInformation($"GetPartnersToUpdateByStreetcodeIdQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {partnerDtos.Count()} partners");
+            _logger?.LogInformation($"GetPartnersToUpdateByStreetcodeIdQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
             return Result.Ok(value: partnerDtos);
         }
     }

@@ -35,8 +35,9 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetAllHistoricalContextQuery handled successfully");
-            return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContextItems));
+            var historicalContext = _mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContextItems);
+            _logger?.LogInformation($"GetAllHistoricalContextQuery handled successfully. Retrieved {historicalContext.Count()} historical contexts");
+            return Result.Ok(historicalContext);
         }
     }
 }

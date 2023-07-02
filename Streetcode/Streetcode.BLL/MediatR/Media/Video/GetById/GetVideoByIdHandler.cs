@@ -17,7 +17,6 @@ public class GetVideoByIdHandler : IRequestHandler<GetVideoByIdQuery, Result<Vid
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-
         _logger = logger;
     }
 
@@ -33,8 +32,7 @@ public class GetVideoByIdHandler : IRequestHandler<GetVideoByIdQuery, Result<Vid
             return Result.Fail(new Error(errorMsg));
         }
 
-        var videoDto = _mapper.Map<VideoDTO>(video);
         _logger?.LogInformation($"GetVideoByIdQuery handled successfully");
-        return Result.Ok(videoDto);
+        return Result.Ok(_mapper.Map<VideoDTO>(video));
     }
 }

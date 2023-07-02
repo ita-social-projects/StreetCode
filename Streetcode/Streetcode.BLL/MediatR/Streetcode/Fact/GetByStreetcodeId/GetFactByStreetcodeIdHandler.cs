@@ -35,8 +35,7 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
         }
 
         var factDto = _mapper.Map<IEnumerable<FactDto>>(fact);
-        _logger?.LogInformation($"GetFactByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {factDto.Count()} facts");
+        _logger?.LogInformation($"GetFactByStreetcodeIdQuery handled successfully. Retrieved {factDto.Count()} facts");
         return Result.Ok(factDto);
     }
 }

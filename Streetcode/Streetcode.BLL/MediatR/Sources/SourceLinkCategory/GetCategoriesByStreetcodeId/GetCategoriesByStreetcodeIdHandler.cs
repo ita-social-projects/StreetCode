@@ -48,8 +48,7 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
             srcCategory.Image.Base64 = _blobService.FindFileInStorageAsBase64(srcCategory.Image.BlobName);
         }
 
-        _logger?.LogInformation($"GetCategoriesByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {mappedSrcCategories.Count()} categories");
+        _logger?.LogInformation($"GetCategoriesByStreetcodeIdQuery handled successfully. Retrieved {mappedSrcCategories.Count()} categories");
         return Result.Ok(mappedSrcCategories);
     }
 }

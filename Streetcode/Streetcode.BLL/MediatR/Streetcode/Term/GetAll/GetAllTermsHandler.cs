@@ -35,9 +35,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
             }
 
             var termDto = _mapper.Map<IEnumerable<TermDTO>>(terms);
-
-            _logger?.LogInformation($"GetAllTermsQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {termDto.Count()} terms");
+            _logger?.LogInformation($"GetAllTermsQuery handled successfully. Retrieved {termDto.Count()} terms");
             return Result.Ok(termDto);
         }
     }

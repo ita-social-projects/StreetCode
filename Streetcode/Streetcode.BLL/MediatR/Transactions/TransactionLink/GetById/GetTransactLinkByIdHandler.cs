@@ -34,8 +34,7 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
             return Result.Fail(new Error(errorMsg));
         }
 
-        var mappedTransactLink = _mapper.Map<TransactLinkDTO>(transactLink);
         _logger?.LogInformation($"GetTransactLinkByIdQuery handled successfully");
-        return Result.Ok(mappedTransactLink);
+        return Result.Ok(_mapper.Map<TransactLinkDTO>(transactLink));
     }
 }

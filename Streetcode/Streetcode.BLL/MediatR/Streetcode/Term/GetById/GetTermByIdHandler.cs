@@ -32,8 +32,7 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
             return Result.Fail(new Error(errorMsg));
         }
 
-        var termDto = _mapper.Map<TermDTO>(term);
         _logger?.LogInformation($"GetTermByIdQuery handled successfully");
-        return Result.Ok(termDto);
+        return Result.Ok(_mapper.Map<TermDTO>(term));
     }
 }

@@ -12,7 +12,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService _logger = null;
+    private readonly ILoggerService _logger;
 
     public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
@@ -34,7 +34,6 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
         }
 
         _logger?.LogInformation("GetSubtitleByIdQuery handled successfully");
-        var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);
-        return Result.Ok(subtitleDto);
+        return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));
     }
 }

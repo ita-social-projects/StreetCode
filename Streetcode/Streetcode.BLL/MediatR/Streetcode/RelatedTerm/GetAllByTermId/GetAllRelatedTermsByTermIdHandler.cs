@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
                 return new Error(errorMsg);
             }
 
-            _logger?.LogInformation($"GetAllRelatedTermsByTermIdQuery handled successfully");
+            _logger?.LogInformation($"GetAllRelatedTermsByTermIdQuery handled successfully. Retrieved {relatedTermsDTO.Count()} related terms");
             return Result.Ok(relatedTermsDTO);
         }
     }

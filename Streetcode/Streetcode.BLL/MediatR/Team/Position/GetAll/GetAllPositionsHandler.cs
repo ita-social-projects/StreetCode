@@ -38,8 +38,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 
             var positionsDtos = _mapper.Map<IEnumerable<PositionDTO>>(positions);
 
-            _logger?.LogInformation($"GetAllPositionsQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {positionsDtos.Count()} positions");
+            _logger?.LogInformation($"GetAllPositionsQuery handled successfully. Retrieved {positionsDtos.Count()} positions");
             return Result.Ok(positionsDtos);
         }
     }

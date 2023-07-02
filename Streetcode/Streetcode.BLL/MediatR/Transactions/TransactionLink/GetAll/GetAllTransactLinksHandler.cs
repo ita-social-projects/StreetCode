@@ -34,8 +34,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
         }
 
         var transactLinksDtos = _mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks);
-        _logger?.LogInformation($"GetAllTransactLinksQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {transactLinksDtos.Count()} transactLinks");
+        _logger?.LogInformation($"GetAllTransactLinksQuery handled successfully. Retrieved {transactLinksDtos.Count()} transactLinks");
         return Result.Ok(transactLinksDtos);
     }
 }

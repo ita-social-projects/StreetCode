@@ -40,9 +40,7 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
         }
 
         var timelineItemDtos = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
-
-        _logger?.LogInformation($"GetAllTimelineItemsQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {timelineItemDtos.Count()} timelineItems");
+        _logger?.LogInformation($"GetAllTimelineItemsQuery handled successfully. Retrieved {timelineItemDtos.Count()} timelineItems");
         return Result.Ok(timelineItemDtos);
     }
 }

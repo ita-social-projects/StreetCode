@@ -38,8 +38,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         }
 
         var tagDto = _mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index));
-        _logger?.LogInformation($"GetTagByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {tagDto.Count()} tags");
+        _logger?.LogInformation($"GetTagByStreetcodeIdQuery handled successfully. Retrieved {tagDto.Count()} tags");
         return Result.Ok(tagDto);
     }
 }

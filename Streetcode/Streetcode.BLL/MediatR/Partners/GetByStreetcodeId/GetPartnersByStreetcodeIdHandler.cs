@@ -49,9 +49,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
-
-        _logger?.LogInformation($"GetPartnersByStreetcodeIdQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {partnerDtos.Count()} partners");
+        _logger?.LogInformation($"GetPartnersByStreetcodeIdQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
         return Result.Ok(value: partnerDtos);
     }
 }

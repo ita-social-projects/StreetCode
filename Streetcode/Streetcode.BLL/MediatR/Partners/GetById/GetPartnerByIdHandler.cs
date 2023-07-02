@@ -38,9 +38,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
             return Result.Fail(new Error(errorMsg));
         }
 
-        var partnerDto = _mapper.Map<PartnerDTO>(partner);
-
         _logger?.LogInformation($"GetPartnerByIdQuery handled successfully");
-        return Result.Ok(partnerDto);
+        return Result.Ok(_mapper.Map<PartnerDTO>(partner));
     }
 }

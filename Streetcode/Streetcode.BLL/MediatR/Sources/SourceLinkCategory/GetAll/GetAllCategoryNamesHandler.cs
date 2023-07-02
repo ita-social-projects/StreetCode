@@ -33,8 +33,9 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetAllCategoryNamesQuery handled successfully");
-            return Result.Ok(_mapper.Map<IEnumerable<CategoryWithNameDTO>>(allCategories));
+            var categoryNames = _mapper.Map<IEnumerable<CategoryWithNameDTO>>(allCategories);
+            _logger?.LogInformation($"GetAllCategoryNamesQuery handled successfully. Retrived {categoryNames.Count()} category names");
+            return Result.Ok(categoryNames);
         }
     }
 }

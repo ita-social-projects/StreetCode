@@ -31,9 +31,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 
             if (streetcodes != null)
             {
-                int count = streetcodes.Count();
                 _logger?.LogInformation($"GetStreetcodesCountQuery handled successfully");
-                return Result.Ok(count);
+                return Result.Ok(streetcodes.Count());
             }
 
             const string errorMsg = "No streetcodes exist now";

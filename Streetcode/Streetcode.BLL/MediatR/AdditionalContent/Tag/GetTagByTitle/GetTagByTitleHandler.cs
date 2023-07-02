@@ -33,8 +33,7 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
             return Result.Fail(new Error(errorMsg));
         }
 
-        var tagDto = _mapper.Map<TagDTO>(tag);
         _logger?.LogInformation($"GetTagByTitleQuery handled successfully");
-        return Result.Ok(tagDto);
+        return Result.Ok(_mapper.Map<TagDTO>(tag));
     }
 }

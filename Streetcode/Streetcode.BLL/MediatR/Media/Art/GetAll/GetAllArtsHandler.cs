@@ -35,8 +35,7 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
         }
 
         var artDtos = _mapper.Map<IEnumerable<ArtDTO>>(arts);
-        _logger?.LogInformation($"GetAllArtsQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {artDtos.Count()} arts");
+        _logger?.LogInformation($"GetAllArtsQuery handled successfully. Retrieved {artDtos.Count()} arts");
         return Result.Ok(artDtos);
     }
 }

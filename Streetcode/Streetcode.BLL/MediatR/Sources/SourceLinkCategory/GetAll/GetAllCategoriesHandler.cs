@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
             }
 
-            _logger?.LogInformation($"GetAllCategoriesQuery handled successfully");
+            _logger?.LogInformation($"GetAllCategoriesQuery handled successfully. Retrieved {dtos.Count()} categories");
             return Result.Ok(dtos);
         }
     }

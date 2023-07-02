@@ -14,7 +14,7 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
 
-    public GetStreetcodeByIndexHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger)
+    public GetStreetcodeByIndexHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -35,8 +35,7 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
             return Result.Fail(new Error(errorMsg));
         }
 
-        var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         _logger?.LogInformation($"GetStreetcodeByIndexQuery handled successfully");
-        return Result.Ok(streetcodeDto);
+        return Result.Ok(_mapper.Map<StreetcodeDTO>(streetcode));
     }
 }

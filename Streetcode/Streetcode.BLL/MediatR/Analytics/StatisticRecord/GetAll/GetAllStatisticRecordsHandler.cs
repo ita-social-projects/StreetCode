@@ -46,8 +46,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             }
 
             var sortedEntities = mappedEntities.OrderByDescending((x) => x.Count).AsEnumerable();
-            _logger?.LogInformation($"GetAllStatisticRecordsQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {sortedEntities.Count()} statisctics");
+            _logger?.LogInformation($"GetAllStatisticRecordsQuery handled successfully. Retrieved {sortedEntities.Count()} statisctics");
             return Result.Ok(sortedEntities);
         }
     }

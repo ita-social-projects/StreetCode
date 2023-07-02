@@ -34,8 +34,7 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
             return Result.Fail(new Error(errorMsg));
         }
 
-        var artDto = _mapper.Map<ArtDTO>(art);
         _logger?.LogInformation($"GetArtByIdQuery handled successfully");
-        return Result.Ok(artDto);
+        return Result.Ok(_mapper.Map<ArtDTO>(art));
     }
 }

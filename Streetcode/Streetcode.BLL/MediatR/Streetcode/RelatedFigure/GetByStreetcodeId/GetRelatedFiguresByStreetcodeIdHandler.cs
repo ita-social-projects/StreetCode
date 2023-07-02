@@ -46,10 +46,8 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             return Result.Fail(new Error(errorMsg));
         }
 
-        var mappedRelatedFigures = _mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures);
-
         _logger?.LogInformation($"GetRelatedFigureByStreetcodeIdQuery handled successfully");
-        return Result.Ok(mappedRelatedFigures);
+        return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
     }
 
     private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)

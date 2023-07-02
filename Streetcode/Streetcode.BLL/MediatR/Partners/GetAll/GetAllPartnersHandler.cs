@@ -42,8 +42,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
 
-        _logger?.LogInformation($"GetAllPartnersQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {partnerDtos.Count()} partners");
+        _logger?.LogInformation($"GetAllPartnersQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
         return Result.Ok(partnerDtos);
     }
 }

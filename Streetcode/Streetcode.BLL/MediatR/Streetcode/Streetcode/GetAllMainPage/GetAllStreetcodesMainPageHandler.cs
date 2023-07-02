@@ -16,7 +16,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
 
-        public GetAllStreetcodesMainPageHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService? logger)
+        public GetAllStreetcodesMainPageHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -31,8 +31,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
 
             if (streetcodes != null)
             {
-                _logger?.LogInformation($"GetAllStreetcodesMainPageQuery handled successfully");
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes));
+                var streetcodesMainPAge = _mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes);
+                _logger?.LogInformation($"GetAllStreetcodesMainPageQuery handled successfully. Retrieved {streetcodesMainPAge.Count()} streetcodes");
+                return Result.Ok(streetcodesMainPAge);
             }
 
             const string errorMsg = "No streetcodes exist now";

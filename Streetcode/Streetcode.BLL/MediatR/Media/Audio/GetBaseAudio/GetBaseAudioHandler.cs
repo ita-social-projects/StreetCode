@@ -31,9 +31,7 @@ public class GetBaseAudioHandler : IRequestHandler<GetBaseAudioQuery, Result<Mem
             return Result.Fail(new Error(errorMsg));
         }
 
-        var audioFile = _blobStorage.FindFileInStorageAsMemoryStream(audio.BlobName);
-
         _logger?.LogInformation($"GetBaseAudioQuery handled successfully");
-        return audioFile;
+        return _blobStorage.FindFileInStorageAsMemoryStream(audio.BlobName);
     }
 }

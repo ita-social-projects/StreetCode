@@ -43,8 +43,7 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
             image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
         }
 
-        _logger?.LogInformation($"GetAllImagesQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {imageDtos.Count()} images");
+        _logger?.LogInformation($"GetAllImagesQuery handled successfully. Retrieved {imageDtos.Count()} images");
         return Result.Ok(imageDtos);
     }
 }

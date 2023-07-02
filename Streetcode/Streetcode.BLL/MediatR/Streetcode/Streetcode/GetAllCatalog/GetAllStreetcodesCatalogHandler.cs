@@ -31,8 +31,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
             if (streetcodes != null)
             {
                 var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);
-                _logger?.LogInformation($"GetAllStreetcodesCatalogQuery handled successfully");
-                return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped));
+                var streetcodesCatalog = _mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped);
+                _logger?.LogInformation($"GetAllStreetcodesCatalogQuery handled successfully. Retrieved {streetcodesCatalog.Count()} streetcodes");
+                return Result.Ok(streetcodesCatalog);
             }
 
             const string errorMsg = $"Cannot find any subtitles";

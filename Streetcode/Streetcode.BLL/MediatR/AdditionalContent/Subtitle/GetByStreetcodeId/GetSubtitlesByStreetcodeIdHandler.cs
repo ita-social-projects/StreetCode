@@ -34,8 +34,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
             }
 
             _logger?.LogInformation($"GetSubtitlesByStreetcodeIdQuery handled successfully");
-            var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);
-            return Result.Ok(subtitleDto);
+            return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));
         }
     }
 }

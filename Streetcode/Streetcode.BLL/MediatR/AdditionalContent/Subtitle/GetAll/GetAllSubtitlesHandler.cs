@@ -35,10 +35,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
         }
 
         var subtitleDtos = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
-
-        _logger?.LogInformation("GetAllSubtitlesQuery handled successfully");
-        _logger?.LogInformation($"Retrieved {subtitleDtos.Count()} subtitles");
-
+        _logger?.LogInformation($"GetAllSubtitlesQuery handled successfully. Retrieved {subtitleDtos.Count()} subtitles");
         return Result.Ok(subtitleDtos);
     }
 }

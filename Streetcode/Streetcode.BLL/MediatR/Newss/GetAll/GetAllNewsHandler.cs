@@ -47,8 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 }
             }
 
-            _logger?.LogInformation($"GetAllNewsQuery handled successfully");
-            _logger?.LogInformation($"Retrieved {newsDTOs.Count()} news");
+            _logger?.LogInformation($"GetAllNewsQuery handled successfully. Retrieved {newsDTOs.Count()} news");
             return Result.Ok(newsDTOs);
         }
     }

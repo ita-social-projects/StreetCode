@@ -10,7 +10,7 @@
     {
         protected StreetcodeClient client;
 
-        public BaseControllerTests(CustomWebApplicationFactory<Program> factory,string secondPartUrl = "")
+        public BaseControllerTests(CustomWebApplicationFactory<Program> factory, string secondPartUrl = "")
         {
             this.client = new StreetcodeClient(factory.CreateClient(), secondPartUrl);
         }

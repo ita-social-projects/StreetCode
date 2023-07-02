@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;

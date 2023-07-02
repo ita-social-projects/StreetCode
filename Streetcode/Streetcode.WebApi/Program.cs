@@ -14,12 +14,13 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 
 var app = builder.Build();
-await app.ApplyMigrations();
+
 if (app.Environment.EnvironmentName == "Local")
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
-/*    await app.SeedDataAsync();*/
+    await app.ApplyMigrations();
+    /*    await app.SeedDataAsync();*/
 }
 else
 {

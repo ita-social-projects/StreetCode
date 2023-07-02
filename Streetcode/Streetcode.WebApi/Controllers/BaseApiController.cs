@@ -1,6 +1,4 @@
-﻿// using FluentResults;
-
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.MediatR.ResultVariations;

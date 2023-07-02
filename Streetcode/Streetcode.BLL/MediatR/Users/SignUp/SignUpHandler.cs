@@ -11,13 +11,11 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService _logger;
 
-        public SignUpHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public SignUpHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public Task<Result<UserDTO>> Handle(SignUpQuery request, CancellationToken cancellationToken)

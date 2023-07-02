@@ -26,7 +26,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
             string errorMsg = $"Cannot find a streetcode with corresponding categoryId: {request.Id}";
             _logger?.LogError("DeleteSoftStreetcodeCommand handled with an error");
             _logger?.LogError(errorMsg);
-            throw new Exception(errorMsg);
+            throw new ArgumentNullException(errorMsg);
         }
 
         streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;

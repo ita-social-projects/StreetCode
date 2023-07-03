@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Configuration;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.BlobStorageService;
 
 namespace Streetcode.BLL.HealthChecks
 {
@@ -15,33 +19,97 @@ namespace Streetcode.BLL.HealthChecks
             bool isDatabaseAvailable = await CheckDatabaseAvailability();
             bool isBlobStorageAvailable = await CheckBlobStorageAvailability();
             bool isApiAvailable = await CheckApiAvailability();
+            
+            string description = "";
+            
+            if(!isDatabaseAvailable)
+            {
+                description += "\nDatabase is not available";
+            }
 
-            if (isDatabaseAvailable && isBlobStorageAvailable && isApiAvailable)
+            if (!isBlobStorageAvailable)
+            {
+                description += "\nBlobstorage is not available";
+            }
+
+            if (!isApiAvailable) 
+            {
+                description += "\nAPI is not available";
+            }
+
+            if (isDatabaseAvailable && isApiAvailable && isBlobStorageAvailable)
             {
                 return HealthCheckResult.Healthy("All dependencies are available");
             }
             else
             {
-                return HealthCheckResult.Unhealthy("Some dependencies are unavailable");
+                return HealthCheckResult.Unhealthy(description);
             }
         }
 
-        private static Task<bool> CheckDatabaseAvailability()
+        private static async Task<bool> CheckDatabaseAvailability()
         {
-            // Implement the logic to check database availability
-            return Task.FromResult(true);
+            try
+            {
+                using (SqlConnection connection =
+                    new SqlConnection("Server=localhost;Database=StreetcodeDb;Integrated Security=True;MultipleActiveResultSets=true"))
+                {
+                    await connection.OpenAsync();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        private static Task<bool> CheckBlobStorageAvailability()
+        private static async Task<bool> CheckBlobStorageAvailability()
         {
-            // Implement the logic to check blob storage availability
-            return Task.FromResult(true);
+            string relativePath = @"..\..\BlobStorage";
+            string absolutePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relativePath));
+            try
+            {
+                if (!Directory.Exists(absolutePath))
+                {
+                    return false;
+                }
+
+                string testFilePath = Path.Combine(absolutePath, "test.txt");
+                File.WriteAllText(testFilePath, "test");
+                File.Delete(testFilePath);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        private static Task<bool> CheckApiAvailability()
+        private static async Task<bool> CheckApiAvailability()
         {
-            // Implement the logic to check API availability
-            return Task.FromResult(true);
+            string urlCheck = "https://localhost:5001/api/Partners/GetAll";
+            using (var httpClient = new HttpClient())
+            {
+                try
+                {
+                    var response = await httpClient.GetAsync(urlCheck);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
     }
 }

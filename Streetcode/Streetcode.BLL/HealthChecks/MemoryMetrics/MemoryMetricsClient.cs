@@ -31,14 +31,8 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
             return metrics;
         }
 
-        private bool IsUnix()
-        {
-            var isUnix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
-                         RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-
-            return isUnix;
-        }
-
+        private bool IsUnix() => RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
+                                  RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         private MemoryMetrics GetWindowsMetrics()
         {
             var output = "";

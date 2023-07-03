@@ -10,16 +10,20 @@ namespace Streetcode.BLL.HealthChecks
             var client = new MemoryMetricsClient();
             var metrics = client.GetMetrics();
             var percentUsed = 100 * metrics.Used / metrics.Total;
+            var description = "System memory used is up to 80%";
 
             var status = HealthStatus.Healthy;
-            if (percentUsed > 80)
+
+            if (percentUsed >= 80 && percentUsed <= 90)
             {
                 status = HealthStatus.Degraded;
+                description = "System memory used is between 80% - 90%";
             }
 
             if (percentUsed > 90)
             {
                 status = HealthStatus.Unhealthy;
+                description = "System memory used is over 90%";
             }
 
             var data = new Dictionary<string, object>();
@@ -28,7 +32,7 @@ namespace Streetcode.BLL.HealthChecks
             data.Add("Free", metrics.Free);
             data.Add("Duration", metrics.Duration);
 
-            var result = new HealthCheckResult(status, null, null, data);
+            var result = new HealthCheckResult(status, description, null, data);
 
             return await Task.FromResult(result);
         }

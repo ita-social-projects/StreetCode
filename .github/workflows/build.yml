@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          persist-credentials: false # To prevent permission issues
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -24,15 +22,28 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore ./Streetcode/Streetcode.sln
 
+      - name: Install xmldocmd
+        run: dotnet tool install xmldocmd -g
+
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
+      - name: Install coverlet.console
+        run: dotnet tool install -g coverlet.console
+
       - name: Test and Code Coverage
-        run: dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+        run: |
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura --results-directory ./coverage
 
-      - name: Install coverallsapp/github-action
-        run: dotnet tool install --global coveralls.net
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Upload Code Coverage to Coveralls
-        run: /root/.dotnet/tools/coveralls.net --opencover -i ./Streetcode/**/coverage.opencover.xml --repo-token ${{ secrets.GITHUB_TOKEN }}
+      - name: SonarScanner Analysis
+        run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
+      - name: Publish Code Coverage Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Code Coverage Report
+          path: ./coverage

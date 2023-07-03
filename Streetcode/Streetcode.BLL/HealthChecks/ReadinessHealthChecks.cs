@@ -14,7 +14,7 @@ namespace Streetcode.BLL.HealthChecks
             return VerifyReadinessAsync();
         }
 
-        private async Task<HealthCheckResult> VerifyReadinessAsync()
+        private static async Task<HealthCheckResult> VerifyReadinessAsync()
         {
             bool isDatabaseAvailable = await CheckDatabaseAvailability();
             bool isBlobStorageAvailable = await CheckBlobStorageAvailability();
@@ -74,7 +74,7 @@ namespace Streetcode.BLL.HealthChecks
                 }
 
                 string testFilePath = Path.Combine(absolutePath, "test.txt");
-                File.WriteAllText(testFilePath, "test");
+                await File.WriteAllTextAsync(testFilePath, "test");
                 File.Delete(testFilePath);
 
                 return true;

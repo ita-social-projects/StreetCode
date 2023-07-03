@@ -21,6 +21,7 @@ COPY ./Streetcode/Streetcode.DAL/*.csproj ./Streetcode.DAL/
 COPY ./Streetcode/Streetcode.XUnitTest/*.csproj ./Streetcode.XUnitTest/
 COPY ./Streetcode/Streetcode.XIntegrationTest/*.csproj ./Streetcode.XIntegrationTest/
 COPY ./Streetcode/DbUpdate/*.csproj ./DbUpdate/
+COPY ./houses.zip ./
 RUN dotnet restore
 
 # copying other neccessary data and building application

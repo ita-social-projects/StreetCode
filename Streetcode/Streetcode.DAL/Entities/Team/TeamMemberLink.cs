@@ -15,7 +15,8 @@ namespace Streetcode.DAL.Entities.Team
         public LogoType LogoType { get; set; }
 
         [Required]
-        public string TargetUrl { get; set; }
+        [MaxLength(255)]
+        public string? TargetUrl { get; set; }
 
         [Required]
         public int TeamMemberId { get; set; }

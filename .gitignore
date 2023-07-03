@@ -344,3 +344,4 @@ healthchecksdb
 
 # BlobStorage
 BlobStorage/
+BlobStorageTestFolder/

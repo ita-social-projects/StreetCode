@@ -44,7 +44,8 @@ jobs:
 
       - name: Generate JaCoCo Report
         run: |
-          mvn jacoco:report -f ./Streetcode/Streetcode.sln/pom.xml
+          mvn jacoco:report -f ./pom.xml
+
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner

@@ -45,6 +45,9 @@ jobs:
           dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Streetcode/Streetcode.sln --configuration Release
 
+      - name: Set SonarCloud Token
+        run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
+
       - name: Publish Code Coverage Report
         uses: sonarsource/sonarcloud-github-action@master
         with:

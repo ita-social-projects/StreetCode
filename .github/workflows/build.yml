@@ -42,17 +42,12 @@ jobs:
       - name: Set SonarCloud Token
         run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
         
-      - name: Set Project and Organization Keys
-        run: |
-          echo "SONAR_PROJECT_KEY=ita-social-projects_StreetCode" >> $GITHUB_ENV
-          echo "SONAR_ORGANIZATION=ita-social-projects" >> $GITHUB_ENV
-
       - name: SonarScanner Analysis
         id: sonar
         run: |
           dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build ./Streetcode/Streetcode.sln --configuration Release
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" -X
 
       - name: Publish Code Coverage Report
         uses: sonarsource/sonarcloud-github-action@master

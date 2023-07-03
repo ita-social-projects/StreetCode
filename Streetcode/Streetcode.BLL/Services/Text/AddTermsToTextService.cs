@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -73,22 +75,15 @@ namespace Streetcode.BLL.Services.Text
         {
             var relatedTerm = await _repositoryWrapper.RelatedTermRepository
                 .GetFirstOrDefaultAsync(
-                rt => rt.Word.Contains(clearedWord.ToLower()));
+                rt => rt.Word.Contains(clearedWord.ToLower()),
+                rt => rt.Include(rt => rt.Term));
 
-            if (relatedTerm == null)
+            if (relatedTerm == null || relatedTerm.Term == null)
             {
                 return string.Empty;
             }
 
-            var termToRelate = await _repositoryWrapper.TermRepository
-                        .GetFirstOrDefaultAsync(t => t.Id == relatedTerm.TermId);
-
-            if (termToRelate == null)
-            {
-                return string.Empty;
-            }
-
-            return MarkTermWithDescription(relatedTerm.Word, termToRelate.Description);
+            return MarkTermWithDescription(relatedTerm.Word, relatedTerm.Term.Description);
         }
     }
 }

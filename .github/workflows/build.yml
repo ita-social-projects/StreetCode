@@ -40,15 +40,17 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: SonarScanner Analysis
+        id: sonar
         run: |
-          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" > output.txt
           dotnet build ./Streetcode/Streetcode.sln --configuration Release
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.coverageReportPaths="./coverage/coverage.cobertura.xml"
+
+      - name: Extract Code Coverage
+        run: |
+          grep -oP "(?<=Code Coverage report saved to: )[^ ]+" output.txt | xargs -I {} cp {} coverage.xml
 
       - name: Publish Code Coverage Report
-        uses: actions/upload-artifact@v2
+        uses: sonarsource/sonarcloud-github-action@master
         with:
-          name: Code Coverage Report
-          path: |
-            ./coverage
-            ./*/coverage.cobertura.xml
+          args: >
+            -Dsonar.coverageReportPaths=coverage.xml

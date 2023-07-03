@@ -22,14 +22,16 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
 
     public async Task<Result<VideoDTO>> Handle(GetVideoByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        StreetcodeContent? streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId);
-        if(streetcode is null)
-        {
-            return Result.Fail(new Error($"Streetcode with id: {request.StreetcodeId} doesn`t exist"));
-        }
-
         var video = await _repositoryWrapper.VideoRepository
             .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.StreetcodeId);
+        if(video == null)
+        {
+            StreetcodeContent? streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId);
+            if (streetcode is null)
+            {
+                return Result.Fail(new Error($"Streetcode with id: {request.StreetcodeId} doesn`t exist"));
+            }
+        }
 
         NullResult<VideoDTO> result = new NullResult<VideoDTO>();
         result.WithValue(_mapper.Map<VideoDTO>(video));

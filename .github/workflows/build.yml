@@ -14,41 +14,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Setup JDK
+        uses: actions/setup-java@v2
         with:
-          dotnet-version: 6.0.x
+          java-version: 11
 
-      - name: Restore Dependencies
-        run: dotnet restore ./Streetcode/Streetcode.sln
-
-      - name: Install xmldocmd
-        run: dotnet tool install xmldocmd -g
-
-      - name: Build
-        run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
-
-      - name: Install coverlet.console
-        run: dotnet tool install -g coverlet.console
-
-      - name: Test and Code Coverage
+      - name: Build and Test
         run: |
-          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
-          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura --results-directory ./coverage
+          ./gradlew build
+          ./gradlew test
 
-      - name: Generate Code Coverage Report
-        run: dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./coverage/ --logger trx
+      - name: Run JaCoCo
+        run: ./gradlew jacocoTestReport
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: SonarScanner Analysis
-        run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          ./gradlew sonarqube
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Publish Code Coverage Report
         uses: actions/upload-artifact@v2
         with:
           name: Code Coverage Report
           path: |
-            ./coverage
-            ./coverage/coverage.cobertura.xml
+            ./build/reports/jacoco/test/html/
+            ./build/sonar/sonar-report.json

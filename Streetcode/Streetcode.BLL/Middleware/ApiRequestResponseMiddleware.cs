@@ -14,7 +14,7 @@ namespace Streetcode.BLL.Middleware
     public class ApiRequestResponseMiddleware : IMiddleware
     {
         private readonly ILoggerService _loggerService;
-        private string[] _loggerPropertiesExceptions;
+        private readonly string[] _loggerPropertiesExceptions;
 
         public ApiRequestResponseMiddleware(ILoggerService loggerService, IConfiguration configuration)
         {
@@ -96,7 +96,7 @@ namespace Streetcode.BLL.Middleware
 
                 return jsonObject.ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

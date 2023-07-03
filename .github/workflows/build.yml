@@ -34,4 +34,5 @@ jobs:
         run: dotnet tool install --global coveralls.net
 
       - name: Upload Code Coverage to Coveralls
-        run: dotnet /root/.dotnet/tools/coveralls --opencover -i ./Streetcode/**/coverage.opencover.xml --repo-token ${{ secrets.GITHUB_TOKEN }}
+        run: /root/.dotnet/tools/coveralls.net --opencover -i ./Streetcode/**/coverage.opencover.xml --repo-token ${{ secrets.GITHUB_TOKEN }}
+

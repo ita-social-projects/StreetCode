@@ -36,16 +36,9 @@ jobs:
           dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
           dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura --results-directory ./coverage
 
-      - name: Install Maven
-        uses: actions/setup-java@v2
-        with:
-          java-version: 11
-          distribution: 'adopt'
-
-      - name: Generate JaCoCo Report
+      - name: Generate Code Coverage Report
         run: |
-          mvn jacoco:report -f ./pom.xml
-
+          dotnet tool run coverlet ./Streetcode/Streetcode.sln --target "dotnet" --targetargs "test ./Streetcode/Streetcode.sln --no-build" --format cobertura --output ./coverage
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner

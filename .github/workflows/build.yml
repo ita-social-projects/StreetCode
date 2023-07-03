@@ -15,6 +15,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Run tests
+        run: dotnet test --collect:"XPlat Code Coverage"
+
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         with:
@@ -24,3 +38,5 @@ jobs:
         env:
           DOTNET_ROOT: /home/runner/.dotnet
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ita-social-projects_StreetCode
+          SONAR_ORGANIZATION: ita-social-projects

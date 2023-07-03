@@ -15,28 +15,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore
+      - name: Restore Dependencies
+        run: dotnet restore ./Streetcode/Streetcode.sln
 
-      - name: Build project
-        run: dotnet build --configuration Release
+      - name: Install xmldocmd
+        run: dotnet tool install xmldocmd -g
 
-      - name: Run tests
-        run: dotnet test --collect:"XPlat Code Coverage"
+      - name: Build
+        run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
-      - name: SonarCloud Scan
+      - name: Install coverlet.console
+        run: dotnet tool install -g coverlet.console
+
+      - name: Test and Code Coverage
+        run: |
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./coverage
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: SonarScanner Analysis
+        id: sonar
+        run: |
+          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build ./Streetcode/Streetcode.sln --configuration Release
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Publish Code Coverage Report
         uses: sonarsource/sonarcloud-github-action@master
         with:
-          args: -Dsonar.coverageReportPaths=coverage.xml
-          projectBaseDir: .
-
-        env:
-          DOTNET_ROOT: /home/runner/.dotnet
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ita-social-projects_StreetCode
-          SONAR_ORGANIZATION: ita-social-projects
+          args: >
+            -Dsonar.coverageReportPaths=./coverage/coverage.cobertura.xml

@@ -19,9 +19,7 @@ namespace Streetcode.BLL.HealthChecks
             bool isDatabaseAvailable = await CheckDatabaseAvailability();
             bool isBlobStorageAvailable = await CheckBlobStorageAvailability();
             bool isApiAvailable = await CheckApiAvailability();
-            
             string description = "";
-            
             if(!isDatabaseAvailable)
             {
                 description += "\nDatabase is not available";
@@ -32,7 +30,7 @@ namespace Streetcode.BLL.HealthChecks
                 description += "\nBlobstorage is not available";
             }
 
-            if (!isApiAvailable) 
+            if (!isApiAvailable)
             {
                 description += "\nAPI is not available";
             }

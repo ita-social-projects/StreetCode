@@ -41,6 +41,11 @@ jobs:
 
       - name: Set SonarCloud Token
         run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
+        
+      - name: Set Project and Organization Keys
+        run: |
+          echo "SONAR_PROJECT_KEY=ita-social-projects_StreetCode" >> $GITHUB_ENV
+          echo "SONAR_ORGANIZATION=ita-social-projects" >> $GITHUB_ENV
 
       - name: SonarScanner Analysis
         id: sonar

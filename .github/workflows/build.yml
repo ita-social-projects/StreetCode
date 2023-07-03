@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false # To prevent permission issues
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -32,4 +34,4 @@ jobs:
         run: dotnet tool install --global coveralls.net
 
       - name: Upload Code Coverage to Coveralls
-        run: coveralls --opencover -i ./Streetcode/**/coverage.opencover.xml --repo-token ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet /root/.dotnet/tools/coveralls --opencover -i ./Streetcode/**/coverage.opencover.xml --repo-token ${{ secrets.GITHUB_TOKEN }}

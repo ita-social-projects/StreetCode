@@ -51,4 +51,5 @@ jobs:
           name: Code Coverage Report
           path: |
             ./coverage
-            ./Streetcode/Streetcode.sln/target/site/jacoco/index.html
+            ./Streetcode/Streetcode.sln/TestResults
+

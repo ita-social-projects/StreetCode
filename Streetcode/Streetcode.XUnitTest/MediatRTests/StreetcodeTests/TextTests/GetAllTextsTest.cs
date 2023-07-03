@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
-  public class GetAllTextsTest
+    public class GetAllTextsTest
     {
         private Mock<IRepositoryWrapper> repository;
         private Mock<IMapper> mockMapper;

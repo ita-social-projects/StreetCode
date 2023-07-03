@@ -83,6 +83,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             new TransactionLink
             {
                 Id = 1,
+                QrCodeUrl = "URL",
+                QrCodeUrlTitle = "Title",
                 Url = "URL",
                 UrlTitle = "Title",
                 StreetcodeId = 1
@@ -90,6 +92,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             new TransactionLink
             {
                 Id = 2,
+                QrCodeUrl = "URL2",
+                QrCodeUrlTitle = "Title2",
                 Url = "URL2",
                 UrlTitle = "Title2",
                 StreetcodeId = 2
@@ -101,15 +105,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             new TransactLinkDTO
             {
                 Id = 1,
-                Url = "URL",
-                QrCodeUrl = "URL",
+                Url = new UrlDTO{ Href = "URL", Title = "Title" },
+                QrCodeUrl = new UrlDTO{ Href = "URL", Title = "Title" },
                 StreetcodeId = 1
             },
             new TransactLinkDTO
             {
                 Id = 2,
-                Url = "URL2",
-                QrCodeUrl = "URL2",
+                Url = new UrlDTO{ Href = "URL2", Title = "Title2" },
+                QrCodeUrl = new UrlDTO{ Href = "URL2", Title = "Title2" },
                 StreetcodeId = 2
             }
         };

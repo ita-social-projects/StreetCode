@@ -21,8 +21,6 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
-using Streetcode.BLL.DTO.Streetcode.Update;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -131,10 +129,4 @@ public class StreetcodeController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
     }
-
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
-    {
-        return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));
-	}
 }

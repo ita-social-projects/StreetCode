@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -35,7 +35,7 @@ public class GetAllFactsTest
         //Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault)
+            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
         );
     }
 
@@ -70,7 +70,7 @@ public class GetAllFactsTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = "Cannot find any fact";
@@ -97,7 +97,7 @@ public class GetAllFactsTest
 
         mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         return (mockMapper, mockRepository);
@@ -123,20 +123,20 @@ public class GetAllFactsTest
     {
         return null;
     }
-    private static List<FactDto>? GetListFactsDTOWithNotExistingId()
+    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
     {
         return null;
     }
-    private static List<FactDto> GetListFactDTO()
+    private static List<FactDTO> GetListFactDTO()
     {
-        var factsDTO = new List<FactDto>
+        var factsDTO = new List<FactDTO>
         {
-            new FactDto
+            new FactDTO
             {
                 Id = 1
             },
 
-            new FactDto
+            new FactDTO
             {
                 Id = 2,
             }

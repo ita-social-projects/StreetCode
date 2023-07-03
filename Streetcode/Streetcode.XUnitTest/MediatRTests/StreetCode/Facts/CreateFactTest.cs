@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -27,7 +27,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact> (It.IsAny<FactDto>()))
+        _mockMapper.Setup(x => x.Map<Fact> (It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object);
@@ -46,7 +46,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object);
@@ -65,7 +65,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
@@ -86,7 +86,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
             .Returns(GetFact());
 
         var expectedError = "Failed to create a fact";
@@ -104,15 +104,15 @@ public class CreateFactTest
     {
         return new Fact();
     }
-    private static FactDto GetFactDTO()
+    private static FactDTO GetFactDTO()
     {
-        return new FactDto();
+        return new FactDTO();
     }
     private static Fact? GetFactWithNotExistId()
     {
         return null;
     }
-    private static FactDto? GetFactDTOWithNotExistId()
+    private static FactDTO? GetFactDTOWithNotExistId()
     {
         return null;
     }

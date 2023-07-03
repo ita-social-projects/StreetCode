@@ -13,14 +13,13 @@ public class Audio
 
     [MaxLength(100)]
     public string? Title { get; set; }
+    public string? Description { get; set; }
 
     [Required]
-    [MaxLength(100)]
-    public string? BlobName { get; set; }
+    public string BlobName { get; set; }
 
     [Required]
-    [MaxLength(10)]
-    public string? MimeType { get; set; }
+    public string MimeType { get; set; }
 
     [NotMapped]
     public string? Base64 { get; set; }

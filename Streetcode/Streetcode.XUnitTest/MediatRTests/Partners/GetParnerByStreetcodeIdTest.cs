@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
@@ -101,7 +101,7 @@ public class GetParnerByStreetcodeIdTest
     {
         //Arrange
         var testStreetcodeContent = GetStreetcodeList().First();
-        var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
+        var expectedError = $"Cannot find a coordinates by a streetcode id: {testStreetcodeContent.Id}";
 
         _mockRepository.Setup(x => x.StreetcodeRepository
             .GetSingleOrDefaultAsync(
@@ -122,7 +122,7 @@ public class GetParnerByStreetcodeIdTest
             .Returns(GetPartnerDTOListWithNotExistingId());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
-    
+
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 

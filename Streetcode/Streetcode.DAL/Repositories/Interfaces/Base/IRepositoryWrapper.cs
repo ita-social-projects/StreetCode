@@ -22,7 +22,6 @@ public interface IRepositoryWrapper
     IStreetcodeArtRepository StreetcodeArtRepository { get; }
     IVideoRepository VideoRepository { get; }
     IImageRepository ImageRepository { get; }
-    IImageDetailsRepository ImageDetailsRepository { get; }
     IAudioRepository AudioRepository { get; }
     IStreetcodeCoordinateRepository StreetcodeCoordinateRepository { get; }
     IPartnersRepository PartnersRepository { get; }
@@ -49,9 +48,6 @@ public interface IRepositoryWrapper
     IPartnerStreetcodeRepository PartnerStreetcodeRepository { get;  }
     INewsRepository NewsRepository { get; }
     IPositionRepository PositionRepository { get; }
-    IHistoricalContextTimelineRepository HistoricalContextTimelineRepository { get; }
-    IStreetcodeToponymRepository StreetcodeToponymRepository { get; }
-    IStreetcodeImageRepository StreetcodeImageRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

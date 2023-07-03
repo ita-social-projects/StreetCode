@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Media;
 
 namespace Streetcode.BLL.MediatR.Media.Video.GetById;
 

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -36,7 +36,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -66,7 +66,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -78,7 +78,7 @@ public class GetFactByStreetcodeIdTest
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault)
+            () => Assert.IsType<List<FactDTO>>(result.ValueOrDefault)
         );
     }
 
@@ -96,7 +96,7 @@ public class GetFactByStreetcodeIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
+            .Map<IEnumerable<FactDTO>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
@@ -150,15 +150,15 @@ public class GetFactByStreetcodeIdTest
     {
         return null;
     }
-    private static List<FactDto>? GetListFactsDTOWithNotExistingId()
+    private static List<FactDTO>? GetListFactsDTOWithNotExistingId()
     {
         return null;
     }
-    private static List<FactDto> GetListFactDTO()
+    private static List<FactDTO> GetListFactDTO()
     {
-        var facts = new List<FactDto>
+        var facts = new List<FactDTO>
         {
-            new FactDto
+            new FactDTO
             {
                 Id = 1
             },

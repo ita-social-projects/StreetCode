@@ -15,7 +15,7 @@ public class SourceLinkCategory
 
     [Required]
     [MaxLength(100)]
-    public string? Title { get; set; }
+    public string Title { get; set; }
 
     [Required]
     public int ImageId { get; set; }

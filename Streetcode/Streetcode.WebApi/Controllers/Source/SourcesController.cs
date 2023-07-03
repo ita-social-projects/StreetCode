@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.DTO.Sources;
@@ -51,7 +51,6 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPut("{id:int}")]
-
     public async Task<IActionResult> UpdateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new UpdateCategoryCommand(category)));

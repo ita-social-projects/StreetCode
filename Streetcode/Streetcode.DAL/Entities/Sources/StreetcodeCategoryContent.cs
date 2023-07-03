@@ -9,7 +9,7 @@ public class StreetcodeCategoryContent
 {
     [Required]
     [MaxLength(1000)]
-    public string? Text { get; set; }
+    public string Text { get; set; }
 
     [Required]
     public int SourceLinkCategoryId { get; set; }

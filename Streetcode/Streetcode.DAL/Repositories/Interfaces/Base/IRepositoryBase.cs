@@ -2,7 +2,6 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
-using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,27 +10,21 @@ public interface IRepositoryBase<T>
 {
     IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default);
 
-    T Create(T entity);
-
     Task<T> CreateAsync(T entity);
 
-    Task CreateRangeAsync(IEnumerable<T> items);
+    T Create(T entity);
 
     EntityEntry<T> Update(T entity);
 
-    public void UpdateRange(IEnumerable<T> items);
-
     void Delete(T entity);
-
-    void DeleteRange(IEnumerable<T> items);
 
     void Attach(T entity);
 
-    void Detach(T entity);
-
     EntityEntry<T> Entry(T entity);
 
-    public Task ExecuteSqlRaw(string query);
+    void Detach(T entity);
+
+    Task CreateRangeAsync(IEnumerable<T> items);
 
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 

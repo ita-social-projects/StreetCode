@@ -11,11 +11,11 @@ namespace Streetcode.BLL.Factories.Streetcode
             switch (type)
             {
                 case StreetcodeType.Person:
-                    return new PersonStreetcode();
+                  return new PersonStreetcode();
                 case StreetcodeType.Event:
-                    return new EventStreetcode();
+                  return new EventStreetcode();
                 default:
-                    throw new ArgumentException($"Unsupported streetcode type: {type}", nameof(type));
+                  throw new ArgumentException($"Unsupported streetcode type: {type}", nameof(type));
             }
         }
     }

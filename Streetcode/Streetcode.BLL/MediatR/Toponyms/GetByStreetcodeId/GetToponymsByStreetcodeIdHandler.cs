@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +32,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
             return Result.Fail(new Error($"Cannot find any toponym by the streetcode id: {request.StreetcodeId}"));
         }
 
-        var toponymDto = toponyms.GroupBy(x => x.StreetName).Select(group => group.First()).Select(x => _mapper.Map<ToponymDTO>(x));
+        var toponymDto = _mapper.Map<IEnumerable<ToponymDTO>>(toponyms);
         return Result.Ok(toponymDto);
     }
 }

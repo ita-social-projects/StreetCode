@@ -2,21 +2,17 @@ using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
-using Streetcode.BLL.DTO.Media.Art;
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.DTO.Timeline.Update;
-using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.DTO.Streetcode.Create.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Timeline;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Create
 {
-  public class StreetcodeCreateDTO
+    public class StreetcodeCreateDTO
     {
         public int Index { get; set; }
         public string? FirstName { get; set; }
@@ -36,16 +32,16 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public string Teaser { get; set; }
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
-        public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
-        public IEnumerable<int> ImagesIds { get; set; }
+        public IEnumerable<string> Toponyms { get; set; }
+        public IEnumerable<int> ImagesId { get; set; }
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; }
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
-        public IEnumerable<FactUpdateCreateDto> Facts { get; set; }
+        public IEnumerable<FactDTO> Facts { get; set; }
         public IEnumerable<VideoCreateDTO> Videos { get; set; }
-        public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
-        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
+        public IEnumerable<TimelineItemDTO> TimelineItems { get; set; }
+        public IEnumerable<StreetcodeDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
-        public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
+        public IEnumerable<ArtCreateDTO> StreetcodeArts { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }

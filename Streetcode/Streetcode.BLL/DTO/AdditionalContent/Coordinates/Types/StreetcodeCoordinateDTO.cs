@@ -1,4 +1,4 @@
-namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+﻿namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 
 public class StreetcodeCoordinateDTO : CoordinateDTO
 {

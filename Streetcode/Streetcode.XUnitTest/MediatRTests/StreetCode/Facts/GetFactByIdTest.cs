@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -34,7 +34,7 @@ public class GetFactByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDto>(It.IsAny<Fact>()))
+            .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -64,7 +64,7 @@ public class GetFactByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDto>(It.IsAny<Fact>()))
+            .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(GetFactDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
@@ -96,7 +96,7 @@ public class GetFactByIdTest
 
         _mockMapper
             .Setup(x => x
-            .Map<FactDto>(It.IsAny<Fact>()))
+            .Map<FactDTO>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
@@ -107,7 +107,7 @@ public class GetFactByIdTest
         //Assert
         Assert.Multiple(
             () => Assert.NotNull(result.ValueOrDefault),
-            () => Assert.IsType<FactDto>(result.ValueOrDefault)
+            () => Assert.IsType<FactDTO>(result.ValueOrDefault)
         );
     }
 
@@ -123,14 +123,14 @@ public class GetFactByIdTest
         return null;
     }
 
-    private static FactDto GetFactDTO(int id)
+    private static FactDTO GetFactDTO(int id)
     {
-        return new FactDto
+        return new FactDTO
         {
             Id = id
         };
     }
-    private static FactDto? GetFactDTOWithNotExistingId()
+    private static FactDTO? GetFactDTOWithNotExistingId()
     {
         return null;
     }

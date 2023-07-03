@@ -1,8 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
@@ -13,7 +12,7 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 {
-  public class GetStreetcodeArtByStreetcodeIdTest
+    public class GetStreetcodeArtByStreetcodeIdTest
     {
         private Mock<IRepositoryWrapper> repository;
         private Mock<IMapper> mockMapper;
@@ -29,8 +28,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         private List<StreetcodeArt> GetStreetcodeArtsList()
         {
             return new List<StreetcodeArt>
-            {
-                new StreetcodeArt()
+            { new StreetcodeArt()
                 {
                     Index = 1,
                     StreetcodeId = 1,
@@ -64,6 +62,8 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 {
                     Index = 1,
                     StreetcodeId = 1,
+                    Streetcode = null,
+                    ArtId = 1,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
@@ -74,6 +74,8 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 {
                     Index = 2,
                     StreetcodeId = 2,
+                    Streetcode = null,
+                    ArtId = 2,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
@@ -96,7 +98,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            Assert.Equal(streetcodeId, result.Value.First().StreetcodeId);
+            Assert.Equal(streetcodeId, result.Value.First().ArtId);
         }
 
         [Theory]

@@ -29,7 +29,7 @@ namespace Streetcode.BLL.Services.Text
 
             foreach (var word in splittedText)
             {
-                if (word.Contains('<') || string.IsNullOrWhiteSpace(word) || string.IsNullOrEmpty(word))
+                if (word.Contains('<') || string.IsNullOrWhiteSpace(word))
                 {
                     _text.Append(word);
                     continue;

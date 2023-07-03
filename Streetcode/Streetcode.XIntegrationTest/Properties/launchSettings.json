@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Streetcode.XIntegrationTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "STREETCODE_ENVIRONMENT": "IntegrationTests"
+      }
+    }
+  }
+}

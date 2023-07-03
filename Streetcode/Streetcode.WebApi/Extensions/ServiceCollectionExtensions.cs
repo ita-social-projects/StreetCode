@@ -97,14 +97,15 @@ public static class ServiceCollectionExtensions
                     };
                 });
 
+        var corsConfig = configuration.GetSection("CORS").Get<CorsConfiguration>();
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.SetPreflightMaxAge(TimeSpan.FromDays(1));
+                policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
+                policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
+                policy.WithMethods(corsConfig.AllowedMethods.ToArray());
+                policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
             });
         });
 
@@ -151,5 +152,13 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
+    }
+
+    public class CorsConfiguration
+    {
+        public List<string> AllowedOrigins { get; set; }
+        public List<string> AllowedHeaders { get; set; }
+        public List<string> AllowedMethods { get; set; }
+        public int PreflightMaxAge { get; set; }
     }
 }

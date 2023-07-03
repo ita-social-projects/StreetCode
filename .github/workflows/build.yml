@@ -37,8 +37,7 @@ jobs:
           dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura --results-directory ./coverage
 
       - name: Generate Code Coverage Report
-        run: |
-          dotnet tool run coverlet ./Streetcode/Streetcode.sln --target "dotnet" --targetargs "test ./Streetcode/Streetcode.sln --no-build" --format cobertura --output ./coverage
+        run: dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./coverage/ --logger trx
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner

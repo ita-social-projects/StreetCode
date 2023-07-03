@@ -1,11 +1,9 @@
-
 name: SonarCloud
 
 on:
   push:
     branches:
       - master
-      - develop
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -24,14 +22,22 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore ./Streetcode/Streetcode.sln
 
+      - name: Install xmldocmd
+        run: dotnet tool install xmldocmd -g
+
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
+
+      - name: Install coverlet.console
+        run: dotnet tool install -g coverlet.console
 
       - name: Test and Code Coverage
         run: |
           dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
-          dotnet tool install -g coverlet.console
-          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura --results-directory ./coverage
+
+      - name: Generate Code Coverage Report
+        run: dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./coverage/ --logger trx
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
@@ -43,4 +49,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Code Coverage Report
-          path: ./coverage
+          path: |
+            ./coverage
+            ./*/*/coverage.cobertura.xml

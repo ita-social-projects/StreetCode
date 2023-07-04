@@ -33,7 +33,7 @@ public class DeletePartnerTest
         _mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
-        _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(),null))
+        _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);       
 
         var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);

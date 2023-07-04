@@ -2,8 +2,11 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
@@ -25,16 +28,21 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
     {
         var video = await _repositoryWrapper.VideoRepository
             .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.StreetcodeId);
-
-        if (video is null)
+        if(video == null)
         {
-            string errorMsg = $"Cannot find any video by the streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetVideoByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            StreetcodeContent? streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId);
+            if (streetcode is null)
+            {
+                string errorMsg = $"Streetcode with id: {request.StreetcodeId} doesn`t exist";
+                _logger?.LogError("GetVideoByStreetcodeIdQuery handled with an error");
+                _logger?.LogError(errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
 
+        NullResult<VideoDTO> result = new NullResult<VideoDTO>();
+        result.WithValue(_mapper.Map<VideoDTO>(video));
         _logger?.LogInformation($"GetVideoByStreetcodeIdQuery handled successfully");
-        return Result.Ok(_mapper.Map<VideoDTO>(video));
+        return result;
     }
 }

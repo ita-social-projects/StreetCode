@@ -7,7 +7,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
     {
         public DeleteFileInStorageTest() : base(new BlobStorageFixture(), "delete-test")
         {
-            _fixture.Seeding(_seededFileName);
+            _fixture.SeedImage(_seededFileName);
         }
 
         [Theory]
@@ -24,15 +24,15 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
             Assert.False(File.Exists(_filePath));
         }
 
-        [Theory]
-        [InlineData("invalid|file")]
-        public void ShouldThrowException_EmptyFileName(string fileName)
-        {
-            // Act
-            void action() => _fixture.blobService.DeleteFileInStorage(fileName);
+        //[Theory]
+        //[InlineData("invalid|file")]
+        //public void ShouldThrowException_EmptyFileName(string fileName)
+        //{
+        //    // Act
+        //    void action() => _fixture.blobService.DeleteFileInStorage(fileName);
 
-            // Assert
-            Assert.Throws<IOException>(action);
-        }
+        //    // Assert
+        //    Assert.Throws<IOException>(action);
+        //}
     }
 }

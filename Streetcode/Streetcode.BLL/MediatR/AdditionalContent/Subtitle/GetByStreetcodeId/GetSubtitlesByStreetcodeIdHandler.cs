@@ -3,6 +3,8 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
@@ -25,16 +27,10 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
             var subtitle = await _repositoryWrapper.SubtitleRepository
                 .GetFirstOrDefaultAsync(Subtitle => Subtitle.StreetcodeId == request.StreetcodeId);
 
-            if (subtitle is null)
-            {
-                string errorMsg = $"Cannot find any subtitle by the streetcode id: {request.StreetcodeId}";
-                _logger?.LogError("GetSubtitlesByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
+            NullResult<SubtitleDTO> result = new NullResult<SubtitleDTO>();
+            result.WithValue(_mapper.Map<SubtitleDTO>(subtitle));
             _logger?.LogInformation($"GetSubtitlesByStreetcodeIdQuery handled successfully");
-            return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));
+            return result;
         }
     }
 }

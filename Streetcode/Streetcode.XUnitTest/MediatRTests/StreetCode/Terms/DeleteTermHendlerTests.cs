@@ -21,7 +21,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         }
 
 		[Theory]
-		[InlineData(-1,1)]
+		[InlineData(-1, 1)]
 		public async Task ShouldDeleteSuccessfully(int id, int returnNuber) 
 		{
 			//Arrange
@@ -54,27 +54,27 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
 			//Assert
 			Assert.Equal(expectedError, result.Errors.First().Message);
-		}
+        }
 
-		[Theory]
-		[InlineData(2,0)]
-		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id,int returnNuber) 
+        [Theory]
+		[InlineData(2, 0)]
+		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id, int returnNuber)
 		{
-			//Arange
-			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
+            // Arange
+            MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
 			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-			var expectedError = "Failed to delete a term";
-			var hendler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
+            var expectedError = "Failed to delete a term";
+            var hendler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
 
-			//Act
-			var result = await hendler.Handle(new DeleteTermCommand(id), CancellationToken.None);
+            // Act
+            var result = await hendler.Handle(new DeleteTermCommand(id), CancellationToken.None);
 
-			//Assert
-			Assert.Equal(expectedError, result.Errors.First().Message);
-		}
+            //Assert
+            Assert.Equal(expectedError, result.Errors.First().Message);
+        }
 
-		private static Mock<IRepositoryWrapper> MockRepoInitial_GetFirstOrDefault_Delete(
+        private static Mock<IRepositoryWrapper> MockRepoInitial_GetFirstOrDefault_Delete(
 			Mock<IRepositoryWrapper> mockRepo, int id, bool IsIdExist)
 		{
 			mockRepo.Setup(x => x.TermRepository

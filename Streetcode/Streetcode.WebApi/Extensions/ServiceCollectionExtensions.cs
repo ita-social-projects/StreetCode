@@ -92,10 +92,14 @@ public static class ServiceCollectionExtensions
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
-                policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
-                policy.WithMethods(corsConfig.AllowedMethods.ToArray());
-                policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
+                // policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
+                // policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
+                // policy.WithMethods(corsConfig.AllowedMethods.ToArray());
+                // policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
+
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 

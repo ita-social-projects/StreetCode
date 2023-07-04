@@ -5,8 +5,8 @@ using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
@@ -54,13 +54,20 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             }
         };
 
-        async Task SetupRepository(List<StreetcodeCoordinate> returnList)
+        async Task SetupRepository(List<StreetcodeCoordinate> returnList, StreetcodeContent streetcode)
         {
             _mockRepo.Setup(repo => repo.StreetcodeCoordinateRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeCoordinate, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeCoordinate>,
                 IIncludableQueryable<StreetcodeCoordinate, object>>>()))
                 .ReturnsAsync(returnList);
+
+            _mockRepo.Setup(x => x.StreetcodeRepository
+                .GetFirstOrDefaultAsync(
+                   It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                    It.IsAny<Func<IQueryable<StreetcodeContent>,
+                    IIncludableQueryable<StreetcodeContent, object>>>()))
+                .ReturnsAsync(streetcode);
         }
 
         async Task SetupMapper(List<StreetcodeCoordinateDTO> returnList)
@@ -73,7 +80,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
         public async Task Handler_Returns_NotEmpty_List()
         {
             //Arrange
-            await SetupRepository(coordinates);
+            await SetupRepository(coordinates, new StreetcodeContent());
             await SetupMapper(coordinateDTOs);
                 
             var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
@@ -91,7 +98,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
         public async Task Handler_Returns_Empty_List()
         {
             //Arrange
-            await SetupRepository(new List<StreetcodeCoordinate>());
+            await SetupRepository(new List<StreetcodeCoordinate>(), new StreetcodeContent());
             await SetupMapper(new List<StreetcodeCoordinateDTO>());
 
             var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);

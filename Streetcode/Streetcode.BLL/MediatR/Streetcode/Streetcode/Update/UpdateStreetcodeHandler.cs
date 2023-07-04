@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
@@ -49,6 +50,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
+                    await UpdateFactsDescription(request.Streetcode.ImageDetailses);
 
                     if (request.Streetcode.Text != null)
                     {
@@ -74,6 +76,17 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     return Result.Fail(new Error("An error occurred while updating a streetcode"));
                 }
             }
+        }
+
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto> imageDetails)
+        {
+            _repositoryWrapper.ImageDetailsRepository
+                .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt == "" && f.Id != 0)));
+
+            _repositoryWrapper.ImageDetailsRepository
+                .UpdateRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt != "")));
+
+            await _repositoryWrapper.SaveChangesAsync();
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)

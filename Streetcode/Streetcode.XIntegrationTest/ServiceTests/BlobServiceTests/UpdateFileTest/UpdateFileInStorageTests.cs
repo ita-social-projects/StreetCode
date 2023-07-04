@@ -9,7 +9,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.UpdateFileTe
     {
         public UpdateFileInStorageTests() : base(new BlobStorageFixture(), "update-test")
         {
-            _fixture.Seeding(_seededFileName);
+            _fixture.SeedImage(_seededFileName);
         }
 
         [Theory]

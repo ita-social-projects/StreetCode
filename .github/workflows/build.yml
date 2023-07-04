@@ -1,4 +1,3 @@
-
 name: SonarCloud
 
 on:
@@ -24,23 +23,36 @@ jobs:
       - name: Restore Dependencies
         run: dotnet restore ./Streetcode/Streetcode.sln
 
+      - name: Install xmldocmd
+        run: dotnet tool install xmldocmd -g
+
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
+      - name: Install coverlet.console
+        run: dotnet tool install -g coverlet.console
+
       - name: Test and Code Coverage
         run: |
-          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
-          dotnet tool install -g coverlet.console
-          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+          dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml
 
       - name: Install SonarScanner
         run: dotnet tool install --global dotnet-sonarscanner
 
+      - name: Set SonarCloud Token
+        run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
+        
       - name: SonarScanner Analysis
-        run: dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" && dotnet build ./Streetcode/Streetcode.sln --configuration Release && dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        id: sonar
+        run: |
+          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportPaths="./coverage/coverage.xml"
+          dotnet build ./Streetcode/Streetcode.sln --configuration Release
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Publish Code Coverage Report
         uses: actions/upload-artifact@v2
         with:
           name: Code Coverage Report
-          path: ./coverage
+          path: |
+            ./coverage
+            ./coverage/coverage.cobertura.xml

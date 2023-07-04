@@ -35,13 +35,29 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
             Directory.CreateDirectory(blobPath);
         }
 
-        public void Seeding(string givenBlobName)
+        public Image SeedImage(string givenBlobName)
         {
             string testDataImagePath = "../../../ServiceTests/BlobServiceTests/Utils/testData.json";
             string imageJson = File.ReadAllText(testDataImagePath, Encoding.UTF8);
             Image imgfromJson = JsonConvert.DeserializeObject<Image>(imageJson);
             imgfromJson.BlobName = givenBlobName;
             SaveFileIfNotExist(imgfromJson.Base64, imgfromJson.BlobName, imgfromJson.MimeType.Split('/')[1]);
+            return imgfromJson;
+        }
+
+        public Audio? SeedAudio(string givenBlobName)
+        {
+            string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
+            string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
+            List<Audio> audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+            if (audiosfromJson != null && audiosfromJson.Count > 1)
+            {
+                audiosfromJson[0].BlobName = givenBlobName;
+                this.SaveFileIfNotExist(audiosfromJson[0].Base64, audiosfromJson[0].BlobName, audiosfromJson[0].MimeType.Split('/')[1]);
+                return audiosfromJson[0];
+            }
+
+            return null;
         }
 
         public async Task DbAndStorageSeeding()

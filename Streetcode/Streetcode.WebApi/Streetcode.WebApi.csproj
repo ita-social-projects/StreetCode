@@ -9,6 +9,9 @@
 	  <CodeAnalysisRuleSet>../settings.ruleset</CodeAnalysisRuleSet>
 
   </PropertyGroup>
+	<ItemGroup>
+     <InternalsVisibleTo Include="Streetcode.XIntegrationTest" />
+</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
@@ -45,11 +48,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
+    <None Remove="..\.dockerignore" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="..\.dockerignore" />
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
   </ItemGroup>
 
 </Project>

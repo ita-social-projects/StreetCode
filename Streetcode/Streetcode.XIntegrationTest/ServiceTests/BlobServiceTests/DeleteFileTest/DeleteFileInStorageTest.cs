@@ -7,7 +7,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
     {
         public DeleteFileInStorageTest() : base(new BlobStorageFixture(), "delete-test")
         {
-            _fixture.Seeding(_seededFileName);
+            _fixture.SeedImage(_seededFileName);
         }
 
         [Theory]

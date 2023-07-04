@@ -1,15 +1,11 @@
 using Hangfire;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Services.Logging;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using k8s.Models;
-using Newtonsoft.Json;
 using HealthChecks.UI.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +18,6 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
-
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")

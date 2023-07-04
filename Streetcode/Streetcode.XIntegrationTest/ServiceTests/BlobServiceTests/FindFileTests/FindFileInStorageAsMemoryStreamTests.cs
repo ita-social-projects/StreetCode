@@ -7,7 +7,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
     {
         public FindFileInStorageAsMemoryStreamTests() : base(new BlobStorageFixture(), "find-as-memory-stream-test")
         {
-            _fixture.Seeding(_seededFileName);
+            _fixture.SeedImage(_seededFileName);
         }
 
         [Theory]

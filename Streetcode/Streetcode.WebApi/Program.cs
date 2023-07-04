@@ -1,6 +1,5 @@
 using Hangfire;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
@@ -32,7 +31,7 @@ if (app.Environment.EnvironmentName == "Local")
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
     await app.ApplyMigrations();
-/*    await app.SeedDataAsync();*/
+    /* await app.SeedDataAsync();*/
 }
 else
 {
@@ -52,9 +51,9 @@ app.UseHangfireDashboard("/dash");
 if (app.Environment.EnvironmentName != "Local")
 {
     BackgroundJob.Schedule<WebParsingUtils>(
-      wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
     RecurringJob.AddOrUpdate<WebParsingUtils>(
-      wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
+        wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
     RecurringJob.AddOrUpdate<BlobService>(
         b => b.CleanBlobStorage(), Cron.Monthly);
 }
@@ -62,3 +61,6 @@ if (app.Environment.EnvironmentName != "Local")
 app.MapControllers();
 
 app.Run();
+public partial class Program
+{
+}

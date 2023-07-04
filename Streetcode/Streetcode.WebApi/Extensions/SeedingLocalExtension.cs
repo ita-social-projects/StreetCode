@@ -458,21 +458,18 @@ namespace Streetcode.WebApi.Extensions
                                     dbContext.PartnerSourceLinks.AddRange(
                                         new PartnerSourceLink
                                         {
-                                            Title = "Twitter",
                                             LogoType = LogoType.Twitter,
                                             TargetUrl = "https://twitter.com/SoftServeInc",
                                             PartnerId = 1
                                         },
                                         new PartnerSourceLink
                                         {
-                                            Title = "Instagram",
                                             LogoType = LogoType.Instagram,
                                             TargetUrl = "https://www.instagram.com/softserve_people/",
                                             PartnerId = 1
                                         },
                                         new PartnerSourceLink
                                         {
-                                            Title = "Facebook",
                                             LogoType = LogoType.Facebook,
                                             TargetUrl = "https://www.facebook.com/SoftServeCompany",
                                             PartnerId = 1

@@ -1,9 +1,7 @@
 using Hangfire;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
-using Streetcode.BLL.Services.BlobStorageService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -22,6 +20,7 @@ if (app.Environment.EnvironmentName == "Local")
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
     await app.ApplyMigrations();
+    /* await app.SeedDataAsync();*/
 }
 else
 {
@@ -50,3 +49,6 @@ if (app.Environment.EnvironmentName != "Local")
 app.MapControllers();
 
 app.Run();
+public partial class Program
+{
+}

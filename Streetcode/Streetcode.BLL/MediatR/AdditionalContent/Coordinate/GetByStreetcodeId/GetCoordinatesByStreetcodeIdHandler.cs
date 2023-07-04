@@ -19,6 +19,12 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 
     public async Task<Result<IEnumerable<StreetcodeCoordinateDTO>>> Handle(GetCoordinatesByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
+        {
+            return Result.Fail(
+                new Error($"Cannot find a coordinates by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
+        }
+
         var coordinates = await _repositoryWrapper.StreetcodeCoordinateRepository
             .GetAllAsync(c => c.StreetcodeId == request.StreetcodeId);
 

@@ -117,40 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FailedToCreateAnImage" xml:space="preserve">
-    <value>Failed to create an image</value>
-  </data>
-  <data name="FailedToCreateAudio" xml:space="preserve">
-    <value>Failed to create an audio</value>
-  </data>
-  <data name="FailedToCreateCategory" xml:space="preserve">
-    <value>Failed to create a category</value>
-  </data>
-  <data name="FailedToCreateFact" xml:space="preserve">
-    <value>Failed to create a fact</value>
-  </data>
-  <data name="FailedToCreateNews" xml:space="preserve">
-    <value>Failed to create a news</value>
-  </data>
-  <data name="FailedToCreateRelation" xml:space="preserve">
-    <value>Failed to create a relation</value>
-  </data>
-  <data name="FailedToCreateStreetcode" xml:space="preserve">
-    <value>Failed to create a streetcode</value>
-  </data>
-  <data name="FailedToCreateStreetcodeCoordinate" xml:space="preserve">
-    <value>Failed to create a streetcodeCoordinate</value>
-  </data>
-  <data name="FailedToCreateTeam" xml:space="preserve">
-    <value>Failed to create a team</value>
-  </data>
-  <data name="FailedToCreateTerm" xml:space="preserve">
-    <value>Failed to create a term</value>
-  </data>
-  <data name="FailedToMapCreatedTeamLink" xml:space="preserve">
-    <value>Failed to map created team link</value>
-  </data>
-  <data name="FailedToMapCreatedTerm" xml:space="preserve">
-    <value>Failed to map created term</value>
+  <data name="VoluntaryContribution" xml:space="preserve">
+    <value>Добровільний внесок на статутну діяльність ГО «Історична Платформа»</value>
   </data>
 </root>

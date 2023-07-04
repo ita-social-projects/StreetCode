@@ -126,6 +126,9 @@
   <data name="NoExistingStreetcodeWithId" xml:space="preserve">
     <value>No existing streetcode with id: {0}</value>
   </data>
+  <data name="NoMappedCreatedRecord" xml:space="preserve">
+    <value>No mapped created record</value>
+  </data>
   <data name="NoMappedRecord" xml:space="preserve">
     <value>No mapped record</value>
   </data>

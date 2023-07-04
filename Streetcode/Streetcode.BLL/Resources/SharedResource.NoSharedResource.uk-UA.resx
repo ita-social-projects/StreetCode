@@ -126,6 +126,9 @@
   <data name="NoExistingStreetcodeWithId" xml:space="preserve">
     <value>Немає існуючого стріткоду з ідентифікатором: {0}</value>
   </data>
+  <data name="NoMappedCreatedRecord" xml:space="preserve">
+    <value>Жодного зіставленого створенного запису</value>
+  </data>
   <data name="NoMappedRecord" xml:space="preserve">
     <value>Жодного зіставленого запису</value>
   </data>

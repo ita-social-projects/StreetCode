@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.SharedResource
 {
-    public class No_SharedResource
+    public class NoSharedResource
     {
     }
 }

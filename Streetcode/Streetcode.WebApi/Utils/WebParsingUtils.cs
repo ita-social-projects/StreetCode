@@ -103,8 +103,8 @@ public class WebParsingUtils
     public async Task ParseZipFileFromWebAsync()
     {
         var projRootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
-        var zipPath = $"{projRootDirectory}/Streetcode.DAL/houses.zip";
-        var extractTo = $"{projRootDirectory}/Streetcode.DAL";
+        var zipPath = $"houses.zip";
+        var extractTo = $"/root/build/StreetCode/Streetcode/Streetcode.DAL";
 
         var cancellationToken = new CancellationTokenSource().Token;
 
@@ -170,7 +170,7 @@ public class WebParsingUtils
 
         var remainsToParse = forParsingRows.Except(alreadyParsedRows)
             .Select(x => x.Split(';').ToList()).ToList()
-            .Take(10) // TODO take it of if you want to start global parse
+            .Take(20) // TODO take it of if you want to start global parse
             .ToList();
 
         var toBeDeleted = alreadyParsedRows.Except(forParsingRows).ToList();
@@ -291,7 +291,7 @@ public class WebParsingUtils
 
             // Send GET request to Nominatim API and retrieve JSON data
             var jsonData = await retryPolicy.WrapAsync(circuitBreakerPolicy).ExecuteAsync(async () =>
-                await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={address}&format=json&limit=1&addressdetails=1"));
+                await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={address}, Україна&format=json&limit=1&addressdetails=1"));
 
             return ParseJsonToCoordinateTuple(Encoding.UTF8.GetString(jsonData));
         }

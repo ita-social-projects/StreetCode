@@ -12,7 +12,7 @@ namespace Streetcode.BLL.DTO.Partners
         public bool IsVisibleEverywhere { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public string TargetUrl { get; set; }
+        public string? TargetUrl { get; set; }
         public int LogoId { get; set; }
         public string? UrlTitle { get; set; }
         public List<CreatePartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }

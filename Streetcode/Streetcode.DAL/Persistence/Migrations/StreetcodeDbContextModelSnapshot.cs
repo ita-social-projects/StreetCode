@@ -382,7 +382,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TargetUrl")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -421,11 +420,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 

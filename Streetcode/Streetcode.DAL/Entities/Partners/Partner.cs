@@ -25,9 +25,8 @@ public class Partner
     [Required]
     public bool IsVisibleEverywhere { get; set; }
 
-    [Required]
     [MaxLength(255)]
-    public string TargetUrl { get; set; }
+    public string? TargetUrl { get; set; }
 
     [MaxLength(255)]
     public string? UrlTitle { get; set; }

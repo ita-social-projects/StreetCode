@@ -9,7 +9,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
     {
         public FindFileInStorageAsBase64Tests() : base(new BlobStorageFixture(), "find-as-base64-test")
         {
-            _fixture.Seeding(_seededFileName);
+            _fixture.SeedImage(_seededFileName);
         }
 
         [Theory]

@@ -27,9 +27,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 		[Fact]
 		public async Task ShouldReturnSuccessfully_CorectType() 
 		{
-			//Arrange
-			(_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper,_mockRepository);
-			var hendler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object);
+            //Arrange
+            (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
+            var hendler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object);
 
 			//Act
 			var result = await hendler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);

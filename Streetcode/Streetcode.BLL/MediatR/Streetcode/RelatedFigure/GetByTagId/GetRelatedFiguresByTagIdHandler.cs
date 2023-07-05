@@ -2,8 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,11 +15,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetRelatedFiguresByTagIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetRelatedFiguresByTagIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
@@ -32,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
             if (streetcodes is null)
             {
-                return Result.Fail(new Error($"Cannot find any streetcode with corresponding tagid: {request.tagId}"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.tagId].Value));
             }
 
             var relatedFigureDTO = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);

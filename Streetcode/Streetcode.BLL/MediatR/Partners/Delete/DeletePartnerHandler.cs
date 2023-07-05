@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.Delete
@@ -11,13 +12,13 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly IStringLocalizer? _stringLocalizer;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public DeletePartnerHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<DeletePartnerHandler> stringLocalizer)
+        public DeletePartnerHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
-            _stringLocalizer = stringLocalizer;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<PartnerDTO>> Handle(DeletePartnerQuery request, CancellationToken cancellationToken)
@@ -25,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
             var partner = await _repositoryWrapper.PartnersRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (partner == null)
             {
-                return Result.Fail(_stringLocalizer?["NoPartnerWithId"].Value);
+                return Result.Fail(_stringLocalizerNo?["NoPartnerWithSuchId"].Value);
             }
             else
             {

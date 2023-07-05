@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
@@ -9,11 +11,19 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizerCannotSave;
 
-        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public UpdateCountStatisticRecordHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            IStringLocalizer<CannotSaveSharedResource> stringLocalizerCannotSave,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _stringLocalizerCannotSave = stringLocalizerCannotSave;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCountStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -23,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (statRecord == null)
             {
-                return Result.Fail(new Error("Cannot find record by qrId"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value));
             }
 
             statRecord.Count++;
@@ -34,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error("Cannot save the data"));
+                return Result.Fail(new Error(_stringLocalizerCannotSave["CannotSaveTheData"].Value));
             }
 
             return Result.Ok(Unit.Value);

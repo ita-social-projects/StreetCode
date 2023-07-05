@@ -265,7 +265,7 @@
     <value>Не вдалося знайти партнерів за ідентифікатором стріткоду: {0}</value>
   </data>
   <data name="CannotFindRecordWithQrId" xml:space="preserve">
-    <value>Не вдалося знайти запис з Qr - ідентифікатором</value>
+    <value>Не вдалося знайти запис для Qr - ідентифікатора</value>
   </data>
   <data name="CannotFindRelatedTermWithCorrespondingId" xml:space="preserve">
     <value>Не вдалося знайти пов'язаний термін з відповідним ідентифікатором: {0}</value>
@@ -296,6 +296,9 @@
   </data>
   <data name="CannotFindTransactionLinkByStreetcodeId" xml:space="preserve">
     <value>Не вдалося знайти посилання на транзакцію за ідентифікатором стріткоду: {0}</value>
+  </data>
+  <data name="CannotFindTransactionLinkByStreetcodeIdBecause" xml:space="preserve">
+    <value>Неможливо знайти посилання на транзакцію за ідентифікатором стріткоду: {0}, оскільки такого стріткоду не існує</value>
   </data>
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Не вдалося знайти відео з відповідним ідентифікатором: {0}</value>

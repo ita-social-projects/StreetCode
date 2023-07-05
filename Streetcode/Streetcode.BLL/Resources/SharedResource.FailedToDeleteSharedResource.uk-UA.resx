@@ -150,4 +150,7 @@
   <data name="FailedToDeleteText" xml:space="preserve">
     <value>Не вдалося вилучити текст</value>
   </data>
+  <data name="FailedToDeleteTheRecord" xml:space="preserve">
+    <value>Не вдалося вилучити запис</value>
+  </data>
 </root>

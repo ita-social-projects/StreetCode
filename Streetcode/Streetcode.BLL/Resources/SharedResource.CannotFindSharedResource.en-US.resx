@@ -265,7 +265,7 @@
     <value>Cannot find a partners by a streetcode id: {0}</value>
   </data>
   <data name="CannotFindRecordWithQrId" xml:space="preserve">
-    <value>Cannot find record with qrId</value>
+    <value>Cannot find record for qrId</value>
   </data>
   <data name="CannotFindRelatedTermWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a related term with corresponding id: {0}</value>
@@ -296,6 +296,9 @@
   </data>
   <data name="CannotFindTransactionLinkByStreetcodeId" xml:space="preserve">
     <value>Cannot find a transaction link by a streetcode id: {0}</value>
+  </data>
+  <data name="CannotFindTransactionLinkByStreetcodeIdBecause" xml:space="preserve">
+    <value>Cannot find a transaction link by a streetcode id: {0}, because such streetcode doesn`t exist</value>
   </data>
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a video with corresponding id: {0}</value>

@@ -25,7 +25,7 @@ namespace Streetcode.BLL.Services.Text
         {
             _text.Clear();
 
-            var splittedText = Pattern.Split(text);
+            var splittedText = Pattern.Split(text).Where(x => !string.IsNullOrEmpty(x)).ToArray();
 
             foreach (var word in splittedText)
             {
@@ -60,7 +60,7 @@ namespace Streetcode.BLL.Services.Text
                 }
                 else
                 {
-                    resultedWord = MarkTermWithDescription(term.Title, term.Description);
+                    resultedWord = MarkTermWithDescription(resultedWord, term.Description);
                 }
 
                 _text.Append(resultedWord + extras);
@@ -83,7 +83,7 @@ namespace Streetcode.BLL.Services.Text
                 return string.Empty;
             }
 
-            return MarkTermWithDescription(relatedTerm.Word, relatedTerm.Term.Description);
+            return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description);
         }
     }
 }

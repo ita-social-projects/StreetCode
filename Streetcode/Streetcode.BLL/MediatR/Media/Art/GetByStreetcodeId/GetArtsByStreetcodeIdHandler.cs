@@ -46,8 +46,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             if (arts is null)
             {
                 string errorMsg = $"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}";
-                _logger?.LogError("GetArtsByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetArtsByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -62,7 +61,6 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 }
             }
 
-            _logger?.LogInformation($"GetArtsByStreetcodeIdQuery handled successfully");
             return Result.Ok(artsDto);
         }
     }

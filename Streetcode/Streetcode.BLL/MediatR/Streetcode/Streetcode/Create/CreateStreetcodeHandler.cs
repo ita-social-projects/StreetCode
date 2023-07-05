@@ -63,22 +63,19 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 if (isResultSuccess)
                 {
                     transactionScope.Complete();
-                    _logger?.LogInformation($"CreateStreetcodeCommand handled successfully");
                     return Result.Ok(streetcode.Id);
                 }
                 else
                 {
                     const string errorMsg = "Failed to create a streetcode";
-                    _logger?.LogError("CreateStreetcodeCommand handled with an error");
-                    _logger?.LogError(errorMsg);
+                    _logger.LogError($"CreateStreetcodeCommand handled with an error. {errorMsg}");
                     return Result.Fail(new Error(errorMsg));
                 }
             }
             catch(Exception ex)
             {
                 string errorMsg = $"An error occurred while creating a streetcode. Message: {ex.Message}";
-                _logger?.LogError("CreateStreetcodeCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateStreetcodeCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

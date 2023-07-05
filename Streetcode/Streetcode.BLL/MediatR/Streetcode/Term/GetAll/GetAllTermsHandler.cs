@@ -29,14 +29,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
             if (terms is null)
             {
                 const string errorMsg = $"Cannot find any term";
-                _logger?.LogError("GetAllTermsQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllTermsQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var termDto = _mapper.Map<IEnumerable<TermDTO>>(terms);
-            _logger?.LogInformation($"GetAllTermsQuery handled successfully. Retrieved {termDto.Count()} terms");
-            return Result.Ok(termDto);
+            return Result.Ok(_mapper.Map<IEnumerable<TermDTO>>(terms));
         }
     }
 }

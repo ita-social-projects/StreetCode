@@ -26,8 +26,7 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
         if (audio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding categoryId: {request.Id}";
-            _logger?.LogError("DeleteAudioCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteAudioCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -48,8 +47,7 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
         else
         {
             string errorMsg = $"Failed to delete an audio";
-            _logger?.LogError("DeleteAudioCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteAudioCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

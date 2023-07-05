@@ -24,8 +24,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any streetcode with corresponding id: {request.Id}";
-            _logger?.LogError("UpdateStatusStreetcodeByIdCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"UpdateStatusStreetcodeByIdCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -38,14 +37,12 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if(resultIsSuccessChangeStatus)
         {
-            _logger?.LogInformation($"UpdateStatusStreetcodeByIdCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             const string errorMsg = "Failed to update status of streetcode";
-            _logger?.LogError("UpdateStatusStreetcodeByIdCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"UpdateStatusStreetcodeByIdCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

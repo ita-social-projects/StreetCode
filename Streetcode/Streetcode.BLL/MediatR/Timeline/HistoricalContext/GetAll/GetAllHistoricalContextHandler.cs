@@ -30,14 +30,11 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             if (historicalContextItems is null)
             {
                 const string errorMsg = $"Cannot find any historical contexts";
-                _logger?.LogError("GetAllHistoricalContextQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllHistoricalContextQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var historicalContext = _mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContextItems);
-            _logger?.LogInformation($"GetAllHistoricalContextQuery handled successfully. Retrieved {historicalContext.Count()} historical contexts");
-            return Result.Ok(historicalContext);
+            return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContextItems));
         }
     }
 }

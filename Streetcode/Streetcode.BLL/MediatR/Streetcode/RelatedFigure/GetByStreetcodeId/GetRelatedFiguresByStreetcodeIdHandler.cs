@@ -29,8 +29,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         if (relatedFigureIds is null)
         {
             string errorMsg = $"Cannot find any related figures by a streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetRelatedFigureByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetRelatedFigureByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -41,12 +40,10 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         if (relatedFigures is null)
         {
             string errorMsg = $"Cannot find any related figures by a streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetRelatedFigureByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetRelatedFigureByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetRelatedFigureByStreetcodeIdQuery handled successfully");
         return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
     }
 

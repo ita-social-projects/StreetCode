@@ -28,14 +28,11 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
             if (partners is null)
             {
                 const string errorMsg = $"Cannot find any partners";
-                _logger?.LogError("GetAllPartnersShortQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllPartnersShortQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var partnerShortDtos = _mapper.Map<IEnumerable<PartnerShortDTO>>(partners);
-            _logger?.LogInformation($"GetAllPartnersShortQuery handled successfully. Retrieved {partnerShortDtos.Count()} short partners");
-            return Result.Ok(partnerShortDtos);
+            return Result.Ok(_mapper.Map<IEnumerable<PartnerShortDTO>>(partners));
         }
     }
 }

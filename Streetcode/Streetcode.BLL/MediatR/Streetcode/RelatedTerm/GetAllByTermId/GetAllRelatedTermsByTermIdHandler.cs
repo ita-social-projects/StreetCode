@@ -31,8 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
             if (relatedTerms is null)
             {
                 const string errorMsg = "Cannot get words by term id";
-                _logger?.LogError("GetAllRelatedTermsByTermIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllRelatedTermsByTermIdQuery handled with an error. {errorMsg}");
                 return new Error(errorMsg);
             }
 
@@ -41,12 +40,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
             if (relatedTermsDTO is null)
             {
                 const string errorMsg = "Cannot create DTOs for related words!";
-                _logger?.LogError("GetAllRelatedTermsByTermIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllRelatedTermsByTermIdQuery handled with an error. {errorMsg}");
                 return new Error(errorMsg);
             }
 
-            _logger?.LogInformation($"GetAllRelatedTermsByTermIdQuery handled successfully. Retrieved {relatedTermsDTO.Count()} related terms");
             return Result.Ok(relatedTermsDTO);
         }
     }

@@ -27,12 +27,10 @@ public class GetVideoByIdHandler : IRequestHandler<GetVideoByIdQuery, Result<Vid
         if (video is null)
         {
             string errorMsg = $"Cannot find a video with corresponding id: {request.Id}";
-            _logger?.LogError("GetVideoByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetVideoByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetVideoByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<VideoDTO>(video));
     }
 }

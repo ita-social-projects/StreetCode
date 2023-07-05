@@ -47,14 +47,12 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
 
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"CreateImageCommand handled successfully");
             return Result.Ok(createdImage);
         }
         else
         {
-            const string errorMsg = $"Failed to create an image";
-            _logger?.LogError("CreateImageCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            const string errorMsg = "Failed to create an image";
+            _logger.LogError($"CreateImageCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

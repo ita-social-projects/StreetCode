@@ -30,8 +30,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any partners with corresponding streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetPartnersByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetPartnersByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -43,13 +42,10 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         if (partners is null)
         {
             string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetPartnersByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetPartnersByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
-        _logger?.LogInformation($"GetPartnersByStreetcodeIdQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
-        return Result.Ok(value: partnerDtos);
+        return Result.Ok(value: _mapper.Map<IEnumerable<PartnerDTO>>(partners));
     }
 }

@@ -28,12 +28,10 @@ public class GetToponymByIdHandler : IRequestHandler<GetToponymByIdQuery, Result
         if (toponym is null)
         {
             string errorMsg = $"Cannot find any toponym with corresponding id: {request.Id}";
-            _logger?.LogError("GetToponymByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetToponymByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetToponymByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<ToponymDTO>(toponym));
     }
 }

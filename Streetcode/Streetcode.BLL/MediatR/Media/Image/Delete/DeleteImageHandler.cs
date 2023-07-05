@@ -31,8 +31,7 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
         if (image is null)
         {
             string errorMsg = $"Cannot find an image with corresponding categoryId: {request.Id}";
-            _logger?.LogError("DeleteImageCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteImageCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -47,14 +46,12 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"DeleteImageCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             const string errorMsg = $"Failed to delete an image";
-            _logger?.LogError("DeleteImageCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteImageCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

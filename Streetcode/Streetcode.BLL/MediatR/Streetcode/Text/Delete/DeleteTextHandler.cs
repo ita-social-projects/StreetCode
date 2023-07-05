@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.Delete;
@@ -7,10 +8,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Text.Delete;
 public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
 
-    public DeleteTextHandler(IRepositoryWrapper repositoryWrapper)
+    public DeleteTextHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(DeleteTextCommand request, CancellationToken cancellationToken)
@@ -19,12 +22,23 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
 
         if (text is null)
         {
-            return Result.Fail(new Error($"Cannot find a text with corresponding categoryId: {request.Id}"));
+            string errorMsg = $"Cannot find a text with corresponding categoryId: {request.Id}";
+            _logger.LogError($"DeleteTextCommand handled with an error. {errorMsg}");
+            return Result.Fail(new Error(errorMsg));
         }
 
         _repositoryWrapper.TextRepository.Delete(text);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a text"));
+        if(resultIsSuccess)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = "Failed to delete a text";
+            _logger.LogError($"DeleteTextCommand handled with an error. {errorMsg}");
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

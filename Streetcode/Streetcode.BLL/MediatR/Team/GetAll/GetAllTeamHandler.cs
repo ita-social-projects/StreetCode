@@ -30,14 +30,11 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
             if (team is null)
             {
                 const string errorMsg = $"Cannot find any team";
-                _logger?.LogError("GetAllTeamQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllTeamQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var teamDtos = _mapper.Map<IEnumerable<TeamMemberDTO>>(team);
-            _logger?.LogInformation($"GetAllTeamQuery handled successfully. Retrieved {teamDtos.Count()} teams");
-            return Result.Ok(teamDtos);
+            return Result.Ok(_mapper.Map<IEnumerable<TeamMemberDTO>>(team));
         }
     }
 }

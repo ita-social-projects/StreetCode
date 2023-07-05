@@ -22,11 +22,7 @@ namespace Streetcode.BLL.MediatR.Payment
         public async Task<Result<InvoiceInfo>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
         {
             var invoice = new Invoice(request.Payment.Amount * _currencyMultiplier, _hryvnyaCurrencyCode, new MerchantPaymentInfo { Destination = "Добровільний внесок на статутну діяльність ГО «Історична Платформа»" }, request.Payment.RedirectUrl);
-
-            var result = await _paymentService.CreateInvoiceAsync(invoice);
-
-            _logger?.LogInformation($"CreateInvoiceCommand handled successfully");
-            return Result.Ok(result);
+            return Result.Ok(await _paymentService.CreateInvoiceAsync(invoice));
         }
     }
 }

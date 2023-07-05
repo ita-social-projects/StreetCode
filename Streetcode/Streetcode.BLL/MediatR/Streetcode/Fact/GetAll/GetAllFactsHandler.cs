@@ -28,13 +28,10 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
         if (facts is null)
         {
             const string errorMsg = $"Cannot find any fact";
-            _logger?.LogError("GetAllFactsQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllFactsQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var factDtos = _mapper.Map<IEnumerable<FactDto>>(facts);
-        _logger?.LogInformation($"GetAllFactsQuery handled successfully. Retrieved {factDtos.Count()} facts");
-        return Result.Ok(factDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<FactDto>>(facts));
     }
 }

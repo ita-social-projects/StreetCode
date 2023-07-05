@@ -31,15 +31,11 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
             if (positions is null)
             {
                 const string errorMsg = $"Cannot find any positions";
-                _logger?.LogError("GetAllPositionsQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllPositionsQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var positionsDtos = _mapper.Map<IEnumerable<PositionDTO>>(positions);
-
-            _logger?.LogInformation($"GetAllPositionsQuery handled successfully. Retrieved {positionsDtos.Count()} positions");
-            return Result.Ok(positionsDtos);
+            return Result.Ok(_mapper.Map<IEnumerable<PositionDTO>>(positions));
         }
     }
 }

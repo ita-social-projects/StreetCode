@@ -35,8 +35,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             if (newsDTO is null)
             {
                 string errorMsg = $"No news by entered Url - {url}";
-                _logger?.LogError("GetNewsAndLinksByUrlQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetNewsAndLinksByUrlQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -91,12 +90,10 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             if (newsDTOWithUrls is null)
             {
                 string errorMsg = $"No news by entered Url - {url}";
-                _logger?.LogError("GetNewsAndLinksByUrlQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetNewsAndLinksByUrlQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
-            _logger?.LogInformation($"GetNewsAndLinksByUrlQuery handled successfully");
             return Result.Ok(newsDTOWithUrls);
         }
     }

@@ -28,8 +28,7 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find a streetcode with corresponding categoryId: {request.Id}";
-            _logger?.LogError("DeleteStreetcodeCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteStreetcodeCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -39,14 +38,12 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
 
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"DeleteStreetcodeCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             const string errorMsg = "Failed to delete a streetcode";
-            _logger?.LogError("DeleteStreetcodeCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteStreetcodeCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

@@ -33,7 +33,6 @@ namespace Streetcode.BLL.MediatR.Users.Login
             {
                 var token = _tokenService.GenerateJWTToken(user);
                 var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-                _logger?.LogInformation($"LoginQuery handled successfully");
                 return Result.Ok(new LoginResultDTO()
                 {
                     User = _mapper.Map<UserDTO>(user),
@@ -43,8 +42,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
             }
 
             const string errorMsg = "User not found";
-            _logger?.LogError("LoginQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"LoginQuery handled with an error. {errorMsg}");
             return Result.Fail(errorMsg);
         }
     }

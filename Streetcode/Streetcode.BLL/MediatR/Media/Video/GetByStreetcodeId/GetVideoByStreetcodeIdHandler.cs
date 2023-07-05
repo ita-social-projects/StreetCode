@@ -34,15 +34,13 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
             if (streetcode is null)
             {
                 string errorMsg = $"Streetcode with id: {request.StreetcodeId} doesn`t exist";
-                _logger?.LogError("GetVideoByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetVideoByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }
 
         NullResult<VideoDTO> result = new NullResult<VideoDTO>();
         result.WithValue(_mapper.Map<VideoDTO>(video));
-        _logger?.LogInformation($"GetVideoByStreetcodeIdQuery handled successfully");
         return result;
     }
 }

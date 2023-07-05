@@ -24,8 +24,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
             if (term is null)
             {
                 const string errorMsg = "Cannot convert null to Term";
-                _logger?.LogError("DeleteTermCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteTermCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -34,14 +33,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"DeleteTermCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 const string errorMsg = "Failed to delete a term";
-                _logger?.LogError("DeleteTermCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteTermCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

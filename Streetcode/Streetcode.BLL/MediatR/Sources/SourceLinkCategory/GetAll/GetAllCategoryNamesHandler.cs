@@ -28,14 +28,11 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             if (allCategories == null)
             {
                 const string errorMsg = $"Categories is null";
-                _logger?.LogError("GetAllCategoryNamesQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllCategoryNamesQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var categoryNames = _mapper.Map<IEnumerable<CategoryWithNameDTO>>(allCategories);
-            _logger?.LogInformation($"GetAllCategoryNamesQuery handled successfully. Retrived {categoryNames.Count()} category names");
-            return Result.Ok(categoryNames);
+            return Result.Ok(_mapper.Map<IEnumerable<CategoryWithNameDTO>>(allCategories));
         }
     }
 }

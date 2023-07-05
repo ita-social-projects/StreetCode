@@ -31,8 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
             if (streetcode == null)
             {
                 string errorMsg = $"Cannot find streetcode by transliteration url: {request.url}";
-                _logger?.LogError("GetStreetcodeByTransliterationUrlQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetStreetcodeByTransliterationUrlQuery handled with an error. {errorMsg}");
                 return new Error(errorMsg);
             }
 
@@ -43,8 +42,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);
             streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
-
-            _logger?.LogInformation($"GetStreetcodeByTransliterationUrlQuery handled successfully");
             return Result.Ok(streetcodeDTO);
         }
     }

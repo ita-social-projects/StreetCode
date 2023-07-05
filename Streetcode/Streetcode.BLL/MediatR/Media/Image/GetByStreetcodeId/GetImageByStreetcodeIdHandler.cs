@@ -32,8 +32,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
         if (images is null)
         {
             string errorMsg = $"Cannot find an image with the corresponding streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetImageByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetImageByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -44,7 +43,6 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
             image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
         }
 
-        _logger?.LogInformation($"GetImageByStreetcodeIdQuery handled successfully. Retrieved {imageDtos.Count()} images");
         return Result.Ok(imageDtos);
     }
 }

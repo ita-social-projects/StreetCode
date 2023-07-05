@@ -77,13 +77,11 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 }
 
                 _repository.SaveChanges();
-                _logger?.LogInformation($"CreateTeamQuery handled successfully");
                 return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
             }
             catch (Exception ex)
             {
-                _logger?.LogError("CreateTeamQuery handled with an error");
-                _logger?.LogError(ex.Message);
+                _logger.LogError($"CreateTeamQuery handled with an error. {ex.Message}");
                 return Result.Fail(ex.Message);
             }
         }

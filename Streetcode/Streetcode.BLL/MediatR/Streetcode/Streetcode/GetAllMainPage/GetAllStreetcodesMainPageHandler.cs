@@ -31,14 +31,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
 
             if (streetcodes != null)
             {
-                var streetcodesMainPAge = _mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes);
-                _logger?.LogInformation($"GetAllStreetcodesMainPageQuery handled successfully. Retrieved {streetcodesMainPAge.Count()} streetcodes");
-                return Result.Ok(streetcodesMainPAge);
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes));
             }
 
             const string errorMsg = "No streetcodes exist now";
-            _logger?.LogError("GetAllStreetcodesMainPageQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllStreetcodesMainPageQuery handled with an error. {errorMsg}");
             return Result.Fail(errorMsg);
         }
     }

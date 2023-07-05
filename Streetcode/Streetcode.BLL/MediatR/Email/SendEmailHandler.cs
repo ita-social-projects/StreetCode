@@ -24,14 +24,12 @@ namespace Streetcode.BLL.MediatR.Email
 
             if(isResultSuccess)
             {
-                _logger?.LogInformation($"SendEmailCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 const string errorMsg = $"Failed to send email message";
-                _logger?.LogError("SendEmailCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"SendEmailCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

@@ -27,12 +27,10 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
         if (facts is null)
         {
             string errorMsg = $"Cannot find any fact with corresponding id: {request.Id}";
-            _logger?.LogError("GetFactByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetFactByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetFactByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<FactDto>(facts));
     }
 }

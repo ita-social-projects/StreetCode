@@ -34,12 +34,10 @@ namespace Streetcode.BLL.MediatR.Team.Create
             }
             catch (Exception ex)
             {
-                _logger?.LogError("CreatePositionQuery handled with an error");
-                _logger?.LogError(ex.Message);
+                _logger.LogError($"CreatePositionQuery handled with an error. {ex.Message}");
                 return Result.Fail(ex.Message);
             }
 
-            _logger?.LogInformation($"CreatePositionQuery handled successfully");
             return Result.Ok(_mapper.Map<PositionDTO>(newPosition));
         }
     }

@@ -24,8 +24,7 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             if (news == null)
             {
                 string errorMsg = $"No news found by entered Id - {id}";
-                _logger?.LogError("DeleteNewsCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteNewsCommand handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -38,14 +37,12 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"DeleteNewsCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 string errorMsg = "Failed to delete news";
-                _logger?.LogError("DeleteNewsCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteNewsCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

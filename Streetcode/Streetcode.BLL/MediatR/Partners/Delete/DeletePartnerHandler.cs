@@ -26,8 +26,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
             if (partner == null)
             {
                 const string errorMsg = "No partner with such id";
-                _logger?.LogError("DeletePartnerQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeletePartnerQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
             else
@@ -36,13 +35,11 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
                 try
                 {
                     _repositoryWrapper.SaveChanges();
-                    _logger?.LogInformation($"DeletePartnerQuery handled successfully");
                     return Result.Ok(_mapper.Map<PartnerDTO>(partner));
                 }
                 catch(Exception ex)
                 {
-                    _logger?.LogError("DeletePartnerQuery handled with an error");
-                    _logger?.LogError(ex.Message);
+                    _logger.LogError($"DeletePartnerQuery handled with an error. {ex.Message}");
                     return Result.Fail(ex.Message);
                 }
             }

@@ -25,9 +25,8 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
-                const string errorMsg = $"Cannot convert null to news";
-                _logger?.LogError("CreateNewsCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Cannot convert null to news";
+                _logger.LogError($"CreateNewsCommand handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -40,14 +39,12 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"CreateNewsCommand handled successfully");
                 return Result.Ok(_mapper.Map<NewsDTO>(entity));
             }
             else
             {
-                const string errorMsg = $"Failed to create a news";
-                _logger?.LogError("CreateNewsCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Failed to create a news";
+                _logger.LogError($"CreateNewsCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

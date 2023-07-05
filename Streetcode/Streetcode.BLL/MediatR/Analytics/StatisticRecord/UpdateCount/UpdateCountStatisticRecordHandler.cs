@@ -26,9 +26,8 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (statRecord == null)
             {
-                const string errorMsg = $"Cannot find record by qrId";
-                _logger?.LogError("UpdateCountStatisticRecordCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Cannot find record by qrId";
+                _logger.LogError($"UpdateCountStatisticRecordCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -40,13 +39,11 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (!resultIsSuccess)
             {
-                const string errorMsg = $"Cannot save the data";
-                _logger?.LogError("UpdateCountStatisticRecordCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Cannot save the data";
+                _logger.LogError($"UpdateCountStatisticRecordCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"UpdateCountStatisticRecordCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
     }

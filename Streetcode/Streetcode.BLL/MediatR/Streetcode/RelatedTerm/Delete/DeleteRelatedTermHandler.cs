@@ -27,8 +27,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             if (relatedTerm is null)
             {
                 string errorMsg = $"Cannot find a related term with corresponding id: {request.id}";
-                _logger?.LogError("DeleteRelatedTermCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteRelatedTermCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -37,14 +36,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"DeleteRelatedTermCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 string errorMsg = "Failed to delete a related term";
-                _logger?.LogError("DeleteRelatedTermCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteRelatedTermCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

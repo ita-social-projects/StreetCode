@@ -46,14 +46,12 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
 
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"CreateAudioCommand handled successfully");
             return Result.Ok(createdAudio);
         }
         else
         {
             const string errorMsg = $"Failed to create an audio";
-            _logger?.LogError("CreateAudioCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"CreateAudioCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

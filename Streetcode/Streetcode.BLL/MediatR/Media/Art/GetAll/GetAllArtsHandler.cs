@@ -29,13 +29,10 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
         if (arts is null)
         {
             const string errorMsg = $"Cannot find any arts";
-            _logger?.LogError("GetAllArtsQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllArtsQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var artDtos = _mapper.Map<IEnumerable<ArtDTO>>(arts);
-        _logger?.LogInformation($"GetAllArtsQuery handled successfully. Retrieved {artDtos.Count()} arts");
-        return Result.Ok(artDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<ArtDTO>>(arts));
     }
 }

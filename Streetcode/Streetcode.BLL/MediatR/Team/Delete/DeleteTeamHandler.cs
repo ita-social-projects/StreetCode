@@ -28,8 +28,7 @@ namespace Streetcode.BLL.MediatR.Team.Delete
             if (team == null)
             {
                 const string errorMsg = "No team with such id";
-                _logger?.LogError("DeleteTeamQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteTeamQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
             else
@@ -38,13 +37,11 @@ namespace Streetcode.BLL.MediatR.Team.Delete
                 try
                 {
                     _repositoryWrapper.SaveChanges();
-                    _logger?.LogInformation($"DeleteTeamQuery handled successfully");
                     return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogError("DeleteTeamQuery handled with an error");
-                    _logger?.LogError(ex.Message);
+                    _logger.LogError($"DeleteTeamQuery handled with an error. {ex.Message}");
                     return Result.Fail(ex.Message);
                 }
             }

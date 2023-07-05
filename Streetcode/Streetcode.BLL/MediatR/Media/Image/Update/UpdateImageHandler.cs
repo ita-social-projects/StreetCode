@@ -56,14 +56,12 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"UpdateImageCommand handled successfully");
             return Result.Ok(returnedImaged);
         }
         else
         {
-            const string errorMsg = $"Failed to update an image";
-            _logger?.LogError("UpdateImageCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            const string errorMsg = "Failed to update an image";
+            _logger.LogError($"UpdateImageCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

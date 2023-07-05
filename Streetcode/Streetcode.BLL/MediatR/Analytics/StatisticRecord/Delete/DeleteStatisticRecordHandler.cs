@@ -28,8 +28,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
             if (statRecord is null)
             {
                 const string errorMsg = "Cannot find record for qrId";
-                _logger?.LogError("DeleteStatisticRecordCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteStatisticRecordCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -39,14 +38,12 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"DeleteStatisticRecordCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 const string errorMsg = "Cannot delete the record";
-                _logger?.LogError("DeleteStatisticRecordCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"DeleteStatisticRecordCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

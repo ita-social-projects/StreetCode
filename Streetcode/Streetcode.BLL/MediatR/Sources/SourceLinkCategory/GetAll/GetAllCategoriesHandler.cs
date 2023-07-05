@@ -32,8 +32,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             if (allCategories == null)
             {
                 const string errorMsg = $"Categories is null";
-                _logger?.LogError("GetAllCategoriesQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllCategoriesQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -44,7 +43,6 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
             }
 
-            _logger?.LogInformation($"GetAllCategoriesQuery handled successfully. Retrieved {dtos.Count()} categories");
             return Result.Ok(dtos);
         }
     }

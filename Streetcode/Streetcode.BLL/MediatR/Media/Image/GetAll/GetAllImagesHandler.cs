@@ -31,8 +31,7 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
         if (images is null)
         {
             const string errorMsg = $"Cannot find any image";
-            _logger?.LogError("GetAllImagesQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllImagesQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -43,7 +42,6 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
             image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
         }
 
-        _logger?.LogInformation($"GetAllImagesQuery handled successfully. Retrieved {imageDtos.Count()} images");
         return Result.Ok(imageDtos);
     }
 }

@@ -24,7 +24,6 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
             var statRecord = await _repository.StatisticRecordRepository
                 .GetFirstOrDefaultAsync(predicate: (sr) => sr.QrId == request.qrId);
 
-            _logger?.LogInformation($"ExistStatisticRecordByQrIdCommand handled successfully");
             return statRecord is null ? Result.Ok(false) : Result.Ok(true);
         }
     }

@@ -19,8 +19,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist
         public async Task<Result<bool>> Handle(StreetcodeWithUrlExistQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: st => st.TransliterationUrl == request.url);
-
-            _logger?.LogInformation($"StreetcodeWithUrlExistQuery handled successfully");
             return Result.Ok(streetcodes != null);
         }
     }

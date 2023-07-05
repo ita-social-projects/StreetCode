@@ -37,14 +37,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
             if (streetcodes is null)
             {
                 string errorMsg = $"Cannot find any streetcode with corresponding tagid: {request.tagId}";
-                _logger?.LogError("GetRelatedFiguresByTagIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetRelatedFiguresByTagIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var relatedFigureDTO = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);
-            _logger?.LogInformation($"GetRelatedFiguresByTagIdQuery handled successfully. Retrieved {relatedFigureDTO.Count()} related figures");
-            return Result.Ok(relatedFigureDTO);
+            return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
         }
     }
 }

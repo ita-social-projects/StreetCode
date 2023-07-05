@@ -27,12 +27,10 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
         if (term is null)
         {
             string errorMsg = $"Cannot find any term with corresponding id: {request.Id}";
-            _logger?.LogError("GetAllSubtitlesQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetTermByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetTermByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<TermDTO>(term));
     }
 }

@@ -32,8 +32,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             if (news == null)
             {
                 const string errorMsg = "There are no news in the database";
-                _logger?.LogError("GetAllNewsQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetAllNewsQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -47,7 +46,6 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 }
             }
 
-            _logger?.LogInformation($"GetAllNewsQuery handled successfully. Retrieved {newsDTOs.Count()} news");
             return Result.Ok(newsDTOs);
         }
     }

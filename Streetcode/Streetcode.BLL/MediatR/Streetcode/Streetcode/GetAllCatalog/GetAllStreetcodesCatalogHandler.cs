@@ -31,14 +31,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
             if (streetcodes != null)
             {
                 var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);
-                var streetcodesCatalog = _mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped);
-                _logger?.LogInformation($"GetAllStreetcodesCatalogQuery handled successfully. Retrieved {streetcodesCatalog.Count()} streetcodes");
-                return Result.Ok(streetcodesCatalog);
+                return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(skipped));
             }
 
             const string errorMsg = $"Cannot find any subtitles";
-            _logger?.LogError("GetAllStreetcodesCatalogQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetCategoriesByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(errorMsg);
         }
     }

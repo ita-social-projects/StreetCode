@@ -29,12 +29,10 @@ public class GetTransactLinkByIdHandler : IRequestHandler<GetTransactLinkByIdQue
         if (transactLink is null)
         {
             string errorMsg = $"Cannot find any transaction link with corresponding id: {request.Id}";
-            _logger?.LogError("GetTransactLinkByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetTransactLinkByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetTransactLinkByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<TransactLinkDTO>(transactLink));
     }
 }

@@ -26,8 +26,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             if (category is null)
             {
                 const string errorMsg = "Cannot convert null to Category";
-                _logger?.LogError("UpdateCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"UpdateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -36,14 +35,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"UpdateCategoryCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 const string errorMsg = "Failed to update a category";
-                _logger?.LogError("UpdateCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"UpdateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

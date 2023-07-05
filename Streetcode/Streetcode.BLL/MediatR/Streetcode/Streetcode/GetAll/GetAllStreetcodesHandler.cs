@@ -54,7 +54,6 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             Streetcodes = streetcodeDtos
         };
 
-        _logger?.LogInformation($"GetAllStreetcodesQuery handled successfully");
         return Result.Ok(response);
     }
 

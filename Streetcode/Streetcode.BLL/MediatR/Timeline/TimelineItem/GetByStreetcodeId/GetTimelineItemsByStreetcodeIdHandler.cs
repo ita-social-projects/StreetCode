@@ -34,13 +34,10 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
         if (timelineItems is null)
         {
             string errorMsg = $"Cannot find any timeline item by the streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetTimelineItemsByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetTimelineItemByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var timelineItemDto = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
-        _logger?.LogInformation($"GetTimelineItemsByStreetcodeIdQuery handled successfully. Retrieved {timelineItemDto.Count()} timelineItems");
-        return Result.Ok(timelineItemDto);
+        return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems));
     }
 }

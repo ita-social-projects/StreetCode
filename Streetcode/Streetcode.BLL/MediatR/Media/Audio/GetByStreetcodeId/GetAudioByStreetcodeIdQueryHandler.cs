@@ -34,8 +34,7 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
         if (streetcode == null)
         {
             string errorMsg = $"Cannot find an audio with the corresponding streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetAudioByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAudioByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -47,7 +46,6 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
 
         NullResult<AudioDTO> result = new NullResult<AudioDTO>();
         result.WithValue(_mapper.Map<AudioDTO>(streetcode.Audio));
-        _logger?.LogInformation($"GetAudioByStreetcodeIdQuery handled successfully");
         return result;
     }
 }

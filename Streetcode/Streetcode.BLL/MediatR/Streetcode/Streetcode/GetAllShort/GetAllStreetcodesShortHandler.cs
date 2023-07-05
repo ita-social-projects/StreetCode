@@ -26,14 +26,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
             if (streetcodes != null)
             {
-                var streetcodesShort = _mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes);
-                _logger?.LogInformation($"GetAllStreetcodesShortQuery handled successfully. Retrieved {streetcodesShort.Count()} streetcodes");
-                return Result.Ok(streetcodesShort);
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
             }
 
             const string errorMsg = "No streetcodes exist now";
-            _logger?.LogError("GetAllStreetcodesShortQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllStreetcodesShortQuery handled with an error. {errorMsg}");
             return Result.Fail(errorMsg);
         }
     }

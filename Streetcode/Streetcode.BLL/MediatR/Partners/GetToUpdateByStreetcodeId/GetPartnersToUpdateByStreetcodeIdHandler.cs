@@ -30,8 +30,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
             if (streetcode is null)
             {
                 string errorMsg = $"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}";
-                _logger?.LogError("GetPartnersToUpdateByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetPartnersToUpdateByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -43,14 +42,11 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
             if (partners is null)
             {
                 string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
-                _logger?.LogError("GetPartnersToUpdateByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetPartnersToUpdateByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
-            _logger?.LogInformation($"GetPartnersToUpdateByStreetcodeIdQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
-            return Result.Ok(value: partnerDtos);
+            return Result.Ok(value: _mapper.Map<IEnumerable<PartnerDTO>>(partners));
         }
     }
 }

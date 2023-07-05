@@ -28,12 +28,10 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
         if (tag is null)
         {
             string errorMsg = $"Cannot find any tag by the title: {request.Title}";
-            _logger?.LogError("GetTagByTitleQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetTagByTitleQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetTagByTitleQuery handled successfully");
         return Result.Ok(_mapper.Map<TagDTO>(tag));
     }
 }

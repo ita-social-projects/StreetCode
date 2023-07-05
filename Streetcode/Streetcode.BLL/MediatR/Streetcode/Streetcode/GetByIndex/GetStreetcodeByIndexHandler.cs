@@ -30,12 +30,10 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any streetcode with corresponding index: {request.Index}";
-            _logger?.LogError("GetStreetcodeByIndexQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetStreetcodeByIndexQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetStreetcodeByIndexQuery handled successfully");
         return Result.Ok(_mapper.Map<StreetcodeDTO>(streetcode));
     }
 }

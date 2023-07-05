@@ -35,12 +35,10 @@ namespace Streetcode.BLL.MediatR.Team.GetById
             if (team is null)
             {
                 string errorMsg = $"Cannot find any team with corresponding id: {request.Id}";
-                _logger?.LogError("GetByIdTeamQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetByIdTeamQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetByIdTeamQuery handled successfully");
             return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
         }
     }

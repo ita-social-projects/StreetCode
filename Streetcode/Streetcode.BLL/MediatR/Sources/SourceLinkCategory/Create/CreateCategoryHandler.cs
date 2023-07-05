@@ -31,8 +31,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             if (category is null)
             {
                 const string errorMsg = "Cannot convert null to Category";
-                _logger?.LogError("CreateCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -40,14 +39,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"CreateCategoryCommand handled successfully");
                 return Result.Ok(returned);
             }
             else
             {
                 const string errorMsg = "Failed to create a category";
-                _logger?.LogError("CreateCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

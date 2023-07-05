@@ -33,12 +33,10 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
         if (partner is null)
         {
             string errorMsg = $"Cannot find any partner with corresponding id: {request.Id}";
-            _logger?.LogError("GetPartnerByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetPartnerByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetPartnerByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<PartnerDTO>(partner));
     }
 }

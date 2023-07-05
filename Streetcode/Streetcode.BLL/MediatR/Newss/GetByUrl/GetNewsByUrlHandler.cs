@@ -34,8 +34,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
             if(newsDTO is null)
             {
                 string errorMsg = $"No news by entered Url - {url}";
-                _logger?.LogError("GetNewsByUrlQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetNewsByUrlQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -44,7 +43,6 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
                 newsDTO.Image.Base64 = _blobService.FindFileInStorageAsBase64(newsDTO.Image.BlobName);
             }
 
-            _logger?.LogInformation($"GetNewsByUrlQuery handled successfully");
             return Result.Ok(newsDTO);
         }
     }

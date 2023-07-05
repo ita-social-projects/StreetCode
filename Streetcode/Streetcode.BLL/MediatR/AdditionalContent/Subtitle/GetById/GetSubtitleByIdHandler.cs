@@ -28,12 +28,10 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
         if (subtitle is null)
         {
             string errorMsg = $"Cannot find a subtitle with corresponding id: {request.Id}";
-            _logger?.LogError("GetSubtitleByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetSubtitleByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation("GetSubtitleByIdQuery handled successfully");
         return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));
     }
 }

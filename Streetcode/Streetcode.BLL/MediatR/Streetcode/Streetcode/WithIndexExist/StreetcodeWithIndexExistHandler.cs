@@ -24,11 +24,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist
             var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Index == request.index);
             if (streetcode == null)
             {
-                _logger?.LogInformation($"StreetcodeWithIndexExistQuery handled successfully");
                 return Result.Ok(false);
             }
 
-            _logger?.LogInformation($"StreetcodeWithIndexExistQuery handled successfully");
             return Result.Ok(true);
         }
     }

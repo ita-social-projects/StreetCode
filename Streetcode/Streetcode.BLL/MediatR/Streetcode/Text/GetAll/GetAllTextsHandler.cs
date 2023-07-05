@@ -29,13 +29,10 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
         if (texts is null)
         {
             const string errorMsg = $"Cannot find any text";
-            _logger?.LogError("GetAllTextsQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllTextsQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var textDtos = _mapper.Map<IEnumerable<TextDTO>>(texts);
-        _logger?.LogInformation($"GetAllTextsQuery handled successfully. Retrieved {textDtos.Count()} texts");
-        return Result.Ok(textDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<TextDTO>>(texts));
     }
 }

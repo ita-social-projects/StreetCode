@@ -80,13 +80,11 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 _repositoryWrapper.SaveChanges();
                 var dbo = _mapper.Map<TeamMemberDTO>(team);
                 dbo.Positions = newPositions;
-                _logger?.LogInformation($"GetAllSubtitlesQuery handled successfully");
                 return Result.Ok(dbo);
             }
             catch (Exception ex)
             {
-                _logger?.LogError("GetAllSubtitlesQuery handled with an error");
-                _logger?.LogError(ex.Message);
+                _logger.LogError($"UpdateTeamQuery handled with an error. {ex.Message}");
                 return Result.Fail(ex.Message);
             }
         }

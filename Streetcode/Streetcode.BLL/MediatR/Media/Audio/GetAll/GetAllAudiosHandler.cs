@@ -30,9 +30,8 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
 
         if (audios is null)
         {
-            const string errorMsg = $"Cannot find any audios";
-            _logger?.LogError("GetAllAudiosQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            const string errorMsg = "Cannot find any audios";
+            _logger.LogError($"GetAllAudiosQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -42,7 +41,6 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
             audio.Base64 = _blobService.FindFileInStorageAsBase64(audio.BlobName);
         }
 
-        _logger?.LogInformation($"GetAllAudiosQuery handled successfully. Retrieved {audioDtos.Count()} audios");
         return Result.Ok(audioDtos);
     }
 }

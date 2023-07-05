@@ -29,9 +29,8 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
 
             if (statisticRecords == null)
             {
-                const string errorMsg = $"Cannot find any statistic for this streetcode";
-                _logger?.LogError("GetAllStatisticRecordsByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Cannot find any statistic for this streetcode";
+                _logger.LogError($"GetAllStatisticRecordsByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -39,13 +38,11 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
 
             if (statisticRecordsDTOs == null)
             {
-                const string errorMsg = $"Mapper is null";
-                _logger?.LogError("GetAllStatisticRecordsByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                const string errorMsg = "Mapper is null";
+                _logger.LogError($"GetAllStatisticRecordsByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _logger?.LogInformation($"GetAllStatisticRecordsByStreetcodeIdQuery handled successfully. Retrieved {statisticRecordsDTOs.Count()} statisctic records");
             return Result.Ok(statisticRecordsDTOs);
         }
     }

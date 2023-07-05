@@ -33,8 +33,7 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
         if (image is null)
         {
             string errorMsg = $"Cannot find a image with corresponding id: {request.Id}";
-            _logger?.LogError("GetImageByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetImageByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -44,7 +43,6 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
             imageDto.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
         }
 
-        _logger?.LogInformation($"GetImageByIdQuery handled successfully");
         return Result.Ok(imageDto);
     }
 }

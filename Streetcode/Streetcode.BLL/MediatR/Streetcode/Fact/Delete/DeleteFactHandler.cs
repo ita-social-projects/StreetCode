@@ -23,8 +23,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
         if (fact is null)
         {
             string errorMsg = $"Cannot find a fact with corresponding categoryId: {request.Id}";
-            _logger?.LogError("DeleteFactCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteFactCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -33,14 +32,12 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         if (resultIsSuccess)
         {
-            _logger?.LogInformation($"DeleteFactCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             string errorMsg = "Failed to delete a fact";
-            _logger?.LogError("DeleteFactCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteFactCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

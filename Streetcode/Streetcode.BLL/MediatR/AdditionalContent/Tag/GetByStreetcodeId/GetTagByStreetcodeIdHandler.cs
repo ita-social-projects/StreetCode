@@ -40,13 +40,10 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         if (tagIndexed is null)
         {
             string errorMsg = $"Cannot find any tag by the streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetTagByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetTagByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var tagDto = _mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index));
-        _logger?.LogInformation($"GetTagByStreetcodeIdQuery handled successfully. Retrieved {tagDto.Count()} tags");
-        return Result.Ok(tagDto);
+        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index)));
     }
 }

@@ -31,13 +31,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 
             if (streetcodes != null)
             {
-                _logger?.LogInformation($"GetStreetcodesCountQuery handled successfully");
                 return Result.Ok(streetcodes.Count());
             }
 
             const string errorMsg = "No streetcodes exist now";
-            _logger?.LogError("GetStreetcodesCountQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetStreetcodesCountQuery handled with an error. {errorMsg}");
             return Result.Fail(errorMsg);
         }
     }

@@ -35,14 +35,10 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
         if (partners is null)
         {
             const string errorMsg = $"Cannot find any partners";
-            _logger?.LogError("GetAllPartnersQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllPartnersQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);
-
-        _logger?.LogInformation($"GetAllPartnersQuery handled successfully. Retrieved {partnerDtos.Count()} partners");
-        return Result.Ok(partnerDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<PartnerDTO>>(partners));
     }
 }

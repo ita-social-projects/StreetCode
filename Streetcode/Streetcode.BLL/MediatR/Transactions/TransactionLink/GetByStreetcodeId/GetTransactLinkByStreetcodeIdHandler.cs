@@ -34,15 +34,13 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
                 .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
             {
                 string errorMsg = $"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist";
-                _logger?.LogError("GetAllSubtitlesQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetTransactLinkByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }
 
         NullResult<TransactLinkDTO?> result = new NullResult<TransactLinkDTO?>();
         result.WithValue(_mapper.Map<TransactLinkDTO?>(transactLink));
-        _logger?.LogInformation($"GetTransactLinkByStreetcodeIdQuery handled successfully");
         return result;
     }
 }

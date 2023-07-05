@@ -31,8 +31,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any streetcode with corresponding id: {request.Id}";
-            _logger?.LogError("GetStreetcodeByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetStreetcodeByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -43,7 +42,6 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
 
-        _logger?.LogInformation($"GetStreetcodeByIdQuery handled successfully");
         return Result.Ok(streetcodeDto);
     }
 }

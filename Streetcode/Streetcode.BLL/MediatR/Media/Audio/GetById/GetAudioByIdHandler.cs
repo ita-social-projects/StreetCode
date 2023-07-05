@@ -30,8 +30,7 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
         if (audio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding id: {request.Id}";
-            _logger?.LogError("GetAudioByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAudioByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -39,7 +38,6 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
 
         audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
 
-        _logger?.LogInformation($"GetAudioByIdQuery handled successfully");
         return Result.Ok(audioDto);
     }
 }

@@ -33,8 +33,7 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
                  .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
             {
                 string errorMsg = $"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist";
-                _logger?.LogError("GetTextByStreetcodeIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetTextByStreetcodeIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }
@@ -42,8 +41,6 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
         var textDto = _mapper.Map<TextDTO?>(text);
         NullResult<TextDTO?> result = new NullResult<TextDTO?>();
         result.WithValue(_mapper.Map<TextDTO?>(text));
-
-        _logger?.LogInformation($"GetTextByStreetcodeIdQuery handled successfully");
         return result;
     }
 }

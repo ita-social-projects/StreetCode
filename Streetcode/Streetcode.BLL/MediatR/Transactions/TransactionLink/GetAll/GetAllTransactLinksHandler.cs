@@ -28,13 +28,10 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
         if (transactLinks is null)
         {
             const string errorMsg = $"Cannot find any transaction link";
-            _logger?.LogError("GetAllTransactLinksQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllTransactLinksQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var transactLinksDtos = _mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks);
-        _logger?.LogInformation($"GetAllTransactLinksQuery handled successfully. Retrieved {transactLinksDtos.Count()} transactLinks");
-        return Result.Ok(transactLinksDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks));
     }
 }

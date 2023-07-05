@@ -23,8 +23,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
             if (category is null)
             {
                 string errorMsg = $"Cannot find a category with corresponding categoryId: {request.Id}";
-                _logger?.LogError("DeleteCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -33,14 +32,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                _logger?.LogInformation($"DeleteCategoryCommand handled successfully");
                 return Result.Ok(Unit.Value);
             }
             else
             {
                 string errorMsg = "Failed to delete a category";
-                _logger?.LogError("DeleteCategoryCommand handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

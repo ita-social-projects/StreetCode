@@ -44,7 +44,6 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
             Toponyms = toponymDtos
         };
 
-        _logger?.LogInformation($"GetAllToponymsQuery handled successfully");
         return Result.Ok(response);
     }
 

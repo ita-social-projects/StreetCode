@@ -118,7 +118,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 }
             }
 
-            _logger?.LogInformation($"GetStreetcodeByFilterQuery handled successfully");
             return results;
         }
 

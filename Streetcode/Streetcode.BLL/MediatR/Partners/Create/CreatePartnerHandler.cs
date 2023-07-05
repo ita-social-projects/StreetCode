@@ -35,13 +35,11 @@ namespace Streetcode.BLL.MediatR.Partners.Create
                     .GetAllAsync(s => streetcodeIds.Contains(s.Id)));
 
                 _repositoryWrapper.SaveChanges();
-                _logger?.LogInformation($"CreatePartnerQuery handled successfully");
                 return Result.Ok(_mapper.Map<PartnerDTO>(newPartner));
             }
             catch(Exception ex)
             {
-                _logger?.LogError("CreatePartnerQuery handled with an error");
-                _logger?.LogError(ex.Message);
+                _logger.LogError($"CreatePartnerQuery handled with an error. {ex.Message}");
                 return Result.Fail(ex.Message);
             }
         }

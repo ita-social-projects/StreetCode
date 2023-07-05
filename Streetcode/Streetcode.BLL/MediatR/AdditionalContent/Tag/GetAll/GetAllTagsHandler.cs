@@ -29,13 +29,10 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
         if (tags is null)
         {
             const string errorMsg = $"Cannot find any tags";
-            _logger?.LogError("GetAllTagsQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllTagsQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);
-        _logger?.LogInformation($"GetAllTagsQuery handled successfully. Retrieved {tagDtos.Count()} tags");
-        return Result.Ok(tagDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<TagDTO>>(tags));
     }
 }

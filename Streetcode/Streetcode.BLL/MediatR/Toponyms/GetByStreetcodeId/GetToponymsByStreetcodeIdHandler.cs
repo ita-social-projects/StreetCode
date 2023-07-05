@@ -34,13 +34,11 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
         if (toponyms is null)
         {
             string errorMsg = $"Cannot find any toponym by the streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetAllSubtitlesQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetToponymsByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
         var toponymDto = toponyms.GroupBy(x => x.StreetName).Select(group => group.First()).Select(x => _mapper.Map<ToponymDTO>(x));
-        _logger?.LogInformation($"GetToponymsByStreetcodeIdQuery handled successfully. Retrieved {toponymDto.Count()} toponyms");
         return Result.Ok(toponymDto);
     }
 }

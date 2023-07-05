@@ -15,14 +15,12 @@ namespace Streetcode.BLL.MediatR.Users.RefreshToken
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
-        private readonly ILoggerService _logger;
 
-        public RefreshTokenHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger)
+        public RefreshTokenHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _tokenService = tokenService;
-            _logger = logger;
         }
 
         public async Task<Result<RefreshTokenResponce>> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
@@ -33,7 +31,6 @@ namespace Streetcode.BLL.MediatR.Users.RefreshToken
                 token = _tokenService.RefreshToken(request.token.Token);
             });
 
-            _logger?.LogInformation($"RefreshTokenQuery handled successfully");
             return new RefreshTokenResponce() { Token = new JwtSecurityTokenHandler().WriteToken(token), ExpireAt = token.ValidTo };
         }
     }

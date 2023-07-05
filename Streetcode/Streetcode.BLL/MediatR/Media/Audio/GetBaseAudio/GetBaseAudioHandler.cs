@@ -26,12 +26,10 @@ public class GetBaseAudioHandler : IRequestHandler<GetBaseAudioQuery, Result<Mem
         if (audio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding id: {request.Id}";
-            _logger?.LogError("GetBaseAudioQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetBaseAudioQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetBaseAudioQuery handled successfully");
         return _blobStorage.FindFileInStorageAsMemoryStream(audio.BlobName);
     }
 }

@@ -29,16 +29,14 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         if (observerEntity is null)
         {
             string errorMsg = $"No existing streetcode with id: {request.ObserverId}";
-            _logger?.LogError("CreateRelatedFigureCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
         if (targetEntity is null)
         {
             string errorMsg = $"No existing streetcode with id: {request.TargetId}";
-            _logger?.LogError("CreateRelatedFigureCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -53,14 +51,12 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"CreateRelatedFigureCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             string errorMsg = "Failed to create a relation.";
-            _logger?.LogError("CreateRelatedFigureCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

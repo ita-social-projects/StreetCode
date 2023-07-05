@@ -36,8 +36,7 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
         if (srcCategories is null)
         {
             string errorMsg = $"Cant find any source category with the streetcode id {request.StreetcodeId}";
-            _logger?.LogError("GetCategoriesByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetCategoriesByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -48,7 +47,6 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
             srcCategory.Image.Base64 = _blobService.FindFileInStorageAsBase64(srcCategory.Image.BlobName);
         }
 
-        _logger?.LogInformation($"GetCategoriesByStreetcodeIdQuery handled successfully. Retrieved {mappedSrcCategories.Count()} categories");
         return Result.Ok(mappedSrcCategories);
     }
 }

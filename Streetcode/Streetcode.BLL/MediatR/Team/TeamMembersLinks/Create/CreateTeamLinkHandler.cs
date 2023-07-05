@@ -28,8 +28,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
             if (teamMemberLink is null)
             {
                 const string errorMsg = "Cannot convert null to team link";
-                _logger?.LogError("CreateTeamLinkQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateTeamLinkQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -38,8 +37,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
             if (createdTeamLink is null)
             {
                 const string errorMsg = "Cannot create team link";
-                _logger?.LogError("CreateTeamLinkQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateTeamLinkQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -48,8 +46,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
             if (!resultIsSuccess)
             {
                 const string errorMsg = "Failed to create a team";
-                _logger?.LogError("CreateTeamLinkQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateTeamLinkQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -57,14 +54,12 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if(createdTeamLinkDTO != null)
             {
-                _logger?.LogInformation($"CreateTeamLinkQuery handled successfully");
                 return Result.Ok(createdTeamLinkDTO);
             }
             else
             {
                 const string errorMsg = "Failed to map created team link";
-                _logger?.LogError("CreateTeamLinkQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"CreateTeamLinkQuery handled with an error. {errorMsg}");
                 return Result.Fail(new Error(errorMsg));
             }
         }

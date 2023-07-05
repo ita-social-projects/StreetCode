@@ -42,8 +42,7 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
         if (srcCategories is null)
         {
             string errorMsg = $"Cannot find any srcCategory by the corresponding id: {request.Id}";
-            _logger?.LogError("GetCategoryByIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetCategoryByIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -51,7 +50,6 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
 
         mappedSrcCategories.Image.Base64 = _blobService.FindFileInStorageAsBase64(mappedSrcCategories.Image.BlobName);
 
-        _logger?.LogInformation($"GetCategoryByIdQuery handled successfully");
         return Result.Ok(mappedSrcCategories);
     }
 }

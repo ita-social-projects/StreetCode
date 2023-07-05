@@ -28,14 +28,11 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 
         if (videos is null)
         {
-            const string errorMsg = $"Cannot find any videos";
-            _logger?.LogError("GetAllVideosQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            const string errorMsg = "Cannot find any videos";
+            _logger.LogError($"GetAllVideosQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var videoDtos = _mapper.Map<IEnumerable<VideoDTO>>(videos);
-        _logger?.LogInformation($"GetAllVideosQuery handled successfully. Retrieved {videoDtos.Count()} videos");
-        return Result.Ok(videoDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<VideoDTO>>(videos));
     }
 }

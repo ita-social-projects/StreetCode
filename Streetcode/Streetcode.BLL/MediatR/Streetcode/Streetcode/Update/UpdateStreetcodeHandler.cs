@@ -59,22 +59,19 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     if (isResultSuccess)
                     {
                         transactionScope.Complete();
-                        _logger?.LogInformation($"UpdateStreetcodeCommand handled successfully");
                         return Result.Ok(streetcodeToUpdate.Id);
                     }
                     else
                     {
                         const string errorMsg = "Failed to update a streetcode";
-                        _logger?.LogError("UpdateStreetcodeCommand handled with an error");
-                        _logger?.LogError(errorMsg);
+                        _logger.LogError($"UpdateStreetcodeCommand handled with an error. {errorMsg}");
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
                 catch(Exception)
                 {
                     const string errorMsg = "An error occurred while updating a streetcode";
-                    _logger?.LogError("UpdateStreetcodeCommand handled with an error");
-                    _logger?.LogError(errorMsg);
+                    _logger.LogError($"UpdateStreetcodeCommand handled with an error. {errorMsg}");
                     return Result.Fail(new Error(errorMsg));
                 }
             }

@@ -34,13 +34,10 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
         if (timelineItems is null)
         {
             const string errorMsg = $"Cannot find any timelineItem";
-            _logger?.LogError("GetAllTimelineItemsQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetAllTimelineItemsQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var timelineItemDtos = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
-        _logger?.LogInformation($"GetAllTimelineItemsQuery handled successfully. Retrieved {timelineItemDtos.Count()} timelineItems");
-        return Result.Ok(timelineItemDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems));
     }
 }

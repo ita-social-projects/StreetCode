@@ -26,8 +26,7 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
         if (relation is null)
         {
             string errorMsg = $"Cannot find a relation between streetcodes with corresponding ids: {request.ObserverId} & {request.TargetId}";
-            _logger?.LogError("DeleteRelatedFigureCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteRelatedFigureCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -36,14 +35,12 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"DeleteRelatedFigureCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             const string errorMsg = "Failed to delete a relation.";
-            _logger?.LogError("DeleteRelatedFigureCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"DeleteRelatedFigureCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

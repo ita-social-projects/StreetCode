@@ -26,12 +26,10 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
         if (image is null)
         {
             string errorMsg = $"Cannot find an image with corresponding id: {request.Id}";
-            _logger?.LogError("GetBaseImageQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetBaseImageQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        _logger?.LogInformation($"GetBaseImageQuery handled successfully");
         return _blobStorage.FindFileInStorageAsMemoryStream(image.BlobName);
     }
 }

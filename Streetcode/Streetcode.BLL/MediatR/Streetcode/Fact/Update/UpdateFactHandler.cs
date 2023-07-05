@@ -26,8 +26,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         if (fact is null)
         {
             const string errorMsg = "Cannot convert null to Fact";
-            _logger?.LogError("UpdateFactCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"UpdateFactCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -36,14 +35,12 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         if(resultIsSuccess)
         {
-            _logger?.LogInformation($"UpdateFactCommand handled successfully");
             return Result.Ok(Unit.Value);
         }
         else
         {
             const string errorMsg = "Failed to update a fact";
-            _logger?.LogError("UpdateFactCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"UpdateFactCommand handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
     }

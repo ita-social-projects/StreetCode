@@ -28,14 +28,10 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
         {
             const string errorMsg = $"Cannot find any subtitles";
 
-            _logger?.LogError("GetAllSubtitlesQuery handled with an error");
-            _logger?.LogError(errorMsg);
-
+            _logger.LogError($"GetAllSubtitlesQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var subtitleDtos = _mapper.Map<IEnumerable<SubtitleDTO>>(subtitles);
-        _logger?.LogInformation($"GetAllSubtitlesQuery handled successfully. Retrieved {subtitleDtos.Count()} subtitles");
-        return Result.Ok(subtitleDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<SubtitleDTO>>(subtitles));
     }
 }

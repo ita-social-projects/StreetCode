@@ -67,14 +67,11 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                 _repositoryWrapper.SaveChanges();
                 var dbo = _mapper.Map<PartnerDTO>(partner);
                 dbo.Streetcodes = request.Partner.Streetcodes;
-
-                _logger?.LogInformation($"UpdatePartnerQuery handled successfully");
                 return Result.Ok(dbo);
             }
             catch (Exception ex)
             {
-                _logger?.LogError("UpdatePartnerQuery handled with an error");
-                _logger?.LogError(ex.Message);
+                _logger.LogError($"UpdatePartnerQuery handled with an error. {ex.Message}");
                 return Result.Fail(ex.Message);
             }
         }

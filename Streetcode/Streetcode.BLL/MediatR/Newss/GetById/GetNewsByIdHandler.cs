@@ -34,8 +34,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
             if(newsDTO is null)
             {
                 string errorMsg = $"No news by entered Id - {id}";
-                _logger?.LogError("GetNewsByIdQuery handled with an error");
-                _logger?.LogError(errorMsg);
+                _logger.LogError($"GetNewsByIdQuery handled with an error. {errorMsg}");
                 return Result.Fail(errorMsg);
             }
 
@@ -44,7 +43,6 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
                 newsDTO.Image.Base64 = _blobService.FindFileInStorageAsBase64(newsDTO.Image.BlobName);
             }
 
-            _logger?.LogInformation($"GetNewsByIdQuery handled successfully");
             return Result.Ok(newsDTO);
         }
     }

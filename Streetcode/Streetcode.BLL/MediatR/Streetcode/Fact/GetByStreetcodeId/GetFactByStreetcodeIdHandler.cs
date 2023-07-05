@@ -29,13 +29,10 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
         if (fact is null)
         {
             string errorMsg = $"Cannot find any fact by the streetcode id: {request.StreetcodeId}";
-            _logger?.LogError("GetFactByStreetcodeIdQuery handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError($"GetFactByStreetcodeIdQuery handled with an error. {errorMsg}");
             return Result.Fail(new Error(errorMsg));
         }
 
-        var factDto = _mapper.Map<IEnumerable<FactDto>>(fact);
-        _logger?.LogInformation($"GetFactByStreetcodeIdQuery handled successfully. Retrieved {factDto.Count()} facts");
-        return Result.Ok(factDto);
+        return Result.Ok(_mapper.Map<IEnumerable<FactDto>>(fact));
     }
 }

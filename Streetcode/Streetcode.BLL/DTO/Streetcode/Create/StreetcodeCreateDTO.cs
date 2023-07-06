@@ -49,5 +49,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
+        public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
     }
 }

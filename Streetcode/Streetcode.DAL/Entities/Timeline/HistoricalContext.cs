@@ -12,7 +12,7 @@ public class HistoricalContext
 
     [Required]
     [MaxLength(50)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     public List<HistoricalContextTimeline> HistoricalContextTimelines { get; set; } = new();
 }

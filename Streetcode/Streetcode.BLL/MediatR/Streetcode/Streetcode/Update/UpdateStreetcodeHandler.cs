@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
@@ -43,11 +44,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
-
                     await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
+                    await UpdateFactsDescription(request.Streetcode.ImagesDetails);
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -68,6 +69,22 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     return Result.Fail(new Error("An error occurred while updating a streetcode"));
                 }
             }
+        }
+
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
+        {
+            if(imageDetails == null)
+            {
+                return;
+            }
+
+            _repositoryWrapper.ImageDetailsRepository
+                .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt == "" && f.Id != 0)));
+
+            _repositoryWrapper.ImageDetailsRepository
+                .UpdateRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt != "")));
+
+            await _repositoryWrapper.SaveChangesAsync();
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
@@ -96,7 +113,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -115,7 +132,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(x => x.Title.Equals(x.Title)).Id
+                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -132,8 +149,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             var (_, toCreate, toDelete) = CategorizeItems(toponyms);
 
-            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
-            await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            if (toDelete.Any())
+            {
+                var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+                await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            }
 
             var toponymsNameToCreate = toCreate.Select(x => x.StreetName);
             var toponymsToAdd = await _repositoryWrapper.ToponymRepository
@@ -150,11 +170,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
-
             return query;
         }
 
-        private async Task UpdateImagesAsync(IEnumerable<StreetcodeImageUpdateDTO> images)
+        private async Task UpdateImagesAsync(IEnumerable<ImageUpdateDTO> images)
         {
             var (_, toCreate, toDelete) = CategorizeItems(images);
 

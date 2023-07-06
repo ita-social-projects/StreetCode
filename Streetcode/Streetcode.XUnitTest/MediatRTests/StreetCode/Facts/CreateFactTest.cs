@@ -27,7 +27,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact> (It.IsAny<FactDTO>()))
+        _mockMapper.Setup(x => x.Map<Fact> (It.IsAny<FactDto>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object);
@@ -46,7 +46,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object);
@@ -65,7 +65,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
@@ -86,7 +86,7 @@ public class CreateFactTest
         _mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
 
-        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDTO>()))
+        _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
         var expectedError = "Failed to create a fact";
@@ -104,15 +104,15 @@ public class CreateFactTest
     {
         return new Fact();
     }
-    private static FactDTO GetFactDTO()
+    private static FactDto GetFactDTO()
     {
-        return new FactDTO();
+        return new FactDto();
     }
     private static Fact? GetFactWithNotExistId()
     {
         return null;
     }
-    private static FactDTO? GetFactDTOWithNotExistId()
+    private static FactDto? GetFactDTOWithNotExistId()
     {
         return null;
     }

@@ -16,7 +16,7 @@ public class Video
     public string? Description { get; set; }
 
     [Required]
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     [Required]
     public int StreetcodeId { get; set; }

@@ -12,10 +12,11 @@ public class Term
 
     [Required]
     [MaxLength(50)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required]
-    public string Description { get; set; }
+    [MaxLength(500)]
+    public string? Description { get; set; }
 
     public List<RelatedTerm> RelatedTerms { get; set; } = new();
 }

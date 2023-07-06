@@ -51,7 +51,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
-                    await UpdateFactsDescription(request.Streetcode.ImageDetailses);
+                    await UpdateFactsDescription(request.Streetcode.ImagesDetails);
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -77,8 +77,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
         }
 
-        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto> imageDetails)
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
         {
+            if(imageDetails == null)
+            {
+                return;
+            }
+
             _repositoryWrapper.ImageDetailsRepository
                 .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt == "" && f.Id != 0)));
 

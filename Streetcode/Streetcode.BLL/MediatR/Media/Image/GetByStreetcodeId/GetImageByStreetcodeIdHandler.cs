@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
@@ -26,10 +26,12 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
 
     public async Task<Result<IEnumerable<ImageDTO>>> Handle(GetImageByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var images = await _repositoryWrapper.ImageRepository
-            .GetAllAsync(f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId));
+        var images = (await _repositoryWrapper.ImageRepository
+            .GetAllAsync(
+            f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
+            include: q => q.Include(img => img.ImageDetails))).OrderBy(img => img.ImageDetails?.Alt);
 
-        if (images is null)
+        if (images is null || images.Count() == 0)
         {
             string errorMsg = $"Cannot find an image with the corresponding streetcode id: {request.StreetcodeId}";
             _logger.LogError($"GetImageByStreetcodeIdQuery handled with an error. {errorMsg}");

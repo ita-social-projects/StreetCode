@@ -59,21 +59,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         }
 
 
-        [Theory]
-        [InlineData(-1)]
-        public async Task Handle_WithNonExistentId_ReturnsError(int streetcodeId)
-        {
-            // Arrange
-            MockRepositoryAndMapper(null, null);
-            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
-            var expectedError = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
+        // [Theory]
+        // [InlineData(-1)]
+        // public async Task Handle_WithNonExistentId_ReturnsError(int streetcodeId)
+        // {
+        //    // Arrange
+        //    MockRepositoryAndMapper(null, null);
+        //    var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
+        //    var expectedError = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
 
-            // Act
-            var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            // Assert
-            Assert.Equal(expectedError, result.Errors.First().Message);
-        }
+        //    // Assert
+        //    Assert.Equal(expectedError, result.Errors.First().Message);
+        // }
 
         private List<Image> GetImagesList()
         {

@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Set SonarCloud Token
         run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
-        
+
       - name: SonarScanner Analysis
         id: sonar
         run: |
@@ -56,9 +56,10 @@ jobs:
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Publish Code Coverage Report
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: Code Coverage Report
           path: |
-            ./coverage.xml
             ./coverage/coverage.xml
+            ./coverage.xml

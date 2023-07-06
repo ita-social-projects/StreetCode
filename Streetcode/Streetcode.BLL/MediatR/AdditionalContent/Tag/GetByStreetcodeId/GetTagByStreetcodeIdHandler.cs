@@ -31,7 +31,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
 
         if (tagIndexed is null)
         {
-            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindTagByTheStreetcodeId", request.StreetcodeId].Value));
+            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value));
         }
 
         var tagDto = _mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index));

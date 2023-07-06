@@ -28,7 +28,7 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 
         if (coordinates is null)
         {
-            return Result.Fail(new Error(_stringLocalizer?["CannotFindCoordinates", request.StreetcodeId].Value));
+            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindCoordinatesByStreetcodeId", request.StreetcodeId].Value));
         }
 
         var coordinatesDto = _mapper.Map<IEnumerable<StreetcodeCoordinateDTO>>(coordinates);

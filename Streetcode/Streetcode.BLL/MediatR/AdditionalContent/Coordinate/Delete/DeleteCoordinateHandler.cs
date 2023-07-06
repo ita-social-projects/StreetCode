@@ -13,10 +13,14 @@ public class DeleteCoordinateHandler : IRequestHandler<DeleteCoordinateCommand, 
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-    public DeleteCoordinateHandler(IRepositoryWrapper repositoryWrapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public DeleteCoordinateHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
+        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
     {
         _repositoryWrapper = repositoryWrapper;
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
+        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
     }
 
     public async Task<Result<Unit>> Handle(DeleteCoordinateCommand request, CancellationToken cancellationToken)
@@ -25,12 +29,12 @@ public class DeleteCoordinateHandler : IRequestHandler<DeleteCoordinateCommand, 
 
         if (streetcodeCoordinate is null)
         {
-            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindCoordinate", request.Id].Value));
+            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindCoordinateWithCorrespondingCategoryId", request.Id].Value));
         }
 
         _repositoryWrapper.StreetcodeCoordinateRepository.Delete(streetcodeCoordinate);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerCannotFind?["FailedToDeleteCoordinate"].Value));
+        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToDelete["FailedToDeleteStreetcodeCoordinate"].Value));
     }
 }

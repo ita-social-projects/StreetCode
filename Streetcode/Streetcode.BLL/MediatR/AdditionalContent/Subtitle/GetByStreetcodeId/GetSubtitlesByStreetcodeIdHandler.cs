@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 
             if (subtitle is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnySubtitleByStreetcodeId", request.StreetcodeId]));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnySubtitleByTheStreetcodeId", request.StreetcodeId]));
             }
 
             var subtitleDto = _mapper.Map<SubtitleDTO>(subtitle);

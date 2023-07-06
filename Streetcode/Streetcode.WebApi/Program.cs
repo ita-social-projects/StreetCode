@@ -11,13 +11,6 @@ using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.Configure<RequestLocalizationOptions>(options =>
-//{
-//    var supportedCultures = new[] { "en-US", "uk-UA" };
-//    options.SetDefaultCulture(supportedCultures[1])
-//        .AddSupportedCultures(supportedCultures)
-//        .AddSupportedUICultures(supportedCultures);
-//});
 builder.Host.ConfigureApplication();
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");

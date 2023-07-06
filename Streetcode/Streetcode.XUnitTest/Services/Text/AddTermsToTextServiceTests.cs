@@ -18,10 +18,12 @@ namespace Streetcode.XUnitTest.Services.Text
         }
 
         [Theory]
+        [InlineData("S")]
         [InlineData("Sample")]
+        [InlineData("SampleLonger")]
         public async Task ShouldReturnPopupTag_Success(string inputText)
         {
-            string expectedOutput = "<Popover><Term>Sample Term</Term><Desc>Sample Description</Desc></Popover>";
+            string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Sample Description</Desc></Popover>";
             SetupRepository(GetTerm(), GetRelatedTerm());
             var service = new AddTermsToTextService(_mockRepository.Object);
 
@@ -51,7 +53,7 @@ namespace Streetcode.XUnitTest.Services.Text
         [InlineData("SampleRelated")]
         public async Task ShouldReturnRelatedWordWithDefinition(string inputText)
         {
-            string expectedOutput = "<Popover><Term>Sample Related Term</Term><Desc>Desc from term for related</Desc></Popover>"; ;
+            string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Desc from term for related</Desc></Popover>"; ;
             SetupRepository(null, GetRelatedTerm());
 
             var service = new AddTermsToTextService(_mockRepository.Object);

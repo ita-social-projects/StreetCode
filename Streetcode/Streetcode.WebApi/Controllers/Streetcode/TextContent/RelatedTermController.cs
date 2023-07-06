@@ -36,10 +36,10 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
             return HandleResult(await Mediator.Send(new UpdateRelatedTermCommand(id, relatedTerm)));
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpDelete("{word}")]
+        public async Task<IActionResult> Delete([FromRoute] string word)
         {
-            return HandleResult(await Mediator.Send(new DeleteRelatedTermCommand(id)));
+            return HandleResult(await Mediator.Send(new DeleteRelatedTermCommand(word)));
         }
     }
 }

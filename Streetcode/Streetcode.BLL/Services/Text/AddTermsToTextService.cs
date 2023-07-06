@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -35,24 +34,15 @@ namespace Streetcode.BLL.Services.Text
                     continue;
                 }
 
-                var clearedWord = word.Split('.', ',').First();
+                var (resultedWord, extras) = CleanWord(word);
 
                 var term = await _repositoryWrapper.TermRepository
                     .GetFirstOrDefaultAsync(
-                        t => t.Title.Contains(clearedWord.ToLower()));
-
-                var resultedWord = word;
-                var extras = string.Empty;
-
-                if (!resultedWord.Equals(clearedWord))
-                {
-                    extras = new string(resultedWord.Except(clearedWord).ToArray());
-                    resultedWord = clearedWord;
-                }
+                        t => t.Title.ToLower().Equals(resultedWord.ToLower()));
 
                 if (term == null)
                 {
-                    var buffer = await AddRelatedAsync(clearedWord);
+                    var buffer = await AddRelatedAsync(resultedWord);
                     if (!string.IsNullOrEmpty(buffer))
                     {
                         resultedWord = buffer;
@@ -75,7 +65,7 @@ namespace Streetcode.BLL.Services.Text
         {
             var relatedTerm = await _repositoryWrapper.RelatedTermRepository
                 .GetFirstOrDefaultAsync(
-                rt => rt.Word.Contains(clearedWord.ToLower()),
+                rt => rt.Word.ToLower().Equals(clearedWord.ToLower()),
                 rt => rt.Include(rt => rt.Term));
 
             if (relatedTerm == null || relatedTerm.Term == null)
@@ -84,6 +74,20 @@ namespace Streetcode.BLL.Services.Text
             }
 
             return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description);
+        }
+
+        private (string _clearedWord, string _extras) CleanWord(string word)
+        {
+            var clearedWord = word.Split('.', ',').First();
+
+            var extras = string.Empty;
+
+            if (!word.Equals(clearedWord))
+            {
+                extras = new string(word.Except(clearedWord).ToArray());
+            }
+
+            return (clearedWord, extras);
         }
     }
 }

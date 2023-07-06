@@ -54,5 +54,4 @@ jobs:
         with:
           name: Code Coverage Report
           path: |
-            ./coverage
             ./coverage/coverage.xml

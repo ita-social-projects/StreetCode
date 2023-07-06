@@ -38,21 +38,7 @@ app.UseRequestResponseMiddleware();
 app.UseRouting();
 
 app.MapHealthChecksUI();
-app.MapHealthChecks("/healthz", new()
-{
-    Predicate = check => check.Name == "StartupProbe",
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-app.MapHealthChecks("/health/ready", new()
-{
-    Predicate = check => check.Name == "ReadinessProbe",
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-app.MapHealthChecks("/health/live", new()
-{
-    Predicate = check => check.Name == "LivenessProbe",
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
+app.UseHealthChecks();
 
 app.UseAuthentication();
 app.UseAuthorization();

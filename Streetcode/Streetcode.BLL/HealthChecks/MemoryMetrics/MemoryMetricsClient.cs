@@ -35,7 +35,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
                                   RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
         private MemoryMetrics GetWindowsMetrics()
         {
-            var output = "";
+            var output = string.Empty;
 
             var info = new ProcessStartInfo();
             info.FileName = "wmic";
@@ -62,6 +62,8 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
         private MemoryMetrics GetUnixMetrics()
         {
             var output = "";
+            const string SEPARATOR_NEW_LINE = "\n";
+            const string SEPARATOR_SPACE = " ";
 
             var info = new ProcessStartInfo("free -m");
             info.FileName = "/bin/bash";
@@ -74,8 +76,8 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
                 Console.WriteLine(output);
             }
 
-            var lines = output.Split("\n");
-            var memory = lines[1].Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            var lines = output.Split(SEPARATOR_NEW_LINE);
+            var memory = lines[1].Split(SEPARATOR_SPACE, StringSplitOptions.RemoveEmptyEntries);
 
             var metrics = new MemoryMetrics();
             metrics.Total = double.Parse(memory[1]);

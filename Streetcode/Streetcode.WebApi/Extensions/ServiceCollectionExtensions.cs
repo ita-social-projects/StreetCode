@@ -114,7 +114,6 @@ public static class ServiceCollectionExtensions
 
         services.AddLogging();
         services.AddControllers();
-        services.AddMemoryCache();
     }
 
     public static void AddSwaggerServices(this IServiceCollection services)

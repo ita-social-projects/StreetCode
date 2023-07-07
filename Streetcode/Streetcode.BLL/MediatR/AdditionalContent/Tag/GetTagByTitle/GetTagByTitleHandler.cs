@@ -28,7 +28,7 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
 
         if (tag is null)
         {
-            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindAnyTagByTitle", request.Title].Value));
+            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindAnyTagByTheTitle", request.Title].Value));
         }
 
         var tagDto = _mapper.Map<TagDTO>(tag);

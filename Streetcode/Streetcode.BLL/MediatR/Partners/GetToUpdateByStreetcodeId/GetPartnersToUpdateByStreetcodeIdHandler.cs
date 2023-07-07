@@ -4,6 +4,8 @@ using MediatR;
 using Streetcode.BLL.DTO.Partners;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 {
@@ -11,11 +13,13 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetPartnersToUpdateByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public GetPartnersToUpdateByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersToUpdateByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -25,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
             if (streetcode is null)
             {
-                return Result.Fail(new Error($"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value));
             }
 
             var partners = await _repositoryWrapper.PartnersRepository
@@ -35,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
             if (partners is null)
             {
-                return Result.Fail(new Error($"Cannot find a partners by a streetcode id: {request.StreetcodeId}"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value));
             }
 
             var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);

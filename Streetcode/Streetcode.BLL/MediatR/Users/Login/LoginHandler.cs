@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
@@ -14,12 +15,14 @@ namespace Streetcode.BLL.MediatR.Users.Login
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
+        private readonly IStringLocalizer<LoginHandler> _stringLocalizer;
 
-        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService)
+        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, IStringLocalizer<LoginHandler> stringLocalizer)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _tokenService = tokenService;
+            _stringLocalizer = stringLocalizer;
         }
 
         public async Task<Result<LoginResultDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -38,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
                 });
             }
 
-            return Result.Fail("User not found");
+            return Result.Fail(_stringLocalizer["UserNotFound"].Value);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
@@ -8,9 +10,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
     public class GetStreetcodeUrlByQrIdHandler : IRequestHandler<GetStreetcodeUrlByQrIdQuery, Result<string>>
     {
         private readonly IRepositoryWrapper _repository;
-        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository)
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repository = repository;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<string>> Handle(GetStreetcodeUrlByQrIdQuery request, CancellationToken cancellationToken)
@@ -22,14 +26,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if (statisticRecord == null)
             {
-                return Result.Fail(new Error("Cannot find record by qrid"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value));
             }
 
             var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync((s) => s.Id == statisticRecord.StreetcodeCoordinate.StreetcodeId);
 
             if(streetcode == null)
             {
-                return Result.Fail(new Error("Cannot find streetcode by id"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindStreetcodeById"].Value));
             }
 
             return Result.Ok(streetcode.TransliterationUrl);

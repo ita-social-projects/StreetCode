@@ -198,6 +198,9 @@
   <data name="CannotFindAnyTagByTheStreetcodeId" xml:space="preserve">
     <value>Cannot find any tag by the streetcode id: {0}</value>
   </data>
+  <data name="CannotFindAnyTagByTheTitle" xml:space="preserve">
+    <value>Cannot find any tag by the title: {0}</value>
+  </data>
   <data name="CannotFindAnyTags" xml:space="preserve">
     <value>Cannot find any tags</value>
   </data>

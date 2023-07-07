@@ -198,6 +198,9 @@
   <data name="CannotFindAnyTagByTheStreetcodeId" xml:space="preserve">
     <value>Не вдалося знайти жодного тега за ідентифікатором стріткоду: {0}</value>
   </data>
+  <data name="CannotFindAnyTagByTheTitle" xml:space="preserve">
+    <value>Не вдалося знайти жодного тега за назвою: {0}</value>
+  </data>
   <data name="CannotFindAnyTags" xml:space="preserve">
     <value>Не вдалося знайти жодних теґів</value>
   </data>

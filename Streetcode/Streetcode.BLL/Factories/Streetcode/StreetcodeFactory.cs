@@ -4,7 +4,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Factories.Streetcode
 {
-    public static class StreetcodeFactory
+    public class StreetcodeFactory
     {
         public static StreetcodeContent CreateStreetcode(StreetcodeType type)
         {

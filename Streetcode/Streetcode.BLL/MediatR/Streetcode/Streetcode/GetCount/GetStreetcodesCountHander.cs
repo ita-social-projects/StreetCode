@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
@@ -16,10 +18,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
         Result<int>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
@@ -32,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
                 return Result.Ok(count);
             }
 
-            return Result.Fail("No streetcodes exist now");
+            return Result.Fail(_stringLocalizerNo["NoStreetcodesExistNow"].Value);
         }
     }
 }

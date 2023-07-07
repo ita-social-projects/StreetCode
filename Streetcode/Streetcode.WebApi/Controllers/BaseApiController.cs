@@ -13,7 +13,7 @@ namespace Streetcode.WebApi.Controllers;
 [Route("api/[controller]/[action]")]
 public class BaseApiController : ControllerBase
 {
-    private readonly IStringLocalizer? _stringLocalizer;
+    private readonly IStringLocalizer _stringLocalizer;
     private IMediator? _mediator;
     public BaseApiController(IStringLocalizer<BaseApiController> stringLocalizer)
     {
@@ -36,12 +36,12 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
-                NotFound(_stringLocalizer?["NotFound"].Value) : Ok(result.Value);
+                NotFound(_stringLocalizer["NotFound"].Value) : Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)
         {
-            if (item.Message.Contains("Found result matching null"))
+            if (item.Message.Contains(_stringLocalizer["NotFound"].Value))
             {
                 return Ok();
             }

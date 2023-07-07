@@ -14,7 +14,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllSubtitlesHandler> stringLocalizerCannotFind)
+    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;

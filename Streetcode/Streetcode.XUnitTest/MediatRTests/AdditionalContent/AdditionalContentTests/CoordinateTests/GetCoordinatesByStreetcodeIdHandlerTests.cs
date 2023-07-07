@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
@@ -16,10 +17,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IStringLocalizer> _mockLocalizer;
         public GetCoordinatesByStreetcodeIdHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizer = new Mock<IStringLocalizer>();
         }
 
         private const int _streetcode_id = 1;

@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -9,12 +10,14 @@ namespace Streetcode.BLL.Services.Text
     public class AddTermsToTextService : ITextService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private List<int> _buffer;
 
         private readonly StringBuilder _text = new StringBuilder();
 
         public AddTermsToTextService(IRepositoryWrapper repositoryWrapper)
         {
             _repositoryWrapper = repositoryWrapper;
+            _buffer = new List<int>();
             Pattern = new("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
         }
 
@@ -24,11 +27,18 @@ namespace Streetcode.BLL.Services.Text
         {
             _text.Clear();
 
-            var splittedText = Pattern.Split(text).Where(x => !string.IsNullOrEmpty(x)).ToArray();
+            var splittedText = Pattern.Split(text)
+                .Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x)).ToArray();
+
+            if (splittedText[0].Contains("<p"))
+            {
+                var split = splittedText[0].Replace("<p", "<span");
+                splittedText[0] = split;
+            }
 
             foreach (var word in splittedText)
             {
-                if (word.Contains('<') || string.IsNullOrWhiteSpace(word))
+                if (word.Contains('<'))
                 {
                     _text.Append(word);
                     continue;
@@ -50,14 +60,25 @@ namespace Streetcode.BLL.Services.Text
                 }
                 else
                 {
-                    resultedWord = MarkTermWithDescription(resultedWord, term.Description);
+                    if (!CheckInBuffer(term.Id))
+                    {
+                        resultedWord = MarkTermWithDescription(resultedWord, term.Description);
+                        AddToBuffer(term.Id);
+                    }
                 }
 
-                _text.Append(resultedWord + extras);
+                _text.Append(resultedWord + extras + ' ');
             }
 
+            CLearBuffer();
             return _text.ToString();
         }
+
+        private void AddToBuffer(int key) => _buffer.Add(key);
+
+        private bool CheckInBuffer(int key) => _buffer.Contains(key);
+
+        private void CLearBuffer() => _buffer.Clear();
 
         private static string MarkTermWithDescription(string word, string description) => $"<Popover><Term>{word}</Term><Desc>{description}</Desc></Popover>";
 
@@ -68,10 +89,12 @@ namespace Streetcode.BLL.Services.Text
                 rt => rt.Word.ToLower().Equals(clearedWord.ToLower()),
                 rt => rt.Include(rt => rt.Term));
 
-            if (relatedTerm == null || relatedTerm.Term == null)
+            if (relatedTerm == null || relatedTerm.Term == null || CheckInBuffer(relatedTerm.TermId))
             {
                 return string.Empty;
             }
+
+            AddToBuffer(relatedTerm.TermId);
 
             return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description);
         }

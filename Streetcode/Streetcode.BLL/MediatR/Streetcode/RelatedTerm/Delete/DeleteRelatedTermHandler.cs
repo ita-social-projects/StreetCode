@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 {
-    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<DAL.Entities.Streetcode.TextContent.RelatedTerm>>
+    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<RelatedTermDTO>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
@@ -17,7 +17,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _mapper = mapper;
         }
 
-        public async Task<Result<DAL.Entities.Streetcode.TextContent.RelatedTerm>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
+        public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
         {
             var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word.ToLower().Equals(request.word.ToLower()));
 
@@ -29,7 +29,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _repository.RelatedTermRepository.Delete(relatedTerm);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(relatedTerm) : Result.Fail(new Error("Failed to delete a related term"));
+
+            var relatedTermDto = _mapper.Map<RelatedTermDTO>(relatedTerm);
+
+            return resultIsSuccess && relatedTermDto != null ? Result.Ok(relatedTermDto) : Result.Fail(new Error("Failed to delete a related term"));
         }
     }
 }

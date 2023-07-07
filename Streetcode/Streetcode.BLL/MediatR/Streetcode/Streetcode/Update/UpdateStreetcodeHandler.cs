@@ -4,10 +4,12 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
@@ -49,6 +51,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
                     await UpdateFactsDescription(request.Streetcode.ImagesDetails);
+
+                    if (request.Streetcode.Text != null)
+                    {
+                        await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
+                    }
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -170,6 +177,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
+
             return query;
         }
 

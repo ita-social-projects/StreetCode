@@ -16,12 +16,10 @@ using Xunit;
 public class AddTermsToTextServiceTests
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMemoryCache> _memoryCache;
 
     public AddTermsToTextServiceTests()
     {
         this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._memoryCache = new Mock<IMemoryCache>();
     }
 
     [Theory]
@@ -32,7 +30,7 @@ public class AddTermsToTextServiceTests
     {
         string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Sample Description</Desc></Popover> ";
         SetupRepository(GetTerm(), GetRelatedTerm());
-        var service = new AddTermsToTextService(_mockRepository.Object, _memoryCache.Object);
+        var service = new AddTermsToTextService(_mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -48,7 +46,7 @@ public class AddTermsToTextServiceTests
         string expectedOutput = inputText + ' ';
         SetupRepository(null, null);
 
-        var service = new AddTermsToTextService(this._mockRepository.Object, this._memoryCache.Object);
+        var service = new AddTermsToTextService(this._mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -63,7 +61,7 @@ public class AddTermsToTextServiceTests
         string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Desc from term for related</Desc></Popover> ";
         SetupRepository(null, GetRelatedTerm());
 
-        var service = new AddTermsToTextService(this._mockRepository.Object, this._memoryCache.Object);
+        var service = new AddTermsToTextService(this._mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -91,5 +89,5 @@ public class AddTermsToTextServiceTests
         => new () { Id = 1, Description = description, Title = title, RelatedTerms = new List<RelatedTerm>() };
 
     private RelatedTerm GetRelatedTerm(string title = "Sample Related Term")
-        => new () { Id = 1, Term = this.GetTerm("Do not show title", "Desc from term for related"), TermId = 1, Word = title };
+        => new () { Id = 1, Term = GetTerm("Do not show title", "Desc from term for related"), TermId = 1, Word = title };
 }

@@ -33,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Delete(relatedTerm));
             _repositoryWrapperMock.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
             var handler = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
-            var command = new DeleteRelatedTermCommand(id);
+            var command = new DeleteRelatedTermCommand(word);
 
             // Act
             var result = await handler.Handle(command, default);
@@ -47,24 +47,24 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
         }
 
         [Theory]
-        [InlineData(1)]
-        public async void Handle_WhenRelatedTermDoesNotExist_ReturnsFailedResult(int id)
+        [InlineData("word")]
+        public async void Handle_WhenRelatedTermDoesNotExist_ReturnsFailedResult(string word)
         {
 
             // Arrange
             _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                  It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>())).ReturnsAsync((Entity)null);
             var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
-            var command = new DeleteRelatedTermCommand(id);
+            var command = new DeleteRelatedTermCommand(word);
 
             // Act
             var result = await sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.Multiple(
-            () => Assert.IsType<Result<Unit>>(result),
+            () => Assert.IsType<Result<Entity>>(result),
             () => Assert.False(result.IsSuccess),
-            () => Assert.Equal($"Cannot find a related term with corresponding id: {id}",
+            () => Assert.Equal($"Cannot find a related term: {word}",
             result.Errors.First().Message)
                 );
         }
@@ -82,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             _repositoryWrapperMock.Setup(rw => rw.SaveChangesAsync())
                  .ReturnsAsync(0);
             var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
-            var command = new DeleteRelatedTermCommand(id);
+            var command = new DeleteRelatedTermCommand(word);
             var expectedError = "Failed to delete a related term";
 
             // Act
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
 
             // Assert
             Assert.Multiple(
-          () => Assert.IsType<Result<Unit>>(result),
+          () => Assert.IsType<Result<Entity>>(result),
           () => Assert.False(result.IsSuccess),
           () => Assert.Equal(expectedError, result.Errors.First().Message)
                 );

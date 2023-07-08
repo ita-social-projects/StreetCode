@@ -17,11 +17,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IStringLocalizer<GetCoordinatesByStreetcodeIdHandler>> _mockStringLocalizer;
+        private readonly Mock<IStringLocalizer> _mockLocalizer;
         public GetCoordinatesByStreetcodeIdHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizer = new Mock<IStringLocalizer>();
         }
 
         private const int _streetcode_id = 1;

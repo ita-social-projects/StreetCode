@@ -1,7 +1,9 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Transactions;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
@@ -10,11 +12,13 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllTransactLinksHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllTransactLinksHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<TransactLinkDTO>>> Handle(GetAllTransactLinksQuery request, CancellationToken cancellationToken)
@@ -23,7 +27,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
 
         if (transactLinks is null)
         {
-            return Result.Fail(new Error($"Cannot find any transaction link"));
+            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value));
         }
 
         var transactLinksDtos = _mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks);

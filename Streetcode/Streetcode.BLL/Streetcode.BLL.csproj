@@ -35,262 +35,296 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\MediatR.Email.SendEmailHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Email.SendEmailHandler.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs">
+    <Compile Update="Resources\MediatR.Email.SendEmailHandler.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx</DependentUpon>
+      <DependentUpon>MediatR.Email.SendEmailHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\MediatR.Payment.CreateInvoiceHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Payment.CreateInvoiceHandler.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\MediatR.Payment.CreateInvoiceHandler.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Payment.CreateInvoiceHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.Designer.cs">
+    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.resx</DependentUpon>
+      <DependentUpon>MediatR.Users.Login.LoginHandler.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>MediatR.Users.Login.LoginHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.Designer.cs">
+    <Compile Update="Resources\Services.Users.TokenService.en-UK.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.resx</DependentUpon>
+      <DependentUpon>Services.Users.TokenService.en-UK.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\Services.Users.TokenService.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>Services.Users.TokenService.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.AnErrorOccurredSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.AnErrorOccurredSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.AnErrorOccurredSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.AnErrorOccurredSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.CannotConvertNullSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.CannotConvertNullSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.CannotConvertNullSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.CannotConvertNullSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.CannotCreateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.CannotCreateSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.CannotCreateSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.CannotCreateSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotFindSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotFindSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.Partners.Delete.DeletePartnerHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotFindSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotFindSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetAll.GetAllPartnersHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotGetSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotGetSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetAll.GetAllPartnersHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotGetSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotGetSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotMapSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotMapSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotMapSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotMapSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotSaveSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotSaveSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.CannotSaveSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.CannotSaveSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.FailedToCreateSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.FailedToCreateSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.FailedToCreateSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.FailedToDeleteSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.FailedToDeleteSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs">
-      <DependentUpon>MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.resx</DependentUpon>
+    <Compile Update="Resources\SharedResource.FailedToDeleteSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.FailedToDeleteSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.FailedToUpdateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.FailedToUpdateSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.FailedToUpdateSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.FailedToUpdateSharedResource.uk-UA.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.NoSharedResource.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.NoSharedResource.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.NoSharedResource.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.NoSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.resx">
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.uk-UA.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\MediatR.Email.SendEmailHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Email.SendEmailHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\MediatR.Email.SendEmailHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>MediatR.Email.SendEmailHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.resx">
+    <EmbeddedResource Update="Resources\MediatR.Payment.CreateInvoiceHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Update.UpdateCoordinateHanler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>MediatR.Payment.CreateInvoiceHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\MediatR.Payment.CreateInvoiceHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Payment.CreateInvoiceHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.resx">
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.en-US.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.resx">
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Create.CreateCoordinateHandler.uk-UA.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.resx">
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.Delete.DeleteCoordinateHandler.en-US.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MediatR.Users.Login.LoginHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\Services.Users.TokenService.en-UK.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>Services.Users.TokenService.en-UK.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\Services.Users.TokenService.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetByStreetcodeId.GetSubtitlesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>Services.Users.TokenService.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.AnErrorOccurredSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.AnErrorOccurredSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.AnErrorOccurredSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetAll.GetAllTagsHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.AnErrorOccurredSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotConvertNullSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotConvertNullSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotConvertNullSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetById.GetTagByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotConvertNullSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotCreateSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotCreateSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotCreateSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetByStreetcodeId.GetTagByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotCreateSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotFindSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotFindSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotFindSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Tag.GetTagByTitle.GetTagByTitleHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotFindSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.resx">
-      <LastGenOutput>MediatR.Partners.GetAllPartnerShort.GetAllPartnerShortHandler.uk-UA.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\SharedResource.CannotGetSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotGetSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.resx">
-      <LastGenOutput>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.en-US.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\SharedResource.CannotGetSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotGetSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.resx">
-      <LastGenOutput>MediatR.Partners.GetByStreetcodeId.GetPartnersByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\SharedResource.CannotMapSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotMapSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.CannotMapSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Coordinate.GetByStreetcodeId.GetCoordinatesByStreetcodeIdHandler.uk-UA.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.CannotMapSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.resx">
-      <LastGenOutput>MediatR.Partners.GetById.GetPartnerByIdHandler.uk-UA.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\SharedResource.CannotSaveSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotSaveSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.resx">
-      <SubType>Designer</SubType>
-      <LastGenOutput>MediatR.Partners.GetById.GetPartnerByIdHandler.en-US.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\SharedResource.CannotSaveSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.CannotSaveSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetAll.GetAllSubtitlesHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.FailedToCreateSharedResource.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MediatR.AdditionalContent.Subtitle.GetById.GetSubtitleByIdHandler.en-US.Designer.cs</LastGenOutput>
+      <LastGenOutput>SharedResource.FailedToCreateSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.FailedToDeleteSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToDeleteSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.FailedToDeleteSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToDeleteSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.FailedToUpdateSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToUpdateSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.FailedToUpdateSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToUpdateSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.NoSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.NoSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.NoSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.NoSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

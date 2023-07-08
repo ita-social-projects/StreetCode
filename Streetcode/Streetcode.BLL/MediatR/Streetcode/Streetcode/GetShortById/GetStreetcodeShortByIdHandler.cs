@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
@@ -10,11 +12,19 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
-        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository)
+        public GetStreetcodeShortByIdHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repository = repository;
+            _stringLocalizerCannotMap = stringLocalizerCannotMap;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
@@ -23,14 +33,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if (streetcode == null)
             {
-                return Result.Fail(new Error("Cannot find streetcode by id"));
+                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindStreetcodeById"].Value));
             }
 
             var streetcodeShortDTO = _mapper.Map<StreetcodeShortDTO>(streetcode);
 
             if(streetcodeShortDTO == null)
             {
-                return Result.Fail(new Error("Cannot map streetcode to shortDTO"));
+                return Result.Fail(new Error(_stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value));
             }
 
             return Result.Ok(streetcodeShortDTO);

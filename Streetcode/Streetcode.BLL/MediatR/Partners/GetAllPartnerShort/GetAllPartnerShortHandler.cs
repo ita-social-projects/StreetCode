@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
@@ -11,9 +12,9 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly IStringLocalizer? _stringLocalizer;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-        public GetAllPartnerShortHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllPartnerShortHandler> stringLocalizer)
+        public GetAllPartnerShortHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -26,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
 
             if (partners is null)
             {
-                return Result.Fail(new Error(_stringLocalizer?["CannotFindPartners"].Value));
+                return Result.Fail(new Error(_stringLocalizer?["CannotFindAnyPartners"].Value));
             }
 
             return Result.Ok(_mapper.Map<IEnumerable<PartnerShortDTO>>(partners));

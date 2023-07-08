@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,11 +15,20 @@ namespace Streetcode.BLL.MediatR.Newss.Update
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobSevice;
-        public UpdateNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvertNull;
+        private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+        public UpdateNewsHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            IBlobService blobService,
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvertNull)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobSevice = blobService;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
+            _stringLocalizerCannotConvertNull = stringLocalizerCannotConvertNull;
         }
 
         public async Task<Result<NewsDTO>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
@@ -25,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             var news = _mapper.Map<News>(request.news);
             if (news is null)
             {
-                return Result.Fail(new Error("Cannot convert null to news"));
+                return Result.Fail(new Error(_stringLocalizerCannotConvertNull["CannotConvertNullToNews"].Value));
             }
 
             var response = _mapper.Map<NewsDTO>(news);
@@ -45,7 +56,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
 
             _repositoryWrapper.NewsRepository.Update(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(response) : Result.Fail(new Error("Failed to update news"));
+            return resultIsSuccess ? Result.Ok(response) : Result.Fail(new Error(_stringLocalizerFailedToUpdate["FailedToUpdateNews"].Value));
         }
     }
 }

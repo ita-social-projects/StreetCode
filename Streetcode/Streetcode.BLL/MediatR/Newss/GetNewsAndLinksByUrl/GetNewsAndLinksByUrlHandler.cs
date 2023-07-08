@@ -6,6 +6,8 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
@@ -14,11 +16,13 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
-        public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+        public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _blobService = blobService;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<NewsDTOWithURLs>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
@@ -31,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             if (newsDTO is null)
             {
-                return Result.Fail($"No news by entered Url - {url}");
+                return Result.Fail(_stringLocalizerNo["NoNewsByEnteredUrl", url].Value);
             }
 
             if (newsDTO.Image is not null)
@@ -84,7 +88,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             if (newsDTOWithUrls is null)
             {
-                return Result.Fail($"No news by entered Url - {url}");
+                return Result.Fail(_stringLocalizerNo["NoNewsByEnteredUrl", url].Value);
             }
 
             return Result.Ok(newsDTOWithUrls);

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,10 +13,18 @@ namespace Streetcode.BLL.MediatR.Newss.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        public CreateNewsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
+        public CreateNewsHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _stringLocalizerFailed = stringLocalizerFailed;
+            _stringLocalizerCannot = stringLocalizerCannot;
         }
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
@@ -22,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
-                return Result.Fail("Cannot convert null to news");
+                return Result.Fail(_stringLocalizerCannot["CannotConvertNullToNews"].Value);
             }
 
             if (newNews.ImageId == 0)
@@ -32,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(_mapper.Map<NewsDTO>(entity)) : Result.Fail(new Error("Failed to create a news"));
+            return resultIsSuccess ? Result.Ok(_mapper.Map<NewsDTO>(entity)) : Result.Fail(new Error(_stringLocalizerFailed["FailedToCreateNews"].Value));
         }
     }
 }

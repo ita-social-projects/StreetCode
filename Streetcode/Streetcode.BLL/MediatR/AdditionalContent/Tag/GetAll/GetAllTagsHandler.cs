@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
@@ -12,13 +13,13 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly IStringLocalizer<GetAllTagsHandler> _stringLocalizer;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllTagsHandler> stringLocalizer)
+    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> CannotFindSharedResource)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _stringLocalizer = stringLocalizer;
+        _stringLocalizerCannotFind = CannotFindSharedResource;
     }
 
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
@@ -27,7 +28,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 
         if (tags is null)
         {
-            return Result.Fail(_stringLocalizer?["CannotFindAnyTags"].Value);
+            return Result.Fail(_stringLocalizerCannotFind?["CannotFindAnyTags"].Value);
         }
 
         var tagDtos = _mapper.Map<IEnumerable<TagDTO>>(tags);

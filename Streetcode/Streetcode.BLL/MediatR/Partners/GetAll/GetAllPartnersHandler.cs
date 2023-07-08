@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,13 +14,13 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly IStringLocalizer? _stringLocalizer;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
 
-    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetAllPartnersHandler> stringLocalizer)
+    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _stringLocalizer = stringLocalizer;
+        _stringLocalizeCannotFind = stringLocalizeCannotFind;
     }
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
@@ -33,7 +34,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         if (partners is null)
         {
-            return Result.Fail(new Error(_stringLocalizer?["CannotFindPartners"].Value));
+            return Result.Fail(new Error(_stringLocalizeCannotFind["CannotFindAnyPartners"].Value));
         }
 
         var partnerDtos = _mapper.Map<IEnumerable<PartnerDTO>>(partners);

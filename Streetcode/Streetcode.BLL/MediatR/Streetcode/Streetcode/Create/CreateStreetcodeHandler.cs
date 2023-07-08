@@ -19,6 +19,8 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -26,11 +28,19 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
+    private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
-    public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public CreateStreetcodeHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+        _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -65,12 +75,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 }
                 else
                 {
-                    return Result.Fail(new Error("Failed to create a streetcode"));
+                    return Result.Fail(new Error(_stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value));
                 }
             }
             catch(Exception ex)
             {
-                return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
+                return Result.Fail(new Error(_stringLocalizerAnErrorOccurred["AnErrorOccurredWhileCreating", ex.Message].Value));
             }
         }
     }

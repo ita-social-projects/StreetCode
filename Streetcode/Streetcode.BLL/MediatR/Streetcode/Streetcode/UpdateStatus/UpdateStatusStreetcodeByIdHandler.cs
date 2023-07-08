@@ -1,5 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
@@ -7,10 +9,17 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStreetcodeByIdCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper)
+    public UpdateStatusStreetcodeByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
+        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<Unit>> Handle(UpdateStatusStreetcodeByIdCommand request, CancellationToken cancellationToken)
@@ -20,7 +29,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any streetcode with corresponding id: {request.Id}"));
+            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value));
         }
 
         streetcode.Status = request.Status;
@@ -30,6 +39,6 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         var resultIsSuccessChangeStatus = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        return resultIsSuccessChangeStatus ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update status of streetcode"));
+        return resultIsSuccessChangeStatus ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value));
     }
 }

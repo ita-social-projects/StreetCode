@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetTagByTitle;
@@ -12,13 +13,13 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly IStringLocalizer<GetTagByTitleHandler> _stringLocalizer;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetTagByTitleHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<GetTagByTitleHandler> stringLocalizer)
+    public GetTagByTitleHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _stringLocalizer = stringLocalizer;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<TagDTO>> Handle(GetTagByTitleQuery request, CancellationToken cancellationToken)
@@ -27,7 +28,7 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
 
         if (tag is null)
         {
-            return Result.Fail(new Error(_stringLocalizer?["CannotFindAnyTagByTitle", request.Title].Value));
+            return Result.Fail(new Error(_stringLocalizerCannotFind?["CannotFindAnyTagByTheTitle", request.Title].Value));
         }
 
         var tagDto = _mapper.Map<TagDTO>(tag);

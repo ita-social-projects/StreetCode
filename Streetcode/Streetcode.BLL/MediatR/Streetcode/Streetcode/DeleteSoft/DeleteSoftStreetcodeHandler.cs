@@ -1,5 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
@@ -7,10 +9,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper)
+    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
     {
         _repositoryWrapper = repositoryWrapper;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
+        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
     }
 
     public async Task<Result<Unit>> Handle(DeleteSoftStreetcodeCommand request, CancellationToken cancellationToken)
@@ -20,7 +26,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            throw new Exception($"Cannot find a streetcode with corresponding categoryId: {request.Id}");
+            throw new Exception(_stringLocalizerCannotFind["CannotFindStreetcodeWithCorrespondingCategoryId", request.Id].Value);
         }
 
         streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;
@@ -31,6 +37,6 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
         var resultIsDeleteSucces = await _repositoryWrapper.SaveChangesAsync() > 0;
 
         return resultIsDeleteSucces ? Result.Ok(Unit.Value)
-            : Result.Fail(new Error("Failed to change status of streetcode to deleted"));
+            : Result.Fail(new Error("FailedToChangeStatusOfStreetcodeToDeleted"));
     }
 }

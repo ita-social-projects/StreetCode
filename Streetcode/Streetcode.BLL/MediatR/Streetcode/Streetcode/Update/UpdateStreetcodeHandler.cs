@@ -2,12 +2,14 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -20,11 +22,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+        private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
-        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public UpdateStreetcodeHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -59,13 +68,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
                     else
                     {
-                        return Result.Fail(new Error("Failed to update a streetcode"));
+                        return Result.Fail(new Error(_stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value));
                     }
                 }
                 catch(Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    return Result.Fail(new Error("An error occurred while updating a streetcode"));
+                    return Result.Fail(new Error(_stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value));
                 }
             }
         }

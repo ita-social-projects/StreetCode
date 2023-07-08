@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.MediatR.Team.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
@@ -11,11 +13,22 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
+        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
 
-        public CreateTeamLinkHandler(IMapper mapper, IRepositoryWrapper repository)
+        public CreateTeamLinkHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate,
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
         {
             _mapper = mapper;
             _repository = repository;
+            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
+            _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
+            _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
         }
 
         public async Task<Result<TeamMemberLinkDTO>> Handle(CreateTeamLinkQuery request, CancellationToken cancellationToken)
@@ -24,26 +37,26 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if (teamMemberLink is null)
             {
-                return Result.Fail(new Error("Cannot convert null to team link"));
+                return Result.Fail(new Error(_stringLocalizerCannotConvert["CannotConvertNullToTeamLink"].Value));
             }
 
             var createdTeamLink = _repository.TeamLinkRepository.Create(teamMemberLink);
 
             if (createdTeamLink is null)
             {
-                return Result.Fail(new Error("Cannot create team link"));
+                return Result.Fail(new Error(_stringLocalizerCannotCreate["CannotCreateTeamLink"].Value));
             }
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error("Failed to create a team"));
+                return Result.Fail(new Error(_stringLocalizerFailedToCreate["FailedToCreateTeam"].Value));
             }
 
             var createdTeamLinkDTO = _mapper.Map<TeamMemberLinkDTO>(createdTeamLink);
 
-            return createdTeamLinkDTO != null ? Result.Ok(createdTeamLinkDTO) : Result.Fail(new Error("Failed to map created team link"));
+            return createdTeamLinkDTO != null ? Result.Ok(createdTeamLinkDTO) : Result.Fail(new Error(_stringLocalizerFailedToCreate["FailedToMapCreatedTeamLink"].Value));
         }
     }
 }

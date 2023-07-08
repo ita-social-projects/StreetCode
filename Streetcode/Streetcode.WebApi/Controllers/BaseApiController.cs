@@ -41,7 +41,7 @@ public class BaseApiController : ControllerBase
 
         foreach (var item in result.Reasons)
         {
-            if (item.Message.Contains("Found result matching null"))
+            if (item.Message.Contains(_stringLocalizer?["NotFound"].Value))
             {
                 return Ok();
             }

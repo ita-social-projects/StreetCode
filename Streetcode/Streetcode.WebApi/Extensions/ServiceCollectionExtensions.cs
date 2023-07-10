@@ -23,6 +23,7 @@ using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Middleware;
+using Streetcode.BLL.HealthChecks;
 using Serilog.Events;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -51,6 +52,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddTransient(typeof(ApiRequestResponseMiddleware));
+        services.AddHealthChecks()
+                .AddCheck<StartUpHealthChecks>("StartupProbe")
+                .AddCheck<ReadinessHealthChecks>("ReadinessProbe")
+                .AddCheck<LivenessHealthChecks>("LivenessProbe");
+        services.AddHealthChecksUI().AddInMemoryStorage();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

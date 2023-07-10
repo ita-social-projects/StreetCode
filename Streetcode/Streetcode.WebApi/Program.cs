@@ -1,11 +1,13 @@
 using Hangfire;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Middleware;
+using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Services.Logging;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.ConfigureApplication();
@@ -35,6 +37,9 @@ app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();
 app.UseRouting();
+
+app.MapHealthChecksUI();
+app.UseHealthChecks();
 
 app.UseAuthentication();
 app.UseAuthorization();

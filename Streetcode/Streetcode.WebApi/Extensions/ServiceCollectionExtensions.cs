@@ -22,6 +22,8 @@ using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
+using Streetcode.BLL.Interfaces.Text;
+using Streetcode.BLL.Services.Text;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -46,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
+        services.AddScoped<ITextService, AddTermsToTextService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
@@ -86,14 +89,19 @@ public static class ServiceCollectionExtensions
                     };
                 });
 
+        var corsConfig = configuration.GetSection("CORS").Get<CorsConfiguration>();
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.AllowAnyOrigin();
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                policy.SetPreflightMaxAge(TimeSpan.FromDays(1));
+                // policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
+                // policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
+                // policy.WithMethods(corsConfig.AllowedMethods.ToArray());
+                // policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
+
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 
@@ -140,5 +148,13 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
+    }
+
+    public class CorsConfiguration
+    {
+        public List<string> AllowedOrigins { get; set; }
+        public List<string> AllowedHeaders { get; set; }
+        public List<string> AllowedMethods { get; set; }
+        public int PreflightMaxAge { get; set; }
     }
 }

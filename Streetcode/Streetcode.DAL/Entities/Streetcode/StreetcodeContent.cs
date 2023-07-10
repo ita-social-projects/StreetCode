@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
@@ -19,6 +18,7 @@ namespace Streetcode.DAL.Entities.Streetcode;
 
 [Table("streetcodes", Schema = "streetcode")]
 [Index(nameof(TransliterationUrl), IsUnique = true)]
+[Index(nameof(Index), IsUnique = true)]
 public class StreetcodeContent
 {
     [Key]
@@ -33,7 +33,7 @@ public class StreetcodeContent
 
     [Required]
     [MaxLength(50)]
-    public string DateString { get; set; }
+    public string? DateString { get; set; }
 
     [MaxLength(50)]
     public string? Alias { get; set; }
@@ -42,10 +42,10 @@ public class StreetcodeContent
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
     [Required]
     [MaxLength(150)]
-    public string TransliterationUrl { get; set; }
+    public string? TransliterationUrl { get; set; }
 
     public int ViewCount { get; set; }
 

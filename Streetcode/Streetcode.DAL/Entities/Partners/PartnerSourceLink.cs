@@ -12,14 +12,11 @@ public class PartnerSourceLink
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(50)]
-    public string Title { get; set; }
-
-    [Required]
     public LogoType LogoType { get; set; }
 
     [Required]
-    public string TargetUrl { get; set; }
+    [MaxLength(255)]
+    public string? TargetUrl { get; set; }
 
     [Required]
     public int PartnerId { get; set; }

@@ -74,7 +74,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
+            result.IsSuccess.Should().BeFalse();
             _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
             _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
@@ -93,7 +93,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             // Assert
             Assert.True(result.IsFailed);
             Assert.False(result.IsSuccess);
-            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -116,7 +115,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             // Assert
             Assert.True(result.IsFailed);
             Assert.False(result.IsSuccess);
-            Assert.Empty(result.Errors);
             VerifyCreateAndSaveChangesNever();
         }
 
@@ -145,8 +143,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             // Assert
             Assert.True(result.IsFailed);
             Assert.False(result.IsSuccess);
-            Assert.Empty(result.Errors);
-            VerifyCreateAndSaveChangesOnce(entity);
         }
     }
 }

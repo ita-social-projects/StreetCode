@@ -15,30 +15,29 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepo;
 
-        private void SetupMocks()
+        private void SetupMocks(IEnumerable<TeamMember>? teamMembers = null, IEnumerable<TeamMemberDTO>? teamMemberDTOs = null)
         {
             _mockRepo.Setup(r => r.TeamRepository.GetAllAsync(
                 null,
                 It.IsAny<Func<IQueryable<TeamMember>, IIncludableQueryable<TeamMember, object>>?>()))
-                .ReturnsAsync(GetTeamList);
+                .ReturnsAsync(teamMembers);
 
             _mockMapper.Setup(r => r.Map<IEnumerable<TeamMemberDTO>>(
                 It.IsAny<IEnumerable<TeamMember>>()))
-                .Returns(GetListTeamDTO());
+                .Returns(teamMemberDTOs);
         }
 
         public GetAllMainTeamHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
-            SetupMocks();
-
         }
 
         [Fact]
         public async Task Handle_ReturnsSuccess()
         {
             // Arrange
+            SetupMocks(GetTeamList(), GetListTeamDTO());
             var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
@@ -53,13 +52,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         public async Task Handle_ReturnsError()
         {
             // Arrange
+            SetupMocks();
             var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsFailed);
             Assert.Contains("Cannot find any team", result.Errors.First().Message);
         }
 

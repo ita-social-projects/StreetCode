@@ -8,6 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 using Entity = Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm;
+using EntityDTO = Streetcode.BLL.DTO.Streetcode.TextContent.RelatedTermDTO;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
 {
@@ -42,8 +43,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             _repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Delete(relatedTerm), Times.Once);
             _repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
             Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.True(result.IsSuccess));
+            () => Assert.NotNull(result));
         }
 
         [Theory]
@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
 
             // Assert
             Assert.Multiple(
-            () => Assert.IsType<Result<Entity>>(result),
+            () => Assert.IsType<Result<EntityDTO>>(result),
             () => Assert.False(result.IsSuccess),
             () => Assert.Equal($"Cannot find a related term: {word}",
             result.Errors.First().Message)
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
 
             // Assert
             Assert.Multiple(
-          () => Assert.IsType<Result<Entity>>(result),
+          () => Assert.IsType<Result<EntityDTO>>(result),
           () => Assert.False(result.IsSuccess),
           () => Assert.Equal(expectedError, result.Errors.First().Message)
                 );

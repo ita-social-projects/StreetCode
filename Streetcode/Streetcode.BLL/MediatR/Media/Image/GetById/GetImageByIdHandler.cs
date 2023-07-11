@@ -33,7 +33,7 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
         if (image is null)
         {
             string errorMsg = $"Cannot find a image with corresponding id: {request.Id}";
-            _logger.LogError($"GetImageByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

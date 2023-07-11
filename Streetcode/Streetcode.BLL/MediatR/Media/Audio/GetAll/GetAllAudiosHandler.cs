@@ -31,7 +31,7 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
         if (audios is null)
         {
             const string errorMsg = "Cannot find any audios";
-            _logger.LogError($"GetAllAudiosQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

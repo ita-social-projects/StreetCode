@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
             if (terms is null)
             {
                 const string errorMsg = $"Cannot find any term";
-                _logger.LogError($"GetAllTermsQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

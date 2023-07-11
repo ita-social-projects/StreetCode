@@ -84,7 +84,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
             }
             catch (Exception ex)
             {
-                _logger.LogError($"UpdateTeamQuery handled with an error. {ex.Message}");
+                _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

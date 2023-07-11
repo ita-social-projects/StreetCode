@@ -29,7 +29,7 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
         if (videos is null)
         {
             const string errorMsg = "Cannot find any videos";
-            _logger.LogError($"GetAllVideosQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

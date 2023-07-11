@@ -29,7 +29,7 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
         if (fact is null)
         {
             string errorMsg = $"Cannot find any fact by the streetcode id: {request.StreetcodeId}";
-            _logger.LogError($"GetFactByStreetcodeIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

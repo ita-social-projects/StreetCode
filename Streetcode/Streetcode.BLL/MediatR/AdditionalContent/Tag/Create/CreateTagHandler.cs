@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
             }
             catch(Exception ex)
             {
-                _logger.LogError($"CreateTagQuery handled with an error. {ex.ToString()}");
+                _logger.LogError(request, ex.ToString());
                 return Result.Fail(ex.ToString());
             }
 

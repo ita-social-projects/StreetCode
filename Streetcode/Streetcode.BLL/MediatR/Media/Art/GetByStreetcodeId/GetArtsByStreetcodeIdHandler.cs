@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             if (arts is null)
             {
                 string errorMsg = $"Cannot find any art with corresponding streetcode id: {request.StreetcodeId}";
-                _logger.LogError($"GetArtsByStreetcodeIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

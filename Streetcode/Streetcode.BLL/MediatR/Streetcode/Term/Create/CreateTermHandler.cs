@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             if (term is null)
             {
                 const string errorMsg = "Cannot convert null to Term";
-                _logger.LogError($"CreateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             if (createdTerm is null)
             {
                 const string errorMsg = "Cannot create term";
-                _logger.LogError($"CreateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             if(!resultIsSuccess)
             {
                 const string errorMsg = "Failed to create a term";
-                _logger.LogError($"CreateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -59,7 +59,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             else
             {
                 const string errorMsg = "Failed to map created term";
-                _logger.LogError($"CreateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

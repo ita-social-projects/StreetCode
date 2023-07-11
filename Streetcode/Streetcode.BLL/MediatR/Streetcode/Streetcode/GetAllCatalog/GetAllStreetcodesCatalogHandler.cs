@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
             }
 
             const string errorMsg = $"Cannot find any subtitles";
-            _logger.LogError($"GetCategoriesByStreetcodeIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }
     }

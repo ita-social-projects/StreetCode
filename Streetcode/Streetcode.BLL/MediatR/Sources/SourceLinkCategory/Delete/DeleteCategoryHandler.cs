@@ -23,7 +23,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
             if (category is null)
             {
                 string errorMsg = $"Cannot find a category with corresponding categoryId: {request.Id}";
-                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
             else
             {
                 string errorMsg = "Failed to delete a category";
-                _logger.LogError($"CreateCategoryCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
             if (streetcode == null)
             {
                 string errorMsg = $"Cannot find streetcode by transliteration url: {request.url}";
-                _logger.LogError($"GetStreetcodeByTransliterationUrlQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return new Error(errorMsg);
             }
 

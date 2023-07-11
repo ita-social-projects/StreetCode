@@ -30,7 +30,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any partners with corresponding streetcode id: {request.StreetcodeId}";
-            _logger.LogError($"GetPartnersByStreetcodeIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -42,7 +42,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
         if (partners is null)
         {
             string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
-            _logger.LogError($"GetPartnersByStreetcodeIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

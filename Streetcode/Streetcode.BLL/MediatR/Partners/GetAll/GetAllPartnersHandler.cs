@@ -35,7 +35,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
         if (partners is null)
         {
             const string errorMsg = $"Cannot find any partners";
-            _logger.LogError($"GetAllPartnersQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

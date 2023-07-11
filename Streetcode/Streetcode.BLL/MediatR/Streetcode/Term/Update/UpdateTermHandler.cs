@@ -25,7 +25,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             if (term is null)
             {
                 const string errorMsg = "Cannot convert null to Term";
-                _logger.LogError($"UpdateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             else
             {
                 const string errorMsg = "Failed to update a term";
-                _logger.LogError($"UpdateTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

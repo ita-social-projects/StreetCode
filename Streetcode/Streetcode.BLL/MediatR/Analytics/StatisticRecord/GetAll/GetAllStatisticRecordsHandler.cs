@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             if(statisticRecords == null)
             {
                 const string errorMsg = "Cannot get records";
-                _logger.LogError($"GetAllStatisticRecordsQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             if(mappedEntities == null)
             {
                 const string errorMsg = "Cannot map records";
-                _logger.LogError($"GetAllStatisticRecordsQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

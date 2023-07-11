@@ -23,7 +23,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
         if (fact is null)
         {
             string errorMsg = $"Cannot find a fact with corresponding categoryId: {request.Id}";
-            _logger.LogError($"DeleteFactCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -37,7 +37,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
         else
         {
             string errorMsg = "Failed to delete a fact";
-            _logger.LogError($"DeleteFactCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

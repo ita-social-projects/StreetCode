@@ -34,7 +34,7 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
             if (streetcode is null)
             {
                 string errorMsg = $"Streetcode with id: {request.StreetcodeId} doesn`t exist";
-                _logger.LogError($"GetVideoByStreetcodeIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

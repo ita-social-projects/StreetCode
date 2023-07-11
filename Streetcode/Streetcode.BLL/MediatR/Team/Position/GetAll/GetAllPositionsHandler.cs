@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
             if (positions is null)
             {
                 const string errorMsg = $"Cannot find any positions";
-                _logger.LogError($"GetAllPositionsQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

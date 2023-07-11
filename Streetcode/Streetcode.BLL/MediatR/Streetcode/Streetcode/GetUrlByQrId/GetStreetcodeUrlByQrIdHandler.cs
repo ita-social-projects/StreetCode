@@ -26,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
             if (statisticRecord == null)
             {
                 const string errorMsg = "Cannot find record by qrid";
-                _logger.LogError($"GetStreetcodeUrlByQrIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
             if(streetcode == null)
             {
                 const string errorMsg = "Cannot find streetcode by id";
-                _logger.LogError($"GetStreetcodeUrlByQrIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

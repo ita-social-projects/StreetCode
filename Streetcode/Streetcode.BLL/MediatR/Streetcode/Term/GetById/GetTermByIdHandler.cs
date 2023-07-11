@@ -27,7 +27,7 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
         if (term is null)
         {
             string errorMsg = $"Cannot find any term with corresponding id: {request.Id}";
-            _logger.LogError($"GetTermByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

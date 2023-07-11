@@ -29,14 +29,14 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         if (observerEntity is null)
         {
             string errorMsg = $"No existing streetcode with id: {request.ObserverId}";
-            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
         if (targetEntity is null)
         {
             string errorMsg = $"No existing streetcode with id: {request.TargetId}";
-            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -56,7 +56,7 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         else
         {
             string errorMsg = "Failed to create a relation.";
-            _logger.LogError($"CreateRelatedFigureCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

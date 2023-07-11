@@ -31,7 +31,7 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
         if (existingAudio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding categoryId: {request.Audio.Id}";
-            _logger.LogError($"UpdateAudioCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -58,7 +58,7 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
         else
         {
             const string errorMsg = "Failed to update an audio";
-            _logger.LogError($"UpdateAudioCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

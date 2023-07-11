@@ -26,7 +26,7 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
         if (image is null)
         {
             string errorMsg = $"Cannot find an image with corresponding id: {request.Id}";
-            _logger.LogError($"GetBaseImageQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

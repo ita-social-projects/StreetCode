@@ -24,7 +24,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find a streetcode with corresponding categoryId: {request.Id}";
-            _logger.LogError($"DeleteSoftStreetcodeCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             throw new ArgumentNullException(errorMsg);
         }
 
@@ -42,7 +42,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
         else
         {
             const string errorMsg = "Failed to change status of streetcode to deleted";
-            _logger.LogError($"DeleteSoftStreetcodeCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

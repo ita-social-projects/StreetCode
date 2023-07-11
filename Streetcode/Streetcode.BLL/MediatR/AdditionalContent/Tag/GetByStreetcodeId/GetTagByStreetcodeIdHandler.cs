@@ -40,7 +40,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         if (tagIndexed is null)
         {
             string errorMsg = $"Cannot find any tag by the streetcode id: {request.StreetcodeId}";
-            _logger.LogError($"GetTagByStreetcodeIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

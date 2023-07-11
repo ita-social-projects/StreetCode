@@ -26,7 +26,7 @@ public class GetBaseAudioHandler : IRequestHandler<GetBaseAudioQuery, Result<Mem
         if (audio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding id: {request.Id}";
-            _logger.LogError($"GetBaseAudioQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

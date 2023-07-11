@@ -31,7 +31,7 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
         if (images is null)
         {
             const string errorMsg = $"Cannot find any image";
-            _logger.LogError($"GetAllImagesQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

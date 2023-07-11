@@ -29,7 +29,7 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
         if (arts is null)
         {
             const string errorMsg = $"Cannot find any arts";
-            _logger.LogError($"GetAllArtsQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

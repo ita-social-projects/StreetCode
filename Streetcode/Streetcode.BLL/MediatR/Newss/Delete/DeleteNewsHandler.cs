@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             if (news == null)
             {
                 string errorMsg = $"No news found by entered Id - {id}";
-                _logger.LogError($"DeleteNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 
@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             else
             {
                 string errorMsg = "Failed to delete news";
-                _logger.LogError($"DeleteNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

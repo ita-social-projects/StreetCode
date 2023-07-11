@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
             if (streetcode is null)
             {
                 string errorMsg = $"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}";
-                _logger.LogError($"GetPartnersToUpdateByStreetcodeIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
             if (partners is null)
             {
                 string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
-                _logger.LogError($"GetPartnersToUpdateByStreetcodeIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

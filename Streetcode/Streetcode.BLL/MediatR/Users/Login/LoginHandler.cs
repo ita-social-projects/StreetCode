@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
             }
 
             const string errorMsg = "User not found";
-            _logger.LogError($"LoginQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }
     }

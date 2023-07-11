@@ -71,7 +71,7 @@ namespace Streetcode.BLL.MediatR.Partners.Update
             }
             catch (Exception ex)
             {
-                _logger.LogError($"UpdatePartnerQuery handled with an error. {ex.Message}");
+                _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

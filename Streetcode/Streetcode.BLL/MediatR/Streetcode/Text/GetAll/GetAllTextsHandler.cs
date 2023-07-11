@@ -29,7 +29,7 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
         if (texts is null)
         {
             const string errorMsg = $"Cannot find any text";
-            _logger.LogError($"GetAllTextsQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

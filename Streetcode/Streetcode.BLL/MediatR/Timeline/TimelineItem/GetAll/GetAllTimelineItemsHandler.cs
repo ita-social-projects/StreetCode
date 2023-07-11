@@ -34,7 +34,7 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
         if (timelineItems is null)
         {
             const string errorMsg = $"Cannot find any timelineItem";
-            _logger.LogError($"GetAllTimelineItemsQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

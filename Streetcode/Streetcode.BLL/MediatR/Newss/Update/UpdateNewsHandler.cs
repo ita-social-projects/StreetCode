@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             if (news is null)
             {
                 const string errorMsg = $"Cannot convert null to news";
-                _logger.LogError($"UpdateNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -58,7 +58,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             else
             {
                 const string errorMsg = $"Failed to update news";
-                _logger.LogError($"UpdateNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

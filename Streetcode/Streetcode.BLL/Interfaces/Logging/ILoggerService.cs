@@ -6,6 +6,6 @@
         void LogWarning(string msg);
         void LogTrace(string msg);
         void LogDebug(string msg);
-        void LogError(string msg);
+        void LogError(object request, string errorMsg);
     }
 }

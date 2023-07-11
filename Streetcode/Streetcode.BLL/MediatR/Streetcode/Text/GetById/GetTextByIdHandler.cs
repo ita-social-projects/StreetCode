@@ -27,7 +27,7 @@ public class GetTextByIdHandler : IRequestHandler<GetTextByIdQuery, Result<TextD
         if (text is null)
         {
             string errorMsg = $"Cannot find any text with corresponding id: {request.Id}";
-            _logger.LogError($"GetTextByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

@@ -27,7 +27,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
         if (tag is null)
         {
             string errorMsg = $"Cannot find a Tag with corresponding id: {request.Id}";
-            _logger.LogError($"GetTagByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

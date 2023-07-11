@@ -31,8 +31,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
         if (existingImage is null)
         {
             string errorMsg = $"Cannot find an image with corresponding categoryId: {request.Image.Id}";
-            _logger?.LogError("UpdateImageCommand handled with an error");
-            _logger?.LogError(errorMsg);
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -61,7 +60,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
         else
         {
             const string errorMsg = "Failed to update an image";
-            _logger.LogError($"UpdateImageCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

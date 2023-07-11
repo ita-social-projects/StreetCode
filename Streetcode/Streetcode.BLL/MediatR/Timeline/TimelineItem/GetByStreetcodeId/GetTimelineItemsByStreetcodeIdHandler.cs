@@ -34,7 +34,7 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
         if (timelineItems is null)
         {
             string errorMsg = $"Cannot find any timeline item by the streetcode id: {request.StreetcodeId}";
-            _logger.LogError($"GetTimelineItemByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

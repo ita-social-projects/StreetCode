@@ -27,7 +27,7 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
         if (facts is null)
         {
             string errorMsg = $"Cannot find any fact with corresponding id: {request.Id}";
-            _logger.LogError($"GetFactByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

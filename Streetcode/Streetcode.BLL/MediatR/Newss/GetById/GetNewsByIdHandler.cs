@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
             if(newsDTO is null)
             {
                 string errorMsg = $"No news by entered Id - {id}";
-                _logger.LogError($"GetNewsByIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 

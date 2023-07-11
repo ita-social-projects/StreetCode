@@ -30,7 +30,7 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any streetcode with corresponding index: {request.Index}";
-            _logger.LogError($"GetStreetcodeByIndexQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

@@ -27,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
             if (streetcode == null)
             {
                 const string errorMsg = "Cannot find streetcode by id";
-                _logger.LogError($"GetStreetcodeShortByIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
             if(streetcodeShortDTO == null)
             {
                 const string errorMsg = "Cannot map streetcode to shortDTO";
-                _logger.LogError($"GetStreetcodeShortByIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

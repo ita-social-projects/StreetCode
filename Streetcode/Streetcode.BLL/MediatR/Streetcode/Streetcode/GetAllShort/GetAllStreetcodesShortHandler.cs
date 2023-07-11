@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
             }
 
             const string errorMsg = "No streetcodes exist now";
-            _logger.LogError($"GetAllStreetcodesShortQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }
     }

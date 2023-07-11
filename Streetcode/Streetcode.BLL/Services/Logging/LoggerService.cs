@@ -32,9 +32,11 @@ namespace Streetcode.BLL.Services.Logging
             _logger.Debug($"{msg}");
         }
 
-        public void LogError(string msg)
+        public void LogError(object request, string erroMsg)
         {
-            _logger.Error($"{msg}");
+            string requestType = request.GetType().ToString();
+            string requestClass = requestType.Substring(requestType.LastIndexOf('.') + 1);
+            _logger.Error($"{requestClass} handled with the error: {erroMsg}");
         }
     }
 }

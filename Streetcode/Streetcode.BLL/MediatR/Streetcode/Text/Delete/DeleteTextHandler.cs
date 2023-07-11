@@ -23,7 +23,7 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
         if (text is null)
         {
             string errorMsg = $"Cannot find a text with corresponding categoryId: {request.Id}";
-            _logger.LogError($"DeleteTextCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -37,7 +37,7 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
         else
         {
             const string errorMsg = "Failed to delete a text";
-            _logger.LogError($"DeleteTextCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

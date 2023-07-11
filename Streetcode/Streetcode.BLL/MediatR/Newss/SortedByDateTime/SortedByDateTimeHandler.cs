@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
             if (news == null)
             {
                 const string errorMsg = "There are no news in the database";
-                _logger.LogError($"SortedByDateTimeQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 

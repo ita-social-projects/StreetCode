@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
             }
             catch (Exception ex)
             {
-                _logger.LogError($"CreatePositionQuery handled with an error. {ex.Message}");
+                _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
 

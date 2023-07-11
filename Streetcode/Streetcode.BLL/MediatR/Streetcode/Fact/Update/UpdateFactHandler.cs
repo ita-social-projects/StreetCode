@@ -26,7 +26,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         if (fact is null)
         {
             const string errorMsg = "Cannot convert null to Fact";
-            _logger.LogError($"UpdateFactCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -40,7 +40,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         else
         {
             const string errorMsg = "Failed to update a fact";
-            _logger.LogError($"UpdateFactCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

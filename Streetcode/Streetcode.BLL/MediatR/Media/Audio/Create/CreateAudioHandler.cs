@@ -51,7 +51,7 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
         else
         {
             const string errorMsg = $"Failed to create an audio";
-            _logger.LogError($"CreateAudioCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

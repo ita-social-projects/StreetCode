@@ -26,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (newNews is null)
             {
                 const string errorMsg = "Cannot convert null to news";
-                _logger.LogError($"CreateNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 
@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             else
             {
                 const string errorMsg = "Failed to create a news";
-                _logger.LogError($"CreateNewsCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             if (allCategories == null)
             {
                 const string errorMsg = $"Categories is null";
-                _logger.LogError($"GetAllCategoriesQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
             if (statRecord == null)
             {
                 const string errorMsg = "Mapped record is null";
-                _logger.LogError($"CreateStatisticRecordCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
             if (createdRecord == null)
             {
                 const string errorMsg = "Created record is null";
-                _logger.LogError($"CreateStatisticRecordCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
             if (!resultIsSuccess)
             {
                 const string errorMsg = "Cannot save created record";
-                _logger.LogError($"CreateStatisticRecordCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -56,7 +56,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
             if (mappedCreatedRecord == null)
             {
                 const string errorMsg = "Mapped created record is null";
-                _logger?.LogError($"CreateStatisticRecordCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Partners.Create
             }
             catch(Exception ex)
             {
-                _logger.LogError($"CreatePartnerQuery handled with an error. {ex.Message}");
+                _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

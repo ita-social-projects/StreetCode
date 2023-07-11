@@ -30,7 +30,7 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
         if (audio is null)
         {
             string errorMsg = $"Cannot find an audio with corresponding id: {request.Id}";
-            _logger.LogError($"GetAudioByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

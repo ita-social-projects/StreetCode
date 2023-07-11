@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             if (news == null)
             {
                 const string errorMsg = "There are no news in the database";
-                _logger.LogError($"GetAllNewsQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 

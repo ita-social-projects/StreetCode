@@ -31,7 +31,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         if (streetcode is null)
         {
             string errorMsg = $"Cannot find any streetcode with corresponding id: {request.Id}";
-            _logger.LogError($"GetStreetcodeByIdQuery handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 

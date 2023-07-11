@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
             if (relatedTerm is null)
             {
                 const string errorMsg = "Cannot create new related word for a term!";
-                _logger.LogError($"CreateRelatedTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
             if (existingTerms is null || existingTerms.Any())
             {
                 const string errorMsg = "Слово з цим визначенням уже існує";
-                _logger.LogError($"CreateRelatedTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -51,7 +51,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
             if(!isSuccessResult)
             {
                 const string errorMsg = "Cannot save changes in the database after related word creation!";
-                _logger.LogError($"CreateRelatedTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -64,7 +64,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
             else
             {
                 const string errorMsg = "Cannot map entity!";
-                _logger.LogError($"CreateRelatedTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

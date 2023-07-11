@@ -71,14 +71,14 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 else
                 {
                     const string errorMsg = "Failed to create a streetcode";
-                    _logger.LogError($"CreateStreetcodeCommand handled with an error. {errorMsg}");
+                    _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }
             }
             catch(Exception ex)
             {
                 string errorMsg = $"An error occurred while creating a streetcode. Message: {ex.Message}";
-                _logger.LogError($"CreateStreetcodeCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
             if (streetcodes is null)
             {
                 string errorMsg = $"Cannot find any streetcode with corresponding tagid: {request.tagId}";
-                _logger.LogError($"GetRelatedFiguresByTagIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

@@ -33,7 +33,7 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
                  .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
             {
                 string errorMsg = $"Cannot find a transaction link by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist";
-                _logger.LogError($"GetTextByStreetcodeIdQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

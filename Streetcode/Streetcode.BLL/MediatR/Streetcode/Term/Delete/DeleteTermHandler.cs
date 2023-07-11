@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
             if (term is null)
             {
                 const string errorMsg = "Cannot convert null to Term";
-                _logger.LogError($"DeleteTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
             else
             {
                 const string errorMsg = "Failed to delete a term";
-                _logger.LogError($"DeleteTermCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

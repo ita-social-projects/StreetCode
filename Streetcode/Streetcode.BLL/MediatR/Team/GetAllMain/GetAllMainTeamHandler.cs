@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
             if (team is null)
             {
                 const string errorMsg = $"Cannot find any team";
-                _logger.LogError($"GetAllMainTeamQuery handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 

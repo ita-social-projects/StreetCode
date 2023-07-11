@@ -52,7 +52,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         else
         {
             const string errorMsg = "Failed to create an image";
-            _logger.LogError($"CreateImageCommand handled with an error. {errorMsg}");
+            _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
     }

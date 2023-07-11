@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Email
             else
             {
                 const string errorMsg = $"Failed to send email message";
-                _logger.LogError($"SendEmailCommand handled with an error. {errorMsg}");
+                _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
         }

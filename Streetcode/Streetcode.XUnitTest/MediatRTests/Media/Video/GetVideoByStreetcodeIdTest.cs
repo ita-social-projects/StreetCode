@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -14,11 +16,13 @@ public class GetVideoByStreetcodeIdTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
     public GetVideoByStreetcodeIdTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -38,7 +42,7 @@ public class GetVideoByStreetcodeIdTest
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(streetcodeId));
 
-        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
@@ -71,7 +75,7 @@ public class GetVideoByStreetcodeIdTest
 
         var expectedError = $"Cannot find any video by the streetcode id: {streetcodeId}";
 
-        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),
@@ -102,7 +106,7 @@ public class GetVideoByStreetcodeIdTest
              .Map<VideoDTO>(It.IsAny<Video>()))
              .Returns(GetVideoDTO(streetcodeId));
 
-        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetVideoByStreetcodeIdQuery(streetcodeId),

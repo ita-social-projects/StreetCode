@@ -25,5 +25,6 @@ public class RelatedFigureProfile : Profile
                 .MapFrom(e => e.Images.Select(i => i.Id).LastOrDefault()));
 
         CreateMap<RelatedFigureUpdateDTO, RelatedFigure>();
+        CreateMap<StreetcodeContent, RelatedFigureShortDTO>();
     }
 }

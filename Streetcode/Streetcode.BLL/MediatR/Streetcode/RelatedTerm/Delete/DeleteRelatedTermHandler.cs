@@ -2,12 +2,12 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 {
-    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<Unit>>
+    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<RelatedTermDTO>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
@@ -20,13 +20,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _logger = logger;
         }
 
-        public async Task<Result<Unit>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
+        public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
         {
-            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Id == request.id);
+            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word.ToLower().Equals(request.word.ToLower()));
 
             if (relatedTerm is null)
             {
-                string errorMsg = $"Cannot find a related term with corresponding id: {request.id}";
+                string errorMsg = $"Cannot find a related term: {request.word}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -34,13 +34,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _repository.RelatedTermRepository.Delete(relatedTerm);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
+            var relatedTermDto = _mapper.Map<RelatedTermDTO>(relatedTerm);
+            if(resultIsSuccess && relatedTermDto != null)
             {
-                return Result.Ok(Unit.Value);
+                return Result.Ok(relatedTermDto);
             }
             else
             {
-                string errorMsg = "Failed to delete a related term";
+                const string errorMsg = "Failed to delete a related term";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

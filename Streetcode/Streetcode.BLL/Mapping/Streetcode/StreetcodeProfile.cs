@@ -2,7 +2,6 @@ using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
-using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 
@@ -31,7 +30,8 @@ public class StreetcodeProfile : Profile
           .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
-        	.ForMember(x => x.Tags, conf => conf.Ignore())
+            .ForMember(x => x.Text, conf => conf.Ignore())
+            .ForMember(x => x.Tags, conf => conf.Ignore())
             .ForMember(x => x.Partners, conf => conf.Ignore())
             .ForMember(x => x.Toponyms, conf => conf.Ignore())
             .ForMember(x => x.TimelineItems, conf => conf.Ignore())

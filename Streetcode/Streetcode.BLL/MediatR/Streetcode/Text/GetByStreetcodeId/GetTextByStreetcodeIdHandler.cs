@@ -4,6 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.MediatR.ResultVariations;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,12 +14,14 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ITextService _textService;
     private readonly ILoggerService _logger;
 
-    public GetTextByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetTextByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITextService textService, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _textService = textService;
         _logger = logger;
     }
 
@@ -39,7 +42,14 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
         }
 
         var textDto = _mapper.Map<TextDTO?>(text);
+
+        if(text is null)
+        {
+            return Result.Fail(new Error(""));
+        }
+
         NullResult<TextDTO?> result = new NullResult<TextDTO?>();
+        text.TextContent = await _textService.AddTermsTag(text?.TextContent ?? "");
         result.WithValue(_mapper.Map<TextDTO?>(text));
         return result;
     }

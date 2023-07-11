@@ -5,8 +5,6 @@ using Streetcode.BLL.MediatR.Streetcode.Term.Delete;
 using Streetcode.BLL.MediatR.Streetcode.Term.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Term.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Term.Update;
-using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 

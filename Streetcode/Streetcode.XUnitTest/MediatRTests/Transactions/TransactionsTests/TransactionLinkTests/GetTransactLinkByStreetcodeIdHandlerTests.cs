@@ -13,12 +13,7 @@ using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.TransactionLinkTests
@@ -40,8 +35,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         async Task SetupRepository(int id)
         {
             _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(new TransactionLink() { Id = id });
+                It.IsAny<Expression<Func<TransactionLink, bool>>>(), 
+                It.IsAny<Func<IQueryable<TransactionLink>, IIncludableQueryable<TransactionLink, object>>>()))
+            .ReturnsAsync(new TransactionLink() { Id = id });
         }
 
         async Task SetupMapper(int id)
@@ -64,9 +60,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
             //Assert
             Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.True(result.IsSuccess),
-                () => Assert.Equal(result.Value.Id, id)
+                   () => Assert.NotNull(result),
+                   () => Assert.True(result.IsSuccess),
+                   () => Assert.Equal(result.Value.Id, id)
             );
         }
 
@@ -111,8 +107,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
             //Assert
             Assert.Multiple(
-                () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault)
+                   () => Assert.NotNull(result.ValueOrDefault),
+                   () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault)
             );
         }
     }

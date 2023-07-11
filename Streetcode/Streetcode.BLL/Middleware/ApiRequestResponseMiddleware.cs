@@ -15,11 +15,23 @@ namespace Streetcode.BLL.Middleware
     {
         private readonly ILoggerService _loggerService;
         private readonly string[] _loggerPropertiesExceptions;
+        private readonly string[] _exceptionProperties;
+        private readonly int _maxResponseLength;
 
         public ApiRequestResponseMiddleware(ILoggerService loggerService, IConfiguration configuration)
         {
             _loggerService = loggerService;
-            _loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore").Get<string[]>();
+            _maxResponseLength = configuration.GetValue<int>("Middleware:ApiRequestResponse:MaxResponseLength");
+            _exceptionProperties = configuration.GetSection("Middleware:ApiRequestResponse:ExceptionProperties")
+                .Get<string[]>()
+                .Select(p => p.ToLower())
+                .ToArray();
+            _loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore")
+                .Get<string[]>()
+                .Select(p => p.ToLower())
+                .ToArray();
+            //_loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore").Get<string[]>();
+            //_exceptionProperties = configuration.GetSection("Middleware:ApiRequestResponse:ExceptionProperties").Get<string[]>();
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -27,8 +39,7 @@ namespace Streetcode.BLL.Middleware
             var originalBodyStream = context.Response.Body;
 
             var request = await GetRequestAsTextAsync(context.Request);
-
-            _loggerService.LogInformation(request);
+            LogRequest(request);
 
             await using var responseBody = new MemoryStream();
             context.Response.Body = responseBody;
@@ -36,12 +47,20 @@ namespace Streetcode.BLL.Middleware
             await next(context);
 
             var response = await GetResponseAsTextAsync(context.Response);
-
             var filteredResponse = GetFilteredResponse(response);
-
-            _loggerService.LogInformation(filteredResponse);
+            LogResponse(filteredResponse);
 
             await responseBody.CopyToAsync(originalBodyStream);
+        }
+
+        private void LogRequest(string request)
+        {
+            _loggerService.LogInformation(request);
+        }
+
+        private void LogResponse(string response)
+        {
+            _loggerService.LogInformation(response);
         }
 
         private async Task<string> GetRequestAsTextAsync(HttpRequest request)
@@ -108,9 +127,14 @@ namespace Streetcode.BLL.Middleware
             {
                 if (!_loggerPropertiesExceptions.Contains(property.Name.ToString().ToLower()))
                 {
-                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > 100)
+                    if (_exceptionProperties.Contains(property.Name.ToString().ToLower()))
                     {
-                        property.Value = new JValue(property.Value.ToString().Substring(0, 100));
+                        continue;
+                    }
+
+                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _maxResponseLength)
+                    {
+                        property.Value = new JValue(property.Value.ToString().Substring(0, _maxResponseLength));
                     }
                     else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
                     {

@@ -6,7 +6,6 @@ namespace Streetcode.BLL.HealthChecks
     {
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            // Startup Probe ("/healthz")
             var startup_probe = HealthCheckResult.Healthy("App started");
             return Task.FromResult(startup_probe);
         }

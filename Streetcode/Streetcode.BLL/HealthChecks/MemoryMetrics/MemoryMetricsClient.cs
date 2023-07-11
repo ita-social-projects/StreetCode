@@ -5,11 +5,21 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.Logging;
+using Streetcode.DAL.Entities.Feedback;
 
 namespace Streetcode.BLL.HealthChecks.MemoryMetrics
 {
     public class MemoryMetricsClient
     {
+        private readonly ILoggerService _loggerService;
+        public MemoryMetricsClient(ILoggerService loggerService)
+        {
+            _loggerService = loggerService;
+        }
+
         public MemoryMetrics GetMetrics()
         {
             MemoryMetrics metrics;
@@ -73,7 +83,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
             using (var process = Process.Start(info))
             {
                 output = process.StandardOutput.ReadToEnd();
-                Console.WriteLine(output);
+                _loggerService.LogInformation(output);
             }
 
             var lines = output.Split(SEPARATOR_NEW_LINE);

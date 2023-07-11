@@ -1,13 +1,21 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Streetcode.BLL.HealthChecks.MemoryMetrics;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.BLL.HealthChecks
 {
     public class LivenessHealthChecks : IHealthCheck
     {
+        private readonly ILoggerService _loggerService;
+
+        public LivenessHealthChecks(ILoggerService loggerService)
+        {
+            _loggerService = loggerService;
+        }
+
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            var client = new MemoryMetricsClient();
+            var client = new MemoryMetricsClient(_loggerService);
             var metrics = client.GetMetrics();
             var percentUsed = 100 * metrics.Used / metrics.Total;
             const string HEALTHY = "System memory used is up to 80%";

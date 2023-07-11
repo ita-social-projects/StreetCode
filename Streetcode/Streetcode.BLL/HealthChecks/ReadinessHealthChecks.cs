@@ -14,7 +14,6 @@ namespace Streetcode.BLL.HealthChecks
 
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            // Readiness Probe ("/health/ready")
             return VerifyReadinessAsync();
         }
 
@@ -74,9 +73,9 @@ namespace Streetcode.BLL.HealthChecks
             }
         }
 
-        private static async Task<bool> CheckBlobStorageAvailability()
+        private async Task<bool> CheckBlobStorageAvailability()
         {
-            string relativePath = @"..\..\BlobStorage";
+            string relativePath = _configuration["Blob:BlobStorePath"];
             string absolutePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relativePath));
             try
             {
@@ -99,7 +98,7 @@ namespace Streetcode.BLL.HealthChecks
 
         private async Task<bool> CheckApiAvailability()
         {
-            const string ENDPOINT = "api/Partners/GetAll";
+            const string ENDPOINT = "api/Audio/GetAll";
             string apiUrl = _configuration["Jwt:Issuer"];
             string apiCheck = apiUrl + ENDPOINT;
             using (var httpClient = new HttpClient())

@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             await SetupRepository(subtitles);
             await SetupMapper(subtitleDTOs);
 
-            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object,_mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
@@ -94,7 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             await SetupRepository(new List<Subtitle>());
             await SetupMapper(new List<SubtitleDTO>());
 
-            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);

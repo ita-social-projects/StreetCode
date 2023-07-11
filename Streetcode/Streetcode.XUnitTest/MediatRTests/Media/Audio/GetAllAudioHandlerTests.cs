@@ -10,6 +10,8 @@ using System.Linq.Expressions;
 using System.Reflection.Metadata;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Media.Audio;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
@@ -18,12 +20,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<IBlobService> _blob;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetAllAudioHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
             _blob = new Mock<IBlobService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -45,7 +49,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             MapperSetup(testAudioListDTO);
             BlobSetup(expectedBase64);
 
-            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLocalizer.Object);
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
             // assert
@@ -60,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             RepositorySetup(null, null);
             MapperSetup(null);
             BlobSetup(null);
-            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLocalizer.Object);
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
             // assert

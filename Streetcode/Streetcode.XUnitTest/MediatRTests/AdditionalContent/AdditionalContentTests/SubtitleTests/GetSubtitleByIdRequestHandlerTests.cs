@@ -23,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
-            _mockLocalizer= new Mock<IStringLocalize<CannotFindSharedResource>>();
+            _mockLocalizer= new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         private const int _id = 1;
@@ -51,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             await SetupRepository(subtitle);
             await SetupMapper(subtitleDTO);
 
-            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object,_mockLocalizer.Object);
             
             //Act
             var result = await handler.Handle(new GetSubtitleByIdQuery(_id), CancellationToken.None);
@@ -69,7 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             await SetupRepository(new Subtitle());
             await SetupMapper(new SubtitleDTO());
 
-            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetSubtitleByIdHandler(_mockRepo.Object, _mockMapper.Object,_mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetSubtitleByIdQuery(_id), CancellationToken.None);

@@ -5,6 +5,7 @@ using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -17,12 +18,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IStringLocalizer> _mockLocalizer;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
         public GetCoordinatesByStreetcodeIdHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
-            _mockLocalizer = new Mock<IStringLocalizer>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         private const int _streetcode_id = 1;
@@ -76,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             await SetupRepository(coordinates);
             await SetupMapper(coordinateDTOs);
                 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object,_mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
@@ -94,7 +95,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             await SetupRepository(new List<StreetcodeCoordinate>());
             await SetupMapper(new List<StreetcodeCoordinateDTO>());
 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);

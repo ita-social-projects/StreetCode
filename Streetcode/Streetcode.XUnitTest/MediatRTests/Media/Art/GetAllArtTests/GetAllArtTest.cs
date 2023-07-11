@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore.Query;
 using FluentResults;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.BLL.DTO.Media.Art;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
@@ -15,11 +17,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetAllArtsTest()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -27,7 +31,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);
@@ -42,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             //Arrange
             MockRepositoryAndMapper(new List<Art>(){ }, new List<ArtDTO>() { });
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
             int expectedResult = 0;
             
             //Act
@@ -58,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             //Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);

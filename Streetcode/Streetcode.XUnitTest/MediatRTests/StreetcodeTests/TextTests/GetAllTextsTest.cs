@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -12,13 +13,15 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
   public class GetAllTextsTest
     {
-        private Mock<IRepositoryWrapper> repository;
-        private Mock<IMapper> mockMapper;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetAllTextsTest()
         {
             repository = new Mock<IRepositoryWrapper>();
             mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -44,7 +47,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             mockMapper.Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>())).Returns(testTextslistDTO);
 
-            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object);
+            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 
@@ -69,7 +72,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             mockMapper.Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>())).Returns(new List<TextDTO>() { new TextDTO() { Id = 1 } });
 
 
-            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object);
+            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 

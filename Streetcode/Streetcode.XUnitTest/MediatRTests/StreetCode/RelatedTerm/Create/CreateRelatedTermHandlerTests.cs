@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -16,11 +17,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
     {
         private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
         private readonly Mock<IMapper> _mapperMock;
-
+        private readonly Mock<ILoggerService> _mockLogger;
         public CreateRelatedTermHandlerTests()
         {
             _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             _mapperMock = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         private (RelatedTermDTO relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
@@ -68,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             _repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             SetupMapperMockToMapEntity(relatedTermDTO, entity);
 
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
@@ -84,7 +86,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         {
             // Arrange
             SetupMapperMockToMapEntity(It.IsAny<RelatedTermDTO>(), null);
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(new RelatedTermDTO());
 
             // Act
@@ -106,7 +108,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             SetupMapperMockToMapEntity(relatedTermDTO, entity);
             SetupGetAllAsyncWithExistingTerms(existingTerms);
 
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
@@ -134,7 +136,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             repositoryMock.Setup(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()));
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
 
-            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object);
+            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Team;
@@ -14,6 +15,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         private void SetupMocks(IEnumerable<TeamMember>? teamMembers = null, IEnumerable<TeamMemberDTO>? teamMemberDTOs = null)
         {
@@ -31,6 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -38,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             // Arrange
             SetupMocks(GetTeamList(), GetListTeamDTO());
-            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
@@ -53,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             // Arrange
             SetupMocks();
-            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
@@ -70,16 +73,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             {
                 Id = 1,
                 IsMain = true,
-                Positions = {},
-                TeamMemberLinks = {}
+                Positions = { },
+                TeamMemberLinks = { },
             },
             new TeamMember
             {
                 Id = 2,
                 IsMain = true,
-                Positions = {},
-                TeamMemberLinks = {}
-            }
+                Positions = { },
+                TeamMemberLinks = { },
+            },
         };
 
             return teamMembers;
@@ -90,26 +93,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             var teamMembersDTO = new List<TeamMemberDTO>
         {
-             new TeamMemberDTO
+            new TeamMemberDTO
             {
-                Id=1,
+                Id = 1,
                 IsMain = true,
-                Positions = {},
-                TeamMemberLinks = {}
+                Positions = { },
+                TeamMemberLinks = { },
             },
             new TeamMemberDTO
             {
-                Id=2,
+                Id = 2,
                 IsMain = true,
-                Positions = {},
-                TeamMemberLinks = {}
+                Positions = { },
+                TeamMemberLinks = { },
             },
         };
-
             return teamMembersDTO;
         }
     }
-
-
 }
-

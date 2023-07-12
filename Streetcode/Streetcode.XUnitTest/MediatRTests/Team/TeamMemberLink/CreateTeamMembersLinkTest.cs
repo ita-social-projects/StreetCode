@@ -2,6 +2,7 @@
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Team;
@@ -20,11 +21,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
     {
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public CreateTeamMembersLinkTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -37,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
@@ -56,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
@@ -76,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethodWithErrorThrow(expectedErrorMessage);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);
@@ -100,7 +103,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
                 .Returns((TeamMemberLink)null);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);
@@ -120,7 +123,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
                 .Returns((TeamMemberLink)null);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);

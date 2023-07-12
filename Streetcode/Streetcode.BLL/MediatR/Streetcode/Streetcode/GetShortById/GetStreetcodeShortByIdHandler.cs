@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
@@ -10,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService _logger;
 
-        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository)
+        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
@@ -23,14 +26,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if (streetcode == null)
             {
-                return Result.Fail(new Error("Cannot find streetcode by id"));
+                const string errorMsg = "Cannot find streetcode by id";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var streetcodeShortDTO = _mapper.Map<StreetcodeShortDTO>(streetcode);
 
             if(streetcodeShortDTO == null)
             {
-                return Result.Fail(new Error("Cannot map streetcode to shortDTO"));
+                const string errorMsg = "Cannot map streetcode to shortDTO";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             return Result.Ok(streetcodeShortDTO);

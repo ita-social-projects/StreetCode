@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetTagByTitle;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -15,11 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetTagByTitleRequestHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         private static string _title = "test_title";
@@ -56,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(tag);
             await SetupMapper(tagDTO);
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
@@ -74,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(new Tag());
             await SetupMapper(new TagDTO());
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);

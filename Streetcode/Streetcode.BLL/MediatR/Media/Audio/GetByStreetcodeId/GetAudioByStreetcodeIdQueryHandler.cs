@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
@@ -15,12 +16,14 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService _logger;
 
-    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _blobService = blobService;
+        _logger = logger;
     }
 
     public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -30,7 +33,9 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
             include: q => q.Include(s => s.Audio) !);
         if (streetcode == null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with the corresponding streetcode id: {request.StreetcodeId}, because no streetcode with such streetcode exist"));
+            string errorMsg = $"Cannot find an audio with the corresponding streetcode id: {request.StreetcodeId}";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         AudioDTO audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);

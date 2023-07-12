@@ -18,6 +18,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -25,11 +26,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
 
-    public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -67,12 +70,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 }
                 else
                 {
-                    return Result.Fail(new Error("Failed to create a streetcode"));
+                    const string errorMsg = "Failed to create a streetcode";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
                 }
             }
             catch(Exception ex)
             {
-                return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
+                string errorMsg = $"An error occurred while creating a streetcode. Message: {ex.Message}";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
         }
     }

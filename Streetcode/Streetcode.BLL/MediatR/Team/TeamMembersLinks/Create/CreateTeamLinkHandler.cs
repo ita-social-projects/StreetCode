@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService _logger;
 
-        public CreateTeamLinkHandler(IMapper mapper, IRepositoryWrapper repository)
+        public CreateTeamLinkHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<TeamMemberLinkDTO>> Handle(CreateTeamLinkQuery request, CancellationToken cancellationToken)
@@ -24,26 +27,41 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if (teamMemberLink is null)
             {
-                return Result.Fail(new Error("Cannot convert null to team link"));
+                const string errorMsg = "Cannot convert null to team link";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdTeamLink = _repository.TeamLinkRepository.Create(teamMemberLink);
 
             if (createdTeamLink is null)
             {
-                return Result.Fail(new Error("Cannot create team link"));
+                const string errorMsg = "Cannot create team link";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error("Failed to create a team"));
+                const string errorMsg = "Failed to create a team";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdTeamLinkDTO = _mapper.Map<TeamMemberLinkDTO>(createdTeamLink);
 
-            return createdTeamLinkDTO != null ? Result.Ok(createdTeamLinkDTO) : Result.Fail(new Error("Failed to map created team link"));
+            if(createdTeamLinkDTO != null)
+            {
+                return Result.Ok(createdTeamLinkDTO);
+            }
+            else
+            {
+                const string errorMsg = "Failed to map created team link";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

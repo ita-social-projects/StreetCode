@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.TransactionLinkTests
 {
@@ -32,10 +33,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IMapper> _mockMapper;
         private readonly TransactionLink nullValue = null;
         private readonly TransactLinkDTO nullValueDTO = null;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetTransactLinkByIdHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         async Task SetupRepository(int id)
@@ -58,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
@@ -84,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
             var expectedError = $"Cannot find any transaction link with corresponding id: {id}";
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
@@ -105,7 +108,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetAll
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
 
-        public GetAllTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetAllTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<TeamMemberDTO>>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
@@ -26,11 +29,12 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
 
             if (team is null)
             {
-                return Result.Fail(new Error($"Cannot find any team"));
+                const string errorMsg = $"Cannot find any team";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
-            var teamDtos = _mapper.Map<IEnumerable<TeamMemberDTO>>(team);
-            return Result.Ok(teamDtos);
+            return Result.Ok(_mapper.Map<IEnumerable<TeamMemberDTO>>(team));
         }
     }
 }

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -12,14 +13,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
 	public class CreateTermHandlerTests
 	{
-		private Mock<IRepositoryWrapper> _mockRepository;
-		private Mock<IMapper> _mockMapper;
+		private readonly Mock<IRepositoryWrapper> _mockRepository;
+		private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
-		public CreateTermHandlerTests() 
+        public CreateTermHandlerTests() 
 		{
 			_mockMapper = new();
 			_mockRepository = new();
-		}
+            _mockLogger = new Mock<ILoggerService>();
+        }
 
 		[Theory]
 		[InlineData(1)]
@@ -33,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>())).Returns(createdTerm);
         _mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
 
-        var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+        var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -54,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
           .Returns(GetNotExistingTerm()!);
 
         var expectedError = "Cannot convert null to Term";
-        var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+        var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
         //Act
         var result = await hendler.Handle(new CreateTermCommand(GetNotExistingTermDTO()!), CancellationToken.None);

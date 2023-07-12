@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
@@ -9,11 +10,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService _logger;
 
-        public UpdateTermHandler(IMapper mapper, IRepositoryWrapper repository)
+        public UpdateTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(UpdateTermCommand request, CancellationToken cancellationToken)
@@ -21,13 +24,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
             if (term is null)
             {
-                return Result.Fail(new Error("Cannot convert null to Term"));
+                const string errorMsg = "Cannot convert null to Term";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repository.TermRepository.Update(term);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to update a term"));
+            if (resultIsSuccess)
+            {
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                const string errorMsg = "Failed to update a term";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

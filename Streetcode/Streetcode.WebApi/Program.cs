@@ -17,6 +17,7 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
+builder.Services.ConfigureMiddleware(builder);
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")

@@ -4,9 +4,12 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using MimeKit.Cryptography;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Logging;
 
 namespace Streetcode.BLL.Middleware
@@ -14,24 +17,12 @@ namespace Streetcode.BLL.Middleware
     public class ApiRequestResponseMiddleware : IMiddleware
     {
         private readonly ILoggerService _loggerService;
-        private readonly string[] _loggerPropertiesExceptions;
-        private readonly string[] _exceptionProperties;
-        private readonly int _maxResponseLength;
+        private readonly MiddlewareOptions _options;
 
-        public ApiRequestResponseMiddleware(ILoggerService loggerService, IConfiguration configuration)
+        public ApiRequestResponseMiddleware(ILoggerService loggerService, IOptions<MiddlewareOptions> options)
         {
             _loggerService = loggerService;
-            _maxResponseLength = configuration.GetValue<int>("Middleware:ApiRequestResponse:MaxResponseLength");
-            _exceptionProperties = configuration.GetSection("Middleware:ApiRequestResponse:ExceptionProperties")
-                .Get<string[]>()
-                .Select(p => p.ToLower())
-                .ToArray();
-            _loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore")
-                .Get<string[]>()
-                .Select(p => p.ToLower())
-                .ToArray();
-            //_loggerPropertiesExceptions = configuration.GetSection("Serilog:PropertiesToIgnore").Get<string[]>();
-            //_exceptionProperties = configuration.GetSection("Middleware:ApiRequestResponse:ExceptionProperties").Get<string[]>();
+            _options = options.Value;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -80,7 +71,7 @@ namespace Streetcode.BLL.Middleware
             return $"{request.Scheme} {request.Host} {request.Path} {request.QueryString} {bodyAsText}";
         }
 
-        private async Task<string> GetResponseAsTextAsync(HttpResponse response)
+        private static async Task<string> GetResponseAsTextAsync(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
 
@@ -125,16 +116,16 @@ namespace Streetcode.BLL.Middleware
         {
             foreach (var property in token.Children<JProperty>().ToList())
             {
-                if (!_loggerPropertiesExceptions.Contains(property.Name.ToString().ToLower()))
+                if (!_options.PropertiesToIgnore.Contains(property.Name.ToString().ToLower()))
                 {
-                    if (_exceptionProperties.Contains(property.Name.ToString().ToLower()))
+                    if (!_options.PropertiesToShorten.Contains(property.Name.ToString().ToLower()))
                     {
                         continue;
                     }
 
-                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _maxResponseLength)
+                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
                     {
-                        property.Value = new JValue(property.Value.ToString().Substring(0, _maxResponseLength));
+                        property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength));
                     }
                     else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
                     {

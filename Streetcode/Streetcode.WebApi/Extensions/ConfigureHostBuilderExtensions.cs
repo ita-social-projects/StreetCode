@@ -1,8 +1,10 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Configuration;
+using Serilog;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
+using System.Runtime;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -46,5 +48,10 @@ public static class ConfigureHostBuilderExtensions
                 loggerConfiguration.Filter.ByExcluding(filterExpression);
             }
         });
+    }
+
+    public static void ConfigureMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<MiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
     }
 }

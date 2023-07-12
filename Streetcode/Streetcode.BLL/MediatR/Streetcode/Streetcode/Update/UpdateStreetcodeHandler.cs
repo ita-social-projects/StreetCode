@@ -57,6 +57,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
                     }
 
+                    _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property(x => x.CreatedAt).IsModified = false;
+                    streetcodeToUpdate.UpdatedAt = DateTime.UtcNow;
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 

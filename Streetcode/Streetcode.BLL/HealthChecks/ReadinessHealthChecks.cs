@@ -6,10 +6,21 @@ namespace Streetcode.BLL.HealthChecks
 {
     public class ReadinessHealthChecks : IHealthCheck
     {
+        private readonly string _databaseProblem;
+        private readonly string _blobStorageProblem;
+        private readonly string _apiProblem;
+        private readonly string _healthyReadiness;
         private readonly IConfiguration _configuration;
+
         public ReadinessHealthChecks(IConfiguration configuration)
         {
             _configuration = configuration;
+            _databaseProblem = $"{Environment.NewLine}Database is not available";
+            _blobStorageProblem = $"{Environment.NewLine}Blob storage is not available";
+            _apiProblem = $"{Environment.NewLine}API is not available";
+            _healthyReadiness = $"{Environment.NewLine}The database is available for use." +
+                $"{Environment.NewLine}The blob storage is accessible and ready for data storage." +
+                $"{Environment.NewLine}The API is up and running, ready to handle requests.";
         }
 
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
@@ -22,31 +33,25 @@ namespace Streetcode.BLL.HealthChecks
             bool isDatabaseAvailable = await CheckDatabaseAvailability();
             bool isBlobStorageAvailable = await CheckBlobStorageAvailability();
             bool isApiAvailable = await CheckApiAvailability();
-            const string DATABASE_PROBLEM = "\nDatabase is not available";
-            const string BLOBSTORAGE_PROBLEM = "\nBlobstorage is not available";
-            const string API_PROBLEM = "\nAPI is not available";
-            const string HEALTHY_READINESS = "\nThe database is available for use." +
-                "\nThe blob storage is accessible and ready for data storage." +
-                "\nThe API is up and running, ready to handle requests.";
             string description = string.Empty;
             if (!isDatabaseAvailable)
             {
-                description += DATABASE_PROBLEM;
+                description += _databaseProblem;
             }
 
             if (!isBlobStorageAvailable)
             {
-                description += BLOBSTORAGE_PROBLEM;
+                description += _blobStorageProblem;
             }
 
             if (!isApiAvailable)
             {
-                description += API_PROBLEM;
+                description += _apiProblem;
             }
 
             if (isDatabaseAvailable && isApiAvailable && isBlobStorageAvailable)
             {
-                description = HEALTHY_READINESS;
+                description = _healthyReadiness;
                 return HealthCheckResult.Healthy(description);
             }
             else

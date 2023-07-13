@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -16,11 +18,13 @@ public class GetCategoryByIdTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<IBlobService> _mockBlobService;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
     public GetCategoryByIdTest()
     {
         _mockBlobService = new Mock<IBlobService>();
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
     [Theory]
     [InlineData(1)]
@@ -41,7 +45,8 @@ public class GetCategoryByIdTest
         var handler = new GetCategoryByIdHandler(
             _mockRepository.Object,
             _mockMapper.Object,
-            _mockBlobService.Object);
+            _mockBlobService.Object,
+            _mockLocalizerCannotFind.Object);
 
         // act
 
@@ -72,7 +77,8 @@ public class GetCategoryByIdTest
         var handler = new GetCategoryByIdHandler(
             _mockRepository.Object,
             _mockMapper.Object,
-            _mockBlobService.Object);
+            _mockBlobService.Object,
+            _mockLocalizerCannotFind.Object);
 
         var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
         // act

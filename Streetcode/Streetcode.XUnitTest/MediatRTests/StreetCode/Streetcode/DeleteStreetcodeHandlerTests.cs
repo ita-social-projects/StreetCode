@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -12,9 +14,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     public class DeleteStreetcodeHandlerTests
     {   
         private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
+
+
+
+
         public DeleteStreetcodeHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
         }
 
         [Theory]
@@ -27,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(testStreetcode, testSaveChangesSuccess);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert
@@ -44,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(null, testSaveChangesSuccess);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert
@@ -62,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             RepositorySetup(testStreetcode, testSaveChangesFailed);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object);
+            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
             // assert

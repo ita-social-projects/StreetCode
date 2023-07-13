@@ -7,6 +7,8 @@ using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
@@ -14,11 +16,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
     {
         private Mock<IRepositoryWrapper> _mockRepository;
         private Mock<IMapper> _mockMapper;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetAllTeamTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         private void SetupGetAllTeams(List<TeamMember> teamList)
@@ -55,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -78,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object,_mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -99,7 +103,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
 
             SetupGetAllTeams(GetTeamListWithNotExistingId());
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);

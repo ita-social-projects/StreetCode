@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Transactions;
@@ -27,10 +29,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IMapper> _mockMapper;
         private readonly StreetcodeContent nullValue = null;
         private readonly StreetcodeDTO nullValueDTO = null;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetStreetcodeByTransliterationUrlHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+
         }
 
         async Task SetupRepository(string url)
@@ -58,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await SetupMapper(url);
             await SetupRepository(url);
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
@@ -84,7 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var expectedError = $"Cannot find streetcode by transliteration url: {url}";
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
@@ -105,7 +110,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await SetupMapper(url);
             await SetupRepository(url);
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);

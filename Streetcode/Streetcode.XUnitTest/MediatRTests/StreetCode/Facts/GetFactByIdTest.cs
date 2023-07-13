@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -14,10 +16,12 @@ public class GetFactByIdTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
     public GetFactByIdTest() {
         _mockMapper = new Mock<IMapper>();
         _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -37,7 +41,7 @@ public class GetFactByIdTest
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -69,7 +73,7 @@ public class GetFactByIdTest
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -99,7 +103,7 @@ public class GetFactByIdTest
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);

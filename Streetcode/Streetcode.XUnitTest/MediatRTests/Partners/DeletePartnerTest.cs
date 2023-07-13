@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.MediatR.Partners.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,11 +16,13 @@ public class DeletePartnerTest
 {
     private Mock<IMapper> _mockMapper;
     private Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
 
     public DeletePartnerTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
     }
 
     [Fact]
@@ -33,7 +37,7 @@ public class DeletePartnerTest
         _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(),null))
             .ReturnsAsync(testPartner);       
 
-        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNoShared.Object);
 
         //Act
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
@@ -59,7 +63,7 @@ public class DeletePartnerTest
             .ReturnsAsync(GetPartnerWithNotExistingId());
 
         //Act
-        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNoShared.Object);
 
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 
@@ -85,7 +89,7 @@ public class DeletePartnerTest
             .Throws(new Exception(expectedError));
 
         //Act
-        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new DeletePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNoShared.Object);
 
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 

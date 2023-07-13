@@ -7,6 +7,8 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
@@ -14,11 +16,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
     {
         private Mock<IMapper> _mockMapper;
         private Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNo;
+
 
         public DeleteTeamTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizerNo = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         private void SetupMapTeamMember(TeamMember teamMember)
@@ -49,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupMapTeamMember(testTeam);
             SetupGetFirstOrDefaultAsync(testTeam);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNo.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);
@@ -73,7 +78,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
 
             SetupGetFirstOrDefaultAsync(null);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNo.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);
@@ -95,7 +100,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetFirstOrDefaultAsync(testTeam);
             SetupSaveChangesException(expectedError);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerNo.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);

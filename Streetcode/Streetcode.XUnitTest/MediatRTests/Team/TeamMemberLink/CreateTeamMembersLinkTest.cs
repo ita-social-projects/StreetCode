@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -20,11 +22,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
     {
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
+
 
         public CreateTeamMembersLinkTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -37,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
@@ -56,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
@@ -76,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             SetupCreateMethod(testTeamMemberLink);
             SetupSaveChangesMethodWithErrorThrow(expectedErrorMessage);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);
@@ -100,7 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
                 .Returns((TeamMemberLink)null);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);
@@ -120,7 +129,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
                 .Returns((TeamMemberLink)null);
 
-            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             //Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null), CancellationToken.None);

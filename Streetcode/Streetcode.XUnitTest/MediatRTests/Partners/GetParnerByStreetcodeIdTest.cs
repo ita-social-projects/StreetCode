@@ -1,8 +1,10 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -16,11 +18,14 @@ public class GetParnerByStreetcodeIdTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+
 
     public GetParnerByStreetcodeIdTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -47,7 +52,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object,_mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
@@ -83,7 +88,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
@@ -121,7 +126,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOListWithNotExistingId());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotFind.Object);
     
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);

@@ -1,6 +1,8 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Localization;
+using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
@@ -10,10 +12,14 @@ namespace Streetcode.XUnitTest.MediatRTests.News
     public class DeleteNewsTest
     {
         private Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailed;
 
         public DeleteNewsTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLocalizerFailed = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+            _mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Fact]
@@ -24,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupMockRepositoryGetFirstOrDefault(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object,_mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -47,7 +53,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var expectedError = $"No news found by entered Id - {testNews.Id}";
             SetupMockRepositoryGetFirstOrDefault(null);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -66,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupMockRepositoryGetFirstOrDefault(testNews);
             SetupMockRepositorySaveChangesException(expectedError);
 
-            var handler = new DeleteNewsHandler(_mockRepository.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.MediatR.Streetcode.Term.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -14,11 +16,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 	{
 		private Mock<IRepositoryWrapper> _mockRepository;
 		private Mock<IMapper> _mockMapper;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
 
-		public CreateTermHandlerTests() 
+        public CreateTermHandlerTests() 
 		{
 			_mockMapper = new();
 			_mockRepository = new();
+            _mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
 		}
 
 		[Theory]
@@ -33,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>())).Returns(createdTerm);
         _mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
 
-        var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+        var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
         // Act
         var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -54,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
           .Returns(GetNotExistingTerm()!);
 
         var expectedError = "Cannot convert null to Term";
-        var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object);
+        var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
         //Act
         var result = await hendler.Handle(new CreateTermCommand(GetNotExistingTermDTO()!), CancellationToken.None);

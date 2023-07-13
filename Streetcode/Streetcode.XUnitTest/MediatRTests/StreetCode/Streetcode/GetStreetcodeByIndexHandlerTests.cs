@@ -9,6 +9,8 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.DAL.Entities.Streetcode;
 using Microsoft.EntityFrameworkCore.Query;
 using Model = Streetcode.DAL.Entities.Streetcode.StreetcodeContent;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
@@ -16,10 +18,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetStreetcodeByIndexHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -47,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testDTOList);
 
-            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
+            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
             // assert
@@ -64,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             Setup(null, testStreetcodeDTO);
 
-            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
+            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
             // assert
@@ -81,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             Setup(testStreetcode, testStreetcodeDTO);
 
-            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object);
+            var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
             // assert

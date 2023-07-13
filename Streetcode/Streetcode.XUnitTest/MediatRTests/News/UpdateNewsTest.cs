@@ -10,6 +10,8 @@ using Streetcode.DAL.Entities.Media.Images;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.News
 {
@@ -18,12 +20,16 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         private Mock<IRepositoryWrapper> _mockRepository;
         private Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public UpdateNewsTests()
         {
             _mockRepository = new();
             _mockMapper = new();
             _blobService = new Mock<IBlobService>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
         }
 
         [Theory]
@@ -38,7 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupMapper(testNews, testNewsDTO);
             SetupImageRepository();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object,_mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(testNewsDTO), CancellationToken.None);
@@ -57,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupUpdateRepository(returnNumber);
             SetupMapperWithNullNews();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTOWithNotExistId()), CancellationToken.None);
@@ -80,7 +86,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupImageRepository();
 
             var expectedError = "Failed to update news";
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(testNewsDTO), CancellationToken.None);
@@ -99,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             SetupMapper(GetNews(), GetNewsDTO());
             SetupImageRepository();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -17,11 +19,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetCategoriesByStreetcodeIdTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
         [Theory]
         [InlineData(1)]
@@ -41,7 +45,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
-                _blobService.Object);
+                _blobService.Object,
+                _mockLocalizerCannotFind.Object);
 
             // act
 
@@ -72,7 +77,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
-                _blobService.Object);
+                _blobService.Object,
+                _mockLocalizerCannotFind.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";
             // act

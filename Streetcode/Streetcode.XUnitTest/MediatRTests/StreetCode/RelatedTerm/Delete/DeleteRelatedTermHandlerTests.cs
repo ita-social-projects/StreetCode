@@ -2,8 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
@@ -15,11 +17,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
     {
         private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
         private readonly Mock<IMapper> _mapperMock;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
 
         public DeleteRelatedTermHandlerTests()
         {
             _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             _mapperMock = new Mock<IMapper>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
         }
 
         [Theory]
@@ -32,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>())).ReturnsAsync(relatedTerm);
             _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Delete(relatedTerm));
             _repositoryWrapperMock.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
-            var handler = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var handler = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(id);
 
             // Act
@@ -54,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             // Arrange
             _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Entity, bool>>>(),
                  It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>())).ReturnsAsync((Entity)null);
-            var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(id);
 
             // Act
@@ -81,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             _repositoryWrapperMock.Setup(rw => rw.RelatedTermRepository.Delete(It.IsAny<Entity>()));
             _repositoryWrapperMock.Setup(rw => rw.SaveChangesAsync())
                  .ReturnsAsync(0);
-            var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object);
+            var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(id);
             var expectedError = "Failed to delete a related term";
 

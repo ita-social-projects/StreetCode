@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Query;
 using FluentResults;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 {
@@ -17,6 +19,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetAllImagesTest()
         {
@@ -30,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object,_mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllImagesQuery(), default);
@@ -45,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             //Arrange
             MockRepositoryAndMapper(new List<Image>() { }, new List<ImageDTO>() { });
-            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLocalizer.Object);
             int expectedResult = 0;
 
             //Act
@@ -61,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             //Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetAllImagesQuery(), default);

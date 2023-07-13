@@ -1,14 +1,14 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
 {
-    public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
-          Result<IEnumerable<RelatedFigureShortDTO>>>
+   public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
+          Result<IEnumerable<StreetcodeShortDTO>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -19,7 +19,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
           _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<RelatedFigureShortDTO>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published);
@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
                 return Result.Fail("No streetcodes exist now");
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureShortDTO>>(streetcodes));
+            return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
         }
-    }
+   }
 }

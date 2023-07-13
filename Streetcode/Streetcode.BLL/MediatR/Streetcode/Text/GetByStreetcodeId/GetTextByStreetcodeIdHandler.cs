@@ -41,16 +41,13 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
             }
         }
 
-        var textDto = _mapper.Map<TextDTO?>(text);
-
-        if(text is null)
+        NullResult<TextDTO?> result = new NullResult<TextDTO?>();
+        if (text != null)
         {
-            return Result.Fail(new Error(""));
+            text.TextContent = await _textService.AddTermsTag(text?.TextContent ?? "");
+            result.WithValue(_mapper.Map<TextDTO?>(text));
         }
 
-        NullResult<TextDTO?> result = new NullResult<TextDTO?>();
-        text.TextContent = await _textService.AddTermsTag(text?.TextContent ?? "");
-        result.WithValue(_mapper.Map<TextDTO?>(text));
         return result;
     }
 }

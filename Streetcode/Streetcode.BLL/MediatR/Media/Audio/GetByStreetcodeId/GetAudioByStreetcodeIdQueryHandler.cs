@@ -38,14 +38,16 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
             return Result.Fail(new Error(errorMsg));
         }
 
-        AudioDTO audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
+        NullResult<AudioDTO> result = new NullResult<AudioDTO>();
+
         if (streetcode.Audio != null)
         {
+            AudioDTO audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
+            audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
             audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
+            result.WithValue(audioDto);
         }
 
-        NullResult<AudioDTO> result = new NullResult<AudioDTO>();
-        result.WithValue(_mapper.Map<AudioDTO>(streetcode.Audio));
         return result;
     }
 }

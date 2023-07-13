@@ -1,6 +1,12 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Configuration;
+using System.Net;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Newtonsoft.Json;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.BLL.Services.BlobStorageService;
 
 namespace Streetcode.BLL.HealthChecks
 {
@@ -11,10 +17,12 @@ namespace Streetcode.BLL.HealthChecks
         private readonly string _apiProblem;
         private readonly string _healthyReadiness;
         private readonly IConfiguration _configuration;
+        private readonly IBlobService _blobService;
 
-        public ReadinessHealthChecks(IConfiguration configuration)
+        public ReadinessHealthChecks(IConfiguration configuration, IBlobService blobService)
         {
             _configuration = configuration;
+            _blobService = blobService;
             _databaseProblem = $"{Environment.NewLine}Database is not available";
             _blobStorageProblem = $"{Environment.NewLine}Blob storage is not available";
             _apiProblem = $"{Environment.NewLine}API is not available";
@@ -82,6 +90,15 @@ namespace Streetcode.BLL.HealthChecks
         {
             string relativePath = _configuration["Blob:BlobStorePath"];
             string absolutePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relativePath));
+            byte[] testData = new byte[1024];
+            new Random().NextBytes(testData);
+            string base64 = Convert.ToBase64String(testData);
+            string title = DateTime.Now.ToString();
+            string extension = "mp3";
+            string hashBlobStorageName = _blobService.SaveFileInStorage(base64, title, extension);
+            string fileName = $"{hashBlobStorageName}.{extension}";
+            string filePath = Path.Combine(absolutePath, fileName);
+
             try
             {
                 if (!Directory.Exists(absolutePath))
@@ -89,9 +106,21 @@ namespace Streetcode.BLL.HealthChecks
                     return false;
                 }
 
-                string checkFilePath = Path.Combine(absolutePath, "check.txt");
-                await File.WriteAllTextAsync(checkFilePath, "check");
-                File.Delete(checkFilePath);
+                if(string.IsNullOrEmpty(hashBlobStorageName))
+                {
+                    return false;
+                }
+
+                if(filePath == Path.GetFileName(filePath))
+                {
+                    return false;
+                }
+
+                _blobService.DeleteFileInStorage(fileName);
+                if (File.Exists(filePath))
+                {
+                    return false;
+                }
 
                 return true;
             }
@@ -103,29 +132,15 @@ namespace Streetcode.BLL.HealthChecks
 
         private async Task<bool> CheckApiAvailability()
         {
+            string url = _configuration["Jwt:Issuer"];
+            // on localhost no another option to test it, delete 2 rows below on deploy
             const string ENDPOINT = "api/Audio/GetAll";
-            string apiUrl = _configuration["Jwt:Issuer"];
-            string apiCheck = apiUrl + ENDPOINT;
-            using (var httpClient = new HttpClient())
-            {
-                try
-                {
-                    var response = await httpClient.GetAsync(apiCheck);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            }
+            url = url + ENDPOINT;
+            // =======
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(url);
+            HttpResponseMessage response = await client.GetAsync("");
+            return response.StatusCode == HttpStatusCode.OK;
         }
     }
 }

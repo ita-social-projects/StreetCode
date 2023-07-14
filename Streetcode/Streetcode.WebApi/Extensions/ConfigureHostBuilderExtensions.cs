@@ -35,7 +35,6 @@ public static class ConfigureHostBuilderExtensions
         services.Configure<InstagramEnvirovmentVariables>(builder.Configuration.GetSection("Instagram"));
     }
 
-
     public static void ConfigureRateLimiting(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddMemoryCache();

@@ -9,12 +9,6 @@ namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class RelatedFigureController : BaseApiController
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllPublished()
-    {
-        return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
-    }
-
     [HttpGet("{streetcodeId:int}")]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

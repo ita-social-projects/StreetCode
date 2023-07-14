@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -15,12 +16,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private Mock<IRepositoryWrapper> _mockRepository;
         private Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetAllNewsTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -29,7 +32,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
@@ -47,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
@@ -66,7 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var expectedError = "There are no news in the database";
             SetupMockRepositoryGetAllAsync(GetNewsListWithNotExistingId());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);

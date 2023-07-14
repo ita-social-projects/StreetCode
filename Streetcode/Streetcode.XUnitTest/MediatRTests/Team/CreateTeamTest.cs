@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,11 +15,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
     {
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public CreateTeamTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -30,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
             // Assert
@@ -49,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
             _mockRepository.Setup(repo => repo.SaveChanges()).Throws(new Exception(exceptionMessage));
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
             // Assert
@@ -65,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
             // Assert
@@ -87,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             GetsAsyncRepositorySetup(link: links);
             _mockRepository.Setup(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()));
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
             // Assert
@@ -118,7 +121,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
                 IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(oldPositions);
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
             // Assert
@@ -147,7 +150,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>()))
                 .Returns(new Positions());
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
             // Assert

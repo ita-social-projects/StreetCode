@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Team.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
 
-        public UpdateTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public UpdateTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
@@ -81,6 +84,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
             }
             catch (Exception ex)
             {
+                _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
         }

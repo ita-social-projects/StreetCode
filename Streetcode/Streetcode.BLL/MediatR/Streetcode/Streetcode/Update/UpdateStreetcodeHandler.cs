@@ -4,11 +4,14 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -21,11 +24,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
 
-        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -48,7 +53,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
-                    await UpdateFactsDescription(request.Streetcode.ImageDetailses);
+                    await UpdateFactsDescription(request.Streetcode.ImagesDetails);
+
+                    if (request.Streetcode.Text != null)
+                    {
+                        await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
+                    }
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -60,19 +70,27 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
                     else
                     {
-                        return Result.Fail(new Error("Failed to update a streetcode"));
+                        const string errorMsg = "Failed to update a streetcode";
+                        _logger.LogError(request, errorMsg);
+                        return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
-                    Console.WriteLine(ex.Message);
-                    return Result.Fail(new Error("An error occurred while updating a streetcode"));
+                    const string errorMsg = "An error occurred while updating a streetcode";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
                 }
             }
         }
 
-        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto> imageDetails)
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
         {
+            if(imageDetails == null)
+            {
+                return;
+            }
+
             _repositoryWrapper.ImageDetailsRepository
                 .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt == "" && f.Id != 0)));
 
@@ -165,6 +183,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             string condition = string.Join(" OR ", toponymsName.Select(name => $"t.StreetName LIKE '%{name}%'"));
             query += condition + ")";
+
             return query;
         }
 

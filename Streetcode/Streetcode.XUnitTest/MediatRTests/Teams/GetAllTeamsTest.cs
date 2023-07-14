@@ -7,18 +7,21 @@ using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
     public class GetAllTeamTest
     {
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetAllTeamTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         private void SetupGetAllTeams(List<TeamMember> teamList)
@@ -55,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -78,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -99,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
 
             SetupGetAllTeams(GetTeamListWithNotExistingId());
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);

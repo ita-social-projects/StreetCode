@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -12,13 +13,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
 {
     public class GetAllRelatedTermsByTermIdHandlerTest
     {
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetAllRelatedTermsByTermIdHandlerTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Theory]
@@ -33,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync((IEnumerable<Entity>)null);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -57,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
                 .Returns((IEnumerable<RelatedTermDTO>)null);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -82,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -110,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
 
             var query = new GetAllRelatedTermsByTermIdQuery(termId);
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,11 +15,13 @@ public class GetAllFactsTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;  
 
     public GetAllFactsTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
@@ -27,7 +30,7 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -45,7 +48,7 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -75,7 +78,7 @@ public class GetAllFactsTest
 
         var expectedError = "Cannot find any fact";
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);

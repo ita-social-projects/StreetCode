@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
@@ -8,10 +9,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
     public class DeleteTermHandler : IRequestHandler<DeleteTermCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService _logger;
 
-        public DeleteTermHandler(IRepositoryWrapper repository)
+        public DeleteTermHandler(IRepositoryWrapper repository, ILoggerService logger)
         {
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task<Result<Unit>> Handle(DeleteTermCommand request, CancellationToken cancellationToken)
@@ -20,13 +23,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
 
             if (term is null)
             {
-                return Result.Fail(new Error("Cannot convert null to Term"));
+                const string errorMsg = "Cannot convert null to Term";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repository.TermRepository.Delete(term);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a term"));
+            if(resultIsSuccess)
+            {
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                const string errorMsg = "Failed to delete a term";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

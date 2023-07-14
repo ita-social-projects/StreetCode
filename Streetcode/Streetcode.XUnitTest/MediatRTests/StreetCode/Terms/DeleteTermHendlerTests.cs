@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Delete;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -10,12 +11,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
 	public class DeleteTermHendlerTests
 	{
-		private Mock<IRepositoryWrapper> _mockRepository;
+		private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<ILoggerService> _mockLogger;
 
-		public DeleteTermHendlerTests()
+        public DeleteTermHendlerTests()
 		{
 			_mockRepository = new();
-		}
+            _mockLogger = new Mock<ILoggerService>();
+        }
 
 		[Theory]
 		[InlineData(-1, 1)]
@@ -24,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			//Arrange
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
 			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
-			var handler = new DeleteTermHandler(_mockRepository.Object);
+			var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
 
 			//Act
 			var result = await handler.Handle(new DeleteTermCommand(id), CancellationToken.None);
@@ -44,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, false);
 
 			var expectedError = "Cannot convert null to Term";
-			var handler = new DeleteTermHandler(_mockRepository.Object);
+			var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
 
 			//Act
 			var result = await handler.Handle(new DeleteTermCommand(id), CancellationToken.None);
@@ -62,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
             var expectedError = "Failed to delete a term";
-            var hendler = new DeleteTermHandler(_mockRepository.Object);
+            var hendler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await hendler.Handle(new DeleteTermCommand(id), CancellationToken.None);

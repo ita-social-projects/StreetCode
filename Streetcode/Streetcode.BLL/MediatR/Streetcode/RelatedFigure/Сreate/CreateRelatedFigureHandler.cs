@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using NLog.Targets;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,11 +12,13 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
 
-    public CreateRelatedFigureHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public CreateRelatedFigureHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(CreateRelatedFigureCommand request, CancellationToken cancellationToken)
@@ -25,12 +28,16 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 
         if (observerEntity is null)
         {
-            return Result.Fail(new Error($"No existing streetcode with id: {request.ObserverId}"));
+            string errorMsg = $"No existing streetcode with id: {request.ObserverId}";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         if (targetEntity is null)
         {
-            return Result.Fail(new Error($"No existing streetcode with id: {request.TargetId}"));
+            string errorMsg = $"No existing streetcode with id: {request.TargetId}";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var relation = new DAL.Entities.Streetcode.RelatedFigure
@@ -42,6 +49,15 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         _repositoryWrapper.RelatedFigureRepository.Create(relation);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to create a relation."));
+        if(resultIsSuccess)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            string errorMsg = "Failed to create a relation.";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

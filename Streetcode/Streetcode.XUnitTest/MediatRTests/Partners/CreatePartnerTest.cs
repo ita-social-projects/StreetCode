@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
@@ -13,13 +14,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class CreatePartnerTest
 {
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
 
     public CreatePartnerTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
@@ -40,7 +43,7 @@ public class CreatePartnerTest
         _mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
-        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);
@@ -67,7 +70,7 @@ public class CreatePartnerTest
         _mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
-        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);
@@ -94,7 +97,7 @@ public class CreatePartnerTest
         _mockRepository.Setup(x => x.SaveChanges())
             .Throws(new Exception(expectedError));
 
-        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new CreatePartnerHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);

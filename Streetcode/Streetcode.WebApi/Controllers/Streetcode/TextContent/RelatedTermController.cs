@@ -1,18 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Update;
-using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 {
@@ -36,10 +27,10 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
             return HandleResult(await Mediator.Send(new UpdateRelatedTermCommand(id, relatedTerm)));
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpDelete("{word}")]
+        public async Task<IActionResult> Delete([FromRoute] string word)
         {
-            return HandleResult(await Mediator.Send(new DeleteRelatedTermCommand(id)));
+            return HandleResult(await Mediator.Send(new DeleteRelatedTermCommand(word)));
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using AspNetCoreRateLimit;
+﻿using Serilog.Events;
+using Serilog;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -32,6 +35,7 @@ public static class ConfigureHostBuilderExtensions
         services.Configure<InstagramEnvirovmentVariables>(builder.Configuration.GetSection("Instagram"));
     }
 
+
     public static void ConfigureRateLimiting(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddMemoryCache();
@@ -41,5 +45,15 @@ public static class ConfigureHostBuilderExtensions
         services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
         services.AddInMemoryRateLimiting();
+    }
+
+    public static void ConfigureSerilog(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((ctx, services, loggerConfiguration) =>
+        {
+            loggerConfiguration
+                .ReadFrom.Configuration(builder.Configuration);
+        });
+
     }
 }

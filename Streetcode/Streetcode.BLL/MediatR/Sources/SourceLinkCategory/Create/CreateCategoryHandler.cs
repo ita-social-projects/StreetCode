@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -10,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
 
-        public CreateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public CreateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<DAL.Entities.Sources.SourceLinkCategory>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -27,12 +30,23 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 
             if (category is null)
             {
-                return Result.Fail(new Error("Cannot convert null to Category"));
+                const string errorMsg = "Cannot convert null to Category";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var returned = _repositoryWrapper.SourceCategoryRepository.Create(category);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(returned) : Result.Fail(new Error("Failed to create a category"));
+            if(resultIsSuccess)
+            {
+                return Result.Ok(returned);
+            }
+            else
+            {
+                const string errorMsg = "Failed to create a category";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

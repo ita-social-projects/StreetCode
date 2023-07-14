@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Video.GetAll;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -14,11 +15,12 @@ public class GetAllVideosTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
-
+    private readonly Mock<ILoggerService> _mockLogger;
     public GetAllVideosTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
@@ -26,7 +28,7 @@ public class GetAllVideosTest
     {
         //Arrange
         (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -43,7 +45,7 @@ public class GetAllVideosTest
     {
         //Arrange
         (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);    
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -72,7 +74,7 @@ public class GetAllVideosTest
             .Returns(GetVideosDTOWithNotExistingId());
 
         var expectedError = "Cannot find any videos";
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);

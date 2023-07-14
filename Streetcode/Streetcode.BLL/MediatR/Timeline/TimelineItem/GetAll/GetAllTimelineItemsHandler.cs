@@ -2,7 +2,9 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,11 +14,13 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
 
-    public GetAllTimelineItemsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllTimelineItemsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<IEnumerable<TimelineItemDTO>>> Handle(GetAllTimelineItemsQuery request, CancellationToken cancellationToken)
@@ -29,10 +33,11 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
 
         if (timelineItems is null)
         {
-            return Result.Fail(new Error($"Cannot find any timelineItem"));
+            const string errorMsg = $"Cannot find any timelineItem";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
-        var timelineItemDtos = _mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems);
-        return Result.Ok(timelineItemDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems));
     }
 }

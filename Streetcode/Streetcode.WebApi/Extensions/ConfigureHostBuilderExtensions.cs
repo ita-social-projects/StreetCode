@@ -54,6 +54,5 @@ public static class ConfigureHostBuilderExtensions
             loggerConfiguration
                 .ReadFrom.Configuration(builder.Configuration);
         });
-
     }
 }

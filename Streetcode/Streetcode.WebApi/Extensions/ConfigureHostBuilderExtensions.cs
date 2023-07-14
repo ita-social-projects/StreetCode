@@ -1,4 +1,5 @@
-﻿using Streetcode.BLL.Services.BlobStorageService;
+﻿using AspNetCoreRateLimit;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
 
@@ -29,5 +30,16 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureInstagram(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<InstagramEnvirovmentVariables>(builder.Configuration.GetSection("Instagram"));
+    }
+
+    public static void ConfigureRateLimiting(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.AddMemoryCache();
+        services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+        services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+        services.AddInMemoryRateLimiting();
     }
 }

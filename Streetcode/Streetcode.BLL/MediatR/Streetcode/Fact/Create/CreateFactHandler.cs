@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.Create;
@@ -9,11 +10,13 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
 
-    public CreateFactHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public CreateFactHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<Result<Unit>> Handle(CreateFactCommand request, CancellationToken cancellationToken)
@@ -22,12 +25,23 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            return Result.Fail(new Error("Cannot convert null to Fact"));
+            const string errorMsg = "Cannot convert null to Fact";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         _repositoryWrapper.FactRepository.Create(fact);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to create a fact"));
+        if (resultIsSuccess)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = "Failed to create a fact";
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

@@ -29,7 +29,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public StreetcodeType StreetcodeType { get; set; }
         public string Title { get; set; }
         public string TransliterationUrl { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public TextUpdateDTO? Text { get; set; }
@@ -46,6 +45,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
         public IEnumerable<ImageUpdateDTO> Images { get; set; }
         public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
-        public IEnumerable<ImageDetailsDto> ImageDetailses { get; set; }
+        public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.Delete;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -14,10 +15,12 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
     public class DeleteTextTest
     {
         private Mock<IRepositoryWrapper> repository;
+        private Mock<ILoggerService> _mockLogger;
 
         public DeleteTextTest()
         {
             repository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         private static Text GetText(int id)
@@ -42,7 +45,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new DeleteTextHandler(repository.Object);
+            var handler = new DeleteTextHandler(repository.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new DeleteTextCommand(id), CancellationToken.None);
 

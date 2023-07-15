@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Team.Position.GetAll;
 using Streetcode.DAL.Entities.Team;
@@ -20,11 +21,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetAllPositionTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -34,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupMapMethod(GetListPositionDTO());
             SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -53,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupMapMethod(GetListPositionDTO());
             SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -73,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 
             SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);

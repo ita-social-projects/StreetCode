@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -17,6 +18,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -223,10 +225,12 @@ public class StreetcodeDbContext : DbContext
             entity.Property(s => s.ViewCount)
                 .HasDefaultValue(0);
 
-            entity.HasDiscriminator<string>("StreetcodeType")
-                .HasValue<StreetcodeContent>("streetcode-base")
-                .HasValue<PersonStreetcode>("streetcode-person")
-                .HasValue<EventStreetcode>("streetcode-event");
+            entity.HasDiscriminator<string>(StreetcodeTypeDiscriminators.DiscriminatorName)
+                .HasValue<StreetcodeContent>(StreetcodeTypeDiscriminators.StreetcodeBaseType)
+                .HasValue<PersonStreetcode>(StreetcodeTypeDiscriminators.StreetcodePersonType)
+                .HasValue<EventStreetcode>(StreetcodeTypeDiscriminators.StreetcodeEventType);
+
+            entity.Property<string>("StreetcodeType").Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Save);
 
             entity.HasMany(d => d.Coordinates)
                 .WithOne(c => c.Streetcode)

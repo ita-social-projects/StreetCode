@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Moq;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -10,11 +11,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class DeleteFactTest
 {
-    private Mock<IRepositoryWrapper> _repository;
+    private readonly Mock<IRepositoryWrapper> _repository;
+    private readonly Mock<ILoggerService> _mockLogger;
 
     public DeleteFactTest()
     {
         _repository = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();
     }
 
     [Theory]
@@ -34,7 +37,7 @@ public class DeleteFactTest
 
         _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        var handler = new DeleteFactHandler(_repository.Object);
+        var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
@@ -64,7 +67,7 @@ public class DeleteFactTest
         var expectedError = $"Cannot find a fact with corresponding categoryId: {id}";
 
         //Act
-        var handler = new DeleteFactHandler(_repository.Object);
+        var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 
@@ -92,7 +95,7 @@ public class DeleteFactTest
         var expectedError = "Failed to delete a fact";
 
         //Act
-        var handler = new DeleteFactHandler(_repository.Object);
+        var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 

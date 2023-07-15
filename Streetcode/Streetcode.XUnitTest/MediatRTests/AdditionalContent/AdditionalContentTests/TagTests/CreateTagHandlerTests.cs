@@ -13,6 +13,7 @@ using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Transactions;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -32,11 +33,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-
+        private readonly Mock<ILoggerService> _mockLogger;
         public CreateTagHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -49,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
 
 
-            var handler = new CreateTagHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new CreateTagHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreateTagQuery(new CreateTagDTO()), CancellationToken.None);

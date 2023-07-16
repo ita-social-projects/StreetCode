@@ -7,6 +7,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using Newtonsoft.Json;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.BLL.Services.BlobStorageService;
+using Microsoft.Extensions.Options;
 
 namespace Streetcode.BLL.HealthChecks
 {
@@ -16,12 +17,12 @@ namespace Streetcode.BLL.HealthChecks
         private readonly string _blobStorageProblem;
         private readonly string _apiProblem;
         private readonly string _healthyReadiness;
-        private readonly IConfiguration _configuration;
+        private readonly HealthChecksOptions _options;
         private readonly IBlobService _blobService;
 
-        public ReadinessHealthChecks(IConfiguration configuration, IBlobService blobService)
+        public ReadinessHealthChecks(IOptions<HealthChecksOptions> options, IBlobService blobService)
         {
-            _configuration = configuration;
+            _options = options.Value;
             _blobService = blobService;
             _databaseProblem = $"{Environment.NewLine}Database is not available";
             _blobStorageProblem = $"{Environment.NewLine}Blob storage is not available";
@@ -72,7 +73,7 @@ namespace Streetcode.BLL.HealthChecks
         {
             try
             {
-                string connectionString = _configuration.GetConnectionString("DefaultConnection");
+                string connectionString = _options.DefaultConnection;
                 using (SqlConnection connection =
                     new SqlConnection(connectionString))
                 {
@@ -88,7 +89,7 @@ namespace Streetcode.BLL.HealthChecks
 
         private async Task<bool> CheckBlobStorageAvailability()
         {
-            string relativePath = _configuration["Blob:BlobStorePath"];
+            string relativePath = _options.BlobStoragePath;
             string absolutePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relativePath));
             byte[] testData = new byte[1024];
             new Random().NextBytes(testData);
@@ -132,7 +133,7 @@ namespace Streetcode.BLL.HealthChecks
 
         private async Task<bool> CheckApiAvailability()
         {
-            string url = _configuration["Jwt:Issuer"];
+            string url = _options.GlobalUrl;
             // on localhost no another option to test it, delete 2 rows below on deploy
             const string ENDPOINT = "api/Audio/GetAll";
             url = url + ENDPOINT;

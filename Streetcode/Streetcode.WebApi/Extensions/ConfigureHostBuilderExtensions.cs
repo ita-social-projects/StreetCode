@@ -1,15 +1,28 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Hosting;
 using Serilog;
+using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
-using System.Runtime;
 
 namespace Streetcode.WebApi.Extensions;
 
 public static class ConfigureHostBuilderExtensions
 {
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Program>();
+                webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    var configuration = config.Build();
+                    var url = configuration.GetValue<string>("GlobalSettings:Url");
+                    webBuilder.UseUrls(url);
+                });
+            });
+
     public static void ConfigureApplication(this ConfigureHostBuilder host)
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
@@ -53,5 +66,15 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<MiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
+    }
+
+    public static void ConfigureHealthCheck(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<HealthChecksOptions>(options =>
+        {
+            options.DefaultConnection = builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
+            options.BlobStoragePath = builder.Configuration.GetValue<string>("Blob:BlobStorePath");
+            options.GlobalUrl = builder.Configuration.GetValue<string>("Jwt:Issuer");
+        });
     }
 }

@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using HealthChecks.UI.Core;
+using HealthChecks.UI.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace Streetcode.BLL.HealthChecks
 {

@@ -2,15 +2,15 @@ using Hangfire;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Services.Logging;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureApplication();
+builder.Host.ConfigureApplication(builder);
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
@@ -20,6 +20,7 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureMiddleware(builder);
+builder.Services.ConfigureHealthCheck(builder);
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")
@@ -34,6 +35,9 @@ else
     app.UseHsts();
 }
 
+var localhostOptions = app.Configuration.GetSection("MySettings").Get<LocalhostOptions>();
+var localhostAddress = localhostOptions.LocalhostAddress;
+app.Urls.Add(localhostAddress);
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();

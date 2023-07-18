@@ -134,10 +134,8 @@ namespace Streetcode.BLL.HealthChecks
         private async Task<bool> CheckApiAvailability()
         {
             string url = _options.GlobalUrl;
-            // on localhost no another option to test it, delete 2 rows below on deploy
-            const string ENDPOINT = "api/Audio/GetAll";
+            const string ENDPOINT = "/api";
             url = url + ENDPOINT;
-            // =======
             var client = new HttpClient();
             client.BaseAddress = new Uri(url);
             HttpResponseMessage response = await client.GetAsync("");

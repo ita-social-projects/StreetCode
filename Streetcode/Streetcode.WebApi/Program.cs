@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.ConfigureApplication(builder);
+builder.Host.ConfigureApplication();
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
@@ -35,9 +35,8 @@ else
     app.UseHsts();
 }
 
-var localhostOptions = app.Configuration.GetSection("MySettings").Get<LocalhostOptions>();
-var localhostAddress = localhostOptions.LocalhostAddress;
-app.Urls.Add(localhostAddress);
+string appUrl = builder.Configuration.GetValue<string>("ApplicationUrl");
+app.Urls.Add(appUrl);
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();

@@ -10,17 +10,13 @@ namespace Streetcode.WebApi.Extensions;
 
 public static class ConfigureHostBuilderExtensions
 {
-    public static void ConfigureApplication(this ConfigureHostBuilder host, WebApplicationBuilder builder)
+    public static void ConfigureApplication(this ConfigureHostBuilder host)
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         host.ConfigureAppConfiguration((_, config) =>
         {
             config.ConfigureCustom(environment);
-        })
-        .ConfigureServices((_, services) =>
-        {
-            services.ConfigureLocalhostOptions(builder.Configuration);
         });
     }
 
@@ -65,7 +61,7 @@ public static class ConfigureHostBuilderExtensions
         {
             options.DefaultConnection = builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
             options.BlobStoragePath = builder.Configuration.GetValue<string>("Blob:BlobStorePath");
-            options.GlobalUrl = builder.Configuration.GetValue<string>("Jwt:Issuer");
+            options.GlobalUrl = builder.Configuration.GetValue<string>("ApplicationUrl");
         });
     }
 }

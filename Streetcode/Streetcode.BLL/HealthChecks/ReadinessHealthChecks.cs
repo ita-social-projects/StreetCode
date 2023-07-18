@@ -134,7 +134,7 @@ namespace Streetcode.BLL.HealthChecks
         private async Task<bool> CheckApiAvailability()
         {
             string url = _options.GlobalUrl;
-            const string ENDPOINT = "/api";
+            const string ENDPOINT = "/api/Audio/GetAll";
             url = url + ENDPOINT;
             var client = new HttpClient();
             client.BaseAddress = new Uri(url);

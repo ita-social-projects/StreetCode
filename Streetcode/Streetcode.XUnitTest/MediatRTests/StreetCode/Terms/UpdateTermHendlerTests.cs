@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -13,8 +14,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
 	public class UpdateTermHendlerTests
 	{
-		private Mock<IRepositoryWrapper> _mockRepository;
-		private Mock<IMapper> _mockMapper;
+		private readonly Mock<IRepositoryWrapper> _mockRepository;
+		private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
 
@@ -22,6 +24,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 		{
 			_mockRepository = new();
 			_mockMapper = new();
+			_mockLogger = new Mock<ILoggerService>();
 			_mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
 			_mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
 		}
@@ -38,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 			.Returns(GetTerm());
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -65,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
 			var expectedError = "Cannot convert null to Term";
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTOWithNotExistId()!), CancellationToken.None);
@@ -89,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 				.Returns(GetTerm());
 
 			var expectedError = "Failed to update a term";
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -112,7 +115,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
 				.Returns(GetTerm());
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);

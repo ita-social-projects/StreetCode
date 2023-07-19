@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 
@@ -15,14 +16,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
   public class GetArtByIdTest
     {
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         private Mock<IRepositoryWrapper> _mockRepo;
-        private Mock<IMapper> _mockMapper;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetArtByIdTest()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
@@ -32,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             GetMockRepositoryAndMapper(GetArt(), GetArtDTO());
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
@@ -48,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             GetMockRepositoryAndMapper(GetArt(), GetArtDTO());
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
@@ -63,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             GetMockRepositoryAndMapper(null, null);
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
             var expectedError = $"Cannot find an art with corresponding id: {id}";
 
             // Act

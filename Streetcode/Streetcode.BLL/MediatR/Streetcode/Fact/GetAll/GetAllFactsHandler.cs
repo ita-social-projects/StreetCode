@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,12 +14,14 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
 
-    public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
+    public GetAllFactsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
         _stringLocalizeCannotFind = stringLocalizeCannotFind;
     }
 
@@ -27,10 +31,11 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
 
         if (facts is null)
         {
-            return Result.Fail(new Error(_stringLocalizeCannotFind["CannotFindAnyFact"].Value));
+            const string errorMsg = _stringLocalizeCannotFind["CannotFindAnyFact"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
-        var factDtos = _mapper.Map<IEnumerable<FactDto>>(facts);
-        return Result.Ok(factDtos);
+        return Result.Ok(_mapper.Map<IEnumerable<FactDto>>(facts));
     }
 }

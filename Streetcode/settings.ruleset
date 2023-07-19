@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="My Rules" Description="Description here." ToolsVersion="14.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-    <Rule Id="SA1027" Action="None"/>
+    <Rule Id="SA1027" Action="None" />
     <!-- The code contains a tab or space character which is not consistent with the current project settings. -->
-    <Rule Id="SA1124" Action="Error"/>
+    <Rule Id="SA1124" Action="Error" />
     <!-- Regions must not be used -->
-    <Rule Id="SA1123" Action="Error"/>
+    <Rule Id="SA1123" Action="Error" />
     <!-- Regions must not be used within a code -->
-    <Rule Id="SA1652" Action="None"/>
+    <Rule Id="SA1652" Action="None" />
     <!-- Enable XML output -->
-    <Rule Id="SA1309" Action="None"/>
+    <Rule Id="SA1309" Action="None" />
     <!-- Field must not begin with an underscore -->
-    <Rule Id="SA1101" Action="None"/>
+    <Rule Id="SA1101" Action="None" />
     <!-- Prefix local call with this -->
-    <Rule Id="SA1633" Action="None"/>
+    <Rule Id="SA1633" Action="None" />
     <!-- Code header -->
-    <Rule Id="SA1200" Action="None"/>
+    <Rule Id="SA1200" Action="None" />
     <!-- Using directive must appear within a namespace declaration -->
-    <Rule Id="SA1210" Action="None"/>
+    <Rule Id="SA1210" Action="None" />
     <!-- Using directive must be ordered alphabetically by namespaces -->
     <Rule Id="SA1305" Action="None" />
     <!-- The name of a field or variable in C# uses Hungarian notation. -->
@@ -27,38 +27,37 @@
     <!-- The encoding of the file is not UTF-8 with byte order mark. -->
     <Rule Id="SA1413" Action="None" />
     <!-- The last statement in a multi-line C# initializer or list is missing a trailing comma. -->
-    <Rule Id="SA0001" Action="None"/>
+    <Rule Id="SA0001" Action="None" />
     <!-- All diagnostics of XML documentation comments has been disabled due to the current project configuration. -->
-    <Rule Id="SA1118" Action="None"/>
+    <Rule Id="SA1118" Action="None" />
     <!-- A parameter to a C# method or indexer, other than the first parameter, spans across multiple lines. -->
-    <Rule Id="SA1204" Action="None"/>
+    <Rule Id="SA1204" Action="None" />
     <!-- A static element is positioned beneath an instance element of the same type. -->
-
     <Rule Id="SA1649" Action="Error" />
     <!-- The file name of a C# code file does not match the first type declared in the file. For generics that are defined as Class1<T> the name of the file needs to be Class1{T}.cs or Class1`1.cs depending on the fileNamingConvention setting -->
     <Rule Id="SA1117" Action="Error" />
     <!-- The parameters to a C# method or indexer call or declaration are not all on the same line or each on a separate line. -->
     <Rule Id="SA1116" Action="Error" />
     <!-- The parameters to a C# method or indexer call or declaration span across multiple lines, but the first parameter does not start on the line after the opening bracket. -->
-    <Rule Id="SA1005" Action="Error"/>
+    <Rule Id="SA1005" Action="Error" />
     <!-- A single-line comment within a C# code file does not begin with a single space. -->
-    <Rule Id="SA1515" Action="Error"/>
+    <Rule Id="SA1515" Action="Error" />
     <!-- A single-line comment within C# code is not preceded by a blank line. -->
-    <Rule Id="SA1513" Action="Error"/>
+    <Rule Id="SA1513" Action="Error" />
     <!-- A closing brace within a C# element, statement, or expression is not followed by a blank line. -->
-    <Rule Id="SA1202" Action="Error"/>
+    <Rule Id="SA1202" Action="Error" />
     <!-- An element within a C# code file is out of order within regard to access level, in relation to other elements in the code. -->
-    <Rule Id="SA1503" Action="Error"/>
+    <Rule Id="SA1503" Action="Error" />
     <!-- The opening and closing braces for a C# statement have been omitted. -->
-    <Rule Id="SA1127" Action="Error"/>
+    <Rule Id="SA1127" Action="Error" />
     <!-- A generic constraint on a type or method declaration is on the same line as the declaration, within a C# code file. -->
-    <Rule Id="SA1508" Action="Error"/>
+    <Rule Id="SA1508" Action="Error" />
     <!-- A closing brace within a C# element, statement, or expression is preceded by a blank line. -->
-    <Rule Id="SA1505" Action="Error"/>
+    <Rule Id="SA1505" Action="Error" />
     <!-- An opening brace within a C# element, statement, or expression is followed by a blank line. -->
-    <Rule Id="SA1203" Action="Error"/>
+    <Rule Id="SA1203" Action="Error" />
     <!-- A constant field is placed beneath a non-constant field. -->
-    <Rule Id="SA1208" Action="Error"/>
+    <Rule Id="SA1208" Action="Error" />
     <!-- Using directive for 'System' must appear before -->
     <Rule Id="SA1000" Action="None" />
     <!-- The spacing around a C# keyword is incorrect. -->
@@ -98,7 +97,6 @@
     <!-- The name of a constant C# field should begin with an upper-case letter. -->
     <Rule Id="SA1304" Action="Error" />
     <!-- The name of a non-private readonly C# field should being with an upper-case letter. -->
-
     <Rule Id="SA1311" Action="Error" />
     <!-- The name of a static readonly field does not begin with an upper-case letter. -->
     <Rule Id="SA1400" Action="Error" />
@@ -123,7 +121,6 @@
     <!-- A call to a C# anonymous method does not contain any method parameters, yet the statement still includes parenthesis. -->
     <Rule Id="SA1411" Action="Error" />
     <!-- An attribute declaration does not contain any parameters, yet it still includes parenthesis. -->
-
     <Rule Id="SA1600" Action="None" />
     <!-- A C# code element is missing a documentation header. -->
     <Rule Id="SA1601" Action="None" />
@@ -140,7 +137,6 @@
     <!-- The XML documentation header for a C# constructor does not contain the appropriate summary text. -->
     <Rule Id="SA1643" Action="Error" />
     <!-- The Xml documentation header for a C# finalizer does not contain the appropriate summary text. -->
-
     <Rule Id="SA1002" Action="Error" />
     <!-- The spacing around a semicolon is incorrect, within a C# code file. -->
     <Rule Id="SA1003" Action="Error" />

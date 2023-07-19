@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
@@ -19,12 +20,14 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetCategoriesByStreetcodeIdTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
         [Theory]
@@ -46,6 +49,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object,
+                _mockLogger.Object);
                 _mockLocalizerCannotFind.Object);
 
             // act
@@ -78,6 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object,
+                _mockLogger.Object,
                 _mockLocalizerCannotFind.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";

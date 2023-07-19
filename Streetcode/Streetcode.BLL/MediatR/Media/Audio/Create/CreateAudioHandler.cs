@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,17 +15,20 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizer;
 
     public CreateAudioHandler(
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
         IMapper mapper,
         IStringLocalizer<FailedToCreateSharedResource> stringLocalizer)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
         _stringLocalizer = stringLocalizer;
     }
 
@@ -45,6 +49,15 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(audio);
 
-        return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error(_stringLocalizer?["FailedToCreateAudio"].Value));
+        if(resultIsSuccess)
+        {
+            return Result.Ok(createdAudio);
+        }
+        else
+        {
+            const string errorMsg = _stringLocalizer?["FailedToCreateAudio"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

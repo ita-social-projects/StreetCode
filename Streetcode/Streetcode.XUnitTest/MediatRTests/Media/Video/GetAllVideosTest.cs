@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Video.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
@@ -16,12 +17,14 @@ public class GetAllVideosTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
     private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
     public GetAllVideosTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
         _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
@@ -30,7 +33,7 @@ public class GetAllVideosTest
     {
         //Arrange
         (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -47,7 +50,7 @@ public class GetAllVideosTest
     {
         //Arrange
         (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);    
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -76,7 +79,7 @@ public class GetAllVideosTest
             .Returns(GetVideosDTOWithNotExistingId());
 
         var expectedError = "Cannot find any videos";
-        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizer.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         //Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);

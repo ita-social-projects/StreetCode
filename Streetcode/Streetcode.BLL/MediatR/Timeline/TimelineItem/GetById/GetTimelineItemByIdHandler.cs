@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,12 +14,14 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetTimelineItemByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetTimelineItemByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
@@ -33,10 +36,11 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
 
         if (timelineItem is null)
         {
-            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindTimelineItemWithCorrespondingId", request.Id].Value));
+            string errorMsg = _stringLocalizerCannotFind["CannotFindTimelineItemWithCorrespondingId", request.Id].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
-        var timelineItemDto = _mapper.Map<TimelineItemDTO>(timelineItem);
-        return Result.Ok(timelineItemDto);
+        return Result.Ok(_mapper.Map<TimelineItemDTO>(timelineItem));
     }
 }

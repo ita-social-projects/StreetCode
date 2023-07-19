@@ -344,4 +344,5 @@ healthchecksdb
 
 # BlobStorage
 BlobStorage/
+BlobStorageTestFolder/
 /Streetcode/StreetCode.Client

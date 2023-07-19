@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -18,11 +19,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
-        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        private readonly ILoggerService _logger;
+        public GetAllCategoriesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
         }
 
@@ -32,7 +35,9 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 include: cat => cat.Include(img => img.Image) !);
             if (allCategories == null)
             {
-                return Result.Fail(new Error(_stringLocalizerNo["NoCategories"].Value));
+                const string errorMsg = _stringLocalizerNo["NoCategories"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);

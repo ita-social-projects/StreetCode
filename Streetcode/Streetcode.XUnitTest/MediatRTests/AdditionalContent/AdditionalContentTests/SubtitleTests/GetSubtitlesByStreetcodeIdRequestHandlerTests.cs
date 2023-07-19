@@ -5,6 +5,7 @@ using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -17,12 +18,14 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetSubtitlesByStreetcodeIdRequestHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
@@ -53,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             await SetupRepository(subtitle);
             await SetupMapper(subtitleDTO);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
@@ -71,7 +74,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 			await SetupRepository(subtitle);
 			await SetupMapper(subtitleDTO);
 
-			var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+			var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
 			//Act
 			var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);

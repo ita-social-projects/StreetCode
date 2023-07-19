@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -9,12 +10,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
 public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeCommand, Result<Unit>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
+    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
     {
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
         _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
     }
@@ -26,7 +29,9 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            throw new Exception(_stringLocalizerCannotFind["CannotFindStreetcodeWithCorrespondingCategoryId", request.Id].Value);
+            string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeWithCorrespondingCategoryId", request.Id].Value;
+            _logger.LogError(request, errorMsg);
+            throw new ArgumentNullException(errorMsg);
         }
 
         streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;
@@ -36,7 +41,15 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         var resultIsDeleteSucces = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        return resultIsDeleteSucces ? Result.Ok(Unit.Value)
-            : Result.Fail(new Error("FailedToChangeStatusOfStreetcodeToDeleted"));
+        if(resultIsDeleteSucces)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

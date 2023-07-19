@@ -2,9 +2,11 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -15,22 +17,33 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
         public GetStreetcodeArtByStreetcodeIdHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             IBlobService blobService,
+            ILoggerService logger,
             IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<StreetcodeArtDTO>>> Handle(GetStreetcodeArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            /*
+            if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
+            {
+                return Result.Fail(
+                    new Error($"Cannot find a streetcode arts by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
+            }
+            */
+
             var art = await _repositoryWrapper
             .StreetcodeArtRepository
             .GetAllAsync(
@@ -41,7 +54,9 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 
             if (art is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value));
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(art);

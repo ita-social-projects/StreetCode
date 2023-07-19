@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,6 +15,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
         private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizerCannotSave;
         private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
@@ -22,6 +24,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
         public CreateRelatedTermHandler(
             IRepositoryWrapper repository,
             IMapper mapper,
+            ILoggerService logger,
             IStringLocalizer<CannotSaveSharedResource> stringLocalizerCannotSave,
             IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap,
             IStringLocalizer<CreateRelatedTermHandler> stringLocalizer,
@@ -29,6 +32,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
             _stringLocalizerCannotSave = stringLocalizerCannotSave;
             _stringLocalizerCannotMap = stringLocalizerCannotMap;
             _stringLocalizer = stringLocalizer;
@@ -41,7 +45,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (relatedTerm is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotCreate["CannotCreateNewRelatedWordForTerm"].Value));
+                const string errorMsg = _stringLocalizerCannotCreate["CannotCreateNewRelatedWordForTerm"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var existingTerms = await _repository.RelatedTermRepository
@@ -50,7 +56,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (existingTerms is null || existingTerms.Any())
             {
-                return Result.Fail(new Error(_stringLocalizer["WordWithThisDefinitionAlreadyExists"].Value));
+                const string errorMsg = _stringLocalizer["WordWithThisDefinitionAlreadyExists"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRelatedTerm = _repository.RelatedTermRepository.Create(relatedTerm);
@@ -59,12 +67,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if(!isSuccessResult)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotSave["CannotSaveChangesInTheDatabaseAfterRelatedWordCreation"].Value));
+                const string errorMsg = _stringLocalizerCannotSave["CannotSaveChangesInTheDatabaseAfterRelatedWordCreation"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRelatedTermDTO = _mapper.Map<RelatedTermDTO>(createdRelatedTerm);
 
-            return createdRelatedTermDTO != null ? Result.Ok(createdRelatedTermDTO) : Result.Fail(new Error(_stringLocalizerCannotMap["CannotMapEntity"].Value));
+            if(createdRelatedTermDTO != null)
+            {
+                return Result.Ok(createdRelatedTermDTO);
+            }
+            else
+            {
+                const string errorMsg = _stringLocalizerCannotMap["CannotMapEntity"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

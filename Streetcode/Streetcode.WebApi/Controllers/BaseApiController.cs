@@ -1,6 +1,4 @@
-﻿// using FluentResults;
-
-using System.Resources;
+﻿using System.Resources;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

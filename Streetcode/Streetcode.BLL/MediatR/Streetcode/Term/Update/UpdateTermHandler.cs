@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -11,13 +12,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvertNull;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-        public UpdateTermHandler(IMapper mapper, IRepositoryWrapper repository, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate, IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvertNull)
+        public UpdateTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate, IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvertNull)
         {
             _mapper = mapper;
             _repository = repository;
+            _logger = logger;
             _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _stringLocalizerCannotConvertNull = stringLocalizerCannotConvertNull;
         }
@@ -27,13 +30,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
             if (term is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value));
+                const string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repository.TermRepository.Update(term);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value));
+            if (resultIsSuccess)
+            {
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

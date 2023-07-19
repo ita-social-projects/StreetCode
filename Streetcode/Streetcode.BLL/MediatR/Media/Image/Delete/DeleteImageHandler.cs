@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -13,17 +14,20 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
     public DeleteImageHandler(
         IRepositoryWrapper repositoryWrapper,
         IBlobService blobService,
+        ILoggerService logger,
         IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
         IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
         _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
     }
@@ -37,7 +41,9 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 
         if (image is null)
         {
-            return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyImage", request.Id].Value));
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyImage", request.Id].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         _repositoryWrapper.ImageRepository.Delete(image);
@@ -49,6 +55,15 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
             _blobService.DeleteFileInStorage(image.BlobName);
         }
 
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToDelete["FailedToDeleteImage"].Value));
+        if(resultIsSuccess)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

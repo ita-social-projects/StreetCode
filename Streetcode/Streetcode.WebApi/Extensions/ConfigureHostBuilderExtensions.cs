@@ -1,6 +1,9 @@
-﻿using Streetcode.BLL.Services.BlobStorageService;
+﻿using Serilog.Events;
+using Serilog;
+using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -12,10 +15,7 @@ public static class ConfigureHostBuilderExtensions
 
         host.ConfigureAppConfiguration((_, config) =>
         {
-            config.SetBasePath(Directory.GetCurrentDirectory());
-            config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            config.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
-            config.AddEnvironmentVariables("STREETCODE_");
+            config.ConfigureCustom(environment);
         });
     }
 
@@ -32,5 +32,14 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureInstagram(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<InstagramEnvirovmentVariables>(builder.Configuration.GetSection("Instagram"));
+    }
+
+    public static void ConfigureSerilog(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((ctx, services, loggerConfiguration) =>
+        {
+            loggerConfiguration
+                .ReadFrom.Configuration(builder.Configuration);
+        });
     }
 }

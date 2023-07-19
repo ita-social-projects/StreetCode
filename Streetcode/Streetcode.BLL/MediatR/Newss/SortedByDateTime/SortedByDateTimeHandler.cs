@@ -5,6 +5,8 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 
@@ -15,13 +17,15 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
         private readonly IBlobService _blobService;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public SortedByDateTimeHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public SortedByDateTimeHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
+            _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
         }
 
@@ -31,7 +35,9 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
                 include: cat => cat.Include(img => img.Image));
             if (news == null)
             {
-                return Result.Fail(_stringLocalizerNo["NoNewsInTheDatabase"].Value);
+                const string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var newsDTOs = _mapper.Map<IEnumerable<NewsDTO>>(news).OrderByDescending(x => x.CreationDate).ToList();

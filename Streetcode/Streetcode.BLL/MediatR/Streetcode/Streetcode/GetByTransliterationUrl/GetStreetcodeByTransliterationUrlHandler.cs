@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,12 +15,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetStreetcodeByTransliterationUrlHandler(IRepositoryWrapper repository, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetStreetcodeByTransliterationUrlHandler(IRepositoryWrapper repository, IMapper mapper,, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
@@ -31,7 +34,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             if (streetcode == null)
             {
-                return new Error(_stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.url].Value);
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.url].Value;
+                _logger.LogError(request, errorMsg);
+                return new Error(errorMsg);
             }
 
             var tagIndexed = await _repository.StreetcodeTagIndexRepository

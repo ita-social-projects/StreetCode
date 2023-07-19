@@ -5,6 +5,7 @@ using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Transactions;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
@@ -14,12 +15,7 @@ using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.TransactionLinkTests
@@ -31,18 +27,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
         private readonly TransactionLink nullValue = null;
         private readonly TransactLinkDTO nullValueDTO = null;
+        private readonly Mock<ILoggerService> _mockLogger;
         public GetTransactLinkByStreetcodeIdHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         async Task SetupRepository(int id)
         {
             _mockRepo.Setup(x => x.TransactLinksRepository.GetFirstOrDefaultAsync(
-               It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(new TransactionLink() { Id = id });
+                It.IsAny<Expression<Func<TransactionLink, bool>>>(), 
+                It.IsAny<Func<IQueryable<TransactionLink>, IIncludableQueryable<TransactionLink, object>>>()))
+            .ReturnsAsync(new TransactionLink() { Id = id });
         }
 
         async Task SetupMapper(int id)
@@ -58,16 +57,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByStreetcodeIdQuery(id), CancellationToken.None);
 
             //Assert
             Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.True(result.IsSuccess),
-                () => Assert.Equal(result.Value.Id, id)
+                   () => Assert.NotNull(result),
+                   () => Assert.True(result.IsSuccess),
+                   () => Assert.Equal(result.Value.Id, id)
             );
         }
 
@@ -105,15 +104,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
+            var handler = new GetTransactLinkByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByStreetcodeIdQuery(id), CancellationToken.None);
 
             //Assert
             Assert.Multiple(
-                () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault)
+                   () => Assert.NotNull(result.ValueOrDefault),
+                   () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault)
             );
         }
     }

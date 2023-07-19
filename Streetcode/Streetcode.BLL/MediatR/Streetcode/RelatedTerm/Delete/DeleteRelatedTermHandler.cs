@@ -1,45 +1,61 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 {
-    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<Unit>>
+    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<RelatedTermDTO>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
         public DeleteRelatedTermHandler(
             IRepositoryWrapper repository,
             IMapper mapper,
+            ILoggerService logger,
             IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
             IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
             _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<Unit>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
+        public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
         {
-            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Id == request.id);
+            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word.ToLower().Equals(request.word.ToLower()));
 
             if (relatedTerm is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindRelatedTermWithCorrespondingId", request.id].Value));
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRelatedTermWithCorrespondingId", request.id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repository.RelatedTermRepository.Delete(relatedTerm);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToDelete["FailedToDeleteRelatedTerm"].Value));
+            var relatedTermDto = _mapper.Map<RelatedTermDTO>(relatedTerm);
+            if(resultIsSuccess && relatedTermDto != null)
+            {
+                return Result.Ok(relatedTermDto);
+            }
+            else
+            {
+                const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelatedTerm"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

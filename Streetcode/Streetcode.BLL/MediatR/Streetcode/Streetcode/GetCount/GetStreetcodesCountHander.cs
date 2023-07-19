@@ -8,6 +8,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -18,11 +19,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
         Result<int>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
         }
 
@@ -32,11 +35,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 
             if (streetcodes != null)
             {
-                int count = streetcodes.Count();
-                return Result.Ok(count);
+                return Result.Ok(streetcodes.Count());
             }
 
-            return Result.Fail(_stringLocalizerNo["NoStreetcodesExistNow"].Value);
+            const string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(errorMsg);
         }
     }
 }

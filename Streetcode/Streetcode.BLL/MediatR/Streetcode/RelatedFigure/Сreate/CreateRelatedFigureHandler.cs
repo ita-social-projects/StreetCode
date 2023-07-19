@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using NLog.Targets;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -13,16 +14,19 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
     public CreateRelatedFigureHandler(
         IRepositoryWrapper repositoryWrapper,
         IMapper mapper,
+        ILoggerService logger,
         IStringLocalizer<NoSharedResource> stringLocalizerNo,
         IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
         _stringLocalizerFailed = stringLocalizerFailed;
         _stringLocalizerNo = stringLocalizerNo;
     }
@@ -34,12 +38,16 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 
         if (observerEntity is null)
         {
-            return Result.Fail(new Error(_stringLocalizerNo["NoExistingStreetcodeWithId", request.ObserverId]));
+            string errorMsg = _stringLocalizerNo["NoExistingStreetcodeWithId", request.ObserverId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         if (targetEntity is null)
         {
-            return Result.Fail(new Error(_stringLocalizerNo["NoExistingStreetcodeWithId", request.TargetId]));
+            string errorMsg = _stringLocalizerNo["NoExistingStreetcodeWithId", request.TargetId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var relation = new DAL.Entities.Streetcode.RelatedFigure
@@ -51,6 +59,15 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         _repositoryWrapper.RelatedFigureRepository.Create(relation);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailed["FailedToCreateRelation"].Value));
+        if(resultIsSuccess)
+        {
+            return Result.Ok(Unit.Value);
+        }
+        else
+        {
+            string errorMsg = _stringLocalizerFailed["FailedToCreateRelation"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
@@ -22,17 +26,20 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
         public UpdateStreetcodeHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
             IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
             IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
         }
 
@@ -52,11 +59,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
-
-                   /* await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);*/
+                    await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateImagesAsync(request.Streetcode.Images);
+                    await UpdateFactsDescription(request.Streetcode.ImagesDetails);
+
+                    if (request.Streetcode.Text != null)
+                    {
+                        await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
+                    }
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -68,15 +80,34 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
                     else
                     {
-                        return Result.Fail(new Error(_stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value));
+                        const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
+                        _logger.LogError(request, errorMsg);
+                        return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch(Exception ex)
+                catch(Exception)
                 {
-                    Console.WriteLine(ex.Message);
-                    return Result.Fail(new Error(_stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value));
+                    const string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
                 }
             }
+        }
+
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
+        {
+            if(imageDetails == null)
+            {
+                return;
+            }
+
+            _repositoryWrapper.ImageDetailsRepository
+                .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt == "" && f.Id != 0)));
+
+            _repositoryWrapper.ImageDetailsRepository
+                .UpdateRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails.Where(f => f.Alt != "")));
+
+            await _repositoryWrapper.SaveChangesAsync();
         }
 
         private async Task UpdateTimelineItemsAsync(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
@@ -141,8 +172,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             var (_, toCreate, toDelete) = CategorizeItems(toponyms);
 
-            var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
-            await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            if (toDelete.Any())
+            {
+                var toponymsNameToDelete = toDelete.Select(x => x.StreetName);
+                await _repositoryWrapper.ToponymRepository.ExecuteSqlRaw(GetToponymDeleteQuery(streetcodeContent.Id, toponymsNameToDelete));
+            }
 
             var toponymsNameToCreate = toCreate.Select(x => x.StreetName);
             var toponymsToAdd = await _repositoryWrapper.ToponymRepository
@@ -163,7 +197,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return query;
         }
 
-        private async Task UpdateImagesAsync(IEnumerable<StreetcodeImageUpdateDTO> images)
+        private async Task UpdateImagesAsync(IEnumerable<ImageUpdateDTO> images)
         {
             var (_, toCreate, toDelete) = CategorizeItems(images);
 

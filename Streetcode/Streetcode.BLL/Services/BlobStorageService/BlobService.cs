@@ -13,9 +13,9 @@ public class BlobService : IBlobService
     private readonly string _blobPath;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public BlobService(IOptions<BlobEnvironmentVariables> envirovment, IRepositoryWrapper repositoryWrapper)
+    public BlobService(IOptions<BlobEnvironmentVariables> environment, IRepositoryWrapper? repositoryWrapper = null)
     {
-        _envirovment = envirovment.Value;
+        _envirovment = environment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;
         _blobPath = _envirovment.BlobStorePath;
         _repositoryWrapper = repositoryWrapper;

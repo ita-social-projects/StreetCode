@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,12 +14,14 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.GetAll
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetAllTeamLinkHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetAllTeamLinkHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
+            _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
@@ -29,11 +33,12 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.GetAll
 
             if (teamLinks is null)
             {
-                return Result.Fail(new Error(_stringLocalizerCannotFind["CannotFindAnyTeamLinks"].Value));
+                const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeamLinks"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
-            var teamLinksDtos = _mapper.Map<IEnumerable<TeamMemberLinkDTO>>(teamLinks);
-            return Result.Ok(teamLinksDtos);
+            return Result.Ok(_mapper.Map<IEnumerable<TeamMemberLinkDTO>>(teamLinks));
         }
     }
 }

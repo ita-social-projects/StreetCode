@@ -9,19 +9,22 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Interfaces.Logging;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
     public class GetAllTeamTest
     {
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetAllTeamTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
@@ -59,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -82,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupGetAllTeams(teamList);
             SetupMapTeamMembers(teamList, teamDTOList);
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object,_mockLocalizerCannotFind.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
@@ -103,7 +106,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
 
             SetupGetAllTeams(GetTeamListWithNotExistingId());
 
-            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);

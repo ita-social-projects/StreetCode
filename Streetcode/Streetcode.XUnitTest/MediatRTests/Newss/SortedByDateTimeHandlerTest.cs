@@ -7,6 +7,7 @@ using Moq;
 using NuGet.Frameworks;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
 using Streetcode.BLL.SharedResource;
@@ -25,6 +26,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<IBlobService> _blob;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizer;
 
         public SortedByDateTimeHandlerTests()
@@ -32,6 +34,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
             _blob = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
@@ -61,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             RepositorySetup(testNews);
             MapperSetup(testNews);
             BlobSetup(expectedBase64);
-            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLocalizer.Object);
+            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // act
             var result = await handler.Handle(new SortedByDateTimeQuery(), CancellationToken.None);
@@ -78,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             RepositorySetup(null);
             MapperSetup(null);
             BlobSetup(null);
-            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLocalizer.Object);
+            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // act
             var result = await handler.Handle(new SortedByDateTimeQuery(), CancellationToken.None);

@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 
@@ -34,11 +35,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IMapper> _mockMapper;
         private readonly TransactionLink nullValue = null;
         private readonly TransactLinkDTO nullValueDTO = null;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetTransactLinkByIdHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
@@ -62,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
@@ -88,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
             var expectedError = $"Cannot find any transaction link with corresponding id: {id}";
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
@@ -109,7 +112,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupMapper(id);
             await SetupRepository(id);
 
-            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetTransactLinkByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);

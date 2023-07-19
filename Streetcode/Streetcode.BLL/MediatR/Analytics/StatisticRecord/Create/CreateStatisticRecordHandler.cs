@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,17 +15,20 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource>? _stringLocalizerNo;
         private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizer;
 
         public CreateStatisticRecordHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
             IStringLocalizer<CannotSaveSharedResource> stringLocalizer,
             IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
             _stringLocalizer = stringLocalizer;
             _stringLocalizerNo = stringLocalizerNo;
         }
@@ -35,28 +39,36 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (statRecord == null)
             {
-                return Result.Fail(new Error(_stringLocalizerNo?["NoMappedRecord"].Value));
+                const string errorMsg = _stringLocalizerNo?["NoMappedRecord"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var createdRecord = _repositoryWrapper.StatisticRecordRepository.Create(statRecord);
 
             if (createdRecord == null)
             {
-                return Result.Fail(new Error(_stringLocalizer?["NoCreatedRecord"].Value));
+                const string errorMsg = _stringLocalizer?["NoCreatedRecord"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {
-                return Result.Fail(new Error(_stringLocalizer?["CannotSaveCreatedRecord"].Value));
+                const string errorMsg = _stringLocalizer?["CannotSaveCreatedRecord"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var mappedCreatedRecord = _mapper.Map<StatisticRecordDTO>(createdRecord);
 
             if (mappedCreatedRecord == null)
             {
-                return Result.Fail(new Error(_stringLocalizer?["NoMappedCreatedRecord"].Value));
+                const string errorMsg = _stringLocalizer?["NoMappedCreatedRecord"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             return Result.Ok(mappedCreatedRecord);

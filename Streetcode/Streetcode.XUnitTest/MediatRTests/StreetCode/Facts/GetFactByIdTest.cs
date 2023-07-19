@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -14,13 +15,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetFactByIdTest
 {
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
     private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
     public GetFactByIdTest() {
         _mockMapper = new Mock<IMapper>();
         _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();   
         _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
@@ -41,7 +44,7 @@ public class GetFactByIdTest
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -73,7 +76,7 @@ public class GetFactByIdTest
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -103,7 +106,7 @@ public class GetFactByIdTest
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);

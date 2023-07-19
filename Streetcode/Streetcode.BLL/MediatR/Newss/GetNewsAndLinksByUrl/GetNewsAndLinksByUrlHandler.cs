@@ -6,6 +6,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 
@@ -16,12 +17,14 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
-        public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _blobService = blobService;
+            _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
         }
 
@@ -35,7 +38,9 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             if (newsDTO is null)
             {
-                return Result.Fail(_stringLocalizerNo["NoNewsByEnteredUrl", url].Value);
+                string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             if (newsDTO.Image is not null)
@@ -88,7 +93,9 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             if (newsDTOWithUrls is null)
             {
-                return Result.Fail(_stringLocalizerNo["NoNewsByEnteredUrl", url].Value);
+                string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             return Result.Ok(newsDTOWithUrls);

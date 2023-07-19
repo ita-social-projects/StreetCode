@@ -5,6 +5,7 @@ using Moq;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
@@ -21,6 +22,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _mockBlobService;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizer;
 
         public GetNewsByIdTest()
@@ -28,6 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockBlobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
@@ -42,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
             // Assert
@@ -65,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
             // Assert
@@ -85,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(null);
             BlobServiceSetup(null);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
             // Assert
@@ -106,7 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             //Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
             //Assert

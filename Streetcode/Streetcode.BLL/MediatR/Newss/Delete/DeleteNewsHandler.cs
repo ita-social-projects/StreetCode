@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
@@ -11,11 +12,13 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
     public class DeleteNewsHandler : IRequestHandler<DeleteNewsCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
-        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, IStringLocalizer<NoSharedResource> stringLocalizerNo, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
+        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
         {
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
             _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
         }
@@ -26,7 +29,9 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             var news = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Id == id);
             if (news == null)
             {
-                return Result.Fail(_stringLocalizerNo["NoNewsFoundByEnteredId", id].Value);
+                string errorMsg = _stringLocalizerNo["NoNewsFoundByEnteredId", id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             if (news.Image is not null)
@@ -36,7 +41,16 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
 
             _repositoryWrapper.NewsRepository.Delete(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFailedToDelete["FailedToDeleteNews"].Value));
+            if(resultIsSuccess)
+            {
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteNews"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

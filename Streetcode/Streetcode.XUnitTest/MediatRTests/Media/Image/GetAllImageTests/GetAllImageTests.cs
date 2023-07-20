@@ -51,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             //Arrange
             MockRepositoryAndMapper(new List<Image>() { }, new List<ImageDTO>() { });
-            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLocalizer.Object, _mockLogger.Object);
+            var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             int expectedResult = 0;
 
             //Act

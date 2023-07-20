@@ -43,7 +43,7 @@ public class DeleteFactTest
 
         _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        var handler = new DeleteFactHandler(_repository.Object,_mockLocalizerFailedToDelete.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);

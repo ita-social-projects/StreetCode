@@ -106,7 +106,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(tags);
             await SetupMapper(tagDTOs);
 
-            var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object, _mockLogger.Object);
+            var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);

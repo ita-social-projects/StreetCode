@@ -18,6 +18,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
     public GetSubtitleByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;

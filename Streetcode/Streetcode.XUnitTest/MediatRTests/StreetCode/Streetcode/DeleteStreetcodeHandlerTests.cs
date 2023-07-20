@@ -26,9 +26,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {   
             // arrange
             var testStreetcode = new StreetcodeContent();
+            var relatedFigure = new RelatedFigure();
             int testSaveChangesSuccess = 1;
 
-            RepositorySetup(testStreetcode, testSaveChangesSuccess);
+            RepositorySetup(testStreetcode, relatedFigure, testSaveChangesSuccess);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
@@ -44,8 +45,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // arrange
             string expectedErrorMessage = $"Cannot find a streetcode with corresponding categoryId: {id}";
             int testSaveChangesSuccess = 1;
+            var relatedFigure = new RelatedFigure();
 
-            RepositorySetup(null, testSaveChangesSuccess);
+            RepositorySetup(null, relatedFigure, testSaveChangesSuccess);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
@@ -62,8 +64,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var testStreetcode = new StreetcodeContent();
             string expectedErrorMessage = "Failed to delete a streetcode";
             int testSaveChangesFailed = -1;
+            var relatedFigure = new RelatedFigure();
 
-            RepositorySetup(testStreetcode, testSaveChangesFailed);
+            RepositorySetup(testStreetcode, relatedFigure, testSaveChangesFailed);
 
             var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
             // act
@@ -72,16 +75,22 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
-        private void RepositorySetup(StreetcodeContent streetcodeContent, int saveChangesVariable)
+        private void RepositorySetup(StreetcodeContent streetcodeContent, RelatedFigure relatedFigure, int saveChangesVariable)
         {
             _repository.Setup(x => x.StreetcodeRepository.Delete(streetcodeContent));
             _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
             _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-                 It.IsAny<Func<IQueryable<StreetcodeContent>,
-                    IIncludableQueryable<StreetcodeContent, object>>>()))
-                .ReturnsAsync(streetcodeContent);
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()
+            )).ReturnsAsync(streetcodeContent);
 
+            _repository.Setup(x => x.RelatedFigureRepository.Delete(relatedFigure));
+            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
+            _repository.Setup(x => x.RelatedFigureRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<RelatedFigure, bool>>>(),
+                It.IsAny<Func<IQueryable<RelatedFigure>, IIncludableQueryable<RelatedFigure, object>>>()
+            )).ReturnsAsync(relatedFigure);
         }
+
     }
 }

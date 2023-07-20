@@ -23,8 +23,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             IBlobService blobService,
-            ILoggerService logger)
-            IBlobService blobService,
+            ILoggerService logger,
             IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;

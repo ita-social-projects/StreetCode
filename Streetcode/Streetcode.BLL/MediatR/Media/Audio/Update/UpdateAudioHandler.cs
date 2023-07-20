@@ -69,7 +69,7 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateAudio"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateAudio"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

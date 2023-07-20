@@ -18,7 +18,6 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
-        public GetStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         public GetStatisticRecordByQrIdHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
@@ -42,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 
             if (statRecord == null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -51,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 
             if(statRecordDTO == null)
             {
-                const string errorMsg = _stringLocalizerCannotMap["CannotMapRecord"].Value;
+                string errorMsg = _stringLocalizerCannotMap["CannotMapRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -56,7 +56,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         }
         else
         {
-            const string errorMsg = _stringLocalizer?["FailedToCreateAnImage"].Value;
+            string? errorMsg = _stringLocalizer?["FailedToCreateAnImage"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

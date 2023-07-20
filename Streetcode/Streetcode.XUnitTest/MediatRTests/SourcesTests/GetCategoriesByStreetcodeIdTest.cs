@@ -49,7 +49,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object,
-                _mockLogger.Object);
+                _mockLogger.Object,
                 _mockLocalizerCannotFind.Object);
 
             // act

@@ -61,7 +61,7 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
+            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

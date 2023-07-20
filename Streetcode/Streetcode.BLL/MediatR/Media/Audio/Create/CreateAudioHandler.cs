@@ -55,7 +55,7 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
         }
         else
         {
-            const string errorMsg = _stringLocalizer?["FailedToCreateAudio"].Value;
+            string? errorMsg = _stringLocalizer?["FailedToCreateAudio"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

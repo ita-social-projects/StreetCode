@@ -32,7 +32,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 
         if (tags is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;
+            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

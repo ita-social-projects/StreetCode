@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
             if(statisticRecords == null)
             {
-                const string errorMsg = _stringLocalizerCannotGet["CannotGetRecords"].Value;
+                string errorMsg = _stringLocalizerCannotGet["CannotGetRecords"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -49,7 +49,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
             if(mappedEntities == null)
             {
-                const string errorMsg = _stringLocalizerCannotMap["CannotMapRecords"].Value;
+                string errorMsg = _stringLocalizerCannotMap["CannotMapRecords"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -32,7 +32,7 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
 
         if (arts is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArts"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArts"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

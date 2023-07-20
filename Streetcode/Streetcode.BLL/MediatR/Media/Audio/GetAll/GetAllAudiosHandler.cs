@@ -34,7 +34,7 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
 
         if (audios is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyAudios"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyAudios"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

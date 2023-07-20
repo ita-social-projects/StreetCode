@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (statRecord == null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (!resultIsSuccess)
             {
-                const string errorMsg = _stringLocalizerCannotSave["CannotSaveTheData"].Value;
+                string errorMsg = _stringLocalizerCannotSave["CannotSaveTheData"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

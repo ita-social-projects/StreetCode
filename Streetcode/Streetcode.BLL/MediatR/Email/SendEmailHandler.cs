@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Email
             }
             else
             {
-                const string errorMsg = _stringLocalizer["FailedToSendEmailMessage"].Value;
+                string errorMsg = _stringLocalizer["FailedToSendEmailMessage"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Include="C:\IT\Learning\SoftServe\StreeetCode\StreetCode_Server\Full Back project\Streetcode\vctmp8116_652457.GetImageByStreetcodeIdTest.bc9d9d98.Result.cs" Link="vctmp8116_652457.GetImageByStreetcodeIdTest.bc9d9d98.Result.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.0" />
 		<PackageReference Include="coverlet.collector" Version="3.2.0">
 			<PrivateAssets>all</PrivateAssets>

@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 
             if (relatedTerm is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRelatedTermWithCorrespondingId", request.id].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRelatedTermWithCorrespondingId", request.word].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -52,7 +52,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelatedTerm"].Value;
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelatedTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

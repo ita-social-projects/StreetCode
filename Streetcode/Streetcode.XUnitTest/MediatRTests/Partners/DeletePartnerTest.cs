@@ -18,8 +18,6 @@ public class DeletePartnerTest
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<ILoggerService> _mockLogger;
-    private Mock<IMapper> _mockMapper;
-    private Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
 
     public DeletePartnerTest()

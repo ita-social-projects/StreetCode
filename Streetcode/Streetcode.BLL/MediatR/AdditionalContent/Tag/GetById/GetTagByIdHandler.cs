@@ -31,7 +31,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
 
         if (tag is null)
         {
-            string errorMsg = stringLocalizerCannotFind?["CannotFindTagWithCorrespondingId", request.Id].Value;
+            string errorMsg = _stringLocalizerCannotFind?["CannotFindTagWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

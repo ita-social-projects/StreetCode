@@ -19,7 +19,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetArtByIdTest()

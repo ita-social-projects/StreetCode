@@ -34,7 +34,6 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
         .GetAllAsync(rf => rf.ObserverId == streetcode.Id || rf.TargetId == streetcode.Id);
 
         _repositoryWrapper.RelatedFigureRepository.DeleteRange(relatedFigures);
-
         _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;

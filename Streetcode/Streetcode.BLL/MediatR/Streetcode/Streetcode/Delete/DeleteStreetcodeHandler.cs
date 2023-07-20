@@ -21,9 +21,7 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository
             .GetFirstOrDefaultAsync(
-            predicate: s => s.Id == request.Id,
-            include: s => s.Include(x => x.Observers)
-                           .Include(x => x.Targets));
+            predicate: s => s.Id == request.Id);
 
         if (streetcode is null)
         {
@@ -31,6 +29,11 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
+
+        var relatedFigures = await _repositoryWrapper.RelatedFigureRepository
+        .GetAllAsync(rf => rf.ObserverId == streetcode.Id || rf.TargetId == streetcode.Id);
+
+        _repositoryWrapper.RelatedFigureRepository.DeleteRange(relatedFigures);
 
         _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
 

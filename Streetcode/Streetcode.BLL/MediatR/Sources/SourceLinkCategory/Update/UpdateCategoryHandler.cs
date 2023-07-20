@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category is null)
             {
-                const string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToCategory"].Value;
+                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToCategory"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateCategory"].Value;
+                string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateCategory"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

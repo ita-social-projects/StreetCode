@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             var news = _mapper.Map<News>(request.news);
             if (news is null)
             {
-                const string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToNews"].Value;
+                string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -69,7 +69,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateNews"].Value;
+                string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

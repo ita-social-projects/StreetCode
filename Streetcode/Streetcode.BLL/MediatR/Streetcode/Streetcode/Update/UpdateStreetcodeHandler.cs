@@ -80,14 +80,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
                     else
                     {
-                        const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
+                        string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
                         _logger.LogError(request, errorMsg);
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
                 catch(Exception)
                 {
-                    const string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
+                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }

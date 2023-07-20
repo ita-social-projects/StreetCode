@@ -36,7 +36,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            const string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToFact"].Value;
+            string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -50,7 +50,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateFact"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

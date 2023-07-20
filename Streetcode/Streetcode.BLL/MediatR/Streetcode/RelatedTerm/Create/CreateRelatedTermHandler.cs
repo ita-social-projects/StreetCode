@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (relatedTerm is null)
             {
-                const string errorMsg = _stringLocalizerCannotCreate["CannotCreateNewRelatedWordForTerm"].Value;
+                string errorMsg = _stringLocalizerCannotCreate["CannotCreateNewRelatedWordForTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -56,7 +56,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if (existingTerms is null || existingTerms.Any())
             {
-                const string errorMsg = _stringLocalizer["WordWithThisDefinitionAlreadyExists"].Value;
+                string errorMsg = _stringLocalizer["WordWithThisDefinitionAlreadyExists"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -67,7 +67,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
 
             if(!isSuccessResult)
             {
-                const string errorMsg = _stringLocalizerCannotSave["CannotSaveChangesInTheDatabaseAfterRelatedWordCreation"].Value;
+                string errorMsg = _stringLocalizerCannotSave["CannotSaveChangesInTheDatabaseAfterRelatedWordCreation"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -80,7 +80,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
             }
             else
             {
-                const string errorMsg = _stringLocalizerCannotMap["CannotMapEntity"].Value;
+                string errorMsg = _stringLocalizerCannotMap["CannotMapEntity"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

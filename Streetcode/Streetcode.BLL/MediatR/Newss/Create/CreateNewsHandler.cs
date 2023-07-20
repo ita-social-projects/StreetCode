@@ -17,7 +17,6 @@ namespace Streetcode.BLL.MediatR.Newss.Create
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
         private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
-        
         public CreateNewsHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
@@ -37,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
-                const string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
+                string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
@@ -55,7 +54,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailed["FailedToCreateNews"].Value;
+                string errorMsg = _stringLocalizerFailed["FailedToCreateNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

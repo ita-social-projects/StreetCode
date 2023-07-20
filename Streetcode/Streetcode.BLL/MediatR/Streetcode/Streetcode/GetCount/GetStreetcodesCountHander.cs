@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
                 return Result.Ok(streetcodes.Count());
             }
 
-            const string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }

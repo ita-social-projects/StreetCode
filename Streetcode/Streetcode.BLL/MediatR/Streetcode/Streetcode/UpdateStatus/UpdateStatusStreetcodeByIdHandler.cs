@@ -51,7 +51,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

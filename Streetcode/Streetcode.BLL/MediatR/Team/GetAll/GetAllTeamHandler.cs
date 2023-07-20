@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
 
             if (team is null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeam"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeam"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

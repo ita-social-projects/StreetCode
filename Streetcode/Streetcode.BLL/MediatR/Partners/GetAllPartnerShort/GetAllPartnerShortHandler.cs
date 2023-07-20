@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
 
             if (partners is null)
             {
-                const string errorMsg = _stringLocalizer?["CannotFindAnyPartners"].Value;
+                string? errorMsg = _stringLocalizer?["CannotFindAnyPartners"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

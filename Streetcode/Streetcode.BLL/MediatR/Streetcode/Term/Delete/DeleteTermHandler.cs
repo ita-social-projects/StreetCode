@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
 
             if (term is null)
             {
-                const string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
+                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteTerm"].Value;
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

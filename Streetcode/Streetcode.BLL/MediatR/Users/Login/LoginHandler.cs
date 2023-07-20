@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
                 });
             }
 
-            const string errorMsg = _stringLocalizer["UserNotFound"].Value;
+            string errorMsg = _stringLocalizer["UserNotFound"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }

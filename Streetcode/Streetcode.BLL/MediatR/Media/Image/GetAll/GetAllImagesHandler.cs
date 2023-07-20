@@ -34,7 +34,7 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
 
         if (images is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyImage"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyImage"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

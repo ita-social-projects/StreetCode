@@ -1,11 +1,8 @@
-using System.Resources;
-using System.Reflection;
 using System.Globalization;
 using Hangfire;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
-using Streetcode.BLL.Services.BlobStorageService;
 using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -32,7 +32,7 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
 
         if (texts is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyText"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyText"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -31,7 +31,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
 
         if (transactLinks is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

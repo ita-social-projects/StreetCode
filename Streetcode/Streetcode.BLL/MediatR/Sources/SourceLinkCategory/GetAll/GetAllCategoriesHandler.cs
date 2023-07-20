@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 include: cat => cat.Include(img => img.Image) !);
             if (allCategories == null)
             {
-                const string errorMsg = _stringLocalizerNo["NoCategories"].Value;
+                string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

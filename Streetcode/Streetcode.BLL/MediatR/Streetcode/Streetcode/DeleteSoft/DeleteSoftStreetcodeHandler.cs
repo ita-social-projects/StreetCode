@@ -47,7 +47,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

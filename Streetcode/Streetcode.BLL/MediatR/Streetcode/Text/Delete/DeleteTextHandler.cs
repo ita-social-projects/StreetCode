@@ -46,7 +46,7 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteText"].Value;
+            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteText"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

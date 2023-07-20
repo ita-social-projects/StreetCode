@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 
             if (historicalContextItems is null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if (statisticRecord == null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if(streetcode == null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

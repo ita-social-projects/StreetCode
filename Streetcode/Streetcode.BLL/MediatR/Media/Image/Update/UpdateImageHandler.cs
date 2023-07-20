@@ -71,7 +71,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateImage"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateImage"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

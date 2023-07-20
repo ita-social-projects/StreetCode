@@ -32,7 +32,7 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 
         if (videos is null)
         {
-            const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyVideos"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyVideos"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -81,7 +81,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 }
                 else
                 {
-                    const string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
+                    string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }

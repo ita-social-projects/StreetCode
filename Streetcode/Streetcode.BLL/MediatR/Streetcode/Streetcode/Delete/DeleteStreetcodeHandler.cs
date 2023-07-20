@@ -52,7 +52,7 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteStreetcode"].Value;
+            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteStreetcode"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

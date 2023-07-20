@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Team.Delete
             var team = await _repositoryWrapper.TeamRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (team == null)
             {
-                const string errorMsg = _stringLocalizerNo["NoTeamWithSuchId"].Value;
+                string errorMsg = _stringLocalizerNo["NoTeamWithSuchId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

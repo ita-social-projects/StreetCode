@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
                 return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
             }
 
-            const string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }

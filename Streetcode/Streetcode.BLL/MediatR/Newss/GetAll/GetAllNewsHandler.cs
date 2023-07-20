@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 include: cat => cat.Include(img => img.Image));
             if (news == null)
             {
-                const string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
+                string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

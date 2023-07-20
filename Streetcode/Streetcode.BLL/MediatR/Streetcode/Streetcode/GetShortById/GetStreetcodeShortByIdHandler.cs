@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if (streetcode == null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if(streetcodeShortDTO == null)
             {
-                const string errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
+                string errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

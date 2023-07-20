@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
             if (term is null)
             {
-                const string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value;
+                string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value;
+                string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

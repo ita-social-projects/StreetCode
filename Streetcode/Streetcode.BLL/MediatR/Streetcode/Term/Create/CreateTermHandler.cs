@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if (term is null)
             {
-                const string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
+                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if (createdTerm is null)
             {
-                const string errorMsg = _stringLocalizerCannotCreate["CannotCreateTerm"].Value;
+                string errorMsg = _stringLocalizerCannotCreate["CannotCreateTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -59,7 +59,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if(!resultIsSuccess)
             {
-                const string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateTerm"].Value;
+                string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -72,7 +72,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             }
             else
             {
-                const string errorMsg = _stringLocalizerFailedToCreate["FailedToMapCreatedTerm"].Value;
+                string errorMsg = _stringLocalizerFailedToCreate["FailedToMapCreatedTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 
             if (positions is null)
             {
-                const string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

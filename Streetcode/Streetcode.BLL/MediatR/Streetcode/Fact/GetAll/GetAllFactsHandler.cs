@@ -31,7 +31,7 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
 
         if (facts is null)
         {
-            const string errorMsg = _stringLocalizeCannotFind["CannotFindAnyFact"].Value;
+            string errorMsg = _stringLocalizeCannotFind["CannotFindAnyFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

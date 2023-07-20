@@ -36,7 +36,7 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            const string errorMsg = _stringLocalizerCannot["CannotConvertNullToFact"].Value;
+            string errorMsg = _stringLocalizerCannot["CannotConvertNullToFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -50,7 +50,7 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
         }
         else
         {
-            const string errorMsg = _stringLocalizerFailed["FailedToCreateFact"].Value;
+            string errorMsg = _stringLocalizerFailed["FailedToCreateFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

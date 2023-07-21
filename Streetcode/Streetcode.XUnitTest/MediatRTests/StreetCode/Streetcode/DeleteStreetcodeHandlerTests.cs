@@ -71,9 +71,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             int testSaveChangesFailed = -1;
             var relatedFigure = new RelatedFigure();
 
-            RepositorySetup(testStreetcode, relatedFigure, testSaveChangesFailed);
+            this.RepositorySetup(testStreetcode, relatedFigure, testSaveChangesFailed);
 
-            var handler = new DeleteStreetcodeHandler(_repository.Object, _mockLogger.Object);
+            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object);
 
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);

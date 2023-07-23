@@ -127,6 +127,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
             _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
             .Returns(artListDTO);
+
+            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            .Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int streetcodeId)
+                {
+                    return new LocalizedString(key, $"Cannot find any art with corresponding streetcode id: {streetcodeId}");
+                }
+
+                return new LocalizedString(key, "Cannot find an art with unknown streetcodeId");
+            });
         }
     }
 }

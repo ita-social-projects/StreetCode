@@ -67,6 +67,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             RepositorySetup(null, null);
             MapperSetup(null);
             BlobSetup(null);
+
+            _mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
+                .Returns(new LocalizedString(expectedErrorMessage, expectedErrorMessage));
+
             var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
             // act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);

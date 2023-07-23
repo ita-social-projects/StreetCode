@@ -59,6 +59,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
             RepositoryResultFailed();
             MapperSetup(testAudioDTO);
+
+            var errorMessage = "Localized error message for the test.";
+            var localizedString = new LocalizedString("CannotFindAnAudioWithTheCorrespondingStreetcodeId", errorMessage);
+            _mockLocalizer.Setup(l => l["CannotFindAnAudioWithTheCorrespondingStreetcodeId", id]).Returns(localizedString);
+
             _repository.Setup(repo => repo.StreetcodeRepository
                     .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                     It.IsAny<Func<IQueryable<StreetcodeContent>,

@@ -108,6 +108,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 
             _mockMapper.Setup(x => x.Map<ImageDTO>(It.IsAny<object>()))
             .Returns(ImageDTO);
+
+            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            .Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cannot find a image with corresponding id: {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find an image with unknown Id");
+            });
         }
     }
 }

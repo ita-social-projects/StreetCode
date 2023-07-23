@@ -26,6 +26,10 @@ public class GetAllVideosTest
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
         _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+
+        _mockLocalizer
+                .Setup(x => x["CannotFindAnyVideos"])
+                .Returns(new LocalizedString("CannotFindAnyVideos", "Cannot find any videos"));
     }
 
     [Fact]

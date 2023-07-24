@@ -28,8 +28,8 @@ public class TextController : BaseApiController
         return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetParsedText([FromQuery] string text)
+    [HttpPost]
+    public async Task<IActionResult> GetParsedText([FromBody] string text)
     {
         return HandleResult(await Mediator.Send(new GetParsedTextForAdminPreviewCommand(text)));
     }

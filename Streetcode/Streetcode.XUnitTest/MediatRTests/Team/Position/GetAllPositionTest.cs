@@ -77,6 +77,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         {
             //Arrange
             const string expectedError = "Cannot find any positions";
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPositions"])
+               .Returns(new LocalizedString("CannotFindAnyPositions", expectedError));
+
 
             SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
 

@@ -67,8 +67,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 				.Returns(GetTermWithNotExistId()!);
 
 			var expectedError = "Cannot convert null to Term";
+            _mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+                .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTOWithNotExistId()!), CancellationToken.None);
@@ -92,7 +94,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 				.Returns(GetTerm());
 
 			var expectedError = "Failed to update a term";
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateTerm"])
+               .Returns(new LocalizedString("FailedToUpdateTerm", expectedError));
+            var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);

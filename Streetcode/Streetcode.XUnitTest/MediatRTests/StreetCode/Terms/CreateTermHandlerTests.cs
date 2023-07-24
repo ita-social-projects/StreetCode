@@ -65,6 +65,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
           .Returns(GetNotExistingTerm()!);
 
         var expectedError = "Cannot convert null to Term";
+            _mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+                .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
         var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
         //Act

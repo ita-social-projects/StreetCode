@@ -88,6 +88,17 @@ public class GetVideoByStreetcodeIdTest
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(videoDto);
 
+        _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int streetcodeId)
+                   {
+                       return new LocalizedString(key, $"Cannot find a video with corresponding id: {streetcodeId}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any video with unknown id");
+               });
+
         var handler = new GetVideoByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         //Act

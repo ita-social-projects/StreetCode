@@ -107,6 +107,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>();
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cannot find any related figures by a streetcode id: {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find any related figures with unknown id");
+            });
 
             RepositorySetup(testRelatedFigureEmptyList.AsQueryable(), null);
             MapperSetup(testRelatedDTO);
@@ -124,6 +133,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         {
             // arrange
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cannot find any related figures by a streetcode id: {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find any related figures with unknown id");
+            });
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
 
             RepositorySetup(null, null);

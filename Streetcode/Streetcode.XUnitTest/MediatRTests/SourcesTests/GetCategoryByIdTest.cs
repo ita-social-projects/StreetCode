@@ -86,6 +86,15 @@ public class GetCategoryByIdTest
             _mockLocalizerCannotFind.Object);
 
         var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        {
+            if (args != null && args.Length > 0 && args[0] is int id)
+            {
+                return new LocalizedString(key, $"Cannot find any srcCategory by the corresponding id: {id}");
+            }
+
+            return new LocalizedString(key, "Cannot find any srcCategory with unknown id");
+        });
         // act
 
         var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);

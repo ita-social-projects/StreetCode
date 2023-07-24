@@ -107,6 +107,15 @@ public class GetFactByStreetcodeIdTest
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        {
+            if (args != null && args.Length > 0 && args[0] is int streetCodeId)
+            {
+                return new LocalizedString(key, $"Cannot find any fact by the streetcode id: {streetCodeId}");
+            }
+
+            return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
+        });
 
         var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 

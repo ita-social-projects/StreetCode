@@ -77,7 +77,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task Handle_ReturnsError()
         {
             // arrange
-            string expectedErrorMessage = "There are no news in the database";
+            string expectedErrorMessage = "No news in the database";
+            _mockLocalizer.Setup(x => x["NoNewsInTheDatabase"])
+            .Returns(new LocalizedString("NoNewsInTheDatabase", expectedErrorMessage));
             RepositorySetup(null);
             MapperSetup(null);
             BlobSetup(null);

@@ -77,6 +77,9 @@ public class GetVideoByIdTest
             .Returns(GetVideoDTOWithNotExistingId());
 
         var expectedError = $"Cannot find a video with corresponding id: {id}";
+        _mockLocalizer
+            .Setup(x => x["CannotFindVideoWithCorrespondingId", id])
+            .Returns(new LocalizedString("CannotFindVideoWithCorrespondingId", expectedError));
 
         //Act
         var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);

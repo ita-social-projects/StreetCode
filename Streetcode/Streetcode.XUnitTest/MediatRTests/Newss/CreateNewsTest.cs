@@ -69,6 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNews = GetNews();
             var expectedError = "Failed to create a news";
+            _mockLocalizerFail.Setup(x => x["FailedToCreateNews"]).Returns(new LocalizedString("FailedToCreateNews", expectedError));
             SetupMockMapping(testNews);
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesException(expectedError);

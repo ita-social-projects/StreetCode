@@ -86,6 +86,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             // Arrange
             string expectedError = $"No news by entered Url - {url}";
+            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is string url)
+                {
+                    return new LocalizedString(key, $"No news by entered Url - {url}");
+                }
+
+                return new LocalizedString(key, "Cannot find any news with unknown Url");
+            });
             RepositorySetup(null);
             MapperSetup(null);
             BlobServiceSetup(null);

@@ -44,6 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             _repositoryWrapperMock.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
             var handler = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(word);
+            SetupLocalizers();
 
             // Act
             var result = await handler.Handle(command, default);
@@ -65,6 +66,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
                  It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>())).ReturnsAsync((Entity)null);
             var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(word);
+            var expectedError = $"Cannot find a related term: {word}";
+            SetupLocalizers();
 
             // Act
             var result = await sut.Handle(command, CancellationToken.None);
@@ -73,8 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             Assert.Multiple(
             () => Assert.IsType<Result<EntityDTO>>(result),
             () => Assert.False(result.IsSuccess),
-            () => Assert.Equal($"Cannot find a related term: {word}",
-            result.Errors.First().Message)
+            () => Assert.Equal(expectedError, result.Errors.First().Message)
                 );
         }
 
@@ -93,6 +95,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
             var sut = new DeleteRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
             var command = new DeleteRelatedTermCommand(word);
             var expectedError = "Failed to delete a related term";
+            SetupLocalizers();
 
             // Act
             var result = await sut.Handle(command, CancellationToken.None);
@@ -109,5 +112,25 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
         {
             return new Entity { Id = id, Word = word, TermId = termId };
         }
+
+        private void SetupLocalizers()
+        {
+            // Setup for _mockLocalizerCannotFind
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+                .Returns((string key, object[] args) =>
+                {
+                    if (args != null && args.Length > 0 && args[0] is string word)
+                    {
+                        return new LocalizedString(key, $"Cannot find a related term: {word}");
+                    }
+
+                    return new LocalizedString(key, "Cannot find any related term with unknown word");
+                });
+
+            // Setup for _mockLocalizerFailedToDelete
+            _mockLocalizerFailedToDelete.Setup(x => x["FailedToDeleteRelatedTerm"])
+                .Returns(new LocalizedString("FailedToDeleteRelatedTerm", "Failed to delete a related term"));
+        }
+
     }
 }

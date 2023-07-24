@@ -78,6 +78,8 @@ public class CreateFactTest
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
+        _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToFact"])
+           .Returns(new LocalizedString("CannotConvertNullToFact", expectedError));
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
@@ -99,6 +101,8 @@ public class CreateFactTest
             .Returns(GetFact());
 
         var expectedError = "Failed to create a fact";
+        _mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateFact"])
+            .Returns(new LocalizedString("FailedToCreateFact", expectedError));
 
         var handler = new CreateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 

@@ -32,7 +32,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsSuccess(int id)
-        {   
+        {
             // arrange
             var testModelList = new List<Model>()
             {
@@ -54,6 +54,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testDTOList);
 
+            SetupLocalizers();
+
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
@@ -64,10 +66,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsError(int id)
-        {   
+        {
             // arrange 
             var testStreetcodeDTO = new EventStreetcodeDTO();
             var expectedErrorMessage = $"Cannot find any streetcode with corresponding index: {id}";
+            SetupLocalizers();
+
 
             Setup(null, testStreetcodeDTO);
 
@@ -81,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         [Theory]
         [InlineData(1)]
         public async Task Handle_ReturnsCorrectType(int id)
-        {   
+        {
             // arrange
             var testStreetcodeDTO = new EventStreetcodeDTO();
             var testStreetcode = new Model();
@@ -105,5 +109,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .Returns(testStreetcodeDTO);
         }
 
+        private void SetupLocalizers()
+        {
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int id)
+                   {
+                       return new LocalizedString(key, $"Cannot find any streetcode with corresponding index: {id}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any streetcode with unknown index");
+               });
+        }
     }
 }

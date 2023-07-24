@@ -71,7 +71,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task ShouldThrowException_IdNotExist()
         {
             // Arrange
-            var expectedError = "There are no news in the database";
+            var expectedError = "No news in the database";
+            _mockLocalizerNoShared.Setup(x => x["NoNewsInTheDatabase"])
+            .Returns(new LocalizedString("NoNewsInTheDatabase", expectedError));
             SetupMockRepositoryGetAllAsync(GetNewsListWithNotExistingId());
 
             var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerNoShared.Object);

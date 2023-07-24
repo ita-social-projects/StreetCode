@@ -54,6 +54,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNews = GetNews();
             var expectedError = $"No news found by entered Id - {testNews.Id}";
+            _mockLocalizerNoShared.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+           {
+            if (args != null && args.Length > 0 && args[0] is int id)
+             {
+                 return new LocalizedString(key, $"No news found by entered Id - {testNews.Id}");
+             }
+
+            return new LocalizedString(key, "Cannot find any news with unknown id");
+           });
+
             SetupMockRepositoryGetFirstOrDefault(null);
 
             var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
@@ -72,6 +82,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNews = GetNews();
             var expectedError = "Failed to delete news";
+            _mockLocalizerFailed.Setup(x => x["FailedToDeleteNews"])
+            .Returns(new LocalizedString("FailedToDeleteNews", expectedError));
             SetupMockRepositoryGetFirstOrDefault(testNews);
             SetupMockRepositorySaveChangesException(expectedError);
 

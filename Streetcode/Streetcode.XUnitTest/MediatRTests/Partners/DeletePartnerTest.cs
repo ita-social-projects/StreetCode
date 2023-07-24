@@ -61,6 +61,8 @@ public class DeletePartnerTest
         //Arrange
         var testPartner = GetPartner();
         var expectedError = "No partner with such id";
+        _mockLocalizerNoShared.Setup(x => x["NoPartnerWithSuchId"])
+            .Returns(new LocalizedString("NoPartnerWithSuchId", expectedError));
 
         _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(GetPartnerWithNotExistingId());

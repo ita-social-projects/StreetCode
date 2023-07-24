@@ -81,6 +81,8 @@ public class GetAllFactsTest
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = "Cannot find any fact";
+        _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyFact"])
+           .Returns(new LocalizedString("CannotFindAnyFact", expectedError));
 
         var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 

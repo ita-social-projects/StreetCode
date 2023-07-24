@@ -63,6 +63,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             // Arrange
             var expectedError = "Cannot convert null to news";
+            _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
+            .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
             SetupUpdateRepository(returnNumber);
             SetupMapperWithNullNews();
 
@@ -89,6 +91,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupImageRepository();
 
             var expectedError = "Failed to update news";
+            _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateNews"])
+            .Returns(new LocalizedString("FailedToUpdateNews", expectedError));
             var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act

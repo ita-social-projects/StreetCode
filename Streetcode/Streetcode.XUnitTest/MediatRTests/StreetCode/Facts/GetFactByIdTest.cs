@@ -75,6 +75,15 @@ public class GetFactByIdTest
             .Returns(GetFactDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        {
+            if (args != null && args.Length > 0 && args[0] is int id)
+            {
+                return new LocalizedString(key, $"Cannot find any fact with corresponding id: {id}");
+            }
+
+            return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
+        });
 
         var handler = new GetFactByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 

@@ -84,6 +84,8 @@ public class GetAllPartnersTest
     {
         //Arrange
         var expectedError = "Cannot find any partners";
+        _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPartners"])
+            .Returns(new LocalizedString("CannotFindAnyPartners", expectedError));
 
         _mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
             null,

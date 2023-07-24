@@ -71,6 +71,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {   
             // arrange
             string expectedErrorMessage = $"Cannot find any streetcode with corresponding id: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int id)
+                   {
+                       return new LocalizedString(key, $"Cannot find any streetcode with corresponding id: {id}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any streetcode with unknown id");
+               });
 
             RepositorySetup(null);
             MapperSetup(null);

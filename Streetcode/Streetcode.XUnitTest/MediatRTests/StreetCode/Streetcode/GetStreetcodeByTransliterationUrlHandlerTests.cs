@@ -90,6 +90,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(nullValueDTO);
 
             var expectedError = $"Cannot find streetcode by transliteration url: {url}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is string url)
+                   {
+                       return new LocalizedString(key, $"Cannot find streetcode by transliteration url: {url}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any streetcode with unknown transliteration url");
+               });
+
 
             var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 

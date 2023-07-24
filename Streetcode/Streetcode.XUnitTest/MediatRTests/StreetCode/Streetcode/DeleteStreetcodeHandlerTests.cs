@@ -53,6 +53,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {   
             // arrange
             string expectedErrorMessage = $"Cannot find a streetcode with corresponding categoryId: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int id)
+                   {
+                       return new LocalizedString(key, $"Cannot find a streetcode with corresponding categoryId: {id}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any streetcode with unknown categoryId");
+               });
+
             int testSaveChangesSuccess = 1;
 
             RepositorySetup(null, testSaveChangesSuccess);
@@ -71,6 +82,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // arrange
             var testStreetcode = new StreetcodeContent();
             string expectedErrorMessage = "Failed to delete a streetcode";
+            _mockLocalizerFailedToDelete.Setup(x => x["FailedToDeleteStreetcode"])
+          .Returns(new LocalizedString("FailedToDeleteStreetcode", expectedErrorMessage));
+
             int testSaveChangesFailed = -1;
 
             RepositorySetup(testStreetcode, testSaveChangesFailed);

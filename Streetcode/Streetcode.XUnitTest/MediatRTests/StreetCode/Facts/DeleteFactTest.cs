@@ -71,6 +71,15 @@ public class DeleteFactTest
         .Delete(GetFactWithNotExistingId()));
 
         var expectedError = $"Cannot find a fact with corresponding categoryId: {id}";
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        {
+            if (args != null && args.Length > 0 && args[0] is int id)
+            {
+                return new LocalizedString(key, $"Cannot find a fact with corresponding categoryId: {id}");
+            }
+
+            return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
+        });
 
         //Act
         var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
@@ -99,6 +108,8 @@ public class DeleteFactTest
         _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
 
         var expectedError = "Failed to delete a fact";
+        _mockLocalizerFailedToDelete.Setup(x => x["FailedToDeleteFact"])
+           .Returns(new LocalizedString("FailedToDeleteFact", expectedError));
 
         //Act
         var handler = new DeleteFactHandler(_repository.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);

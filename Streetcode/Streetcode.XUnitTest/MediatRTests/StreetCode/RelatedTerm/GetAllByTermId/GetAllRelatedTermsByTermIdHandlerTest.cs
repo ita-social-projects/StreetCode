@@ -26,6 +26,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            _mockLocalizerCannotGet = new Mock<IStringLocalizer<CannotGetSharedResource>>();
         }
 
         [Theory]
@@ -41,12 +43,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync((IEnumerable<Entity>)null);
 
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object,_mockLocalizerCannotCreate.Object);
+            var expectedError = "Cannot get words by term id";
+            _mockLocalizerCannotGet.Setup(x => x["CannotGetWordsByTermId"])
+           .Returns(new LocalizedString("CannotGetWordsByTermId", expectedError));
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Equal("Cannot get words by term id", result.Errors.First().Message);
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         [Theory]
@@ -65,12 +70,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .Returns((IEnumerable<RelatedTermDTO>)null);
 
             var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object, _mockLocalizerCannotCreate.Object);
+            var expectedError = "Cannot create DTOs for related words!";
+            _mockLocalizerCannotCreate.Setup(x => x["CannotCreateDTOsForRelatedWords"])
+           .Returns(new LocalizedString("CannotCreateDTOsForRelatedWords", expectedError));
+
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Equal("Cannot create DTOs for related words!", result.Errors.First().Message);
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
         [Theory]

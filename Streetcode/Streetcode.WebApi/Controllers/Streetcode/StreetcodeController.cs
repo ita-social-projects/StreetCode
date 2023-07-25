@@ -10,7 +10,6 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
-using Streetcode.WebApi.Attributes;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
@@ -23,6 +22,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -32,6 +32,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllPublished()
+    {
+        return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
     }
 
     [HttpGet]

@@ -29,7 +29,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public StreetcodeType StreetcodeType { get; set; }
         public string Title { get; set; }
         public string TransliterationUrl { get; set; }
-        public string UpdatedAt { get; set; }
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public TextUpdateDTO? Text { get; set; }

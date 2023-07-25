@@ -30,8 +30,8 @@ public class TextController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetParsedText([FromBody] TextPreviewDTO text)
+    public async Task<IActionResult> UpdateParsedText([FromBody] TextPreviewDTO text)
     {
-        return HandleResult(await Mediator.Send(new GetParsedTextForAdminPreviewCommand(text.TextContent)));
+        return HandleResult(await Mediator.Send(new UpdateParsedTextForAdminPreviewCommand(text.TextContent)));
     }
 }

@@ -5,18 +5,18 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetParsed
 {
-    public class GetParsedTextAdminPreviewHandler : IRequestHandler<GetParsedTextForAdminPreviewCommand, Result<string>>
+    public class UpdateParsedTextAdminPreviewHandler : IRequestHandler<UpdateParsedTextForAdminPreviewCommand, Result<string>>
     {
         private readonly ITextService _textService;
 
-        public GetParsedTextAdminPreviewHandler(ITextService textService)
+        public UpdateParsedTextAdminPreviewHandler(ITextService textService)
         {
             _textService = textService;
         }
 
-        public async Task<Result<string>> Handle(GetParsedTextForAdminPreviewCommand request, CancellationToken cancellationToken)
+        public async Task<Result<string>> Handle(UpdateParsedTextForAdminPreviewCommand request, CancellationToken cancellationToken)
         {
-            string? parsedText = await _textService.AddTermsTag(request.textToParse);
+            string? parsedText = await _textService.AddTermsTag(request.TextToParse);
             return parsedText == null ? Result.Fail(new Error("text was not parsed successfully")) : Result.Ok(parsedText);
         }
     }

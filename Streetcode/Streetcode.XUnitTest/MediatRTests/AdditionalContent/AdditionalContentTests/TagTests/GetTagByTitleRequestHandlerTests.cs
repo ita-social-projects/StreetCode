@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(tag);
             await SetupMapper(tagDTO);
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(new Tag());
             await SetupMapper(new TagDTO());
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLocalizer.Object);
 
             //Act
             var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);

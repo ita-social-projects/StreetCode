@@ -103,6 +103,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             // Arrange
             var expectedError = "Cannot find any team";
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
+                .Returns(new LocalizedString("CannotFindAnyTeam", expectedError));
 
             SetupGetAllTeams(GetTeamListWithNotExistingId());
 

@@ -75,6 +75,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             //Arrange
             const string expectedError = "Cannot find any team links";
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyTeamLinks"])
+              .Returns(new LocalizedString("CannotFindAnyTeamLinks", expectedError));
             SetupMapMethod(GetTeamMemberLinksListWithNotExistingId());
 
             var handler = new GetAllTeamLinkHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);

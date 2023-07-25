@@ -61,12 +61,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Arrange
             SetupMocks();
             var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
+            var expectedError = "Cannot find any team";
+            _mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
+                .Returns(new LocalizedString("CannotFindAnyTeam", expectedError));
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
 
             // Assert
-            Assert.Contains("Cannot find any team", result.Errors.First().Message);
+            Assert.Contains(expectedError, result.Errors.First().Message);
         }
 
         private static IEnumerable<TeamMember> GetTeamList()

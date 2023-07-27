@@ -30,21 +30,28 @@ namespace Streetcode.BLL.Services.Text
             var splittedText = Pattern.Split(text)
                 .Where(x => !string.IsNullOrEmpty(x) && !string.IsNullOrWhiteSpace(x)).ToArray();
 
-            if (splittedText[0].Contains("<p"))
-            {
-                var split = splittedText[0].Replace("<p", "<span");
-                splittedText[0] = split;
-            }
-
             foreach (var word in splittedText)
             {
+                var manipulationWord = word;
+                if (word.Contains("<p"))
+                {
+                    var split = word.Replace("<p>", "<p><span>");
+                    manipulationWord = split;
+                }
+
+                if (word.Contains("</p"))
+                {
+                    var split = word.Replace("</p>", "</span></p>");
+                    manipulationWord = split;
+                }
+
                 if (word.Contains('<'))
                 {
-                    _text.Append(word);
+                    _text.Append(manipulationWord);
                     continue;
                 }
 
-                var (resultedWord, extras) = CleanWord(word);
+                var (resultedWord, extras) = CleanWord(manipulationWord);
 
                 var term = await _repositoryWrapper.TermRepository
                     .GetFirstOrDefaultAsync(

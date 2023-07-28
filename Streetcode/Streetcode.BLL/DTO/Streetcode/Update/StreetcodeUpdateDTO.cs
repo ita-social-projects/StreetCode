@@ -1,18 +1,19 @@
-using Streetcode.DAL.Enums;
-using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
-using Streetcode.BLL.DTO.Media.Video;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.DTO.Partners.Update;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Media.Audio;
-using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Analytics.Update;
+using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Sources.Update;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Timeline.Update;
+using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.DTO.Transactions;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
@@ -33,6 +34,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public TextUpdateDTO? Text { get; set; }
+        public TransactionLinkUpdateDTO? TransactionLink { get; set; }
         public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; }
         public IEnumerable<FactUpdateDto> Facts { get; set; }

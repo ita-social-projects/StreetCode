@@ -92,6 +92,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
         }
 
+        private void UpdateTransactionLink()
+        {
+
+        }
+
         private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
         {
             if(imageDetails == null)

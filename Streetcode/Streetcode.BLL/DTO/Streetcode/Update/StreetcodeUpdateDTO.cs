@@ -25,6 +25,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public string? Teaser { get; set; }
         public string DateString { get; set; }
         public string? Alias { get; set; }
+        public string? ARBlockURL { get; set; }
         public StreetcodeStatus Status { get; set; }
         public StreetcodeType StreetcodeType { get; set; }
         public string Title { get; set; }

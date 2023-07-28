@@ -27,11 +27,19 @@ namespace Streetcode.BLL.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var originalBodyStream = context.Response.Body;
+            await LogRequestAsync(context);
+            await LogResponseAsync(context, next);
+        }
 
+        private async Task LogRequestAsync(HttpContext context)
+        {
             var request = await GetRequestAsTextAsync(context.Request);
-            LogRequest(request);
+            _loggerService.LogInformation(request);
+        }
 
+        private async Task LogResponseAsync(HttpContext context, RequestDelegate next)
+        {
+            var originalBodyStream = context.Response.Body;
             await using var responseBody = new MemoryStream();
             context.Response.Body = responseBody;
 
@@ -39,19 +47,8 @@ namespace Streetcode.BLL.Middleware
 
             var response = await GetResponseAsTextAsync(context.Response);
             var filteredResponse = GetFilteredResponse(response);
-            LogResponse(filteredResponse);
-
+            _loggerService.LogInformation(filteredResponse);
             await responseBody.CopyToAsync(originalBodyStream);
-        }
-
-        private void LogRequest(string request)
-        {
-            _loggerService.LogInformation(request);
-        }
-
-        private void LogResponse(string response)
-        {
-            _loggerService.LogInformation(response);
         }
 
         private async Task<string> GetRequestAsTextAsync(HttpRequest request)

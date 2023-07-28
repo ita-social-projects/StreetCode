@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Runtime;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
-using System.Runtime;
 
 namespace Streetcode.WebApi.Extensions;
 

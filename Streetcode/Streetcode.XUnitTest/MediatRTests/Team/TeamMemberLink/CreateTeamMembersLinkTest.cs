@@ -80,7 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         [Fact]
         public async Task ShouldThrowExeption_WhenSaveChangesIsNotSuccessful()
         {
-            const string expectedErrorMessage = "Failed to create a team";
+            string expectedErrorMessage = "Failed to create a team";
+            _mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateTeam"])
+                .Returns(new LocalizedString("FailedToCreateTeam", expectedErrorMessage));
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
@@ -102,7 +104,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         [Fact]
         public async Task ShouldThrowExeption_WhenCreateNotSuccessful()
         {
-            const string expectedErrorMessage = "Cannot create team link";
+            string expectedErrorMessage = "Cannot create team link";
+            _mockLocalizerCannotCreate.Setup(x => x["CannotCreateTeamLink"])
+                .Returns(new LocalizedString("CannotCreateTeamLink", expectedErrorMessage));
+
             //Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
@@ -126,7 +131,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         [Fact]
         public async Task ShouldThrowExeption_WhenMapNotSuccessful()
         {
-            const string expectedErrorMessage = "Cannot convert null to team link";
+            string expectedErrorMessage = "Cannot convert null to team link";
+            _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToTeamLink"])
+                .Returns(new LocalizedString("CannotConvertNullToTeamLink", expectedErrorMessage));
             //Arrange
             //The specific setup of the 'Map' method returned null, causing an error.
             _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))

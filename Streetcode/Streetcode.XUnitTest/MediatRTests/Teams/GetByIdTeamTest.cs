@@ -74,6 +74,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Arrange
             var testTeam = GetTeam();
             var expectedError = $"Cannot find any team with corresponding id: {testTeam.Id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int id)
+                   {
+                       return new LocalizedString(key, expectedError);
+                   }
+
+                   return new LocalizedString(key, "Cannot find any team with unknown Id");
+               });
+
             var teamDTOWithNotExistingId = GetTeamDTOWithNotExistingId();
 
             SetupGetTeamById(GetTeamWithNotExistingId());

@@ -6,8 +6,12 @@ using Streetcode.BLL.DTO.Streetcode.CatalogItem;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Enums;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 

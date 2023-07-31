@@ -78,6 +78,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Arrange
             var testTeam = GetTeam();
             var expectedError = "No team with such id";
+            _mockLocalizerNo.Setup(x => x["NoTeamWithSuchId"])
+                .Returns(new LocalizedString("NoTeamWithSuchId", expectedError));
+
 
             SetupGetFirstOrDefaultAsync(null);
 
@@ -98,6 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Arrange
             var testTeam = GetTeam();
             var expectedError = "The team wasn't added";
+
 
             SetupMapTeamMember(testTeam);
             SetupGetFirstOrDefaultAsync(testTeam);

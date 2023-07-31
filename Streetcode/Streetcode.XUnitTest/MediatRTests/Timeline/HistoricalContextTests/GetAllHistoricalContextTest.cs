@@ -82,7 +82,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 				.Returns(GetNullListHistoricalContextDTO()!);
 
 			var expectedError = "Cannot find any historical contexts";
-			var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyHistoricalContexts"])
+               .Returns(new LocalizedString("CannotFindAnyHistoricalContexts", expectedError));
+
+            var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
 			//Act
 			var result = await handler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);

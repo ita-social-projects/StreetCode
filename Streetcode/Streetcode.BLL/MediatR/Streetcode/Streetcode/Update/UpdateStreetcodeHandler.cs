@@ -19,6 +19,7 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -71,6 +72,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
 
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
+
+                    _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property(x => x.CreatedAt).IsModified = false;
+                    var discriminatorProperty = _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property<string>(StreetcodeTypeDiscriminators.DiscriminatorName );
+                    discriminatorProperty.CurrentValue = StreetcodeTypeDiscriminators.GetStreetcodeType(request.Streetcode.StreetcodeType);
+                    discriminatorProperty.IsModified = true;
+
+                    streetcodeToUpdate.UpdatedAt = DateTime.UtcNow;
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
                     if (isResultSuccess)

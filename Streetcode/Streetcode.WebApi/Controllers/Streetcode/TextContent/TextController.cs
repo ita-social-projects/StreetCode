@@ -1,6 +1,7 @@
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
@@ -28,9 +29,9 @@ public class TextController : BaseApiController
         return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetParsedText([FromQuery] string text)
+    [HttpPost]
+    public async Task<IActionResult> UpdateParsedText([FromBody] TextPreviewDTO text)
     {
-        return HandleResult(await Mediator.Send(new GetParsedTextForAdminPreviewCommand(text)));
+        return HandleResult(await Mediator.Send(new UpdateParsedTextForAdminPreviewCommand(text.TextContent)));
     }
 }

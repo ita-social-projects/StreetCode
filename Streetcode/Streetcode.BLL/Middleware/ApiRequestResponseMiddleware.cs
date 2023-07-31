@@ -113,26 +113,25 @@ namespace Streetcode.BLL.Middleware
         {
             foreach (var property in token.Children<JProperty>().ToList())
             {
-                if (!_options.PropertiesToIgnore.Contains(property.Name.ToString().ToLower()))
-                {
-                    if (!_options.PropertiesToShorten.Contains(property.Name.ToString().ToLower()))
-                    {
-                        continue;
-                    }
-
-                    if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
-                    {
-                        property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength));
-                    }
-                    else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
-                    {
-                        TruncateProperties(property.Value);
-                    }
-                }
-                else
+                if (_options.PropertiesToIgnore.Contains(property.Name.ToString().ToLower()))
                 {
                     property.Remove();
+                    continue;
                 }
+                if (!_options.PropertiesToShorten.Contains(property.Name.ToString().ToLower()))
+                {
+                    continue;
+                }
+
+                 if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
+                {
+                    property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength));
+                }
+                else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
+                {
+                    TruncateProperties(property.Value);
+                }
+            }
             }
         }
     }

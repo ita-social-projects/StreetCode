@@ -72,7 +72,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
         private MemoryMetrics GetUnixMetrics()
         {
             var output = "";
-            const string SEPARATOR_NEW_LINE = "\n";
+            const string SEPARATOR_NEW_LINE = Environment.NewLine;
             const string SEPARATOR_SPACE = " ";
 
             var info = new ProcessStartInfo("free -m");

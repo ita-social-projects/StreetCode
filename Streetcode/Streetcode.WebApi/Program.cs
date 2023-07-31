@@ -23,7 +23,7 @@ builder.Services.ConfigureMiddleware(builder);
 builder.Services.ConfigureHealthCheck(builder);
 var app = builder.Build();
 
-if (app.Environment.EnvironmentName == "Local")
+if (app.Environment.EnvironmentName.ToLower() == "local")
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
@@ -50,7 +50,7 @@ app.UseAuthorization();
 
 app.UseHangfireDashboard("/dash");
 
-if (app.Environment.EnvironmentName != "Local")
+if (app.Environment.EnvironmentName.ToLower() != "local")
 {
     BackgroundJob.Schedule<WebParsingUtils>(
       wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));

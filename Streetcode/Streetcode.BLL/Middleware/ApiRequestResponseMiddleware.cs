@@ -118,12 +118,13 @@ namespace Streetcode.BLL.Middleware
                     property.Remove();
                     continue;
                 }
+
                 if (!_options.PropertiesToShorten.Contains(property.Name.ToString().ToLower()))
                 {
                     continue;
                 }
 
-                 if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
+                if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
                 {
                     property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength));
                 }
@@ -131,7 +132,6 @@ namespace Streetcode.BLL.Middleware
                 {
                     TruncateProperties(property.Value);
                 }
-            }
             }
         }
     }

@@ -35,8 +35,8 @@ else
     app.UseHsts();
 }
 
-string appUrl = builder.Configuration.GetValue<string>("ApplicationUrl");
-app.Urls.Add(appUrl);
+var appUrl = builder.Configuration.GetSection("ApplicationUrls").Get<string[]>();
+app.Urls.Add(appUrl[1]);
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();

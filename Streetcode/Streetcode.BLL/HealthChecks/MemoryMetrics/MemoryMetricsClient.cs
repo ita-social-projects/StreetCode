@@ -57,7 +57,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
                 output = process.StandardOutput.ReadToEnd();
             }
 
-            var lines = output.Trim().Split("{Environment.NewLine}");
+            var lines = output.Trim().Split($"{Environment.NewLine}");
             var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
             var totalMemoryParts = lines[1].Split("=", StringSplitOptions.RemoveEmptyEntries);
 
@@ -72,7 +72,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
         private MemoryMetrics GetUnixMetrics()
         {
             var output = "";
-            const string SEPARATOR_NEW_LINE = Environment.NewLine;
+            string separator_new_line = Environment.NewLine;
             const string SEPARATOR_SPACE = " ";
 
             var info = new ProcessStartInfo("free -m");
@@ -86,7 +86,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
                 _loggerService.LogInformation(output);
             }
 
-            var lines = output.Split(SEPARATOR_NEW_LINE);
+            var lines = output.Split(separator_new_line);
             var memory = lines[1].Split(SEPARATOR_SPACE, StringSplitOptions.RemoveEmptyEntries);
 
             var metrics = new MemoryMetrics();

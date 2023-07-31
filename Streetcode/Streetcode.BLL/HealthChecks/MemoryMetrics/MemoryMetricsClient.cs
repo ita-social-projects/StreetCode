@@ -57,7 +57,7 @@ namespace Streetcode.BLL.HealthChecks.MemoryMetrics
                 output = process.StandardOutput.ReadToEnd();
             }
 
-            var lines = output.Trim().Split("\n");
+            var lines = output.Trim().Split("{Environment.NewLine}");
             var freeMemoryParts = lines[0].Split("=", StringSplitOptions.RemoveEmptyEntries);
             var totalMemoryParts = lines[1].Split("=", StringSplitOptions.RemoveEmptyEntries);
 

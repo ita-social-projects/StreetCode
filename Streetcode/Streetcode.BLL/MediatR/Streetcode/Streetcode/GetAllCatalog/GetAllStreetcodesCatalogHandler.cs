@@ -3,21 +3,15 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Enums;
-=========
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
->>>>>>>>> Temporary merge branch 2
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
 {
-  public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodesCatalogQuery,
+    public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodesCatalogQuery,
         Result<IEnumerable<CatalogItem>>>
     {
         private readonly IMapper _mapper;

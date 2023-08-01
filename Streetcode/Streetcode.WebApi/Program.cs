@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Hangfire;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
@@ -13,6 +14,7 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
+builder.Services.ConfigureRateLimitMiddleware(builder);
 var app = builder.Build();
 
 if (app.Environment.EnvironmentName == "Local")
@@ -35,6 +37,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHangfireDashboard("/dash");
+
+app.UseIpRateLimiting();
 
 if (app.Environment.EnvironmentName != "Local")
 {

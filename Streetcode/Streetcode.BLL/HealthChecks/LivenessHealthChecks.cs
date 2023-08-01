@@ -15,26 +15,28 @@ namespace Streetcode.BLL.HealthChecks
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
+            const uint PERCENTAGE_MIN = 80;
+            const uint PERCENTAGE_MAX = 90;
             var client = new MemoryMetricsClient(_loggerService);
             var metrics = client.GetMetrics();
             var percentUsed = 100 * metrics.Used / metrics.Total;
-            const string HEALTHY = "System memory used is up to 80%";
-            const string DEGRADED = "System memory used is between 80% - 90%";
-            const string UNHEALTHY = "System memory used is over 90%";
+            string healthy = $"System memory used is up to {PERCENTAGE_MIN}%";
+            string degraded = $"System memory used is between {PERCENTAGE_MIN}% - {PERCENTAGE_MAX}%";
+            string unhealthy = $"System memory used is over {PERCENTAGE_MAX}%";
 
             var status = HealthStatus.Healthy;
-            string healthDescription = HEALTHY;
+            string healthDescription = healthy;
 
-            if (percentUsed >= 80 && percentUsed <= 90)
+            if (percentUsed >= PERCENTAGE_MIN && percentUsed <= PERCENTAGE_MAX)
             {
                 status = HealthStatus.Degraded;
-                healthDescription = DEGRADED;
+                healthDescription = degraded;
             }
 
-            if (percentUsed > 90)
+            if (percentUsed > PERCENTAGE_MAX)
             {
                 status = HealthStatus.Unhealthy;
-                healthDescription = UNHEALTHY;
+                healthDescription = unhealthy;
             }
 
             var data = new Dictionary<string, object>();

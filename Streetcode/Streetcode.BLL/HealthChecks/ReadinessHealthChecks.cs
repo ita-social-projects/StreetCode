@@ -89,9 +89,10 @@ namespace Streetcode.BLL.HealthChecks
 
         private async Task<bool> CheckBlobStorageAvailability()
         {
+            const uint MIN_BYTE_SIZE = 1024;
             string relativePath = _options.BlobStoragePath;
             string absolutePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, relativePath));
-            byte[] testData = new byte[1024];
+            byte[] testData = new byte[MIN_BYTE_SIZE];
             new Random().NextBytes(testData);
             string base64 = Convert.ToBase64String(testData);
             string title = DateTime.Now.ToString();
@@ -102,17 +103,7 @@ namespace Streetcode.BLL.HealthChecks
 
             try
             {
-                if (!Directory.Exists(absolutePath))
-                {
-                    return false;
-                }
-
-                if(string.IsNullOrEmpty(hashBlobStorageName))
-                {
-                    return false;
-                }
-
-                if(filePath == Path.GetFileName(filePath))
+                if (!Directory.Exists(absolutePath) && string.IsNullOrEmpty(hashBlobStorageName) && filePath == Path.GetFileName(filePath))
                 {
                     return false;
                 }

@@ -16,8 +16,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 maxLength: 7000,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(4000)",
-                oldMaxLength: 4000);
+                oldType: "nvarchar(1000)",
+                oldMaxLength: 1000);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -26,8 +26,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "Text",
                 schema: "sources",
                 table: "streetcode_source_link_categories",
-                type: "nvarchar(4000)",
-                maxLength: 4000,
+                type: "nvarchar(1000)",
+                maxLength: 1000,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",

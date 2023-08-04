@@ -4,7 +4,7 @@
 
 namespace Streetcode.DAL.Persistence.Migrations
 {
-    public partial class Change_StreetcodeCategoryContent_Text_to_7000_simb : Migration
+    public partial class Change_StreetcodeCategoryContent_Text_to_10000_simb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "sources",
                 table: "streetcode_source_link_categories",
                 type: "nvarchar(max)",
-                maxLength: 7000,
+                maxLength: 10000,
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(1000)",
@@ -31,7 +31,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldMaxLength: 7000);
+                oldMaxLength: 10000);
         }
     }
 }

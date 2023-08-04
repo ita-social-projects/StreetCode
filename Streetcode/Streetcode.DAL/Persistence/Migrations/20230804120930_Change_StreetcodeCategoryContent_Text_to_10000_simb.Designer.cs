@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230803205114_Change_StreetcodeCategoryContent_Text_to_7000_simb")]
-    partial class Change_StreetcodeCategoryContent_Text_to_7000_simb
+    [Migration("20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb")]
+    partial class Change_StreetcodeCategoryContent_Text_to_10000_simb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -478,7 +478,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(7000)
+                        .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SourceLinkCategoryId", "StreetcodeId");

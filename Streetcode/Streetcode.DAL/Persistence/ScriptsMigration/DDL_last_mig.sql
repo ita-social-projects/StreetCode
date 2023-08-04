@@ -578,7 +578,7 @@ ALTER TABLE [sources].[streetcode_source_link_categories] ALTER COLUMN [Text] nv
 GO
 
 INSERT INTO [entity_framework].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20230803205114_Change_StreetcodeCategoryContent_Text_to_7000_simb', N'6.0.11');
+VALUES (N'20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb', N'6.0.11');
 GO
 
 COMMIT;

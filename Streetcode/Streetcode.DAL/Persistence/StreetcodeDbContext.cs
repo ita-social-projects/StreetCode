@@ -5,6 +5,7 @@ using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Feedback;
+using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.News;
@@ -69,6 +70,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<HistoricalContextTimeline> HistoricalContextsTimelines { get; set; }
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
+    public DbSet<Job> Job { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

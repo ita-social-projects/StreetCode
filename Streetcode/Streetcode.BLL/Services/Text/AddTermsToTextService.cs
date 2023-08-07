@@ -33,15 +33,15 @@ namespace Streetcode.BLL.Services.Text
             foreach (var word in splittedText)
             {
                 var manipulationWord = word;
-                if (word.Contains("<p"))
+                if (word.Contains("<p>"))
                 {
-                    var split = word.Replace("<p>", "<p><span>");
+                    var split = word.Replace("<p>", "<span><br>");
                     manipulationWord = split;
                 }
 
-                if (word.Contains("</p"))
+                if (word.Contains("</p>"))
                 {
-                    var split = word.Replace("</p>", "</span></p>");
+                    var split = word.Replace("</p>", "<br></span>");
                     manipulationWord = split;
                 }
 

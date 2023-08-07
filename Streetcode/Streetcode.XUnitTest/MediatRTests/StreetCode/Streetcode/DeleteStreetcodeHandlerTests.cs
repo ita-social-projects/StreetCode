@@ -19,9 +19,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
 
-
-
-
         public DeleteStreetcodeHandlerTests()
         {
             this._repository = new Mock<IRepositoryWrapper>();
@@ -71,6 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             this.RepositorySetup(null, relatedFigure, testSaveChangesSuccess);
             var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+
             // act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
 

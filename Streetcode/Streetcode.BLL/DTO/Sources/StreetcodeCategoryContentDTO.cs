@@ -10,7 +10,7 @@ namespace Streetcode.BLL.DTO.Sources
     public class StreetcodeCategoryContentDTO
     {
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(10000)]
         public string Text { get; set; }
 
         [Required]

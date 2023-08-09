@@ -4,6 +4,7 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Jobs.ChangeStatus;
 using Streetcode.BLL.MediatR.Jobs.Create;
 using Streetcode.BLL.MediatR.Jobs.Delete;
+using Streetcode.BLL.MediatR.Jobs.GetActiveJobs;
 using Streetcode.BLL.MediatR.Jobs.GetAll;
 using Streetcode.BLL.MediatR.Jobs.GetById;
 using Streetcode.BLL.MediatR.Jobs.Update;
@@ -25,6 +26,12 @@ namespace Streetcode.WebApi.Controllers.Jobs
 		public async Task<IActionResult> GetAllShort()
 		{
 			return HandleResult(await Mediator.Send(new GetAllShortJobsQuery()));
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> GetActiveJobs()
+		{
+			return HandleResult(await Mediator.Send(new GetActiveJobsQuery()));
 		}
 
 		[HttpGet("{id:int}")]

@@ -1,5 +1,7 @@
-﻿using Streetcode.BLL.DTO.Partners;
+﻿using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.BLL.DTO.Team
 {
@@ -13,5 +15,6 @@ namespace Streetcode.BLL.DTO.Team
         public int ImageId { get; set; }
         public List<TeamMemberLinkDTO> TeamMemberLinks { get; set; } = new List<TeamMemberLinkDTO>();
         public List<PositionDTO> Positions { get; set; } = new List<PositionDTO>();
+        public ImageDTO Image { get; set; }
     }
 }

@@ -35,7 +35,7 @@ namespace Streetcode.BLL.Services.Text
                 var manipulationWord = word;
                 if (word.Contains("<p>"))
                 {
-                    var split = word.Replace("<p>", "<span>");
+                    var split = word.Replace("<p>", "<span><br>");
                     manipulationWord = split;
                 }
 

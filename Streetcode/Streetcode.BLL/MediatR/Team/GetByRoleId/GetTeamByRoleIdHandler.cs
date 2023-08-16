@@ -39,7 +39,6 @@ namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 					team.Image.Base64 = _blob.FindFileInStorageAsBase64(team.Image.BlobName);
 				}
 
-
 				var teamByRoleId = _mapper.Map<IEnumerable<TeamMemberDTO>>(teamDtoByRoleId);
 
 				return Result.Ok(teamByRoleId);

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,11 +15,20 @@ namespace Streetcode.BLL.MediatR.Newss.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        public CreateNewsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
+        public CreateNewsHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerFailed = stringLocalizerFailed;
+            _stringLocalizerCannot = stringLocalizerCannot;
         }
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
@@ -25,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
-                const string errorMsg = "Cannot convert null to news";
+                string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
@@ -43,7 +54,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             }
             else
             {
-                const string errorMsg = "Failed to create a news";
+                string errorMsg = _stringLocalizerFailed["FailedToCreateNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

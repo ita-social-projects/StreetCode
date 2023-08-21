@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -19,12 +21,14 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetCategoriesByStreetcodeIdTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
         [Theory]
         [InlineData(1)]
@@ -45,7 +49,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object,
-                _mockLogger.Object);
+                _mockLogger.Object,
+                _mockLocalizerCannotFind.Object);
 
             // act
 
@@ -77,9 +82,19 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _blobService.Object,
-                _mockLogger.Object);
+                _mockLogger.Object,
+                _mockLocalizerCannotFind.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cant find any source category with the streetcode id {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find any source category with unknown id");
+            });
             // act
 
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);

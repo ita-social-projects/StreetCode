@@ -11,6 +11,8 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Media.Images;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 {
@@ -19,11 +21,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
         public GetRelatedFiguresByStreetcodeIdHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
         [Theory]
         [InlineData(1)]
@@ -55,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             _mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testRelatedDTOList);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -88,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             RepositorySetup(testRelatedFigureList.AsQueryable(), testStreetcodeContentList);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -103,11 +107,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>();
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cannot find any related figures by a streetcode id: {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find any related figures with unknown id");
+            });
 
             RepositorySetup(testRelatedFigureEmptyList.AsQueryable(), null);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert
@@ -120,12 +133,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         {
             // arrange
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is int id)
+                {
+                    return new LocalizedString(key, $"Cannot find any related figures by a streetcode id: {id}");
+                }
+
+                return new LocalizedString(key, "Cannot find any related figures with unknown id");
+            });
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
 
             RepositorySetup(null, null);
             MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
             // act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
             // assert

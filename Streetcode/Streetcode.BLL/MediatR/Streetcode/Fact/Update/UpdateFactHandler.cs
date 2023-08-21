@@ -2,6 +2,8 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.Update;
@@ -11,12 +13,21 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
+    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public UpdateFactHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public UpdateFactHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
+        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
+        _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
     }
 
     public async Task<Result<Unit>> Handle(UpdateFactCommand request, CancellationToken cancellationToken)
@@ -25,7 +36,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            const string errorMsg = "Cannot convert null to Fact";
+            string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -39,7 +50,7 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
         }
         else
         {
-            const string errorMsg = "Failed to update a fact";
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateFact"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

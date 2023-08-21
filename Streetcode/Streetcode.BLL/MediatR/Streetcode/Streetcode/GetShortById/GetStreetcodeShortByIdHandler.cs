@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
@@ -12,12 +14,21 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
-        public GetStreetcodeShortByIdHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
+        public GetStreetcodeShortByIdHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            ILoggerService logger,
+            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
+            _stringLocalizerCannotMap = stringLocalizerCannotMap;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
@@ -26,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if (streetcode == null)
             {
-                const string errorMsg = "Cannot find streetcode by id";
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -35,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
             if(streetcodeShortDTO == null)
             {
-                const string errorMsg = "Cannot map streetcode to shortDTO";
+                string errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -1,9 +1,11 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,12 +16,14 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> CannotFindSharedResource)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
+        _stringLocalizerCannotFind = CannotFindSharedResource;
     }
 
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
@@ -28,7 +32,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
 
         if (tags is null)
         {
-            const string errorMsg = $"Cannot find any tags";
+            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

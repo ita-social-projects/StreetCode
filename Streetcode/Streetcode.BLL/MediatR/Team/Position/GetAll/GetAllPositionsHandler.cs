@@ -2,9 +2,11 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetAll
@@ -14,12 +16,14 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetAllPositionsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public GetAllPositionsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<PositionDTO>>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
@@ -30,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 
             if (positions is null)
             {
-                const string errorMsg = $"Cannot find any positions";
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

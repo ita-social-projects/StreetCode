@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
@@ -15,14 +16,16 @@ namespace Streetcode.BLL.Services.Users
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
         private readonly string _jwtKey;
+        private readonly IStringLocalizer<TokenService> _stringLocalizer;
 
-        public TokenService(IConfiguration configuration)
+        public TokenService(IConfiguration configuration, IStringLocalizer<TokenService> stringLocalizer)
         {
             _jwtIssuer = configuration["Jwt:Issuer"];
             _jwtAudience = configuration["Jwt:Audience"];
             _jwtKey = configuration["Jwt:Key"];
             _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
             _signInCridentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+            _stringLocalizer = stringLocalizer;
         }
 
         public JwtSecurityToken GenerateJWTToken(User user)
@@ -84,7 +87,7 @@ namespace Streetcode.BLL.Services.Users
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("Invalid token");
+                throw new SecurityTokenException(_stringLocalizer["InvalidToken"].Value);
             }
 
             return principal;

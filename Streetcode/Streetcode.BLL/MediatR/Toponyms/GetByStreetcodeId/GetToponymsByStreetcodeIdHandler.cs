@@ -3,8 +3,10 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Toponyms.GetByStreetcodeId;
@@ -14,12 +16,14 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetToponymsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetToponymsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetToponymsByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -33,7 +37,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
         toponyms.DistinctBy(x => x.StreetName);
         if (toponyms is null)
         {
-            string errorMsg = $"Cannot find any toponym by the streetcode id: {request.StreetcodeId}";
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyToponymByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

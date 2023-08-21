@@ -2,8 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentByStreetcodeId
@@ -13,12 +15,14 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetCategoryContentByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public GetCategoryContentByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<StreetcodeCategoryContentDTO>> Handle(GetCategoryContentByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -26,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
             if((await _repositoryWrapper.StreetcodeRepository
                 .GetFirstOrDefaultAsync(s => s.Id == request.streetcodeId)) == null)
             {
-                string errorMsg = $"No such streetcode with id = {request.streetcodeId}";
+                string errorMsg = _stringLocalizerNo["NoSuchStreetcodeWithId", request.streetcodeId].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -37,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
 
             if (streetcodeContent == null)
             {
-                string errorMsg = "The streetcode content is null";
+                string errorMsg = _stringLocalizerNo["NoStreetcodeContentExist"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

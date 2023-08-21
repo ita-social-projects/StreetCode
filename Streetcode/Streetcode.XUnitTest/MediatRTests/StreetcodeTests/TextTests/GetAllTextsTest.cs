@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -16,12 +18,14 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
         private readonly Mock<IRepositoryWrapper> repository;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetAllTextsTest()
         {
             repository = new Mock<IRepositoryWrapper>();
             mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -46,8 +50,10 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             repository.Setup(repo => repo.TextRepository.GetAllAsync(null, null)).ReturnsAsync(testTextsList);
 
             mockMapper.Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>())).Returns(testTextslistDTO);
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyText"])
+               .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
-            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 
@@ -70,9 +76,11 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             repository.Setup(repo => repo.TextRepository.GetAllAsync(null, null)).ReturnsAsync((List<Text>)null);
 
             mockMapper.Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>())).Returns(new List<TextDTO>() { new TextDTO() { Id = 1 } });
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyText"])
+               .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
 
-            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllTextsHandler(repository.Object, mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 

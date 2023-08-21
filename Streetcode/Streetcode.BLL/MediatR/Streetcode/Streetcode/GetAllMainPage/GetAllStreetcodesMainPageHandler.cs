@@ -35,7 +35,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
 
             if (streetcodes != null)
             {
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes));
+                var random = new Random();
+                var shuffledStreetcodes = streetcodes.OrderBy(sc => random.Next());
+
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(shuffledStreetcodes));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;

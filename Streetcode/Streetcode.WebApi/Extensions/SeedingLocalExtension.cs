@@ -130,21 +130,24 @@ namespace Streetcode.WebApi.Extensions
                         dbContext.AddRange(
                             new TeamMember
                             {
-                                Name = "Name three",
+                                FirstName = "Inna",
+                                LastName = "Krupnyk",
                                 ImageId = 25,
                                 Description = "У 1894 році Грушевський за рекомендацією Володимира Антоновича призначений\r\nна посаду ординарного професора",
                                 IsMain = true
                             },
                             new TeamMember
                             {
-                                Name = "Name two",
+                                FirstName = "Danyil",
+                                LastName = "Terentiev",
                                 ImageId = 26,
                                 Description = "У 1894 році Грушевський за рекомендацією Володимира Антоновича призначений\r\nна посаду ординарного професора",
                                 IsMain = true
                             },
                             new TeamMember
                             {
-                                Name = "Name one",
+                                FirstName = "Nadia",
+                                LastName = "Kischchuk",
                                 ImageId = 27,
                                 Description = "У 1894 році Грушевський за рекомендацією Володимира Антоновича призначений\r\nна посаду ординарного професора",
                                 IsMain = true

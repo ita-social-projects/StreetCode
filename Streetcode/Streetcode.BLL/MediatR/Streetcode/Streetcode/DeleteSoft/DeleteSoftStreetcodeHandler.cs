@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
@@ -11,15 +9,11 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
+    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
-        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
     }
 
     public async Task<Result<Unit>> Handle(DeleteSoftStreetcodeCommand request, CancellationToken cancellationToken)
@@ -29,7 +23,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeWithCorrespondingCategoryId", request.Id].Value;
+            string errorMsg = $"Cannot find a streetcode with corresponding categoryId: {request.Id}";
             _logger.LogError(request, errorMsg);
             throw new ArgumentNullException(errorMsg);
         }
@@ -47,7 +41,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
+            const string errorMsg = "Failed to change status of streetcode to deleted";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

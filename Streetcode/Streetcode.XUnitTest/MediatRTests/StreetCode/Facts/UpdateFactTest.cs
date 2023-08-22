@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -17,17 +15,12 @@ public class UpdateFactTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-    private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
-
 
     public UpdateFactTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-        _mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
     }
 
     [Fact]
@@ -40,7 +33,7 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
-        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
@@ -60,10 +53,8 @@ public class UpdateFactTest
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
-        _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToFact"])
-           .Returns(new LocalizedString("CannotConvertNullToFact", expectedError));
 
-        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTOWithNotExistId()), CancellationToken.None);
@@ -83,10 +74,8 @@ public class UpdateFactTest
             .Returns(GetFact());
 
         var expectedError = "Failed to update a fact";
-        _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateFact"])
-           .Returns(new LocalizedString("FailedToUpdateFact", expectedError));
 
-        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
@@ -105,7 +94,7 @@ public class UpdateFactTest
         _mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
-        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);

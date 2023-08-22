@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
@@ -11,19 +9,11 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-    public DeleteFactHandler(
-        IRepositoryWrapper repositoryWrapper,
-        ILoggerService logger,
-        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public DeleteFactHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<Unit>> Handle(DeleteFactCommand request, CancellationToken cancellationToken)
@@ -32,7 +22,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindFactWithCorrespondingCategoryId", request.Id].Value;
+            string errorMsg = $"Cannot find a fact with corresponding categoryId: {request.Id}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -46,7 +36,7 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteFact"].Value;
+            string errorMsg = "Failed to delete a fact";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

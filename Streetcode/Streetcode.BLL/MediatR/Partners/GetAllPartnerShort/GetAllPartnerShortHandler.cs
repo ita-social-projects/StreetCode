@@ -2,10 +2,8 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
@@ -15,14 +13,12 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-        public GetAllPartnerShortHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
+        public GetAllPartnerShortHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
-            _stringLocalizer = stringLocalizer;
         }
 
         public async Task<Result<IEnumerable<PartnerShortDTO>>> Handle(GetAllPartnersShortQuery request, CancellationToken cancellationToken)
@@ -31,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
 
             if (partners is null)
             {
-                string? errorMsg = _stringLocalizer?["CannotFindAnyPartners"].Value;
+                const string errorMsg = $"Cannot find any partners";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

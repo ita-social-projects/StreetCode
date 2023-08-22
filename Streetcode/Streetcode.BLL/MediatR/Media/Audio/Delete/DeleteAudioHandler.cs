@@ -1,9 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Delete;
@@ -13,21 +11,12 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-    public DeleteAudioHandler(
-        IRepositoryWrapper repositoryWrapper,
-        IBlobService blobService,
-        ILoggerService logger,
-        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public DeleteAudioHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
         _logger = logger;
-        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<Unit>> Handle(DeleteAudioCommand request, CancellationToken cancellationToken)
@@ -36,7 +25,7 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
 
         if (audio is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithCorrespondingCategoryId", request.Id].Value;
+            string errorMsg = $"Cannot find an audio with corresponding categoryId: {request.Id}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -57,7 +46,7 @@ public class DeleteAudioHandler : IRequestHandler<DeleteAudioCommand, Result<Uni
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteAudio"].Value;
+            string errorMsg = $"Failed to delete an audio";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -3,8 +3,6 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
@@ -14,21 +12,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-        public DeleteRelatedTermHandler(
-            IRepositoryWrapper repository,
-            IMapper mapper,
-            ILoggerService logger,
-            IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public DeleteRelatedTermHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
-            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
@@ -37,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 
             if (relatedTerm is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRelatedTermWithCorrespondingId", request.word].Value;
+                string errorMsg = $"Cannot find a related term: {request.word}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -52,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             }
             else
             {
-                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelatedTerm"].Value;
+                const string errorMsg = "Failed to delete a related term";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

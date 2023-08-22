@@ -11,8 +11,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Threading.Tasks;
 using System.Threading;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
@@ -22,8 +20,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public UpdateNewsTests()
         {
@@ -31,8 +27,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockMapper = new();
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            _mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
         }
 
         [Theory]
@@ -47,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMapper(testNews, testNewsDTO);
             SetupImageRepository();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(testNewsDTO), CancellationToken.None);
@@ -63,12 +57,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             // Arrange
             var expectedError = "Cannot convert null to news";
-            _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
-            .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
             SetupUpdateRepository(returnNumber);
             SetupMapperWithNullNews();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTOWithNotExistId()), CancellationToken.None);
@@ -91,9 +83,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupImageRepository();
 
             var expectedError = "Failed to update news";
-            _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateNews"])
-            .Returns(new LocalizedString("FailedToUpdateNews", expectedError));
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(testNewsDTO), CancellationToken.None);
@@ -112,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMapper(GetNews(), GetNewsDTO());
             SetupImageRepository();
 
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);

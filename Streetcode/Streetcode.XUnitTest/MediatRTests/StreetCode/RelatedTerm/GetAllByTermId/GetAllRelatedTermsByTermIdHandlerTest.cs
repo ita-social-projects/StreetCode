@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
@@ -18,16 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotGetSharedResource>> _mockLocalizerCannotGet;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
 
         public GetAllRelatedTermsByTermIdHandlerTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            _mockLocalizerCannotGet = new Mock<IStringLocalizer<CannotGetSharedResource>>();
         }
 
         [Theory]
@@ -42,16 +36,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 It.IsAny<Func<IQueryable<Entity>, IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync((IEnumerable<Entity>)null);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object,_mockLocalizerCannotCreate.Object);
-            var expectedError = "Cannot get words by term id";
-            _mockLocalizerCannotGet.Setup(x => x["CannotGetWordsByTermId"])
-           .Returns(new LocalizedString("CannotGetWordsByTermId", expectedError));
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Equal(expectedError, result.Errors.First().Message);
+            Assert.Equal("Cannot get words by term id", result.Errors.First().Message);
         }
 
         [Theory]
@@ -69,17 +60,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
                 .Returns((IEnumerable<RelatedTermDTO>)null);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object, _mockLocalizerCannotCreate.Object);
-            var expectedError = "Cannot create DTOs for related words!";
-            _mockLocalizerCannotCreate.Setup(x => x["CannotCreateDTOsForRelatedWords"])
-           .Returns(new LocalizedString("CannotCreateDTOsForRelatedWords", expectedError));
-
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
 
             // Assert
-            Assert.Equal(expectedError, result.Errors.First().Message);
+            Assert.Equal("Cannot create DTOs for related words!", result.Errors.First().Message);
         }
 
         [Theory]
@@ -98,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
             _mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -126,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
 
             var query = new GetAllRelatedTermsByTermIdQuery(termId);
-            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotGet.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

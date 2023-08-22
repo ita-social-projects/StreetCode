@@ -1,16 +1,12 @@
-using System.Globalization;
 using AspNetCoreRateLimit;
 using Hangfire;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Utils;
-using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Host.ConfigureApplication();
 
-builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
@@ -20,18 +16,7 @@ builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
 var app = builder.Build();
-var supportedCulture = new[]
-{
-    new CultureInfo("en-US"),
-    new CultureInfo("uk-UA")
-};
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("uk-UA"),
-    SupportedCultures = supportedCulture,
-    SupportedUICultures = supportedCulture,
-    ApplyCurrentCultureToResponseHeaders = true
-});
+
 if (app.Environment.EnvironmentName == "Local")
 {
     app.UseSwagger();
@@ -47,6 +32,7 @@ await app.ApplyMigrations();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

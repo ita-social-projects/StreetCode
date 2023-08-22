@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -20,20 +18,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
-        private readonly Mock<IStringLocalizer<CannotMapSharedResource>> _mockLocalizerCannotMap;
-        private readonly Mock<IStringLocalizer<CreateRelatedTermHandler>> _mockLocalizer;
-        private readonly Mock<IStringLocalizer<CannotSaveSharedResource>> _mockLocalizerCannotSave;
-
         public CreateRelatedTermHandlerTests()
         {
             _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             _mapperMock = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CreateRelatedTermHandler>>();
-            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            _mockLocalizerCannotMap = new Mock<IStringLocalizer<CannotMapSharedResource>>();
-            _mockLocalizerCannotSave = new Mock<IStringLocalizer<CannotSaveSharedResource>>();
         }
 
         private (RelatedTermDTO relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
@@ -80,9 +69,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             _repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Create(entity));
             _repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             SetupMapperMockToMapEntity(relatedTermDTO, entity);
-            SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerCannotSave.Object, _mockLocalizerCannotMap.Object, _mockLocalizer.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
@@ -98,9 +86,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         {
             // Arrange
             SetupMapperMockToMapEntity(It.IsAny<RelatedTermDTO>(), null);
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerCannotSave.Object, _mockLocalizerCannotMap.Object, _mockLocalizer.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(new RelatedTermDTO());
-            SetupLocalizers();
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);
@@ -120,9 +107,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 
             SetupMapperMockToMapEntity(relatedTermDTO, entity);
             SetupGetAllAsyncWithExistingTerms(existingTerms);
-            SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerCannotSave.Object, _mockLocalizerCannotMap.Object, _mockLocalizer.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
@@ -149,9 +135,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 
             repositoryMock.Setup(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()));
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
-            SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object, _mockLogger.Object, _mockLocalizerCannotSave.Object, _mockLocalizerCannotMap.Object, _mockLocalizer.Object, _mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object, _mockLogger.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
@@ -160,25 +145,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             // Assert
             Assert.True(result.IsFailed);
             Assert.False(result.IsSuccess);
-        }
-
-        private void SetupLocalizers()
-        {
-            // Setup for _mockLocalizer
-            _mockLocalizer.Setup(x => x[It.IsAny<string>()])
-                .Returns((string key) => new LocalizedString(key, $"Word with this definition already exists"));
-
-            // Setup for _mockLocalizerCannotCreate
-            _mockLocalizerCannotCreate.Setup(x => x[It.IsAny<string>()])
-                .Returns((string key) => new LocalizedString(key, $"Cannot create new related word for a term"));
-
-            // Setup for _mockLocalizerCannotMap
-            _mockLocalizerCannotMap.Setup(x => x[It.IsAny<string>()])
-                .Returns((string key) => new LocalizedString(key, $"Cannot map entity"));
-
-            // Setup for _mockLocalizerCannotSave
-            _mockLocalizerCannotSave.Setup(x => x[It.IsAny<string>()])
-                .Returns((string key) => new LocalizedString(key, $"Cannot save changes in the database after related word creation"));
         }
     }
 }

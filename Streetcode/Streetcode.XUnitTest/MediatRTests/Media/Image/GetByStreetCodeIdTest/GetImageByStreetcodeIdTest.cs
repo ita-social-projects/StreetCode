@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -20,7 +18,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         private Mock<IRepositoryWrapper> _mockRepo;
         private Mock<IMapper> _mockMapper;
         private Mock<IBlobService> _blobService;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
         private readonly Mock<ILoggerService> _mockLogger;
 
         public GetImageByStreetcodeIdTest()
@@ -29,7 +26,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -39,7 +35,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -56,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);

@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
@@ -15,23 +13,11 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
-        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
-        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
 
-        public CreateTeamLinkHandler(
-            IMapper mapper,
-            IRepositoryWrapper repository,
-            ILoggerService logger,
-            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate,
-            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
+        public CreateTeamLinkHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
-            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
-            _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
-            _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
             _logger = logger;
         }
 
@@ -41,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if (teamMemberLink is null)
             {
-                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTeamLink"].Value;
+                const string errorMsg = "Cannot convert null to team link";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -50,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if (createdTeamLink is null)
             {
-                string errorMsg = _stringLocalizerCannotCreate["CannotCreateTeamLink"].Value;
+                const string errorMsg = "Cannot create team link";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -59,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
 
             if (!resultIsSuccess)
             {
-                string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateTeam"].Value;
+                const string errorMsg = "Failed to create a team";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -72,7 +58,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
             }
             else
             {
-                string errorMsg = _stringLocalizerFailedToCreate["FailedToMapCreatedTeamLink"].Value;
+                const string errorMsg = "Failed to map created team link";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

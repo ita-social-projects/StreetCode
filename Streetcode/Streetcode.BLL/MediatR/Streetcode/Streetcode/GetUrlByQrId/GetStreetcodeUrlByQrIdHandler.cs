@@ -2,8 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
@@ -12,12 +10,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
     {
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetStreetcodeUrlByQrIdHandler(IRepositoryWrapper repository, ILoggerService logger)
         {
             _repository = repository;
             _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<string>> Handle(GetStreetcodeUrlByQrIdQuery request, CancellationToken cancellationToken)
@@ -29,7 +25,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if (statisticRecord == null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                const string errorMsg = "Cannot find record by qrid";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -38,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
 
             if(streetcode == null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
+                const string errorMsg = "Cannot find streetcode by id";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

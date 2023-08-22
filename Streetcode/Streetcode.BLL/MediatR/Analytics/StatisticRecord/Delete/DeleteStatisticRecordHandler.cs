@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
 
@@ -14,21 +12,12 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-        public DeleteStatisticRecordHandler(
-            IMapper mapper,
-            IRepositoryWrapper repositoryWrapper,
-            ILoggerService logger,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
-            IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
+        public DeleteStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
-            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
         }
 
         public async Task<Result<Unit>> Handle(DeleteStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -38,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 
             if (statRecord is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                const string errorMsg = "Cannot find record for qrId";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -47,13 +36,13 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 
             var resultIsSuccess = _repositoryWrapper.SaveChanges() > 0;
 
-            if (resultIsSuccess)
+            if(resultIsSuccess)
             {
                 return Result.Ok(Unit.Value);
             }
             else
             {
-                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteTheRecord"].Value;
+                const string errorMsg = "Cannot delete the record";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

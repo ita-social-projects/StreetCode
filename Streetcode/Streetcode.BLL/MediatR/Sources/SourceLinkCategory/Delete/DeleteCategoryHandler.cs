@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
@@ -11,19 +9,11 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-        public DeleteCategoryHandler(
-            IRepositoryWrapper repositoryWrapper,
-            ILoggerService logger,
-            IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public DeleteCategoryHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
-            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<Unit>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
@@ -32,7 +22,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
 
             if (category is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindCategoryWithCorrespondingCategoryId", request.Id].Value;
+                string errorMsg = $"Cannot find a category with corresponding categoryId: {request.Id}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -46,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
             }
             else
             {
-                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteCategory"].Value;
+                string errorMsg = "Failed to delete a category";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

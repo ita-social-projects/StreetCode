@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 {
@@ -16,14 +14,12 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetPartnersToUpdateByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetPartnersToUpdateByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersToUpdateByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -33,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
             if (streetcode is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
+                string errorMsg = $"Cannot find any streetcode with corresponding streetcode id: {request.StreetcodeId}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -45,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
             if (partners is null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
+                string errorMsg = $"Cannot find a partners by a streetcode id: {request.StreetcodeId}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

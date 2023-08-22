@@ -8,8 +8,6 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
@@ -18,15 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNo;
-
 
         public DeleteTeamTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerNo = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         private void SetupMapTeamMember(TeamMember teamMember)
@@ -57,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             SetupMapTeamMember(testTeam);
             SetupGetFirstOrDefaultAsync(testTeam);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);
@@ -78,13 +73,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             // Arrange
             var testTeam = GetTeam();
             var expectedError = "No team with such id";
-            _mockLocalizerNo.Setup(x => x["NoTeamWithSuchId"])
-                .Returns(new LocalizedString("NoTeamWithSuchId", expectedError));
-
 
             SetupGetFirstOrDefaultAsync(null);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);
@@ -102,12 +94,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             var testTeam = GetTeam();
             var expectedError = "The team wasn't added";
 
-
             SetupMapTeamMember(testTeam);
             SetupGetFirstOrDefaultAsync(testTeam);
             SetupSaveChangesException(expectedError);
 
-            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
+            var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteTeamQuery(testTeam.Id), CancellationToken.None);

@@ -1,14 +1,12 @@
 using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System;
@@ -23,7 +21,6 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<IBlobService> blobService;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetStreetcodeArtByStreetcodeIdTest()
         {
@@ -31,7 +28,6 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
             mockMapper = new Mock<IMapper>();
             blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         private List<StreetcodeArt> GetStreetcodeArtsList()
@@ -108,7 +104,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
@@ -123,7 +119,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(repository.Object, mockMapper.Object, blobService.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 

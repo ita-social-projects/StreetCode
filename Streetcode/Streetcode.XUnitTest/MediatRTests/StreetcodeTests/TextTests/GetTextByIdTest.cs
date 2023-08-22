@@ -13,8 +13,6 @@ using System.Linq.Expressions;
 using Xunit;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
@@ -23,15 +21,12 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
         private readonly Mock<IRepositoryWrapper> repository;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-
 
         public GetTextByIdTest()
         {
             repository = new Mock<IRepositoryWrapper>();
             mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();   
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -49,7 +44,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             {
                 return new TextDTO { Id = sourceText.Id };
             });
-            var handler = new GetTextByIdHandler(repository.Object, mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
 
@@ -74,7 +69,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 return new TextDTO { Id = sourceText.Id };
             });
 
-            var handler = new GetTextByIdHandler(repository.Object, mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(repository.Object, mockMapper.Object, _mockLogger.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(2), CancellationToken.None);
 

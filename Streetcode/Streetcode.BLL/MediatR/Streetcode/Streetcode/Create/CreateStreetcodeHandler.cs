@@ -19,8 +19,6 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -29,21 +27,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
-    private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
-    public CreateStreetcodeHandler(
-        IMapper mapper,
-        IRepositoryWrapper repositoryWrapper,
-        ILoggerService logger,
-        IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
+    public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
-        _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -80,14 +69,14 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 }
                 else
                 {
-                    string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
+                    const string errorMsg = "Failed to create a streetcode";
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }
             }
             catch(Exception ex)
             {
-                string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileCreating", ex.Message].Value;
+                string errorMsg = $"An error occurred while creating a streetcode. Message: {ex.Message}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

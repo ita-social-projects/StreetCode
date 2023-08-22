@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetAll;
@@ -14,14 +12,12 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetAllSubtitlesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetAllSubtitlesQuery request, CancellationToken cancellationToken)
@@ -30,7 +26,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 
         if (subtitles is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnySubtitles"].Value;
+            const string errorMsg = $"Cannot find any subtitles";
 
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));

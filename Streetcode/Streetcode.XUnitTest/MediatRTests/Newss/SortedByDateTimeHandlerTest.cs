@@ -2,7 +2,6 @@
 using FluentAssertions;
 using FluentAssertions.Collections;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using NuGet.Frameworks;
 using Streetcode.BLL.DTO.News;
@@ -10,7 +9,6 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -27,7 +25,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<IBlobService> _blob;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizer;
 
         public SortedByDateTimeHandlerTests()
         {
@@ -35,7 +32,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mapper = new Mock<IMapper>();
             _blob = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Theory]
@@ -64,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             RepositorySetup(testNews);
             MapperSetup(testNews);
             BlobSetup(expectedBase64);
-            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object);
 
             // act
             var result = await handler.Handle(new SortedByDateTimeQuery(), CancellationToken.None);
@@ -77,13 +73,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task Handle_ReturnsError()
         {
             // arrange
-            string expectedErrorMessage = "No news in the database";
-            _mockLocalizer.Setup(x => x["NoNewsInTheDatabase"])
-            .Returns(new LocalizedString("NoNewsInTheDatabase", expectedErrorMessage));
+            string expectedErrorMessage = "There are no news in the database";
             RepositorySetup(null);
             MapperSetup(null);
             BlobSetup(null);
-            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new SortedByDateTimeHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object);
 
             // act
             var result = await handler.Handle(new SortedByDateTimeQuery(), CancellationToken.None);

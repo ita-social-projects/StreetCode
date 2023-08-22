@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
@@ -13,21 +11,12 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-        private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizerCannotSave;
 
-        public UpdateCountStatisticRecordHandler(
-            IMapper mapper,
-            IRepositoryWrapper repositoryWrapper,
-            ILoggerService logger,
-            IStringLocalizer<CannotSaveSharedResource> stringLocalizerCannotSave,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public UpdateCountStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
-            _stringLocalizerCannotSave = stringLocalizerCannotSave;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCountStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -37,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (statRecord == null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                const string errorMsg = "Cannot find record by qrId";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -50,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             if (!resultIsSuccess)
             {
-                string errorMsg = _stringLocalizerCannotSave["CannotSaveTheData"].Value;
+                const string errorMsg = "Cannot save the data";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

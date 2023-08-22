@@ -3,10 +3,8 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -17,14 +15,12 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
 
-    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
+    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizeCannotFind = stringLocalizeCannotFind;
     }
 
     public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
@@ -38,7 +34,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         if (partners is null)
         {
-            string? errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
+            const string errorMsg = $"Cannot find any partners";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

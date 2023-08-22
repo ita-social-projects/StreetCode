@@ -8,8 +8,6 @@ using System.Linq.Expressions;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
@@ -18,14 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetAllTagsRequestHandlerTests()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer  = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         private readonly List<Tag> tags = new List<Tag>()
@@ -76,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(tags);
             await SetupMapper(tagDTOs);
 
-            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
@@ -94,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             await SetupRepository(new List<Tag>());
             await SetupMapper(new List<TagDTO>());
 
-            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);

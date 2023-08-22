@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetAll;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -19,8 +17,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
-
 
         public GetAllNewsTest()
         {
@@ -28,7 +24,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Fact]
@@ -37,7 +32,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerNoShared.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
@@ -55,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             SetupMockRepositoryGetAllAsync(GetNewsList());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerNoShared.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);
@@ -71,12 +66,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task ShouldThrowException_IdNotExist()
         {
             // Arrange
-            var expectedError = "No news in the database";
-            _mockLocalizerNoShared.Setup(x => x["NoNewsInTheDatabase"])
-            .Returns(new LocalizedString("NoNewsInTheDatabase", expectedError));
+            var expectedError = "There are no news in the database";
             SetupMockRepositoryGetAllAsync(GetNewsListWithNotExistingId());
 
-            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerNoShared.Object);
+            var handler = new GetAllNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllNewsQuery(), CancellationToken.None);

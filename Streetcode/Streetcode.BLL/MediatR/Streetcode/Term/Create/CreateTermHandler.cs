@@ -1,8 +1,10 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
 
@@ -13,12 +15,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
+        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
 
-        public CreateTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
+        public CreateTermHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            ILoggerService logger,
+            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate,
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
+            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
+            _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
+            _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
         }
 
         public async Task<Result<TermDTO>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
@@ -27,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if (term is null)
             {
-                const string errorMsg = "Cannot convert null to Term";
+                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -36,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if (createdTerm is null)
             {
-                const string errorMsg = "Cannot create term";
+                string errorMsg = _stringLocalizerCannotCreate["CannotCreateTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -45,7 +59,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 
             if(!resultIsSuccess)
             {
-                const string errorMsg = "Failed to create a term";
+                string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -58,7 +72,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             }
             else
             {
-                const string errorMsg = "Failed to map created term";
+                string errorMsg = _stringLocalizerFailedToCreate["FailedToMapCreatedTerm"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

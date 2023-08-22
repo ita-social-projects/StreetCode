@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Team.Position.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System;
@@ -22,12 +24,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetAllPositionTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -37,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupMapMethod(GetListPositionDTO());
             SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -56,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupMapMethod(GetListPositionDTO());
             SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -73,10 +77,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         {
             //Arrange
             const string expectedError = "Cannot find any positions";
+            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPositions"])
+               .Returns(new LocalizedString("CannotFindAnyPositions", expectedError));
+
 
             SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);

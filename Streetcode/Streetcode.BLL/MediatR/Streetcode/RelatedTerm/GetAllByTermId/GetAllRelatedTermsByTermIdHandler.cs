@@ -2,8 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
@@ -13,12 +15,21 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotGetSharedResource> _stringLocalizerCannotGet;
+        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
 
-        public GetAllRelatedTermsByTermIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        public GetAllRelatedTermsByTermIdHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotGetSharedResource> stringLocalizerCannotGet,
+            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate)
         {
             _mapper = mapper;
             _repository = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
+            _stringLocalizerCannotGet = stringLocalizerCannotGet;
         }
 
         public async Task<Result<IEnumerable<RelatedTermDTO>>> Handle(GetAllRelatedTermsByTermIdQuery request, CancellationToken cancellationToken)
@@ -30,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
 
             if (relatedTerms is null)
             {
-                const string errorMsg = "Cannot get words by term id";
+                string errorMsg = _stringLocalizerCannotGet["CannotGetWordsByTermId"].Value;
                 _logger.LogError(request, errorMsg);
                 return new Error(errorMsg);
             }
@@ -39,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
 
             if (relatedTermsDTO is null)
             {
-                const string errorMsg = "Cannot create DTOs for related words!";
+                string errorMsg = _stringLocalizerCannotCreate["CannotCreateDTOsForRelatedWords"].Value;
                 _logger.LogError(request, errorMsg);
                 return new Error(errorMsg);
             }

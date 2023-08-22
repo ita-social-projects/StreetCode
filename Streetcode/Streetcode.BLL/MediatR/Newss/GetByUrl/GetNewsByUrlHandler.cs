@@ -7,6 +7,8 @@ using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Newss.GetByUrl
 {
@@ -16,12 +18,14 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
-        public GetNewsByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger)
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+        public GetNewsByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _blobService = blobService;
             _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<NewsDTO>> Handle(GetNewsByUrlQuery request, CancellationToken cancellationToken)
@@ -33,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
                     .Include(sc => sc.Image)));
             if(newsDTO is null)
             {
-                string errorMsg = $"No news by entered Url - {url}";
+                string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

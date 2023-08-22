@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using NLog.Targets;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,12 +15,20 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-
-    public CreateRelatedFigureHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
+    public CreateRelatedFigureHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo,
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
+        _stringLocalizerFailed = stringLocalizerFailed;
+        _stringLocalizerNo = stringLocalizerNo;
     }
 
     public async Task<Result<Unit>> Handle(CreateRelatedFigureCommand request, CancellationToken cancellationToken)
@@ -28,14 +38,14 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 
         if (observerEntity is null)
         {
-            string errorMsg = $"No existing streetcode with id: {request.ObserverId}";
+            string errorMsg = _stringLocalizerNo["NoExistingStreetcodeWithId", request.ObserverId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
         if (targetEntity is null)
         {
-            string errorMsg = $"No existing streetcode with id: {request.TargetId}";
+            string errorMsg = _stringLocalizerNo["NoExistingStreetcodeWithId", request.TargetId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -55,7 +65,7 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
         }
         else
         {
-            string errorMsg = "Failed to create a relation.";
+            string errorMsg = _stringLocalizerFailed["FailedToCreateRelation"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -27,21 +27,24 @@ public class GetTickerStringHandler : IRequestHandler<GetTickerStringQuery, Resu
 
         foreach (var position in positions)
         {
-            memberString.Append(position.Position);
-            memberString.Append(": ");
-
-            int memberCount = position.TeamMembers.Count;
-            for (int i = 0; i < memberCount; i++)
+            if (position.TeamMembers.Count > 0)
             {
-                memberString.Append(position.TeamMembers[i].Name);
+                memberString.Append(position.Position);
+                memberString.Append(": ");
 
-                if (i < memberCount - 1)
+                int memberCount = position.TeamMembers.Count;
+                for (int i = 0; i < memberCount; i++)
                 {
-                    memberString.Append(", ");
-                }
-            }
+                    memberString.Append(position.TeamMembers[i].Name);
 
-            memberString.Append(" ");
+                    if (i < memberCount - 1)
+                    {
+                        memberString.Append(", ");
+                    }
+                }
+
+                memberString.Append(" ");
+            }
         }
 
         try

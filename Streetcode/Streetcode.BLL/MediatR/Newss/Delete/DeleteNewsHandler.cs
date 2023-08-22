@@ -2,6 +2,8 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -11,10 +13,14 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+        public DeleteNewsHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
+            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
         }
 
         public async Task<Result<Unit>> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
@@ -23,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             var news = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Id == id);
             if (news == null)
             {
-                string errorMsg = $"No news found by entered Id - {id}";
+                string errorMsg = _stringLocalizerNo["NoNewsFoundByEnteredId", id].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
@@ -41,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.Delete
             }
             else
             {
-                string errorMsg = "Failed to delete news";
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

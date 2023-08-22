@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -13,12 +15,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 	{
 		private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
 
         public DeleteTermHendlerTests()
 		{
 			_mockRepository = new();
             _mockLogger = new Mock<ILoggerService>();
-        }
+			_mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+			_mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+		}
 
 		[Theory]
 		[InlineData(-1, 1)]
@@ -27,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			//Arrange
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, true);
 			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
-			var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
+			var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object,_mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new DeleteTermCommand(id), CancellationToken.None);
@@ -47,7 +53,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			MockRepoInitial_GetFirstOrDefault_Delete(_mockRepository, id, false);
 
 			var expectedError = "Cannot convert null to Term";
-			var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
+            _mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+                .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
+
+            var handler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
 			//Act
 			var result = await handler.Handle(new DeleteTermCommand(id), CancellationToken.None);
@@ -65,7 +74,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
             var expectedError = "Failed to delete a term";
-            var hendler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object);
+            _mockLocalizerFailedToCreate.Setup(x => x["FailedToDeleteTerm"])
+               .Returns(new LocalizedString("FailedToDeleteTerm", expectedError));
+            var hendler = new DeleteTermHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
             // Act
             var result = await hendler.Handle(new DeleteTermCommand(id), CancellationToken.None);

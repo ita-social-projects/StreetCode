@@ -2,7 +2,9 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,12 +15,21 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
-        public GetStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        public GetStatisticRecordByQrIdHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerCannotMap = stringLocalizerCannotMap;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<StatisticRecordDTO>> Handle(GetStatisticRecordByQrIdQuery request, CancellationToken cancellationToken)
@@ -30,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 
             if (statRecord == null)
             {
-                const string errorMsg = "Cannot find record with qrId";
+                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -39,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 
             if(statRecordDTO == null)
             {
-                const string errorMsg = $"Cannot map record";
+                string errorMsg = _stringLocalizerCannotMap["CannotMapRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

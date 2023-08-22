@@ -3,26 +3,28 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Enums;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
 {
-  public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodesCatalogQuery,
+    public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodesCatalogQuery,
         Result<IEnumerable<CatalogItem>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetAllStreetcodesCatalogHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public GetAllStreetcodesCatalogHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<IEnumerable<CatalogItem>>> Handle(GetAllStreetcodesCatalogQuery request, CancellationToken cancellationToken)
@@ -43,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
                 return Result.Ok(_mapper.Map<IEnumerable<CatalogItem>>(skipped));
             }
 
-            const string errorMsg = $"Cannot find any subtitles";
+            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }

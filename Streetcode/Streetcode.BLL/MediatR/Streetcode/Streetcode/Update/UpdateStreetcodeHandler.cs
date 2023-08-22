@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
@@ -12,6 +13,7 @@ using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -26,12 +28,20 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+        private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
-        public UpdateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        public UpdateStreetcodeHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -78,14 +88,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     }
                     else
                     {
-                        const string errorMsg = "Failed to update a streetcode";
+                        string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
                         _logger.LogError(request, errorMsg);
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
                 catch(Exception)
                 {
-                    const string errorMsg = "An error occurred while updating a streetcode";
+                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }

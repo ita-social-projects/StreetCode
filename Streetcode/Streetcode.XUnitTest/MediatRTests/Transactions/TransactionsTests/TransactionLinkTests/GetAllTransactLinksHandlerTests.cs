@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -25,12 +27,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetAllTransactLinksHandlerTests()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         async Task SetupRepository(List<TransactionLink> returnList)
@@ -52,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupRepository(transactions);
             await SetupMapper(transactionsDTOs);
 
-            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
@@ -70,7 +74,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             await SetupRepository(new List<TransactionLink>());
             await SetupMapper(new List<TransactLinkDTO>());
 
-            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
+            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             //Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);

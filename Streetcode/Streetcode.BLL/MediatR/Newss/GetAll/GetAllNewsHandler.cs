@@ -7,6 +7,8 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
@@ -16,13 +18,15 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
         private readonly IMapper _mapper;
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetAllNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger)
+        public GetAllNewsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
             _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
@@ -31,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 include: cat => cat.Include(img => img.Image));
             if (news == null)
             {
-                const string errorMsg = "There are no news in the database";
+                string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

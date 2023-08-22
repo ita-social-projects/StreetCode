@@ -120,7 +120,4 @@
   <data name="NotFound" xml:space="preserve">
     <value>Found result matching null</value>
   </data>
-  <data name="String1" xml:space="preserve">
-    <value />
-  </data>
 </root>

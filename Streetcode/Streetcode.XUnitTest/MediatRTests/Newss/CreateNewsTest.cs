@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Create;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -16,15 +14,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
         public CreateNewsTest()
         {
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -36,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
@@ -54,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
@@ -69,12 +63,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNews = GetNews();
             var expectedError = "Failed to create a news";
-            _mockLocalizerFail.Setup(x => x["FailedToCreateNews"]).Returns(new LocalizedString("FailedToCreateNews", expectedError));
             SetupMockMapping(testNews);
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesException(expectedError);
 
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);

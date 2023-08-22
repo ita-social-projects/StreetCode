@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetAll;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -18,7 +16,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockStringLocalizerCannotFind;
 
         private void SetupMocks(IEnumerable<TeamMember>? teamMembers = null, IEnumerable<TeamMemberDTO>? teamMemberDTOs = null)
         {
@@ -37,7 +34,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             _mockMapper = new Mock<IMapper>();
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockStringLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -45,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             // Arrange
             SetupMocks(GetTeamList(), GetListTeamDTO());
-            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
@@ -60,16 +56,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         {
             // Arrange
             SetupMocks();
-            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
-            var expectedError = "Cannot find any team";
-            _mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
-                .Returns(new LocalizedString("CannotFindAnyTeam", expectedError));
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
 
             // Assert
-            Assert.Contains(expectedError, result.Errors.First().Message);
+            Assert.Contains("Cannot find any team", result.Errors.First().Message);
         }
 
         private static IEnumerable<TeamMember> GetTeamList()

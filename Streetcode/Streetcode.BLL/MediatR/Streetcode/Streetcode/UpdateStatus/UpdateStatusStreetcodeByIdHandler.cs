@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
@@ -11,19 +9,11 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public UpdateStatusStreetcodeByIdHandler(
-        IRepositoryWrapper repositoryWrapper,
-        ILoggerService logger,
-        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
-        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public UpdateStatusStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<Unit>> Handle(UpdateStatusStreetcodeByIdCommand request, CancellationToken cancellationToken)
@@ -33,7 +23,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
+            string errorMsg = $"Cannot find any streetcode with corresponding id: {request.Id}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -51,7 +41,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value;
+            const string errorMsg = "Failed to update status of streetcode";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

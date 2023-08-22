@@ -2,8 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.Create;
@@ -13,21 +11,12 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
-    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
 
-    public CreateFactHandler(
-        IRepositoryWrapper repositoryWrapper,
-        IMapper mapper,
-        ILoggerService logger,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
-        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+    public CreateFactHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizerFailed = stringLocalizerFailed;
-        _stringLocalizerCannot = stringLocalizerCannot;
     }
 
     public async Task<Result<Unit>> Handle(CreateFactCommand request, CancellationToken cancellationToken)
@@ -36,7 +25,7 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
 
         if (fact is null)
         {
-            string errorMsg = _stringLocalizerCannot["CannotConvertNullToFact"].Value;
+            const string errorMsg = "Cannot convert null to Fact";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -50,7 +39,7 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
         }
         else
         {
-            string errorMsg = _stringLocalizerFailed["FailedToCreateFact"].Value;
+            const string errorMsg = "Failed to create a fact";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

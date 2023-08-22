@@ -1,11 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Delete;
@@ -15,21 +13,12 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-    public DeleteImageHandler(
-        IRepositoryWrapper repositoryWrapper,
-        IBlobService blobService,
-        ILoggerService logger,
-        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public DeleteImageHandler(IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
-        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
     }
 
     public async Task<Result<Unit>> Handle(DeleteImageCommand request, CancellationToken cancellationToken)
@@ -41,7 +30,7 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 
         if (image is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyImage", request.Id].Value;
+            string errorMsg = $"Cannot find an image with corresponding categoryId: {request.Id}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -61,7 +50,7 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
+            const string errorMsg = $"Failed to delete an image";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
@@ -16,21 +14,12 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<NoSharedResource>? _stringLocalizerNo;
-        private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizer;
 
-        public CreateStatisticRecordHandler(
-            IMapper mapper,
-            IRepositoryWrapper repositoryWrapper,
-            ILoggerService logger,
-            IStringLocalizer<CannotSaveSharedResource> stringLocalizer,
-            IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public CreateStatisticRecordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
-            _stringLocalizer = stringLocalizer;
-            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<StatisticRecordDTO>> Handle(CreateStatisticRecordCommand request, CancellationToken cancellationToken)
@@ -39,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (statRecord == null)
             {
-                string errorMsg = _stringLocalizerNo?["NoMappedRecord"].Value;
+                const string errorMsg = "Mapped record is null";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -48,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (createdRecord == null)
             {
-                string errorMsg = _stringLocalizer?["NoCreatedRecord"].Value;
+                const string errorMsg = "Created record is null";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -57,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (!resultIsSuccess)
             {
-                string? errorMsg = _stringLocalizer?["CannotSaveCreatedRecord"].Value;
+                const string errorMsg = "Cannot save created record";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -66,7 +55,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (mappedCreatedRecord == null)
             {
-                string? errorMsg = _stringLocalizer?["NoMappedCreatedRecord"].Value;
+                const string errorMsg = "Mapped created record is null";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

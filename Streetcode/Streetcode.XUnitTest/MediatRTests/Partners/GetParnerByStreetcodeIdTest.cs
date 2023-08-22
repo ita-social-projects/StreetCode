@@ -1,11 +1,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -20,15 +18,12 @@ public class GetParnerByStreetcodeIdTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-
 
     public GetParnerByStreetcodeIdTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -55,7 +50,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
@@ -91,7 +86,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
@@ -110,16 +105,8 @@ public class GetParnerByStreetcodeIdTest
         //Arrange
         var testStreetcodeContent = GetStreetcodeList().First();
         var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
-        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
-        {
-            if (args != null && args.Length > 0 && args[0] is int id)
-            {
-                return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}");
-            }
 
-            return new LocalizedString(key, "Cannot find any partners with unknown Id");
-        });
-            _mockRepository.Setup(x => x.StreetcodeRepository
+        _mockRepository.Setup(x => x.StreetcodeRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 null))
@@ -137,7 +124,7 @@ public class GetParnerByStreetcodeIdTest
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOListWithNotExistingId());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
     
         //Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);

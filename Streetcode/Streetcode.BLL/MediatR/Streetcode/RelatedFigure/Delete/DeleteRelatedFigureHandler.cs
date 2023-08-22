@@ -1,8 +1,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
@@ -11,19 +9,11 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
-    private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-    public DeleteRelatedFigureHandler(
-        IRepositoryWrapper repositoryWrapper,
-        ILoggerService logger,
-        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
-        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public DeleteRelatedFigureHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<Unit>> Handle(DeleteRelatedFigureCommand request, CancellationToken cancellationToken)
@@ -35,7 +25,7 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
 
         if (relation is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindRelationBetweenStreetcodesWithCorrespondingIds", request.ObserverId, request.TargetId].Value;
+            string errorMsg = $"Cannot find a relation between streetcodes with corresponding ids: {request.ObserverId} & {request.TargetId}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -49,7 +39,7 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
         }
         else
         {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelation"].Value;
+            const string errorMsg = "Failed to delete a relation.";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

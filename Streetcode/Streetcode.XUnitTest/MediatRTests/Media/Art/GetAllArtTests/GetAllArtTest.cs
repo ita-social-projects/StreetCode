@@ -9,8 +9,6 @@ using FluentResults;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
@@ -18,15 +16,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-
         private readonly Mock<ILoggerService> _mockLogger;
         public GetAllArtsTest()
         {
             _mockRepo = new Mock<IRepositoryWrapper>();
             _mockMapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -34,7 +29,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);
@@ -49,7 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             //Arrange
             MockRepositoryAndMapper(new List<Art>(){ }, new List<ArtDTO>() { });
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
             int expectedResult = 0;
             
             //Act
@@ -65,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             //Arrange
             MockRepositoryAndMapper(GetArtsList(), GetArtsDTOList());
-            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);

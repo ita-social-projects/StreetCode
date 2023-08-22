@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Video.GetById;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -18,14 +16,12 @@ public class GetVideoByIdTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
     public GetVideoByIdTest()
     {
         _mockMapper = new Mock<IMapper>();
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -45,7 +41,7 @@ public class GetVideoByIdTest
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(id));
 
-        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         //Act
         var result = await handler.Handle(new GetVideoByIdQuery (id),
@@ -77,12 +73,9 @@ public class GetVideoByIdTest
             .Returns(GetVideoDTOWithNotExistingId());
 
         var expectedError = $"Cannot find a video with corresponding id: {id}";
-        _mockLocalizer
-            .Setup(x => x["CannotFindVideoWithCorrespondingId", id])
-            .Returns(new LocalizedString("CannotFindVideoWithCorrespondingId", expectedError));
 
         //Act
-        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         var result = await handler.Handle(new GetVideoByIdQuery(id),
             CancellationToken.None);
@@ -113,7 +106,7 @@ public class GetVideoByIdTest
              .Returns(GetVideoDTO(id));
 
         //Act
-        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
 
         var result = await handler.Handle(new GetVideoByIdQuery(id),
             CancellationToken.None);

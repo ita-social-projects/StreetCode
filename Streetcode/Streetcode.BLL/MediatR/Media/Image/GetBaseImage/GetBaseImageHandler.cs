@@ -1,8 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,14 +11,12 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
     private readonly IBlobService _blobStorage;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetBaseImageHandler(IBlobService blobService, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _blobStorage = blobService;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<MemoryStream>> Handle(GetBaseImageQuery request, CancellationToken cancellationToken)
@@ -29,7 +25,7 @@ public class GetBaseImageHandler : IRequestHandler<GetBaseImageQuery, Result<Mem
 
         if (image is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithCorrespondingId", request.Id].Value;
+            string errorMsg = $"Cannot find an image with corresponding id: {request.Id}";
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

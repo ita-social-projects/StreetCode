@@ -2,9 +2,7 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
@@ -14,21 +12,12 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
-        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
 
-        public CreateCategoryHandler(
-            IRepositoryWrapper repositoryWrapper,
-            IMapper mapper,
-            ILoggerService logger,
-            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+        public CreateCategoryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
-            _stringLocalizerFailed = stringLocalizerFailed;
-            _stringLocalizerCannot = stringLocalizerCannot;
         }
 
         public async Task<Result<DAL.Entities.Sources.SourceLinkCategory>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -41,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 
             if (category is null)
             {
-                string errorMsg = _stringLocalizerCannot["CannotConvertNullToCategory"].Value;
+                const string errorMsg = "Cannot convert null to Category";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -54,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             }
             else
             {
-                string errorMsg = _stringLocalizerFailed["FailedToCreateCategory"].Value;
+                const string errorMsg = "Failed to create a category";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

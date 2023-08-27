@@ -50,6 +50,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddScoped<ITextService, AddTermsToTextService>();
+        services.AddResponseCaching(options =>
+        {
+            options.MaximumBodySize = 64 * 1024 * 1024;
+            options.UseCaseSensitivePaths = true;
+        });
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

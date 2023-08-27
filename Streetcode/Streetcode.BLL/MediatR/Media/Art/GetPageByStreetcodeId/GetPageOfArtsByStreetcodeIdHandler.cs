@@ -16,8 +16,6 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
         public GetPageOfArtsByStreetcodeIdHandler(
             IRepositoryWrapper repositoryWrapper,
@@ -29,8 +27,6 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
-            _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetPageOfArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)

@@ -21,8 +21,14 @@ public class ArtController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    public async Task<IActionResult> GetAllByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    public async Task<IActionResult> GetPageByStreetcodeId([FromRoute] uint streetcodeId, ushort page, ushort pageSize)
+    {
+        return HandleResult(await Mediator.Send(new GetPageOfArtsByStreetcodeIdQuery(streetcodeId, page, pageSize)));
     }
 }

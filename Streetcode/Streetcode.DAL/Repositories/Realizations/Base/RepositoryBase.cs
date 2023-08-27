@@ -18,9 +18,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext = context;
     }
 
-    public IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default)
+    public IQueryable<T> FindAll(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
     {
-        return GetQueryable(predicate).AsNoTracking();
+        return GetQueryable(predicate, include).AsNoTracking();
     }
 
     public T Create(T entity)

@@ -23,7 +23,7 @@ public class ArtController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ResponseCache(Duration = 60)]
+    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId)));

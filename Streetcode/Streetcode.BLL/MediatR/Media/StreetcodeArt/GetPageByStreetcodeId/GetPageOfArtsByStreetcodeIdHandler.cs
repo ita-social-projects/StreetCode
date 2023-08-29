@@ -11,7 +11,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
-  public class GetPageOfArtsByStreetcodeIdHandler : IRequestHandler<GetPageOfArtsByStreetcodeIdQuery, Result<IEnumerable<ArtDTO>>>
+  public class GetPageOfArtsByStreetcodeIdHandler : IRequestHandler<GetPageOfArtsByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtDTO>>>
     {
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
@@ -20,39 +20,39 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         public GetPageOfArtsByStreetcodeIdHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
-            IBlobService blobService,
-            ILoggerService logger,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+            IBlobService blobService)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
         }
 
-        public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetPageOfArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StreetcodeArtDTO>>> Handle(GetPageOfArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var query = _repositoryWrapper.ArtRepository
+            var query = _repositoryWrapper.StreetcodeArtRepository
                 .FindAll(
-                    predicate: sc => sc.StreetcodeArts.Any(s => s.StreetcodeId == request.StreetcodeId),
-                    include: scl => scl.Include(sc => sc.Image))
+                    predicate: s => s.StreetcodeId == request.StreetcodeId,
+                    include: art => art
+                        .Include(a => a.Art)
+                        .Include(i => i.Art.Image) !)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize);
 
             var arts = await query.ToListAsync(cancellationToken);
 
-            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
+            var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(arts);
             artsDto = ConvertArtImagesToBase64(artsDto);
 
             return Result.Ok(artsDto);
         }
 
-        private IEnumerable<ArtDTO> ConvertArtImagesToBase64(IEnumerable<ArtDTO> artsDto)
+        private IEnumerable<StreetcodeArtDTO> ConvertArtImagesToBase64(IEnumerable<StreetcodeArtDTO> artsDto)
         {
             foreach (var artDto in artsDto)
             {
-                if (artDto.Image != null && artDto.Image.BlobName != null)
+                if (artDto.Art.Image != null && artDto.Art.Image.BlobName != null)
                 {
-                    artDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Image.BlobName);
+                    artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
                 }
             }
 

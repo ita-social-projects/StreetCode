@@ -49,7 +49,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseResponseCaching();
 app.UseHangfireDashboard("/dash");
 
 app.UseIpRateLimiting();

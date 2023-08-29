@@ -8,6 +8,7 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class StreetcodeArtController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
+    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId)));

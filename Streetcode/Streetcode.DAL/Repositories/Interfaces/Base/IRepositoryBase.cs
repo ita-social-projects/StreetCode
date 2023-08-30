@@ -9,7 +9,9 @@ namespace Streetcode.DAL.Repositories.Interfaces.Base;
 public interface IRepositoryBase<T>
     where T : class
 {
-    IQueryable<T> FindAll(Expression<Func<T, bool>>? predicate = default);
+    IQueryable<T> FindAll(
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 
     T Create(T entity);
 

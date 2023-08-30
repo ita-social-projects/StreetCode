@@ -157,7 +157,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         private void RepositorySetup(IQueryable<Entities.RelatedFigure> relatedFigures, List<StreetcodeContent> streetcodeContents)
         {
             _repository.Setup(x => x.RelatedFigureRepository
-                .FindAll(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>?>()))
+                .FindAll(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>?>(), null))
                 .Returns(relatedFigures);
 
             _repository.Setup(x => x.StreetcodeRepository

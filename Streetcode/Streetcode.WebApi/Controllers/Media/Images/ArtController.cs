@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.MediatR.Media.Art.GetAll;
 using Streetcode.BLL.MediatR.Media.Art.GetById;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
@@ -24,7 +23,7 @@ public class ArtController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
-    public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
+    public async Task<IActionResult> GetAllByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId)));
     }

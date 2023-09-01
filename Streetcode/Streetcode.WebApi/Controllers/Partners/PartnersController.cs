@@ -5,6 +5,7 @@ using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Partners.GetAllPartnerShort;
 using Streetcode.BLL.MediatR.Partners.GetById;
+using Streetcode.BLL.MediatR.Partners.GetByIsKeyPartner;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.DAL.Entities.Partners;
@@ -25,6 +26,12 @@ public class PartnersController : BaseApiController
     public async Task<IActionResult> GetAllShort()
     {
         return HandleResult(await Mediator.Send(new GetAllPartnersShortQuery()));
+    }
+
+    [HttpGet("{isKeyPartner:bool}")]
+    public async Task<IActionResult> GetPartnersByIsKeyPartner([FromRoute] bool isKeyPartner)
+    {
+        return HandleResult(await Mediator.Send(new GetPartnersByIsKeyPartnerQuery(isKeyPartner)));
     }
 
     [HttpGet("{id:int}")]

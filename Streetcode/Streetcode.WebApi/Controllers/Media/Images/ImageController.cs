@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
 using Streetcode.WebApi.Attributes;
 using Streetcode.DAL.Enums;
+using Microsoft.Net.Http.Headers;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -24,14 +25,32 @@ public class ImageController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
+        if (!isAdmin)
+        {
+            return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
+        }
+        else
+        {
+            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
+            return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
+        }
     }
 
     [HttpGet("{id:int}")]
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
+        if (!isAdmin)
+        {
+            return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
+        }
+        else
+        {
+            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
+            return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
+        }
     }
 
     [HttpPost]

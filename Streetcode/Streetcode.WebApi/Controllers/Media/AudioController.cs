@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.MediatR.Media.Audio.Create;
 using Streetcode.BLL.MediatR.Media.Audio.Delete;
@@ -7,6 +8,7 @@ using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Audio.Update;
+using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
@@ -24,14 +26,32 @@ public class AudioController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId)));
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
+        if (!isAdmin)
+        {
+            return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId)));
+        }
+        else
+        {
+            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
+            return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId)));
+        }
     }
 
     [HttpGet("{id:int}")]
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
+        if (!isAdmin)
+        {
+            return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
+        }
+        else
+        {
+            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
+            return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
+        }
     }
 
     [HttpGet("{id:int}")]

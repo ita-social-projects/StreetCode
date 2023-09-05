@@ -23,7 +23,7 @@ public class TextController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var isAdmin = HttpContext.User.IsInRole("Administrator");
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
         if (isAdmin)
         {
             Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
@@ -39,7 +39,7 @@ public class TextController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var isAdmin = HttpContext.User.IsInRole("Administrator");
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
         if (isAdmin)
         {
             Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";

@@ -25,7 +25,7 @@ public class ImageController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var isAdmin = HttpContext.User.IsInRole("Administrator");
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
         if (!isAdmin)
         {
             return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
@@ -41,7 +41,7 @@ public class ImageController : BaseApiController
     [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var isAdmin = HttpContext.User.IsInRole("Administrator");
+        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
         if (!isAdmin)
         {
             return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));

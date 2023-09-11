@@ -53,7 +53,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     var streetcodeToUpdate = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                     _mapper.Map(request.Streetcode, streetcodeToUpdate);
 
-                    await UpdateEntitiesAsync(request.Streetcode.StreetcodeArts, _repositoryWrapper.StreetcodeArtRepository);
+                    await UpdateEntitiesAsync(request.Streetcode.StreetcodeArtSlides, _repositoryWrapper.StreetcodeArtSlideRepository);
                     await UpdateEntitiesAsync(request.Streetcode.StatisticRecords, _repositoryWrapper.StreetcodeCoordinateRepository);
                     await UpdateEntitiesAsync(request.Streetcode.StreetcodeCategoryContents, _repositoryWrapper.StreetcodeCategoryContentRepository);
                     await UpdateEntitiesAsync(request.Streetcode.RelatedFigures, _repositoryWrapper.RelatedFigureRepository);

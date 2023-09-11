@@ -28,6 +28,6 @@ public class StreetcodeArtController : BaseApiController
     [HttpGet("{streetcodeId:int}")]
     public async Task<IActionResult> GetPageByStreetcodeId([FromRoute] uint streetcodeId, ushort page, ushort pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetPageOfArtsByStreetcodeIdQuery(streetcodeId, page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, page, pageSize)));
     }
 }

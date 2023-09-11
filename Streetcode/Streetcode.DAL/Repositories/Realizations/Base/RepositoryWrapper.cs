@@ -50,6 +50,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IStreetcodeArtRepository _streetcodeArtRepository;
 
+    private IStreetcodeArtSlideRepository _streetcodeArtSlideRepository;
+
     private IFactRepository _factRepository;
 
     private IPartnersRepository _partnersRepository;
@@ -238,6 +240,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _streetcodeArtRepository;
+        }
+    }
+
+    public IStreetcodeArtSlideRepository StreetcodeArtSlideRepository
+    {
+        get
+        {
+            if (_streetcodeArtSlideRepository is null)
+            {
+                _streetcodeArtSlideRepository = new StreetcodeArtSlideRepository(_streetcodeDbContext);
+            }
+
+            return _streetcodeArtSlideRepository;
         }
     }
 

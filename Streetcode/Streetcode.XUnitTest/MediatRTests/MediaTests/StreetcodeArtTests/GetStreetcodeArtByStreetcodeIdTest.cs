@@ -41,8 +41,8 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 new StreetcodeArt()
                 {
                     Index = 1,
-                    StreetcodeId = 1,
-                    Streetcode = null,
+                    StreetcodeArtSlideId = 1,
+                    StreetcodeArtSlide = null,
                     ArtId = 1,
                     Art= new DAL.Entities.Media.Images.Art
                     {
@@ -53,8 +53,8 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 new StreetcodeArt()
                 {
                     Index = 2,
-                    StreetcodeId = 2,
-                    Streetcode = null,
+                    StreetcodeArtSlideId = 2,
+                    StreetcodeArtSlide = null,
                     ArtId = 2,
                     Art = new DAL.Entities.Media.Images.Art
                     {

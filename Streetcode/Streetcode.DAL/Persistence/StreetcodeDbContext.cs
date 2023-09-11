@@ -19,6 +19,7 @@ using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
+using StreetcodeArtSlide = Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -58,6 +59,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<Video> Videos { get; set; }
     public DbSet<StreetcodeCategoryContent> StreetcodeCategoryContent { get; set; }
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
+    public DbSet<StreetcodeArtSlide> StreetcodeArtSlides { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
     public DbSet<TeamMember> TeamMembers { get; set; }
@@ -192,13 +194,24 @@ public class StreetcodeDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<StreetcodeArtSlide>(entity =>
+        {
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.StreetcodeArtSlides)
+                .HasForeignKey(d => d.StreetcodeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Index)
+                .HasDefaultValue(1);
+        });
+
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
-            entity.HasKey(d => new { d.ArtId, d.StreetcodeId });
+            entity.HasKey(d => new { d.ArtId, d.StreetcodeArtSlideId });
 
-            entity.HasOne(d => d.Streetcode)
+            entity.HasOne(d => d.StreetcodeArtSlide)
                 .WithMany(d => d.StreetcodeArts)
-                .HasForeignKey(d => d.StreetcodeId)
+                .HasForeignKey(d => d.StreetcodeArtSlideId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Art)
@@ -210,7 +223,7 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(1);
 
             entity
-                .HasIndex(d => new { d.ArtId, d.StreetcodeId })
+                .HasIndex(d => new { d.ArtId, d.StreetcodeArtSlideId })
                 .IsUnique(false);
         });
 
@@ -307,5 +320,10 @@ public class StreetcodeDbContext : DbContext
             .HasValue<Coordinate>("coordinate_base")
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest;User Id=sa;Password=DBpass2023;MultipleActiveResultSets=true");
     }
 }

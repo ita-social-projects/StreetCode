@@ -36,35 +36,27 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<StreetcodeArtDTO>>> Handle(GetStreetcodeArtByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            /*
-            if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
-            {
-                return Result.Fail(
-                    new Error($"Cannot find a streetcode arts by a streetcode id: {request.StreetcodeId}, because such streetcode doesn`t exist"));
-            }
-            */
+            var streetcodeArts = await _repositoryWrapper
+                .StreetcodeArtRepository
+                .GetAllAsync(
+                    predicate: sArt => sArt.StreetcodeArtSlide.StreetcodeId == request.StreetcodeId,
+                    include: sArt => sArt
+                        .Include(a => a.Art)
+                        .Include(i => i.Art.Image) !);
 
-            var art = await _repositoryWrapper
-            .StreetcodeArtRepository
-            .GetAllAsync(
-                predicate: s => s.StreetcodeId == request.StreetcodeId,
-                include: art => art
-                    .Include(a => a.Art)
-                    .Include(i => i.Art.Image) !);
-
-            if (art is null)
+            if (streetcodeArts is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(art);
+            var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(streetcodeArts);
 
-            foreach (var artDto in artsDto)
-            {
-                artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
-            }
+            // foreach (var artDto in artsDto)
+            // {
+            //     artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
+            // }
 
             return Result.Ok(artsDto);
         }

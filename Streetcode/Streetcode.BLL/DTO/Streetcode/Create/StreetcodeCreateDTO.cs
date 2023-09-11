@@ -43,7 +43,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
-        public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
+        public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }

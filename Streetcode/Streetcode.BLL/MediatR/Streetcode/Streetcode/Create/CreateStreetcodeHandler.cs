@@ -60,7 +60,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
                 AddAudio(streetcode, request.Streetcode.AudioId);
-                AddArts(streetcode, request.Streetcode.StreetcodeArts);
+                AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -199,9 +199,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private void AddArts(StreetcodeContent streetcode, IEnumerable<StreetcodeArtCreateUpdateDTO> arts)
+    private void AddArtSlides(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> arts)
     {
-        streetcode.StreetcodeArts.AddRange(_mapper.Map<IEnumerable<StreetcodeArt>>(arts));
+        streetcode.StreetcodeArtSlides.AddRange(_mapper.Map<IEnumerable<StreetcodeArtSlide>>(arts));
     }
 
     private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)

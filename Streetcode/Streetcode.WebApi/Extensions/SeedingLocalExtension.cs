@@ -586,61 +586,61 @@ namespace Streetcode.WebApi.Extensions
                                         new StreetcodeArt
                                         {
                                             ArtId = 1,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 1,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 2,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 2,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 3,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 3,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 4,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 4,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 5,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 5,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 6,
-                                            StreetcodeId = 1,
+                                            StreetcodeArtSlideId = 1,
                                             Index = 6,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 7,
-                                            StreetcodeId = 2,
+                                            StreetcodeArtSlideId = 2,
                                             Index = 1,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 4,
-                                            StreetcodeId = 2,
+                                            StreetcodeArtSlideId = 2,
                                             Index = 2,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 5,
-                                            StreetcodeId = 2,
+                                            StreetcodeArtSlideId = 2,
                                             Index = 3,
                                         },
                                         new StreetcodeArt
                                         {
                                             ArtId = 6,
-                                            StreetcodeId = 2,
+                                            StreetcodeArtSlideId = 2,
                                             Index = 4,
                                         });
 

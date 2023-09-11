@@ -29,7 +29,7 @@ public class StreetcodeProfile : Profile
           .ForMember(x => x.TimelineItems, conf => conf.Ignore())
           .ForMember(x => x.Images, conf => conf.Ignore())
           .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
-          .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
+          .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
           .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
@@ -41,7 +41,7 @@ public class StreetcodeProfile : Profile
             .ForMember(x => x.Images, conf => conf.Ignore())
             .ForMember(x => x.StreetcodeCategoryContents, conf => conf.Ignore())
             .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
-            .ForMember(x => x.StreetcodeArts, conf => conf.Ignore())
+            .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
             .ForMember(x => x.Facts, conf => conf.Ignore())
               .ReverseMap();
 

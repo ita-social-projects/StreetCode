@@ -20,6 +20,7 @@ public interface IRepositoryWrapper
     IFactRepository FactRepository { get; }
     IArtRepository ArtRepository { get; }
     IStreetcodeArtRepository StreetcodeArtRepository { get; }
+    IStreetcodeArtSlideRepository StreetcodeArtSlideRepository { get; }
     IVideoRepository VideoRepository { get; }
     IImageRepository ImageRepository { get; }
     IImageDetailsRepository ImageDetailsRepository { get; }

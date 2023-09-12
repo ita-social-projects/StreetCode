@@ -53,10 +53,10 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
 
             var artsDto = _mapper.Map<IEnumerable<StreetcodeArtDTO>>(streetcodeArts);
 
-            // foreach (var artDto in artsDto)
-            // {
-            //     artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
-            // }
+            foreach (var artDto in artsDto)
+            {
+                artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
+            }
 
             return Result.Ok(artsDto);
         }

@@ -22,35 +22,15 @@ public class ImageController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
-        if (!isAdmin)
-        {
-            return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
-        }
-        else
-        {
-            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
-            return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
-        }
+        return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
-        if (!isAdmin)
-        {
-            return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
-        }
-        else
-        {
-            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
-            return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
-        }
+       return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
     }
 
     [HttpPost]
@@ -72,7 +52,6 @@ public class ImageController : BaseApiController
     }
 
     [HttpGet("{id:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetBaseImage([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetBaseImageQuery(id)));

@@ -5,6 +5,7 @@ using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.BLL.MediatR.Team.Delete;
 using Streetcode.BLL.MediatR.Team.GetAll;
 using Streetcode.BLL.MediatR.Team.GetById;
+using Streetcode.BLL.MediatR.Team.GetByRoleId;
 using Streetcode.BLL.MediatR.Team.Update;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
@@ -30,6 +31,12 @@ namespace Streetcode.WebApi.Controllers.Team
         {
             return HandleResult(await Mediator.Send(new GetByIdTeamQuery(id)));
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetByRoleId([FromRoute] int id)
+		{
+			return HandleResult(await Mediator.Send(new GetTeamByRoleIdQuery(id)));
+		}
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TeamMemberDTO teamMember)

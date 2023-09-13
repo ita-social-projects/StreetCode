@@ -25,6 +25,8 @@ using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.Services.Text;
 using Serilog.Events;
+using Streetcode.BLL.Services.CacheService;
+using Streetcode.BLL.Interfaces.Cache;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -39,10 +41,12 @@ public static class ServiceCollectionExtensions
     {
         services.AddRepositoryServices();
         services.AddFeatureManagement();
+        services.AddMemoryCache();
+
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
-
+        services.AddScoped<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoggerService, LoggerService>();
@@ -50,7 +54,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddScoped<ITextService, AddTermsToTextService>();
-        services.AddResponseCaching();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

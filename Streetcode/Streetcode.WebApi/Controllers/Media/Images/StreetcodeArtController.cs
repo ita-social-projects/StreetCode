@@ -10,19 +10,9 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class StreetcodeArtController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
-        if (isAdmin)
-        {
-            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
-            return HandleResult(await Mediator.Send(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId)));
-        }
-        else
-        {
-            return HandleResult(await Mediator.Send(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId)));
-        }
+       return HandleResult(await Mediator.Send(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{streetcodeId:int}")]

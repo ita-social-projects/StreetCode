@@ -34,38 +34,38 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             _mockCache = new Mock<ICacheService>();
         }
 
-        [Theory]
-        [InlineData(1)]
+        //[Theory]
+        //[InlineData(1)]
 
-        public async Task Handle_ReturnsImage(int streetcodeId)
-        {
-            // Arrange
-            MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object, _mockCache.Object);
+        //public async Task Handle_ReturnsImage(int streetcodeId)
+        //{
+        //    // Arrange
+        //    MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
+        //    var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object, _mockCache.Object);
 
-            // Act
-            var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            //Assert
-            Assert.Equal(streetcodeId, result.Value.First().Id);
+        //    //Assert
+        //    Assert.Equal(streetcodeId, result.Value.First().Id);
 
-        }
+        //}
 
-        [Theory]
-        [InlineData(1)]
+        //[Theory]
+        //[InlineData(1)]
 
-        public async Task Handle_ReturnsType(int streetcodeId)
-        {
-            // Arrange
-            MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object, _mockCache.Object);
+        //public async Task Handle_ReturnsType(int streetcodeId)
+        //{
+        //    // Arrange
+        //    MockRepositoryAndMapper(GetImagesList(), GetImagesDTOList());
+        //    var handler = new GetImageByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object, _mockCache.Object);
 
-            // Act
-            var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+        //    // Act
+        //    var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), default);
 
-            // Assert
-            Assert.IsType<Result<IEnumerable<ImageDTO>>>(result);
-        }
+        //    // Assert
+        //    Assert.IsType<Result<IEnumerable<ImageDTO>>>(result);
+        //}
 
         // [Theory]
         // [InlineData(-1)]

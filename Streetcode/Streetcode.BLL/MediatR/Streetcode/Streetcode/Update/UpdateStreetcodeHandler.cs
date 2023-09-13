@@ -20,6 +20,8 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
+using Microsoft.Extensions.Caching.Memory;
+using Streetcode.BLL.Interfaces.Cache;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -30,18 +32,20 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
-
+        private readonly ICacheService _cacheService;
         public UpdateStreetcodeHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
-            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            ICacheService cacheService)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _cacheService = cacheService;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -84,6 +88,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     if (isResultSuccess)
                     {
                         transactionScope.Complete();
+                        _cacheService.RemoveStreetcodeCaches(streetcodeToUpdate.Id);
                         return Result.Ok(streetcodeToUpdate.Id);
                     }
                     else

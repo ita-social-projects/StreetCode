@@ -35,11 +35,12 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
     public async Task<Result<IEnumerable<ImageDTO>>> Handle(GetImageByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         string cacheKey = $"ImageCache_{request.StreetcodeId}";
-
+        _logger.LogInformation(cacheKey + "cacheKey was created");
         return await _cacheService.GetOrSetAsync(
             cacheKey,
             async () =>
             {
+                _logger.LogInformation(cacheKey + "async function start");
                 var images = (await _repositoryWrapper.ImageRepository
                     .GetAllAsync(
                     f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
@@ -59,6 +60,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
                     image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
                 }
 
+                _logger.LogInformation(cacheKey + "async function finish");
                 return Result.Ok(imageDtos);
             },
             TimeSpan.FromMinutes(10));

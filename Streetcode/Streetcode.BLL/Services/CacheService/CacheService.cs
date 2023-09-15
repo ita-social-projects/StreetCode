@@ -25,7 +25,7 @@ namespace Streetcode.BLL.Services.CacheService
 
         public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> getItemCallback, TimeSpan cacheDuration)
         {
-            _logger.LogInformation(key + "GetOrSetAsync function start");
+            _logger.LogInformation(key + "GetOrSetAsync function start!");
             if (_cache.TryGetValue(key, out T cachedItem))
             {
                 _logger.LogInformation(key + "TryGetValue function true");

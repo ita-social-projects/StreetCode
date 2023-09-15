@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
-        services.AddScoped<ICacheService, CacheService>();
+        services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoggerService, LoggerService>();

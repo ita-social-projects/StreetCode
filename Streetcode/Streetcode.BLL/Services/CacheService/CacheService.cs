@@ -68,7 +68,10 @@ namespace Streetcode.BLL.Services.CacheService
         public void RemoveStreetcodeCaches(int streetcodeId)
         {
             string cacheKeyImage = $"ImageCache_{streetcodeId}";
+            string cacheKeyText = $"TextCache_{streetcodeId}";
+
             _cache.Remove(cacheKeyImage);
+            _cache.Remove(cacheKeyText);
         }
     }
 }

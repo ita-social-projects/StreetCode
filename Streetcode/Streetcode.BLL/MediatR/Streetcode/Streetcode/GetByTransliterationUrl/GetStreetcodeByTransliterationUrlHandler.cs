@@ -45,7 +45,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
                                                 include: q => q.Include(ti => ti.Tag));
 
             var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);
-            streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed).OrderBy(tag => tag.Index);
+            streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
+
+            if(streetcodeDTO.Tags is not null)
+            {
+                streetcodeDTO.Tags = streetcodeDTO.Tags.OrderBy(tag => tag.Index);
+            }
+
             return Result.Ok(streetcodeDTO);
         }
     }

@@ -26,34 +26,42 @@ public class AudioService : IAudioService
 
     public async Task CleanUnusedAudios()
     {
-        var referencedAudioIds = _streetcodeRepository
-            .FindAll()
-            .Where(streetcode => streetcode.AudioId.HasValue)
-            .Select(streetcode => streetcode.AudioId.Value)
-            .ToList();
-
-        var unreferencedAudios = _audioRepository
-            .FindAll(audio => !referencedAudioIds.Contains(audio.Id))
-            .ToList();
-
-        _loggerService.LogInformation("Starting deleting this audios:");
-
-        foreach (var audio in unreferencedAudios)
+        try
         {
-            _loggerService.LogInformation(audio.BlobName);
-        }
+            var referencedAudioIds = _streetcodeRepository
+                .FindAll()
+                .Where(streetcode => streetcode.AudioId.HasValue)
+                .Select(streetcode => streetcode.AudioId.Value)
+                .ToList();
 
-        if (unreferencedAudios.Any())
-        {
+            var unreferencedAudios = _audioRepository
+                .FindAll(audio => !referencedAudioIds.Contains(audio.Id))
+                .ToList();
+
+            _loggerService.LogInformation("Starting deleting this audios:");
+
             foreach (var audio in unreferencedAudios)
             {
-                _blobService.DeleteFileInStorage(audio.BlobName);
+                _loggerService.LogInformation(audio.BlobName);
             }
 
-            _audioRepository.DeleteRange(unreferencedAudios);
-            await _repositoryWrapper.SaveChangesAsync();
-        }
+            if (unreferencedAudios.Any())
+            {
+                foreach (var audio in unreferencedAudios)
+                {
+                    _blobService.DeleteFileInStorage(audio.BlobName);
+                }
 
-        _loggerService.LogInformation("Deleting completed:");
+                _audioRepository.DeleteRange(unreferencedAudios);
+                await _repositoryWrapper.SaveChangesAsync();
+            }
+
+            _loggerService.LogInformation("Deleting completed:");
+        }
+        catch (Exception e)
+        {
+            _loggerService.LogError(null, e.Message);
+            throw;
+        }
     }
 }

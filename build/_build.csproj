@@ -30,4 +30,12 @@
     <ProjectReference Include="..\Streetcode\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="..\GitVersion.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageDownload Include="GitVersion.Tool" Version="[5.12.0]" />
+  </ItemGroup>
+
 </Project>

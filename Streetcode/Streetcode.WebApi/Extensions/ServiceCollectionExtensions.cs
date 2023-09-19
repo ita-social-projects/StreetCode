@@ -15,16 +15,17 @@ using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Streetcode.BLL.Services.AudioService;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.Services.Text;
-using Serilog.Events;
 using Streetcode.BLL.Services.CacheService;
 using Streetcode.BLL.Interfaces.Cache;
 
@@ -48,6 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(currentAssemblies);
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
+        services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped<IEmailService, EmailService>();

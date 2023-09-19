@@ -19,6 +19,7 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+
 var app = builder.Build();
 var supportedCulture = new[]
 {
@@ -44,6 +45,7 @@ else
 
 await app.ApplyMigrations();
 
+app.AddCleanAudiosJob();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();

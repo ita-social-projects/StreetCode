@@ -42,7 +42,7 @@ else
     app.UseHsts();
 }
 
-// await app.ApplyMigrations();
+await app.ApplyMigrations();
 
 app.AddCleanAudiosJob();
 app.UseCors();

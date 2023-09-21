@@ -1,10 +1,9 @@
 using System.Globalization;
 using AspNetCoreRateLimit;
 using Hangfire;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
-using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Localization;
+using Streetcode.BLL.Services.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +42,7 @@ else
     app.UseHsts();
 }
 
-await app.ApplyMigrations();
+// await app.ApplyMigrations();
 
 app.AddCleanAudiosJob();
 app.UseCors();
@@ -51,7 +50,10 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
+});
 app.UseIpRateLimiting();
 
 app.MapControllers();

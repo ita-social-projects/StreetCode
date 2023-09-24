@@ -34,9 +34,16 @@ namespace Streetcode.BLL.Services.Logging
 
         public void LogError(object request, string erroMsg)
         {
-            string requestType = request.GetType().ToString();
-            string requestClass = requestType.Substring(requestType.LastIndexOf('.') + 1);
-            _logger.Error($"{requestClass} handled with the error: {erroMsg}");
+            if (request != null)
+            {
+                string requestType = request.GetType().ToString();
+                string requestClass = requestType.Substring(requestType.LastIndexOf('.') + 1);
+                _logger.Error($"{requestClass} handled with the error: {erroMsg}");
+            }
+            else
+            {
+               _logger.Error(erroMsg);
+            }
         }
     }
 }

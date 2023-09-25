@@ -1,10 +1,9 @@
 using System.Globalization;
 using AspNetCoreRateLimit;
 using Hangfire;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.WebApi.Extensions;
-using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Localization;
+using Streetcode.BLL.Services.Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +18,7 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+
 var app = builder.Build();
 var supportedCulture = new[]
 {
@@ -44,24 +44,17 @@ else
 
 await app.ApplyMigrations();
 
+app.AddCleanAudiosJob();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard("/dash");
-
-app.UseIpRateLimiting();
-
-if (app.Environment.EnvironmentName != "Local")
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
-    BackgroundJob.Schedule<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
-    RecurringJob.AddOrUpdate<WebParsingUtils>(
-        wp => wp.ParseZipFileFromWebAsync(), Cron.Monthly);
-    RecurringJob.AddOrUpdate<BlobService>(
-        b => b.CleanBlobStorage(), Cron.Monthly);
-}
+    Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
+});
+app.UseIpRateLimiting();
 
 app.MapControllers();
 

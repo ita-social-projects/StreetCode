@@ -46,6 +46,11 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
 
+        if(streetcodeDto.Tags is not null)
+        {
+            streetcodeDto.Tags = streetcodeDto.Tags.OrderBy(tag => tag.Index);
+        }
+
         return Result.Ok(streetcodeDto);
     }
 }

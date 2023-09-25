@@ -32,7 +32,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedUICultures = supportedCulture,
     ApplyCurrentCultureToResponseHeaders = true
 });
-if (app.Environment.EnvironmentName == "Local")
+if (app.Environment.EnvironmentName == "Local" || app.Environment.EnvironmentName == "Staging")
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));

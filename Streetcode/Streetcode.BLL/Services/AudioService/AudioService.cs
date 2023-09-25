@@ -10,8 +10,6 @@ namespace Streetcode.BLL.Services.AudioService;
 public class AudioService : IAudioService
 {
     private readonly ILoggerService _loggerService;
-    private readonly IAudioRepository _audioRepository;
-    private readonly IStreetcodeRepository _streetcodeRepository;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
 
@@ -19,22 +17,20 @@ public class AudioService : IAudioService
     {
         _loggerService = loggerService;
         _repositoryWrapper = repositoryWrapper;
-        _audioRepository = repositoryWrapper.AudioRepository;
-        _streetcodeRepository = repositoryWrapper.StreetcodeRepository;
         _blobService = blobService;
     }
 
-    public async Task CleanUnusedAudios()
+    public async Task CleanUnusedAudiosAsync()
     {
         try
         {
-            var referencedAudioIds = _streetcodeRepository
+            var referencedAudioIds = _repositoryWrapper.StreetcodeRepository
                 .FindAll()
                 .Where(streetcode => streetcode.AudioId.HasValue)
                 .Select(streetcode => streetcode.AudioId.Value)
                 .ToList();
 
-            var unreferencedAudios = _audioRepository
+            var unreferencedAudios = _repositoryWrapper.AudioRepository
                 .FindAll(audio => !referencedAudioIds.Contains(audio.Id))
                 .ToList();
 
@@ -52,7 +48,7 @@ public class AudioService : IAudioService
                     _blobService.DeleteFileInStorage(audio.BlobName);
                 }
 
-                _audioRepository.DeleteRange(unreferencedAudios);
+                _repositoryWrapper.AudioRepository.DeleteRange(unreferencedAudios);
                 await _repositoryWrapper.SaveChangesAsync();
             }
 

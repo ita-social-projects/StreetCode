@@ -11,7 +11,7 @@ public static class RecurringJobExtensions
 
         recurringJobManager.AddOrUpdate(
             "Clean audio that are not used in streetcodes",
-            () => app.Services.GetService<IAudioService>().CleanUnusedAudios(),
+            () => app.Services.GetService<IAudioService>().CleanUnusedAudiosAsync(),
             app.Configuration.GetSection("RecurringJobs")["AudioCleaningFrequency"],
             TimeZoneInfo.Local);
     }

@@ -13,6 +13,6 @@ public static class RecurringJobExtensions
             "Clean audio that are not used in streetcodes",
             () => app.Services.GetService<IAudioService>().CleanUnusedAudiosAsync(),
             app.Configuration.GetSection("RecurringJobs")["AudioCleaningFrequency"],
-            TimeZoneInfo.Local);
+            TimeZoneInfo.Utc);
     }
 }

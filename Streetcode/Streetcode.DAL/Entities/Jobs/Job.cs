@@ -26,7 +26,6 @@ namespace Streetcode.DAL.Entities.Jobs
 		[MaxLength(2000)]
 		public string Description { get; set; }
 
-		[Required]
 		[MaxLength(15)]
 		public string Salary { get; set; }
 	}

@@ -6,20 +6,18 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
+using Streetcode.BLL.Interfaces.Cache;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -30,23 +28,25 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
-
+        private readonly ICacheService _cacheService;
         public UpdateStreetcodeHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
-            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            ICacheService cacheService)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _cacheService = cacheService;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
         {
-            using(var transactionScope = _repositoryWrapper.BeginTransaction())
+            using (var transactionScope = _repositoryWrapper.BeginTransaction())
             {
                 try
                 {
@@ -74,7 +74,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     _repositoryWrapper.StreetcodeRepository.Update(streetcodeToUpdate);
 
                     _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property(x => x.CreatedAt).IsModified = false;
-                    var discriminatorProperty = _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property<string>(StreetcodeTypeDiscriminators.DiscriminatorName );
+                    var discriminatorProperty = _repositoryWrapper.StreetcodeRepository.Entry(streetcodeToUpdate).Property<string>(StreetcodeTypeDiscriminators.DiscriminatorName);
                     discriminatorProperty.CurrentValue = StreetcodeTypeDiscriminators.GetStreetcodeType(request.Streetcode.StreetcodeType);
                     discriminatorProperty.IsModified = true;
 
@@ -84,6 +84,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     if (isResultSuccess)
                     {
                         transactionScope.Complete();
+                        _cacheService.RemoveStreetcodeCaches(streetcodeToUpdate.Id);
                         return Result.Ok(streetcodeToUpdate.Id);
                     }
                     else
@@ -93,7 +94,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
                     _logger.LogError(request, errorMsg);
@@ -104,7 +105,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
         private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
         {
-            if(imageDetails == null)
+            if (imageDetails == null)
             {
                 return;
             }
@@ -128,7 +129,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var (toUpdate, toCreate, toDelete) = CategorizeItems<TimelineItemCreateUpdateDTO>(timelineItems);
 
             var timelineItemsUpdated = new List<TimelineItem>();
-            foreach(var timelineItem in toUpdate)
+            foreach (var timelineItem in toUpdate)
             {
                 timelineItemsUpdated.Add(_mapper.Map<TimelineItem>(timelineItem));
                 var (historicalContextToUpdate, historicalContextToCreate, historicalContextToDelete) = CategorizeItems<HistoricalContextCreateUpdateDTO>(timelineItem.HistoricalContexts);
@@ -156,7 +157,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             streetcode.TimelineItems.AddRange(timelineItemsUpdated);
 
             var timelineItemsCreated = new List<TimelineItem>();
-            foreach(var timelineItem in toCreate)
+            foreach (var timelineItem in toCreate)
             {
                 var timelineItemCreate = _mapper.Map<TimelineItem>(timelineItem);
                 timelineItemCreate.HistoricalContextTimelines = timelineItem.HistoricalContexts
@@ -191,7 +192,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     .GetAllAsync(predicate: t => toponymsNameToCreate.Contains(t.StreetName));
 
             streetcodeContent.Toponyms.AddRange(toponymsToAdd);
-		}
+        }
 
         private string GetToponymDeleteQuery(int streetcodeId, IEnumerable<string> toponymsName)
         {
@@ -215,17 +216,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
         private void UpdateAudio(IEnumerable<AudioUpdateDTO> audios, StreetcodeContent streetcode)
         {
-            var (_, toCreate, toDelete) = CategorizeItems(audios);
-
-            if (toDelete?.Any() == true)
-            {
-                streetcode.AudioId = null;
-                _repositoryWrapper.AudioRepository.DeleteRange(_mapper.Map<IEnumerable<Audio>>(toDelete));
-            }
+            var (toUpdate, toCreate, _) = CategorizeItems(audios);
 
             if (toCreate?.Any() == true)
             {
                 streetcode.AudioId = toCreate.First().Id;
+            }
+
+            if (toUpdate?.Any() == true)
+            {
+                streetcode.AudioId = toUpdate.First().Id;
             }
         }
 

@@ -170,6 +170,37 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("responses", "feedback");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Jobs.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Salary")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(65)
+                        .HasColumnType("nvarchar(65)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("job", "jobs");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
                 {
                     b.Property<int>("Id")
@@ -774,18 +805,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

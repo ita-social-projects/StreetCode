@@ -20,35 +20,15 @@ public class TextController : BaseApiController
     }
 
     [HttpGet("{id:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
-        if (isAdmin)
-        {
-            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
-            return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
-        }
-        else
-        {
-            return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
-        }
+         return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ResponseCache(Duration = 600, Location = ResponseCacheLocation.Any)]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var isAdmin = HttpContext.User.IsInRole("MainAdministrator");
-        if (isAdmin)
-        {
-            Response.Headers[HeaderNames.CacheControl] = "no-store, no-cache";
-            return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
-        }
-        else
-        {
-            return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
-        }
+       return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpPost]

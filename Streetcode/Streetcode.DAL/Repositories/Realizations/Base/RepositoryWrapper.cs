@@ -4,6 +4,7 @@ using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Newss;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
@@ -17,6 +18,7 @@ using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
+using Streetcode.DAL.Repositories.Realizations.Jobs;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
 using Streetcode.DAL.Repositories.Realizations.Newss;
@@ -107,6 +109,8 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeToponymRepository _streetcodeToponymRepository;
 
     private IStreetcodeImageRepository _streetcodeImageRepository;
+
+    private IJobRepository _jobRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -567,6 +571,19 @@ public class RepositoryWrapper : IRepositoryWrapper
 			}
 
 			return _streetcodeImageRepository;
+		}
+	}
+
+    public IJobRepository JobRepository
+	{
+		get
+		{
+			if (_jobRepository is null)
+			{
+				_jobRepository = new JobRepository(_streetcodeDbContext);
+			}
+
+			return _jobRepository;
 		}
 	}
 

@@ -28,6 +28,8 @@ using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.Services.Text;
 using Streetcode.BLL.Services.CacheService;
 using Streetcode.BLL.Interfaces.Cache;
+using Streetcode.BLL.Interfaces.Image;
+using Streetcode.BLL.Services.ImageService;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -50,6 +52,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
+        services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped<IEmailService, EmailService>();

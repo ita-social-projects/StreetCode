@@ -64,9 +64,12 @@ pipeline {
                 *Duration:* ${buildDuration}
                 """
     
-                sh """
-                curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
-                """
+                withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
+                                 string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
+                    sh """
+                    curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
+                    """
+                }
             }
         }
     }

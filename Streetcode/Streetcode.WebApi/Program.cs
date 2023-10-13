@@ -45,6 +45,7 @@ else
 await app.ApplyMigrations();
 
 app.AddCleanAudiosJob();
+app.AddCleanImagesJob();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();

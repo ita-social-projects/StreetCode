@@ -1,12 +1,14 @@
 name: SonarCloud
 
 on:
-  push:
+  pull_request:
     branches:
       - master
       - develop
-  pull_request:
-    types: [opened, synchronize, reopened]
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   sonarcloud_branch:
@@ -15,50 +17,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          distribution: 'temurin'
+          java-version: '17'
+          overwrite-settings: false
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
 
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
+
+      - name: Install dotnet-sonarscanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
       - name: Restore Dependencies
         run: dotnet restore ./Streetcode/Streetcode.sln
-
-      - name: Install xmldocmd
-        run: dotnet tool install xmldocmd -g
 
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
-      - name: Install coverlet.console
-        run: dotnet tool install -g coverlet.console
-
       - name: Test and Code Coverage
-        run: |
-          dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml
-
-      - name: Install SonarScanner
-        run: dotnet tool install --global dotnet-sonarscanner
-
-      - name: Set SonarCloud Token
-        run: echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> $GITHUB_ENV
+        run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
 
       - name: SonarScanner Analysis
         id: sonar
         run: |
-          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportPaths="./coverage/coverage.xml"
-          dotnet build ./Streetcode/Streetcode.sln --configuration Release
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-      - name: Publish Code Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: Code Coverage Report
-          path: |
-            ./coverage/coverage.xml
+         dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+         dotnet build ./Streetcode/Streetcode.sln --configuration Release
+         dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal
+         dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

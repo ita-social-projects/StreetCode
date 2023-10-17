@@ -14,7 +14,7 @@ namespace Streetcode.BLL.HealthChecks
     {
         public static IEndpointRouteBuilder UseHealthChecks(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+            endpoints.MapHealthChecks("/health", new HealthCheckOptions
             {
                 Predicate = check => check.Name == "StartupProbe",
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse

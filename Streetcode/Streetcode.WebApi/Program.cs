@@ -4,7 +4,7 @@ using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
-
+using Streetcode.BLL.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication();
@@ -18,6 +18,7 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+builder.Services.ConfigureHealthCheck(builder);
 
 var app = builder.Build();
 var supportedCulture = new[]
@@ -44,6 +45,10 @@ else
 
 await app.ApplyMigrations();
 
+var appUrl = builder.Configuration.GetSection("ApplicationUrls").Get<string[]>();
+app.Urls.Add(appUrl[1]);
+app.MapHealthChecksUI();
+app.UseHealthChecks();
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();

@@ -45,8 +45,8 @@ else
 
 await app.ApplyMigrations();
 
-var appUrl = builder.Configuration.GetSection("ApplicationUrls").Get<string[]>();
-app.Urls.Add(appUrl[1]);
+var appUrl = builder.Configuration.GetValue<string>("HealthCheckUrl");
+app.Urls.Add(appUrl);
 app.MapHealthChecksUI();
 app.UseHealthChecks();
 app.AddCleanAudiosJob();

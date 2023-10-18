@@ -58,8 +58,7 @@ public static class ConfigureHostBuilderExtensions
         {
             options.DefaultConnection = builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
             options.BlobStoragePath = builder.Configuration.GetValue<string>("Blob:BlobStorePath");
-            var urls = builder.Configuration.GetSection("ApplicationUrls").Get<string[]>();
-            options.GlobalUrl = urls[1];
+            options.GlobalUrl = builder.Configuration.GetValue<string>("HealthCheckUrl");
         });
     }
 }

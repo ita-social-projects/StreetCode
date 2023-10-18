@@ -55,6 +55,27 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
+
+                foreach (var slideDto in request.Streetcode.StreetcodeArtSlides)
+                {
+                    var slide = new StreetcodeArtSlide();
+                    slide.Index = slideDto.Index;
+                    slide.Template = slideDto.Template;
+                    foreach (var artDto in slideDto.StreetcodeArts)
+                    {
+                        var art = new StreetcodeArt()
+                        {
+                            StreetcodeArtSlideId = slide.Id,
+                            ArtId = artDto.ArtId,
+                            Index = artDto.Index,
+                        };
+
+                        slide.StreetcodeArts.Add(art);
+                    }
+
+                    streetcode.StreetcodeArtSlides.Add(slide);
+                }
+
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -65,7 +86,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
                 // await AddArts(streetcode, request.Streetcode.Arts);
 
-                await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
+                // await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -204,7 +225,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArtSlides(StreetcodeContent streetcode, IEnumerable<ArtSlideDTO> artSlides)
+    private async Task AddArtSlides(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> artSlides)
     {
         var newArtSldies = new List<StreetcodeArtSlide>();
         foreach (var artSlide in artSlides)

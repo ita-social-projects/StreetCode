@@ -1,4 +1,5 @@
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Media.Art;
 
@@ -9,4 +10,6 @@ public class ArtDTO
     public string? Title { get; set; }
     public int ImageId { get; set; }
     public ImageDTO? Image { get; set; }
+    public ModelState ModelState { get; set; }
+    public bool IsPersisted { get; set; }
 }

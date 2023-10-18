@@ -2,6 +2,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Media.Video;
@@ -12,6 +13,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Create
@@ -43,10 +45,14 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
-        public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
+
+        // public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
+
+        public IEnumerable<ArtSlideDTO> StreetcodeArtSlides { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
         public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
+        public List<ArtDTO> Arts { get; set; }
     }
 }

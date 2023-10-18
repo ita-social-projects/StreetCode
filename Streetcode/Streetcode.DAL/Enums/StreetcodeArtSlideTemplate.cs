@@ -1,6 +1,6 @@
 namespace Streetcode.DAL.Enums;
 
-public enum StreetcodeArtSlide
+public enum StreetcodeArtSlideTemplate
 {
     OneToFourAndFiveToSix = 0,
     OneToTwoAndThreeToFourAndFiveToSix = 1,

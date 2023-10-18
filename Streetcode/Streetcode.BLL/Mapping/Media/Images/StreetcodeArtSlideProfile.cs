@@ -1,4 +1,5 @@
 using AutoMapper;
+using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.DAL.Entities.Streetcode;
 
@@ -8,7 +9,8 @@ public class StreetcodeArtSlideProfile : Profile
 {
     public StreetcodeArtSlideProfile()
     {
-        CreateMap<StreetcodeArtSlide, StreetcodeArtSlideDTO>().ReverseMap();
+        // CreateMap<StreetcodeArtSlide, StreetcodeArtSlideDTO>().ReverseMap();
+        CreateMap<StreetcodeArtSlide, ArtSlideDTO>().ReverseMap();
         CreateMap<StreetcodeArtSlideCreateUpdateDTO, StreetcodeArtSlide>().ReverseMap();
     }
 }

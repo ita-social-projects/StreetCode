@@ -20,6 +20,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
@@ -59,8 +60,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
+                Console.WriteLine("Allright");
                 AddAudio(streetcode, request.Streetcode.AudioId);
-                AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
+
+                // await AddArts(streetcode, request.Streetcode.Arts);
+
+                await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -199,9 +204,33 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private void AddArtSlides(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> arts)
+    private async Task AddArtSlides(StreetcodeContent streetcode, IEnumerable<ArtSlideDTO> artSlides)
     {
-        streetcode.StreetcodeArtSlides.AddRange(_mapper.Map<IEnumerable<StreetcodeArtSlide>>(arts));
+        var newArtSldies = new List<StreetcodeArtSlide>();
+        foreach (var artSlide in artSlides)
+        {
+            var newArtSlide = new StreetcodeArtSlide
+            {
+                StreetcodeId = streetcode.Id,
+                Template = artSlide.Template,
+                Index = artSlide.Index
+            };
+
+            foreach (var art in artSlide.StreetcodeArts)
+            {
+                var newStreetcodeArt = new StreetcodeArt
+                {
+                    ArtId = art.ArtId,
+                    Index = art.Index
+                };
+
+                newArtSlide.StreetcodeArts.Add(newStreetcodeArt);
+            }
+
+            newArtSldies.Add(newArtSlide);
+        }
+
+        streetcode.StreetcodeArtSlides.AddRange(_mapper.Map<IEnumerable<StreetcodeArtSlide>>(artSlides));
     }
 
     private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)

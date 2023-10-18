@@ -15,7 +15,7 @@ public class StreetcodeArtSlide
     public int StreetcodeId { get; set; }
 
     [Required]
-    public Enums.StreetcodeArtSlide Template { get; set; }
+    public Enums.StreetcodeArtSlideTemplate Template { get; set; }
 
     public StreetcodeContent? Streetcode { get; set; }
 

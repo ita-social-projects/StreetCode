@@ -10,7 +10,7 @@ namespace Streetcode.BLL.DTO.Media.Art
         public int Index { get; set; }
         public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
         public int StreetcodeId { get; set; }
-        public StreetcodeArtSlide Template { get; set; }
+        public StreetcodeArtSlideTemplate Template { get; set; }
         public ModelState ModelState { get; set; }
     }
 }

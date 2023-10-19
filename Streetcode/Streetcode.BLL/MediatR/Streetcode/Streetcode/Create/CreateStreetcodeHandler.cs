@@ -56,27 +56,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
 
-                foreach (var slideDto in request.Streetcode.StreetcodeArtSlides)
-                {
-                    var slide = new StreetcodeArtSlide();
-                    slide.Index = slideDto.Index;
-                    slide.Template = slideDto.Template;
-                    foreach (var artDto in slideDto.StreetcodeArts)
-                    {
-                        var art = new StreetcodeArt()
-                        {
-                            StreetcodeArtSlideId = slide.Id,
-                            ArtId = artDto.ArtId,
-                            Index = artDto.Index,
-                        };
-
-                        slide.StreetcodeArts.Add(art);
-                    }
-
-                    streetcode.StreetcodeArtSlides.Add(slide);
-                }
-
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
+                streetcode.Arts = new List<Art>();
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
@@ -84,9 +65,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 Console.WriteLine("Allright");
                 AddAudio(streetcode, request.Streetcode.AudioId);
 
-                // await AddArts(streetcode, request.Streetcode.Arts);
+                await AddArts(streetcode, request.Streetcode.Arts);
 
-                // await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
+                await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -113,6 +94,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex);
                 string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileCreating", ex.Message].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
@@ -252,6 +234,24 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }
 
         streetcode.StreetcodeArtSlides.AddRange(_mapper.Map<IEnumerable<StreetcodeArtSlide>>(artSlides));
+    }
+
+    private async Task AddArts(StreetcodeContent streetcode, IEnumerable<ArtDTO> artDtos)
+    {
+        var newArts = new List<Art>();
+        foreach (var artDto in artDtos)
+        {
+            var newArt = new Art
+            {
+               Description = artDto.Description,
+               Title = artDto.Title,
+               ImageId = artDto.ImageId,
+            };
+
+            newArts.Add(newArt);
+        }
+
+        streetcode.Arts.AddRange(_mapper.Map<IEnumerable<Art>>(newArts));
     }
 
     private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)

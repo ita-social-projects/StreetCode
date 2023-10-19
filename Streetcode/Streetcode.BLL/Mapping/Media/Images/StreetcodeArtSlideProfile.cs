@@ -9,8 +9,8 @@ public class StreetcodeArtSlideProfile : Profile
 {
     public StreetcodeArtSlideProfile()
     {
-        // CreateMap<StreetcodeArtSlide, StreetcodeArtSlideDTO>().ReverseMap();
         CreateMap<StreetcodeArtSlide, ArtSlideDTO>().ReverseMap();
         CreateMap<StreetcodeArtSlideCreateUpdateDTO, StreetcodeArtSlide>().ReverseMap();
+        CreateMap<StreetcodeArtSlideDTO, StreetcodeArtSlide>().ReverseMap();
     }
 }

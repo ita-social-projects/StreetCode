@@ -98,5 +98,5 @@ public class StreetcodeContent
 
     public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
 
-    public List<Art> Arts { get; set; } = new();
+    public List<Art>? Arts { get; set; } = new();
 }

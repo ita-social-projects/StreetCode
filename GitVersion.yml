@@ -1,5 +1,13 @@
 mode: Mainline
-branches: {}
+branches:
+  feature:
+    regex: ^feature?[/-]
+    source-branches: ["master", "main"]
+    tag: feat-{BranchName}
+  fix:
+    regex: bugfix(es)?[/-]
+    source-branches: ["master", "main"]
+    tag: bugfix-{BranchName}
 ignore:
   sha: []
 merge-message-formats: {}

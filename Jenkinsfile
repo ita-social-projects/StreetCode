@@ -10,7 +10,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore'
+                sh 'nuke CompileAPI --configuration Release --no-restore'
             }
         }
         stage('Test') {

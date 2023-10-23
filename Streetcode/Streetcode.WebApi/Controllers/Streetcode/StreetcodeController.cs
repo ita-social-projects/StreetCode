@@ -23,6 +23,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -50,6 +51,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetAllMainPage()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesMainPageQuery()));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize, int shuffleSeed)
+    {
+        return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize, shuffleSeed)));
     }
 
     [HttpGet("{id:int}")]

@@ -209,6 +209,8 @@ public class StreetcodeDbContext : DbContext
 
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
+            entity.HasKey(d => new { d.ArtId, d.StreetcodeArtSlideId });
+
             entity.HasOne(d => d.StreetcodeArtSlide)
                 .WithMany(d => d.StreetcodeArts)
                 .HasForeignKey(d => d.StreetcodeArtSlideId)
@@ -324,6 +326,6 @@ public class StreetcodeDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest;User Id=sa;Password=DBpass2023;MultipleActiveResultSets=true");
+        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest3;User Id=sa;Password=Admin@1234;MultipleActiveResultSets=true");
     }
 }

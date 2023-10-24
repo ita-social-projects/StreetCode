@@ -209,8 +209,6 @@ public class StreetcodeDbContext : DbContext
 
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
-            entity.HasKey(d => new { d.ArtId, d.StreetcodeArtSlideId });
-
             entity.HasOne(d => d.StreetcodeArtSlide)
                 .WithMany(d => d.StreetcodeArts)
                 .HasForeignKey(d => d.StreetcodeArtSlideId)

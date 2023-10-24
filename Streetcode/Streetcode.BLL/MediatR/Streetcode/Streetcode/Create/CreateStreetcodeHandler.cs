@@ -65,9 +65,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 Console.WriteLine("Allright");
                 AddAudio(streetcode, request.Streetcode.AudioId);
 
-                await AddArts(streetcode, request.Streetcode.Arts);
+                // await AddArts(streetcode, request.Streetcode.Arts);
 
-                await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides);
+                await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -207,7 +207,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArtSlides(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> artSlides)
+    private async Task AddArtSlides(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtDTO> arts)
     {
         var newArtSldies = new List<StreetcodeArtSlide>();
         foreach (var artSlide in artSlides)
@@ -216,42 +216,49 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 StreetcodeId = streetcode.Id,
                 Template = artSlide.Template,
-                Index = artSlide.Index
+                Index = artSlide.Index,
             };
-
-            foreach (var art in artSlide.StreetcodeArts)
-            {
-                var newStreetcodeArt = new StreetcodeArt
-                {
-                    ArtId = art.ArtId,
-                    Index = art.Index
-                };
-
-                newArtSlide.StreetcodeArts.Add(newStreetcodeArt);
-            }
 
             newArtSldies.Add(newArtSlide);
         }
 
-        streetcode.StreetcodeArtSlides.AddRange(_mapper.Map<IEnumerable<StreetcodeArtSlide>>(artSlides));
-    }
+        await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSldies);
 
-    private async Task AddArts(StreetcodeContent streetcode, IEnumerable<ArtDTO> artDtos)
-    {
         var newArts = new List<Art>();
-        foreach (var artDto in artDtos)
+        foreach (var art in arts)
         {
             var newArt = new Art
             {
-               Description = artDto.Description,
-               Title = artDto.Title,
-               ImageId = artDto.ImageId,
+                Description = art.Description,
+                Title = art.Title,
+                ImageId = art.ImageId,
             };
 
             newArts.Add(newArt);
         }
 
-        streetcode.Arts.AddRange(_mapper.Map<IEnumerable<Art>>(newArts));
+        await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);
+        await _repositoryWrapper.SaveChangesAsync();
+
+        var artSlidesList = artSlides.ToList();
+        var newStreetcodeArts = new List<StreetcodeArt>();
+        foreach (var artSlide in artSlidesList)
+        {
+            foreach (var streetcodeArt in artSlide.StreetcodeArts)
+            {
+                var newStreetcodeArt = new StreetcodeArt
+                {
+                    Index = streetcodeArt.Index,
+                    ArtId = newArts[streetcodeArt.ArtId - 1].Id,
+                    StreetcodeArtSlideId = newArtSldies[artSlidesList.IndexOf(artSlide)].Id,
+                };
+
+                newStreetcodeArts.Add(newStreetcodeArt);
+            }
+        }
+
+        await _repositoryWrapper.StreetcodeArtRepository.CreateRangeAsync(newStreetcodeArts);
+        await _repositoryWrapper.SaveChangesAsync();
     }
 
     private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)

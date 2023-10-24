@@ -7,14 +7,15 @@ namespace Streetcode.DAL.Entities.Streetcode;
 [Table("streetcode_art", Schema = "streetcode")]
 public class StreetcodeArt
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
     public int Index { get; set; }
 
-    [Required]
     public int StreetcodeArtSlideId { get; set; }
 
     public StreetcodeArtSlide? StreetcodeArtSlide { get; set; }
 
-    [Required]
     public int ArtId { get; set; }
 
     public Art? Art { get; set; }

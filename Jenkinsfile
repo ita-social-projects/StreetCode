@@ -3,6 +3,19 @@ pipeline {
         label 'stage' 
     }
     stages {
+        stage('Branch name'){
+
+            steps{
+                echo "${env.BRANCH_NAME}"
+
+                sh '''
+                    printenv
+
+                '''
+            }
+        }
+
+
         stage('Restore Dependencies') {
             steps {
                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
@@ -38,14 +51,18 @@ pipeline {
         stage('Docker push') {
             steps {
                 script {
-                    Date date = new Date()
-                    env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                        sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
-                        sh "docker push ${username}/streetcode:${env.DATETAG}"
-                    }
+                    // Date date = new Date()
+                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
+                    string imageTag = sh(script: 'docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.6.6 /repo', returnStdout: True)
+                    def gitVersionJson = readJson(text: gitVersion)
+                    String imageTag = gitVersionJson['MajorMinorPatch']
+                    println(imageTag)
+                    // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                        // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                        // sh "docker push ${username}/streetcode:latest"
+                        // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
+                        // sh "docker push ${username}/streetcode:${env.DATETAG}"
+                    // }
                 }
             }
         }

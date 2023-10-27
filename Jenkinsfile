@@ -53,7 +53,7 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    string imageTag = sh(script: 'docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.6.6 /repo', returnStdout: True)
+                    string imageTag = sh(script: 'docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.6.6 /repo', returnStdout: true)
                     def gitVersionJson = readJson(text: gitVersion)
                     String imageTag = gitVersionJson['MajorMinorPatch']
                     println(imageTag)
@@ -67,27 +67,27 @@ pipeline {
             }
         }
     }
-    post {
-        failure {
-            script {
-                def buildStatus = '❌ FAILURE'
-                def buildUrl = env.BUILD_URL
-                def buildDuration = currentBuild.durationString
+    // post {
+    //     failure {
+    //         script {
+    //             def buildStatus = '❌ FAILURE'
+    //             def buildUrl = env.BUILD_URL
+    //             def buildDuration = currentBuild.durationString
     
-                def message = """
-                *Build Status:* ${buildStatus}
-                *Job Name:* ${env.JOB_NAME}
-                *Build Number:* [${env.BUILD_NUMBER}](${buildUrl})
-                *Duration:* ${buildDuration}
-                """
+    //             def message = """
+    //             *Build Status:* ${buildStatus}
+    //             *Job Name:* ${env.JOB_NAME}
+    //             *Build Number:* [${env.BUILD_NUMBER}](${buildUrl})
+    //             *Duration:* ${buildDuration}
+    //             """
     
-                withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
-                                 string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
-                    sh """
-                    curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
-                    """
-                }
-            }
-        }
-    }
+    //             withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
+    //                              string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
+    //                 sh """
+    //                 curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
+    //                 """
+    //             }
+    //         }
+    //     }
+    // }
 }

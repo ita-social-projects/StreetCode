@@ -50,4 +50,27 @@ pipeline {
             }
         }
     }
+    post {
+        failure {
+            script {
+                def buildStatus = '❌ FAILURE'
+                def buildUrl = env.BUILD_URL
+                def buildDuration = currentBuild.durationString
+    
+                def message = """
+                *Build Status:* ${buildStatus}
+                *Job Name:* ${env.JOB_NAME}
+                *Build Number:* [${env.BUILD_NUMBER}](${buildUrl})
+                *Duration:* ${buildDuration}
+                """
+    
+                withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
+                                 string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
+                    sh """
+                    curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
+                    """
+                }
+            }
+        }
+    }
 }

@@ -43,6 +43,8 @@ else
     app.UseHsts();
 }
 
+await app.ApplyMigrations();
+
 app.MapHealthChecksUI();
 app.UseHealthChecks();
 app.AddCleanAudiosJob();

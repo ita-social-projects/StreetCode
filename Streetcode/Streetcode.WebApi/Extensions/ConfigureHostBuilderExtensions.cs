@@ -1,6 +1,5 @@
 ﻿using AspNetCoreRateLimit;
 using Serilog;
-using Streetcode.BLL.HealthChecks;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
@@ -50,15 +49,5 @@ public static class ConfigureHostBuilderExtensions
         builder.Services.AddInMemoryRateLimiting();
         services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
         builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-    }
-
-    public static void ConfigureHealthCheck(this IServiceCollection services, WebApplicationBuilder builder)
-    {
-        services.Configure<HealthChecksOptions>(options =>
-        {
-            options.DefaultConnection = builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection");
-            options.BlobStoragePath = builder.Configuration.GetValue<string>("Blob:BlobStorePath");
-            options.GlobalUrl = builder.Configuration.GetValue<string>("HealthCheckUrl");
-        });
     }
 }

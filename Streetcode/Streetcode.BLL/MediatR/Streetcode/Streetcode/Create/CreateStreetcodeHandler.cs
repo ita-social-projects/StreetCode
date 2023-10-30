@@ -248,6 +248,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var newStreetcodeArt = new StreetcodeArt
                 {
+                    StreetcodeId = streetcode.Id,
                     Index = streetcodeArt.Index,
                     ArtId = newArts[streetcodeArt.ArtId - 1].Id,
                     StreetcodeArtSlideId = newArtSldies[artSlidesList.IndexOf(artSlide)].Id,

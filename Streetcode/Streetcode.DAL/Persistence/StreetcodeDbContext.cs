@@ -209,11 +209,16 @@ public class StreetcodeDbContext : DbContext
 
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
-            entity.HasKey(d => new { d.ArtId, d.StreetcodeArtSlideId });
+            entity.HasKey(d => new { d.Id });
 
             entity.HasOne(d => d.StreetcodeArtSlide)
                 .WithMany(d => d.StreetcodeArts)
                 .HasForeignKey(d => d.StreetcodeArtSlideId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.StreetcodeArts)
+                .HasForeignKey(d => d.StreetcodeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Art)

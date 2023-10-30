@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230908082639_AddStreetcodeArtSlide_TemplateColumn")]
-    partial class AddStreetcodeArtSlide_TemplateColumn
+    [Migration("20231030073954_AddStreetcodeArtSlides")]
+    partial class AddStreetcodeArtSlides
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,6 +172,37 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("responses", "feedback");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Jobs.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Salary")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(65)
+                        .HasColumnType("nvarchar(65)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("job", "jobs");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
                 {
                     b.Property<int>("Id")
@@ -214,6 +245,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StreetcodeContentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -222,6 +256,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("ImageId")
                         .IsUnique();
+
+                    b.HasIndex("StreetcodeContentId");
 
                     b.ToTable("arts", "media");
                 });
@@ -511,14 +547,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("StreetcodeArtSlideId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<int>("Index")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.HasKey("ArtId", "StreetcodeArtSlideId");
 
                     b.HasIndex("StreetcodeArtSlideId");
+
+                    b.HasIndex("StreetcodeId");
 
                     b.HasIndex("ArtId", "StreetcodeArtSlideId");
 
@@ -776,18 +823,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -1151,6 +1194,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
+                        .WithMany("Arts")
+                        .HasForeignKey("StreetcodeContentId");
+
                     b.Navigation("Image");
                 });
 
@@ -1308,7 +1355,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeArts")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Art");
+
+                    b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeArtSlide");
                 });
@@ -1546,6 +1601,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
+                    b.Navigation("Arts");
+
                     b.Navigation("Coordinates");
 
                     b.Navigation("Facts");
@@ -1555,6 +1612,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("StatisticRecords");
 
                     b.Navigation("StreetcodeArtSlides");
+
+                    b.Navigation("StreetcodeArts");
 
                     b.Navigation("StreetcodeCategoryContents");
 

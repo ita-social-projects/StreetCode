@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -39,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
             var streetcodeArts = await _repositoryWrapper
                 .StreetcodeArtRepository
                 .GetAllAsync(
-                    predicate: sArt => sArt.StreetcodeArtSlide.StreetcodeId == request.StreetcodeId,
+                    predicate: sArt => sArt.StreetcodeId == request.StreetcodeId,
                     include: sArt => sArt
                         .Include(a => a.Art)
                         .Include(i => i.Art.Image) !);

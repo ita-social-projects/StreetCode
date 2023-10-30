@@ -11,12 +11,11 @@ public class StreetcodeArt
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public int Index { get; set; }
-
-    public int StreetcodeArtSlideId { get; set; }
-
-    public StreetcodeArtSlide? StreetcodeArtSlide { get; set; }
-
+    public int StreetcodeId { get; set; }
+    public int? StreetcodeArtSlideId { get; set; }
     public int ArtId { get; set; }
 
     public Art? Art { get; set; }
+    public StreetcodeArtSlide? StreetcodeArtSlide { get; set; }
+    public StreetcodeContent? Streetcode { get; set; }
 }

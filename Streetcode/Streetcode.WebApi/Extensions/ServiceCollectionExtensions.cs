@@ -30,7 +30,7 @@ using Streetcode.BLL.Services.CacheService;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Services.ImageService;
-using Streetcode.BLL.HealthChecks;
+
 namespace Streetcode.WebApi.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -59,11 +59,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddScoped<ITextService, AddTermsToTextService>();
-        services.AddHealthChecks()
-            .AddCheck<StartUpHealthChecks>("StartupProbe")
-            .AddCheck<ReadinessHealthChecks>("ReadinessProbe")
-            .AddCheck<LivenessHealthChecks>("LivenessProbe");
-        services.AddHealthChecksUI().AddInMemoryStorage();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

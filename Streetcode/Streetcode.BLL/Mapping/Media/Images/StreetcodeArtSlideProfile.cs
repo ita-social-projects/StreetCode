@@ -11,6 +11,8 @@ public class StreetcodeArtSlideProfile : Profile
     {
         CreateMap<StreetcodeArtSlide, ArtSlideDTO>().ReverseMap();
         CreateMap<StreetcodeArtSlideCreateUpdateDTO, StreetcodeArtSlide>().ReverseMap();
-        CreateMap<StreetcodeArtSlideDTO, StreetcodeArtSlide>().ReverseMap();
+        CreateMap<StreetcodeArtSlideDTO, StreetcodeArtSlide>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SlideId))
+            .ReverseMap();
     }
 }

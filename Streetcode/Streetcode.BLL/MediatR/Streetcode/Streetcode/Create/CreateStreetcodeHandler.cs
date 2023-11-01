@@ -62,10 +62,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
-                Console.WriteLine("Allright");
                 AddAudio(streetcode, request.Streetcode.AudioId);
-
-                // await AddArts(streetcode, request.Streetcode.Arts);
 
                 await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
@@ -232,6 +229,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 Description = art.Description,
                 Title = art.Title,
                 ImageId = art.ImageId,
+                StreetcodeContentId = streetcode.Id
             };
 
             newArts.Add(newArt);

@@ -1,9 +1,10 @@
 using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Media.Art;
 
-public class ArtDTO
+public class ArtDTO : IModelState
 {
     public int Id { get; set; }
     public string? Description { get; set; }

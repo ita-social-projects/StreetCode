@@ -296,7 +296,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.StreetcodeArtSlideRepository.DeleteRange(_repositoryWrapper.StreetcodeArtSlideRepository.FindAll(slide => slide.StreetcodeId == artSlides.First().StreetcodeId));
             await _repositoryWrapper.SaveChangesAsync();
 
-            var newArtSldies = new List<StreetcodeArtSlide>();
+            var newArtSlides = new List<StreetcodeArtSlide>();
             foreach (var artSlide in artSlides)
             {
                 var newArtSlide = new StreetcodeArtSlide
@@ -306,15 +306,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     Index = artSlide.Index,
                 };
 
-                newArtSldies.Add(newArtSlide);
+                newArtSlides.Add(newArtSlide);
             }
 
-            await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSldies);
+            await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSlides);
             await _repositoryWrapper.SaveChangesAsync();
 
-            var artSlidesList = artSlides.ToList();
             var newStreetcodeArts = new List<StreetcodeArt>();
-            foreach (var artSlide in artSlidesList)
+            foreach (var artSlide in newArtSlides)
             {
                 foreach (var streetcodeArt in artSlide.StreetcodeArts)
                 {
@@ -324,7 +323,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         {
                             Index = streetcodeArt.Index,
                             ArtId = toCreateList[oldIds.IndexOf(streetcodeArt.ArtId - 1)].Id,
-                            StreetcodeArtSlideId = newArtSldies[artSlidesList.IndexOf(artSlide)].Id,
+                            StreetcodeArtSlideId = newArtSlides[newArtSlides.IndexOf(artSlide)].Id,
                             StreetcodeId = streetcode.Id
                         };
                         newStreetcodeArts.Add(newStreetcodeArt);
@@ -335,7 +334,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         {
                             Index = streetcodeArt.Index,
                             ArtId = streetcodeArt.ArtId,
-                            StreetcodeArtSlideId = newArtSldies[artSlidesList.IndexOf(artSlide)].Id,
+                            StreetcodeArtSlideId = newArtSlides[newArtSlides.IndexOf(artSlide)].Id,
                             StreetcodeId = streetcode.Id
                         };
                         newStreetcodeArts.Add(newStreetcodeArt);

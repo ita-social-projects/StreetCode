@@ -94,7 +94,7 @@ public class StreetcodeContent
 
     public List<Partner> Partners { get; set; } = new ();
 
-    public List<StreetcodeArtSlide> StreetcodeArtSlides { get; set; } = new ();
+    public List<StreetcodeArtSlide>? StreetcodeArtSlides { get; set; } = new ();
 
     public List<StreetcodeArt> StreetcodeArts { get; set; } = new ();
 

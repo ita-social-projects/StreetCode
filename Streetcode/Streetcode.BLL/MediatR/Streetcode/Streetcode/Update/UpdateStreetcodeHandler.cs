@@ -288,7 +288,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     Index = artSlide.Index,
                     StreetcodeId = streetcode.Id,
-                    Streetcode = streetcode,
                     Template = artSlide.Template
                 };
 

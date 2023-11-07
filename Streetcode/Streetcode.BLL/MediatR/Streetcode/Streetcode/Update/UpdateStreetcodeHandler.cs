@@ -71,9 +71,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateImagesAsync(request.Streetcode.Images);
 
                     await UpdateFactsDescription(request.Streetcode.ImagesDetails);
-                    var deleteTransactionLinks =
-                        _repositoryWrapper.TransactLinksRepository.FindAll(t =>
-                            t.StreetcodeId == streetcodeToUpdate.Id);
+                    var deleteTransactionLinks = _repositoryWrapper.TransactLinksRepository.FindAll(t => t.StreetcodeId == streetcodeToUpdate.Id);
                     _repositoryWrapper.TransactLinksRepository.DeleteRange(deleteTransactionLinks);
                     if (request.Streetcode.Text != null)
                     {

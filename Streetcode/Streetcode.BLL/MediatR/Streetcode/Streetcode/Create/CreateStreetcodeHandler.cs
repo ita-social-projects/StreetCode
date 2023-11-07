@@ -63,10 +63,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
                 AddAudio(streetcode, request.Streetcode.AudioId);
-
                 await AddArtSlides(streetcode, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
-
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
                 await AddPartners(streetcode, request.Streetcode.Partners);
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
@@ -91,7 +89,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
                 string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileCreating", ex.Message].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));

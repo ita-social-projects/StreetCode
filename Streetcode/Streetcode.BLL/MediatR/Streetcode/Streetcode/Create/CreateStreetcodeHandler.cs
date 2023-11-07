@@ -229,7 +229,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 Description = art.Description,
                 Title = art.Title,
                 ImageId = art.ImageId,
-                StreetcodeContentId = streetcode.Id
+                StreetcodeId = streetcode.Id
             };
 
             newArts.Add(newArt);

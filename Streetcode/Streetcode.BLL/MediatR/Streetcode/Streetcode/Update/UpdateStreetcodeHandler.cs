@@ -253,7 +253,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     Description = art.Description,
                     ImageId = art.ImageId,
-                    StreetcodeContentId = streetcode.Id,
+                    StreetcodeId = streetcode.Id,
                     Title = art.Title
                 };
                 if (art.ModelState == ModelState.Created)
@@ -290,6 +290,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     Index = artSlide.Index,
                     StreetcodeId = streetcode.Id,
+                    Streetcode = streetcode,
                     Template = artSlide.Template
                 };
 

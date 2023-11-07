@@ -207,6 +207,19 @@ public class StreetcodeDbContext : DbContext
                 .HasDefaultValue(1);
         });
 
+        modelBuilder.Entity<Art>(entity =>
+        {
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.Arts)
+                .HasForeignKey(d => d.StreetcodeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Image)
+                .WithOne(d => d.Art)
+                .HasForeignKey<Art>(d => d.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
             entity.HasKey(d => new { d.Id });
@@ -216,15 +229,10 @@ public class StreetcodeDbContext : DbContext
                 .HasForeignKey(d => d.StreetcodeArtSlideId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(d => d.Streetcode)
-                .WithMany(d => d.StreetcodeArts)
-                .HasForeignKey(d => d.StreetcodeId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             entity.HasOne(d => d.Art)
                 .WithMany(d => d.StreetcodeArts)
                 .HasForeignKey(d => d.ArtId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             entity.Property(e => e.Index)
                 .HasDefaultValue(1);
@@ -331,6 +339,6 @@ public class StreetcodeDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest3;User Id=sa;Password=Admin@1234;MultipleActiveResultSets=true");
+        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=MigrationTest3;User Id=sa;Password=Admin@1234;MultipleActiveResultSets=true");
     }
 }

@@ -13,9 +13,8 @@ public class StreetcodeArt
     public int Index { get; set; }
     public int? StreetcodeArtSlideId { get; set; }
     public int ArtId { get; set; }
-
+    public int? StreetcodeId { get; set; }
     public Art? Art { get; set; }
     public StreetcodeArtSlide? StreetcodeArtSlide { get; set; }
     public StreetcodeContent? Streetcode { get; set; }
-    public int? StreetcodeId { get; set; }
 }

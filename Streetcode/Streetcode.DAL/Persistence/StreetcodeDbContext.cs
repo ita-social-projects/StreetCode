@@ -339,6 +339,6 @@ public class StreetcodeDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=MigrationTest3;User Id=sa;Password=Admin@1234;MultipleActiveResultSets=true");
+        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest;User Id=sa;Password=DBpass2023;MultipleActiveResultSets=true");
     }
 }

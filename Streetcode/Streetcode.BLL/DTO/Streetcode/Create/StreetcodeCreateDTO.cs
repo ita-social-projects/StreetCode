@@ -45,15 +45,11 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
-
         public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
-
-        // public IEnumerable<ArtSlideDTO> StreetcodeArtSlides { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
         public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
-
         public List<ArtDTO> Arts { get; set; }
     }
 }

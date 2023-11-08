@@ -84,7 +84,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
             {
                 if (fact.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) || fact.FactContent.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
                 {
-                    results.Add(CreateFilterResult(fact.Streetcode, fact.Title, "Wow-факти", "wow-facts"));
+                    results.Add(CreateFilterResult(fact.Streetcode, fact.Title, "Wow-факти", "wow-facts", factId: fact.Id));
                 }
             }
 
@@ -95,7 +95,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 if (timelineItem.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
                     || (!string.IsNullOrEmpty(timelineItem.Description) && timelineItem.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)))
                 {
-                    results.Add(CreateFilterResult(timelineItem.Streetcode, timelineItem.Title, "Хронологія", "timeline"));
+                    results.Add(CreateFilterResult(timelineItem.Streetcode, timelineItem.Title, "Хронологія", "timeline", timelineItemId: timelineItem.Id));
                 }
             }
 
@@ -121,7 +121,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
             return results;
         }
 
-        private StreetcodeFilterResultDTO CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null)
+        private StreetcodeFilterResultDTO CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null, int factId = 0, int timelineItemId = 0)
         {
             return new StreetcodeFilterResultDTO
             {
@@ -131,6 +131,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 BlockName = blockName,
                 Content = content,
                 SourceName = sourceName,
+                FactId = factId,
+                TimelineItemId = timelineItemId,
             };
         }
     }

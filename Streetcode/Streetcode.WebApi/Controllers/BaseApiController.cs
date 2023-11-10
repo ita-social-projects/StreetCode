@@ -34,7 +34,7 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
-                NotFound(_stringLocalizer["NotFound"].Value) : Ok(result.Value);
+                NotFound(_stringLocalizer?["NotFound"].Value) : Ok(result.Value);
         }
 
         foreach (var item in result.Reasons)
@@ -46,5 +46,5 @@ public class BaseApiController : ControllerBase
         }
 
         return BadRequest(result.Reasons);
-    }
+    } 
 }

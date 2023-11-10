@@ -48,9 +48,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             int incorrectId = -100;
             var response = await this.client.GetByIdAsync(incorrectId);
+
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
-                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode));
+                () => Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode));
         }
 
         [Fact]

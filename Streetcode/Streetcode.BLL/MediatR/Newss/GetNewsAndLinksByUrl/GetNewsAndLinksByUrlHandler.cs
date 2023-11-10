@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             {
                 string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                return Result.Ok();
             }
 
             if (newsDTO.Image is not null)
@@ -95,7 +95,6 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             {
                 string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
             }
 
             return Result.Ok(newsDTOWithUrls);

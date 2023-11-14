@@ -51,7 +51,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
-                () => Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode));
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode));
         }
 
         [Fact]

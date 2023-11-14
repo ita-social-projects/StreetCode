@@ -34,7 +34,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
                 t => t.StreetcodeId == request.StreetcodeId,
                 include: q => q.Include(t => t.Tag));
 
-        if (tagIndexed is null || !tagIndexed.Any())
+        if (tagIndexed is null)
         {
             string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

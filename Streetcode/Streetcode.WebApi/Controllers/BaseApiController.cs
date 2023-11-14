@@ -34,15 +34,7 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
-                NotFound(_stringLocalizer["NotFound"].Value) : Ok(result.Value);
-        }
-
-        foreach (var item in result.Reasons)
-        {
-            if (item.Message.Contains(_stringLocalizer?["NotFound"].Value))
-            {
-                return Ok();
-            }
+                NotFound("Not Found") : Ok(result.Value);
         }
 
         return BadRequest(result.Reasons);

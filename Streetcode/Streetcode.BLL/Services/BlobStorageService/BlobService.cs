@@ -61,7 +61,7 @@ public class BlobService : IBlobService
 
     public void SaveFileInStorageBase64(string base64, string name, string extension)
     {
-        byte[] imageBytes = Convert.FromBase64String(base64);
+        byte[] imageBytes = Convert.FromBase64String(base64.Trim());
         Directory.CreateDirectory(_blobPath);
         EncryptFile(imageBytes, extension, name);
     }

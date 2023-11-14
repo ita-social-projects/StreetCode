@@ -50,7 +50,7 @@
             var response = await client.GetByIdAsync(incorrectId);
 
             Assert.Multiple(
-                () => Assert.Equal(System.Net.HttpStatusCode.InternalServerError, response.StatusCode),
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
@@ -74,7 +74,7 @@
             var response = await client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
-                () => Assert.Equal(System.Net.HttpStatusCode.InternalServerError, response.StatusCode),
+                () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
@@ -101,7 +101,7 @@
             var response = await client.GetResponse($"/GetTagByTitle/{title}");
 
             Assert.Multiple(
-              () => Assert.Equal(System.Net.HttpStatusCode.InternalServerError, response.StatusCode),
+              () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
               () => Assert.False(response.IsSuccessStatusCode));
         }
     }

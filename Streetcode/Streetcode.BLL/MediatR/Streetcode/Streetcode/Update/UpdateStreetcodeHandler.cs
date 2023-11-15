@@ -22,6 +22,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.Interfaces.Cache;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.Transactions;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
@@ -247,13 +248,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var oldArtIds = new List<int>();
             foreach (var art in arts)
             {
-                var newArt = new Art
-                {
-                    Description = art.Description,
-                    ImageId = art.ImageId,
-                    StreetcodeId = streetcode.Id,
-                    Title = art.Title
-                };
+                var newArt = _mapper.Map<Art>(art);
+                newArt.StreetcodeId = streetcode.Id;
+
                 if (art.ModelState == ModelState.Created)
                 {
                     oldArtIds.Add(art.Id);
@@ -281,59 +278,21 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             var toCreateSlides = new List<StreetcodeArtSlide>();
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
+
             var toCreateStreetcodeArts = new List<StreetcodeArt>();
             foreach (var artSlide in artSlides)
             {
-                var newArtSlide = new StreetcodeArtSlide
-                {
-                    Index = artSlide.Index,
-                    StreetcodeId = streetcode.Id,
-                    Template = artSlide.Template
-                };
+                var newArtSlide = _mapper.Map<StreetcodeArtSlide>(artSlide);
+                newArtSlide.StreetcodeId = streetcode.Id;
+                newArtSlide.StreetcodeArts = null;
 
-                var streetcodeArts = new List<StreetcodeArt>();
-                foreach (var art in artSlide.StreetcodeArts)
-                {
-                    var newArt = new StreetcodeArt()
-                    {
-                        Index = art.Index,
-                        StreetcodeId = streetcode.Id,
-                    };
-                    if (oldArtIds.Contains(art.ArtId))
-                    {
-                        newArt.ArtId = toCreateArts[oldArtIds.IndexOf(art.ArtId)].Id;
-                    }
-                    else
-                    {
-                        newArt.ArtId = art.ArtId;
-                    }
+                var newStreetcodeArts =
+                    GetStreetcodeArtsWithNewArtsId(streetcode.Id, oldArtIds, artSlide, toCreateArts);
 
-                    streetcodeArts.Add(newArt);
-                }
-
-                if (artSlide.ModelState == ModelState.Created)
-                {
-                    toCreateSlides.Add(newArtSlide);
-                    newArtSlide.StreetcodeArts = streetcodeArts;
-                }
-                else
-                {
-                    newArtSlide.Id = artSlide.SlideId;
-                    if (artSlide.ModelState == ModelState.Deleted)
-                    {
-                        toDeleteSlides.Add(newArtSlide);
-                    }
-                    else if (artSlide.ModelState == ModelState.Updated)
-                    {
-                        toUpdateSlides.Add(newArtSlide);
-                        foreach (var streetcodeArt in streetcodeArts)
-                        {
-                            streetcodeArt.StreetcodeArtSlideId = artSlide.SlideId;
-                            toCreateStreetcodeArts.Add(streetcodeArt);
-                        }
-                    }
-                }
+                DistributeArtSlide(artSlide, newArtSlide, newStreetcodeArts, ref toCreateSlides, ref toUpdateSlides, ref toDeleteSlides, ref toCreateStreetcodeArts);
             }
+
+            toCreateStreetcodeArts = CreateStreetcodeHandler.CreateStreetcodeArtsForUnusedArts(streetcode.Id, toCreateArts.Concat(toUpdateArts).ToList(), toCreateStreetcodeArts);
 
             await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(toCreateSlides);
             _repositoryWrapper.StreetcodeArtSlideRepository.DeleteRange(toDeleteSlides);
@@ -377,6 +336,54 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
 
             return (toUpdate, toCreate, toDelete);
+        }
+
+        private List<StreetcodeArt> GetStreetcodeArtsWithNewArtsId(int streetcodeId, List<int> oldArtIds, StreetcodeArtSlideCreateUpdateDTO streetcodeArtSlide, List<Art> toCreateArts)
+        {
+            var newStreetcodeArts = new List<StreetcodeArt>();
+            foreach (var art in streetcodeArtSlide.StreetcodeArts)
+            {
+                var newArt = _mapper.Map<StreetcodeArt>(art);
+                newArt.StreetcodeId = streetcodeId;
+
+                if (oldArtIds.Contains(art.ArtId))
+                {
+                    newArt.ArtId = toCreateArts[oldArtIds.IndexOf(art.ArtId)].Id;
+                }
+                else
+                {
+                    newArt.ArtId = art.ArtId;
+                }
+
+                newStreetcodeArts.Add(newArt);
+            }
+
+            return newStreetcodeArts;
+        }
+
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref List<StreetcodeArtSlide> toCreateSlides, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        {
+            if (artSlideDto.ModelState == ModelState.Created)
+            {
+                toCreateSlides.Add(artSlide);
+            }
+            else
+            {
+                artSlide.Id = artSlideDto.SlideId;
+                if (artSlideDto.ModelState == ModelState.Deleted)
+                {
+                    toDeleteSlides.Add(artSlide);
+                }
+                else if (artSlideDto.ModelState == ModelState.Updated)
+                {
+                    toUpdateSlides.Add(artSlide);
+                    foreach (var streetcodeArt in newStreetcodeArts)
+                    {
+                        streetcodeArt.StreetcodeArtSlideId = artSlideDto.SlideId;
+                        toCreateStreetcodeArts.Add(streetcodeArt);
+                    }
+                }
+            }
         }
     }
 }

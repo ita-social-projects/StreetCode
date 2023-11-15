@@ -336,9 +336,4 @@ public class StreetcodeDbContext : DbContext
             .HasValue<StreetcodeCoordinate>("coordinate_streetcode")
             .HasValue<ToponymCoordinate>("coordinate_toponym");
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=StreetcodeDbTest;User Id=sa;Password=DBpass2023;MultipleActiveResultSets=true");
-    }
 }

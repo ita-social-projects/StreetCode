@@ -53,7 +53,7 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    string imageTag = sh(script: 'docker run --rm -v "$(pwd):/repo" gittools/gitversion:5.6.6 /repo', returnStdout: true)
+                    string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
                     def gitVersionJson = readJson(text: gitVersion)
                     String imageTag = gitVersionJson['MajorMinorPatch']
                     println(imageTag)

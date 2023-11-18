@@ -34,9 +34,10 @@ public class BaseApiController : ControllerBase
             }
 
             return (result.Value is null) ?
+
                 NotFound("Not Found") : Ok(result.Value);
         }
 
         return BadRequest(result.Reasons);
-    }
+    } 
 }

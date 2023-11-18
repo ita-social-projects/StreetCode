@@ -54,10 +54,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         [Fact]
         [ExtractTestStreetcode]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
+        public async Task GetArtsByStreetcodeId_ReturnSuccessStatusCode()
         {
             int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetArtsByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -65,11 +65,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        public async Task GetByStreetcodeId_Incorrect_BadResult()
+        public async Task GetArtsByStreetcodeId_Incorrect_BadResult()
         {
             int streetcodeId = -100;
 
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetArtsByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                           () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),

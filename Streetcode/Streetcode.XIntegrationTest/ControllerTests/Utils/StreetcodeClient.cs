@@ -31,6 +31,11 @@
             return await this.GetResponse($"/getByStreetcodeId/{id}");
         }
 
+        public async Task<RestResponse> GetArtsByStreetcodeId(int id)
+        {
+            return await this.GetResponse($"/getArtsByStreetcodeId/{id}");
+        }
+
         public async Task<RestResponse> GetResponse(string requestString)
         {
             var request = new RestRequest($"{this.SecondPartUrl}{requestString}");

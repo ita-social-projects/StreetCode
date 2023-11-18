@@ -59,6 +59,7 @@
         [ExtractTestTag]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
+            StreetcodeTagIndexSetup.Setup(ExtractTestStreetcode.StreetcodeForTest, ExtractTestTag.TagForTest);
             int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);

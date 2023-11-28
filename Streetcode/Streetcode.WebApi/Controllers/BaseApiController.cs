@@ -46,5 +46,5 @@ public class BaseApiController : ControllerBase
         }
 
         return BadRequest(result.Reasons);
-    } 
+    }
 }

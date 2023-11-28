@@ -1,8 +1,6 @@
-﻿using System.Resources;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
@@ -11,12 +9,7 @@ namespace Streetcode.WebApi.Controllers;
 [Route("api/[controller]/[action]")]
 public class BaseApiController : ControllerBase
 {
-    private readonly IStringLocalizer _stringLocalizer;
     private IMediator? _mediator;
-    public BaseApiController(IStringLocalizer<BaseApiController> stringLocalizer)
-    {
-        _stringLocalizer = stringLocalizer;
-    }
 
     public BaseApiController()
     {
@@ -28,7 +21,7 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            if(result is NullResult<T>)
+            if (result is NullResult<T>)
             {
                 return Ok(result.Value);
             }
@@ -39,5 +32,5 @@ public class BaseApiController : ControllerBase
         }
 
         return BadRequest(result.Reasons);
-    } 
+    }
 }

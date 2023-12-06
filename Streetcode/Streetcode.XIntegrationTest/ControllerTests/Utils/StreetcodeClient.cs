@@ -1,7 +1,9 @@
 ﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
+    using global::Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
     using RestSharp;
     using RestSharp.Serializers;
+    using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
     using System.Threading.Tasks;
 
     public class StreetcodeClient
@@ -45,5 +47,12 @@
             return returns;
         }
 
+        public async Task<RestResponse> UpdateAsync(UpdateStreetcodeCommand updateStreetcodeCommand)
+        {
+            var request = new RestRequest($"{this.SecondPartUrl}/Update", Method.Put);
+            request.AddJsonBody(updateStreetcodeCommand);
+            var response = await this.Client.ExecuteAsync(request);
+            return response;
+        }
     }
 }

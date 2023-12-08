@@ -28,6 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     Alias = "dsf",
                     Title = "Title",
                     TransliterationUrl = Guid.NewGuid().ToString(),
+                    Teaser = "Test Teaser",
                 });
                 sqlDbHelper.SaveChanges();
             }

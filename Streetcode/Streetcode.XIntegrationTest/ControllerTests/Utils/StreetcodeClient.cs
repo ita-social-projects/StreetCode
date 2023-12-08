@@ -1,10 +1,9 @@
 ﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
+    using System.Threading.Tasks;
     using global::Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
     using RestSharp;
     using RestSharp.Serializers;
-    using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
-    using System.Threading.Tasks;
 
     public class StreetcodeClient
     {

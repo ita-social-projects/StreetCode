@@ -1,4 +1,7 @@
-﻿using Streetcode.XIntegrationTest.ControllerTests.Utils;
+﻿using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using System;
 using System.Collections.Generic;
@@ -18,8 +21,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
 
         }
 
-        //[Fact]
-        //[ExtractTestStreetcode]
-        //{
+        [Fact]
+        [ExtractTestStreetcode]
+        public async Task Update_ReturnSuccessStatusCode()
+        {
+            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
+
+            var updateStreetcodeCommand = new UpdateStreetcodeCommand
+            {
+                Streetcode = new StreetcodeUpdateDTO
+                {
+                    Id = expectedStreetcode.Id,
+                    Title = "New Title",
+                    TransliterationUrl = "new-transliteration-url",
+                }
+            };
+        }
     }
 }

@@ -36,8 +36,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
         public override void After(MethodInfo methodUnderTest)
         {
             var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-            StreetcodeForTest.Title = "Updated Title";
-            StreetcodeForTest.TransliterationUrl = "updated-transliteration-url";
+            sqlDbHelper.RemoveRange<StreetcodeContent>();
             sqlDbHelper.SaveChanges();
         }
     }

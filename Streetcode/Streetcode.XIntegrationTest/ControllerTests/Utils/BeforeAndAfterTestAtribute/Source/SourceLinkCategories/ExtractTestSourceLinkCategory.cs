@@ -1,18 +1,12 @@
-﻿using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Sources;
+﻿using Streetcode.DAL.Entities.Sources;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Image;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Source.SourceLinkCategories
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestSourceLinkCategory:BeforeAfterTestAttribute
+    internal class ExtractTestSourceLinkCategory : BeforeAfterTestAttribute
     {
         public static SourceLinkCategory SourceLinkCategoryForTest;
 

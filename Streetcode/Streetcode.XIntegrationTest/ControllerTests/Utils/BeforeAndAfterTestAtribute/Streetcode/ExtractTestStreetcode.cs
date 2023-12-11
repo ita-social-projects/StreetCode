@@ -1,5 +1,4 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.Streetcode;
+﻿using Streetcode.DAL.Entities.Streetcode;
 using System.Reflection;
 using Xunit.Sdk;
 

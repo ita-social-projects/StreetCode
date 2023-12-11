@@ -1,19 +1,18 @@
-﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
-{
-    using System.Threading.Tasks;
-    using global::Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
-    using RestSharp;
-    using RestSharp.Serializers;
+﻿using RestSharp;
+using RestSharp.Serializers;
+using Streetcode.BLL.DTO.Streetcode.Update;
 
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils
+{
     public class StreetcodeClient
     {
         protected RestClient Client;
 
         public string SecondPartUrl { get; }
 
-      public StreetcodeClient(HttpClient client, string secondPartUrl = "")
+        public StreetcodeClient(HttpClient client, string secondPartUrl = "")
         {
-            this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
+            this.Client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
 
@@ -46,10 +45,12 @@
             return returns;
         }
 
-        public async Task<RestResponse> UpdateAsync(UpdateStreetcodeCommand updateStreetcodeCommand)
+        public async Task<RestResponse> UpdateAsync(StreetcodeUpdateDTO updateStreetcodeDTO)
         {
             var request = new RestRequest($"{this.SecondPartUrl}/Update", Method.Put);
-            request.AddJsonBody(updateStreetcodeCommand);
+            request.AddJsonBody(updateStreetcodeDTO);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            request.AddHeader("content-type", "application/json");
             var response = await this.Client.ExecuteAsync(request);
             return response;
         }

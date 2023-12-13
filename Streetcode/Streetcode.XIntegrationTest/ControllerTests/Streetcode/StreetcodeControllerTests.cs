@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
@@ -13,6 +12,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
@@ -52,12 +52,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             await this.client.UpdateAsync(updateStreetCodeDTO);
 
             var responseGetByIdUpdated = await client.GetByIdAsync(expectedStreetcode.Id);
-            var responseContent = JsonConvert.DeserializeObject<StreetcodeContent>(responseGetByIdUpdated.Content);
-
+            var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);
             Assert.Multiple(() =>
             {
-                Assert.Equal(updateStreetCodeDTO.Title, responseContent.Title);
-                Assert.Equal(updateStreetCodeDTO.TransliterationUrl, responseContent.TransliterationUrl);
+                Assert.Equal(updateStreetCodeDTO.Title, streetCodeContent.Title);
+                Assert.Equal(updateStreetCodeDTO.TransliterationUrl, streetCodeContent.TransliterationUrl);
             });
         }
 
@@ -79,7 +78,32 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         {
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
             var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
-            updateStreetCodeDTO.Title = String.IsNullOrEmpty; // Invalid data
+            updateStreetCodeDTO.Title = null; // Invalid data
+            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractTestStreetcode]
+        public async Task Update_WithInvalidTags_ReturnsBadRequest()
+        {
+            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
+            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+
+            // Invalid tag data
+            updateStreetCodeDTO.Tags = new List<StreetcodeTagUpdateDTO>
+                    {
+                        new StreetcodeTagUpdateDTO
+                        {
+                            Id = 9999, // Non-existent tag ID
+                            Title = "Invalid Tag",
+                            IsVisible = true,
+                            Index = 0,
+                            StreetcodeId = expectedStreetcode.Id,
+                            ModelState = ModelState.Updated
+                        },
+                    };
+
             var response = await this.client.UpdateAsync(updateStreetCodeDTO);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

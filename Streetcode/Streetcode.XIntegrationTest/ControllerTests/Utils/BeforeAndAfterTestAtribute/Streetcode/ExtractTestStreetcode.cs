@@ -36,8 +36,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
         public override void After(MethodInfo methodUnderTest)
         {
             var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-            sqlDbHelper.RemoveRange<StreetcodeContent>();
-            sqlDbHelper.SaveChanges();
+            var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>();
+            if (streetcodeContent != null)
+            {
+                // Restore the original StreetcodeContent
+                streetcodeContent.EventStartOrPersonBirthDate = StreetcodeForTest.EventStartOrPersonBirthDate;
+                streetcodeContent.EventEndOrPersonDeathDate = StreetcodeForTest.EventEndOrPersonDeathDate;
+                streetcodeContent.ViewCount = StreetcodeForTest.ViewCount;
+                streetcodeContent.DateString = StreetcodeForTest.DateString;
+                streetcodeContent.Alias = StreetcodeForTest.Alias;
+                streetcodeContent.Title = StreetcodeForTest.Title;
+                streetcodeContent.TransliterationUrl = StreetcodeForTest.TransliterationUrl;
+                streetcodeContent.Teaser = StreetcodeForTest.Teaser;
+
+                sqlDbHelper.SaveChanges();
+            }
         }
     }
 }

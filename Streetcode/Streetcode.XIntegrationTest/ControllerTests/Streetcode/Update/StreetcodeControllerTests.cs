@@ -19,7 +19,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribu
 using System.Net;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
+namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
 {
     public class StreetcodeControllerTests :
         BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
@@ -36,8 +36,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         {
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
 
-            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
-            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            var response = await client.UpdateAsync(updateStreetCodeDTO);
 
             Assert.True(response.IsSuccessStatusCode);
         }
@@ -48,8 +48,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         {
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
 
-            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
-            await this.client.UpdateAsync(updateStreetCodeDTO);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            await client.UpdateAsync(updateStreetCodeDTO);
 
             var responseGetByIdUpdated = await client.GetByIdAsync(expectedStreetcode.Id);
             var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);
@@ -66,8 +66,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         {
 
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id + 1);
-            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id + 1);
+            var response = await client.UpdateAsync(updateStreetCodeDTO);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -77,9 +77,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public async Task Update_WithInvalidData_ReturnsBadRequest()
         {
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
             updateStreetCodeDTO.Title = null; // Invalid data
-            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
@@ -88,7 +88,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public async Task Update_WithInvalidTags_ReturnsBadRequest()
         {
             StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = this.CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
 
             // Invalid tag data
             updateStreetCodeDTO.Tags = new List<StreetcodeTagUpdateDTO>
@@ -104,7 +104,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
                         },
                     };
 
-            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 

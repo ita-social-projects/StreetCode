@@ -1,0 +1,75 @@
+﻿using AutoMapper;
+using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
+using System.Reflection;
+using Xunit.Sdk;
+
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
+{
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    class ExtractCreateTestStreetcode : BeforeAfterTestAttribute
+    {
+        public static StreetcodeCreateDTO StreetcodeForTest;
+        
+        public override void Before(MethodInfo methodUnderTest)
+        {
+            var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
+            StreetcodeForTest =  new StreetcodeCreateDTO
+                {
+                    Index = new Random().Next(0, 1000000),
+                    FirstName = "TestFirstName",
+                    LastName = "TestLastName",
+                    Title = "TestTitle",
+                    DateString = "20 травня 2023",
+                    Alias = "TestAlias",
+                    TransliterationUrl = Guid.NewGuid().ToString(),
+                    ARBlockURL = "test-arblock-url",
+                    StreetcodeType = StreetcodeType.Event,
+                    Status = StreetcodeStatus.Published,
+                    EventStartOrPersonBirthDate = DateTime.Now,
+                    EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
+                    ViewCount = 1,
+                    Teaser = "Test Teaser",
+                    Text = new TextCreateDTO(),
+                    AudioId = 1,
+                    Toponyms = new List<StreetcodeToponymUpdateDTO>(),
+                    ImagesIds = new List<int> { 1, 2, 3 },
+                    Tags = new List<StreetcodeTagDTO>(),
+                    Subtitles = new List<SubtitleCreateDTO>(),
+                    Facts = new List<FactUpdateCreateDto>(),
+                    Videos = new List<VideoCreateDTO>(),
+                    Partners = new List<PartnerShortDTO>(),
+                    StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
+                    StatisticRecords = new List<StatisticRecordDTO>(),
+                    StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
+                    Coordinates = new List<StreetcodeCoordinateDTO>(),
+                    ImagesDetails = new List<ImageDetailsDto>()
+                };
+             }
+
+        public override void After(MethodInfo methodUnderTest)
+        {
+            var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
+            var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>(p => p.Index == StreetcodeForTest.Index);
+            if (streetcodeContent != null)
+            {
+                // Delete the StreetcodeContent
+                sqlDbHelper.DeleteItem(streetcodeContent);
+                sqlDbHelper.SaveChanges();
+            }
+        }
+    }
+}

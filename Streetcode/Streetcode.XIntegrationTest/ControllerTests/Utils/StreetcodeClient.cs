@@ -1,5 +1,6 @@
 ﻿using RestSharp;
 using RestSharp.Serializers;
+using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
@@ -49,6 +50,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             var request = new RestRequest($"{this.SecondPartUrl}/Update", Method.Put);
             request.AddJsonBody(updateStreetcodeDTO);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            request.AddHeader("content-type", "application/json");
+            var response = await this.Client.ExecuteAsync(request);
+            return response;
+        }
+
+        public async Task<RestResponse> CreateAsync(StreetcodeCreateDTO createStreetcodeDTO)
+        {
+            var request = new RestRequest($"{this.SecondPartUrl}/Create", Method.Post);
+            request.AddJsonBody(createStreetcodeDTO);
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("content-type", "application/json");
             var response = await this.Client.ExecuteAsync(request);

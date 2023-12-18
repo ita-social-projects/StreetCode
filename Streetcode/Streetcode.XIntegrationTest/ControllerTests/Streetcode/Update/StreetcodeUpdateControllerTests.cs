@@ -21,10 +21,10 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
 {
-    public class StreetcodeControllerTests :
+    public class StreetcodeUpdateControllerTests :
         BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public StreetcodeControllerTests(CustomWebApplicationFactory<Program> factory)
+        public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Streetcode")
         {
 

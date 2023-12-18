@@ -31,24 +31,30 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
         }
 
         [Fact]
-        [ExtractTestStreetcode]
+        [ExtractTestUpdateStreetcode]
         public async Task Update_ReturnSuccessStatusCode()
         {
-            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
+            StreetcodeContent expectedStreetcode = ExtractTestUpdateStreetcode.StreetcodeForTest;
 
-            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(
+                expectedStreetcode.Id,
+                expectedStreetcode.Index,
+                expectedStreetcode.TransliterationUrl);
             var response = await client.UpdateAsync(updateStreetCodeDTO);
 
             Assert.True(response.IsSuccessStatusCode);
         }
 
         [Fact]
-        [ExtractTestStreetcode]
+        [ExtractTestUpdateStreetcode]
         public async Task Update_ChangesTitleAndTransliterationUrl()
         {
-            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
+            StreetcodeContent expectedStreetcode = ExtractTestUpdateStreetcode.StreetcodeForTest;
 
-            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(
+                expectedStreetcode.Id,
+                expectedStreetcode.Index,
+                expectedStreetcode.TransliterationUrl);
             await client.UpdateAsync(updateStreetCodeDTO);
 
             var responseGetByIdUpdated = await client.GetByIdAsync(expectedStreetcode.Id);
@@ -56,39 +62,48 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
             Assert.Multiple(() =>
             {
                 Assert.Equal(updateStreetCodeDTO.Title, streetCodeContent.Title);
-                Assert.Equal(updateStreetCodeDTO.TransliterationUrl, streetCodeContent.TransliterationUrl);
+                Assert.Equal(updateStreetCodeDTO.DateString, streetCodeContent.DateString);
             });
         }
 
         [Fact]
-        [ExtractTestStreetcode]
-        public async Task Update_WithIncorrectId_ReturnsBadRequest()
+        [ExtractTestUpdateStreetcode]
+        public async Task Update_WithInvalidId_ReturnsBadRequest()
         {
 
-            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id + 1);
+            StreetcodeContent expectedStreetcode = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(
+                expectedStreetcode.Id + 1,
+                expectedStreetcode.Index,
+                expectedStreetcode.TransliterationUrl);
             var response = await client.UpdateAsync(updateStreetCodeDTO);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
-        [ExtractTestStreetcode]
+        [ExtractTestUpdateStreetcode]
         public async Task Update_WithInvalidData_ReturnsBadRequest()
         {
-            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            StreetcodeContent expectedStreetcode = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(
+                expectedStreetcode.Id,
+                expectedStreetcode.Index,
+                expectedStreetcode.TransliterationUrl);
             updateStreetCodeDTO.Title = null; // Invalid data
             var response = await client.UpdateAsync(updateStreetCodeDTO);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
-        [ExtractTestStreetcode]
+        [ExtractTestUpdateStreetcode]
         public async Task Update_WithInvalidTags_ReturnsBadRequest()
         {
-            StreetcodeContent expectedStreetcode = ExtractTestStreetcode.StreetcodeForTest;
-            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(expectedStreetcode.Id);
+            StreetcodeContent expectedStreetcode = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            var updateStreetCodeDTO = CreateMoqStreetCodeDTO(
+                expectedStreetcode.Id,
+                expectedStreetcode.Index,
+                expectedStreetcode.TransliterationUrl);
 
             // Invalid tag data
             updateStreetCodeDTO.Tags = new List<StreetcodeTagUpdateDTO>
@@ -108,13 +123,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        private StreetcodeUpdateDTO CreateMoqStreetCodeDTO(int id)
+        private StreetcodeUpdateDTO CreateMoqStreetCodeDTO(int id, int index, string transliterationUrl )
         {
             return new StreetcodeUpdateDTO
             {
                 Id = id,
+                Index = index,
                 Title = "New Title",
-                TransliterationUrl = "new-transliteration-url",
+                TransliterationUrl = transliterationUrl,
                 Tags = new List<StreetcodeTagUpdateDTO>(),
                 Facts = new List<FactUpdateDto>(),
                 Audios = new List<AudioUpdateDTO>(),
@@ -123,7 +139,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
                 Partners = new List<PartnersUpdateDTO>(),
                 Toponyms = new List<StreetcodeToponymUpdateDTO>(),
                 Subtitles = new List<SubtitleUpdateDTO>(),
-                DateString = "20 травня 2023",
+                DateString = "22 травня 2023",
                 TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
                 RelatedFigures = new List<RelatedFigureUpdateDTO>(),
                 StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),

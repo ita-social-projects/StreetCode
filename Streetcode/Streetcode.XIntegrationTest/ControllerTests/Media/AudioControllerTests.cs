@@ -2,7 +2,6 @@
 using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Audio;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media

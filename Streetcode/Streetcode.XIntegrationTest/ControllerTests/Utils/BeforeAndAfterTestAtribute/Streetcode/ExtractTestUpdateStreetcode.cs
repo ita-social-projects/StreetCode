@@ -5,7 +5,7 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    class ExtractTestStreetcode : BeforeAfterTestAttribute
+    class ExtractTestUpdateStreetcode : BeforeAfterTestAttribute
     {
         public static StreetcodeContent StreetcodeForTest;
 

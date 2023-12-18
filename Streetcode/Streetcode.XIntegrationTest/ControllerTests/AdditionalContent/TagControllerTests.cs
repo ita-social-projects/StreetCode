@@ -1,14 +1,13 @@
-﻿namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
-{
-    using Streetcode.BLL.DTO.AdditionalContent;
-    using Streetcode.BLL.DTO.AdditionalContent.Tag;
-    using Streetcode.DAL.Entities.AdditionalContent;
-    using Streetcode.DAL.Entities.Streetcode.TextContent;
-    using Streetcode.XIntegrationTest.ControllerTests.Utils;
-    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag;
-    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
-    using Xunit;
+﻿using global::Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Xunit;
 
+namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
+{
     public class TagControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)

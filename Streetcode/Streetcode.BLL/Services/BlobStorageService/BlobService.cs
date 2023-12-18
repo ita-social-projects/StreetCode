@@ -87,26 +87,6 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
-    public async Task CleanBlobStorage()
-    {
-        var base64Files = GetAllBlobNames();
-
-        var existingImagesInDatabase = await _repositoryWrapper.ImageRepository.GetAllAsync();
-        var existingAudiosInDatabase = await _repositoryWrapper.AudioRepository.GetAllAsync();
-
-        List<string> existingMedia = new ();
-        existingMedia.AddRange(existingImagesInDatabase.Select(img => img.BlobName));
-        existingMedia.AddRange(existingAudiosInDatabase.Select(img => img.BlobName));
-
-        var filesToRemove = base64Files.Except(existingMedia).ToList();
-
-        foreach (var file in filesToRemove)
-        {
-            Console.WriteLine($"Deleting {file}...");
-            DeleteFileInStorage(file);
-        }
-    }
-
     private IEnumerable<string> GetAllBlobNames()
     {
         var paths = Directory.EnumerateFiles(_blobPath);

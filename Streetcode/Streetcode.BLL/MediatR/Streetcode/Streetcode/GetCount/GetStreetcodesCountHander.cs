@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
@@ -31,7 +26,17 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 
         public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
         {
-            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+            IEnumerable<StreetcodeContent> streetcodes;
+
+            if (request.onlyPublished)
+            {
+                streetcodes = await _repositoryWrapper.StreetcodeRepository
+                    .GetAllAsync(s => s.Status == StreetcodeStatus.Published);
+            }
+            else
+            {
+                streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+            }
 
             if (streetcodes != null)
             {

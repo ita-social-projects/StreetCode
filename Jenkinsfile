@@ -1,20 +1,19 @@
 pipeline {
-    agent { 
-        label 'stage' 
+    agent {
+        label 'stage'
     }
     stages {
-        stage('Branch name'){
+        // stage('Branch name'){
 
-            steps{
-                echo "${env.BRANCH_NAME}"
+        //     steps{
+        //         echo "${env.BRANCH_NAME}"
 
-                sh '''
-                    printenv
+        //         sh '''
+        //             printenv
 
-                '''
-            }
-        }
-
+        //         '''
+        //     }
+        // }
 
         // stage('Restore Dependencies') {
         //     steps {
@@ -48,21 +47,35 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Docker push') {
+        stage('GitVersion') {
             steps {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
-                    def gitVersionJson = readJson(text: gitVersion)
-                    String imageTag = gitVersionJson['MajorMinorPatch']
-                    println(imageTag)
-                    // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                        // sh "docker push ${username}/streetcode:latest"
-                        // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
-                        // sh "docker push ${username}/streetcode:${env.DATETAG}"
-                    // }
+                    sh 'dotnet-gitversion /output buildserver'
+                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
+                // def gitVersionJson = readJson(text: gitVersion)
+                // String imageTag = gitVersionJson['MajorMinorPatch']
+                // println(imageTag)
+                // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                // sh "docker push ${username}/streetcode:latest"
+                // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
+                // sh "docker push ${username}/streetcode:${env.DATETAG}"
+                // }
+                }
+            }
+        }
+        stage('Inject environment variables step') {
+            steps {
+                script {
+                    def props = readProperties file: 'gitversion.properties'
+
+                    env.GitVersion_SemVer = props.GitVersion_SemVer
+                    env.GitVersion_BranchName = props.GitVersion_BranchName
+                    env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
+                    env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
+                    env.GitVersion_Sha = props.GitVersion_Sha
                 }
             }
         }
@@ -73,21 +86,21 @@ pipeline {
     //             def buildStatus = '❌ FAILURE'
     //             def buildUrl = env.BUILD_URL
     //             def buildDuration = currentBuild.durationString
-    
+
     //             def message = """
     //             *Build Status:* ${buildStatus}
     //             *Job Name:* ${env.JOB_NAME}
     //             *Build Number:* [${env.BUILD_NUMBER}](${buildUrl})
     //             *Duration:* ${buildDuration}
     //             """
-    
-    //             withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
-    //                              string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
-    //                 sh """
-    //                 curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
-    //                 """
-    //             }
-    //         }
-    //     }
-    // }
+
+//             withCredentials([string(credentialsId: 'BotToken', variable: 'TOKEN'),
+//                              string(credentialsId: 'chatid', variable: 'CHAT_ID')]) {
+//                 sh """
+//                 curl -s -X POST https://api.telegram.org/bot\$TOKEN/sendMessage -d chat_id=\$CHAT_ID -d reply_to_message_id=2246 -d parse_mode=markdown -d text='${message}'
+//                 """
+//             }
+//         }
+//     }
+// }
 }

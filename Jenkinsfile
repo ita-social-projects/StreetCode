@@ -49,7 +49,6 @@ pipeline {
         // }
         stage('GitVersion') {
             steps {
-                script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
                     sh 'dotnet-gitversion /output buildserver'
@@ -63,7 +62,6 @@ pipeline {
                 // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
                 // sh "docker push ${username}/streetcode:${env.DATETAG}"
                 // }
-                }
             }
         }
         stage('Inject environment variables step') {

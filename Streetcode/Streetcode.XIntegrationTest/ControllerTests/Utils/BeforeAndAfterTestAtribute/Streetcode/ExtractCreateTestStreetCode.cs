@@ -9,9 +9,12 @@ using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
+using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using System.Reflection;
@@ -23,42 +26,47 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     class ExtractCreateTestStreetcode : BeforeAfterTestAttribute
     {
         public static StreetcodeCreateDTO StreetcodeForTest;
-        
+
         public override void Before(MethodInfo methodUnderTest)
         {
-            var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-            StreetcodeForTest =  new StreetcodeCreateDTO
+            StreetcodeForTest = new StreetcodeCreateDTO
+            {
+                Index = new Random().Next(0, 1000000),
+                FirstName = "TestFirstName",
+                LastName = "TestLastName",
+                Title = "TestTitle",
+                DateString = "20 травня 2023",
+                Alias = "TestAlias",
+                TransliterationUrl = Guid.NewGuid().ToString(),
+                ARBlockURL = "test-arblock-url",
+                StreetcodeType = StreetcodeType.Event,
+                Status = StreetcodeStatus.Published,
+                EventStartOrPersonBirthDate = DateTime.Now,
+                EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
+                ViewCount = 1,
+                Teaser = "Test Teaser",
+                Text = new TextCreateDTO
                 {
-                    Index = new Random().Next(0, 1000000),
-                    FirstName = "TestFirstName",
-                    LastName = "TestLastName",
-                    Title = "TestTitle",
-                    DateString = "20 травня 2023",
-                    Alias = "TestAlias",
-                    TransliterationUrl = Guid.NewGuid().ToString(),
-                    ARBlockURL = "test-arblock-url",
-                    StreetcodeType = StreetcodeType.Event,
-                    Status = StreetcodeStatus.Published,
-                    EventStartOrPersonBirthDate = DateTime.Now,
-                    EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
-                    ViewCount = 1,
-                    Teaser = "Test Teaser",
-                    Text = new TextCreateDTO(),
-                    AudioId = 1,
-                    Toponyms = new List<StreetcodeToponymUpdateDTO>(),
-                    ImagesIds = new List<int> { 1, 2, 3 },
-                    Tags = new List<StreetcodeTagDTO>(),
-                    Subtitles = new List<SubtitleCreateDTO>(),
-                    Facts = new List<FactUpdateCreateDto>(),
-                    Videos = new List<VideoCreateDTO>(),
-                    Partners = new List<PartnerShortDTO>(),
-                    StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
-                    StatisticRecords = new List<StatisticRecordDTO>(),
-                    StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
-                    Coordinates = new List<StreetcodeCoordinateDTO>(),
-                    ImagesDetails = new List<ImageDetailsDto>()
-                };
-             }
+                    Title = "TestTextTitle",
+                    TextContent = "TestTextContent",
+                    AdditionalText = "TestAdditionalText",
+                },
+                Toponyms = new List<StreetcodeToponymUpdateDTO>(),
+                ImagesIds = new List<int> { 1, 2, 3 },
+                Tags = new List<StreetcodeTagDTO>(),
+                Subtitles = new List<SubtitleCreateDTO>(),
+                Facts = new List<FactUpdateCreateDto>(),
+                Videos = new List<VideoCreateDTO>(),
+                Partners = new List<PartnerShortDTO>(),
+                StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
+                StatisticRecords = new List<StatisticRecordDTO>(),
+                StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
+                Coordinates = new List<StreetcodeCoordinateDTO>(),
+                ImagesDetails = new List<ImageDetailsDto>(),
+                TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
+                RelatedFigures = new List<RelatedFigureShortDTO>(),
+            };
+        }
 
         public override void After(MethodInfo methodUnderTest)
         {

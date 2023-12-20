@@ -52,7 +52,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     AdditionalText = "TestAdditionalText",
                 },
                 Toponyms = new List<StreetcodeToponymUpdateDTO>(),
-                ImagesIds = new List<int> { 1, 2, 3 },
+                ImagesIds = new List<int> (),
                 Tags = new List<StreetcodeTagDTO>(),
                 Subtitles = new List<SubtitleCreateDTO>(),
                 Facts = new List<FactUpdateCreateDto>(),

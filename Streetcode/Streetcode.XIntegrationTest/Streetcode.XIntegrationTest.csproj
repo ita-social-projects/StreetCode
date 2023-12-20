@@ -51,4 +51,8 @@
     <ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
     <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ControllerTests\Streetcode\" />
+  </ItemGroup>
 </Project>

@@ -368,7 +368,7 @@ namespace Streetcode.WebApi.Extensions
                      "Академік Імператорської академії мистецтв",
                             ViewCount = 0,
                             CreatedAt = DateTime.Now,
-                            DateString = "9 березня 1814 — 10 березня 1861",
+                            DateString = "9 березня 1814 – 10 березня 1861",
                             EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
                             EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
                             FirstName = "Тарас",
@@ -559,7 +559,9 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new Art
                             {
-                                ImageId = 11
+                                ImageId = 11,
+                                Title = "Назва 4",
+                                Description = "Опис 4"
                             });
 
                         await dbContext.SaveChangesAsync();

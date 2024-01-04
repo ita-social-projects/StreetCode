@@ -15,11 +15,7 @@ namespace Streetcode.WebApi.Configuration
             var context = serviceProvider.GetService<StreetcodeDbContext>() !;
 
             // Create roles in database.
-            await context.Roles.AddRangeAsync(
-                new IdentityRole("admin"),
-                new IdentityRole("user"));
-
-            await context.SaveChangesAsync();
+            await AddRolesAsync(serviceProvider);
 
             // Populate initial admin with information.
             var initialAdmin = new User
@@ -54,6 +50,16 @@ namespace Streetcode.WebApi.Configuration
             UserManager<User> userManager = services.GetService<UserManager<User>>() !;
             User user = await userManager!.FindByEmailAsync(email);
             var result = await userManager.AddToRoleAsync(user, role);
+        }
+
+        public static async Task AddRolesAsync(IServiceProvider services)
+        {
+            RoleManager<IdentityRole> roleManager = services.GetService<RoleManager<IdentityRole>>() !;
+            if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
+            {
+                await roleManager.CreateAsync(new IdentityRole("admin"));
+                await roleManager.CreateAsync(new IdentityRole("customer"));
+            }
         }
     }
 }

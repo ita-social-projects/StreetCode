@@ -78,16 +78,16 @@ public static class ServiceCollectionExtensions
             });
         });
 
+        // Add Identity services.
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<StreetcodeDbContext>();
+
         services.AddHangfire(config =>
         {
             config.UseSqlServerStorage(connectionString);
         });
 
         services.AddHangfireServer();
-
-        // Add Identity services.
-        services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<StreetcodeDbContext>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

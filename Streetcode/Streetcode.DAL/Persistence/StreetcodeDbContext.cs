@@ -21,7 +21,6 @@ using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.DAL.Persistence;
 

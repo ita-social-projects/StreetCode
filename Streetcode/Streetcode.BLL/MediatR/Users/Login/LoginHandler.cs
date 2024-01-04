@@ -30,23 +30,23 @@ namespace Streetcode.BLL.MediatR.Users.Login
 
         public async Task<Result<LoginResultDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _repositoryWrapper.UserRepository
-                .GetFirstOrDefaultAsync(u => u.Password == request.UserLogin.Password && u.Login == request.UserLogin.Login);
-            if (user != null)
-            {
-                var token = _tokenService.GenerateJWTToken(user);
-                var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-                return Result.Ok(new LoginResultDTO()
-                {
-                    User = _mapper.Map<UserDTO>(user),
-                    Token = stringToken,
-                    ExpireAt = token.ValidTo
-                });
-            }
+            // var user = await _repositoryWrapper.UserRepository
+            //    .GetFirstOrDefaultAsync(u => u.Password == request.UserLogin.Password && u.Login == request.UserLogin.Login);
+            // if (user != null)
+            // {
+            //    var token = _tokenService.GenerateJWTToken(user);
+            //    var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
+            //    return Result.Ok(new LoginResultDTO()
+            //    {
+            //        User = _mapper.Map<UserDTO>(user),
+            //        Token = stringToken,
+            //        ExpireAt = token.ValidTo
+            //    });
+            // }
 
-            string errorMsg = _stringLocalizer["UserNotFound"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
+            // string errorMsg = _stringLocalizer["UserNotFound"].Value;
+            // _logger.LogError(request, errorMsg);
+            return Result.Fail("error");
         }
     }
 }

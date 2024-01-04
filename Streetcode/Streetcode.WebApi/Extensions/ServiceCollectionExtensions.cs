@@ -31,6 +31,8 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
+using Microsoft.AspNetCore.Identity;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -84,6 +86,10 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddHangfireServer();
+
+        // Add Identity services.
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<StreetcodeDbContext>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

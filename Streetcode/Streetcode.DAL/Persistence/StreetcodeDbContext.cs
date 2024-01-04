@@ -77,8 +77,6 @@ public class StreetcodeDbContext : IdentityDbContext<User>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new RoleConfiguration());
-
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<StatisticRecord>()

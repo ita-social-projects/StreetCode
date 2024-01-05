@@ -1,8 +1,11 @@
 using System.Transactions;
+using Microsoft.AspNetCore.Identity;
 using Repositories.Interfaces;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
+using Streetcode.DAL.Repositories.Interfaces.Authorization;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
@@ -18,6 +21,7 @@ using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
+using Streetcode.DAL.Repositories.Realizations.Authorization;
 using Streetcode.DAL.Repositories.Realizations.Jobs;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
@@ -37,6 +41,10 @@ namespace Streetcode.DAL.Repositories.Realizations.Base;
 public class RepositoryWrapper : IRepositoryWrapper
 {
     private readonly StreetcodeDbContext _streetcodeDbContext;
+    private readonly UserManager<User> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+
+    private IAuthRepository _authRepository;
 
     private IVideoRepository _videoRepository;
 
@@ -110,9 +118,24 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IJobRepository _jobRepository;
 
-    public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
+    public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
         _streetcodeDbContext = streetcodeDbContext;
+        _userManager = userManager;
+        _roleManager = roleManager;
+    }
+
+    public IAuthRepository AuthRepository
+    {
+        get
+        {
+            if (_authRepository is null)
+            {
+                _authRepository = new AuthRepository(_streetcodeDbContext, _userManager, _roleManager);
+            }
+
+            return _authRepository;
+        }
     }
 
     public INewsRepository NewsRepository

@@ -1,11 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Persistence;
 
 namespace Streetcode.BLL.Services.Users
 {
@@ -17,8 +19,9 @@ namespace Streetcode.BLL.Services.Users
         private readonly string _jwtAudience;
         private readonly string _jwtKey;
         private readonly IStringLocalizer<TokenService> _stringLocalizer;
+        private readonly StreetcodeDbContext _dbContext;
 
-        public TokenService(IConfiguration configuration, IStringLocalizer<TokenService> stringLocalizer)
+        public TokenService(IConfiguration configuration, IStringLocalizer<TokenService> stringLocalizer, StreetcodeDbContext dbContext)
         {
             _jwtIssuer = configuration["Jwt:Issuer"];
             _jwtAudience = configuration["Jwt:Audience"];
@@ -26,16 +29,25 @@ namespace Streetcode.BLL.Services.Users
             _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
             _signInCridentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             _stringLocalizer = stringLocalizer;
+            _dbContext = dbContext;
         }
 
         public JwtSecurityToken GenerateJWTToken(User user)
         {
+            // Get roles of user.
+            var userRoleId = _dbContext.UserRoles.AsNoTracking()
+                .Where(userRole => userRole.UserId == user.Id)
+                .Select(userRole => userRole.RoleId)
+                .FirstOrDefault();
+            var userRoleName = _dbContext.Roles.AsNoTracking()
+                .FirstOrDefault(role => role.Id == userRoleId) !.Name;
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Surname, user.Surname),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim(ClaimTypes.Role, userRoleName),
             };
 
             return new JwtSecurityToken(

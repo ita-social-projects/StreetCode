@@ -38,10 +38,10 @@ namespace Streetcode.BLL.MediatR.Users.Login
             var user = await _repositoryWrapper.UserRepository
                .GetFirstOrDefaultAsync(user => user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login);
 
-            bool isValid = await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
-            if (user is not null && isValid)
+            bool isValid = user is null ? false : await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
+            if (isValid)
             {
-                var token = _tokenService.GenerateJWTToken(user);
+                var token = _tokenService.GenerateJWTToken(user!);
                 var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
                 return Result.Ok(new LoginResultDTO()
                 {

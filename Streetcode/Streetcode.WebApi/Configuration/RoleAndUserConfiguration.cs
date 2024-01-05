@@ -58,7 +58,7 @@ namespace Streetcode.WebApi.Configuration
             if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
             {
                 await roleManager.CreateAsync(new IdentityRole("admin"));
-                await roleManager.CreateAsync(new IdentityRole("customer"));
+                await roleManager.CreateAsync(new IdentityRole("user"));
             }
         }
     }

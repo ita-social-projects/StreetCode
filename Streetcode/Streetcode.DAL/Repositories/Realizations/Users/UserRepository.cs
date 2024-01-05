@@ -20,9 +20,22 @@ namespace Streetcode.DAL.Repositories.Realizations.Users
             _roleManager = roleManager;
         }
 
-        public Task RegisterAsync(User User, string password)
+        public async Task RegisterAsync(User user, string password)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "user");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return;
         }
     }
 }

@@ -2,10 +2,12 @@
 using System.IO.Compression;
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Polly;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
@@ -28,9 +30,9 @@ public class WebParsingUtils
     private readonly IRepositoryWrapper _repository;
     private readonly StreetcodeDbContext _streetcodeContext;
 
-    public WebParsingUtils(StreetcodeDbContext streetcodeContext)
+    public WebParsingUtils(StreetcodeDbContext streetcodeContext, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
     {
-        _repository = new RepositoryWrapper(streetcodeContext);
+        _repository = new RepositoryWrapper(streetcodeContext, userManager, roleManager);
         _streetcodeContext = streetcodeContext;
     }
 

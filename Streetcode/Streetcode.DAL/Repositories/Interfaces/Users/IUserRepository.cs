@@ -3,8 +3,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Users
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepositoryBase<User>
     {
-        Task RegisterAsync(User User, string password);
     }
 }

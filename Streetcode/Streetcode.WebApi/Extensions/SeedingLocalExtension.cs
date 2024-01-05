@@ -35,7 +35,9 @@ namespace Streetcode.WebApi.Extensions
                 var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
-                var repo = new RepositoryWrapper(dbContext);
+                var userManager = app.Services.GetRequiredService<UserManager<User>>();
+                var roleManager = app.Services.GetRequiredService<RoleManager<IdentityRole>>();
+                var repo = new RepositoryWrapper(dbContext, userManager, roleManager);
                 var blobService = new BlobService(blobOptions, repo);
                 string initialDataImagePath = "../Streetcode.DAL/InitialData/images.json";
                 string initialDataAudioPath = "../Streetcode.DAL/InitialData/audios.json";

@@ -275,7 +275,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
-            var toCreateSlides = new List<StreetcodeArtSlide>();
+            StreetcodeArtSlide toCreateSlide = null;
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
 
@@ -289,12 +289,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 var newStreetcodeArts =
                     GetStreetcodeArtsWithNewArtsId(streetcode.Id, oldArtIds, artSlide, toCreateArts);
 
-                DistributeArtSlide(artSlide, newArtSlide, newStreetcodeArts, ref toCreateSlides, ref toUpdateSlides, ref toDeleteSlides, ref toCreateStreetcodeArts);
+                DistributeArtSlide(artSlide, newArtSlide, newStreetcodeArts, ref toCreateSlide, ref toUpdateSlides, ref toDeleteSlides, ref toCreateStreetcodeArts);
+
+                if (toCreateSlide != null)
+                {
+                    await _repositoryWrapper.StreetcodeArtSlideRepository.CreateAsync(toCreateSlide);
+                    await _repositoryWrapper.SaveChangesAsync();
+                    foreach (var streetcodeArt in newStreetcodeArts)
+                    {
+                        streetcodeArt.StreetcodeArtSlideId = toCreateSlide.Id;
+                        toCreateStreetcodeArts.Add(streetcodeArt);
+                    }
+
+                    toCreateSlide = null;
+                }
             }
 
             toCreateStreetcodeArts = CreateStreetcodeHandler.CreateStreetcodeArtsForUnusedArts(streetcode.Id, toCreateArts.Concat(toUpdateArts).ToList(), toCreateStreetcodeArts);
 
-            await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(toCreateSlides);
             _repositoryWrapper.StreetcodeArtSlideRepository.DeleteRange(toDeleteSlides);
             _repositoryWrapper.StreetcodeArtSlideRepository.UpdateRange(toUpdateSlides);
             await _repositoryWrapper.StreetcodeArtRepository.CreateRangeAsync(toCreateStreetcodeArts);
@@ -361,11 +373,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return newStreetcodeArts;
         }
 
-        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref List<StreetcodeArtSlide> toCreateSlides, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
         {
             if (artSlideDto.ModelState == ModelState.Created)
             {
-                toCreateSlides.Add(artSlide);
+                toCreateSlide = artSlide;
             }
             else
             {

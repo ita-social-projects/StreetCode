@@ -13,15 +13,17 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
 {
     public class SignUpHandler : IRequestHandler<SignUpQuery, Result<UserDTO>>
     {
-        private readonly IMapper _mapper;
         private readonly ILoggerService _logger;
+        private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly UserManager<User> _userManager;
 
-        public SignUpHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public SignUpHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
             _logger = logger;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<Result<UserDTO>> Handle(SignUpQuery request, CancellationToken cancellationToken)
@@ -47,7 +49,12 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
 
             try
             {
-                await _repositoryWrapper.AuthRepository.RegisterAsync(user, password);
+                // Create user with given password and assign 'user' role to it.
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "user");
+                }
             }
             catch (Exception ex)
             {
@@ -56,15 +63,8 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             }
 
             // Change it to mapper.
-            var userDTO = new UserDTO()
-            {
-                Name = user.Name,
-                Surname = user.Surname,
-                Email = user.Email,
-                Id = user.Id,
-                Login = user.UserName,
-                Role = "user"
-            };
+            var userDTO = _mapper.Map<UserDTO>(user);
+            userDTO.Password = password;
 
             return Result.Ok(userDTO);
         }
@@ -96,6 +96,13 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
 
         private async Task<Result> IsUserValid(User user)
         {
+            // Check if email valid.
+            var emailValidationResult = IsEmailValid(user.Email);
+            if (!emailValidationResult.isValid)
+            {
+                return Result.Fail(emailValidationResult.errorMassage);
+            }
+
             // Check if user is unique by email.
             var userFromDbDyEmail = await _repositoryWrapper.UserRepository
                 .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.Email == user.Email);
@@ -107,16 +114,9 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             // Check if user is unique by username.
             var userFromDbDyUserName = await _repositoryWrapper.UserRepository
                 .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.UserName == user.UserName);
-            if (userFromDbDyEmail is not null)
+            if (userFromDbDyUserName is not null)
             {
                 return Result.Fail("User with such UserName already exists in database");
-            }
-
-            // Check if email valid.
-            var emailValidationResult = IsEmailValid(user.Email);
-            if (!emailValidationResult.isValid)
-            {
-                return Result.Fail(emailValidationResult.errorMassage);
             }
 
             return Result.Ok();
@@ -124,20 +124,11 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
 
         private (bool isValid, string? errorMassage) IsEmailValid(string email)
         {
-            // if (Regex.IsMatch(email, @"[^a - zA - Z@.\d:]"))
-            // {
-            //    return (false, "Email cannot contain non-alphanumeric chracters(except @)");
-            // }
-
-            // if (email.ToCharArray().Count())
-            // {
-            //    return (false, "Email cannot contain non-alphanumeric chracters(except @)");
-            // }
-
-            // if (email.Contains("admin", StringComparison.CurrentCultureIgnoreCase))
-            // {
-            //    return (false, "Email cannot contain 'admin'");
-            // }
+            // Check if input email has standart format( e.g. *******@****.com).
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.(com|net|org|gov|ua)$"))
+            {
+                return (false, "Incorrect email address format");
+            }
 
             return (true, null);
         }

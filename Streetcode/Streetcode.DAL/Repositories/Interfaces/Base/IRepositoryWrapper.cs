@@ -2,7 +2,6 @@ using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
-using Streetcode.DAL.Repositories.Interfaces.Authorization;
 using Streetcode.DAL.Repositories.Interfaces.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Newss;
@@ -19,7 +18,6 @@ namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryWrapper
 {
-    IAuthRepository AuthRepository { get; }
     IFactRepository FactRepository { get; }
     IArtRepository ArtRepository { get; }
     IStreetcodeArtRepository StreetcodeArtRepository { get; }

@@ -30,9 +30,9 @@ public class WebParsingUtils
     private readonly IRepositoryWrapper _repository;
     private readonly StreetcodeDbContext _streetcodeContext;
 
-    public WebParsingUtils(StreetcodeDbContext streetcodeContext, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+    public WebParsingUtils(StreetcodeDbContext streetcodeContext)
     {
-        _repository = new RepositoryWrapper(streetcodeContext, userManager, roleManager);
+        _repository = new RepositoryWrapper(streetcodeContext);
         _streetcodeContext = streetcodeContext;
     }
 

@@ -45,8 +45,8 @@ namespace Streetcode.BLL.Services.Users
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Surname, user.Surname),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, userRoleName),
             };
 

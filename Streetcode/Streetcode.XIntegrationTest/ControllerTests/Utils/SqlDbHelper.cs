@@ -83,12 +83,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return this.dbContext.Set<T>().Remove(item).Entity;
         }
 
-        public void RemoveRange<T>()
-            where T : class, new()
-        {
-            this.dbContext.Set<T>().RemoveRange(this.dbContext.Set<T>());
-            this.dbContext.SaveChanges();
-        }
         public void SaveChanges() => this.dbContext.SaveChanges();
     }
 }

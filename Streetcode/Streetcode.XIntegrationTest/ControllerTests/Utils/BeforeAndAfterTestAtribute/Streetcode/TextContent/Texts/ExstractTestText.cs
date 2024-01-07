@@ -1,11 +1,16 @@
 ﻿using Streetcode.DAL.Entities.Streetcode.TextContent;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.Texts
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExstractTestText : BeforeAfterTestAttribute
+    internal class ExstractTestText :BeforeAfterTestAttribute
     {
         public static Text TextForTest;
 

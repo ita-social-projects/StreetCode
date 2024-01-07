@@ -1,11 +1,16 @@
 ﻿using Streetcode.DAL.Entities.Streetcode;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.RelatedFigure
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestRelatedFigure : BeforeAfterTestAttribute
+    internal class ExtractTestRelatedFigure: BeforeAfterTestAttribute
     {
         public static DAL.Entities.Streetcode.RelatedFigure RelatedFigureForTest;
 

@@ -5,6 +5,8 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Realizations.Base;
+using Streetcode.XIntegrationTest.Base;
 using System.Text;
 
 namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
@@ -27,8 +29,8 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
             blobPath = environmentVariables.Value.BlobStorePath;
             blobKey = environmentVariables.Value.BlobStoreKey;
 
-            //    TestDbContext = TestDBFixture.CreateContext(Configuration.GetConnectionString("DefaultConnection"));
-            //    RepositoryWrapper repo = new RepositoryWrapper(TestDbContext);
+        //    TestDbContext = TestDBFixture.CreateContext(Configuration.GetConnectionString("DefaultConnection"));
+        //    RepositoryWrapper repo = new RepositoryWrapper(TestDbContext);
 
             blobService = new BlobService(environmentVariables); // add repo
             Directory.CreateDirectory(blobPath);

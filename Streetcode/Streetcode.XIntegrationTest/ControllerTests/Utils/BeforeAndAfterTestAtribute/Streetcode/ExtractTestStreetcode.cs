@@ -1,4 +1,5 @@
-﻿using Streetcode.DAL.Entities.Streetcode;
+﻿using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Streetcode;
 using System.Reflection;
 using Xunit.Sdk;
 
@@ -27,28 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     Alias = "dsf",
                     Title = "Title",
                     TransliterationUrl = Guid.NewGuid().ToString(),
-                    Teaser = "Test Teaser",
                 });
-                sqlDbHelper.SaveChanges();
-            }
-        }
-
-        public override void After(MethodInfo methodUnderTest)
-        {
-            var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-            var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>();
-            if (streetcodeContent != null)
-            {
-                // Restore the original StreetcodeContent
-                streetcodeContent.EventStartOrPersonBirthDate = StreetcodeForTest.EventStartOrPersonBirthDate;
-                streetcodeContent.EventEndOrPersonDeathDate = StreetcodeForTest.EventEndOrPersonDeathDate;
-                streetcodeContent.ViewCount = StreetcodeForTest.ViewCount;
-                streetcodeContent.DateString = StreetcodeForTest.DateString;
-                streetcodeContent.Alias = StreetcodeForTest.Alias;
-                streetcodeContent.Title = StreetcodeForTest.Title;
-                streetcodeContent.TransliterationUrl = StreetcodeForTest.TransliterationUrl;
-                streetcodeContent.Teaser = StreetcodeForTest.Teaser;
-
                 sqlDbHelper.SaveChanges();
             }
         }

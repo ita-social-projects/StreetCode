@@ -6,7 +6,7 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.StreetcodeArt
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestStreetcodeArt : BeforeAfterTestAttribute
+    internal class ExtractTestStreetcodeArt:BeforeAfterTestAttribute
     {
         public static DAL.Entities.Streetcode.StreetcodeArt StreetcodeArtForTest;
 
@@ -14,7 +14,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
         {
             var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
             StreetcodeArtForTest = sqlDbHelper.GetExistItem<DAL.Entities.Streetcode.StreetcodeArt>();
-            if (StreetcodeArtForTest == null)
+            if(StreetcodeArtForTest == null)
             {
                 if (ExtractTestStreetcode.StreetcodeForTest == null)
                 {

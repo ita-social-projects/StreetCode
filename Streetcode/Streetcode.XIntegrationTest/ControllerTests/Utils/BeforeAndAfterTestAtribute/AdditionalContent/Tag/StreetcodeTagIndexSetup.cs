@@ -1,5 +1,10 @@
 ﻿using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag
 {

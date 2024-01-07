@@ -4,6 +4,7 @@ using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +19,16 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
+
 var supportedCulture = new[]
 {
     new CultureInfo("en-US"),

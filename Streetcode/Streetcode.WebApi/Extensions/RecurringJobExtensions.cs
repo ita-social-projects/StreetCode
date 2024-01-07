@@ -1,4 +1,5 @@
 using Hangfire;
+using Microsoft.Extensions.DependencyInjection;
 using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Image;
 
@@ -8,23 +9,33 @@ public static class RecurringJobExtensions
 {
     public static void AddCleanAudiosJob(this WebApplication app)
     {
-        var recurringJobManager = app.Services.GetService<IRecurringJobManager>();
+        var serviceScopeFactory = app.Services.GetService<IServiceScopeFactory>();
+        using (var scope = serviceScopeFactory.CreateScope())
+        {
+            var recurringJobManager = scope.ServiceProvider.GetService<IRecurringJobManager>();
+            var audioService = scope.ServiceProvider.GetService<IAudioService>();
 
-        recurringJobManager.AddOrUpdate(
-            "Clean audio that are not used in streetcodes",
-            () => app.Services.GetService<IAudioService>().CleanUnusedAudiosAsync(),
-            app.Configuration.GetSection("RecurringJobs")["AudioCleaningFrequency"],
-            TimeZoneInfo.Utc);
+            recurringJobManager.AddOrUpdate(
+                "Clean audio that are not used in streetcodes",
+                () => audioService.CleanUnusedAudiosAsync(),
+                app.Configuration.GetSection("RecurringJobs")["AudioCleaningFrequency"],
+                TimeZoneInfo.Utc);
+        }
     }
 
     public static void AddCleanImagesJob(this WebApplication app)
     {
-        var recurringJobManager = app.Services.GetService<IRecurringJobManager>();
+        var serviceScopeFactory = app.Services.GetService<IServiceScopeFactory>();
+        using (var scope = serviceScopeFactory.CreateScope())
+        {
+            var recurringJobManager = scope.ServiceProvider.GetService<IRecurringJobManager>();
+            var imageService = scope.ServiceProvider.GetService<IImageService>();
 
-        recurringJobManager.AddOrUpdate(
-            "Clean images that are not used",
-            () => app.Services.GetService<IImageService>().CleanUnusedImagesAsync(),
-            app.Configuration.GetSection("RecurringJobs")["ImageCleaningFrequency"],
-            TimeZoneInfo.Utc);
+            recurringJobManager.AddOrUpdate(
+                "Clean images that are not used",
+                () => imageService.CleanUnusedImagesAsync(),
+                app.Configuration.GetSection("RecurringJobs")["ImageCleaningFrequency"],
+                TimeZoneInfo.Utc);
+        }
     }
 }

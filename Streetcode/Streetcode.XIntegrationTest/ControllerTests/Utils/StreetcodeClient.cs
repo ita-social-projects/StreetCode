@@ -10,7 +10,7 @@
 
         public string SecondPartUrl { get; }
 
-        public StreetcodeClient(HttpClient client, string secondPartUrl = "")
+      public StreetcodeClient(HttpClient client, string secondPartUrl = "")
         {
             this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
@@ -31,13 +31,18 @@
             return await this.GetResponse($"/getByStreetcodeId/{id}");
         }
 
+        public async Task<RestResponse> GetArtsByStreetcodeId(int id)
+        {
+            return await this.GetResponse($"/getArtsByStreetcodeId/{id}");
+        }
+
         public async Task<RestResponse> GetResponse(string requestString)
         {
             var request = new RestRequest($"{this.SecondPartUrl}{requestString}");
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("content-type", "application/json");
-            
-            return await this.Client.ExecuteGetAsync(request);
+            var returns = await this.Client.ExecuteGetAsync(request);
+            return returns;
         }
 
     }

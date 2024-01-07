@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Streetcode.DAL.Entities.AdditionalContent;
+using System.Reflection;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag
@@ -17,7 +18,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 TagForTest = sqlDbHelper.AddNewItem(
                     new DAL.Entities.AdditionalContent.Tag()
                     {
-                        Title = "TagTitle",
+                        Title = "TagTitle_NEW!!!",
                     });
                 sqlDbHelper.SaveChanges();
             }

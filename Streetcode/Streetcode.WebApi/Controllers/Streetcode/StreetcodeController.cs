@@ -90,9 +90,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCount([FromQuery] bool? onlyPublished)
+    public async Task<IActionResult> GetCount()
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery(onlyPublished ?? false)));
+        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery()));
     }
 
     [HttpGet("{url}")]

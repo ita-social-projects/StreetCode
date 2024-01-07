@@ -576,8 +576,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("DateString")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");

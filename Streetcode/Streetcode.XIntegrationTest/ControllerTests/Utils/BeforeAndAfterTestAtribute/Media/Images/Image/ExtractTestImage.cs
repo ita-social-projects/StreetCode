@@ -7,7 +7,7 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Image
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ExtractTestImage : BeforeAfterTestAttribute
+    public class ExtractTestImage: BeforeAfterTestAttribute
     {
         public static DAL.Entities.Media.Images.Image ImageForTest;
 

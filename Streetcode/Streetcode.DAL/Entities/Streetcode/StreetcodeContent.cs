@@ -32,7 +32,7 @@ public class StreetcodeContent
     public string? Teaser { get; set; }
 
     [Required]
-    [MaxLength(100)]
+    [MaxLength(50)]
     public string? DateString { get; set; }
 
     [MaxLength(50)]

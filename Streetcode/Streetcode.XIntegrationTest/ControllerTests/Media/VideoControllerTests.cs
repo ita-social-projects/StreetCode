@@ -1,8 +1,9 @@
-﻿using Streetcode.BLL.DTO.Media;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video;
-namespace Streetcode.XIntegrationTest.ControllerTests.Media
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
+    using Streetcode.BLL.DTO.Media;
+    using Streetcode.BLL.DTO.Media.Audio;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils;
+    using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video;
     using Xunit;
 
     public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>

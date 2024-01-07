@@ -1,9 +1,9 @@
-﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
-{
-    using RestSharp;
-    using RestSharp.Serializers;
-    using System.Threading.Tasks;
+﻿using RestSharp;
+using RestSharp.Serializers;
+using Streetcode.BLL.DTO.Streetcode.Update;
 
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils
+{
     public class StreetcodeClient
     {
         protected RestClient Client;
@@ -12,7 +12,7 @@
 
         public StreetcodeClient(HttpClient client, string secondPartUrl = "")
         {
-            this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
+            this.Client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
 
@@ -31,14 +31,28 @@
             return await this.GetResponse($"/getByStreetcodeId/{id}");
         }
 
+        public async Task<RestResponse> GetArtsByStreetcodeId(int id)
+        {
+            return await this.GetResponse($"/getArtsByStreetcodeId/{id}");
+        }
+
         public async Task<RestResponse> GetResponse(string requestString)
         {
             var request = new RestRequest($"{this.SecondPartUrl}{requestString}");
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("content-type", "application/json");
-            
-            return await this.Client.ExecuteGetAsync(request);
+            var returns = await this.Client.ExecuteGetAsync(request);
+            return returns;
         }
 
+        public async Task<RestResponse> UpdateAsync(StreetcodeUpdateDTO updateStreetcodeDTO)
+        {
+            var request = new RestRequest($"{this.SecondPartUrl}/Update", Method.Put);
+            request.AddJsonBody(updateStreetcodeDTO);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            request.AddHeader("content-type", "application/json");
+            var response = await this.Client.ExecuteAsync(request);
+            return response;
+        }
     }
 }

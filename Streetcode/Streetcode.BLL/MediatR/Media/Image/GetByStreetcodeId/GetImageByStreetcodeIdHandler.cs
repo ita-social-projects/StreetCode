@@ -46,7 +46,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
                     f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                     include: q => q.Include(img => img.ImageDetails))).OrderBy(img => img.ImageDetails?.Alt);
 
-                if (images is null || images.Count() == 0)
+                if (images is null || request.StreetcodeId < 1)
                 {
                     string errorMsg = _stringLocalizerCannotFind["CannotFindAnImageWithTheCorrespondingStreetcodeId", request.StreetcodeId].Value;
                     _logger.LogError(request, errorMsg);

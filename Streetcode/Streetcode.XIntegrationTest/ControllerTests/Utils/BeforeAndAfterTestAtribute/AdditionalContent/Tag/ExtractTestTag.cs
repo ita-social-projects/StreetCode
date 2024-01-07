@@ -4,7 +4,7 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ExtractTestTag: BeforeAfterTestAttribute
+    public class ExtractTestTag : BeforeAfterTestAttribute
     {
         public static DAL.Entities.AdditionalContent.Tag TagForTest;
 
@@ -17,7 +17,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 TagForTest = sqlDbHelper.AddNewItem(
                     new DAL.Entities.AdditionalContent.Tag()
                     {
-                        Title = "TagTitle",
+                        Title = "TagTitle_NEW!!!",
                     });
                 sqlDbHelper.SaveChanges();
             }

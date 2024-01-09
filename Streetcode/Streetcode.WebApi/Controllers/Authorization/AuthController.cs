@@ -31,7 +31,7 @@ namespace Streetcode.WebApi.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO registerDTO)
         {
-            return HandleResult(await Mediator.Send(new SignUpQuery(registerDTO)));
+            return HandleResult(await Mediator.Send(new RegisterQuery(registerDTO)));
         }
 
         [HttpPost]

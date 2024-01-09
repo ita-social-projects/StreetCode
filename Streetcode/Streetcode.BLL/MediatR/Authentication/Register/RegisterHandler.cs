@@ -12,14 +12,14 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.SignUp
 {
-    public class SignUpHandler : IRequestHandler<SignUpQuery, Result<UserDTO>>
+    public class RegisterHandler : IRequestHandler<RegisterQuery, Result<UserDTO>>
     {
         private readonly ILoggerService _logger;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly UserManager<User> _userManager;
 
-        public SignUpHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager)
+        public RegisterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
@@ -27,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             _userManager = userManager;
         }
 
-        public async Task<Result<UserDTO>> Handle(SignUpQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UserDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
             User user = new User()
             {

@@ -19,6 +19,8 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody] RelatedTermDTO relatedTerm)
         {
             return HandleResult(await Mediator.Send(new CreateRelatedTermCommand(relatedTerm)));
@@ -26,6 +28,8 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] RelatedTermDTO relatedTerm)
         {
             return HandleResult(await Mediator.Send(new UpdateRelatedTermCommand(id, relatedTerm)));
@@ -33,6 +37,8 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpDelete("{word}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete([FromRoute] string word)
         {
             return HandleResult(await Mediator.Send(new DeleteRelatedTermCommand(word)));

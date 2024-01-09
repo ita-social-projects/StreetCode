@@ -25,6 +25,8 @@ public class RelatedFigureController : BaseApiController
 
     [HttpPost("{ObserverId:int}&{TargetId:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromRoute] int ObserverId, int TargetId)
     {
         return HandleResult(await Mediator.Send(new CreateRelatedFigureCommand(ObserverId, TargetId)));
@@ -32,6 +34,8 @@ public class RelatedFigureController : BaseApiController
 
     [HttpDelete("{ObserverId:int}&{TargetId:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int ObserverId, int TargetId)
     {
         return HandleResult(await Mediator.Send(new DeleteRelatedFigureCommand(ObserverId, TargetId)));

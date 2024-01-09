@@ -38,6 +38,8 @@ public class TagController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] CreateTagDTO tagTitle)
     {
         return HandleResult(await Mediator.Send(new CreateTagQuery(tagTitle)));

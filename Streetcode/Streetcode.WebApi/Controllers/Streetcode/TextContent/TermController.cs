@@ -26,6 +26,8 @@ public class TermController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] TermDTO term)
     {
         return HandleResult(await Mediator.Send(new CreateTermCommand(term)));
@@ -33,6 +35,8 @@ public class TermController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody] TermDTO term)
     {
         return HandleResult(await Mediator.Send(new UpdateTermCommand(term)));
@@ -40,6 +44,8 @@ public class TermController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteTermCommand(id)));

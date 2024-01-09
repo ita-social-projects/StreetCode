@@ -47,6 +47,8 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody] NewsDTO partner)
         {
             return HandleResult(await Mediator.Send(new CreateNewsCommand(partner)));
@@ -54,6 +56,8 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteNewsCommand(id)));
@@ -61,6 +65,8 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPut]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update(NewsDTO newsDTO)
         {
             return HandleResult(await Mediator.Send(new UpdateNewsCommand(newsDTO)));

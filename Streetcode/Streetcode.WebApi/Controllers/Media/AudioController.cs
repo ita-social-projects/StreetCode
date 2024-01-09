@@ -42,6 +42,8 @@ public class AudioController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
     {
         return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
@@ -49,6 +51,8 @@ public class AudioController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDTO audio)
     {
         return HandleResult(await Mediator.Send(new UpdateAudioCommand(audio)));
@@ -56,6 +60,8 @@ public class AudioController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteAudioCommand(id)));

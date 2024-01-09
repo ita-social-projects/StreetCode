@@ -40,6 +40,8 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDTO)
         {
@@ -48,6 +50,8 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Update(int id)
         {
@@ -56,6 +60,8 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Delete(int id)
         {

@@ -44,6 +44,8 @@ namespace Streetcode.WebApi.Controllers.Jobs
 
 		[HttpPost]
 		[Authorize(Roles = nameof(UserRole.Admin))]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> Create([FromBody] JobDto jobDto)
 		{
 			return HandleResult(await Mediator.Send(new CreateJobCommand(jobDto)));
@@ -51,6 +53,8 @@ namespace Streetcode.WebApi.Controllers.Jobs
 
 		[HttpDelete("{id:int}")]
 		[Authorize(Roles = nameof(UserRole.Admin))]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> Delete(int id)
 		{
 			return HandleResult(await Mediator.Send(new DeleteJobCommand(id)));
@@ -58,6 +62,8 @@ namespace Streetcode.WebApi.Controllers.Jobs
 
 		[HttpPut]
 		[Authorize(Roles = nameof(UserRole.Admin))]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> Update([FromBody]JobDto jobDto)
 		{
 			return HandleResult(await Mediator.Send(new UpdateJobCommand(jobDto)));
@@ -65,6 +71,8 @@ namespace Streetcode.WebApi.Controllers.Jobs
 
 		[HttpPut]
 		[Authorize(Roles = nameof(UserRole.Admin))]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		public async Task<IActionResult> ChangeJobStatus([FromBody] JobChangeStatusDto jobChangeStatusDto)
 		{
 			return HandleResult(await Mediator.Send(new ChangeJobStatusCommand(jobChangeStatusDto)));

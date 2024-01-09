@@ -122,6 +122,8 @@ public class StreetcodeController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
@@ -129,6 +131,8 @@ public class StreetcodeController : BaseApiController
 
     [HttpPut("{id:int}/{status}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,
         [FromRoute] StreetcodeStatus status)
@@ -138,6 +142,8 @@ public class StreetcodeController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> SoftDelete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteSoftStreetcodeCommand(id)));
@@ -145,6 +151,8 @@ public class StreetcodeController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
@@ -152,6 +160,8 @@ public class StreetcodeController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));

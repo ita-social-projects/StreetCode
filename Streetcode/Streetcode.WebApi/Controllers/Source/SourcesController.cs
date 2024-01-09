@@ -8,6 +8,7 @@ using Streetcode.BLL.MediatR.Sources.SourceLink.Delete;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll;
 using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentByStreetcodeId;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Streetcode.WebApi.Controllers.Source;
 
@@ -44,12 +45,14 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryDTO category)
     {
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
 
     public async Task<IActionResult> UpdateCategory([FromBody] SourceLinkCategoryDTO category)
     {
@@ -57,6 +60,7 @@ public class SourcesController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> DeleteCategory([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteCategoryCommand(id)));

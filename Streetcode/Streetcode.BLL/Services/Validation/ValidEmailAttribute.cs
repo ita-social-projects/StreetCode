@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Streetcode.BLL.Services.Authentication
+namespace Streetcode.BLL.Services.Validation
 {
     public class ValidEmailAttribute : ValidationAttribute
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Streetcode.BLL.DTO.Authentication
+namespace Streetcode.BLL.DTO.Authentication.Register
 {
     public class RegisterResponseDTO
     {

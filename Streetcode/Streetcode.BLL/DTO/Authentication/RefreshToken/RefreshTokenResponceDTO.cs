@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Streetcode.BLL.DTO.Users
+namespace Streetcode.BLL.DTO.Authentication.RefreshToken
 {
-    public class LoginResultDTO
+    public class RefreshTokenResponceDTO
     {
-        public UserDTO User { get; set; }
         public string Token { get; set; }
         public DateTime ExpireAt { get; set; }
     }

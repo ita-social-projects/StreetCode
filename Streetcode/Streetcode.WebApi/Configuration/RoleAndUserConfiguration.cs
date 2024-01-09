@@ -23,19 +23,19 @@ namespace Streetcode.WebApi.Configuration
             {
                 Name = "admin",
                 Surname = "admin",
-                Email = "admin@admin.com",
-                NormalizedEmail = "ADMIN@ADMIN.COM",
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
+                Email = Environment.GetEnvironmentVariable("ADMIN_EMAIL") !,
+                NormalizedEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") !.ToUpper(),
+                UserName = Environment.GetEnvironmentVariable("ADMIN_USERNAME") !,
+                NormalizedUserName = Environment.GetEnvironmentVariable("ADMIN_USERNAME") !.ToUpper(),
                 PhoneNumber = "777-777-77-77",
-                EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
+                EmailConfirmed = false,
+                PhoneNumberConfirmed = false,
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
             // Add initial admin.
             var password = new PasswordHasher<User>();
-            var hashed = password.HashPassword(initialAdmin, "SuperAdmin#007");
+            var hashed = password.HashPassword(initialAdmin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
             initialAdmin.PasswordHash = hashed;
 
             await context.Users.AddAsync(initialAdmin);

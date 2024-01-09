@@ -4,6 +4,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.Authentication;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Users;
@@ -12,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.SignUp
 {
-    public class RegisterHandler : IRequestHandler<RegisterQuery, Result<UserDTO>>
+    public class RegisterHandler : IRequestHandler<RegisterQuery, Result<RegisterResponseDTO>>
     {
         private readonly ILoggerService _logger;
         private readonly IMapper _mapper;
@@ -27,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             _userManager = userManager;
         }
 
-        public async Task<Result<UserDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
+        public async Task<Result<RegisterResponseDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
             User user = new User()
             {
@@ -68,10 +69,11 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             }
 
             // Change it to mapper.
-            var userDTO = _mapper.Map<UserDTO>(user);
-            userDTO.Password = password;
+            var responseDTO = _mapper.Map<RegisterResponseDTO>(user);
+            responseDTO.Password = password;
+            responseDTO.Role = nameof(UserRole.User);
 
-            return Result.Ok(userDTO);
+            return Result.Ok(responseDTO);
         }
 
         private async Task<Result> IsInputValid(User user, string password, string passwordConfirmed)

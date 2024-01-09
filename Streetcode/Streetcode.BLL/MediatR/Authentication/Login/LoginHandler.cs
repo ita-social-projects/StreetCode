@@ -4,6 +4,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Authentication;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Users;
@@ -12,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.Login
 {
-    public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResultDTO>>
+    public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResponseDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -33,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
             _roleManager = roleManager;
         }
 
-        public async Task<Result<LoginResultDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _repositoryWrapper.UserRepository
                .GetFirstOrDefaultAsync(user => user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login);
@@ -43,12 +44,15 @@ namespace Streetcode.BLL.MediatR.Users.Login
             {
                 var token = _tokenService.GenerateJWTToken(user!);
                 var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-                return Result.Ok(new LoginResultDTO()
+                var userDTO = _mapper.Map<UserDTO>(user);
+                userDTO.Password = request.UserLogin.Password;
+                var response = new LoginResponseDTO()
                 {
-                    User = _mapper.Map<UserDTO>(user),
+                    User = userDTO,
                     Token = stringToken,
                     ExpireAt = token.ValidTo
-                });
+                };
+                return Result.Ok(response);
             }
 
             string errorMsg = _stringLocalizer["UserNotFound"].Value;

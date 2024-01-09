@@ -24,7 +24,7 @@ namespace Streetcode.WebApi.Controllers.Users
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLoginDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
         {
             return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
         }

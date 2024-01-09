@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using Streetcode.BLL.Constants.Authentication;
 using Streetcode.BLL.Services.Authentication;
 
-namespace Streetcode.BLL.DTO.Authentication;
+namespace Streetcode.BLL.DTO.Authentication.Register;
 
 public class RegisterRequestDTO
 {

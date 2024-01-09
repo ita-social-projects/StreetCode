@@ -4,7 +4,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Authentication;
+using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Users;

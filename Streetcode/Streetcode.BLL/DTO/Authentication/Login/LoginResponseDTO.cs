@@ -1,6 +1,6 @@
 ﻿using Streetcode.BLL.DTO.Users;
 
-namespace Streetcode.BLL.DTO.Authentication
+namespace Streetcode.BLL.DTO.Authentication.Login
 {
     public class LoginResponseDTO
     {

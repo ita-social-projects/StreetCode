@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Data;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,6 @@ namespace Streetcode.BLL.Services.Users
 {
     public sealed class TokenService : ITokenService
     {
-        private readonly SymmetricSecurityKey _symmetricSecurityKey;
         private readonly SigningCredentials _signInCridentials;
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
@@ -26,8 +26,9 @@ namespace Streetcode.BLL.Services.Users
             _jwtIssuer = configuration["Jwt:Issuer"];
             _jwtAudience = configuration["Jwt:Audience"];
             _jwtKey = configuration["Jwt:Key"];
-            _symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
-            _signInCridentials = new SigningCredentials(_symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            _signInCridentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             _stringLocalizer = stringLocalizer;
             _dbContext = dbContext;
         }
@@ -42,31 +43,41 @@ namespace Streetcode.BLL.Services.Users
             var userRoleName = _dbContext.Roles.AsNoTracking()
                 .FirstOrDefault(role => role.Id == userRoleId) !.Name;
 
-            var claims = new[]
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Surname, user.Surname),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, userRoleName),
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Surname, user.Surname),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, userRoleName),
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = _signInCridentials,
+                Issuer = _jwtIssuer,
+                Audience = _jwtAudience
             };
+            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
-            return new JwtSecurityToken(
-                _jwtIssuer,
-                _jwtAudience,
-                claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: _signInCridentials);
+            return token;
         }
 
         public JwtSecurityToken RefreshToken(string token)
         {
             var principles = GetPrinciplesFromToken(token);
-            return new JwtSecurityToken(
-                _jwtIssuer,
-                _jwtAudience,
-                principles.Claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: _signInCridentials);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(principles.Claims),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = _signInCridentials,
+                Issuer = _jwtIssuer,
+                Audience = _jwtAudience
+            };
+            var newToken = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+
+            return newToken;
         }
 
         private ClaimsPrincipal GetPrinciplesFromToken(string token)

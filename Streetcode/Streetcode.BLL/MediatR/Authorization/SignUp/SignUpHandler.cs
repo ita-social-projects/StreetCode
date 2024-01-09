@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.SignUp
@@ -53,7 +54,7 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, "user");
+                    await _userManager.AddToRoleAsync(user, nameof(UserRole.User));
                 }
             }
             catch (Exception ex)

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Configuration
 {
@@ -40,8 +41,8 @@ namespace Streetcode.WebApi.Configuration
             await context.Users.AddAsync(initialAdmin);
             await context.SaveChangesAsync();
 
-            // Assign role 'admin' to initialAdmin.
-            await AssignRole(serviceProvider, initialAdmin.Email, "admin");
+            // Assign role 'Admin' to initialAdmin.
+            await AssignRole(serviceProvider, initialAdmin.Email, nameof(UserRole.Admin));
             await context.SaveChangesAsync();
         }
 
@@ -55,10 +56,10 @@ namespace Streetcode.WebApi.Configuration
         public static async Task AddRolesAsync(IServiceProvider services)
         {
             RoleManager<IdentityRole> roleManager = services.GetService<RoleManager<IdentityRole>>() !;
-            if (!roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
+            if (!roleManager.RoleExistsAsync(nameof(UserRole.Admin)).GetAwaiter().GetResult())
             {
-                await roleManager.CreateAsync(new IdentityRole("admin"));
-                await roleManager.CreateAsync(new IdentityRole("user"));
+                await roleManager.CreateAsync(new IdentityRole(nameof(UserRole.Admin)));
+                await roleManager.CreateAsync(new IdentityRole(nameof(UserRole.User)));
             }
         }
     }

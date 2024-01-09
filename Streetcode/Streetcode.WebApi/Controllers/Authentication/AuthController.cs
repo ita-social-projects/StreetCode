@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Authentication;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.MediatR.Users.Login;
 using Streetcode.BLL.MediatR.Users.RefreshToken;
@@ -29,7 +30,7 @@ namespace Streetcode.WebApi.Controllers.Users
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserRegisterDTO registerDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDTO)
         {
             return HandleResult(await Mediator.Send(new RegisterQuery(registerDTO)));
         }

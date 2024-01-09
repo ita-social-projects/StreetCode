@@ -31,15 +31,15 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
         {
             User user = new User()
             {
-                UserName = request.newUser.UserName,
-                Email = request.newUser.Email,
-                NormalizedEmail = request.newUser.Email.ToUpper(),
-                Name = request.newUser.Name,
-                Surname = request.newUser.Surname,
-                PhoneNumber = request.newUser.PhoneNumber
+                UserName = request.registerRequestDTO.UserName,
+                Email = request.registerRequestDTO.Email,
+                NormalizedEmail = request.registerRequestDTO.Email.ToUpper(),
+                Name = request.registerRequestDTO.Name,
+                Surname = request.registerRequestDTO.Surname,
+                PhoneNumber = request.registerRequestDTO.PhoneNumber
             };
-            string password = request.newUser.Password;
-            string passwordConfirmed = request.newUser.PasswordConfirmed;
+            string password = request.registerRequestDTO.Password;
+            string passwordConfirmed = request.registerRequestDTO.PasswordConfirmed;
 
             // Validate input.
             var validationResult = await IsInputValid(user, password, passwordConfirmed);
@@ -55,6 +55,10 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, nameof(UserRole.User));
+                }
+                else
+                {
+                    _logger.LogError(request, result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user");
                 }
             }
             catch (Exception ex)
@@ -79,17 +83,10 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
                 return Result.Fail(userValidationResult.Errors);
             }
 
-            // Check if password valid.
-            var passwordValidationResult = IsPasswordValid(password);
-            if (!passwordValidationResult.isValid)
-            {
-                return Result.Fail(passwordValidationResult.errorMessage);
-            }
-
             // Check if password and passwordConfirmed are same.
             if (password != passwordConfirmed)
             {
-                return Result.Fail(passwordValidationResult.errorMessage);
+                return Result.Fail("cdcdscs");
             }
 
             return Result.Ok();
@@ -97,13 +94,6 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
 
         private async Task<Result> IsUserValid(User user)
         {
-            // Check if email valid.
-            var emailValidationResult = IsEmailValid(user.Email);
-            if (!emailValidationResult.isValid)
-            {
-                return Result.Fail(emailValidationResult.errorMassage);
-            }
-
             // Check if user is unique by email.
             var userFromDbDyEmail = await _repositoryWrapper.UserRepository
                 .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.Email == user.Email);
@@ -121,47 +111,6 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             }
 
             return Result.Ok();
-        }
-
-        private (bool isValid, string? errorMassage) IsEmailValid(string email)
-        {
-            // Check if input email has standart format( e.g. *******@****.com).
-            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.(com|net|org|gov|ua)$"))
-            {
-                return (false, "Incorrect email address format");
-            }
-
-            return (true, null);
-        }
-
-        private (bool isValid, string? errorMessage) IsPasswordValid(string password)
-        {
-            if (Regex.Matches(password, @"[\s]").Any())
-            {
-                return (false, "Password cannot contain whitespaces");
-            }
-
-            if (!Regex.Matches(password, @"[^a - zA - Z.\d:]").Any())
-            {
-                return (false, "Password must contain non-alphanumeric symbol");
-            }
-
-            if (password.Contains('%'))
-            {
-                return (false, "Password cannot contain '%'");
-            }
-
-            if (!Regex.Matches(password, @"\p{Lu}").Any())
-            {
-                return (false, "Password must contain UPPERCASE letter");
-            }
-
-            if (!Regex.Matches(password, @"\p{Ll}").Any())
-            {
-                return (false, "Password must contain lowercase letter");
-            }
-
-            return (true, null);
         }
     }
 }

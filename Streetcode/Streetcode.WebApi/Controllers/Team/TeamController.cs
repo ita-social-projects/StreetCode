@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.MediatR.Team.Create;
@@ -38,18 +39,21 @@ namespace Streetcode.WebApi.Controllers.Team
 		}
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Create([FromBody] TeamMemberDTO teamMember)
         {
             return HandleResult(await Mediator.Send(new CreateTeamQuery(teamMember)));
         }
 
         [HttpPut]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Update([FromBody] TeamMemberDTO teamMember)
         {
             return HandleResult(await Mediator.Send(new UpdateTeamQuery(teamMember)));
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             return HandleResult(await Mediator.Send(new DeleteTeamQuery(id)));

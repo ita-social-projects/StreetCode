@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
@@ -31,12 +32,14 @@ public class FactController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> Create([FromBody] FactDto fact)
     {
         return HandleResult(await Mediator.Send(new CreateFactCommand(fact)));
     }
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] FactDto fact)
     {
         fact.Id = id;
@@ -44,6 +47,7 @@ public class FactController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteFactCommand(id)));

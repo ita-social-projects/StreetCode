@@ -130,8 +130,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             };
         }
 
-        private static string GetPasswordOfExistingEntity() => "One111oneOne#@#";
-
         private void SetupMockRepositoryGetFirstOrDefault(bool existing)
         {
             this._mockRepositoryWrapper

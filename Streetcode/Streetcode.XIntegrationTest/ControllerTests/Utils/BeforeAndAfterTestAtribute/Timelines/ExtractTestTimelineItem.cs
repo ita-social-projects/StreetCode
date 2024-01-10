@@ -1,11 +1,16 @@
 ﻿using Streetcode.DAL.Entities.Timeline;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Timelines
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestTimelineItem : BeforeAfterTestAttribute
+    internal class ExtractTestTimelineItem: BeforeAfterTestAttribute
     {
         public static TimelineItem TimelineItemForTest;
 

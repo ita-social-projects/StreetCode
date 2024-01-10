@@ -6,7 +6,7 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    internal class ExtractTestVideo : BeforeAfterTestAttribute
+    internal class ExtractTestVideo: BeforeAfterTestAttribute
     {
         public static DAL.Entities.Media.Video VideoForTest;
         public static StreetcodeContent StreetcodeWithVideo;

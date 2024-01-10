@@ -19,14 +19,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             {
                 StreetcodeContent first = sqlDbHelper.GetExistItem<StreetcodeContent>();
                 first ??= sqlDbHelper.AddNewItem(new StreetcodeContent()
-                {
-                    Index = 10,
-                    UpdatedAt = DateTime.Now,
-                    CreatedAt = DateTime.Now,
-                    EventStartOrPersonBirthDate = DateTime.Now,
-                    EventEndOrPersonDeathDate = DateTime.Now,
-                    ViewCount = 1,
-                });
+                    {
+                        Index = 10,
+                        UpdatedAt = DateTime.Now,
+                        CreatedAt = DateTime.Now,
+                        EventStartOrPersonBirthDate = DateTime.Now,
+                        EventEndOrPersonDeathDate = DateTime.Now,
+                        ViewCount = 1,
+                    });
 
                 CoordinateForTest = sqlDbHelper.AddNewItem(
                     new StreetcodeCoordinate()

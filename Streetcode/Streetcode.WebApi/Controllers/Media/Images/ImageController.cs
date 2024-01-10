@@ -7,7 +7,6 @@ using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Image.Create;
 using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
-using Streetcode.WebApi.Attributes;
 using Streetcode.DAL.Enums;
 using Microsoft.Net.Http.Headers;
 

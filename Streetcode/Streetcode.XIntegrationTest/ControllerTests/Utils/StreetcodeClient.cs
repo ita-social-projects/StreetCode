@@ -3,17 +3,15 @@ using RestSharp.Serializers;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils
-{
     public class StreetcodeClient
     {
         protected RestClient Client;
 
         public string SecondPartUrl { get; }
 
-        public StreetcodeClient(HttpClient client, string secondPartUrl = "")
+      public StreetcodeClient(HttpClient client, string secondPartUrl = "")
         {
-            this.Client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
+            this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
 

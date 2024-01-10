@@ -40,13 +40,12 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
                 PhoneNumber = request.registerRequestDTO.PhoneNumber
             };
             string password = request.registerRequestDTO.Password;
-            string passwordConfirmed = request.registerRequestDTO.PasswordConfirmed;
 
             // Validate input.
-            var validationResult = await IsInputValid(user, password, passwordConfirmed);
-            if (validationResult.IsFailed)
+            var uniqueResult = await IsUserUnique(user);
+            if (uniqueResult.IsFailed)
             {
-                return Result.Fail(validationResult.Errors);
+                return Result.Fail(uniqueResult.Errors);
             }
 
             try
@@ -76,25 +75,7 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
             return Result.Ok(responseDTO);
         }
 
-        private async Task<Result> IsInputValid(User user, string password, string passwordConfirmed)
-        {
-            // Check if user valid.
-            var userValidationResult = await IsUserValid(user);
-            if (userValidationResult.IsFailed)
-            {
-                return Result.Fail(userValidationResult.Errors);
-            }
-
-            // Check if password and passwordConfirmed are same.
-            if (password != passwordConfirmed)
-            {
-                return Result.Fail("cdcdscs");
-            }
-
-            return Result.Ok();
-        }
-
-        private async Task<Result> IsUserValid(User user)
+        private async Task<Result> IsUserUnique(User user)
         {
             // Check if user is unique by email.
             var userFromDbDyEmail = await _repositoryWrapper.UserRepository

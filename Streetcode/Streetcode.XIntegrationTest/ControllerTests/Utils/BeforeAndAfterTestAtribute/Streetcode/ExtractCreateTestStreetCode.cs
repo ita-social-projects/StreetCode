@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
@@ -14,7 +13,6 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using System.Reflection;
@@ -52,7 +50,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     AdditionalText = "TestAdditionalText",
                 },
                 Toponyms = new List<StreetcodeToponymUpdateDTO>(),
-                ImagesIds = new List<int> (),
+                ImagesIds = new List<int>(),
                 Tags = new List<StreetcodeTagDTO>(),
                 Subtitles = new List<SubtitleCreateDTO>(),
                 Facts = new List<FactUpdateCreateDto>(),

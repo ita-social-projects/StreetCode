@@ -1,17 +1,8 @@
-﻿using Streetcode.XIntegrationTest.ControllerTests.Utils;
+﻿using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
-using Streetcode.BLL.DTO.Timeline.Update;
-using Streetcode.DAL.Entities.Timeline;
-using Newtonsoft.Json;
-using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
 {

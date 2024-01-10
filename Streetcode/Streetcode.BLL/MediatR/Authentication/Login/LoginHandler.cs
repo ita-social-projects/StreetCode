@@ -21,7 +21,6 @@ namespace Streetcode.BLL.MediatR.Users.Login
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<LoginHandler> _stringLocalizer;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
         public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, IStringLocalizer<LoginHandler> stringLocalizer, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -31,7 +30,6 @@ namespace Streetcode.BLL.MediatR.Users.Login
             _logger = logger;
             _stringLocalizer = stringLocalizer;
             _userManager = userManager;
-            _roleManager = roleManager;
         }
 
         public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)

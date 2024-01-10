@@ -22,7 +22,7 @@ namespace Streetcode.BLL.MediatR.Users.Login
         private readonly IStringLocalizer<LoginHandler> _stringLocalizer;
         private readonly UserManager<User> _userManager;
 
-        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, IStringLocalizer<LoginHandler> stringLocalizer, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, IStringLocalizer<LoginHandler> stringLocalizer, UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;

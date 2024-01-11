@@ -43,13 +43,16 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 if (app.Environment.EnvironmentName != "Production")
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
+    // app.UseSwagger();
+    // app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 }
 else
 {
     app.UseHsts();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPIv5 v1"));
 
 await app.ApplyMigrations();
 

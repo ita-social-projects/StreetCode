@@ -43,7 +43,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
             var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(getResponse.Content);
 
             // Assert
-            // Check if the fetched Streetcode matches the one we created
             Assert.Equal(streetcodeCreateDTO.Title, fetchedStreetcode.Title);
             Assert.Equal(streetcodeCreateDTO.TransliterationUrl, fetchedStreetcode.TransliterationUrl);
         }
@@ -84,8 +83,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
         public async Task Create_WithLongTransliterationUrl_ReturnsBadRequest()
         {
             // Arrange
+            var transliterationUrlMaxLength = 150;
             var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
-            streetcodeCreateDTO.TransliterationUrl = new string('a', 151);  // TransliterationUrl length exceeds the maximum limit
+            streetcodeCreateDTO.TransliterationUrl = new string('a', transliterationUrlMaxLength + 1);
 
             // Act
             var response = await client.CreateAsync(streetcodeCreateDTO);

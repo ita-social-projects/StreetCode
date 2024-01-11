@@ -26,10 +26,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
             });
             blobPath = environmentVariables.Value.BlobStorePath;
             blobKey = environmentVariables.Value.BlobStoreKey;
-
-            //    TestDbContext = TestDBFixture.CreateContext(Configuration.GetConnectionString("DefaultConnection"));
-            //    RepositoryWrapper repo = new RepositoryWrapper(TestDbContext);
-
+                       
             blobService = new BlobService(environmentVariables); // add repo
             Directory.CreateDirectory(blobPath);
         }

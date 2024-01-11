@@ -72,7 +72,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>(p => p.Index == StreetcodeForTest.Index);
             if (streetcodeContent != null)
             {
-                // Delete the StreetcodeContent
                 sqlDbHelper.DeleteItem(streetcodeContent);
                 sqlDbHelper.SaveChanges();
             }

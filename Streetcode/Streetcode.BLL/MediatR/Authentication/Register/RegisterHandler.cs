@@ -58,7 +58,9 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
                 }
                 else
                 {
-                    _logger.LogError(request, result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user");
+                    string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user";
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(errorMessage);
                 }
             }
             catch (Exception ex)
@@ -79,18 +81,11 @@ namespace Streetcode.BLL.MediatR.Users.SignUp
         {
             // Check if user is unique by email.
             var userFromDbDyEmail = await _repositoryWrapper.UserRepository
-                .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.Email == user.Email);
+                .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.Email == user.Email || userFromDb.UserName == user.UserName);
             if (userFromDbDyEmail is not null)
             {
-                return Result.Fail("User with such Email already exists in database");
-            }
-
-            // Check if user is unique by username.
-            var userFromDbDyUserName = await _repositoryWrapper.UserRepository
-                .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.UserName == user.UserName);
-            if (userFromDbDyUserName is not null)
-            {
-                return Result.Fail("User with such UserName already exists in database");
+                bool isNotUniqueByEmail = userFromDbDyEmail.Email == user.Email;
+                return Result.Fail($"User with such {(isNotUniqueByEmail ? "Email" : "UserName")} already exists in database");
             }
 
             return Result.Ok();

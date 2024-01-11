@@ -74,11 +74,22 @@ git@github.com:ita-social-projects/StreetCode.git
   ```
 
 ### Setup
-  1. Change connection string  
-   (Go to **appsettings.json** and write your local database connection string)
-  2. Create local database  
-   (Run project and make sure that database was created filled with data)
+  **1. Change connection string**  
+   * Go to `appsettings.Local.json` in **StreetCode.WebApi** project and write your local database connection string in following format:
+    
+     ```
+      Server={local_server_name};Database=StreetcodeDb;User Id={username};Password={password};MultipleActiveResultSets=true;TrustServerCertificate=true;
+     ```
 
+  **2. Add database seeding**
+   - Go to `Program.cs` in **StreetCode.WebApi** project and add following code:
+
+     ```csharp
+     await app.SeedDataAsync(); 
+     ```
+     
+  **3. Create and seed local database**  
+   * Run project and make sure that database was created and filled with data
 
 ### How to run local 
  Run the Streetcode project than open your browser and enter https://localhost:5001/swagger/index.html url. If you had this page already opened, just reload it.

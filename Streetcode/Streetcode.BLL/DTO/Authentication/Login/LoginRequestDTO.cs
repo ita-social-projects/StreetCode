@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Streetcode.BLL.Attributes.Authentication;
 using Streetcode.BLL.Constants.Authentication;
-using Streetcode.BLL.Services.Authentication;
 
 namespace Streetcode.BLL.DTO.Authentication.Login;
 

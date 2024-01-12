@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.Middleware
 {
-    public class MiddlewareOptions
+    public class RequestResponseMiddlewareOptions
     {
         public int MaxResponseLength { get; set; }
         public List<string> PropertiesToShorten { get; set; }

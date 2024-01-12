@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +18,9 @@ namespace Streetcode.BLL.Middleware
     public class ApiRequestResponseMiddleware : IMiddleware
     {
         private readonly ILoggerService _loggerService;
-        private readonly MiddlewareOptions _options;
+        private readonly RequestResponseMiddlewareOptions _options;
 
-        public ApiRequestResponseMiddleware(ILoggerService loggerService, IOptions<MiddlewareOptions> options)
+        public ApiRequestResponseMiddleware(ILoggerService loggerService, IOptions<RequestResponseMiddlewareOptions> options)
         {
             _loggerService = loggerService;
             _options = options.Value;
@@ -27,17 +28,12 @@ namespace Streetcode.BLL.Middleware
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            await LogRequestAsync(context);
-            await LogResponseAsync(context, next);
-        }
-
-        private async Task LogRequestAsync(HttpContext context)
-        {
             var request = await GetRequestAsTextAsync(context.Request);
-            _loggerService.LogInformation(request);
+            var response = await FormatResponseAsync(context, next);
+            _loggerService.LogInformation($"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}Request body: {request}{Environment.NewLine}Response body: {response}");
         }
 
-        private async Task LogResponseAsync(HttpContext context, RequestDelegate next)
+        private async Task<string> FormatResponseAsync(HttpContext context, RequestDelegate next)
         {
             var originalBodyStream = context.Response.Body;
             await using var responseBody = new MemoryStream();
@@ -46,29 +42,24 @@ namespace Streetcode.BLL.Middleware
             await next(context);
 
             var response = await GetResponseAsTextAsync(context.Response);
-            var filteredResponse = GetFilteredResponse(response);
-            _loggerService.LogInformation(filteredResponse);
+            var filteredResponse = GetFilteredBody(response);
             await responseBody.CopyToAsync(originalBodyStream);
+            return filteredResponse;
         }
 
         private async Task<string> GetRequestAsTextAsync(HttpRequest request)
         {
-            var requestBody = request.Body;
-
             request.EnableBuffering();
+            using var streamReader = new StreamReader(request.Body, leaveOpen: true);
+            var requestBody = await streamReader.ReadToEndAsync();
+            request.Body.Position = 0;
 
-            var buffer = new byte[Convert.ToInt32(request.ContentLength)];
+            var filteredBody = GetFilteredBody(requestBody);
 
-            await request.Body.ReadAsync(buffer, 0, buffer.Length);
-
-            var bodyAsText = Encoding.UTF8.GetString(buffer);
-
-            request.Body = requestBody;
-
-            return $"{request.Scheme} {request.Host} {request.Path} {request.QueryString} {bodyAsText}";
+            return filteredBody;
         }
 
-        private static async Task<string> GetResponseAsTextAsync(HttpResponse response)
+        private async Task<string> GetResponseAsTextAsync(HttpResponse response)
         {
             response.Body.Seek(0, SeekOrigin.Begin);
 
@@ -78,14 +69,16 @@ namespace Streetcode.BLL.Middleware
 
             response.Body.Seek(0, SeekOrigin.Begin);
 
-            return text;
+            var filteredBody = GetFilteredBody(text);
+
+            return filteredBody;
         }
 
-        private string GetFilteredResponse(string response)
+        private string GetFilteredBody(string body)
         {
             try
             {
-                var jsonObject = JToken.Parse(response);
+                var jsonObject = JToken.Parse(body);
 
                 if (jsonObject.Type == JTokenType.Array)
                 {
@@ -103,9 +96,10 @@ namespace Streetcode.BLL.Middleware
 
                 return jsonObject.ToString();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _loggerService.LogError($"Error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}. Tried to filter body: {body}. Exception: {ex}");
+                return string.Empty;
             }
         }
 

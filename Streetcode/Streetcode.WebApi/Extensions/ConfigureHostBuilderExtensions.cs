@@ -50,8 +50,8 @@ public static class ConfigureHostBuilderExtensions
         });
     }
 
-    public static void ConfigureMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
+    public static void ConfigureRequestResponseMiddlewareOptions(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.Configure<MiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
+        services.Configure<RequestResponseMiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
     }
 }

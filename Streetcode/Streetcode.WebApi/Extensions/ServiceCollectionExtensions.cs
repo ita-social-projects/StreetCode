@@ -17,7 +17,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.AudioService;
 using Streetcode.BLL.Interfaces.Users;
-using Streetcode.BLL.Services.Users;
+using Streetcode.BLL.Services.Authentication;
 using Microsoft.FeatureManagement;
 using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Payment;

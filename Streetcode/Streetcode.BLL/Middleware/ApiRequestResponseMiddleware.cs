@@ -2,37 +2,33 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit.Cryptography;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Services.BlobStorageService;
-using Streetcode.BLL.Services.Logging;
 
 namespace Streetcode.BLL.Middleware
 {
-    public class ApiRequestResponseMiddleware : IMiddleware
+    public class ApiRequestResponseMiddleware
     {
-        private readonly ILoggerService _loggerService;
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ApiRequestResponseMiddleware> _loggerService;
         private readonly RequestResponseMiddlewareOptions _options;
 
-        public ApiRequestResponseMiddleware(ILoggerService loggerService, IOptions<RequestResponseMiddlewareOptions> options)
+        public ApiRequestResponseMiddleware(RequestDelegate next, ILogger<ApiRequestResponseMiddleware> loggerService, IOptions<RequestResponseMiddlewareOptions> options)
         {
             _loggerService = loggerService;
             _options = options.Value;
+            _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
             var request = await GetRequestAsTextAsync(context.Request);
             var requestTemplate = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}Request body: {request}{Environment.NewLine}";
             try
             {
-                var response = await FormatResponseAsync(context, next);
+                var response = await FormatResponseAsync(context, _next);
                 _loggerService.LogInformation($"{requestTemplate}Response body: {response}");
             }
             catch (Exception exception)

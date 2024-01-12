@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
@@ -22,10 +20,6 @@ using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
-using Streetcode.BLL.Middleware;
-using Serilog.Events;
-using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -46,11 +40,9 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
-        services.AddTransient(typeof(ApiRequestResponseMiddleware));
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

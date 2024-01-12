@@ -29,8 +29,16 @@ namespace Streetcode.BLL.Middleware
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             var request = await GetRequestAsTextAsync(context.Request);
-            var response = await FormatResponseAsync(context, next);
-            _loggerService.LogInformation($"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}Request body: {request}{Environment.NewLine}Response body: {response}");
+            var requestTemplate = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}Request body: {request}{Environment.NewLine}";
+            try
+            {
+                var response = await FormatResponseAsync(context, next);
+                _loggerService.LogInformation($"{requestTemplate}Response body: {response}");
+            }
+            catch (Exception exception)
+            {
+                _loggerService.LogError($"{requestTemplate}An unhandled exception was thrown by the application: {exception}");
+            }
         }
 
         private async Task<string> FormatResponseAsync(HttpContext context, RequestDelegate next)
@@ -76,6 +84,11 @@ namespace Streetcode.BLL.Middleware
 
         private string GetFilteredBody(string body)
         {
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return string.Empty;
+            }
+
             try
             {
                 var jsonObject = JToken.Parse(body);
@@ -98,7 +111,7 @@ namespace Streetcode.BLL.Middleware
             }
             catch (Exception ex)
             {
-                _loggerService.LogError($"Error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}. Tried to filter body: {body}. Exception: {ex}");
+                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}.{MethodBase.GetCurrentMethod().Name}. Tried to parse body: {body}. Exception: {ex}");
                 return string.Empty;
             }
         }
@@ -120,7 +133,7 @@ namespace Streetcode.BLL.Middleware
 
                 if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
                 {
-                    property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength));
+                    property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength) + "...");
                 }
                 else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
                 {

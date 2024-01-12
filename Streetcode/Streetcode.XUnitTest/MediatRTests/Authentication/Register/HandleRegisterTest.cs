@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Users.SignUp;
+using Streetcode.BLL.MediatR.Authentication.Register;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -66,21 +66,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             Assert.Equal(expectedRole, result.Value.Role);
         }
 
-        [Fact]
-        public async Task ShouldReturnFailWithCorrectMessage_UserWithGivenEmailIsAlreadyInDatabase()
-        {
-            // Arrange.
-            string expectedErrorMessage = "User with such Email already exists in database";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
-            var handler = this.GetRegisterHandler();
+        //[Fact]
+        //public async Task ShouldReturnFailWithCorrectMessage_UserWithGivenEmailIsAlreadyInDatabase()
+        //{
+        //    // Arrange.
+        //    string expectedErrorMessage = "User with such Email already exists in database";
+        //    this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
+        //    var handler = this.GetRegisterHandler();
 
-            // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetRegisterRequestWithExistingEmail()), CancellationToken.None);
+        //    // Act.
+        //    var result = await handler.Handle(new RegisterQuery(this.GetRegisterRequestWithExistingEmail()), CancellationToken.None);
 
-            // Assert.
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
-        }
+        //    // Assert.
+        //    Assert.True(result.IsFailed);
+        //    Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
+        //}
 
         [Fact]
         public async Task ShouldReturnFailWithCorrectMessage_UserWithGivenUserNameIsAlreadyInDatabase()

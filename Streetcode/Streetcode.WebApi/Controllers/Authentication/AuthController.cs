@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.DTO.Authentication.Register;
-using Streetcode.BLL.MediatR.Users.Login;
-using Streetcode.BLL.MediatR.Users.RefreshToken;
-using Streetcode.BLL.MediatR.Users.SignUp;
+using Streetcode.BLL.MediatR.Authentication.Login;
+using Streetcode.BLL.MediatR.Authentication.RefreshToken;
+using Streetcode.BLL.MediatR.Authentication.Register;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Users
 {

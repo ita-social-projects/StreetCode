@@ -6,7 +6,7 @@ using Moq;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Users;
-using Streetcode.BLL.MediatR.Users.Login;
+using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;

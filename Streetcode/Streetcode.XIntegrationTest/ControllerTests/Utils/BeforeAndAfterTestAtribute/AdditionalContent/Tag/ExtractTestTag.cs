@@ -1,11 +1,10 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
-using System.Reflection;
+﻿using System.Reflection;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ExtractTestTag: BeforeAfterTestAttribute
+    public class ExtractTestTag : BeforeAfterTestAttribute
     {
         public static DAL.Entities.AdditionalContent.Tag TagForTest;
 

@@ -10,40 +10,50 @@ using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 
-namespace Streetcode.BLL.Services.Users
+namespace Streetcode.BLL.Services.Authentication
 {
     public sealed class TokenService : ITokenService
     {
-        private readonly SigningCredentials _signInCridentials;
+        private readonly SigningCredentials _signingCredentials;
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
         private readonly string _jwtKey;
         private readonly IStringLocalizer<TokenService> _stringLocalizer;
         private readonly StreetcodeDbContext _dbContext;
+        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         public TokenService(IConfiguration configuration, IStringLocalizer<TokenService> stringLocalizer, StreetcodeDbContext dbContext)
         {
-            _jwtIssuer = configuration["Jwt:Issuer"];
-            _jwtAudience = configuration["Jwt:Audience"];
-            _jwtKey = configuration["Jwt:Key"];
+            _jwtIssuer = configuration["Jwt:Issuer"] !;
+            _jwtAudience = configuration["Jwt:Audience"] !;
+            _jwtKey = configuration["Jwt:Key"] !;
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
-            _signInCridentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             _stringLocalizer = stringLocalizer;
             _dbContext = dbContext;
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            _signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+            _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
-        public JwtSecurityToken GenerateJWTToken(User user)
+        public JwtSecurityToken GenerateJWTToken(User? user)
         {
+            // Throw exception if argument is null.
+            if (user is null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
             // Get roles of user.
-            var userRoleId = _dbContext.UserRoles.AsNoTracking()
+            var userRoleId = _dbContext.UserRoles
+                .AsNoTracking()
                 .Where(userRole => userRole.UserId == user.Id)
                 .Select(userRole => userRole.RoleId)
                 .FirstOrDefault();
-            var userRoleName = _dbContext.Roles.AsNoTracking()
+            var userRoleName = _dbContext.Roles
+                .AsNoTracking()
                 .FirstOrDefault(role => role.Id == userRoleId) !.Name;
 
-            var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -54,11 +64,11 @@ namespace Streetcode.BLL.Services.Users
                     new Claim(ClaimTypes.Role, userRoleName),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = _signInCridentials,
+                SigningCredentials = _signingCredentials,
                 Issuer = _jwtIssuer,
                 Audience = _jwtAudience
             };
-            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+            var token = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return token;
         }
@@ -66,16 +76,15 @@ namespace Streetcode.BLL.Services.Users
         public JwtSecurityToken RefreshToken(string token)
         {
             var principles = GetPrinciplesFromToken(token);
-            var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(principles.Claims),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = _signInCridentials,
+                SigningCredentials = _signingCredentials,
                 Issuer = _jwtIssuer,
                 Audience = _jwtAudience
             };
-            var newToken = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+            var newToken = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return newToken;
         }
@@ -104,9 +113,8 @@ namespace Streetcode.BLL.Services.Users
                 },
                 ValidateLifetime = true
             };
-            var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var principal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
             if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {

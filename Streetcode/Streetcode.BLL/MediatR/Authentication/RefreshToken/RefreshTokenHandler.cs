@@ -1,13 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Users;
-using Streetcode.BLL.Services.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-
 namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
     public class RefreshTokenHandler : IRequestHandler<RefreshTokenQuery, Result<RefreshTokenResponceDTO>>

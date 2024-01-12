@@ -134,9 +134,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         {
             this._mockRepositoryWrapper
                 .Setup(wrapper => wrapper.UserRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<User, bool>>>(),
-                    It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+                    .GetFirstOrDefaultAsync(
+                        It.IsAny<Expression<Func<User, bool>>>(),
+                        It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
                 .ReturnsAsync(existing ? GetUser() : null);
         }
 

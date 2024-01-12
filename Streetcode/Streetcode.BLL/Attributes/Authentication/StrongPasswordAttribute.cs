@@ -13,6 +13,11 @@ namespace Streetcode.BLL.Attributes.Authentication
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
+            if (value is null)
+            {
+                return new ValidationResult("Input parameter cannot be null");
+            }
+
             string? password = value as string;
 
             if (password is null)

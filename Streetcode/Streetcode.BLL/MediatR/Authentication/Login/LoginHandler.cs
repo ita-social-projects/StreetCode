@@ -11,7 +11,7 @@ using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Users.Login
+namespace Streetcode.BLL.MediatR.Authentication.Login
 {
     public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResponseDTO>>
     {

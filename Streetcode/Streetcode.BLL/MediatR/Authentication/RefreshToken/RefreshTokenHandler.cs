@@ -8,7 +8,7 @@ using Streetcode.BLL.Interfaces.Users;
 using Streetcode.BLL.Services.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Users.RefreshToken
+namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
     public class RefreshTokenHandler : IRequestHandler<RefreshTokenQuery, Result<RefreshTokenResponceDTO>>
     {

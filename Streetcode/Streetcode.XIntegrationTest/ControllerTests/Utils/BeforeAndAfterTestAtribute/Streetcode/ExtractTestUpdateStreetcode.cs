@@ -1,12 +1,11 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.Streetcode;
+﻿using Streetcode.DAL.Entities.Streetcode;
 using System.Reflection;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    class ExtractTestStreetcode : BeforeAfterTestAttribute
+    class ExtractTestUpdateStreetcode : BeforeAfterTestAttribute
     {
         public static StreetcodeContent StreetcodeForTest;
 
@@ -28,6 +27,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                     Alias = "dsf",
                     Title = "Title",
                     TransliterationUrl = Guid.NewGuid().ToString(),
+                    Teaser = "Test Teaser",
                 });
                 sqlDbHelper.SaveChanges();
             }

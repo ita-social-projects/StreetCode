@@ -12,14 +12,10 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
     public class RefreshTokenHandler : IRequestHandler<RefreshTokenQuery, Result<RefreshTokenResponceDTO>>
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
 
-        public RefreshTokenHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService)
+        public RefreshTokenHandler(ITokenService tokenService)
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
             _tokenService = tokenService;
         }
 

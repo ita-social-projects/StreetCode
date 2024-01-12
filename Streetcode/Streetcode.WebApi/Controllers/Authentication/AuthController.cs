@@ -11,7 +11,6 @@ using Streetcode.DAL.Entities.Users;
 namespace Streetcode.WebApi.Controllers.Users
 {
     [ApiController]
-    [Route("auth/[action]")]
     public class AuthController : BaseApiController
     {
         private readonly UserManager<User> _userManager;

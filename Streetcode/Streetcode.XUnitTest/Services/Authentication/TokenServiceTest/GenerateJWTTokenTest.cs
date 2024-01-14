@@ -35,7 +35,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         }
 
         [Fact]
-        public async Task ShouldThrowException_InputParameterIsNull()
+        public void ShouldThrowException_InputParameterIsNull()
         {
             // Arrange.
             var exceptionAction = this._tokenService.GenerateJWTToken;
@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         }
 
         [Fact]
-        public async Task ShouldReturnNotNullToken_InputUserIsValid()
+        public void ShouldReturnNotNullToken_InputUserIsValid()
         {
             // Arrange.
             this.SetupMockDbContextGetRoles();
@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         }
 
         [Fact]
-        public async Task ShouldReturnCorrectData_InputUserIsValid()
+        public void ShouldReturnCorrectData_InputUserIsValid()
         {
             // Arrange.
             User expectedUser = GetUser();

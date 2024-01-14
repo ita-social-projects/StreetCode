@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             // Arrange.
             this.SetupMockDbContextGetRoles();
             this.SetupMockDbContextGetUserRoles();
-            User user = GetUser();
+            User user = this.GetUser();
 
             // Act.
             var token = this._tokenService.GenerateJWTToken(user);
@@ -78,7 +78,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             Assert.Equal(expectedRole, token.Claims.FirstOrDefault(claim => claim.Type == "role") !.Value);
         }
 
-        private static User GetUser()
+        private User GetUser()
         {
             return new User()
             {

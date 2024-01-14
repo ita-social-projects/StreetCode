@@ -92,8 +92,6 @@ namespace Streetcode.BLL.Services.Authentication
         private ClaimsPrincipal GetPrinciplesFromToken(string token)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidAudience = _jwtAudience,
@@ -102,26 +100,23 @@ namespace Streetcode.BLL.Services.Authentication
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = securityKey,
-                LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) =>
-                {
-                    if (expires == null)
-                    {
-                        return false;
-                    }
-
-                    return (DateTime.Now.AddHours(1) - expires).Value.TotalSeconds > 0;
-                },
-                ValidateLifetime = true
+                ValidateLifetime = true,
+                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
             };
+
+            ClaimsPrincipal claimsPrincipal;
             SecurityToken securityToken;
-            var principal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                throw new SecurityTokenException(_stringLocalizer["InvalidToken"].Value);
+                claimsPrincipal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            }
+            catch (SecurityTokenValidationException ex)
+            {
+                throw new SecurityTokenValidationException(ex.Message, ex);
             }
 
-            return principal;
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            return claimsPrincipal;
         }
     }
 }

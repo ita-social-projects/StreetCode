@@ -47,5 +47,5 @@ public class RegisterRequestDTO
     [MinLength(14, ErrorMessage = "Password minimum length is 14")]
     [DefaultValue("")]
     [Compare(nameof(Password))]
-    public string PasswordConfirmed { get; set; }
+    public string PasswordConfirmation { get; set; }
 }

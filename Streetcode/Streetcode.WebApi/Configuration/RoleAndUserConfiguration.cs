@@ -46,13 +46,6 @@ namespace Streetcode.WebApi.Configuration
             await context.SaveChangesAsync();
         }
 
-        public static async Task AssignRole(IServiceProvider services, string email, string role)
-        {
-            UserManager<User> userManager = services.GetService<UserManager<User>>() !;
-            User user = await userManager!.FindByEmailAsync(email);
-            var result = await userManager.AddToRoleAsync(user, role);
-        }
-
         public static async Task AddRolesAsync(IServiceProvider services)
         {
             RoleManager<IdentityRole> roleManager = services.GetService<RoleManager<IdentityRole>>() !;
@@ -61,6 +54,13 @@ namespace Streetcode.WebApi.Configuration
                 await roleManager.CreateAsync(new IdentityRole(nameof(UserRole.Admin)));
                 await roleManager.CreateAsync(new IdentityRole(nameof(UserRole.User)));
             }
+        }
+
+        private static async Task AssignRole(IServiceProvider services, string email, string role)
+        {
+            UserManager<User> userManager = services.GetService<UserManager<User>>()!;
+            User user = await userManager!.FindByEmailAsync(email);
+            var result = await userManager.AddToRoleAsync(user, role);
         }
     }
 }

@@ -1,15 +1,10 @@
 ﻿using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional
 {
-    public class TagClient: BaseClient
+    public class SubtitleClient : BaseClient
     {
-        public TagClient(HttpClient client, string secondPartUrl = "")
+        public SubtitleClient(HttpClient client, string secondPartUrl = "")
             : base(client, secondPartUrl)
         {
         }

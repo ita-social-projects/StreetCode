@@ -2,11 +2,12 @@
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-   public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class CoordinateControllerTests : BaseControllerTests<CoordinateClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeContent _testStreetcodeContent;
 

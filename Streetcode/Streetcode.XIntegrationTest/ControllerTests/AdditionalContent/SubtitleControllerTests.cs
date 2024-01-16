@@ -1,13 +1,14 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using System.Net;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class SubtitleControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Subtitle _testSubtitle;
 

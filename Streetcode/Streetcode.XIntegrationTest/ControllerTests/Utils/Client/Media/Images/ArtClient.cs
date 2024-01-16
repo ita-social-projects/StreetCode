@@ -12,7 +12,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images
 
         public async Task<RestResponse> GetArtsByStreetcodeId(int id, string authToken = "")
         {
-            return await this.SendQuery($"/GetTagByTitle/{id}", authToken);
+            return await this.SendQuery($"/GetArtsByStreetcodeId/{id}", authToken);
         }
     }
 }

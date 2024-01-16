@@ -1,12 +1,13 @@
 ﻿using Streetcode.BLL.DTO.Media;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-    public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class VideoControllerTests : BaseControllerTests<VideoClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Video _testVideo;
 
@@ -24,7 +25,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await client.GetAllAsync();
+            var response = await this.client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<VideoDTO>>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -46,7 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var response = await client.GetByIdAsync(id);
+            var response = await this.client.GetByIdAsync(id);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -72,7 +73,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),

@@ -1,15 +1,15 @@
 ﻿using Streetcode.BLL.DTO.Media.Audio;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-    public class AudioControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Audio _testAudio;
         private StreetcodeContent _testStreetcodeContent;

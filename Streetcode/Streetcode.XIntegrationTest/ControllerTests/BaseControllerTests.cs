@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Streetcode.DAL.Persistence;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests
 {
@@ -29,7 +29,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests
         public abstract void Dispose();
     }
 
-    public class BaseControllerTests : BaseControllerTests<StreetcodeClient>
+    public class BaseControllerTests : BaseControllerTests<StreetcodeRelatedBaseClient>
     {
         public BaseControllerTests(CustomWebApplicationFactory<Program> factory, string secondPartUrl = "")
             : base(factory, secondPartUrl)

@@ -2,13 +2,14 @@
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
-    public class ImageControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ImageControllerTests : BaseControllerTests<ImageClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Image _testImage;
         private StreetcodeContent _testStreetcodeContent;

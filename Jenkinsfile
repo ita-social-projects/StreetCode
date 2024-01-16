@@ -76,6 +76,7 @@ pipeline {
                     env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
                     env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
                     env.GitVersion_Sha = props.GitVersion_Sha
+                    env.GitVersion_IGNORE_NORMALISATION_GIT_HEAD_MOVE = 1
                 }
             }
         }

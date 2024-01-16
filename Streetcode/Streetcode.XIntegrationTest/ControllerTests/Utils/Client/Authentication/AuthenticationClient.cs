@@ -2,6 +2,7 @@
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.DTO.Authentication.Register;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authentication
 {

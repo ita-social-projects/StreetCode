@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional
 {

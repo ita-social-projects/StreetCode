@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Streetcode.DAL.Persistence;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests
 {

@@ -3,21 +3,21 @@ using RestSharp.Serializers;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client
 {
-    public abstract class BaseClient
+    public class BaseClient
     {
-        protected RestClient client;
+        private readonly RestClient _client;
 
-        public string SecondPartUrl { get; }
+        protected readonly string _secondPartUrl;
 
         public BaseClient(HttpClient client, string secondPartUrl = "")
         {
-            this.client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
-            this.SecondPartUrl = secondPartUrl;
+            this._client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
+            this._secondPartUrl = secondPartUrl;
         }
 
-        public async Task<RestResponse> SendQuery(string requestString, string authToken = "")
+        protected async Task<RestResponse> SendQuery(string requestString, string authToken = "")
         {
-            var request = new RestRequest($"{this.SecondPartUrl}{requestString}");
+            var request = new RestRequest($"{this._secondPartUrl}{requestString}");
             RestResponse response;
             try
             {
@@ -32,10 +32,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client
             return response;
         }
 
-        public async Task<RestResponse> SendCommand<T>(string requestString, Method method, T requestDto, string authToken = "")
+        protected async Task<RestResponse> SendCommand<T>(string requestString, Method method, T requestDto, string authToken = "")
             where T : class
         {
-            var request = new RestRequest($"{this.SecondPartUrl}{requestString}", method);
+            var request = new RestRequest($"{this._secondPartUrl}{requestString}", method);
             request.AddJsonBody<T>(requestDto);
             RestResponse response;
             try
@@ -55,7 +55,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("authorization", $"Bearer {authToken}");
             request.AddHeader("content-type", "application/json");
-            var response = await this.client.ExecuteAsync(request);
+
+            var response = await this._client.ExecuteAsync(request);
             return response;
         }
     }

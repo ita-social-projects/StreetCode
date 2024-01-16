@@ -11,7 +11,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         private static Func<HttpClient, string, T> CreateClientInitializerFunction()
         {
             ConstructorInfo TestClassConstructorCache = typeof(T).GetConstructor(new[] { typeof(HttpClient), typeof(string) })!;
-            ParameterExpression clientParameter = Expression.Parameter(typeof(HttpClient), "client");
+            ParameterExpression clientParameter = Expression.Parameter(typeof(HttpClient), "_client");
             ParameterExpression secondPartUrlParameter = Expression.Parameter(typeof(string), "secondPartUrl");
 
             NewExpression constructorExpression = Expression.New(

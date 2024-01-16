@@ -4,13 +4,14 @@ using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class TagControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class TagControllerTests : BaseControllerTests<TagClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Tag _testTag;
         private StreetcodeContent _testStreetcodeContent;
@@ -35,7 +36,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await client.GetAllAsync();
+            var response = await this.client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -61,7 +62,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetByIdIncorrect_ReturnBadRequest()
         {
             int incorrectId = -100;
-            var response = await client.GetByIdAsync(incorrectId);
+            var response = await this.client.GetByIdAsync(incorrectId);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -84,7 +85,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -96,7 +97,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
 
             Tag expectedTag = this._testTag;
-            var response = await this.client.GetResponse($"/GetTagByTitle/{expectedTag.Title}");
+            var response = await this.client.GetTagByTitle(expectedTag.Title);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -108,7 +109,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetByTitle_Incorrect_ReturnBadRequest()
         {
             string title = "Some_Incorrect_Title";
-            var response = await client.GetResponse($"/GetTagByTitle/{title}");
+            var response = await this.client.GetTagByTitle(title);
 
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),

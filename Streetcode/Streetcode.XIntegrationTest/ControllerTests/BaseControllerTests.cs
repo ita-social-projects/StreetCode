@@ -5,26 +5,38 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests
 {
-
-    public abstract class BaseControllerTests : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
+    public abstract class BaseControllerTests<T> : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
     {
-        protected StreetcodeClient client;
+        protected T client;
 
         public BaseControllerTests(CustomWebApplicationFactory<Program> factory, string secondPartUrl = "")
         {
-            this.client = new StreetcodeClient(factory.CreateClient(), secondPartUrl);
+            this.client = ClientInitializer<T>.Initialize(factory.CreateClient(), secondPartUrl);
         }
 
         public static SqlDbHelper GetSqlDbHelper()
         {
             var sqlConnectionString = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.IntegrationTests.json")
-                .Build().GetConnectionString("DefaultConnection");
+                .Build()
+                .GetConnectionString("DefaultConnection");
             var optionBuilder = new DbContextOptionsBuilder<StreetcodeDbContext>();
             optionBuilder.UseSqlServer(sqlConnectionString);
             return new SqlDbHelper(optionBuilder.Options);
         }
 
         public abstract void Dispose();
+    }
+
+    public class BaseControllerTests : BaseControllerTests<StreetcodeClient>
+    {
+        public BaseControllerTests(CustomWebApplicationFactory<Program> factory, string secondPartUrl = "")
+            : base(factory, secondPartUrl)
+        {
+        }
+
+        public override void Dispose()
+        {
+        }
     }
 }

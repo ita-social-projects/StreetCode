@@ -30,7 +30,10 @@ using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
+<<<<<<< HEAD
 using Streetcode.WebApi.Utils;
+=======
+>>>>>>> d11f5171 (Make BaseControllerTests class take different clients)
 using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
 

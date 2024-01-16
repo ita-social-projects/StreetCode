@@ -180,8 +180,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasMaxLength(3000)
+                        .HasColumnType("nvarchar(3000)");
 
                     b.Property<string>("Salary")
                         .IsRequired()
@@ -618,8 +618,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("DateString")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");

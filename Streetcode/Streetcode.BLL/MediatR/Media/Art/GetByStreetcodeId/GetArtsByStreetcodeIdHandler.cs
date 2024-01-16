@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 include: scl => scl
                     .Include(sc => sc.Image) !);
 
-            if (arts is null)
+            if (arts is null || request.StreetcodeId < 1)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
                 _logger.LogError(request, errorMsg);

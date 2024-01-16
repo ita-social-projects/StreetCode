@@ -10,7 +10,6 @@ using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Audio.Update;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media;
 

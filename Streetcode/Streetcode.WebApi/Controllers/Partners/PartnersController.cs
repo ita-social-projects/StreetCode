@@ -10,7 +10,6 @@ using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Partners;
 

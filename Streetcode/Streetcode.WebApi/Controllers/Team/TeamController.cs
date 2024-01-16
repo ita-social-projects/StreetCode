@@ -8,7 +8,6 @@ using Streetcode.BLL.MediatR.Team.GetById;
 using Streetcode.BLL.MediatR.Team.GetByRoleId;
 using Streetcode.BLL.MediatR.Team.Update;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Team
 {

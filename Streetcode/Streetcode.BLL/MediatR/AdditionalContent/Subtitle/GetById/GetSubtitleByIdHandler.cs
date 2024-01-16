@@ -33,7 +33,8 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindSubtitleWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var returner = Result.Fail(new Error(errorMsg));
+            return returner;
         }
 
         return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));

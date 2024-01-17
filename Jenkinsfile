@@ -52,9 +52,10 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
+                    echo "Current directory: ${pwd()}"
                     checkout scm
-                    def version = sh(script: 'dotnet-gitversion /output buildserver', returnStatus: true).trim()
-                    
+                    def version = sh(script: 'dotnet-gitversion /output buildserver').trim()
+                    echo "Calculated version: ${version}"
 
                     // Ваші інші кроки збірки тут
                 // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
@@ -67,13 +68,6 @@ pipeline {
                 // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
                 // sh "docker push ${username}/streetcode:${env.DATETAG}"
                 // }
-                }
-            }
-        }
-        stage('Version output') {
-            steps {
-                script {
-                    echo "Calculated version: ${version}"
                 }
             }
         }

@@ -1,5 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.BLL.Interfaces.Logging;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
@@ -7,10 +10,20 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
     public class DeleteCategoryHandler : IRequestHandler<DeleteCategoryCommand, Result<Unit>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
-        public DeleteCategoryHandler(IRepositoryWrapper repositoryWrapper)
+        public DeleteCategoryHandler(
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
+            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<Unit>> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
@@ -19,13 +32,24 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Delete
 
             if (category is null)
             {
-                return Result.Fail(new Error($"Cannot find a category with corresponding categoryId: {request.Id}"));
+                string errorMsg = _stringLocalizerCannotFind["CannotFindCategoryWithCorrespondingCategoryId", request.Id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repositoryWrapper.SourceCategoryRepository.Delete(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error("Failed to delete a category"));
+            if(resultIsSuccess)
+            {
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteCategory"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
     }
 }

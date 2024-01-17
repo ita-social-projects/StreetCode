@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
@@ -16,23 +14,38 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
         Result<int>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
+            _stringLocalizerNo = stringLocalizerNo;
         }
 
         public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
         {
-            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+            IEnumerable<StreetcodeContent> streetcodes;
+
+            if (request.onlyPublished)
+            {
+                streetcodes = await _repositoryWrapper.StreetcodeRepository
+                    .GetAllAsync(s => s.Status == StreetcodeStatus.Published);
+            }
+            else
+            {
+                streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
+            }
 
             if (streetcodes != null)
             {
-                int count = streetcodes.Count();
-                return Result.Ok(count);
+                return Result.Ok(streetcodes.Count());
             }
 
-            return Result.Fail("No streetcodes exist now");
+            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(errorMsg);
         }
     }
 }

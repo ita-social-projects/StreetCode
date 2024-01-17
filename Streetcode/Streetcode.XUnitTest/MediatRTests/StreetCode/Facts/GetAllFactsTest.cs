@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -14,11 +17,15 @@ public class GetAllFactsTest
 {
     private Mock<IRepositoryWrapper> _mockRepository;
     private Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;  
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
     public GetAllFactsTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -27,7 +34,7 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -45,7 +52,7 @@ public class GetAllFactsTest
         //Arrange
         (_mockMapper, _mockRepository) = GetMapperAndRepo(_mockMapper, _mockRepository);
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -74,8 +81,10 @@ public class GetAllFactsTest
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = "Cannot find any fact";
+        _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyFact"])
+           .Returns(new LocalizedString("CannotFindAnyFact", expectedError));
 
-        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object);
+        var handler = new GetAllFactsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         //Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);

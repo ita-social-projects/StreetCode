@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Streetcode.BLL.Middleware;
+using AspNetCoreRateLimit;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
@@ -53,5 +54,14 @@ public static class ConfigureHostBuilderExtensions
     public static void ConfigureRequestResponseMiddlewareOptions(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<RequestResponseMiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
+    }
+    
+    public static void ConfigureRateLimitMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        builder.Services.AddMemoryCache();
+        builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        builder.Services.AddInMemoryRateLimiting();
+        services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+        builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
     }
 }

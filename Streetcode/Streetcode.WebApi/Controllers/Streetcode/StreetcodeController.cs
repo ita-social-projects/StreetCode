@@ -10,7 +10,6 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
-using Streetcode.WebApi.Attributes;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
@@ -23,6 +22,8 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -35,6 +36,12 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
+    public async Task<IActionResult> GetAllPublished()
+    {
+        return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
+    }
+
+    [HttpGet]
     public async Task<IActionResult> GetAllShort()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery()));
@@ -44,6 +51,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetAllMainPage()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesMainPageQuery()));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize, int shuffleSeed)
+    {
+        return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize, shuffleSeed)));
     }
 
     [HttpGet("{id:int}")]
@@ -77,9 +90,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCount()
+    public async Task<IActionResult> GetCount([FromQuery] bool? onlyPublished)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery()));
+        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery(onlyPublished ?? false)));
     }
 
     [HttpGet("{url}")]

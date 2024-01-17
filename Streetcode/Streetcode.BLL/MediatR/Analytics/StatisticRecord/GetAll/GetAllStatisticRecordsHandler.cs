@@ -2,7 +2,11 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
@@ -11,11 +15,22 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
+        private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotGetSharedResource> _stringLocalizerCannotGet;
+        private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
-        public GetAllStatisticRecordsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+        public GetAllStatisticRecordsHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotGetSharedResource> stringLocalizerCannotGet,
+            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
+            _logger = logger;
+            _stringLocalizerCannotGet = stringLocalizerCannotGet;
+            _stringLocalizerCannotMap = stringLocalizerCannotMap;
         }
 
         public async Task<Result<IEnumerable<StatisticRecordDTO>>> Handle(GetAllStatisticRecordsQuery request, CancellationToken cancellationToken)
@@ -25,19 +40,21 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
             if(statisticRecords == null)
             {
-                return Result.Fail(new Error("Cannot get records"));
+                string errorMsg = _stringLocalizerCannotGet["CannotGetRecords"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             var mappedEntities = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
 
             if(mappedEntities == null)
             {
-                return Result.Fail(new Error("Cannot map records"));
+                string errorMsg = _stringLocalizerCannotMap["CannotMapRecords"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
-            var sortedEntities = mappedEntities.OrderByDescending((x) => x.Count).AsEnumerable();
-
-            return Result.Ok(sortedEntities);
+            return Result.Ok(mappedEntities.OrderByDescending((x) => x.Count).AsEnumerable());
         }
     }
 }

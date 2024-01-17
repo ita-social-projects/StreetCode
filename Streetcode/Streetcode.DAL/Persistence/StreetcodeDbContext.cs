@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Feedback;
+using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.News;
@@ -17,6 +19,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -67,6 +70,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<HistoricalContextTimeline> HistoricalContextsTimelines { get; set; }
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
+    public DbSet<Job> Job { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -223,10 +227,12 @@ public class StreetcodeDbContext : DbContext
             entity.Property(s => s.ViewCount)
                 .HasDefaultValue(0);
 
-            entity.HasDiscriminator<string>("StreetcodeType")
-                .HasValue<StreetcodeContent>("streetcode-base")
-                .HasValue<PersonStreetcode>("streetcode-person")
-                .HasValue<EventStreetcode>("streetcode-event");
+            entity.HasDiscriminator<string>(StreetcodeTypeDiscriminators.DiscriminatorName)
+                .HasValue<StreetcodeContent>(StreetcodeTypeDiscriminators.StreetcodeBaseType)
+                .HasValue<PersonStreetcode>(StreetcodeTypeDiscriminators.StreetcodePersonType)
+                .HasValue<EventStreetcode>(StreetcodeTypeDiscriminators.StreetcodeEventType);
+
+            entity.Property<string>("StreetcodeType").Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Save);
 
             entity.HasMany(d => d.Coordinates)
                 .WithOne(c => c.Streetcode)

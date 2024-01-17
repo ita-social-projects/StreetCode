@@ -2,7 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
@@ -11,11 +14,15 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetStreetcodeByIndexHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetStreetcodeByIndexHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIndexQuery request, CancellationToken cancellationToken)
@@ -26,10 +33,11 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
 
         if (streetcode is null)
         {
-            return Result.Fail(new Error($"Cannot find any streetcode with corresponding index: {request.Index}"));
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingIndex", request.Index].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
-        var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
-        return Result.Ok(streetcodeDto);
+        return Result.Ok(_mapper.Map<StreetcodeDTO>(streetcode));
     }
 }

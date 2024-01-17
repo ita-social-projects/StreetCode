@@ -7,8 +7,8 @@ using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Image.Create;
 using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
-using Streetcode.WebApi.Attributes;
 using Streetcode.DAL.Enums;
+using Microsoft.Net.Http.Headers;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -29,7 +29,7 @@ public class ImageController : BaseApiController
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
+       return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
     }
 
     [HttpPost]

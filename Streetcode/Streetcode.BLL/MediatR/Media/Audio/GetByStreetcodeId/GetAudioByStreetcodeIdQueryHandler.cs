@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
@@ -12,28 +18,40 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService)
+    public GetAudioByStreetcodeIdQueryHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _blobService = blobService;
+        _logger = logger;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var audio = await _repositoryWrapper.AudioRepository
-            .GetFirstOrDefaultAsync(audio => audio.Streetcode.Id == request.StreetcodeId);
-
-        if (audio is null)
+        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
+            s => s.Id == request.StreetcodeId,
+            include: q => q.Include(s => s.Audio) !);
+        if (streetcode == null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with the corresponding streetcode id: {request.StreetcodeId}"));
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithTheCorrespondingStreetcodeId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
-        var audioDto = _mapper.Map<AudioDTO>(audio);
+        NullResult<AudioDTO> result = new NullResult<AudioDTO>();
 
-        audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
+        if (streetcode.Audio != null)
+        {
+            AudioDTO audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
+            audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
+            audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
+            result.WithValue(audioDto);
+        }
 
-        return Result.Ok(audioDto);
+        return result;
     }
 }

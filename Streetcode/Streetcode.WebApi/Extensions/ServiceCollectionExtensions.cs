@@ -13,13 +13,21 @@ using Streetcode.BLL.Services.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
+using Streetcode.BLL.Services.AudioService;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.BLL.Services.Users;
 using Microsoft.FeatureManagement;
+using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Payment;
 using Streetcode.BLL.Services.Payment;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
+using Streetcode.BLL.Interfaces.Text;
+using Streetcode.BLL.Services.Text;
+using Streetcode.BLL.Services.CacheService;
+using Streetcode.BLL.Interfaces.Cache;
+using Streetcode.BLL.Interfaces.Image;
+using Streetcode.BLL.Services.ImageService;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -34,15 +42,20 @@ public static class ServiceCollectionExtensions
     {
         services.AddRepositoryServices();
         services.AddFeatureManagement();
+        services.AddMemoryCache();
+
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
-
+        services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
+        services.AddScoped<IAudioService, AudioService>();
+        services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
+        services.AddScoped<ITextService, AddTermsToTextService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
@@ -88,10 +101,14 @@ public static class ServiceCollectionExtensions
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
-                policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
-                policy.WithMethods(corsConfig.AllowedMethods.ToArray());
-                policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
+                // policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
+                // policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
+                // policy.WithMethods(corsConfig.AllowedMethods.ToArray());
+                // policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
+
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
             });
         });
 

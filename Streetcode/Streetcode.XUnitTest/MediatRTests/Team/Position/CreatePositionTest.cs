@@ -2,6 +2,7 @@
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.DAL.Entities.Partners;
@@ -22,11 +23,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
     {
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public CreatePositionTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -39,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupCreateAsyncMethod(testPositions);
             SetupSaveChangesMethod();
 
-            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreatePositionQuery(GetPositionsDTO()), CancellationToken.None);
@@ -58,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupCreateAsyncMethod(testPositions);
             SetupSaveChangesMethod();
 
-            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreatePositionQuery(GetPositionsDTO()), CancellationToken.None);
@@ -78,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             SetupCreateAsyncMethod(testPositions);
             SetupSaveChangesMethodWithErrorThrow(expectedError);
 
-            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object);
+            var handler = new CreatePositionHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             //Act
             var result = await handler.Handle(new CreatePositionQuery(GetPositionsDTO()), CancellationToken.None);

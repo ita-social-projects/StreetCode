@@ -4,7 +4,6 @@ using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.MediatR.Users.Login;
 using Streetcode.BLL.MediatR.Users.RefreshToken;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Users
 {

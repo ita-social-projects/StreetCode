@@ -8,5 +8,7 @@ namespace Streetcode.BLL.DTO.Streetcode
         public string BlockName { get; set; }
         public string Content { get; set; }
         public string SourceName { get; set; }
+        public int FactId { get; set; } = 0;
+        public int TimelineItemId { get; set; } = 0;
     }
 }

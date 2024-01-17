@@ -2,8 +2,11 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
@@ -12,11 +15,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
+        private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetStreetcodeByTransliterationUrlHandler(IRepositoryWrapper repository, IMapper mapper)
+        public GetStreetcodeByTransliterationUrlHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repository = repository;
             _mapper = mapper;
+            _logger = logger;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByTransliterationUrlQuery request, CancellationToken cancellationToken)
@@ -27,7 +34,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             if (streetcode == null)
             {
-                return new Error($"Cannot find streetcode by transliteration url: {request.url}");
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.url].Value;
+                _logger.LogError(request, errorMsg);
+                return new Error(errorMsg);
             }
 
             var tagIndexed = await _repository.StreetcodeTagIndexRepository
@@ -37,6 +46,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);
             streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
+
+            if(streetcodeDTO.Tags is not null)
+            {
+                streetcodeDTO.Tags = streetcodeDTO.Tags.OrderBy(tag => tag.Index);
+            }
+
             return Result.Ok(streetcodeDTO);
         }
     }

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Update;
@@ -12,12 +15,24 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public UpdateAudioHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService)
+    public UpdateAudioHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        IBlobService blobService,
+        ILoggerService logger,
+        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _blobService = blobService;
+        _logger = logger;
+        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<AudioDTO>> Handle(UpdateAudioCommand request, CancellationToken cancellationToken)
@@ -27,7 +42,9 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         if (existingAudio is null)
         {
-            return Result.Fail(new Error($"Cannot find an audio with corresponding categoryId: {request.Audio.Id}"));
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithTheCorrespondingStreetcodeId", request.Audio.Id].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         var updatedAudio = _mapper.Map<DAL.Entities.Media.Audio>(request.Audio);
@@ -46,6 +63,15 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(updatedAudio);
 
-        return resultIsSuccess ? Result.Ok(createdAudio) : Result.Fail(new Error("Failed to update an audio"));
+        if (resultIsSuccess)
+        {
+            return Result.Ok(createdAudio);
+        }
+        else
+        {
+            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateAudio"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

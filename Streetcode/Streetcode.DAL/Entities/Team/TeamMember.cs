@@ -18,10 +18,7 @@ namespace Streetcode.DAL.Entities.Team
 
         [Required]
         [MaxLength(50)]
-        public string? FirstName { get; set; }
-
-        [MaxLength(50)]
-        public string? LastName { get; set; }
+        public string? Name { get; set; }
 
         [Required]
         [MaxLength(150)]

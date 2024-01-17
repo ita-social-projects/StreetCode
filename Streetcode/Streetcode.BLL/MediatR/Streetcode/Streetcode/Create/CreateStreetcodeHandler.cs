@@ -17,6 +17,10 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Interfaces.Logging;
+using Microsoft.Extensions.Localization;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -24,11 +28,22 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
+    private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
 
-    public CreateStreetcodeHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public CreateStreetcodeHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
+        _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+        _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -39,14 +54,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
-
+                streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 AddArts(streetcode, request.Streetcode.StreetcodeArts);
-
                 await AddTags(streetcode, request.Streetcode.Tags.ToList());
 
                 await AddRelatedFigures(streetcode, request.Streetcode.RelatedFigures);
@@ -56,6 +70,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
+                await AddImagesDetails(request.Streetcode.ImagesDetails);
+                await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
                 {
@@ -64,12 +80,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 }
                 else
                 {
-                    return Result.Fail(new Error("Failed to create a streetcode"));
+                    string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
                 }
             }
             catch(Exception ex)
             {
-                return Result.Fail(new Error($"An error occurred while creating a streetcode. Message: {ex.Message}"));
+                string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileCreating", ex.Message].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
         }
     }
@@ -86,8 +106,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 });
             }
         }
-
-        await _repositoryWrapper.SaveChangesAsync();
     }
 
     private void AddTransactionLink(StreetcodeContent streetcode, string? url)
@@ -129,6 +147,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             ImageId = imageId,
             StreetcodeId = streetcode.Id,
         }));
+    }
+
+    private async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
+    {
+        if(imageDetails == null)
+        {
+            return;
+        }
+
+        await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)

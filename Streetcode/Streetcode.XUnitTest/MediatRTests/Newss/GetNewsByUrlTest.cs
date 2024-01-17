@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -19,12 +22,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _mockBlobService;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizer;
 
         public GetNewsByUrlTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockBlobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Theory]
@@ -39,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object);
+            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
             // Assert
@@ -63,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object);
+            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
             // Assert
@@ -79,11 +86,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             // Arrange
             string expectedError = $"No news by entered Url - {url}";
+            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is string url)
+                {
+                    return new LocalizedString(key, $"No news by entered Url - {url}");
+                }
+
+                return new LocalizedString(key, "Cannot find any news with unknown Url");
+            });
             RepositorySetup(null);
             MapperSetup(null);
             BlobServiceSetup(null);
 
-            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object);
+            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             // Act
             var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
             // Assert
@@ -105,7 +121,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             MapperSetup(testNewsDTO);
             BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object);
+            var handler = new GetNewsByUrlHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             //Act
             var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
             //Assert

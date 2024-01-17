@@ -31,8 +31,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public int ViewCount { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public string Teaser { get; set; }
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
@@ -49,5 +47,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
+        public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
     }
 }

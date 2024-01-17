@@ -52,9 +52,8 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'dotnet-gitversion /output buildserver'
                     checkout scm
-                    def version = sh(script: 'gitversion /output buildserver', returnStatus: true).trim()
+                    def version = sh(script: 'dotnet-gitversion /output buildserver', returnStatus: true).trim()
                     
 
                     // Ваші інші кроки збірки тут

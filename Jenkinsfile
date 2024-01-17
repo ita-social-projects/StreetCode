@@ -52,7 +52,9 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'dotnet-gitversion /output buildserver'
+                    checkout scm
+                    def version = sh(script: 'gitversion /output buildserver', returnStatus: true).trim()
+                    echo "Calculated version: ${version}"
                 // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
                 // def gitVersionJson = readJson(text: gitVersion)
                 // String imageTag = gitVersionJson['MajorMinorPatch']
@@ -76,7 +78,6 @@ pipeline {
                     env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
                     env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
                     env.GitVersion_Sha = props.GitVersion_Sha
-                    env.GitVersion_IGNORE_NORMALISATION_GIT_HEAD_MOVE = 1
                 }
             }
         }

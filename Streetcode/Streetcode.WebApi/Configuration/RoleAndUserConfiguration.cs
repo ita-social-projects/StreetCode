@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
+using static Streetcode.WebApi.Utils.Constants.UserDatabaseSeedingConstants;
 
 namespace Streetcode.WebApi.Configuration
 {
@@ -23,10 +20,10 @@ namespace Streetcode.WebApi.Configuration
             {
                 Name = "admin",
                 Surname = "admin",
-                Email = Environment.GetEnvironmentVariable("ADMIN_EMAIL") !,
-                NormalizedEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL") !.ToUpper(),
-                UserName = Environment.GetEnvironmentVariable("ADMIN_USERNAME") !,
-                NormalizedUserName = Environment.GetEnvironmentVariable("ADMIN_USERNAME") !.ToUpper(),
+                Email = AdminEmail,
+                NormalizedEmail = AdminEmail.ToUpper(),
+                UserName = AdminUsername,
+                NormalizedUserName = AdminUsername.ToUpper(),
                 PhoneNumber = "777-777-77-77",
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
@@ -35,7 +32,7 @@ namespace Streetcode.WebApi.Configuration
 
             // Add initial admin.
             var password = new PasswordHasher<User>();
-            var hashed = password.HashPassword(initialAdmin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
+            var hashed = password.HashPassword(initialAdmin, AdminPassword);
             initialAdmin.PasswordHash = hashed;
 
             await context.Users.AddAsync(initialAdmin);
@@ -58,9 +55,9 @@ namespace Streetcode.WebApi.Configuration
 
         private static async Task AssignRole(IServiceProvider services, string email, string role)
         {
-            UserManager<User> userManager = services.GetService<UserManager<User>>()!;
+            UserManager<User> userManager = services.GetService<UserManager<User>>() !;
             User user = await userManager!.FindByEmailAsync(email);
-            var result = await userManager.AddToRoleAsync(user, role);
+            await userManager.AddToRoleAsync(user, role);
         }
     }
 }

@@ -30,18 +30,9 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
 
         public async Task<Result<RegisterResponseDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
-            User user = new User()
-            {
-                UserName = request.registerRequestDTO.UserName,
-                Email = request.registerRequestDTO.Email,
-                NormalizedEmail = request.registerRequestDTO.Email.ToUpper(),
-                Name = request.registerRequestDTO.Name,
-                Surname = request.registerRequestDTO.Surname,
-                PhoneNumber = request.registerRequestDTO.PhoneNumber
-            };
+            User user = _mapper.Map<User>(request.registerRequestDTO);
             string password = request.registerRequestDTO.Password;
 
-            // Validate input.
             var uniqueResult = await IsUserUnique(user);
             if (uniqueResult.IsFailed)
             {
@@ -50,7 +41,6 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
 
             try
             {
-                // Create user with given password and assign 'user' role to it.
                 var result = await _userManager.CreateAsync(user, password);
                 if (result.Succeeded)
                 {
@@ -69,7 +59,6 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
                 return Result.Fail(ex.Message);
             }
 
-            // Change it to mapper.
             var responseDTO = _mapper.Map<RegisterResponseDTO>(user);
             responseDTO.Password = password;
             responseDTO.Role = nameof(UserRole.User);
@@ -79,7 +68,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
 
         private async Task<Result> IsUserUnique(User user)
         {
-            // Check if user is unique by email.
+            // Check if user is unique by email or username.
             var userFromDbDyEmail = await _repositoryWrapper.UserRepository
                 .GetFirstOrDefaultAsync(predicate: userFromDb => userFromDb.Email == user.Email || userFromDb.UserName == user.UserName);
             if (userFromDbDyEmail is not null)

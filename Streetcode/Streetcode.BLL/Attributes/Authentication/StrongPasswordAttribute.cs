@@ -25,6 +25,11 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Attribute cannot be applied to non-string property");
             }
 
+            if (password.Length < 14)
+            {
+                return new ValidationResult("Password minimum length is 14");
+            }
+
             if (Regex.Matches(password, @"[\s]").Any())
             {
                 return new ValidationResult("Password cannot contain whitespaces");
@@ -32,12 +37,12 @@ namespace Streetcode.BLL.Attributes.Authentication
 
             if (!Regex.Matches(password, @"\d").Any())
             {
-                return new ValidationResult("Password must contain digit");
+                return new ValidationResult("Password must contain at least one digit");
             }
 
             if (!Regex.Matches(password, @"[^a-zA-Z\d]").Any())
             {
-                return new ValidationResult("Password must contain non-alphanumeric symbol");
+                return new ValidationResult("Password must contain at least one non-alphanumeric symbol");
             }
 
             if (password.Contains('%'))
@@ -47,12 +52,12 @@ namespace Streetcode.BLL.Attributes.Authentication
 
             if (!Regex.Matches(password, @"\p{Lu}").Any())
             {
-                return new ValidationResult("Password must contain UPPERCASE letter");
+                return new ValidationResult("Password must contain at least one UPPERCASE letter");
             }
 
             if (!Regex.Matches(password, @"\p{Ll}").Any())
             {
-                return new ValidationResult("Password must contain lowercase letter");
+                return new ValidationResult("Password must contain at least one lowercase letter");
             }
 
             return ValidationResult.Success;

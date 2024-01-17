@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
@@ -18,17 +19,17 @@ namespace Streetcode.BLL.Services.Authentication
         private readonly string _jwtIssuer;
         private readonly string _jwtAudience;
         private readonly string _jwtKey;
-        private readonly IStringLocalizer<TokenService> _stringLocalizer;
+        private readonly double _tokenLifetimeInHours;
         private readonly StreetcodeDbContext _dbContext;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-        public TokenService(IConfiguration configuration, IStringLocalizer<TokenService> stringLocalizer, StreetcodeDbContext dbContext)
+        public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext)
         {
             _jwtIssuer = configuration["Jwt:Issuer"] !;
             _jwtAudience = configuration["Jwt:Audience"] !;
             _jwtKey = configuration["Jwt:Key"] !;
+            _tokenLifetimeInHours = configuration.GetValue<double>("Jwt:LifetimeInHours");
 
-            _stringLocalizer = stringLocalizer;
             _dbContext = dbContext;
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
@@ -38,21 +39,20 @@ namespace Streetcode.BLL.Services.Authentication
 
         public JwtSecurityToken GenerateJWTToken(User? user)
         {
-            // Throw exception if argument is null.
             if (user is null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            // Get roles of user.
             var userRoleId = _dbContext.UserRoles
                 .AsNoTracking()
                 .Where(userRole => userRole.UserId == user.Id)
                 .Select(userRole => userRole.RoleId)
                 .FirstOrDefault();
-            var userRoleName = _dbContext.Roles
+            var userRole = _dbContext.Roles
                 .AsNoTracking()
-                .FirstOrDefault(role => role.Id == userRoleId) !.Name;
+                .FirstOrDefault(role => role.Id == userRoleId);
+            string userRoleName = userRole!.Name;
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
@@ -63,7 +63,7 @@ namespace Streetcode.BLL.Services.Authentication
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, userRoleName),
                 }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(_tokenLifetimeInHours),
                 SigningCredentials = _signingCredentials,
                 Issuer = _jwtIssuer,
                 Audience = _jwtAudience
@@ -79,7 +79,7 @@ namespace Streetcode.BLL.Services.Authentication
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(principles.Claims),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(_tokenLifetimeInHours),
                 SigningCredentials = _signingCredentials,
                 Issuer = _jwtIssuer,
                 Audience = _jwtAudience
@@ -115,7 +115,6 @@ namespace Streetcode.BLL.Services.Authentication
                 throw new SecurityTokenValidationException(ex.Message, ex);
             }
 
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
             return claimsPrincipal;
         }
     }

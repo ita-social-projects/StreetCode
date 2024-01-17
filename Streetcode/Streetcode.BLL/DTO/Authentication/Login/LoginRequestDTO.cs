@@ -10,13 +10,12 @@ public class LoginRequestDTO
     [Required]
     [ValidEmail]
     [EmailAddress]
-    [DefaultValue(AuthConstants.EMAIL)]
+    [DefaultValue(AuthConstants.Email)]
     public string Login { get; set; }
 
     [Required]
     [StrongPassword]
-    [DefaultValue(AuthConstants.PASSWORD)]
+    [DefaultValue(AuthConstants.Password)]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
-    [MinLength(14, ErrorMessage = "Password minimum length is 14")]
     public string Password { get; set; }
 }

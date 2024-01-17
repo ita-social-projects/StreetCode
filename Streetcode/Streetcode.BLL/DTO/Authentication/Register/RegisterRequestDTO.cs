@@ -9,42 +9,39 @@ public class RegisterRequestDTO
 {
     [Required]
     [MaxLength(50)]
-    [DefaultValue(AuthConstants.NAME)]
+    [DefaultValue(AuthConstants.Name)]
     public string Name { get; set; }
 
     [Required]
     [MaxLength(50)]
-    [DefaultValue(AuthConstants.SURNAME)]
+    [DefaultValue(AuthConstants.Surname)]
     public string Surname { get; set; }
 
     [Required]
     [EmailAddress]
     [ValidEmail]
-    [DefaultValue(AuthConstants.EMAIL)]
+    [DefaultValue(AuthConstants.Email)]
     public string Email { get; set; }
 
     [Required]
     [MaxLength(50, ErrorMessage = "UserName maximum length is 50")]
-    [DefaultValue(AuthConstants.USERNAME)]
+    [DefaultValue(AuthConstants.Username)]
     public string UserName { get; set; }
 
-    [Required]
     [Display(Name = "Phone Number")]
     [Phone]
-    [DefaultValue(AuthConstants.PHONENUMBER)]
-    public string PhoneNumber { get; set; }
+    [DefaultValue(AuthConstants.PhoneNumber)]
+    public string? PhoneNumber { get; set; }
 
     [Required]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
-    [MinLength(14, ErrorMessage = "Password minimum length is 14")]
     [StrongPassword]
-    [DefaultValue(AuthConstants.PASSWORD)]
+    [DefaultValue(AuthConstants.Password)]
     public string Password { get; set; }
 
     [Required]
     [Display(Name = "Confirm password")]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
-    [MinLength(14, ErrorMessage = "Password minimum length is 14")]
     [DefaultValue("")]
     [Compare(nameof(Password))]
     public string PasswordConfirmation { get; set; }

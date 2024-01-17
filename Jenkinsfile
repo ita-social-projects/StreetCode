@@ -53,7 +53,9 @@ pipeline {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
                     checkout scm     
-                    sh 'dotnet-gitversion /output buildserver'    
+                    sh 'dotnet-gitversion /output buildserver' 
+                    echo %GitVersion_SemVer%
+                    echo %GitVersion_Sha%   
 
                 // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
                 // def gitVersionJson = readJson(text: gitVersion)

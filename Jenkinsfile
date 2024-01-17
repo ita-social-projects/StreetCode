@@ -55,8 +55,6 @@ pipeline {
                     echo "Current directory: ${pwd()}"
                     checkout scm
                     def version = sh(script: 'dotnet-gitversion /output buildserver')
-                    echo "Calculated version: ${version}"
-
                     // Ваші інші кроки збірки тут
                 // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
                 // def gitVersionJson = readJson(text: gitVersion)
@@ -71,6 +69,33 @@ pipeline {
                 }
             }
         }
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout scm
+
+                    // Зчитати вміст gitversion.properties
+                    def gitVersionProperties = readFile('gitversion.properties')
+
+                    // Розділити рядок на змінні
+                    def propertiesMap = [:]
+                    gitVersionProperties.readLines().each { line ->
+                        def parts = line.split('=')
+                        if (parts.size() == 2) {
+                            propertiesMap[parts[0].trim()] = parts[1].trim()
+                        }
+                    }
+
+                    // Вивести отримані змінні
+                    propertiesMap.each { key, value ->
+                        echo "${key}: ${value}"
+                    }
+
+                    // Тепер ви можете використовувати propertiesMap для отримання конкретних значень, наприклад:
+                    def semVer = propertiesMap['SemVer']
+                    echo "SemVer: ${semVer}"
+                }
+            }
     // post {
     //     failure {
     //         script {

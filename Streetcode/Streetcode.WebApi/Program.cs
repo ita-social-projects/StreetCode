@@ -53,6 +53,7 @@ else
 
 await app.ApplyMigrations();
 
+app.AddClobalRegexTimeout();
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();
@@ -65,7 +66,6 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
     Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
 });
 app.UseIpRateLimiting();
-
 app.MapControllers();
 
 app.Run();

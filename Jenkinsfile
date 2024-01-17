@@ -54,13 +54,7 @@ pipeline {
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
                     checkout scm     
                     sh 'dotnet-gitversion /output buildserver'    
-                    echo Retrieving some GitVersion environment variables:
-                    echo %GitVersion_SemVer%
-                    echo %GitVersion_BranchName%
-                    echo %GitVersion_AssemblySemVer%
-                    echo %GitVersion_MajorMinorPatch%
-                    echo %GitVersion_Sha%
-                    // Ваші інші кроки збірки тут
+
                 // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
                 // def gitVersionJson = readJson(text: gitVersion)
                 // String imageTag = gitVersionJson['MajorMinorPatch']

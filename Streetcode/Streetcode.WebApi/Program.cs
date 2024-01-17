@@ -5,8 +5,6 @@ using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
-using Streetcode.WebApi.Utils;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 

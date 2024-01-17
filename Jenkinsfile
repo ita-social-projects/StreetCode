@@ -77,7 +77,7 @@ pipeline {
                     env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
                     env.GitVersion_Sha = props.GitVersion_Sha
 
-                    echo "SemVer: ${GitVersion_SemVer}
+                    echo "SemVer: ${GitVersion_SemVer}"
                 }
             }
         }

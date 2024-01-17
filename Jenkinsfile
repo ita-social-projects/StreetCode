@@ -72,7 +72,6 @@ pipeline {
                 // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
                 // sh "docker push ${username}/streetcode:${env.DATETAG}"
                 // }
-                }
             }
         }
     // post {

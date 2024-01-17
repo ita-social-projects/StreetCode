@@ -96,6 +96,7 @@ pipeline {
                     echo "SemVer: ${semVer}"
                 }
             }
+        }
     // post {
     //     failure {
     //         script {

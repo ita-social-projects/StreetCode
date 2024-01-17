@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.Interfaces.Logging;
@@ -12,7 +11,6 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using Xunit;
 using System.IdentityModel.Tokens.Jwt;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Users;
 
@@ -24,7 +22,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
         private readonly Mock<ITokenService> _mockTokenService;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<LoginHandler>> _mockStringLocalizer;
         private readonly Mock<UserManager<User>> _mockUserManager;
 
         /// <summary>
@@ -35,7 +32,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             this._mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
             this._mockMapper = new Mock<IMapper>();
             this._mockLogger = new Mock<ILoggerService>();
-            this._mockStringLocalizer = new Mock<IStringLocalizer<LoginHandler>>();
             this._mockTokenService = new Mock<ITokenService>();
 
             var store = new Mock<IUserStore<User>>();
@@ -66,7 +62,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         {
             // Arrange.
             this.SetupMockRepositoryGetFirstOrDefault(existing: false);
-            this.SetupMockStringLocalizer();
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -82,7 +77,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             // Arrange.
             this.SetupMockRepositoryGetFirstOrDefault(existing: true);
             this.SetupMockUserManagerCheckPassword(false);
-            this.SetupMockStringLocalizer();
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -156,15 +150,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 .Returns(new JwtSecurityToken());
         }
 
-        private void SetupMockStringLocalizer()
-        {
-            string key = "UserNotFound";
-            var localizedString = new LocalizedString(key, key);
-            this._mockStringLocalizer
-                .Setup(localizer => localizer[key])
-                .Returns(localizedString);
-        }
-
         private void SetupMockMapper()
         {
             this._mockMapper
@@ -180,7 +165,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 this._mockMapper.Object,
                 this._mockTokenService.Object,
                 this._mockLogger.Object,
-                this._mockStringLocalizer.Object,
                 this._mockUserManager.Object);
         }
     }

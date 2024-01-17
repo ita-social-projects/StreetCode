@@ -23,10 +23,7 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             JwtSecurityToken? token = null;
             try
             {
-                await Task.Run(() =>
-                {
-                    token = _tokenService.RefreshToken(request.token.Token);
-                });
+                token = _tokenService.RefreshToken(request.token.Token);
             }
             catch (SecurityTokenValidationException ex)
             {

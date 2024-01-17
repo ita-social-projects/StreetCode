@@ -24,7 +24,6 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Attribute cannot be applied to non-string property");
             }
 
-            // Check if input email has standart format( e.g. *******@****.com).
             if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.(com|net|org|gov|ua)$"))
             {
                 return new ValidationResult("Incorrect email address format");

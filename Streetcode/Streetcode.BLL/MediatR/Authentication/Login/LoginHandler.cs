@@ -19,16 +19,14 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<LoginHandler> _stringLocalizer;
         private readonly UserManager<User> _userManager;
 
-        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, IStringLocalizer<LoginHandler> stringLocalizer, UserManager<User> userManager)
+        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _tokenService = tokenService;
             _logger = logger;
-            _stringLocalizer = stringLocalizer;
             _userManager = userManager;
         }
 
@@ -36,8 +34,9 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         {
             var user = await _repositoryWrapper.UserRepository
                .GetFirstOrDefaultAsync(user => user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login);
+            bool isUserNull = user is null;
 
-            bool isValid = user is null ? false : await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
+            bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
             if (isValid)
             {
                 var token = _tokenService.GenerateJWTToken(user!);
@@ -53,9 +52,11 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 return Result.Ok(response);
             }
 
-            string errorMsg = _stringLocalizer["UserNotFound"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail("error");
+            string errorMessage = isUserNull ?
+                "User with such Email and Username in not found" :
+                "Password is incorrect";
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(errorMessage);
         }
     }
 }

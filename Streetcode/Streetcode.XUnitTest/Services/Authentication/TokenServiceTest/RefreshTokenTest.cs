@@ -24,7 +24,6 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         private const string _JwtAudience = "JWT_Audience";
         private const string _JwtIssuer = "JWT_Issuer";
         private const string _JwtKey = "LKqwleLVcdsl234po14lckd34lkdcdDlakjc";
-        private readonly Mock<IStringLocalizer<TokenService>> _mockStringLocalizer;
         private readonly Mock<StreetcodeDbContext> _mockDbContext;
         private readonly Mock<IConfiguration> _mockConfiguration;
         private readonly TokenService _tokenService;
@@ -34,12 +33,10 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         /// </summary>
         public RefreshTokenTest()
         {
-            this._mockStringLocalizer = new Mock<IStringLocalizer<TokenService>>();
             this._mockDbContext = new Mock<StreetcodeDbContext>();
             this._mockConfiguration = new Mock<IConfiguration>();
 
             this.SetupMockConfiguration();
-            this.SetupMockStringLocalizer();
             this._tokenService = this.GetTokenService();
         }
 
@@ -132,15 +129,6 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             return signingCredentials;
         }
 
-        private void SetupMockStringLocalizer()
-        {
-            string key = "InvalidToken";
-            var localizedString = new LocalizedString(key, key);
-            this._mockStringLocalizer
-                .Setup(localizer => localizer[key])
-                .Returns(localizedString);
-        }
-
         private void SetupMockConfiguration()
         {
             this._mockConfiguration
@@ -158,7 +146,6 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             return new TokenService(
                 this._mockConfiguration.Object,
-                this._mockStringLocalizer.Object,
                 this._mockDbContext.Object);
         }
     }

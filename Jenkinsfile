@@ -54,7 +54,7 @@ pipeline {
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
                     echo "Current directory: ${pwd()}"
                     checkout scm
-                    def version = sh(script: 'dotnet-gitversion /output buildserver').trim()
+                    def version = sh(script: 'dotnet-gitversion /output buildserver')
                     echo "Calculated version: ${version}"
 
                     // Ваші інші кроки збірки тут

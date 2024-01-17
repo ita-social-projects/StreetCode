@@ -52,9 +52,8 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    echo "Current directory: ${pwd()}"
-                    checkout scm
-                    def version = sh(script: 'dotnet-gitversion /output buildserver')
+                    checkout scm     
+                    sh 'dotnet-gitversion /output buildserver'    
                     echo Retrieving some GitVersion environment variables:
                     echo %GitVersion_SemVer%
                     echo %GitVersion_BranchName%
@@ -72,6 +71,7 @@ pipeline {
                 // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
                 // sh "docker push ${username}/streetcode:${env.DATETAG}"
                 // }
+                }
             }
         }
     // post {
@@ -97,5 +97,5 @@ pipeline {
 //         }
 //     }
 // }
-   }
+}
 }

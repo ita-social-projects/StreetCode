@@ -75,6 +75,7 @@ else
 
 await app.ApplyMigrations();
 
+app.AddClobalRegexTimeout();
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();
@@ -89,8 +90,11 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 });
 
 app.UseIpRateLimiting();
+<<<<<<< HEAD
 app.UseRateLimiter();
 
+=======
+>>>>>>> 5969cb94 (Add global regex timeout)
 app.MapControllers();
 
 app.Run();

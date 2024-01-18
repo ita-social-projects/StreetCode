@@ -32,7 +32,7 @@ namespace Streetcode.WebApi.Configuration
 
             // Add initial admin.
             var password = new PasswordHasher<User>();
-            var hashed = password.HashPassword(initialAdmin, AdminPassword);
+            var hashed = password.HashPassword(initialAdmin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
             initialAdmin.PasswordHash = hashed;
 
             await context.Users.AddAsync(initialAdmin);

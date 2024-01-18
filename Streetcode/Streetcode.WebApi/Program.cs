@@ -53,7 +53,6 @@ else
 
 await app.ApplyMigrations();
 
-app.AddClobalRegexTimeout();
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();

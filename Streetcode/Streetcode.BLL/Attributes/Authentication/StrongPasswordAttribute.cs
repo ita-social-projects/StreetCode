@@ -30,17 +30,17 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Password minimum length is 14");
             }
 
-            if (Regex.Matches(password, @"[\s]").Any())
+            if (Regex.Matches(password, @"[\s]", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())
             {
                 return new ValidationResult("Password cannot contain whitespaces");
             }
 
-            if (!Regex.Matches(password, @"\d").Any())
+            if (!Regex.Matches(password, @"\d", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())
             {
                 return new ValidationResult("Password must contain at least one digit");
             }
 
-            if (!Regex.Matches(password, @"[^a-zA-Z\d]").Any())
+            if (!Regex.Matches(password, @"[^a-zA-Z\d]", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())
             {
                 return new ValidationResult("Password must contain at least one non-alphanumeric symbol");
             }
@@ -50,12 +50,12 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Password cannot contain '%'");
             }
 
-            if (!Regex.Matches(password, @"\p{Lu}").Any())
+            if (!Regex.Matches(password, @"\p{Lu}", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())
             {
                 return new ValidationResult("Password must contain at least one UPPERCASE letter");
             }
 
-            if (!Regex.Matches(password, @"\p{Ll}").Any())
+            if (!Regex.Matches(password, @"\p{Ll}", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())
             {
                 return new ValidationResult("Password must contain at least one lowercase letter");
             }

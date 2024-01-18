@@ -10,29 +10,28 @@ using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.Interfaces.Users;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
+using Streetcode.BLL.Utils.Options;
 
 namespace Streetcode.BLL.Services.Authentication
 {
     public sealed class TokenService : ITokenService
     {
         private readonly SigningCredentials _signingCredentials;
-        private readonly string _jwtIssuer;
-        private readonly string _jwtAudience;
-        private readonly string _jwtKey;
-        private readonly double _tokenLifetimeInHours;
+        private readonly JwtOptions _jwtOptions;
         private readonly StreetcodeDbContext _dbContext;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext)
         {
-            _jwtIssuer = configuration["Jwt:Issuer"] !;
-            _jwtAudience = configuration["Jwt:Audience"] !;
-            _jwtKey = configuration["Jwt:Key"] !;
-            _tokenLifetimeInHours = configuration.GetValue<double>("Jwt:LifetimeInHours");
+            var c = configuration
+              .GetSection("Jwt");
+            _jwtOptions = configuration
+              .GetSection("Jwt")
+              .Get<JwtOptions>() !;
 
             _dbContext = dbContext;
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             _signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
@@ -63,10 +62,10 @@ namespace Streetcode.BLL.Services.Authentication
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, userRoleName),
                 }),
-                Expires = DateTime.UtcNow.AddHours(_tokenLifetimeInHours),
+                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
                 SigningCredentials = _signingCredentials,
-                Issuer = _jwtIssuer,
-                Audience = _jwtAudience
+                Issuer = _jwtOptions.Issuer,
+                Audience = _jwtOptions.Audience
             };
             var token = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
@@ -79,10 +78,10 @@ namespace Streetcode.BLL.Services.Authentication
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(principles.Claims),
-                Expires = DateTime.UtcNow.AddHours(_tokenLifetimeInHours),
+                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
                 SigningCredentials = _signingCredentials,
-                Issuer = _jwtIssuer,
-                Audience = _jwtAudience
+                Issuer = _jwtOptions.Issuer,
+                Audience = _jwtOptions.Audience
             };
             var newToken = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
@@ -91,11 +90,11 @@ namespace Streetcode.BLL.Services.Authentication
 
         private ClaimsPrincipal GetPrinciplesFromToken(string token)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKey));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidAudience = _jwtAudience,
-                ValidIssuer = _jwtIssuer,
+                ValidAudience = _jwtOptions.Audience,
+                ValidIssuer = _jwtOptions.Issuer,
                 ValidateAudience = true,
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,

@@ -5,7 +5,7 @@ using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
-
+using Streetcode.BLL.HealthChecks;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication();
@@ -19,6 +19,7 @@ builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+builder.Services.ConfigureHealthCheck(builder);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
@@ -51,8 +52,10 @@ else
     app.UseHsts();
 }
 
-await app.ApplyMigrations();
+// await app.ApplyMigrations();
 
+app.MapHealthChecksUI();
+app.UseHealthChecks();
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();

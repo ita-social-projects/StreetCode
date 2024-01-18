@@ -55,7 +55,7 @@ public static class ConfigureHostBuilderExtensions
     {
         services.Configure<RequestResponseMiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
     }
-    
+
     public static void ConfigureRateLimitMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
     {
         builder.Services.AddMemoryCache();

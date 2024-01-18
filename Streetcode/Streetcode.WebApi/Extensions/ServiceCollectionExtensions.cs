@@ -27,7 +27,9 @@ using Streetcode.BLL.Services.Text;
 using Streetcode.BLL.Services.CacheService;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Image;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
+using Streetcode.BLL.Services.Logging;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -47,6 +49,8 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
+        services.AddScoped<ILoggerService, LoggerService>();
+
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();

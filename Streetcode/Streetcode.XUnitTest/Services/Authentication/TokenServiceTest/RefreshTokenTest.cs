@@ -21,11 +21,12 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             InvalidToken,
         }
 
-        private const string _JwtAudience = "JWT_Audience";
-        private const string _JwtIssuer = "JWT_Issuer";
-        private const string _JwtKey = "LKqwleLVcdsl234po14lckd34lkdcdDlakjc";
+        private readonly string _JwtKey = "s_dkcLEWRlcksdmcQWE_124";
+        private readonly string _JwtIssuer = "Jwt_Issuer";
+        private readonly string _JwtAudience = "Jwt_Audience";
+        private readonly string _TokenLifetimeInHours = "1";
         private readonly Mock<StreetcodeDbContext> _mockDbContext;
-        private readonly Mock<IConfiguration> _mockConfiguration;
+        private readonly IConfiguration _fakeConfiguration;
         private readonly TokenService _tokenService;
 
         /// <summary>
@@ -34,9 +35,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public RefreshTokenTest()
         {
             this._mockDbContext = new Mock<StreetcodeDbContext>();
-            this._mockConfiguration = new Mock<IConfiguration>();
+            this._fakeConfiguration = this.GetFakeConfiguration();
 
-            this.SetupMockConfiguration();
             this._tokenService = this.GetTokenService();
         }
 
@@ -104,8 +104,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
                     new Claim(ClaimTypes.Role, userRoleName),
                 }),
                 SigningCredentials = this.GetSigningCredentials(),
-                Issuer = _JwtIssuer,
-                Audience = _JwtAudience,
+                Issuer = this._JwtIssuer,
+                Audience = this._JwtAudience,
             };
             var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(tokenDescriptor);
             return token;
@@ -129,23 +129,26 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             return signingCredentials;
         }
 
-        private void SetupMockConfiguration()
+        private IConfiguration GetFakeConfiguration()
         {
-            this._mockConfiguration
-                .SetupGet(configuration => configuration["Jwt:Issuer"])
-                .Returns(_JwtIssuer);
-            this._mockConfiguration
-                .SetupGet(configuration => configuration["Jwt:Audience"])
-                .Returns(_JwtAudience);
-            this._mockConfiguration
-                .SetupGet(configuration => configuration["Jwt:Key"])
-                .Returns(_JwtKey);
+            var appSettingsStub = new Dictionary<string, string>
+            {
+                { "Jwt:Key", this._JwtKey },
+                { "Jwt:Issuer", this._JwtIssuer },
+                { "Jwt:Audience", this._JwtAudience },
+                { "Jwt:LifetimeInHours", this._TokenLifetimeInHours },
+            };
+            var fakeConfiguration = new ConfigurationBuilder()
+            .AddInMemoryCollection(appSettingsStub)
+            .Build();
+
+            return fakeConfiguration;
         }
 
         private TokenService GetTokenService()
         {
             return new TokenService(
-                this._mockConfiguration.Object,
+                this._fakeConfiguration,
                 this._mockDbContext.Object);
         }
     }

@@ -72,6 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             // Arrange.
             string expectedErrorMessage = "User with such Email already exists in database";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
+            this.SetupMockMapper(isEmailExists: true);
             var handler = this.GetRegisterHandler();
 
             // Act.
@@ -88,6 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             // Arrange.
             string expectedErrorMessage = "User with such UserName already exists in database";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
+            this.SetupMockMapper();
             var handler = this.GetRegisterHandler();
 
             // Act.
@@ -201,12 +203,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 .ReturnsAsync(isExists ? this.GetSampleUser() : null);
         }
 
-        private void SetupMockMapper(string registerResponseDtoId = "")
+        private void SetupMockMapper(string registerResponseDtoId = "", bool isEmailExists = false)
         {
             this._mockMapper
                 .Setup(x => x
                 .Map<RegisterResponseDTO>(It.IsAny<User>()))
                 .Returns(new RegisterResponseDTO() { Id = registerResponseDtoId });
+
+            User sampleUser = this.GetSampleUser();
+            if (isEmailExists)
+            {
+                sampleUser.UserName = string.Empty;
+            }
+            else
+            {
+                sampleUser.Email = string.Empty;
+            }
+
+            this._mockMapper
+               .Setup(x => x
+               .Map<User>(It.IsAny<RegisterRequestDTO>()))
+               .Returns(sampleUser);
         }
 
         private void SetupMockUserManagerCreate(bool isSuccess)

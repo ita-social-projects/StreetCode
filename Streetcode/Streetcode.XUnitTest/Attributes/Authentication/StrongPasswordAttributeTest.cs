@@ -44,11 +44,25 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         }
 
         [Fact]
+        public async Task ShouldReturnCorrectFailMessage_PasswordLengthLessThan14()
+        {
+            // Arrange.
+            string expectedErrorMessage = "Password minimum length is 14";
+            string password = "qwer";
+
+            // Act.
+            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+
+            // Assert.
+            Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
+        }
+
+        [Fact]
         public async Task ShouldReturnCorrectFailMessage_PasswordContainsWhitespaces()
         {
             // Arrange.
             string expectedErrorMessage = "Password cannot contain whitespaces";
-            string password = "qwer ty";
+            string password = "qwer tyqwertyqwerty";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -61,8 +75,8 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         public async Task ShouldReturnCorrectFailMessage_PasswordHasNoDigits()
         {
             // Arrange.
-            string expectedErrorMessage = "Password must contain digit";
-            string password = "qwerty";
+            string expectedErrorMessage = "Password must contain at least one digit";
+            string password = "qwertyqweqwerty";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -75,8 +89,8 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         public async Task ShouldReturnCorrectFailMessage_PasswordHasNoNonAlphaNumericCharacters()
         {
             // Arrange.
-            string expectedErrorMessage = "Password must contain non-alphanumeric symbol";
-            string password = "qwerty1";
+            string expectedErrorMessage = "Password must contain at least one non-alphanumeric symbol";
+            string password = "qwerty1qwertyqwe";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -90,7 +104,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         {
             // Arrange.
             string expectedErrorMessage = "Password cannot contain '%'";
-            string password = "qwerty1@%";
+            string password = "qwerty1@%qwertyqwe";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -103,8 +117,8 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         public async Task ShouldReturnCorrectFailMessage_PasswordHasNoUppercaseLetter()
         {
             // Arrange.
-            string expectedErrorMessage = "Password must contain UPPERCASE letter";
-            string password = "qwerty1@";
+            string expectedErrorMessage = "Password must contain at least one UPPERCASE letter";
+            string password = "qwerty1@qwertyqwe";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -117,8 +131,8 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         public async Task ShouldReturnCorrectFailMessage_PasswordHasNoLowercaseLetter()
         {
             // Arrange.
-            string expectedErrorMessage = "Password must contain lowercase letter";
-            string password = "QWERTY1@";
+            string expectedErrorMessage = "Password must contain at least one lowercase letter";
+            string password = "QWERTY1@QWERTYQWE";
 
             // Act.
             var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
@@ -128,10 +142,10 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         }
 
         [Theory]
-        [InlineData("Qwerty123@#")]
-        [InlineData("@1234540956pW")]
-        [InlineData("*(&#@^#qW1")]
-        [InlineData("____Q....w,,,,1")]
+        [InlineData("Qwerty123@#asdfg")]
+        [InlineData("@1234540956pWWWWWW")]
+        [InlineData("*(&#@^#qW1@&@($&@#_!@")]
+        [InlineData("____Q....w,,,,1....,")]
         public async Task ShouldReturnSuccess_ValidPassword(string password)
         {
             // Arrange.

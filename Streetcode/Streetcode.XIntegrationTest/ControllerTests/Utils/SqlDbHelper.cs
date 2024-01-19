@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
 using Polly;
 using Streetcode.DAL.Persistence;
 
@@ -48,11 +49,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            object value = idProp?.GetValue(newItem);
-            if (value != null && (int)value != 0)
+            string? value = idProp?.GetValue(newItem) as string;
+            if (!string.IsNullOrEmpty(value))
             {
-                idProp?.SetValue(newItem, 0);
+                int n;
+                if (int.TryParse(value, out n))
+                {
+                    idProp?.SetValue(newItem, 0);
+                    return this.dbContext.Set<T>().Add(newItem).Entity;
+                }
             }
+
             return this.dbContext.Set<T>().Add(newItem).Entity;
         }
 

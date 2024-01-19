@@ -53,8 +53,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
         private async Task<RestResponse> SendRequest(RestRequest request, string authToken)
         {
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
-            request.AddHeader("authorization", $"Bearer {authToken}");
-            request.AddHeader("content-type", "application/json");
+            request.AddHeader("Authorization", $"Bearer {authToken}");
+            request.AddHeader("Content-Type", "application/json");
 
             var response = await _client.ExecuteAsync(request);
             return response;

@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using System.Net;
 using Xunit;
@@ -10,7 +11,7 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
 {
     public class StreetcodeUpdateControllerTests :
-        BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+        BaseControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeUpdateDTO _testStreetcodeUpdateDTO;
 

@@ -14,8 +14,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
         {
             RegisterRequest = new RegisterRequestDTO()
             {
-                Email = "test@test.com",
-                UserName = "Test_test",
+                Email = "test@register.com",
+                UserName = "Test_Register",
                 Name = "Test",
                 Surname = "Test",
                 PhoneNumber = "+111-111-11-11",

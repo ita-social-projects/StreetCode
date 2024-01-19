@@ -1,0 +1,11 @@
+﻿{
+  "Name": "Test_Name",
+  "Surname": "Test_Surname",
+  "Email": "test@email.com",
+  "UserName": "Test_UserName",
+  "PhoneNumber": "Test_Phone_Number",
+  "ConcurrencyStamp": "Test_Concurrency_Stamp",
+  "AccessFailedCount": 0,
+  "EmailConfirmed": 0,
+  "LockoutEnabled": 0
+}

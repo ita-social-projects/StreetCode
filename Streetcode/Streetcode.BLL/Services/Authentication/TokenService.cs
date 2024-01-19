@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
-using Streetcode.BLL.Interfaces.Users;
+using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 using Streetcode.BLL.Utils.Options;

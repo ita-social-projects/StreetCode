@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Interfaces.Users;
+using Streetcode.BLL.Interfaces.Authentication;
 namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
     public class RefreshTokenHandler : IRequestHandler<RefreshTokenQuery, Result<RefreshTokenResponceDTO>>

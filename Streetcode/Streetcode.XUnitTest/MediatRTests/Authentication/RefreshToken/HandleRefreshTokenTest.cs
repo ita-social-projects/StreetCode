@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Interfaces.Users;
+using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.BLL.MediatR.Authentication.RefreshToken;
 using Streetcode.BLL.MediatR.Authentication.Register;

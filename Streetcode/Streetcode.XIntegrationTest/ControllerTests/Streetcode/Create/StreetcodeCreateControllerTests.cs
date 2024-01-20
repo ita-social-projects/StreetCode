@@ -35,7 +35,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
             var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
 
             // Act
-            var response = await this.client.CreateAsync(streetcodeCreateDTO, this._adminToken);
+            var response = await this.client.CreateAsync(streetcodeCreateDTO);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

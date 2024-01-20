@@ -8,13 +8,11 @@ namespace Streetcode.BLL.DTO.Authentication.Login;
 public class LoginRequestDTO
 {
     [Required]
-    [ValidEmail]
     [EmailAddress]
     [DefaultValue(AuthConstants.Email)]
     public string Login { get; set; }
 
     [Required]
-    [StrongPassword]
     [DefaultValue(AuthConstants.Password)]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
     public string Password { get; set; }

@@ -19,7 +19,6 @@ public class RegisterRequestDTO
 
     [Required]
     [EmailAddress]
-    [ValidEmail]
     [DefaultValue(AuthConstants.Email)]
     public string Email { get; set; }
 

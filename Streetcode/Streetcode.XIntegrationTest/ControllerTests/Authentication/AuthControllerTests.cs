@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 {

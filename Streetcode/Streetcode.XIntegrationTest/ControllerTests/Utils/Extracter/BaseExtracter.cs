@@ -1,4 +1,6 @@
 ﻿
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
 {
     public static class BaseExtracter

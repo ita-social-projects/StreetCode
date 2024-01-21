@@ -1,5 +1,6 @@
 ﻿using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using System.Reflection;
 using Xunit.Sdk;
 

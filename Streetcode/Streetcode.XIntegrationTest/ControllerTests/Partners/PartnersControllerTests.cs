@@ -1,5 +1,6 @@
 ﻿using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.Partners;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;

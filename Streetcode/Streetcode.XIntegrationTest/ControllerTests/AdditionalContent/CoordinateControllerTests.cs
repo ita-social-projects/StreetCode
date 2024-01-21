@@ -1,9 +1,10 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Xunit;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {

@@ -15,6 +15,7 @@ using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using System.Reflection;
 using Xunit.Sdk;
 

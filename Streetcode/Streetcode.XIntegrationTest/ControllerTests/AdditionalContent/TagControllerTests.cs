@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;

@@ -15,7 +15,7 @@ namespace Streetcode.XIntegrationTest
             IConfigurationBuilder configBuilder = new ConfigurationBuilder()
                 .ConfigureCustom(environment);
 
-            Configuration = configBuilder.Build();
+            this.Configuration = configBuilder.Build();
         }
     }
 }

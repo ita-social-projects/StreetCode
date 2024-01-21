@@ -1,4 +1,5 @@
 ﻿using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;

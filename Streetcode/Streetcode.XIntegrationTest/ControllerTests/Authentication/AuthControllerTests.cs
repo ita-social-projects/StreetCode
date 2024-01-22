@@ -8,16 +8,18 @@ using Streetcode.DAL.Enums;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+using Streetcode.BLL.DTO.Authentication.RefreshToken;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 {
-    public class AuthControllerTests : BaseControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Authorization")]
+    public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private User _testUser;
         private string _testPassword;
 
-        public AuthControllerTests(CustomWebApplicationFactory<Program> factory)
-           : base(factory, "/api/Auth")
+        public AuthControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
+           : base(factory, "/api/Auth", tokenStorage)
         {
             (this._testUser, this._testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
@@ -112,6 +114,38 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
             // Act.
             var response = await this.client.Login(loginRequest);
+
+            // Assert.
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshToken_ReturnsSuccess()
+        {
+            // Arrange.
+            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            {
+                Token = this._tokenStorage.UserToken,
+            };
+
+            // Act.
+            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
+
+            // Assert.
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task RefreshToken_InvalidToken_ReturnsBadRequest()
+        {
+            // Arrange.
+            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            {
+                Token = "invalid_Token",
+            };
+
+            // Act.
+            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

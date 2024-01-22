@@ -28,7 +28,12 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             catch (SecurityTokenValidationException ex)
             {
                 _logger.LogError(request, ex.Message);
-                return Result.Fail("error");
+                return Result.Fail(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(request, ex.Message);
+                return Result.Fail(ex.Message);
             }
 
             return new RefreshTokenResponceDTO() { Token = new JwtSecurityTokenHandler().WriteToken(token), ExpireAt = token!.ValidTo };

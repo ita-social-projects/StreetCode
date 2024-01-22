@@ -45,6 +45,35 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
 
         [Fact]
         [ExtractCreateTestStreetcode]
+        public async Task Create_TokenNotPassed_ReturnsUnauthorized()
+        {
+            // Arrange
+            var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
+
+            // Act
+            var response = await this.client.CreateAsync(streetcodeCreateDTO);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractCreateTestStreetcode]
+        public async Task Create_NotAdminTokenPassed_ReturnsForbidden()
+        {
+            // Arrange
+            var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
+
+            // Act
+            var response = await this.client.CreateAsync(streetcodeCreateDTO, this._tokenStorage.UserToken);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        }
+
+
+        [Fact]
+        [ExtractCreateTestStreetcode]
         public async Task Create_CreatesNewStreetcode()
         {
             // Arrange

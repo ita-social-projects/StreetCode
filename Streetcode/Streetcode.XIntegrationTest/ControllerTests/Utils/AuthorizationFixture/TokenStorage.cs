@@ -15,10 +15,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         private readonly StreetcodeDbContext _streetcodeDbContext;
         private readonly IConfiguration _configuration;
         private readonly ITokenService _tokenService;
+        private readonly Dictionary<string, User> _users;
 
         public TokenStorage()
         {
             this._streetcodeDbContext = this.GetDbContext();
+            this._users = new Dictionary<string, User>();
             this.SeedDatabaseWithInitialUsers();
 
             this._configuration = this.GetConfiguration();
@@ -29,6 +31,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         public void Dispose()
         {
+            this.RemoveTestUsers();
             this._streetcodeDbContext.Dispose();
         }
 
@@ -60,22 +63,32 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private void ObtainTokens()
         {
-            User testAdmin = this.GetUserFromDb(nameof(UserRole.Admin));
-            User testUser = this.GetUserFromDb(nameof(UserRole.User));
-
-            this.AdminToken = this._tokenService.GenerateJWTToken(testAdmin).RawData;
-            this.UserToken = this._tokenService.GenerateJWTToken(testUser).RawData;
+            this.AdminToken = this._tokenService.GenerateJWTToken(this._users["Admin"]).RawData;
+            this.UserToken = this._tokenService.GenerateJWTToken(this._users["User"]).RawData;
         }
 
         private void SeedDatabaseWithInitialUsers()
         {
             IdentityRole adminRole = this.GetRoleFromDb(nameof(UserRole.Admin));
             IdentityRole userRole = this.GetRoleFromDb(nameof(UserRole.User));
-            User testAdmin = this.GetUserFromDb(nameof(UserRole.Admin));
-            User testUser = this.GetUserFromDb(nameof(UserRole.User));
+            this._users["Admin"] = this.GetUserFromDb(nameof(UserRole.Admin));
+            this._users["User"] = this.GetUserFromDb(nameof(UserRole.User));
 
-            this.AddUserRole(testAdmin, adminRole);
-            this.AddUserRole(testUser, userRole);
+            this.AddUserRole(this._users["Admin"], adminRole);
+            this.AddUserRole(this._users["User"], userRole);
+        }
+
+        private void RemoveTestUsers()
+        {
+            foreach (string key in this._users.Keys)
+            {
+                var userFromDb = this._streetcodeDbContext.Users.FirstOrDefault(user => user.Id == this._users[key].Id);
+                if (userFromDb is not null)
+                {
+                    this._streetcodeDbContext.Remove(userFromDb);
+                    this._streetcodeDbContext.SaveChanges();
+                }
+            }
         }
 
         private IdentityRole GetRoleFromDb(string roleName)

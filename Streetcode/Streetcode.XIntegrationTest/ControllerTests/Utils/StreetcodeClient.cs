@@ -1,18 +1,18 @@
-﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils
+﻿using RestSharp;
+using RestSharp.Serializers;
+using Streetcode.BLL.DTO.Streetcode.Create;
+using Streetcode.BLL.DTO.Streetcode.Update;
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
-    using RestSharp;
-    using RestSharp.Serializers;
-    using System.Threading.Tasks;
-
     public class StreetcodeClient
     {
         protected RestClient Client;
 
         public string SecondPartUrl { get; }
 
-      public StreetcodeClient(HttpClient client, string secondPartUrl = "")
+        public StreetcodeClient(HttpClient client, string secondPartUrl = "")
         {
-            this.Client = new RestClient(client) { AcceptedContentTypes=ContentType.JsonAccept };
+            this.Client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
 
@@ -45,5 +45,24 @@
             return returns;
         }
 
+        public async Task<RestResponse> UpdateAsync(StreetcodeUpdateDTO updateStreetcodeDTO)
+        {
+            var request = new RestRequest($"{this.SecondPartUrl}/Update", Method.Put);
+            request.AddJsonBody(updateStreetcodeDTO);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            request.AddHeader("content-type", "application/json");
+            var response = await this.Client.ExecuteAsync(request);
+            return response;
+        }
+
+        public async Task<RestResponse> CreateAsync(StreetcodeCreateDTO createStreetcodeDTO)
+        {
+            var request = new RestRequest($"{this.SecondPartUrl}/Create", Method.Post);
+            request.AddJsonBody(createStreetcodeDTO);
+            request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
+            request.AddHeader("content-type", "application/json");
+            var response = await this.Client.ExecuteAsync(request);
+            return response;
+        }
     }
 }

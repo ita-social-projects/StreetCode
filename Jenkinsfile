@@ -3,6 +3,31 @@ pipeline {
         label 'stage'
     }
     stages {
+        stage('GitVersion') {
+            steps {
+                script {
+                    // Date date = new Date()
+                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
+                    sh 'dotnet-gitversion /output buildserver'
+                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                    sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                    sh "docker push ${username}/streetcode:latest"
+                    sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
+                    sh "docker push ${username}/streetcode:${ env.GitVersion_MajorMinorPatch}"
+                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
+                // def gitVersionJson = readJson(text: gitVersion)
+                // String imageTag = gitVersionJson['MajorMinorPatch']
+                // println(imageTag)
+                // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                // sh "docker push ${username}/streetcode:latest"
+                // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
+                // sh "docker push ${username}/streetcode:${env.DATETAG}"
+                // }
+                }
+            }
+        }
+        }
         stage('Branch name'){
 
             steps{
@@ -19,25 +44,6 @@ pipeline {
                  sh 'dotnet restore ./Streetcode/Streetcode.sln'
              }
          }
-        stage('GitVersion') {
-            steps {
-                script {
-                    // Date date = new Date()
-                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'dotnet-gitversion /output buildserver'
-                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
-                // def gitVersionJson = readJson(text: gitVersion)
-                // String imageTag = gitVersionJson['MajorMinorPatch']
-                // println(imageTag)
-                // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                // sh "docker push ${username}/streetcode:latest"
-                // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
-                // sh "docker push ${username}/streetcode:${env.DATETAG}"
-                // }
-                }
-            }
-        }
         stage('Inject environment variables step') {
             steps {
                 script {
@@ -62,11 +68,6 @@ pipeline {
                 // def gitVersionJson = readJson(text: gitVersion)
                 // String imageTag = gitVersionJson['MajorMinorPatch']
                 // println(imageTag)
-                 withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                 sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                 sh "docker push ${username}/streetcode:latest"
-                 sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
-                 sh "docker push ${username}/streetcode:${ env.GitVersion_MajorMinorPatch}"
                  }
                 }
             }

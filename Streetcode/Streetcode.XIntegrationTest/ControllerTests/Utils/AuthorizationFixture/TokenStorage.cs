@@ -123,14 +123,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private void AddUserRole(User user, IdentityRole role)
         {
-            IdentityUserRole<string>? actualUserRole = this._streetcodeDbContext
+            bool exists = this._streetcodeDbContext
                 .UserRoles
                 .AsNoTracking()
-                .FirstOrDefault(userRole => userRole.UserId == user.Id && userRole.RoleId == role.Id);
+                .Any(userRole => userRole.UserId == user.Id && userRole.RoleId == role.Id);
 
-            if (actualUserRole is null)
+            if (!exists)
             {
-                actualUserRole = new IdentityUserRole<string>
+                var actualUserRole = new IdentityUserRole<string>
                 {
                     UserId = user.Id,
                     RoleId = role.Id,

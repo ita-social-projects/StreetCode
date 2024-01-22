@@ -30,7 +30,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            if (this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate: s => (int)idProp?.GetValue(s)! == id) == null)
+            if (this.dbContext.Set<T>()
+                .AsEnumerable()
+                .FirstOrDefault(predicate: s => (int)idProp?.GetValue(s)! == id) == null)
             {
                 return false;
             }
@@ -42,7 +44,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
+            return this.dbContext.Set<T>()
+                .AsNoTracking()
+                .AsEnumerable()
+                .FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
         }
 
         public T AddNewItem<T>(T newItem)
@@ -91,7 +96,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate);
+                return this.dbContext.Set<T>().AsNoTracking().AsEnumerable().FirstOrDefault(predicate);
             }
 
             return this.dbContext.Set<T>().FirstOrDefault();
@@ -113,10 +118,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsEnumerable().Where(predicate);
+                return this.dbContext.Set<T>().AsNoTracking().AsEnumerable().Where(predicate);
             }
 
-            return this.dbContext.Set<T>();
+            return this.dbContext.Set<T>().AsNoTracking();
         }
 
         public T DeleteItem<T>(T item)

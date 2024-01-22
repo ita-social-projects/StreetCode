@@ -18,6 +18,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using System.Reflection;
 using Xunit.Sdk;
+using static Streetcode.XIntegrationTest.Constants.ControllerTests.StreetcodeConstants;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
 {
@@ -30,7 +31,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
         {
             StreetcodeForTest = new StreetcodeCreateDTO
             {
-                Index = new Random().Next(0, 1000000),
+                Index = STREETCODE_CREATE_INDEX,
                 FirstName = "TestFirstName",
                 LastName = "TestLastName",
                 Title = "TestTitle",

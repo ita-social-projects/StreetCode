@@ -26,6 +26,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
         public async Task<Result<List<StreetcodeFilterResultDTO>>> Handle(GetStreetcodeByFilterQuery request, CancellationToken cancellationToken)
         {
             string searchQuery = request.Filter.SearchQuery;
+            searchQuery = searchQuery.Trim();
 
             var results = new List<StreetcodeFilterResultDTO>();
 

@@ -51,12 +51,28 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         }
 
         [Fact]
-        public async Task ShouldReturnFail_InvalidInputToken()
+        public async Task ShouldReturnFail_InvalidInputTokenData()
         {
             // Arrange.
             this._mockTokenService
                 .Setup(service => service.RefreshToken(It.IsAny<string>()))
                 .Throws<SecurityTokenValidationException>();
+            var handler = this.GetRefreshTokenHandler();
+
+            // Act.
+            var result = await handler.Handle(new RefreshTokenQuery(this.GetRefreshTokenRequestDTO()), CancellationToken.None);
+
+            // Assert.
+            Assert.True(result.IsFailed);
+        }
+
+        [Fact]
+        public async Task ShouldReturnFail_InvalidInputToken()
+        {
+            // Arrange.
+            this._mockTokenService
+                .Setup(service => service.RefreshToken(It.IsAny<string>()))
+                .Throws<Exception>();
             var handler = this.GetRefreshTokenHandler();
 
             // Act.

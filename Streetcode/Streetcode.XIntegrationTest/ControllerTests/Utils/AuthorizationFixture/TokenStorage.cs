@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Services.Authentication;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
 using Streetcode.WebApi.Extensions;
+using static Streetcode.XIntegrationTest.Constants.ControllerTests.AuthConstants;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
@@ -69,10 +69,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private void SeedDatabaseWithInitialUsers()
         {
-            IdentityRole adminRole = this.GetRoleFromDb(nameof(UserRole.Admin));
-            IdentityRole userRole = this.GetRoleFromDb(nameof(UserRole.User));
-            this._users["Admin"] = this.GetUserFromDb(nameof(UserRole.Admin));
-            this._users["User"] = this.GetUserFromDb(nameof(UserRole.User));
+            IdentityRole adminRole = TEST_ROLE_ADMIN;
+            IdentityRole userRole = TEST_ROLE_USER;
+            this.AddRoleToDb(adminRole);
+            this.AddRoleToDb(userRole);
+
+            this._users["Admin"] = TEST_USER_ADMIN;
+            this._users["User"] = TEST_USER_USER;
+            this.AddUserToDb(this._users["Admin"]);
+            this.AddUserToDb(this._users["User"]);
 
             this.AddUserRole(this._users["Admin"], adminRole);
             this.AddUserRole(this._users["User"], userRole);
@@ -91,41 +96,30 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             }
         }
 
-        private IdentityRole GetRoleFromDb(string roleName)
+        private void AddRoleToDb(IdentityRole role)
         {
-            IdentityRole testRole = this.GetTestRole(roleName);
-            IdentityRole? actualRole = this._streetcodeDbContext
-                .Roles
-                .FirstOrDefault(roleFromDb => roleFromDb.Id == testRole.Id);
-            if (actualRole is null)
+            bool exists = this._streetcodeDbContext.Roles.Any(roleFromDb => roleFromDb.Id == role.Id);
+            if (!exists)
             {
-                actualRole = this._streetcodeDbContext.Roles.Add(testRole).Entity;
+                this._streetcodeDbContext.Roles.Add(role);
                 this._streetcodeDbContext.SaveChanges();
             }
-
-            return actualRole;
         }
 
-        private User GetUserFromDb(string roleName)
+        private void AddUserToDb(User user)
         {
-            User testUser = this.GetTestUser(roleName);
-            User? actualUser = this._streetcodeDbContext
-                .Users
-                .FirstOrDefault(roleFromDb => roleFromDb.Id == testUser.Id);
-            if (actualUser is null)
+            bool exists = this._streetcodeDbContext.Users.Any(userFromDb => userFromDb.Id == user.Id);
+            if (!exists)
             {
-                actualUser = this._streetcodeDbContext.Users.Add(testUser).Entity;
+                this._streetcodeDbContext.Users.Add(user);
                 this._streetcodeDbContext.SaveChanges();
             }
-
-            return actualUser;
         }
 
         private void AddUserRole(User user, IdentityRole role)
         {
             bool exists = this._streetcodeDbContext
                 .UserRoles
-                .AsNoTracking()
                 .Any(userRole => userRole.UserId == user.Id && userRole.RoleId == role.Id);
 
             if (!exists)
@@ -138,27 +132,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 this._streetcodeDbContext.UserRoles.Add(actualUserRole);
                 this._streetcodeDbContext.SaveChanges();
             }
-        }
-
-        private IdentityRole GetTestRole(string roleName)
-        {
-           return new IdentityRole
-            {
-                Id = $"test_role_{roleName}_clsdkmcd29384IJDAlnfsdfd",
-                Name = roleName,
-            };
-        }
-
-        private User GetTestUser(string userRole)
-        {
-            return new User
-            {
-                Id = $"test_user_{userRole}_clsdkmcd29384IJDAlnfsdfd",
-                Name = $"Test_{userRole}",
-                Surname = $"Test_{userRole}",
-                Email = $"test_{userRole}@test.com",
-                UserName = $"test_{userRole}_T",
-            };
         }
     }
 }

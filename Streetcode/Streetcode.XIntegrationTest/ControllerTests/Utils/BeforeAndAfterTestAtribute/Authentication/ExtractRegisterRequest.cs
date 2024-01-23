@@ -1,5 +1,7 @@
-﻿using Streetcode.BLL.DTO.Authentication.Register;
+﻿using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using System.Reflection;
 using Xunit.Sdk;

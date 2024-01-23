@@ -25,7 +25,8 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'git reset'
+                    sh 'git reset --hard'
+                    sh 'git pull'
                     sh 'dotnet-gitversion /output buildserver'
                     def props = readProperties file: 'gitversion.properties'
                     env.GitVersion_SemVer = props.GitVersion_SemVer

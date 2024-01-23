@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 
 namespace Streetcode.BLL.Middleware
@@ -25,7 +24,10 @@ namespace Streetcode.BLL.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             var request = await GetRequestAsTextAsync(context.Request);
-            var requestTemplate = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}Request body: {request}{Environment.NewLine}";
+            var requestTemplate =
+                $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}{Environment.NewLine}";
+            requestTemplate += request.IsNullOrEmpty() ? "Request body is empty" : $"Request body: {request}";
+            requestTemplate += $"{Environment.NewLine}";
             try
             {
                 var response = await FormatResponseAsync(context, _next);
@@ -116,24 +118,26 @@ namespace Streetcode.BLL.Middleware
         {
             foreach (var property in token.Children<JProperty>().ToList())
             {
-                if (_options.PropertiesToIgnore.Contains(property.Name.ToString().ToLower()))
+                if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
                 {
                     property.Remove();
                     continue;
                 }
 
-                if (!_options.PropertiesToShorten.Contains(property.Name.ToString().ToLower()))
+                var valueType = property.Value.Type;
+
+                if (valueType == JTokenType.Object || valueType == JTokenType.Array)
                 {
+                    TruncateProperties(property.Value);
                     continue;
                 }
 
-                if (property.Value.Type == JTokenType.String && property.Value.ToString().Length > _options.MaxResponseLength)
+                var valueAsString = property.Value.ToString();
+                var valueLength = valueAsString.Length;
+
+                if (valueLength > _options.MaxResponseLength)
                 {
-                    property.Value = new JValue(property.Value.ToString().Substring(0, _options.MaxResponseLength) + "...");
-                }
-                else if (property.Value.Type == JTokenType.Object || property.Value.Type == JTokenType.Array)
-                {
-                    TruncateProperties(property.Value);
+                    property.Value = new JValue(valueAsString.Substring(0, _options.MaxResponseLength) + "...");
                 }
             }
         }

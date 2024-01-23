@@ -42,7 +42,7 @@ namespace Streetcode.BLL.Services.Logging
             }
             else
             {
-               _logger.Error(erroMsg);
+                _logger.Error(erroMsg);
             }
         }
     }

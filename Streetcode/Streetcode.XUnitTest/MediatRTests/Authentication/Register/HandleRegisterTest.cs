@@ -1,18 +1,23 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Query;
-using Moq;
+﻿// <copyright file="HandleRegisterTest.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Register;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
-using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 {
+    using System.Linq.Expressions;
+    using AutoMapper;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore.Query;
+    using Moq;
+    using Xunit;
+
     public class HandleRegisterTest
     {
         private readonly Mock<IMapper> _mockMapper;
@@ -52,18 +57,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         public async Task ShouldReturnRegisterResponseDTOWithCorrectData_NewUser()
         {
             // Arrange.
-            string expectedId = Guid.NewGuid().ToString();
+            User expectedUser = this.GetSampleUser();
             string expectedRole = nameof(UserRole.User);
             this.SetupServicesForSuccess();
-            this.SetupMockMapper(registerResponseDtoId: expectedId);
+            this.SetupMockMapper(expectedUser);
             var handler = this.GetRegisterHandler();
 
             // Act.
             var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
 
             // Assert.
-            Assert.Equal(expectedId, result.Value.Id);
-            Assert.Equal(expectedRole, result.Value.Role);
+            Assert.Multiple(
+                () => Assert.Equal(expectedUser.Id, result.Value.Id),
+                () => Assert.Equal(expectedUser.Name, result.Value.Name),
+                () => Assert.Equal(expectedUser.Surname, result.Value.Surname),
+                () => Assert.Equal(expectedUser.Email, result.Value.Email),
+                () => Assert.Equal(expectedUser.UserName, result.Value.UserName),
+                () => Assert.Equal(expectedRole, result.Value.Role));
         }
 
         [Fact]
@@ -156,8 +166,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             return new User()
             {
+                Id = Guid.NewGuid().ToString(),
                 Email = "zero@gmail.com",
                 UserName = "Zero_zero",
+                Name = "SampleName",
+                Surname = "SampleSurname",
             };
         }
 
@@ -203,12 +216,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 .ReturnsAsync(isExists ? this.GetSampleUser() : null);
         }
 
-        private void SetupMockMapper(string registerResponseDtoId = "", bool isEmailExists = false)
+        private void SetupMockMapper(User? user = null, bool isEmailExists = false)
         {
+            RegisterResponseDTO registerResponseToReturnFromMapper = new RegisterResponseDTO();
+            if (user is not null)
+            {
+                registerResponseToReturnFromMapper = new RegisterResponseDTO
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    Email = user.Email,
+                    UserName = user.UserName,
+                };
+            }
+
             this._mockMapper
                 .Setup(x => x
                 .Map<RegisterResponseDTO>(It.IsAny<User>()))
-                .Returns(new RegisterResponseDTO() { Id = registerResponseDtoId });
+                .Returns(registerResponseToReturnFromMapper);
 
             User sampleUser = this.GetSampleUser();
             if (isEmailExists)

@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Services.Logging;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
@@ -29,7 +27,9 @@ using Streetcode.BLL.Services.Text;
 using Streetcode.BLL.Services.CacheService;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Image;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
+using Streetcode.BLL.Services.Logging;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -49,12 +49,13 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
+        services.AddScoped<ILoggerService, LoggerService>();
+
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();

@@ -1,5 +1,8 @@
-﻿using AspNetCoreRateLimit;
+﻿using System.Runtime;
+using Microsoft.Extensions.Configuration;
 using Serilog;
+using Streetcode.BLL.Middleware;
+using AspNetCoreRateLimit;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
@@ -35,11 +38,22 @@ public static class ConfigureHostBuilderExtensions
 
     public static void ConfigureSerilog(this IServiceCollection services, WebApplicationBuilder builder)
     {
+        var filterExpression = builder.Configuration["Serilog:Filter:ByExcluding"];
+
         builder.Host.UseSerilog((ctx, services, loggerConfiguration) =>
         {
-            loggerConfiguration
-                .ReadFrom.Configuration(builder.Configuration);
+            loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
+
+            if (!string.IsNullOrEmpty(filterExpression))
+            {
+                loggerConfiguration.Filter.ByExcluding(filterExpression);
+            }
         });
+    }
+
+    public static void ConfigureRequestResponseMiddlewareOptions(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<RequestResponseMiddlewareOptions>(builder.Configuration.GetSection("RequestResponseMiddlewareOptions"));
     }
 
     public static void ConfigureRateLimitMiddleware(this IServiceCollection services, WebApplicationBuilder builder)

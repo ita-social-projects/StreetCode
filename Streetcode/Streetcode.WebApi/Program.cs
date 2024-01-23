@@ -5,7 +5,7 @@ using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
-
+using Streetcode.BLL.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication();
@@ -18,6 +18,7 @@ builder.Services.ConfigureBlob(builder);
 builder.Services.ConfigurePayment(builder);
 builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
+builder.Services.ConfigureRequestResponseMiddlewareOptions(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
@@ -57,6 +58,7 @@ app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();
 app.UseHttpsRedirection();
+app.UseRequestResponseMiddleware();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

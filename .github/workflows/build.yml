@@ -40,7 +40,7 @@ jobs:
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
       - name: Test and Code Coverage
-        run: dotnet-coverage collect "dotnet test --filter FullyQualifiedName~XUnitTest|FullyQualifiedName~XIntegrationTest --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
+        run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
 
       - name: SonarScanner Analysis
         id: sonar

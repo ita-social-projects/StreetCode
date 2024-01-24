@@ -43,7 +43,7 @@ namespace Streetcode.WebApi.Configuration
             await context.SaveChangesAsync();
         }
 
-        public static async Task AddRolesAsync(IServiceProvider services)
+        private static async Task AddRolesAsync(IServiceProvider services)
         {
             RoleManager<IdentityRole> roleManager = services.GetService<RoleManager<IdentityRole>>() !;
             if (!roleManager.RoleExistsAsync(nameof(UserRole.Admin)).GetAwaiter().GetResult())

@@ -139,6 +139,11 @@ _TeamCity*
 *.coverage
 *.coveragexml
 
+#dotnet-coverage code coverage results
+coverage/
+CoverageReposrts/
+coverage.xml
+
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml

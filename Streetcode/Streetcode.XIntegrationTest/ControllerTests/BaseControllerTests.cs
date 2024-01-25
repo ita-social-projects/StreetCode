@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests
 {
+
     public class BaseControllerTests : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         protected StreetcodeClient client;

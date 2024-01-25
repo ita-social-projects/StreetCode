@@ -8,6 +8,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using System.IO;
+using Utils;
 
 namespace Targets;
 
@@ -23,7 +24,7 @@ partial class Build
         && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
 
     Target AddMigration => _ => _
-        .OnlyWhenStatic(() => !CheckForMigration())
+        .OnlyWhenStatic(() => CheckForMigration())
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _

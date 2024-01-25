@@ -30,10 +30,6 @@
           "type": "boolean",
           "description": "Indicates to continue a previously failed build attempt"
         },
-        "DockerAtom": {
-          "type": "string",
-          "description": "docker atom"
-        },
         "Dockerize": {
           "type": "boolean",
           "description": "Build in Docker"
@@ -113,6 +109,7 @@
             "type": "string",
             "enum": [
               "AddMigration",
+              "ApplyMigrationsForIntegrationTests",
               "CheckoutBranch",
               "Clean",
               "CleanContainers",
@@ -126,6 +123,7 @@
               "CommitSubmodules",
               "CompileAPI",
               "CompileCli",
+              "CreateDatabaseForIntegrationTests",
               "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
@@ -137,12 +135,13 @@
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
-              "SetPublicEnvironmentVariables",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupIntegrationTestsEnvironment",
+              "SetupIntegrationTestsEnvironmentVariables",
               "SetupLocal",
               "SetupPublic",
               "Test",
@@ -163,6 +162,7 @@
             "type": "string",
             "enum": [
               "AddMigration",
+              "ApplyMigrationsForIntegrationTests",
               "CheckoutBranch",
               "Clean",
               "CleanContainers",
@@ -176,6 +176,7 @@
               "CommitSubmodules",
               "CompileAPI",
               "CompileCli",
+              "CreateDatabaseForIntegrationTests",
               "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
@@ -187,12 +188,13 @@
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
-              "SetPublicEnvironmentVariables",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
               "SetupFrontEnd",
               "SetupGit",
+              "SetupIntegrationTestsEnvironment",
+              "SetupIntegrationTestsEnvironmentVariables",
               "SetupLocal",
               "SetupPublic",
               "Test",

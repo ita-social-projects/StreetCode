@@ -9,7 +9,6 @@ using Utils;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.Npm.NpmTasks;
-using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using Nuke.Common.Tools.EntityFramework;
 
 namespace Targets;
@@ -86,35 +85,5 @@ partial class Build
         {
             NpmRun(_ => _
                 .SetProcessWorkingDirectory(ClientDirectory));
-        });
-
-    Target SetupIntegrationTestsEnvironment => _ => _
-        .DependsOn(
-            SetupIntegrationTestsEnvironmentVariables,
-            CreateDatabaseForIntegrationTests,
-            ApplyMigrationsForIntegrationTests);
-
-    Target SetupIntegrationTestsEnvironmentVariables => _ => _
-        .Executes(() =>
-        {
-            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests", EnvironmentVariableTarget.Process);
-        });
-    Target CreateDatabaseForIntegrationTests => _ => _
-        .Executes(() =>
-        {
-            IntegrationTestsDatabaseConfiguration.CreateDatabase();
-        });
-
-    Target ApplyMigrationsForIntegrationTests => _ => _
-        .OnlyWhenStatic(() => CheckForMigration())
-        .Executes(() =>
-        {
-            EntityFrameworkDatabaseUpdate(_ => _
-                .SetConnection(IntegrationTestsDatabaseConfiguration.ConnectionString)
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration));
         });
 }

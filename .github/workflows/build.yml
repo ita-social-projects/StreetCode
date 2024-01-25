@@ -39,6 +39,9 @@ jobs:
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
+      - name: Setup environment for integration tests
+        run: ./Streetcode/build.cmd SetupIntegrationTestsEnvironment
+
       - name: Test and Code Coverage
         run: dotnet-coverage collect "dotnet test --filter FullyQualifiedName~XUnitTest|FullyQualifiedName~XIntegrationTest --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
 

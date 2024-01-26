@@ -39,24 +39,10 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
                 return Result.Fail(uniqueResult.Errors);
             }
 
-            try
+            var registerResponse = await RegisterUserAsync(request, user, password);
+            if (registerResponse.IsFailed)
             {
-                var result = await _userManager.CreateAsync(user, password);
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(user, nameof(UserRole.User));
-                }
-                else
-                {
-                    string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user";
-                    _logger.LogError(request, errorMessage);
-                    return Result.Fail(errorMessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(request, ex.Message);
-                return Result.Fail(ex.Message);
+                return Result.Fail(registerResponse.Errors);
             }
 
             var responseDTO = _mapper.Map<RegisterResponseDTO>(user);
@@ -75,6 +61,31 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
             {
                 bool isNotUniqueByEmail = userFromDbDyEmail.Email == user.Email;
                 return Result.Fail($"User with such {(isNotUniqueByEmail ? "Email" : "UserName")} already exists in database");
+            }
+
+            return Result.Ok();
+        }
+
+        private async Task<Result> RegisterUserAsync(RegisterQuery request, User user, string password)
+        {
+            try
+            {
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, nameof(UserRole.User));
+                }
+                else
+                {
+                    string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user";
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(request, ex.Message);
+                return Result.Fail(ex.Message);
             }
 
             return Result.Ok();

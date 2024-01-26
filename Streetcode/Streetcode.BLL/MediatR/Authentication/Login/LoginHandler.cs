@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -32,8 +33,10 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
 
         public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _repositoryWrapper.UserRepository
-               .GetFirstOrDefaultAsync(user => user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login);
+            var userExistsExpression = GetUserExistsPredicate(request);
+            var user = (await _repositoryWrapper.UserRepository
+                .GetAllAsync())
+                .FirstOrDefault(userExistsExpression);
             bool isUserNull = user is null;
 
             bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
@@ -57,6 +60,15 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 "Password is incorrect";
             _logger.LogError(request, errorMessage);
             return Result.Fail(errorMessage);
+        }
+
+        private Func<User, bool> GetUserExistsPredicate(LoginQuery request)
+        {
+            Func<User, bool> userExistsPredicate = user =>
+            {
+                return user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login;
+            };
+            return userExistsPredicate;
         }
     }
 }

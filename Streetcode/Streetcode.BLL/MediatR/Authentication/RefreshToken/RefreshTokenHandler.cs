@@ -25,18 +25,17 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             {
                 token = _tokenService.RefreshToken(request.token.Token);
             }
-            catch (SecurityTokenValidationException ex)
-            {
-                _logger.LogError(request, ex.Message);
-                return Result.Fail(ex.Message);
-            }
             catch (Exception ex)
             {
                 _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
 
-            return new RefreshTokenResponceDTO() { Token = new JwtSecurityTokenHandler().WriteToken(token), ExpireAt = token!.ValidTo };
+            return new RefreshTokenResponceDTO()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                ExpireAt = token!.ValidTo,
+            };
         }
     }
 }

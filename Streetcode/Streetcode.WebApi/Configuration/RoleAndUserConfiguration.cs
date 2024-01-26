@@ -6,7 +6,7 @@ using static Streetcode.WebApi.Utils.Constants.UserDatabaseSeedingConstants;
 
 namespace Streetcode.WebApi.Configuration
 {
-    public class RoleAndUserConfiguration
+    public static class RoleAndUserConfiguration
     {
         public static async Task AddUsersAndRoles(IServiceProvider serviceProvider)
         {

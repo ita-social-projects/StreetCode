@@ -1,8 +1,6 @@
 ﻿using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Authentication;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authentication;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using System.Net;
-using Xunit;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Entities.Users;
@@ -12,6 +10,9 @@ using Streetcode.BLL.DTO.Authentication.RefreshToken;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 {
+    using System.Net;
+    using Xunit;
+
     [Collection("Authorization")]
     public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {

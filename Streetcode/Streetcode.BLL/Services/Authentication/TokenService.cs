@@ -23,8 +23,6 @@ namespace Streetcode.BLL.Services.Authentication
 
         public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext)
         {
-            var c = configuration
-              .GetSection("Jwt");
             _jwtOptions = configuration
               .GetSection("Jwt")
               .Get<JwtOptions>() !;

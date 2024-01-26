@@ -1,7 +1,5 @@
 using System.Transactions;
-using Microsoft.AspNetCore.Identity;
 using Repositories.Interfaces;
-using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
@@ -39,8 +37,6 @@ namespace Streetcode.DAL.Repositories.Realizations.Base;
 public class RepositoryWrapper : IRepositoryWrapper
 {
     private readonly StreetcodeDbContext _streetcodeDbContext;
-    private readonly UserManager<User> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
 
     private IVideoRepository _videoRepository;
 

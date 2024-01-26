@@ -3,6 +3,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 using System;
+using System.Threading;
 using Utils;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;

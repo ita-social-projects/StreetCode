@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using static Nuke.Common.NukeBuild;
 using System;
@@ -53,7 +53,7 @@ namespace Utils
         private static SqlConnection GetSqlConnection()
         {
             var sqlConnectionBuilder = new SqlConnectionStringBuilder(CONNECTION_STRING);
-            sqlConnectionBuilder.InitialCatalog = string.Empty;
+            sqlConnectionBuilder.InitialCatalog = "master";
             SqlConnection sqlConnection = new SqlConnection(sqlConnectionBuilder.ConnectionString);
             return sqlConnection;
         }

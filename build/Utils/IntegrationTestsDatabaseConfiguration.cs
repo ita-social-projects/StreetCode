@@ -4,6 +4,7 @@ using static Nuke.Common.NukeBuild;
 using System;
 using System.Data;
 using System.IO;
+using System.Threading;
 
 namespace Utils
 {
@@ -32,22 +33,33 @@ namespace Utils
 
         private static void ExecuteCommand(SqlCommand command, SqlConnection sqlConnection)
         {
-            try
+            DateTime startTime = DateTime.Now;
+            do
             {
-                sqlConnection.Open();
-                command.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            finally
-            {
-                if (sqlConnection.State == ConnectionState.Open)
+                try
                 {
-                    sqlConnection.Close();
+                    sqlConnection.Open();
+                    command.ExecuteNonQuery();
+                    break;
                 }
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Thread.Sleep(5000);
+                }
+                finally
+                {
+                    if (sqlConnection.State == ConnectionState.Open)
+                    {
+                        sqlConnection.Close();
+                    }
+                }
+            } while (TimeLimitNotExceeded(startTime));
+        }
+
+        private static bool TimeLimitNotExceeded(DateTime startDateTime)
+        {
+            return (DateTime.Now - startDateTime).TotalMinutes < 5;
         }
 
         private static SqlConnection GetSqlConnection()

@@ -24,7 +24,6 @@ partial class Build
             DockerComposeUp(u => u
                 .SetProcessWorkingDirectory(Path.Combine(RootDirectory, DOCKER_COMPOSE_FOLDER_NAME))
                 .EnableDetach());
-            Thread.Sleep(300000);
         });
 
     Target CleanImages => _ => _

@@ -24,6 +24,7 @@ public class DockerComposeUpSettings : DockerComposeSettings
     {
         arguments = base.ConfigureProcessArguments(arguments);
         arguments.Add("up")
+            .Add("--wait")
             .Add("--detach", Detach);
         return arguments;
     }

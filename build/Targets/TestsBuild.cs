@@ -43,10 +43,10 @@ partial class Build
         });
 
     Target SetupIntegrationTestsEnvironment => _ => _
-        .DependsOn(
-            ApplyMigrationsForIntegrationTests);
+        .DependsOn(ApplyMigrationsForIntegrationTests);
 
     Target SetupIntegrationTestsEnvironmentVariables => _ => _
+        .Before(SetupDocker)
         .Executes(() =>
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests", EnvironmentVariableTarget.Process);

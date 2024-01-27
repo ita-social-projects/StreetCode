@@ -33,6 +33,7 @@ namespace Utils
 
         private static void ExecuteCommand(SqlCommand command, SqlConnection sqlConnection)
         {
+            Console.WriteLine(CONNECTION_STRING);
             DateTime startTime = DateTime.Now;
             do
             {

@@ -59,7 +59,7 @@ namespace Utils
 
         private static bool TimeLimitNotExceeded(DateTime startDateTime)
         {
-            return (DateTime.Now - startDateTime).TotalMinutes < 5;
+            return (DateTime.Now - startDateTime).TotalMinutes < 1;
         }
 
         private static SqlConnection GetSqlConnection()

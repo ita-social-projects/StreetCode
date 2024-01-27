@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnSuccess_ValidInputData()
         {
             // Arrange.
-            this.SetupMockRepositoryGetFirstOrDefault(existing: true);
+            this.SetupMockRepositoryGetAllAsync(existing: true);
             this.SetupMockUserManagerCheckPassword(true);
             this.SetupMockTokenService();
             this.SetupMockMapper();
@@ -61,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnFail_UserNotExistInDb()
         {
             // Arrange.
-            this.SetupMockRepositoryGetFirstOrDefault(existing: false);
+            this.SetupMockRepositoryGetAllAsync(existing: false);
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -75,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnFail_InvalidPassword()
         {
             // Arrange.
-            this.SetupMockRepositoryGetFirstOrDefault(existing: true);
+            this.SetupMockRepositoryGetAllAsync(existing: true);
             this.SetupMockUserManagerCheckPassword(false);
             var handler = this.GetLoginHandler();
 
@@ -86,13 +86,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             Assert.True(result.IsFailed);
         }
 
-        private static User GetUser()
+        private static IEnumerable<User> GetUserCollection()
         {
-            return new ()
+            return new List<User>()
             {
-                Id = "1",
-                Email = "one@gmail.com",
-                UserName = "One_one",
+                new User()
+                {
+                    Id = "1",
+                    Email = "one@gmail.com",
+                    UserName = "One_one",
+                },
             };
         }
 
@@ -124,14 +127,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             };
         }
 
-        private void SetupMockRepositoryGetFirstOrDefault(bool existing)
+        private void SetupMockRepositoryGetAllAsync(bool existing)
         {
             this._mockRepositoryWrapper
                 .Setup(wrapper => wrapper.UserRepository
-                    .GetFirstOrDefaultAsync(
+                    .GetAllAsync(
                         It.IsAny<Expression<Func<User, bool>>>(),
                         It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
-                .ReturnsAsync(existing ? GetUser() : null);
+                .ReturnsAsync(existing ? GetUserCollection() : new List<User>());
         }
 
         private void SetupMockUserManagerCheckPassword(bool checkReturn)

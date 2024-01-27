@@ -33,17 +33,14 @@ jobs:
       - name: Install dotnet-sonarscanner
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Install nuke
-        run: dotnet tool install --global Nuke.GlobalTool
-
       - name: Restore Dependencies
         run: dotnet restore ./Streetcode/Streetcode.sln
 
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
-      - name: Setup environment for integration tests
-        run: nuke SetupIntegrationTestsEnvironment
+      - name: Setup Environment For Integration Tests
+        run: ./Streetcode/build.cmd SetupIntegrationTestsEnvironment
 
       - name: Test and Code Coverage
         run: dotnet-coverage collect "dotnet test --filter FullyQualifiedName~XUnitTest|FullyQualifiedName~XIntegrationTest --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml

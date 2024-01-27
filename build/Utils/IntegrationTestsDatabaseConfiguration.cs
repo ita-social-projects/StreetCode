@@ -5,6 +5,7 @@ using System;
 using System.Data;
 using System.IO;
 using System.Threading;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 
 namespace Utils
 {
@@ -34,6 +35,7 @@ namespace Utils
         private static void ExecuteCommand(SqlCommand command, SqlConnection sqlConnection)
         {
             Console.WriteLine(CONNECTION_STRING);
+            PowerShell("docker ps -a");
             DateTime startTime = DateTime.Now;
             do
             {
@@ -60,7 +62,7 @@ namespace Utils
 
         private static bool TimeLimitNotExceeded(DateTime startDateTime)
         {
-            return (DateTime.Now - startDateTime).TotalMinutes < 5;
+            return (DateTime.Now - startDateTime).TotalMinutes < 1;
         }
 
         private static SqlConnection GetSqlConnection()

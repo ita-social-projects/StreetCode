@@ -71,8 +71,8 @@ partial class Build
                 queryType = "ScriptsMigration";
             }
 
-            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.WebApi");
-            var outputScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.DAL", "Persistence", queryType);
+            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode/Streetcode.WebApi");
+            var outputScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode/Streetcode.DAL", "Persistence", queryType);
 
             PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
             PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}{queryName}.sql  --project {dbPath}");

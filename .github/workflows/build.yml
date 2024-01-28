@@ -27,9 +27,6 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Install dotnet-ef
-        run: dotnet tool install --global dotnet-ef --version 6.0.1
-
       - name: Install dotnet-coverage
         run: dotnet tool install --global dotnet-coverage
 
@@ -43,7 +40,7 @@ jobs:
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
       - name: Setup Environment For Integration Tests
-        run: ./Streetcode/build.cmd SetupIntegrationTestsEnvironment
+        run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Test and Code Coverage
         run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml

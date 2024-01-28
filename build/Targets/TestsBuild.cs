@@ -43,7 +43,7 @@ partial class Build
         });
 
     Target SetupIntegrationTestsEnvironment => _ => _
-        .DependsOn(ApplyMigrationsForIntegrationTests);
+        .DependsOn(UpdateDatabase);
 
     Target SetupIntegrationTestsEnvironmentVariables => _ => _
         .Before(SetupDocker)

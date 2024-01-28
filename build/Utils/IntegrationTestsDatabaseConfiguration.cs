@@ -41,6 +41,7 @@ namespace Utils
                 {
                     sqlConnection.Open();
                     command.ExecuteNonQuery();
+                    Console.WriteLine("Successfully connected");
                     break;
                 }
                 catch (Exception ex)

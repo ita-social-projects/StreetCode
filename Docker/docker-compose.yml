@@ -1,7 +1,7 @@
 services:
   sqlserver:
     container_name: local_sql_server
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2019-CU10-ubuntu-20.04
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "sdlLKMCD234!@#lkcmds"

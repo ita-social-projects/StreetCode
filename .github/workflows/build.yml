@@ -10,7 +10,7 @@ on:
 
 jobs:
   sonarcloud_branch:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,13 +39,19 @@ jobs:
       - name: Build
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
-      - name: Test and Code Coverage
-        run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
+      - name: Setup Environment For Integration Tests
+        run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
+
+      - name: Unit Tests
+        run: ./Streetcode/build.sh UnitTest
+
+      - name: Integration Tests
+        run: ./Streetcode/build.sh IntegrationTest
 
       - name: SonarScanner Analysis
         id: sonar
         run: |
          dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
          dotnet build ./Streetcode/Streetcode.sln --configuration Release
-         dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal
+         dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build --verbosity normal" -f xml -o "coverage.xml"
          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

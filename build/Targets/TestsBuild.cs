@@ -43,7 +43,7 @@ partial class Build
         });
 
     Target SetupIntegrationTestsEnvironment => _ => _
-        .DependsOn(UpdateDatabase);
+        .DependsOn(UpdateDatabase, CreateDatabaseForIntegrationTests);
 
     Target SetupIntegrationTestsEnvironmentVariables => _ => _
         .Before(SetupDocker)
@@ -53,6 +53,7 @@ partial class Build
         });
     Target CreateDatabaseForIntegrationTests => _ => _
         .DependsOn(SetupDocker, SetupIntegrationTestsEnvironmentVariables)
+        .Before(UpdateDatabase)
         .Executes(() =>
         {
             IntegrationTestsDatabaseConfiguration.CreateDatabase();

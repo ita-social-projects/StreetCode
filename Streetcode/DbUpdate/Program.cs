@@ -6,7 +6,7 @@ public class Program
 {
     static int Main(string[] args)
     {
-        string rootDirectory = Path.GetFullPath(Path.Combine("../", "../", Assembly.GetEntryAssembly().Location.Substring(0, Assembly.GetEntryAssembly().Location.IndexOf("Streetcode\\"))));
+        string rootDirectory = Path.GetFullPath(Path.Combine(Assembly.GetEntryAssembly().Location, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"));
         string pathToSqlScripts = Path.Combine(rootDirectory,
             "Streetcode", "Streetcode.DAL", "Persistence", "ScriptsMigration");
 

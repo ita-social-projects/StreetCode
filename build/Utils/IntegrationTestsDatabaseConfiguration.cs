@@ -34,8 +34,6 @@ namespace Utils
 
         private static void ExecuteCommand(SqlCommand command, SqlConnection sqlConnection)
         {
-            Console.WriteLine(CONNECTION_STRING);
-            PowerShell("docker ps -a");
             DateTime startTime = DateTime.Now;
             do
             {

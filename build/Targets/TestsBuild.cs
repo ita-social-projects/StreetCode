@@ -57,19 +57,5 @@ partial class Build
         {
             IntegrationTestsDatabaseConfiguration.CreateDatabase();
         });
-
-    Target ApplyMigrationsForIntegrationTests => _ => _
-        .OnlyWhenStatic(() => CheckForMigration())
-        .DependsOn(CreateDatabaseForIntegrationTests)
-        .Executes(() =>
-        {
-            EntityFrameworkDatabaseUpdate(_ => _
-                .SetConnection(IntegrationTestsDatabaseConfiguration.ConnectionString)
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration));
-        });
 }
 

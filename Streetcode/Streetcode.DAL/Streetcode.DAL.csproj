@@ -46,6 +46,7 @@
   <ItemGroup>
 	<SonarQubeSetting Include="sonar.exclusions">
 		<Value>**/Migrations/*</Value>
+		<Value>**/ScriptsMigration/*</Value>
 	</SonarQubeSetting>
   </ItemGroup>
 </Project>

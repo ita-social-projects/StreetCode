@@ -28,7 +28,7 @@ jobs:
           dotnet-version: 6.0.x
 
       - name: Install dotnet-ef
-        run: dotnet tool install --global dotnet-ef
+        run: dotnet tool install --global dotnet-ef --version 6.0.1
 
       - name: Install dotnet-coverage
         run: dotnet tool install --global dotnet-coverage

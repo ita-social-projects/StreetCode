@@ -74,7 +74,7 @@ partial class Build
             var outputScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode/Streetcode.DAL", "Persistence", queryType);
 
             PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
-            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}{queryName}.sql  --project {dbPath}");
+            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}/{queryName}.sql  --project {dbPath}");
         });
 
     Target DropDatabase => _ => _

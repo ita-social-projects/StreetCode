@@ -58,7 +58,8 @@ app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();
 app.UseHttpsRedirection();
-app.UseRequestResponseMiddleware();
+
+// app.UseRequestResponseMiddleware();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

@@ -43,7 +43,7 @@ jobs:
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Test and Code Coverage
-        run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln -p:ParallelizeTestCollections=false --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
+        run: dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --results-directory ./coverage --logger trx" -f xml -o coverage.xml
 
       - name: SonarScanner Analysis
         id: sonar

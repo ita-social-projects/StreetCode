@@ -10,7 +10,7 @@ on:
 
 jobs:
   sonarcloud_branch:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2

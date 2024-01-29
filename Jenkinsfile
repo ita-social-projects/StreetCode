@@ -12,14 +12,7 @@ pipeline {
 
                 '''
              }
-         }
-        stage('Debugging') {
-            steps {
-                sh 'pwd'
-                sh 'git branch -a'
-                sh 'git fetch --all'
-            }
-        }       
+         }   
         stage("Clean up"){
             steps{
                 deleteDir()
@@ -28,9 +21,17 @@ pipeline {
         stage('Restore Dependencies') {
             steps {
                 sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
+                sh 'cd StreetCode/'
                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
              }
          }
+        stage('Debugging') {
+            steps {
+                sh 'pwd'
+                sh 'git branch -a'
+                sh 'git fetch --all'
+            }
+        }    
         stage('GitVersion') {
             steps {
                 script {

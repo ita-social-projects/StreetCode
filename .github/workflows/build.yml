@@ -43,7 +43,7 @@ jobs:
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Unit Tests
-        run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj -configuration "Release"
+        run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release
 
       - name: Integration Tests
         run: ./Streetcode/retry-test.ps1 ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj -configuration "Release"

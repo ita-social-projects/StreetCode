@@ -21,12 +21,12 @@ pipeline {
         stage('Restore Dependencies') {
             steps {
                 sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
-                sh 'cd StreetCode/'
              }
          }
         stage('Debugging') {
             steps {
                 sh 'pwd'
+                sh 'cd StreetCode/'
                 sh 'git fetch --all'
             }
         }    

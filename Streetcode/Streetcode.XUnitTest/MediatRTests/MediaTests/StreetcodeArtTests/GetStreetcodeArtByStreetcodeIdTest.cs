@@ -114,15 +114,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            foreach (var a in result.Value)
-            {
-                _testOutputHelper.WriteLine("object" + a.Index.ToString());
-                _testOutputHelper.WriteLine(a.Art.Id.ToString());
-                _testOutputHelper.WriteLine("object" + GetStreetcodeArtDTOList()[a.Index - 1].Index);
-                _testOutputHelper.WriteLine(GetStreetcodeArtDTOList()[a.Index - 1].Art.Id.ToString());
-            }
-            
-            Assert.True(result.Value.All(a => GetStreetcodeArtDTOList()[a.Index - 1] == a));
+            Assert.True(result.Value.All(a => GetStreetcodeArtDTOList()[a.Index - 1].Art.Id == a.Art.Id));
         }
 
         [Theory]

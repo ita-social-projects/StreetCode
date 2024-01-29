@@ -14,6 +14,7 @@ using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 using System.Reflection;
+using Streetcode.BLL.DTO.Media.Create;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
@@ -92,7 +93,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 DateString = "22 травня 2023",
                 TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
                 RelatedFigures = new List<RelatedFigureUpdateDTO>(),
-                StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
+                Arts = new List<ArtCreateUpdateDTO>(),
+                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
                 StatisticRecords = new List<StatisticRecordUpdateDTO>(),
                 StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
             };

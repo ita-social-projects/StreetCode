@@ -12,8 +12,10 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 {
@@ -24,14 +26,16 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         private readonly Mock<IBlobService> blobService;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public GetStreetcodeArtByStreetcodeIdTest()
+        public GetStreetcodeArtByStreetcodeIdTest(ITestOutputHelper testOutputHelper)
         {
             repository = new Mock<IRepositoryWrapper>();
             mockMapper = new Mock<IMapper>();
             blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
             _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _testOutputHelper = testOutputHelper;
         }
 
         private List<StreetcodeArt> GetStreetcodeArtsList()
@@ -44,7 +48,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     StreetcodeArtSlideId = 1,
                     StreetcodeArtSlide = null,
                     ArtId = 1,
-                    Art= new DAL.Entities.Media.Images.Art
+                    Art = new DAL.Entities.Media.Images.Art
                     {
                         Image = new DAL.Entities.Media.Images.Image()
                     }
@@ -71,7 +75,6 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 new StreetcodeArtDTO
                 {
                     Index = 1,
-                    StreetcodeId = 1,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
@@ -81,7 +84,6 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                 new StreetcodeArtDTO
                 {
                     Index = 2,
-                    StreetcodeId = 2,
                     Art = new ArtDTO
                     {
                         Image = new ImageDTO()
@@ -112,7 +114,15 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            Assert.Equal(streetcodeId, result.Value.First().StreetcodeId);
+            foreach (var a in result.Value)
+            {
+                _testOutputHelper.WriteLine("object" + a.Index.ToString());
+                _testOutputHelper.WriteLine(a.Art.Id.ToString());
+                _testOutputHelper.WriteLine("object" + GetStreetcodeArtDTOList()[a.Index - 1].Index);
+                _testOutputHelper.WriteLine(GetStreetcodeArtDTOList()[a.Index - 1].Art.Id.ToString());
+            }
+            
+            Assert.True(result.Value.All(a => GetStreetcodeArtDTOList()[a.Index - 1] == a));
         }
 
         [Theory]

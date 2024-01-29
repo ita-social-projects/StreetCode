@@ -13,7 +13,15 @@ pipeline {
                 '''
              }
          }
-
+        stage('Debugging') {
+            steps {
+                sh '''
+                pwd
+                git branch -a'
+                git fetch --all
+                '''
+            }
+        }
         stage('Restore Dependencies') {
             steps {
                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
@@ -24,7 +32,6 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'git fetch --all'
                     sh 'dotnet-gitversion /output buildserver'
                     def props = readProperties file: 'gitversion.properties'
                     env.GitVersion_SemVer = props.GitVersion_SemVer

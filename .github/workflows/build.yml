@@ -43,10 +43,10 @@ jobs:
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Unit Tests
-        run: ./Streetcode/build.sh UnitTest
+        run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build
 
       - name: Integration Tests
-        run: ./Streetcode/build.sh IntegrationTest
+        run: dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build
 
       - name: SonarScanner Analysis
         id: sonar

@@ -1,14 +1,17 @@
 ﻿using DbUp;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
 
 public class Program
 {
     static int Main(string[] args)
     {
-        string rootDirectory = Path.GetFullPath(Path.Combine(Assembly.GetEntryAssembly().Location, $"..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}..{Path.DirectorySeparatorChar}"));
-        string pathToSqlScripts = Path.Combine(rootDirectory,
-            "Streetcode", "Streetcode.DAL", "Persistence", "ScriptsMigration");
+        string rootDirectory = GetRootFolderPath();
+        string pathToSqlScripts = Path.Combine(
+            rootDirectory,
+            "Streetcode",
+            "Streetcode.DAL",
+            "Persistence",
+            "ScriptsMigration");
 
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
@@ -45,5 +48,18 @@ public class Program
         Console.WriteLine("Success!");
         Console.ResetColor();
         return 0;
+    }
+
+    private static string GetRootFolderPath()
+    {
+        // By root folder we mean folder, that contains .gitignore file.
+        string currentDirectoryPath = Directory.GetCurrentDirectory();
+        var directory = new DirectoryInfo(currentDirectoryPath);
+        while (directory is not null && !directory.GetFiles(".gitignore").Any())
+        {
+            directory = directory.Parent;
+        }
+
+        return directory?.FullName ?? throw new NullReferenceException("Cannot find root folder");
     }
 }

@@ -22,7 +22,6 @@ pipeline {
             steps {
                 sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
                 sh 'cd StreetCode/'
-                sh 'dotnet restore ./Streetcode/Streetcode.sln'
              }
          }
         stage('Debugging') {

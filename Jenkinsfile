@@ -3,17 +3,16 @@ pipeline {
         label 'stage'
     }
     stages {
-        // stage('Branch name'){
-       // 
-        //     steps{
-        //         echo "${env.BRANCH_NAME}"
+        stage('Branch name'){
+            steps{
+                echo "${env.BRANCH_NAME}"
 
-        //         sh '''
-        //             printenv
+                sh '''
+                    printenv
 
-        //         '''
-        //     }
-        // }
+                '''
+             }
+         }
 
         stage('Restore Dependencies') {
             steps {
@@ -25,6 +24,7 @@ pipeline {
                 script {
                     // Date date = new Date()
                     // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
+                    sh 'git fetch --all'
                     sh 'dotnet-gitversion /output buildserver'
                     def props = readProperties file: 'gitversion.properties'
                     env.GitVersion_SemVer = props.GitVersion_SemVer

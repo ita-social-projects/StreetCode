@@ -12,24 +12,30 @@ pipeline {
 
                 '''
              }
-         }   
+         }
+        stage('Debugging') {
+            steps {
+                sh 'pwd'
+                sh 'git branch -a'
+                sh 'git fetch --all'
+            }
+        }       
         stage("Clean up"){
             steps{
                 deleteDir()
             }
         }
-        stage('Restore Dependencies') {
-            steps {
-                sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
-             }
-         }
-        stage('Debugging') {
-            steps {
-                sh 'pwd'
-                sh 'cd StreetCode/'
-                sh 'git fetch --all'
+        stage('Clone and Navigate'){
+            steps{
+                script {
+                    sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
+                    dir(repoFolder) {
+                        sh "cd StreetCode/"
+                    }
+                    sh 'pwd'
+                }
             }
-        }    
+        }
         stage('GitVersion') {
             steps {
                 script {
@@ -76,7 +82,7 @@ pipeline {
              steps {
                  script {
                      withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                         sh "docker build -t ${username}/streetcode:${env.GitVersion_MajorMinorPatch} ."
+                         sh "docker build -t ${username}/streetcode:${env.GitVersion_SemVer} ."
                      }
                 }
              }

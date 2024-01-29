@@ -27,7 +27,6 @@ pipeline {
         stage('Debugging') {
             steps {
                 sh 'pwd'
-                sh 'git branch -a'
                 sh 'git fetch --all'
             }
         }    

@@ -20,8 +20,14 @@ pipeline {
                 sh 'git fetch --all'
             }
         }       
+        stage("Clean up"){
+            steps{
+                deleteDir()
+            }
+        }
         stage('Restore Dependencies') {
             steps {
+                sh 'git clone https://github.com/ita-social-projects/StreetCode.git'
                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
              }
          }

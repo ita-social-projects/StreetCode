@@ -40,7 +40,7 @@ jobs:
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
       - name: Setup Environment For Integration Tests
-        run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
+        run: ./Streetcode/build.ps1 SetupIntegrationTestsEnvironment
 
       - name: Unit Tests
         run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release

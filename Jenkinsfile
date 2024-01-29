@@ -3,64 +3,56 @@ pipeline {
         label 'stage'
     }
     stages {
-        stage('Branch name') {
-            steps {
-                echo "${env.BRANCH_NAME}"
-                sh 'printenv'
-            }
-        }
-
-        stage('Clean up') {
+        stage("Clean Up"){
             steps {
                 deleteDir()
             }
         }
-
-        stage('Clone and Navigate') {
-            steps {
-                script {
-                    def repoUrl = 'https://github.com/ita-social-projects/StreetCode.git'
-                    def repoFolder = 'StreetCode'
-                    dir(repoFolder) {
-                        sh "git clone ${repoUrl} ."
-                    }
-                    sh 'git status'
-                    sh 'ls -la'
-                }
+        stage("Clone Repo"){
+            steps{
+                sh "git clone https://github.com/ita-social-projects/StreetCode.git"
             }
         }
-
         stage('GitVersion') {
             steps {
                 script {
-                    sh 'dotnet-gitversion /output buildserver'
-                    def props = readProperties file: 'gitversion.properties'
-                    env.GitVersion_SemVer = props.GitVersion_SemVer
-                    env.GitVersion_BranchName = props.GitVersion_BranchName
-                    env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
-                    env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
-                    env.GitVersion_Sha = props.GitVersion_Sha
+                    dir("StreetCode") {
+                        env.IGNORE_NORMALISATION_GIT_HEAD_MOVE = 1
+                        sh 'dotnet-gitversion /output buildserver'
+                        def props = readProperties file: 'gitversion.properties'
+                        env.GitVersion_SemVer = props.GitVersion_SemVer
+                        env.GitVersion_BranchName = props.GitVersion_BranchName
+                        env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
+                        env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
+                        env.GitVersion_Sha = props.GitVersion_Sha
+                    }
                 }
             }
         }
 
         stage('Build') {
             steps {
-                sh 'nuke CompileAPI --configuration Release --no-restore'
+                dir("StreetCode") {
+                    sh 'nuke CompileAPI --configuration Release --no-restore'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml'
+                dir("StreetCode") {
+                    sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml'
+                }
             }
         }
 
         stage('Docker prune') {
             steps {
                 script {
-                    sh 'docker image prune --force --all --filter "until=72h"'
-                    sh 'docker system prune --force --all --filter "until=72h"'
+                    dir("StreetCode") {
+                        sh 'docker image prune --force --all --filter "until=72h"'
+                        sh 'docker system prune --force --all --filter "until=72h"'
+                    }
                 }
             }
         }
@@ -68,8 +60,10 @@ pipeline {
         stage('Docker build') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh "docker build -t ${username}/streetcode:${env.GitVersion_SemVer} ."
+                    dir("StreetCode") {
+                        withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                            sh "docker build -t ${username}/streetcode:${env.GitVersion_SemVer} ."
+                        }
                     }
                 }
             }

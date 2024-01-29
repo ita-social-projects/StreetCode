@@ -15,12 +15,11 @@ pipeline {
          }
         stage('Debugging') {
             steps {
-                sh '''
-                git branch -a'
-                git fetch --all
-                '''
+                sh 'pwd'
+                sh 'git branch -a'
+                sh 'git fetch --all'
             }
-        }
+        }       
         stage('Restore Dependencies') {
             steps {
                 sh 'dotnet restore ./Streetcode/Streetcode.sln'

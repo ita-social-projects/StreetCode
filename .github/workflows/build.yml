@@ -26,7 +26,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-
+          
+      - name: Install powershell
+        run: sudo snap install powershell --classic
+        
       - name: Install dotnet-coverage
         run: dotnet tool install --global dotnet-coverage
 
@@ -40,7 +43,7 @@ jobs:
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
       - name: Setup Environment For Integration Tests
-        run: ./Streetcode/build.ps1 SetupIntegrationTestsEnvironment
+        run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Unit Tests
         run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release

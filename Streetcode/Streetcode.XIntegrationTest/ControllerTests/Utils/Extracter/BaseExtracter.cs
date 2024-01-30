@@ -1,33 +1,31 @@
-﻿using System.Runtime.CompilerServices;
-
+﻿
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
 {
-    public static class Extracter
+    public static class BaseExtracter
     {
         private static SqlDbHelper _dbHelper;
 
-        static Extracter()
+        static BaseExtracter()
         {
             _dbHelper = BaseControllerTests.GetSqlDbHelper();
         }
 
-        public static T Extract<T>(T entity, Func<T, bool>? predicate = null)
+        public static T Extract<T>(T entity, Func<T, bool>? searchPredicate = null)
             where T : class, new()
         {
 
-            if (!_dbHelper.Any<T>(predicate))
+            if (!_dbHelper.Any<T>(searchPredicate))
             {
                 _dbHelper.AddNewItem<T>(entity);
             }
 
-            return _dbHelper.GetExistItem<T>(predicate);
+            return _dbHelper.GetExistItem<T>(searchPredicate);
         }
 
-        public static void Remove<T>(T entity, Func<T, bool>? predicate = null)
+        public static void Remove<T>(T entity, Func<T, bool>? searchPredicate = null)
             where T : class, new()
         {
-
-            if (_dbHelper.Any<T>(predicate))
+            if (_dbHelper.Any<T>(searchPredicate))
             {
                 _dbHelper.DeleteItem<T>(entity);
             }

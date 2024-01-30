@@ -66,6 +66,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return this.dbContext.Set<T>().FirstOrDefault();
         }
 
+        public bool Any<T>(Func<T, bool>? predicate = default)
+           where T : class, new()
+        {
+            if (predicate != null)
+            {
+                return this.dbContext.Set<T>().AsNoTracking().Any(predicate);
+            }
+
+            return this.dbContext.Set<T>().AsNoTracking().Any();
+        }
+
         public IEnumerable<T> GetAll<T>(Func<T, bool>? predicate = default)
              where T : class
         {

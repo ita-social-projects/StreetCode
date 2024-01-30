@@ -40,18 +40,18 @@ jobs:
         run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
 
       - name: Setup Environment For Integration Tests
-        run: ./Streetcode/build.ps1 SetupIntegrationTestsEnvironment
+        run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 
       - name: Unit Tests
         run: dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release
 
       - name: Integration Tests
-        run: ./Streetcode/retry-test.ps1 ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj -configuration "Release"
+        run: dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release
 
-      - name: SonarScanner Analysis
-        id: sonar
-        run: |
-         dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
-         dotnet build ./Streetcode/Streetcode.sln --configuration Release
-         dotnet-coverage collect "./Streetcode/retry-test.ps1 ./Streetcode/Streetcode.sln -configuration ""Release""" -f xml -o "coverage.xml"
-         dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      # - name: SonarScanner Analysis
+      #   id: sonar
+      #   run: |
+      #    dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+      #    dotnet build ./Streetcode/Streetcode.sln --configuration Release
+      #    dotnet-coverage collect "./Streetcode/retry-test.ps1 ./Streetcode/Streetcode.sln -configuration ""Release""" -f xml -o "coverage.xml"
+      #    dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

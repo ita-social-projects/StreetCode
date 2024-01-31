@@ -1,0 +1,12 @@
+﻿{
+  "id": 0,
+  "isKeyPartner": true,
+  "isVisibleEverywhere": true,
+  "title": "Test_Title",
+  "description": "TestDescription",
+  "logoId": 0,
+  "UrlTitle": "Test_UrlTitle",
+  "TargetUrl": "Test_TardetUrl",
+  "partnerSourceLinks": [],
+  "streetcodes": []
+}

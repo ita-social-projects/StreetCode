@@ -4,18 +4,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
 {
     public static class StreetcodeContentExtracter
     {
-        public static StreetcodeContent Extract(int index, string transliterationUrl)
+        public static StreetcodeContent Extract(int id, int index, string transliterationUrl)
         {
             StreetcodeContent testStreetcodeContent = TestDataProvider.GetTestData<StreetcodeContent>();
+            testStreetcodeContent.Id = id;
             testStreetcodeContent.Index = index;
             testStreetcodeContent.TransliterationUrl = transliterationUrl;
 
-            return BaseExtracter.Extract<StreetcodeContent>(testStreetcodeContent, strCont => strCont.Index == index);
+            return BaseExtracter.Extract<StreetcodeContent>(testStreetcodeContent, strCont => strCont.Id == id);
         }
 
-        public static void Remove(StreetcodeContent streetcodeContent)
+        public static void Remove(StreetcodeContent entity)
         {
-            BaseExtracter.Remove<StreetcodeContent>(streetcodeContent, strCont => strCont.Index == streetcodeContent.Index);
+            BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
         }
     }
 }

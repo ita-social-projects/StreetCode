@@ -14,7 +14,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             : base(factory, "/api/Coordinate")
         {
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), Guid.NewGuid().ToString());
+                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
         }
 
         public override void Dispose()

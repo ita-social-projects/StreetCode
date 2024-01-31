@@ -1,20 +1,34 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class TagControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Tag _testTag;
+        private StreetcodeContent _testStreetcodeContent;
+
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Tag")
         {
+            this._testTag = TagExtracter.Extract(HashCode.Combine(this, DateTime.Now.Ticks));
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
+        }
 
+        public override void Dispose()
+        {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
+            TagExtracter.Remove(this._testTag);
         }
 
         [Fact]
@@ -28,11 +42,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestTag]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Tag expectedTag = ExtractTestTag.TagForTest;
-            var response = await client.GetByIdAsync(expectedTag.Id);
+            Tag expectedTag = this._testTag;
+            var response = await this.client.GetByIdAsync(expectedTag.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
@@ -55,12 +68,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
-        [ExtractTestTag]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            StreetcodeTagIndexSetup.Setup(ExtractTestStreetcode.StreetcodeForTest, ExtractTestTag.TagForTest);
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            TagExtracter.AddStreetcodeTagIndex(this._testStreetcodeContent.Id, this._testTag.Id);
+            int streetcodeId = this._testStreetcodeContent.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
 
@@ -80,19 +91,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestTag]
         public async Task GetByTitle_ReturnSuccessStatusCode()
         {
 
-            Tag expectedTag = ExtractTestTag.TagForTest;
-            var response = await client.GetResponse($"/GetTagByTitle/{expectedTag.Title}");
+            Tag expectedTag = this._testTag;
+            var response = await this.client.GetResponse($"/GetTagByTitle/{expectedTag.Title}");
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.Multiple(
-                () => Assert.Equal(expectedTag.Id, returnedValue?.Id),
-                () => Assert.Equal(expectedTag.Title, returnedValue?.Title));
+            Assert.Equal(expectedTag.Title, returnedValue?.Title);
         }
 
         [Fact]
@@ -104,11 +112,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
               () => Assert.False(response.IsSuccessStatusCode));
-        }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

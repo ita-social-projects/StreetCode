@@ -7,13 +7,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
     {
         public static T GetTestData<T>()
         {
-            string jsonFilePath = @"../../../testData.json";
+            string typeName = typeof(T).Name;
+            string jsonFilePath = @$"../../../TestData/{typeName}.json";
             using StreamReader reader = new (jsonFilePath);
             string fileJson = reader.ReadToEnd();
-            var patsedFileJson = JObject.Parse(fileJson);
-
-            string entityJson = patsedFileJson[nameof(T)]?.ToString();
-            T entity = JsonConvert.DeserializeObject<T>(entityJson);
+            T entity = JsonConvert.DeserializeObject<T>(fileJson);
             return entity;
         }
     }

@@ -1,17 +1,28 @@
 ﻿using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Partners;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Partners
 {
     public class PartnersControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private StreetcodeContent _testStreetcodeContent;
+
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(this.GetHashCode(), Guid.NewGuid().ToString());
+        }
+
+        ~PartnersControllerTests()
+        {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
         }
 
         [Fact]
@@ -55,10 +66,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         }
 
         [Fact]
-        [ExtractTestStreetcode]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            int streetcodeId = this._testStreetcodeContent.Id;
 
             var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);

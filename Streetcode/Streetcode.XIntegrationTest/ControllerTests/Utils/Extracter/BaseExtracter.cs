@@ -12,7 +12,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
             _lock = new object();
         }
 
-        public static T Extract<T>(T entity, Func<T, bool> searchPredicate)
+        public static T Extract<T>(T entity, Func<T, bool> searchPredicate, bool hasIdentity = true)
             where T : class, new()
         {
 
@@ -20,7 +20,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
             {
                 if (!_dbHelper.Any<T>(searchPredicate))
                 {
-                    _dbHelper.AddItemWithCustomId<T>(entity);
+                    if (hasIdentity)
+                    {
+                        _dbHelper.AddItemWithCustomId<T>(entity);
+                    }
+                    else
+                    {
+                        _dbHelper.AddNewItem<T>(entity);
+                        _dbHelper.SaveChanges();
+                    }
                 }
 
                 return _dbHelper.GetExistItem<T>(searchPredicate);

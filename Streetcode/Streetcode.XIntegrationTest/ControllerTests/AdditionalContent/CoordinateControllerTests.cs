@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+   public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Coordinate")

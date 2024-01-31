@@ -20,7 +20,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
                 .Extract(this.GetHashCode(), Guid.NewGuid().ToString());
         }
 
-        ~PartnersControllerTests()
+        public override void Dispose()
         {
             StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
         }

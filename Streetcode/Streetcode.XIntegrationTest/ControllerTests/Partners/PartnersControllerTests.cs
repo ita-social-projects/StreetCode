@@ -2,8 +2,7 @@
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Partners;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.PartnerExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
@@ -12,17 +11,20 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
     public class PartnersControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeContent _testStreetcodeContent;
+        private Partner _testPartner;
 
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), Guid.NewGuid().ToString());
+                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
+            this._testPartner = PartnerExtracter.Extract(this.GetHashCode());
         }
 
         public override void Dispose()
         {
             StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
+            PartnerExtracter.Remove(this._testPartner);
         }
 
         [Fact]
@@ -36,23 +38,22 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         }
 
         [Fact]
-        [ExtractTestPartners]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Partner expected = ExtractTestPartners.PartnerForTest;
-            var response = await this.client.GetByIdAsync(expected.Id);
+            Partner expectedPartner = this._testPartner;
+            var response = await this.client.GetByIdAsync(expectedPartner.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
             Assert.Multiple(
-                () => Assert.Equal(expected.Id, returnedValue.Id),
-                () => Assert.Equal(expected.Title, returnedValue.Title),
-                () => Assert.Equal(expected.Description, returnedValue.Description),
-                () => Assert.Equal(expected.LogoId, returnedValue.LogoId),
-                () => Assert.Equal(expected.IsKeyPartner, returnedValue.IsKeyPartner),
-                () => Assert.Equal(expected.TargetUrl, returnedValue.TargetUrl.Href),
-                () => Assert.Equal(expected.UrlTitle, returnedValue.TargetUrl.Title));
+                () => Assert.Equal(expectedPartner.Id, returnedValue.Id),
+                () => Assert.Equal(expectedPartner.Title, returnedValue.Title),
+                () => Assert.Equal(expectedPartner.Description, returnedValue.Description),
+                () => Assert.Equal(expectedPartner.LogoId, returnedValue.LogoId),
+                () => Assert.Equal(expectedPartner.IsKeyPartner, returnedValue.IsKeyPartner),
+                () => Assert.Equal(expectedPartner.TargetUrl, returnedValue.TargetUrl.Href),
+                () => Assert.Equal(expectedPartner.UrlTitle, returnedValue.TargetUrl.Title));
         }
 
         [Fact]

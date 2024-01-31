@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Polly;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
@@ -53,6 +54,29 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 idProp?.SetValue(newItem, 0);
             }
             return this.dbContext.Set<T>().Add(newItem).Entity;
+        }
+
+        public void AddItemWithCustomId<T>(T newItem)
+            where T : class, new()
+        {
+            this.dbContext.Database.OpenConnection();
+            try
+            {
+                string tableSchema = this.dbContext.Model.FindEntityType(typeof(T)).GetSchema();
+                string tableName = this.dbContext.Model.FindEntityType(typeof(T)).GetTableName();
+
+                string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
+                string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
+
+                this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                this.dbContext.Add(newItem);
+                this.dbContext.SaveChanges();
+                this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
+            }
+            finally
+            {
+                this.dbContext.Database.CloseConnection();
+            }
         }
 
         public T GetExistItem<T>(Func<T, bool>? predicate = default)

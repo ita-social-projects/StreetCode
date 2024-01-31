@@ -1,8 +1,10 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using System.Net;
 using Xunit;
 
@@ -10,9 +12,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class SubtitleControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private StreetcodeContent _testStreetcodeContent;
+
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(this.GetHashCode(), Guid.NewGuid().ToString());
+        }
+
+        public override void Dispose()
+        {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
         }
 
         [Fact]
@@ -25,11 +36,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
         [ExtractTestSubtitle]
         public async Task GetById_ReturnSuccessContent()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            int streetcodeId = this._testStreetcodeContent.Id;
             Subtitle expectedSubtitle = ExtractTestSubtitle.SubtitleForTest;
 
             var response = await this.client.GetByIdAsync(expectedSubtitle.Id);
@@ -55,11 +65,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
         [ExtractTestSubtitle]
         public async Task GetByStreetcodeId_ReturnSuccess()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            int streetcodeId = this._testStreetcodeContent.Id;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);

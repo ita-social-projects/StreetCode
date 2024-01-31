@@ -105,5 +105,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
               () => Assert.False(response.IsSuccessStatusCode));
         }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

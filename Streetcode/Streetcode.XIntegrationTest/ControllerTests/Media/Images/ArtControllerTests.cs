@@ -75,5 +75,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
                           () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                           () => Assert.False(response.IsSuccessStatusCode));
         }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

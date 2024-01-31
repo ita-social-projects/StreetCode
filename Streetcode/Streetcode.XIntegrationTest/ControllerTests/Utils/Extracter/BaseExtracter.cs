@@ -4,32 +4,40 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
     public static class BaseExtracter
     {
         private static SqlDbHelper _dbHelper;
+        private static object _lock;
 
         static BaseExtracter()
         {
             _dbHelper = BaseControllerTests.GetSqlDbHelper();
+            _lock = new object();
         }
 
         public static T Extract<T>(T entity, Func<T, bool> searchPredicate)
             where T : class, new()
         {
 
-            if (!_dbHelper.Any<T>(searchPredicate))
+            lock (_lock)
             {
-                _dbHelper.AddNewItem<T>(entity);
-                _dbHelper.SaveChanges();
-            }
+                if (!_dbHelper.Any<T>(searchPredicate))
+                {
+                    _dbHelper.AddNewItem<T>(entity);
+                    _dbHelper.SaveChanges();
+                }
 
-            return _dbHelper.GetExistItem<T>(searchPredicate);
+                return _dbHelper.GetExistItem<T>(searchPredicate);
+            }
         }
 
         public static void Remove<T>(T entity, Func<T, bool> searchPredicate)
             where T : class, new()
         {
-            if (_dbHelper.Any<T>(searchPredicate))
+            lock (_lock)
             {
-                _dbHelper.DeleteItem<T>(entity);
-                _dbHelper.SaveChanges();
+                if (_dbHelper.Any<T>(searchPredicate))
+                {
+                    _dbHelper.DeleteItem<T>(entity);
+                    _dbHelper.SaveChanges();
+                }
             }
         }
     }

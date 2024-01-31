@@ -4,8 +4,6 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribu
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-   
-
     public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
@@ -71,6 +69,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
+        }
+
+        public override void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

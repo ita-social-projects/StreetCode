@@ -42,10 +42,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                var random = new Random();
-                var shuffledStreetcodes = streetcodes.OrderBy(sc => random.Next());
-
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(shuffledStreetcodes));
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(streetcodes).OrderByDescending(c => c.UpdatedAt).Take(10));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;

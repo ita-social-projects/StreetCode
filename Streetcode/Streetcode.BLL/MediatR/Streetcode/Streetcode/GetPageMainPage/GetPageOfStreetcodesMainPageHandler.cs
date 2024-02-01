@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
@@ -33,8 +34,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
             var random = new Random(request.shuffleSeed);
             var streetcodes = (await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails)))
-                .OrderBy(sc => random.Next());
+                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails))).
+                OrderByDescending(sc => sc.UpdatedAt).Take(10);
 
             if (streetcodes != null)
             {

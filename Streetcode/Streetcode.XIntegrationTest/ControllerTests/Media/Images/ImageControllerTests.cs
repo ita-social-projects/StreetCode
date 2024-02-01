@@ -30,6 +30,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         public override void Dispose()
         {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
             ImageExtracter.Remove(this._testImage);
         }
 

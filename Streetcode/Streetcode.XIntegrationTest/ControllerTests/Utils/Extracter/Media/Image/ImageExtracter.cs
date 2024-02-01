@@ -11,13 +11,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtra
     {
         public static DAL.Entities.Media.Images.Image Extract(int imageId)
         {
-            StreetcodeContent testStreetcode = StreetcodeContentExtracter
-                .Extract(imageId, imageId, Guid.NewGuid().ToString());
             var blobFixture = new BlobStorageFixture();
             DAL.Entities.Media.Images.Image testImage = blobFixture.SeedImage(Guid.NewGuid().ToString());
             testImage.Id = imageId;
             testImage.BlobName += $".{testImage.MimeType?.Split('/')[1]}";
-            testImage.Streetcodes = new List<StreetcodeContent>() { testStreetcode };
 
             return BaseExtracter.Extract<DAL.Entities.Media.Images.Image>(testImage, image => image.Id == imageId);
         }

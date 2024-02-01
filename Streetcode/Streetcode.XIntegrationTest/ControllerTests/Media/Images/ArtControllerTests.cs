@@ -1,17 +1,35 @@
 ﻿using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Art;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Image;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ArtControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Art _testArt;
+        private StreetcodeContent _testStreetcodeContent;
+
         public ArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Art")
         {
+            this._testArt = ArtExtracter.Extract(this.GetHashCode());
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(
+                    this.GetHashCode(),
+                    this.GetHashCode(),
+                    Guid.NewGuid().ToString());
+        }
+
+        public override void Dispose()
+        {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
+            ArtExtracter.Remove(this._testArt);
         }
 
         [Fact]
@@ -25,10 +43,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        [ExtractTestArt]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Art expectedArt = ExtractTestArt.ArtForTest;
+            Art expectedArt = this._testArt;
             var response = await this.client.GetByIdAsync(expectedArt.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ArtDTO>(response.Content);
@@ -53,10 +70,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        [ExtractTestStreetcode]
         public async Task GetArtsByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            ArtExtracter.AddStreetcodeArt(this._testStreetcodeContent.Id, this._testArt.Id);
+            int streetcodeId = this._testStreetcodeContent.Id;
             var response = await this.client.GetArtsByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
 
@@ -74,11 +91,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.Multiple(
                           () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                           () => Assert.False(response.IsSuccessStatusCode));
-        }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

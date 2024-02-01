@@ -15,7 +15,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
-            this._testSubtitle = SubtitleExtracter.Extract(HashCode.Combine(this, DateTime.Now.Ticks));
+            this._testSubtitle = SubtitleExtracter.Extract(this.GetHashCode());
         }
 
         public override void Dispose()

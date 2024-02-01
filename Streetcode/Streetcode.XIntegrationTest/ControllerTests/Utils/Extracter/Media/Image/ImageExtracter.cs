@@ -18,6 +18,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtra
 
         public static void Remove(Image entity)
         {
+            var blobFixture = new BlobStorageFixture();
+            blobFixture.blobService.DeleteFileInStorage(entity.BlobName);
             BaseExtracter.RemoveByPredicate<Image>(image => image.Id == entity.Id);
         }
     }

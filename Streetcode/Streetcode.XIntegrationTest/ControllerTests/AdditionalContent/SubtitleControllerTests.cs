@@ -1,7 +1,6 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using System.Net;
 using Xunit;
@@ -33,7 +32,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestSubtitle]
         public async Task GetById_ReturnSuccessContent()
         {
             Subtitle expectedSubtitle = this._testSubtitle;

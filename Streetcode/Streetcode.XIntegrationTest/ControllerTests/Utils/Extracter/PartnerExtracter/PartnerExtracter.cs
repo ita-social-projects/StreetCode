@@ -1,6 +1,6 @@
 ﻿using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.ImageExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.PartnerExtracter
 {

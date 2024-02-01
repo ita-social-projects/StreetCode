@@ -1,14 +1,26 @@
 ﻿using Streetcode.BLL.DTO.Media;
+using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Video _testVideo;
+
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
+            this._testVideo = VideoExtracter.Extract(this.GetHashCode());
+        }
+
+        public override void Dispose()
+        {
+            VideoExtracter.Remove(this._testVideo);
         }
 
         [Fact]
@@ -21,10 +33,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         }
 
         [Fact]
-        [ExtractTestVideo]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            int id = ExtractTestVideo.VideoForTest.Id;
+            int id = this._testVideo.Id;
             var response = await client.GetByIdAsync(id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
@@ -45,12 +56,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         }
 
         [Fact]
-        [ExtractTestVideo]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = ExtractTestVideo.StreetcodeWithVideo.Id;
-            int videoId = ExtractTestVideo.VideoForTest.Id;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            int streetcodeId = this._testVideo.StreetcodeId;
+            int videoId = this._testVideo.Id;
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -69,11 +79,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
-        }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

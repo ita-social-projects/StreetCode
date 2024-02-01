@@ -20,9 +20,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Tag")
         {
-            this._testTag = TagExtracter.Extract(HashCode.Combine(this, DateTime.Now.Ticks));
+            this._testTag = TagExtracter.Extract(this.GetHashCode());
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
+                .Extract(
+                    this.GetHashCode(),
+                    this.GetHashCode(),
+                    Guid.NewGuid().ToString());
         }
 
         public override void Dispose()

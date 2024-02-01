@@ -2,7 +2,7 @@
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.PartnerExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 

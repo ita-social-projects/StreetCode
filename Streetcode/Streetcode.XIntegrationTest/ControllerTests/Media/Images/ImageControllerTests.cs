@@ -6,7 +6,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.ImageExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 

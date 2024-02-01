@@ -1,17 +1,36 @@
-﻿using Streetcode.BLL.DTO.Media.Images;
+﻿using Microsoft.AspNetCore.Server.IIS.Core;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Images.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.ImageExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ImageControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Image _testImage;
+        private StreetcodeContent _testStreetcodeContent;
+
         public ImageControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Image")
         {
+            this._testImage = ImageExtracter.Extract(this.GetHashCode());
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(
+                    this.GetHashCode(),
+                    this.GetHashCode(),
+                    Guid.NewGuid().ToString());
+        }
+
+        public override void Dispose()
+        {
+            ImageExtracter.Remove(this._testImage);
         }
 
         [Fact]
@@ -26,10 +45,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        [ExtractTestImage]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Image expectedImage = ExtractTestImage.ImageForTest;
+            Image expectedImage = this._testImage;
             var response = await this.client.GetByIdAsync(expectedImage.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ImageDTO>(response.Content);
 
@@ -53,10 +71,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        [ExtractTestStreetcode]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            ImageExtracter.AddStreetcodeImage(this._testStreetcodeContent.Id, this._testImage.Id);
+            int streetcodeId = this._testStreetcodeContent.Id;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
 
@@ -72,11 +90,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
               () => Assert.False(response.IsSuccessStatusCode));
-        }
-
-        public override void Dispose()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Audio")
         {
-            this._testAudio = AudioExtracter.Extract(HashCode.Combine(this, DateTime.Now.Ticks));
+            this._testAudio = AudioExtracter.Extract(this.GetHashCode());
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     this.GetHashCode(),

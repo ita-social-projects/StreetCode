@@ -28,10 +28,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 
                 StreetcodeArtForTest = sqlDbHelper.AddNewItem(new DAL.Entities.Streetcode.StreetcodeArt()
                 {
-                    StreetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id,
+                    StreetcodeArtSlideId = ExtractTestStreetcode.StreetcodeForTest.Id,
                     ArtId = ExtractTestArt.ArtForTest.Id,
                     Art = ExtractTestArt.ArtForTest,
-                    Streetcode = ExtractTestStreetcode.StreetcodeForTest,
+                    StreetcodeArtSlide = null, /*TODO: add ExtractTestStreetcodeArtSlide*/
                 });
                 sqlDbHelper.SaveChanges();
             }

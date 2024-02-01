@@ -21,7 +21,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(a => a.StreetcodeId == streetcodeId));
+            Assert.True(returnedValue.All(a => ExtractCreateTestStreetcode.StreetcodeForTest.Arts.Contains(a.Art)));
         }
 
         [Fact]

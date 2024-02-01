@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,10 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231108151054_RefactorStreetcodeArts")]
+    partial class RefactorStreetcodeArts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,8 +182,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(3000)
-                        .HasColumnType("nvarchar(3000)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Salary")
                         .IsRequired()
@@ -512,7 +514,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(15000)
+                        .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("SourceLinkCategoryId", "StreetcodeId");
@@ -618,8 +620,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("DateString")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("EventEndOrPersonDeathDate")
                         .HasColumnType("datetime2");

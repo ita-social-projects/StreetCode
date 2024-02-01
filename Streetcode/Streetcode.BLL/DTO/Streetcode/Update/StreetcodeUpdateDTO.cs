@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners.Update;
@@ -42,7 +43,8 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnersUpdateDTO> Partners { get; set; }
         public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
-        public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; }
+        public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
+        public IEnumerable<ArtCreateUpdateDTO> Arts { get; set; }
         public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; }
         public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
         public IEnumerable<ImageUpdateDTO> Images { get; set; }

@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 var streetcodesPaginated = streetcodes.Paginate(request.page, request.pageSize);

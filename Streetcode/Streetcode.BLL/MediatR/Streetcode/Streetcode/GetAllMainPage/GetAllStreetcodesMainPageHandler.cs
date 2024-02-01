@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 var random = new Random();

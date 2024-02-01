@@ -1,9 +1,6 @@
 ﻿using Streetcode.BLL.DTO.Media;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Media

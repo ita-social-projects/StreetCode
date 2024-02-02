@@ -4,32 +4,24 @@ using System.Linq;
 using Nuke.Common.Tooling;
 using static Utils.DockerComposeTasks;
 using static Nuke.Common.Tools.Docker.DockerTasks;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
+using System.IO;
 
 namespace Targets;
 
 partial class Build
 {
-    [Parameter("docker atom")]
-    readonly string DockerAtom = "Streetcode";
-
-    Target SetPublicEnvironmentVariables => _ => _
-        .Executes(() =>
-        {
-            PowerShell($"setx DOCKER_ATOM \"{DockerAtom}\"");
-        });
+    private const string DOCKER_COMPOSE_FOLDER_NAME = "Docker";
 
     Target SetupDocker => _ => _
-        .DependsOn(SetPublicEnvironmentVariables)
         .Executes(() =>
         {
             DockerComposeBuild(b => b
-                .SetProcessWorkingDirectory(RootDirectory)
+                .SetProcessWorkingDirectory(Path.Combine(RootDirectory, DOCKER_COMPOSE_FOLDER_NAME))
                 .EnableNoCache()
                 .EnableQuiet());
 
             DockerComposeUp(u => u
-                .SetProcessWorkingDirectory(RootDirectory)
+                .SetProcessWorkingDirectory(Path.Combine(RootDirectory, DOCKER_COMPOSE_FOLDER_NAME))
                 .EnableDetach());
         });
 
@@ -37,9 +29,7 @@ partial class Build
         .After(CleanContainers)
         .Executes(() =>
         {
-            var images = DockerImageLs(i => i
-                .SetFilter($"label=atom={DockerAtom}")
-            );
+            var images = DockerImageLs(i => i);
 
             if (images.Any())
                 DockerImageRm(r => r.AddImages(images
@@ -51,14 +41,12 @@ partial class Build
         .Executes(() =>
         {
             var runningContainers = DockerPs(s => s
-                .SetFilter($"label=atom={DockerAtom}")
                 .EnableQuiet());
 
             if (runningContainers.Any())
                 DockerKill(s => s.AddContainers(runningContainers.Select(c => c.Text)));
 
             var containers = DockerPs(s => s
-                .SetFilter($"label=atom={DockerAtom}")
                 .EnableQuiet()
                 .EnableAll());
 
@@ -71,7 +59,6 @@ partial class Build
         .Executes(() =>
         {
             var volumes = DockerVolumeLs(v=>v
-                .SetFilter($"label=atom={DockerAtom}")
                 .EnableQuiet());
 
             if (volumes.Any())

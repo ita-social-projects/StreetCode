@@ -23,7 +23,7 @@ partial class Build
         && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
 
     Target AddMigration => _ => _
-        .OnlyWhenStatic(() => !CheckForMigration())
+        .OnlyWhenStatic(() => CheckForMigration())
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
@@ -70,11 +70,11 @@ partial class Build
                 queryType = "ScriptsMigration";
             }
 
-            var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.WebApi");
-            var outputScriptPath = Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.DAL", "Persistence", queryType);
+            var dbPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.WebApi");
+            var outputScriptPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.DAL", "Persistence", queryType);
 
             PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
-            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}{queryName}.sql  --project {dbPath}");
+            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}/{queryName}.sql  --project {dbPath}");
         });
 
     Target DropDatabase => _ => _

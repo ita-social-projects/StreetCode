@@ -1,0 +1,9 @@
+services:
+  sqlserver:
+    container_name: local_sql_server
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "sdlLKMCD234!@#lkcmds"
+    ports:
+      - 1433:1433

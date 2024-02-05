@@ -7,6 +7,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
@@ -18,11 +19,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/StreetcodeArt")
         {
-            this._testArt = ArtExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testArt = ArtExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    this.GetHashCode(),
-                    this.GetHashCode(),
+                    uniqueId,
+                    uniqueId,
                     Guid.NewGuid().ToString());
         }
 

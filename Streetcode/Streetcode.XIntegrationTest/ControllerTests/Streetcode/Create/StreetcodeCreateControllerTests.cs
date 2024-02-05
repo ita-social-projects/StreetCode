@@ -6,6 +6,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtr
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 using System.Net;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
 {
@@ -17,10 +18,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Create
         public StreetcodeCreateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Streetcode", tokenStorage)
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    this.GetHashCode(),
-                    this.GetHashCode(),
+                    uniqueId,
+                    uniqueId,
                     Guid.NewGuid().ToString());
         }
 

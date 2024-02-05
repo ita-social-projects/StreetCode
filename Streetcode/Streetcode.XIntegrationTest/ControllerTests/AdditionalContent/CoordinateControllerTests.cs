@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtr
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Xunit;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
@@ -15,8 +16,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Coordinate")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
+                .Extract(
+                uniqueId,
+                uniqueId,
+                Guid.NewGuid().ToString());
         }
 
         public override void Dispose()

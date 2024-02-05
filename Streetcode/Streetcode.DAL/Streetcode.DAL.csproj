@@ -42,7 +42,7 @@
   
   <ItemGroup>
     <Folder Include="Persistence\Migrations\" />
-    <Folder Include="Persistence\ScriptsMigration\" />
+	<Folder Include="Persistence\ScriptsMigration\" />
   </ItemGroup>
 	
   <ItemGroup>

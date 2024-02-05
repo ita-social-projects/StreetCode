@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag;
@@ -20,11 +21,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Tag")
         {
-            this._testTag = TagExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testTag = TagExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    this.GetHashCode(),
-                    this.GetHashCode(),
+                    uniqueId,
+                    uniqueId,
                     Guid.NewGuid().ToString());
         }
 

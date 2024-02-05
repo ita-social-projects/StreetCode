@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
@@ -15,7 +16,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
-            this._testVideo = VideoExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testVideo = VideoExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()

@@ -2,6 +2,7 @@
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
@@ -11,17 +12,19 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
 {
+    [Collection("Authorization")]
     public class StreetcodeUpdateControllerTests :
-        BaseControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+        BaseAuthorizationControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeUpdateDTO _testStreetcodeUpdateDTO;
 
-        public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory)
-            : base(factory, "/api/Streetcode")
+        public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
+            : base(factory, "/api/Streetcode", tokenStorage)
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
             this._testStreetcodeUpdateDTO = StreetcodeUpdateDTOExtracter.Extract(
-                this.GetHashCode(),
-                this.GetHashCode(),
+                uniqueId,
+                uniqueId,
                 Guid.NewGuid().ToString());
         }
 
@@ -35,7 +38,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
         {
             StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
 
-            var response = await this.client.UpdateAsync(updateStreetCodeDTO);
+            var response = await this.client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
             Assert.True(response.IsSuccessStatusCode);
         }
@@ -44,7 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
         public async Task Update_ChangesTitleAndTransliterationUrl()
         {
             StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
-            await this.client.UpdateAsync(updateStreetCodeDTO);
+            await this.client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
             var responseGetByIdUpdated = await this.client.GetByIdAsync(updateStreetCodeDTO.Id);
             var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);
@@ -61,7 +64,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
             StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
             updateStreetCodeDTO.Id++;
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -72,7 +75,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
             StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
             updateStreetCodeDTO.Title = null; // Invalid data
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
@@ -95,7 +98,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
                         },
                     };
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }

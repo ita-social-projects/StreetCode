@@ -45,7 +45,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             var idProp = typeof(T).GetProperty("Id");
             return this.dbContext.Set<T>()
-                .AsNoTracking()
                 .AsEnumerable()
                 .FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
         }
@@ -96,7 +95,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsNoTracking().AsEnumerable().FirstOrDefault(predicate);
+                return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate);
             }
 
             return this.dbContext.Set<T>().FirstOrDefault();

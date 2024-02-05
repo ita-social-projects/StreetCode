@@ -42,13 +42,11 @@
   
   <ItemGroup>
     <Folder Include="Persistence\Migrations\" />
-	<Folder Include="Persistence\ScriptsMigration\" />
   </ItemGroup>
 	
   <ItemGroup>
 	<SonarQubeSetting Include="sonar.exclusions">
 		<Value>**/Migrations/*</Value>
-		<Value>**/ScriptsMigration/*</Value>
 	</SonarQubeSetting>
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ namespace Targets;
 
 partial class Build
 {
-    [GitVersion(Framework ="net6.0")] readonly GitVersion GitVersion;
+    [GitVersion(Framework ="net6.0", NoFetch = true)] readonly GitVersion GitVersion;
 
     Target CleanTests => _ => _
     .Executes(() =>

@@ -38,6 +38,7 @@ jobs:
 
       - name: Restore and Build
         run: |
+            git --version
             ./Streetcode/build.sh Run
             ls
 

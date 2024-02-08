@@ -34,11 +34,8 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Install gitversion
-        run: dotnet tool install --global GitVersion.Tool --version 5.*
-      - name: Git-remote-add
-        run: git remote add https://github.com/ita-social-projects/StreetCode.git
-      - name: Git-fetch-all
-        run: git fetch --all
+        run: dotnet tool install --global GitVersion.Tool --version 5.11.0
+      
       - name: Restore and Build
         run: |
             git --version

@@ -35,7 +35,7 @@ jobs:
 
       - name: Restore and Build
         run: |
-            build.sh Run
+            ./Streetcode/build.sh Run
             ls
 
       - name: Setup Environment For Integration Tests

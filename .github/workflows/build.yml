@@ -33,11 +33,10 @@ jobs:
       - name: Install dotnet-sonarscanner
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Restore Dependencies
-        run: dotnet restore ./Streetcode/Streetcode.sln
-
-      - name: Build
-        run: dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore
+      - name: Restore and Build
+        run: |
+            build.sh Run
+            ls
 
       - name: Setup Environment For Integration Tests
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment

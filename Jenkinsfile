@@ -20,7 +20,9 @@ pipeline {
             steps {
                 script {
                     sh 'set +e'
-                    def exitCode = sh(script: '(dotnet tool install --global dotnet-coverage) ; exit 0', returnStdout: true)
+                    def exitCode = sh script: """
+                                                dotnet tool install --global dotnet-coverage
+                    """, returnStatus: true
                     exitCode = sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: true)
                     exitCode = sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: true)
                     sh 'set -e'

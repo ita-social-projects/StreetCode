@@ -27,9 +27,11 @@ pipeline {
         }
         stage('Build') { // install EnvInject extension
             steps {
-                sh './Streetcode/build.sh Run'
-                CODE_VERSION = "${GitVersion_SemVer}"
-                currentBuild.displayName = "${GitVersion_SemVer}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
+                script {
+                    sh './Streetcode/build.sh Run'
+                    CODE_VERSION = "${GitVersion_SemVer}"
+                    currentBuild.displayName = "${GitVersion_SemVer}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
+                }
             }
         }
         stage('Setup environment') {

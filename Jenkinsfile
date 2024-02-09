@@ -16,17 +16,17 @@ pipeline {
                 ])
             }
         }
-        stage('Setup dependencies') {
-            steps {
-                sh 'set +e'
-                sh(script: '(dotnet tool install --global dotnet-coverage) ; exit 0', returnStdout: false)
-                sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: false)
-                sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: false)
-                sh 'set -e'
-                sh 'docker image prune --force --all --filter "until=72h"'
-                sh 'docker system prune --force --all --filter "until=72h"'
-            }
-        }
+        // stage('Setup dependencies') {
+        //     steps {
+        //         sh 'set +e'
+        //         sh(script: '(dotnet tool install --global dotnet-coverage) ; exit 0', returnStdout: false)
+        //         sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: false)
+        //         sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: false)
+        //         sh 'set -e'
+        //         sh 'docker image prune --force --all --filter "until=72h"'
+        //         sh 'docker system prune --force --all --filter "until=72h"'
+        //     }
+        // }
         stage('Build') { // install EnvInject extension
             steps {
                 script {

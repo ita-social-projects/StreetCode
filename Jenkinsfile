@@ -18,9 +18,9 @@ pipeline {
         }
         stage('Setup dependencies') {
             steps {
-                sh 'dotnet tool install --global dotnet-coverage --verbosity minimal'
-                sh 'dotnet tool install --global dotnet-sonarscanner --verbosity minimal'
-                sh 'dotnet tool install --global GitVersion.Tool --version 5.12.0 --verbosity minimal'
+                sh(script: 'dotnet tool install --global dotnet-coverage', returnStdout: true)
+                sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: true)
+                sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: true)
                 sh 'docker image prune --force --all --filter "until=72h"'
                 sh 'docker system prune --force --all --filter "until=72h"'
             }

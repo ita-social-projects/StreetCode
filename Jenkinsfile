@@ -1,50 +1,88 @@
+def CODE_VERSION
+def IS_IMAGE_BUILDED = false
 pipeline {
-    agent { 
+    agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
     }
     stages {
-        stage('Restore Dependencies') {
+        stage('Checkout') { //need to install LocalBranch, WipeWorkspace extensions + create StreetcodeGithubCreds creds
+            checkout([
+                $class: 'GitSCM',
+                branches: scm.branches,
+                extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
+                userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
+                doGenerateSubmoduleConfigurations: false
+            ])
+        }
+        stage('Setup dependencies') {
             steps {
-                sh 'dotnet restore ./Streetcode/Streetcode.sln'
+                sh 'dotnet tool install --global dotnet-coverage'
+                sh 'dotnet tool install --global dotnet-sonarscanner'
+                sh 'dotnet tool install --global GitVersion.Tool --version 5.12.0'
+                sh 'docker image prune --force --all --filter "until=72h"'
+                sh 'docker system prune --force --all --filter "until=72h"'
             }
         }
-        stage('Build') {
+        stage('Build') { // install EnvInject extension
             steps {
-                sh 'dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore'
+                sh './Streetcode/build.sh Run'
+                CODE_VERSION = "${GitVersion_SemVer}"
+                currentBuild.displayName = "${GitVersion_SemVer}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
             }
         }
-        stage('Test') {
+        stage('Setup environment') {
             steps {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml'
+                sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
-        stage('Docker prune') {
+        stage('Unit test') {
             steps {
-                script {
-                    sh 'docker image prune --force --all --filter "until=72h"'
-                    sh 'docker system prune --force --all --filter "until=72h"'
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+            }
+        }
+        stage('Integration test') {
+            steps {
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+            }
+        }
+        stage('Sonar scan') {
+            environment {
+                    //use 'sonar' credentials scoped only to this stage
+                    SONAR = credentials('sonar')
                 }
+            steps {
+                sh '''          echo "Sonar scan"
+                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR_PSW /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                                dotnet build ./Streetcode/Streetcode.sln --configuration Release
+                                dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                dotnet sonarscanner end /d:sonar.token=$SONAR_PSW
+                        '''
             }
         }
-        stage('Docker build') {
+        stage('Build image') {
+            when {
+                branch pattern: "release/\\([0-9]\.[0-9]\.[0-9])", comparator: "REGEXP"
+            }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh "docker build -t ${username}/streetcode:latest ."
+                        IS_IMAGE_BUILDED = true
                     }
                 }
             }
         }
-        stage('Docker push') {
+        stage('Push image') {
+            when {
+                expression { IS_IMAGE_BUILDED == true }
+            }
             steps {
                 script {
-                    Date date = new Date()
-                    env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
                         sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
-                        sh "docker push ${username}/streetcode:${env.DATETAG}"
+                        sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${CODE_VERSION}"
+                        sh "docker push ${username}/streetcode:${CODE_VERSION}"
                     }
                 }
             }

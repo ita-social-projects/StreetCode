@@ -6,13 +6,15 @@ pipeline {
     }
     stages {
         stage('Checkout') { //need to install LocalBranch, WipeWorkspace extensions + create StreetcodeGithubCreds creds
-            checkout([
-                $class: 'GitSCM',
-                branches: scm.branches,
-                extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
-                userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
-                doGenerateSubmoduleConfigurations: false
-            ])
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: scm.branches,
+                    extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
+                    userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
+                    doGenerateSubmoduleConfigurations: false
+                ])
+            }
         }
         stage('Setup dependencies') {
             steps {

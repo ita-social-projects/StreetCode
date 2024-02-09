@@ -19,7 +19,7 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 sh 'set +e'
-                sh(script: '(dotnet tool install --global dotnet-coverage) || true', returnStdout: false)
+                sh(script: '(dotnet tool install --global dotnet-coverage) ; exit 0', returnStdout: false)
                 sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: false)
                 sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: false)
                 sh 'set -e'

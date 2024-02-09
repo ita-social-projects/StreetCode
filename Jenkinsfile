@@ -18,9 +18,9 @@ pipeline {
         }
         stage('Setup dependencies') {
             steps {
-                sh 'dotnet tool install --global dotnet-coverage'
-                sh 'dotnet tool install --global dotnet-sonarscanner'
-                sh 'dotnet tool install --global GitVersion.Tool --version 5.12.0'
+                sh 'dotnet tool install --global --slient dotnet-coverage'
+                sh 'dotnet tool install --global --slient dotnet-sonarscanner'
+                sh 'dotnet tool install --global --slient GitVersion.Tool --version 5.12.0'
                 sh 'docker image prune --force --all --filter "until=72h"'
                 sh 'docker system prune --force --all --filter "until=72h"'
             }

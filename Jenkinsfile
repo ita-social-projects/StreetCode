@@ -50,8 +50,8 @@ pipeline {
                     //     """, returnStdout: true
                     //env.CODE_VERSION = sh(script: "grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' GITVERSION_PROPERTIES", returnStdout: true)
                     env.CODE_VERSION = sh script: """
-                            dotnet gitversion | grep -oP '(?<="FullSemVer": ")[^"]*'
-                        """, returnStdout: true
+                            dotnet gitversion | grep -oP '(?<="MajorMinorPatch": ")[^"]*'
+                        """, returnStatus: true
                     env.CODE_VERSION = sh(returnStdout: true, script: "${env.CODE_VERSION}.${env.BUILD_NUMBER}")
                     echo "${env.CODE_VERSION}"
                     currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}"

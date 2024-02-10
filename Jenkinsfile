@@ -19,13 +19,11 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'set +e'
-                    def exitCode = sh script: """
-                                                dotnet tool install --global dotnet-coverage
+                    sh script: """
+                                                dotnet tool update --global dotnet-coverage
                     """, returnStatus: true
                     exitCode = sh(script: 'dotnet tool install --global dotnet-sonarscanner', returnStdout: true)
-                    exitCode = sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: true)
-                    sh 'set -e'
+                    sh(script: 'dotnet tool install --global GitVersion.Tool --version 5.12.0', returnStdout: true)
                     sh 'docker image prune --force --all --filter "until=72h"'
                     sh 'docker system prune --force --all --filter "until=72h"'
                 }

@@ -1,9 +1,9 @@
+def CODE_VERSION = ''     
 pipeline {
     agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
     }
     environment {
-       CODE_VERSION = ''     
        IS_IMAGE_BUILDED = false
    }
    options {

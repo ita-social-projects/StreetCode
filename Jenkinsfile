@@ -55,7 +55,7 @@ pipeline {
                     sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
                     sh "cat version"
                     //env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
-                    env.CODE_VERSION = readFile(file: 'version')
+                    env.CODE_VERSION = readFile(file: 'version').trim()
                     echo "${env.CODE_VERSION}"
                     // env.CODE_VERSION = sh script: """
                     //         dotnet gitversion | grep -oP '(?<="MajorMinorPatch": ")[^"]*'

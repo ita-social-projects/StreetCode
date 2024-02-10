@@ -1,4 +1,4 @@
-def CODE_VERSION
+def CODE_VERSION = ""
 def IS_IMAGE_BUILDED = false
 pipeline {
     agent { //maybe we will need to run the stages in docker containers
@@ -34,6 +34,7 @@ pipeline {
                     CODE_VERSION = sh script: """
                             dotnet gitversion | grep -oP '(?<="FullSemVer": ")[^"]*'
                         """, returnStatus: true
+                    sh "echo ${CODE_VERSION}"
                     currentBuild.displayName = "${CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
                 }
             }

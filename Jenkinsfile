@@ -20,9 +20,9 @@ pipeline {
         }
         stage('Print details') {
             steps {
-                echo "JOB_NAME..........${env.JOB_NAME}"
+                echo "JOB_NAME..............${env.JOB_NAME}"
                 echo "BUILD_NUMBER..........${env.BUILD_NUMBER}"
-                echo "BUILD_TAG..........${env.BUILD_TAG}"
+                echo "BUILD_TAG.............${env.BUILD_TAG}"
             }
         }
         stage('Setup dependencies') {
@@ -40,11 +40,10 @@ pipeline {
             steps {
                 script {
                     sh './Streetcode/build.sh Run'
-                    env.CODE_VERSION = sh script: """
-                            dotnet gitversion | grep -oP '(?<="FullSemVer": ")[^"]*'
-                        """, returnStatus: true
-                    sh "echo ${CODE_VERSION}"
-                    currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
+                    env.CODE_VERSION = sh(returnStdout: true, script: """ dotnet gitversion | grep -oP '(?<="MajorMinorPatch": ")[^"]*' """)
+                    env.CODE_VERSION = sh(returnStdout: true, script: "${env.CODE_VERSION}.${env.BUILD_NUMBER}")
+                    echo "${CODE_VERSION}"
+                    currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}"
                 }
             }
         }

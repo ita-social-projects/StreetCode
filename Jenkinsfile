@@ -42,7 +42,10 @@ pipeline {
                     sh './Streetcode/build.sh Run'
                     sh(script: 'dotnet gitversion > GITVERSION_PROPERTIES', returnStdout: true)
                     sh "cat GITVERSION_PROPERTIES"
-                    env.CODE_VERSION = sh(script: '''grep -oP '(?<="MajorMinorPatch": ")[^"]*' GITVERSION_PROPERTIES''', returnStdout: true)
+                    env.CODE_VERSION = sh script: """
+                            grep -oP '(?<="MajorMinorPatch": ")[^"]*' GITVERSION_PROPERTIES
+                        """, returnStdout: true
+                    // env.CODE_VERSION = sh(script: '''grep -oP '(?<="MajorMinorPatch": ")[^"]*' GITVERSION_PROPERTIES''', returnStdout: true)
                     env.CODE_VERSION = sh(returnStdout: true, script: "${env.CODE_VERSION}.${env.BUILD_NUMBER}")
                     echo "${env.CODE_VERSION}"
                     currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}"

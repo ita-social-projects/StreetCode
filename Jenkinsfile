@@ -60,8 +60,8 @@ pipeline {
                     //     """, returnStatus: true
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
-                    def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}-${gitCommit}"
+                    def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
+                    currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}:${gitCommit}"
                 }
             }
         }

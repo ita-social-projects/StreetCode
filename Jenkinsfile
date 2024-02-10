@@ -23,9 +23,13 @@ pipeline {
         }
         stage('Print details') {
             steps {
-                echo "JOB_NAME..............${env.JOB_NAME}"
+                echo "BUILD_ID..............${env.BUILD_ID}"
                 echo "BUILD_NUMBER..........${env.BUILD_NUMBER}"
                 echo "BUILD_TAG.............${env.BUILD_TAG}"
+                echo "EXECUTOR_NUMBER.......${env.EXECUTOR_NUMBER}"
+                echo "JOB_NAME..............${env.JOB_NAME}"
+                echo "NODE_NAME.............${env.NODE_NAME}"
+                echo "WORKSPACE.............${env.WORKSPACE}"
             }
         }
         stage('Setup dependencies') {
@@ -50,7 +54,8 @@ pipeline {
                     //     """, returnStdout: true
                     sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
                     sh "cat version"
-                    env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
+                    //env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
+                    env.CODE_VERSION = readFile "version"
                     // env.CODE_VERSION = sh script: """
                     //         dotnet gitversion | grep -oP '(?<="MajorMinorPatch": ")[^"]*'
                     //     """, returnStatus: true

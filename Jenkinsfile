@@ -1,11 +1,9 @@
 def CODE_VERSION = ''     
+def IS_IMAGE_BUILDED = false
 pipeline {
     agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
     }
-    environment {
-       IS_IMAGE_BUILDED = false
-   }
    options {
     skipDefaultCheckout true
   }
@@ -62,7 +60,7 @@ pipeline {
                     //     """, returnStatus: true
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
-                    currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}"
+                    currentBuild.displayName = "${env.CODE_VERSION}-${env.GIT_BRANCH}-${env.GIT_COMMIT}"
                 }
             }
         }

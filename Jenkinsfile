@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     sh './Streetcode/build.sh Run'
-                    CODE_VERSION = 'gitversion | grep MajorMinorPatch'
+                    CODE_VERSION = sh(script: 'gitversion | grep MajorMinorPatch', returnStdout: true)
                     currentBuild.displayName = "${CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
                 }
             }

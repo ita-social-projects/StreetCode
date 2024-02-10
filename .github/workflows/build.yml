@@ -40,9 +40,12 @@ jobs:
       
       - name: Restore and Build
         run: |
+            ls
             git --version
             ./Streetcode/build.sh Run
-            ls
+            
+      - name: Files
+        run: ls
 
       - name: Setup Environment For Integration Tests
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment

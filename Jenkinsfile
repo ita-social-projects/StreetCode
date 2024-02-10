@@ -31,7 +31,9 @@ pipeline {
             steps {
                 script {
                     sh './Streetcode/build.sh Run'
-                    CODE_VERSION = sh(script: 'dotnet gitversion | grep FullSemVer', returnStdout: true)
+                    CODE_VERSION = sh script: """
+                            dotnet gitversion | grep -oP '(?<="FullSemVer": ")[^"]*'
+                        """, returnStatus: true
                     currentBuild.displayName = "${CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
                 }
             }

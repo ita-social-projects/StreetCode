@@ -15,7 +15,7 @@ pipeline {
                     branches: scm.branches,
                     extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
-                    doGenerateSubmoduleConfigurations: false
+                    doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations
                 ])
             }
         }
@@ -60,7 +60,7 @@ pipeline {
                     //     """, returnStatus: true
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
-                    currentBuild.displayName = "${env.CODE_VERSION}-${env.GIT_BRANCH}-${env.GIT_COMMIT}"
+                    currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}-${GIT_COMMIT}"
                 }
             }
         }

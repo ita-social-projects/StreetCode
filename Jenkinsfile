@@ -1,11 +1,13 @@
-def CODE_VERSION = ""
-def IS_IMAGE_BUILDED = false
 pipeline {
     agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
     }
+    environment {
+       CODE_VERSION = ''     
+       IS_IMAGE_BUILDED = false
+   }
     stages {
-        stage('Checkout') { //need to install LocalBranch, WipeWorkspace extensions + create StreetcodeGithubCreds creds
+        stage('Checkout') {
             steps {
                 checkout([
                     $class: 'GitSCM',
@@ -14,6 +16,13 @@ pipeline {
                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
                     doGenerateSubmoduleConfigurations: false
                 ])
+            }
+        }
+        stage('Print details') {
+            steps {
+                echo "JOB_NAME..........${env.JOB_NAME}"
+                echo "BUILD_NUMBER..........${env.BUILD_NUMBER}"
+                echo "BUILD_TAG..........${env.BUILD_TAG}"
             }
         }
         stage('Setup dependencies') {
@@ -27,15 +36,15 @@ pipeline {
                 }
             }
         }
-        stage('Build') { // install EnvInject extension
+        stage('Build') {
             steps {
                 script {
                     sh './Streetcode/build.sh Run'
-                    CODE_VERSION = sh script: """
+                    env.CODE_VERSION = sh script: """
                             dotnet gitversion | grep -oP '(?<="FullSemVer": ")[^"]*'
                         """, returnStatus: true
                     sh "echo ${CODE_VERSION}"
-                    currentBuild.displayName = "${CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
+                    currentBuild.displayName = "${env.CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
                 }
             }
         }
@@ -90,8 +99,8 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
                         sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${CODE_VERSION}"
-                        sh "docker push ${username}/streetcode:${CODE_VERSION}"
+                        sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
+                        sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
                     }
                 }
             }

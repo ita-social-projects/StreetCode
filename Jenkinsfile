@@ -31,10 +31,8 @@ pipeline {
             steps {
                 script {
                     sh './Streetcode/build.sh Run'
-                    def props = readProperties file: 'gitversion.properties'
-                    sh "echo ${props}"
-                    CODE_VERSION = "${props.GitVersion_SemVer}"
-                    currentBuild.displayName = "${props.GitVersion_SemVer}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
+                    CODE_VERSION = 'gitversion | grep MajorMinorPatch'
+                    currentBuild.displayName = "${CODE_VERSION}-${GIT_BRANCH}-${GIT_COMMIT}-${BUILD_NUMBER}"
                 }
             }
         }

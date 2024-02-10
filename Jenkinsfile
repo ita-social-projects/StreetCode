@@ -6,6 +6,9 @@ pipeline {
        CODE_VERSION = ''     
        IS_IMAGE_BUILDED = false
    }
+   options {
+    skipDefaultCheckout true
+  }
     stages {
         stage('Checkout') {
             steps {

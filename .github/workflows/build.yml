@@ -44,7 +44,7 @@ jobs:
       - name: Files
         run: |
           ls 
-          ls Streetcode
+          ls Streetcode/Streetcode.BLL
 
       - name: Setup Environment For Integration Tests
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment

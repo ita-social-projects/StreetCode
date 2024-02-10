@@ -45,7 +45,7 @@ jobs:
             ./Streetcode/build.sh Run
             
       - name: Files
-        run: ls
+        run: ls StreetCode/Streetcode/Streetcode.BLL/bin/Debug/net6.0
 
       - name: Setup Environment For Integration Tests
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment

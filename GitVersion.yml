@@ -78,7 +78,7 @@ branches:
         mode: ContinuousDelivery
         tag: PullRequest
         increment: Inherit
-        prevent-increment-of-merged-branch-version: false
+        prevent-increment-of-merged-branch-version: true
         tag-number-pattern: '[/-](?<number>\d+)'
         track-merge-target: false
         regex: ^(pull|pull\-requests|pr)[/-]

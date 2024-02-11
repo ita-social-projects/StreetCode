@@ -81,6 +81,23 @@ branches:
         is-release-branch: false
         is-mainline: false
         pre-release-weight: 30000
+    pull-request:
+        mode: ContinuousDelivery
+        tag: PullRequest
+        increment: None
+        prevent-increment-of-merged-branch-version: true
+        tag-number-pattern: '[/-](?<number>\d+)'
+        track-merge-target: false
+        regex: ^(pull|pull\-requests|pr)[/-]
+        source-branches:
+        - develop
+        - release
+        - feature
+        - hotfix
+        tracks-release-branches: false
+        is-release-branch: false
+        is-mainline: false
+        pre-release-weight: 30000
 ignore:
     sha: []
 commit-date-format: yyyy-MM-dd

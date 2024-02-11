@@ -45,6 +45,7 @@ jobs:
             
       - name: Files
         run: |
+          dotnet-gitversion
           exiftool -AssemblyVersion -ProductVersion ./Streetcode/DbUpdate/bin/Release/net6.0/Streetcode.BLL.dll
           
       - name: Setup Environment For Integration Tests

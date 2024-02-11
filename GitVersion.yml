@@ -12,7 +12,7 @@ legacy-semver-padding: 4
 build-metadata-padding: 4
 commits-since-version-source-padding: 4
 tag-pre-release-weight: 60000
-commit-message-incrementing: Enabled
+commit-message-incrementing: Disabled
 branches:
     develop:
         mode: ContinuousDeployment

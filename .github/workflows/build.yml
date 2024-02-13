@@ -40,6 +40,11 @@ jobs:
       - name: Restore and Build
         run: ./Streetcode/build.sh Run
 
+      - name: Version
+        run: |
+          dotnet-gitversion
+          exiftool -AssemblyVersion -ProductVersion ./Streetcode/DbUpdate/bin/Release/net6.0/Streetcode.BLL.dll
+
       - name: Setup Environment For Integration Tests
         run: ./Streetcode/build.sh SetupIntegrationTestsEnvironment
 

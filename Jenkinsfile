@@ -1,20 +1,20 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
 pipeline {
- //   agent { //maybe we will need to run the stages in docker containers
- //       label 'stage' 
- //   }
-    agent {
-     
-    docker {
-
-        image 'mcr.microsoft.com/dotnet/sdk:6.0'
-        label 'stage'
-         args  '-v /tmp:/tmp'
-
+    agent { //maybe we will need to run the stages in docker containers
+        label '2;c,l23' 
     }
+//    agent {
+     
+  //  docker {
 
-}
+    //    image 'mcr.microsoft.com/dotnet/sdk:6.0'
+      //  label 'stage'
+        // args  '-v /tmp:/tmp'
+
+    //}
+
+//}
  environment {
    HOME = '/tmp'
 } 

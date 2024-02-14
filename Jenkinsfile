@@ -1,10 +1,20 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
 pipeline {
-    agent { //maybe we will need to run the stages in docker containers
-        label 'stage' 
+ //   agent { //maybe we will need to run the stages in docker containers
+ //       label 'stage' 
+ //   }
+    agent {
+
+    docker {
+
+        image 'mcr.microsoft.com/dotnet/sdk:6.0'
+        label 'TESTETSTTSTTSTSTS'
+
     }
-   options {
+
+}
+    options {
     skipDefaultCheckout true
     disableConcurrentBuilds()
   }

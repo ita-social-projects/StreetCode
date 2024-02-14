@@ -8,7 +8,7 @@ pipeline {
      
   docker {
 
-        image 'docker:25.0.3-cli'
+        image 'ubuntu:22.04'
         label 'stage'
          args  '-v /tmp:/tmp'
 
@@ -50,13 +50,13 @@ pipeline {
                 script {
        //           sh 'which sudo || apt-get install sudo'
          //           sh ''' 
-           //         sudo apt update && \
-//
-  //                 sudo apk -qy full-upgrade && \
+                    sudo apt update && \
 
-    //               sudo apt-get install -qy curl && \
+                   sudo apt -qy full-upgrade && \
 
-      //           curl -sSL https://get.docker.com/ | sh'''
+                   sudo apt-get install -qy curl && \
+
+                 curl -sSL https://get.docker.com/ | sh'''
                   sh ' whoami '
                   sh ' apt list --installed '
                   sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet

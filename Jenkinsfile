@@ -8,7 +8,7 @@ pipeline {
      
   docker {
 
-        image 'mcr.microsoft.com/dotnet/aspnet:6.0'
+        image 'docker:25.0.3-cli'
         label 'stage'
          args  '-v /tmp:/tmp'
 

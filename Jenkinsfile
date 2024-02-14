@@ -5,15 +5,19 @@ pipeline {
  //       label 'stage' 
  //   }
     agent {
-
+     
     docker {
 
         image 'mcr.microsoft.com/dotnet/sdk:6.0'
         label 'stage'
+         args  '-v /tmp:/tmp'
 
     }
 
 }
+ environment {
+   HOME = '/tmp'
+} 
     options {
     skipDefaultCheckout true
     disableConcurrentBuilds()

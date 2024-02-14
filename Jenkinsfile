@@ -57,6 +57,7 @@ pipeline {
     //               sudo apt-get install -qy curl && \
 
       //           curl -sSL https://get.docker.com/ | sh'''
+                  sh ' apk add curl'
                   sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet
  chmod +x /usr/local/bin/dotnet'''
                     sh 'dotnet tool update --global dotnet-coverage'

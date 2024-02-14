@@ -10,7 +10,7 @@ pipeline {
 
         image 'docker:25.0.3-cli'
         label 'stage'
-         args  '-v /tmp:/tmp'
+         args  '-v /tmp:/tmp  -u ROOT'
 
     }
 

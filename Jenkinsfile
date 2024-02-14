@@ -6,6 +6,7 @@ pipeline {
     }
    options {
     skipDefaultCheckout true
+    disableConcurrentBuilds()
   }
     stages {
         stage('Checkout') {
@@ -83,14 +84,14 @@ pipeline {
         stage('Sonar scan') {
             environment {
                     //use 'sonar' credentials scoped only to this stage
-                    SONAR = credentials('sonar')
+                    SONAR = credentials('sonar_token')
                 }
             steps {
                 sh '''          echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR_PSW /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR_PSW
+                                dotnet sonarscanner end /d:sonar.token=$SONAR
                         '''
             }
         }

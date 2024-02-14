@@ -48,11 +48,19 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
+                    sh '''apt-get update && \
+
+                   apt-get -qy full-upgrade && \
+
+                   apt-get install -qy curl && \
+
+                   curl -sSL https://get.docker.com/ | sh'''
                     sh 'dotnet tool update --global dotnet-coverage'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
                     sh 'docker system prune --force --all --filter "until=72h"'
+                 
                 }
             }
         }

@@ -50,11 +50,11 @@ pipeline {
                 script {
        //           sh 'which sudo || apt-get install sudo'
          //           sh ''' 
-                    sudo apt update && \
+                     apt-get update && \
 
-                   sudo apt -qy full-upgrade && \
+                    apt-get -qy full-upgrade && \
 
-                   sudo apt-get install -qy curl && \
+                    apt-get install -qy curl && \
 
                  curl -sSL https://get.docker.com/ | sh'''
                   sh ' whoami '

@@ -8,7 +8,7 @@ pipeline {
      
   docker {
 
-        image 'mcr.microsoft.com/windows/servercore:ltsc2022'
+        image 'mcr.microsoft.com/dotnet/aspnet:6.0'
         label 'stage'
          args  '-v /tmp:/tmp'
 

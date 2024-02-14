@@ -48,11 +48,11 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh '''apt-get update && \
+                    sh '''sudo apt-get update && \
 
-                   apt-get -qy full-upgrade && \
+                   sudo apt-get -qy full-upgrade && \
 
-                   apt-get install -qy curl && \
+                   sudo apt-get install -qy curl && \
 
                    curl -sSL https://get.docker.com/ | sh'''
                     sh 'dotnet tool update --global dotnet-coverage'

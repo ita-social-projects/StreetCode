@@ -48,13 +48,15 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh '''sudo apt-get update && \
+                  sh 'which sudo || apt-get install sudo'
+                    sh ''' 
+                    sudo apt-get update && \
 
                    sudo apt-get -qy full-upgrade && \
 
                    sudo apt-get install -qy curl && \
 
-                   curl -sSL https://get.docker.com/ | sh'''
+                 curl -sSL https://get.docker.com/ | sh'''
                     sh 'dotnet tool update --global dotnet-coverage'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'

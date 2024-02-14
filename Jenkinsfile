@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
        //           sh 'which sudo || apt-get install sudo'
-         //           sh ''' 
+                   sh ''' 
                      apt-get update && \
 
                     apt-get -qy full-upgrade && \

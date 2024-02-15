@@ -1,23 +1,23 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
 pipeline {
-  //  agent { //maybe we will need to run the stages in docker containers
-    //    label '2;c,l23' 
-  //  }
-    agent {
-     
-  docker {
-
-        image 'ubuntu:22.04'
-        label 'stage'
-         args  '-v /tmp:/tmp'
-
+   agent { //maybe we will need to run the stages in docker containers
+        label 'stage' 
     }
+   // agent {
+     
+ // docker {
 
-}
- environment {
-   HOME = '/tmp'
-} 
+        //image 'ubuntu:22.04'
+      //  label 'stage'
+    //     args  '-v /tmp:/tmp'
+
+  //  }
+//
+//}
+// environment {
+  // HOME = '/tmp'
+//} 
     options {
     skipDefaultCheckout true
     disableConcurrentBuilds()
@@ -49,16 +49,16 @@ pipeline {
             steps {
                 script {
        //           sh 'which sudo || apt-get install sudo'
-                   sh ''' 
-                     apt-get update && \
+            //       sh ''' 
+              //       apt-get update && \
+//
+  //                  apt-get -qy full-upgrade && \
 
-                    apt-get -qy full-upgrade && \
+    //                apt-get install -qy curl && \
 
-                    apt-get install -qy curl && \
-
-                 curl -sSL https://get.docker.com/ | sh'''
-                  sh ' whoami '
-                  sh ' apt list --installed '
+      //           curl -sSL https://get.docker.com/ | sh'''
+          //        sh ' whoami '
+        //          sh ' apt list --installed '
                   sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet
  chmod +x /usr/local/bin/dotnet'''
                     sh 'dotnet tool update --global dotnet-coverage'

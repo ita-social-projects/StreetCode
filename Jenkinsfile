@@ -59,8 +59,8 @@ pipeline {
       //           curl -sSL https://get.docker.com/ | sh'''
           //        sh ' whoami '
         //          sh ' apt list --installed '
-                  sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet
- chmod +x /usr/local/bin/dotnet'''
+     //             sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet
+ //chmod +x /usr/local/bin/dotnet'''
                     sh 'dotnet tool update --global dotnet-coverage'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'

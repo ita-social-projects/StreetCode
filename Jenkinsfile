@@ -48,23 +48,8 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-       //           sh 'which sudo || apt-get install sudo'
-            //       sh ''' 
-              //       apt-get update && \
-//
-  //                  apt-get -qy full-upgrade && \
-
-    //                apt-get install -qy curl && \
-
-      //           curl -sSL https://get.docker.com/ | sh'''
-          //        sh ' whoami '
-        //          sh ' apt list --installed '
-     //             sh '''curl -L --fail https://raw.githubusercontent.com/bshaw/dotnet-docker/master/run.sh -o /usr/local/bin/dotnet
- //chmod +x /usr/local/bin/dotnet'''
                     sh 'dotnet tool update --global dotnet-coverage'
-                    //sh 'dotnet tool update --global dotnet-sonarscanner'
-                    sh 'dotnet tool uninstall -g dotnet-sonarscanner'
-                    sh 'dotnet tool install --global dotnet-sonarscanner --version 5.2.1'
+                    sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
                     sh 'docker system prune --force --all --filter "until=72h"'
@@ -117,6 +102,10 @@ pipeline {
                     SONAR = credentials('sonar_token')
                 }
             steps {
+                 sh 'java -version' // Verify the Java version
+                      sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
+                      
+                      sh 'java -version' // Verify the Java version
                 sh '''          echo "Sonar scan"
                                 dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release

@@ -1,8 +1,10 @@
-﻿using System.Runtime;
+﻿using System.IO.Compression;
+using System.Runtime;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Streetcode.BLL.Middleware;
 using AspNetCoreRateLimit;
+using Microsoft.AspNetCore.ResponseCompression;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
@@ -63,5 +65,18 @@ public static class ConfigureHostBuilderExtensions
         builder.Services.AddInMemoryRateLimiting();
         services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
         builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+    }
+
+    public static void ConfigureResponseCompressingMiddleware(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.AddResponseCompression(options =>
+        {
+            options.EnableForHttps = true;
+            options.Providers.Add<GzipCompressionProvider>();
+        });
+        services.Configure<GzipCompressionProviderOptions>(options =>
+        {
+            options.Level = CompressionLevel.SmallestSize;
+        });
     }
 }

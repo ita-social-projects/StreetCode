@@ -1,13 +1,10 @@
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetParsed;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
@@ -26,6 +23,7 @@ public class TextController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [CompressResponse]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
        return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));

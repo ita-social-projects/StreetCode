@@ -131,7 +131,7 @@ pipeline {
         stage('Push image') {
             when {
                 expression { IS_IMAGE_BUILDED == true }
-            }
+            }   
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
@@ -143,5 +143,21 @@ pipeline {
                 }
             }
         }
+       stage('Deploy Prod'){
+          // which version ? Choose or set up by default
+           steps {
+
+	      		// Create an Approval Button with a timeout of 15minutes.
+	                timeout(time: 15, unit: "MINUTES") {
+	                    input message: 'Do you want to approve this?', ok: 'Yes'
+	                }
+			
+	                echo "Initiating deployment"
+
+	            }
+       }
+       stage('Deploy Stage'){
+          
+       }
     }
 }

@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Email
 
         public async Task<Result<Unit>> Handle(SendEmailCommand request, CancellationToken cancellationToken)
         {
-            var reCaptchaResponse = await _httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={_configuration["ReCaptcha:SecretKey"]}&response={request.Email.Token}", null);
+            var reCaptchaResponse = await _httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={_configuration["ReCaptcha:SecretKey"]}&response={request.Email.Token}", null, cancellationToken);
 
             if (!reCaptchaResponse.IsSuccessStatusCode)
             {
@@ -37,15 +37,16 @@ namespace Streetcode.BLL.MediatR.Email
                 return Result.Fail(new Error("ReCaptcha request failed"));
             }
 
-            var reCaptchaResponseResult = await reCaptchaResponse.Content.ReadFromJsonAsync<ReCaptchaResponseDTO>();
+            var reCaptchaResponseResult = await reCaptchaResponse.Content.ReadFromJsonAsync<ReCaptchaResponseDto>(cancellationToken: cancellationToken);
 
+            reCaptchaResponseResult ??= new();
             if (!reCaptchaResponseResult.Success)
             {
                 _logger.LogError(request, "Invalid captcha");
                 return Result.Fail(new Error("Invalid captcha"));
             }
 
-            var message = new Message(new string[] { _configuration["EmailConfiguration:To"] }, request.Email.From, "FeedBack", request.Email.Content);
+            var message = new Message(new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodeua@gmail.com" }, request.Email.From, "FeedBack", request.Email.Content);
             bool isResultSuccess = await _emailService.SendEmailAsync(message);
 
             if (isResultSuccess)

@@ -12,6 +12,6 @@ namespace Streetcode.BLL.DTO.Email
         public string Content { get; set; }
 
         [Required]
-        public string Token { get; set; }
+        public string Token { get; set; } = null!;
     }
 }

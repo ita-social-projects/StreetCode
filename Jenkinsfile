@@ -155,9 +155,15 @@ pipeline {
 	                echo "Initiating deployment"
 
 	            }
-       //stage('Deploy Stage'){
-          
-       //}
+	       post {
+                always {
+                    echo 'Always'
+                }
+                success {
+                  echo 'Always'
+		}
+            }
+
     }
 }
 }

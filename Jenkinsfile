@@ -155,9 +155,9 @@ pipeline {
 	                echo "Initiating deployment"
 
 	            }
-       }
-       stage('Deploy Stage'){
+       //stage('Deploy Stage'){
           
-       }
+       //}
     }
+}
 }

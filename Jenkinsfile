@@ -175,8 +175,10 @@ pipeline {
                     echo 'Always'
                 }
                 success {
-			def myVariable = '1'
-			sh 'export IS_DEPLOY_PROD=true'
+		    script {
+		                def myVariable = '1'
+		
+		            }
                  
 		}
             }

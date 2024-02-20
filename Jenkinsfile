@@ -175,7 +175,7 @@ pipeline {
                     echo 'Always'
                 }
                 success {
-			sh 'export IS_DEPLOY_PROD==true'
+			sh 'export IS_DEPLOY_PROD=true'
                  
 		}
             }

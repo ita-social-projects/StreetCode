@@ -197,7 +197,6 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
-'
 		}
             }
         }

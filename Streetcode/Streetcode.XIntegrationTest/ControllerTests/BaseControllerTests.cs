@@ -6,7 +6,7 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests
 {
 
-    public class BaseControllerTests : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>
+    public abstract class BaseControllerTests : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
     {
         protected StreetcodeClient client;
 
@@ -24,5 +24,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests
             optionBuilder.UseSqlServer(sqlConnectionString);
             return new SqlDbHelper(optionBuilder.Options);
         }
+
+        public abstract void Dispose();
     }
 }

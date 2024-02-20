@@ -10,5 +10,8 @@ namespace Streetcode.BLL.DTO.Email
         [Required]
         [StringLength(500, MinimumLength = 1)]
         public string Content { get; set; }
+
+        [Required]
+        public string Token { get; set; } = null!;
     }
 }

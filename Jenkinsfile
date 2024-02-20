@@ -175,6 +175,7 @@ pipeline {
                     echo 'Always'
                 }
                 success {
+			def myVariable = '1'
 			sh 'export IS_DEPLOY_PROD=true'
                  
 		}
@@ -184,7 +185,7 @@ pipeline {
 
 	  stage('Sync after release') {
             when {
-                expression { IS_DEPLOY_PROD == true }
+               expression { myVariable == '1' }
             }   
             steps {
                 script {

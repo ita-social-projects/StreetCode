@@ -97,6 +97,9 @@ pipeline {
             }
         }
         stage('Sonar scan') {
+            when {
+                expression { IS_IMAGE_BUILDED == true }
+            } 
             environment {
                     //use 'sonar' credentials scoped only to this stage
                     SONAR = credentials('sonar_token')

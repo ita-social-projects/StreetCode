@@ -146,16 +146,28 @@ pipeline {
                 }
             }
         }
-       stage('Deploy Prod'){
-          // which version ? Choose or set up by default
+	stage('Deploy Stage'){
            steps {
+	          input message: 'Do you want to approve deploy stage?', ok: 'Yes'
 
-	      		// Create an Approval Button with a timeout of 15minutes.
-	              //  timeout(time: 15, unit: "MINUTES") {
-	                    input message: 'Do you want to approve this?', ok: 'Yes'
-	               // }
-			
-	                echo "Initiating deployment"
+//  			docker image prune --force --filter "until=72h"
+//		       docker system prune --force --filter "until=72h"
+//			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
+//			docker compose down && sleep 10
+//			docker compose --env-file /etc/environment up -d
+		   sh 'echo DEPLOY STAGE'
+	            }
+
+    }
+       stage('Deploy Prod'){
+           steps {
+	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
+
+	         //    docker image prune --force --filter "until=72h"
+		 //    docker system prune --force --filter "until=72h"
+		 //    docker compose down && sleep 10
+		  //   docker compose --env-file /etc/environment up -d
+			 sh 'echo DEPLOY prod'
 
 	            }
 	       post {
@@ -163,10 +175,31 @@ pipeline {
                     echo 'Always'
                 }
                 success {
-                  echo 'Always'
+			sh 'export IS_DEPLOY_PROD==true'
+                 
 		}
             }
 
     }
+
+	  stage('Sync after release') {
+            when {
+                expression { IS_DEPLOY_PROD == true }
+            }   
+            steps {
+                script {
+                 //  TEG 
+                 //  PUSH
+                  // RELIASE MARGE
+			echo 'after prod deploy'
+                }
+            }
+            post {
+                success {
+                  echo 'DDD'
+'
+		}
+            }
+        }
 }
 }

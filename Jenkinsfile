@@ -1,5 +1,6 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
+def myVariable
 pipeline {
    agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
@@ -176,7 +177,7 @@ pipeline {
                 }
                 success {
 		    script {
-		                def myVariable = '1'
+		               myVariable = '1'
 		
 		            }
                  

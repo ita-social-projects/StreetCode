@@ -162,7 +162,7 @@ pipeline {
     }
        stage('Deploy Prod'){
            steps {
-	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
+	           input message: 'Do you want to approve deploy prod?', ok: 'Yes', submitter: 'approve_user'
 
 	         //    docker image prune --force --filter "until=72h"
 		 //    docker system prune --force --filter "until=72h"

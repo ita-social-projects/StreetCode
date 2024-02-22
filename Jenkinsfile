@@ -205,4 +205,10 @@ pipeline {
             }
         }
 }
+post { 
+        always { 
+            sh 'docker stop local_sql_server'
+	     sh 'docker rm local_sql_server'
+        }
+    }
 }

@@ -197,7 +197,7 @@ pipeline {
                  //  PUSH   sh "git push origin ${env.CODE_VERSION}"
                   // RELIASE MARGE
 			sh 'echo ${BRANCH_NAME}'
-			sh "git checkout main" 
+			sh "git checkout master" 
 			sh 'echo ${BRANCH_NAME}'
                //     sh "git merge ${}" 
                  //   sh "git push origin main" 

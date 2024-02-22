@@ -83,7 +83,6 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        // Add Identity services.
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<StreetcodeDbContext>();
 

@@ -30,11 +30,12 @@ namespace Streetcode.WebApi.Configuration
                 SecurityStamp = Guid.NewGuid().ToString("D")
             };
 
-            // Add initial admin.
+            // Create hashed password.
             var password = new PasswordHasher<User>();
             var hashed = password.HashPassword(initialAdmin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
             initialAdmin.PasswordHash = hashed;
 
+            // Add initial admin.
             await context.Users.AddAsync(initialAdmin);
             await context.SaveChangesAsync();
 

@@ -41,30 +41,7 @@ namespace Streetcode.BLL.Services.Authentication
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var userRoleId = _dbContext.UserRoles
-                .AsNoTracking()
-                .Where(userRole => userRole.UserId == user.Id)
-                .Select(userRole => userRole.RoleId)
-                .FirstOrDefault();
-            var userRole = _dbContext.Roles
-                .AsNoTracking()
-                .FirstOrDefault(role => role.Id == userRoleId);
-            string userRoleName = userRole!.Name;
-
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Surname, user.Surname),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, userRoleName),
-                }),
-                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
-                SigningCredentials = _signingCredentials,
-                Issuer = _jwtOptions.Issuer,
-                Audience = _jwtOptions.Audience
-            };
+            var tokenDescriptor = GetTokenDescriptor(user);
             var token = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return token;
@@ -113,6 +90,36 @@ namespace Streetcode.BLL.Services.Authentication
             }
 
             return claimsPrincipal;
+        }
+
+        private SecurityTokenDescriptor GetTokenDescriptor(User user)
+        {
+            var userRoleId = _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(userRole => userRole.UserId == user.Id)
+                .Select(userRole => userRole.RoleId)
+                .FirstOrDefault();
+            var userRole = _dbContext.Roles
+                .AsNoTracking()
+                .FirstOrDefault(role => role.Id == userRoleId);
+            string userRoleName = userRole!.Name;
+
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Surname, user.Surname),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, userRoleName),
+                }),
+                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
+                SigningCredentials = _signingCredentials,
+                Issuer = _jwtOptions.Issuer,
+                Audience = _jwtOptions.Audience
+            };
+
+            return tokenDescriptor;
         }
     }
 }

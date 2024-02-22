@@ -196,8 +196,10 @@ pipeline {
                    
                  //  PUSH   sh "git push origin ${env.CODE_VERSION}"
                   // RELIASE MARGE
-		//	sh "git checkout main" 
-               //     sh "git merge ${??}" 
+			sh 'echo ${BRANCH_NAME}'
+			sh "git checkout main" 
+			sh 'echo ${BRANCH_NAME}'
+               //     sh "git merge ${}" 
                  //   sh "git push origin main" 
                   
 			echo 'after prod deploy'
@@ -206,9 +208,34 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
+			
+		//	uploadGithubReleaseAsset(
+		//	        credentialId: 'StreetcodeGithubCreds',
+		//	        repository: 'ita-social-projects/StreetCode',
+		//	        tagName: '${env.CODE_VERSION}', 
+		//	        uploadAssets: [
+		//	                [filePath: 'releasenotes.md'], 
+		//	                [filePath: ' ${env.CODE_VERSION}.zip']
+		//	        ]
+			//)
 		}
             }
         }
+       stage('Rollback Stage') {  
+            steps {
+                script {
+                   sh ''
+                }
+            }
+        }
+	stage('Rollback Prod') {  
+            steps {
+                script {
+                   sh ''
+                }
+            }
+        }
+	    
 }
 post { 
         always { 

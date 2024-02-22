@@ -149,7 +149,10 @@ pipeline {
         }
 	stage('Deploy Stage'){
            steps {
-	          input message: 'Do you want to approve deploy stage?', ok: 'Yes'
+	    //      input message: 'Do you want to approve deploy stage?', ok: 'Yes'
+		  input message: 'Do you want to approve deploy to stage?', ok: 'Yes', parameters: [
+                        [$class: 'UserParameter', defaultValue: 'usernptexist', description: 'Approver', name: 'Approver']
+                    ]
 
 //  			docker image prune --force --filter "until=72h"
 //		       docker system prune --force --filter "until=72h"
@@ -162,7 +165,7 @@ pipeline {
     }
        stage('Deploy Prod'){
            steps {
-	           input message: 'Do you want to approve deploy prod?', ok: 'Yes', submitter: 'approve_user'
+	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
 
 	         //    docker image prune --force --filter "until=72h"
 		 //    docker system prune --force --filter "until=72h"
@@ -192,9 +195,14 @@ pipeline {
             }   
             steps {
                 script {
-                 //  TEG 
-                 //  PUSH
+                 //  TaG sh "git tag -a ${env.CODE_VERSION} -m 'Version ${env.CODE_VERSION}'"
+                   
+                 //  PUSH   sh "git push origin ${env.CODE_VERSION}"
                   // RELIASE MARGE
+		//	sh "git checkout main" 
+               //     sh "git merge ${??}" 
+                 //   sh "git push origin main" 
+                  
 			echo 'after prod deploy'
                 }
             }

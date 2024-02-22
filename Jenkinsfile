@@ -149,10 +149,7 @@ pipeline {
         }
 	stage('Deploy Stage'){
            steps {
-	    //      input message: 'Do you want to approve deploy stage?', ok: 'Yes'
-		  input message: 'Do you want to approve deploy to stage?', ok: 'Yes', parameters: [
-                        [$class: 'UserParameter', defaultValue: 'usernptexist', description: 'Approver', name: 'Approver']
-                    ]
+	         input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'jenkins-user, jenkins-user2'
 
 //  			docker image prune --force --filter "until=72h"
 //		       docker system prune --force --filter "until=72h"

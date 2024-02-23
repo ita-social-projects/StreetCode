@@ -63,7 +63,7 @@
           "type": "boolean",
           "description": "enable integration tests"
         },
-        "MigrName": {
+        "migrname": {
           "type": "string",
           "description": "Specifies migration name during its creation"
         },
@@ -93,10 +93,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "RollbackMigration": {
-          "type": "boolean",
-          "description": "Specifies whether a migration rollback should be committed"
         },
         "Root": {
           "type": "string",
@@ -201,10 +197,6 @@
               "UpdateSubmodules"
             ]
           }
-        },
-        "UpdMigrName": {
-          "type": "string",
-          "description": "Specifies migration name during db update"
         },
         "UTest": {
           "type": "boolean",

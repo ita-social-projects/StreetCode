@@ -8,13 +8,14 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using System.IO;
+using Utils;
 
 namespace Targets;
 
 partial class Build
 {
-    [Parameter("Specifies migration name during its creation")]
-    readonly string MigrName = "New Migration Added";
+    [Parameter("Specifies migration name during its creation", Name = "migrname")]
+    readonly string MigrationName;
 
     bool CheckForMigration() =>
         GitHasCleanCopy(DALDirectory / "Entities")
@@ -24,24 +25,25 @@ partial class Build
 
     Target AddMigration => _ => _
         .OnlyWhenStatic(() => CheckForMigration())
+        .Requires(() => MigrationName)
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
                 .SetProcessWorkingDirectory(SourceDirectory)
-                .SetName(MigrName)
+                .SetName(MigrationName)
                 .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")  
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(@"Persistence\Migrations"));
         });
 
-    [Parameter("Specifies migration name during db update")]
-    [CanBeNull] 
-    readonly string UpdMigrName = default;
+    //[Parameter("Specifies migration name during db update")]
+    //[CanBeNull] 
+    //readonly string UpdMigrName = default;
 
-    [Parameter("Specifies whether a migration rollback should be committed")]
-    readonly bool RollbackMigration = false;
+    //[Parameter("Specifies whether a migration rollback should be committed")]
+    //readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
         .Executes(() =>
@@ -58,20 +60,8 @@ partial class Build
             Console.WriteLine("Select name of SQL script:");
             string queryName = Console.ReadLine();
 
-            Console.WriteLine("Select -s for SEED or -m for MIGRATE SQL script:");
-            string queryType = Console.ReadLine();
-
-            if (queryType == "-s")
-            {
-                queryType = "ScriptsSeeding";
-            } 
-            else 
-            {
-                queryType = "ScriptsMigration";
-            }
-
             var dbPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.WebApi");
-            var outputScriptPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.DAL", "Persistence", queryType);
+            var outputScriptPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.DAL", "Persistence", "ScriptsMigration");
 
             PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
             PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}/{queryName}.sql  --project {dbPath}");

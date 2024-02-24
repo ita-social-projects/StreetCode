@@ -17,6 +17,15 @@ partial class Build
     [Parameter("Specifies migration name during its creation", Name = "migrname")]
     readonly string MigrationName;
 
+    [Parameter("Specifies script file name", Name = "name")]
+    string ScriptName = string.Empty;
+
+    [Parameter("Specifies FROM migration for script generationg", Name = "from")]
+    string FromMigration = string.Empty;
+
+    [Parameter("Specifies TO migration for script generationg", Name = "to")]
+    string ToMigration = string.Empty;
+
     bool CheckForMigration() =>
         GitHasCleanCopy(DALDirectory / "Entities")
         && GitHasCleanCopy(DALDirectory / "Enums") 
@@ -24,7 +33,7 @@ partial class Build
         && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
 
     Target AddMigration => _ => _
-        .OnlyWhenStatic(() => CheckForMigration())
+        .Before(GenerateSQLScripts, SetScriptParametersForMigrationAndScriptAutogeneration)
         .Requires(() => MigrationName)
         .Executes(() =>
         {
@@ -35,7 +44,8 @@ partial class Build
                 .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
                 .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
                 .SetConfiguration(Configuration)
-                .SetOutputDirectory(@"Persistence\Migrations"));
+                .SetOutputDirectory(@"Persistence\Migrations")
+                .EnablePrefixOutput());
         });
 
     //[Parameter("Specifies migration name during db update")]
@@ -50,21 +60,49 @@ partial class Build
         {
             DotNetRun(s => s
             .SetProjectFile(DbUpdateDirectory)
-            .SetConfiguration(Configuration)
-            );
+            .SetConfiguration(Configuration));
         });
 
-    Target CreateSQLScripts => _ => _
+    Target GenerateSQLScripts => _ => _
+        .Requires(() => ScriptName)
+        .Requires(() => FromMigration)
+        .Requires(() => ToMigration)
         .Executes(() =>
         {
-            Console.WriteLine("Select name of SQL script:");
-            string queryName = Console.ReadLine();
+            var startupProjectPath = APIDirectory;
+            var outputScriptPath = Path.Combine(DALDirectory, "Persistence", "ScriptsMigration");
+            string scriptFullName = Path.Combine(outputScriptPath, $"{ScriptName}.sql");
 
-            var dbPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.WebApi");
-            var outputScriptPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.DAL", "Persistence", "ScriptsMigration");
+            EntityFrameworkMigrationsScript(_ => _
+                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetOutput(scriptFullName)
+                .SetFrom(FromMigration)
+                .SetTo(ToMigration)
+                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
+                .SetConfiguration(Configuration)
+                .SetIdempotent(true)
+                .SetNoTransactions(true));
+        });
 
-            PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
-            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}/{queryName}.sql  --project {dbPath}");
+    Target GenerateMigrationAndScript => _ => _
+        .Requires(() => MigrationName)
+        .DependsOn(
+            AddMigration,
+            SetScriptParametersForMigrationAndScriptAutogeneration,
+            GenerateSQLScripts);
+
+    Target SetScriptParametersForMigrationAndScriptAutogeneration => _ => _
+        .Requires(() => MigrationName)
+        .Before(GenerateSQLScripts)
+        .Executes(() =>
+        {
+            ScriptProcessor.SetScriptParametersForLastMigration(
+                MigrationName,
+                out ScriptName,
+                out FromMigration,
+                out ToMigration);
         });
 
     Target DropDatabase => _ => _

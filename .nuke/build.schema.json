@@ -34,6 +34,10 @@
           "type": "boolean",
           "description": "Build in Docker"
         },
+        "from": {
+          "type": "string",
+          "description": "Specifies FROM migration for script generationg"
+        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -70,6 +74,10 @@
         "Msg": {
           "type": "string",
           "description": "commit message"
+        },
+        "name": {
+          "type": "string",
+          "description": "Specifies script file name"
         },
         "NewB": {
           "type": "boolean",
@@ -119,9 +127,10 @@
               "CompileAPI",
               "CompileCli",
               "CreateDatabaseForIntegrationTests",
-              "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
+              "GenerateMigrationAndScript",
+              "GenerateSQLScripts",
               "IntegrationTest",
               "PullBackEnd",
               "Push",
@@ -130,6 +139,7 @@
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
+              "SetScriptParametersForMigrationAndScriptAutogeneration",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
@@ -171,9 +181,10 @@
               "CompileAPI",
               "CompileCli",
               "CreateDatabaseForIntegrationTests",
-              "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
+              "GenerateMigrationAndScript",
+              "GenerateSQLScripts",
               "IntegrationTest",
               "PullBackEnd",
               "Push",
@@ -182,6 +193,7 @@
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
+              "SetScriptParametersForMigrationAndScriptAutogeneration",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
@@ -197,6 +209,10 @@
               "UpdateSubmodules"
             ]
           }
+        },
+        "to": {
+          "type": "string",
+          "description": "Specifies TO migration for script generationg"
         },
         "UTest": {
           "type": "boolean",

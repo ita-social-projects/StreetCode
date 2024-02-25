@@ -5,7 +5,8 @@ using Nuke.Common.Tools.EntityFramework;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using System.IO;
-using static Utils.ScriptProcessor;
+using static Utils.MigrationsService;
+using Utils;
 
 namespace Targets;
 
@@ -51,7 +52,7 @@ partial class Build
         .Requires(() => ScriptName)
         .Requires(() => FromMigration)
         .Requires(() => ToMigration)
-        .OnlyWhenDynamic(() => IsScriptNameValid(ScriptName))
+        .OnlyWhenDynamic(() => ScriptsService.IsScriptNameValid(ScriptName))
         .Executes(() =>
         {
             var startupProjectPath = APIDirectory;
@@ -83,11 +84,34 @@ partial class Build
         .Before(GenerateSQLScripts)
         .Executes(() =>
         {
-            SetScriptParametersForSingleMigration(
+            ScriptsService.SetScriptParametersForSingleMigration(
                 MigrationName,
                 out ScriptName,
                 out FromMigration,
                 out ToMigration);
+        });
+
+    Target RemoveMigrationAndScript => _ => _
+        .DependsOn(DeleteMirationScriptFile, RemoveMigration);
+
+    Target DeleteMirationScriptFile => _ => _
+        .Before(RemoveMigration)
+        .Executes(() =>
+        {
+            string migrationFullName = GetLastMigrationFullName();
+            ScriptsService.DeleteMigrationScriptFile(migrationFullName);
+        });
+
+    Target RemoveMigration => _ => _
+        .Executes(() =>
+        {
+            EntityFrameworkMigrationsRemove(_ => _
+                .SetProcessWorkingDirectory(SourceDirectory)
+                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
+                .SetConfiguration(Configuration)
+                .EnableForce());
         });
 
     Target DropDatabase => _ => _

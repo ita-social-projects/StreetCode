@@ -1,14 +1,11 @@
-﻿using System;
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.Tooling;
-using JetBrains.Annotations;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using System.IO;
-using Utils;
+using static Utils.ScriptProcessor;
 
 namespace Targets;
 
@@ -26,12 +23,6 @@ partial class Build
     [Parameter("Specifies TO migration for script generationg", Name = "to")]
     string ToMigration = string.Empty;
 
-    bool CheckForMigration() =>
-        GitHasCleanCopy(DALDirectory / "Entities")
-        && GitHasCleanCopy(DALDirectory / "Enums") 
-        && GitHasCleanCopy(DALDirectory / "Extensions") 
-        && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
-
     Target AddMigration => _ => _
         .Before(GenerateSQLScripts, SetScriptParametersForMigrationAndScriptAutogeneration)
         .Requires(() => MigrationName)
@@ -48,13 +39,6 @@ partial class Build
                 .EnablePrefixOutput());
         });
 
-    //[Parameter("Specifies migration name during db update")]
-    //[CanBeNull] 
-    //readonly string UpdMigrName = default;
-
-    //[Parameter("Specifies whether a migration rollback should be committed")]
-    //readonly bool RollbackMigration = false;
-
     Target UpdateDatabase => _ => _
         .Executes(() =>
         {
@@ -67,6 +51,7 @@ partial class Build
         .Requires(() => ScriptName)
         .Requires(() => FromMigration)
         .Requires(() => ToMigration)
+        .OnlyWhenDynamic(() => IsScriptNameValid(ScriptName))
         .Executes(() =>
         {
             var startupProjectPath = APIDirectory;
@@ -98,7 +83,7 @@ partial class Build
         .Before(GenerateSQLScripts)
         .Executes(() =>
         {
-            ScriptProcessor.SetScriptParametersForLastMigration(
+            SetScriptParametersForSingleMigration(
                 MigrationName,
                 out ScriptName,
                 out FromMigration,

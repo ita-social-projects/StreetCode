@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Nuke.Common.Tools.EntityFramework;
 using System;
-using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
@@ -13,7 +12,12 @@ namespace Utils
 {
     internal static class ScriptProcessor
     {
-        public static void SetScriptParametersForLastMigration(
+        public static bool IsScriptNameValid(string scriptName)
+        {
+            return !string.IsNullOrEmpty(scriptName.Trim());
+        }
+
+        public static void SetScriptParametersForSingleMigration(
             string migrationName,
             out string scriptName,
             out string fromMigration,

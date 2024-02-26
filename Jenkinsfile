@@ -164,8 +164,9 @@ pipeline {
  		 // sh ''' lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep "streetcode:" | cut -d ":" -f2 | head -c -2) '''
 
 		   // sh 'echo ${lastTagStage}'
-
-		   def dockerInspectOutput = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID)', returnStdout: true).trim()
+			script {
+                    // Execute the docker inspect command
+                    def dockerInspectOutput = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID)', returnStdout: true).trim()
 
                     // Parse the output using jq and grep
                     def repoTags = sh(script: 'echo \'' + dockerInspectOutput + '\' | jq \'.[].RepoTags\' | grep "streetcode:"', returnStdout: true).trim()
@@ -175,6 +176,7 @@ pipeline {
 
                     // Print the value
                     echo "Last Tag Stage: ${lastTagStage}"
+                }
 		   
 	            }
 

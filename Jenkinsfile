@@ -161,6 +161,7 @@ pipeline {
 
     }
        stage('Deploy Prod'){
+	agent { label 'prod' }
            steps {
 	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
 
@@ -169,6 +170,7 @@ pipeline {
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
+		   sh 'echo $DOCKER_TAG_BACKEND'
 
 	            }
 	       post {

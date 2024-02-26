@@ -150,13 +150,13 @@ pipeline {
 	stage('Deploy Stage'){
            steps {
 	         input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'jenkins-user, jenkins-user2'
-
+  			
 //  			docker image prune --force --filter "until=72h"
 //		       docker system prune --force --filter "until=72h"
 //			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
 //			docker compose down && sleep 10
 //			docker compose --env-file /etc/environment up -d
-		   sh 'echo DEPLOY STAGE'
+		   sh 'echo $DOCKER_TAG_BACKEND'
 	            }
 
     }

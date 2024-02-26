@@ -220,15 +220,15 @@ pipeline {
                 success {
                   echo 'DDD'
 			
-		//	uploadGithubReleaseAsset(
-		//	        credentialId: 'StreetcodeGithubCreds',
-		//	        repository: 'ita-social-projects/StreetCode',
-		//	        tagName: '${env.CODE_VERSION}', 
-		//	        uploadAssets: [
-		//	                [filePath: 'releasenotes.md'], 
-		//	                [filePath: ' ${env.CODE_VERSION}.zip']
-		//	        ]
-			//)
+			uploadGithubReleaseAsset(
+			        credentialId: 'StreetcodeGithubCreds',
+			        repository: 'ita-social-projects/StreetCode',
+			        tagName: '${env.CODE_VERSION}', 
+			        uploadAssets: [
+			                [filePath: 'releasenotes.md'], 
+			                [filePath: ' ${env.CODE_VERSION}.zip']
+			        ]
+		)
 		}
             }
         }

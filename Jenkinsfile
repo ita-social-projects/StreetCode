@@ -1,6 +1,8 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
 def myVariable
+def lastTagProd
+def lastTagStage
 pipeline {
    agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
@@ -156,7 +158,10 @@ pipeline {
 //			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
 //			docker compose down && sleep 10
 //			docker compose --env-file /etc/environment up -d
+		   sh 'lastTagStage=$DOCKER_TAG_BACKEND'
 		   sh 'echo $DOCKER_TAG_BACKEND'
+		   sh 'echo $lastTagStage'
+		   
 	            }
 
     }
@@ -171,6 +176,7 @@ pipeline {
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
 		   sh 'echo $DOCKER_TAG_BACKEND'
+		    sh 'lastTagProd=$DOCKER_TAG_BACKEND'
 
 	            }
 	       post {

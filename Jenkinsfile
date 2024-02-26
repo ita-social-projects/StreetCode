@@ -165,7 +165,7 @@ pipeline {
 
 		   // sh 'echo ${lastTagStage}'
 
-		                       def dockerInspectOutput = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID)', returnStdout: true).trim()
+		   def dockerInspectOutput = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID)', returnStdout: true).trim()
 
                     // Parse the output using jq and grep
                     def repoTags = sh(script: 'echo \'' + dockerInspectOutput + '\' | jq \'.[].RepoTags\' | grep "streetcode:"', returnStdout: true).trim()

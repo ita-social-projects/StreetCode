@@ -177,8 +177,7 @@ pipeline {
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
-		   sh "	export DOCKER_TAG_BACKEND='test'"
-		   sh "echo $DOCKER_TAG_BACKEND"
+		   sh 'echo $DOCKER_TAG_BACKEND'
 		   sh 'echo env.DOCKER_TAG_BACKEND'
 		    sh 'lastTagProd=$DOCKER_TAG_BACKEND'
 

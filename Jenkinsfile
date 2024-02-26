@@ -181,8 +181,10 @@ pipeline {
 		 //    docker system prune --force --filter "until=72h"
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
-			 sh 'echo DEPLOY prod'
-		   sh 'echo ${lastTagStage}'
+		 script {
+                    echo "Using lastTagStage in next stage: ${lastTagStage}"
+                    // You can use lastTagStage here in any way you need
+                }
 
 	            }
 	       post {

@@ -163,7 +163,8 @@ pipeline {
 		   sh 'lastTagStage=$DOCKER_TAG_BACKEND'
 		   sh 'echo $DOCKER_TAG_BACKEND'
 		   sh 'echo $lastTagStage'
-		    sh 'echo env.DOCKER_TAG_BACKEND'
+		    sh 'echo $DOCKER_TAG_BACKEND
+'
 		   
 	            }
 

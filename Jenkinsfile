@@ -159,12 +159,9 @@ pipeline {
 //			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
 //			docker compose down && sleep 10
 //			docker compose --env-file /etc/environment up -d
-		   sh 'export varName=3456'
-		   sh 'echo "${"$varName"}"'
-		   sh 'lastTagStage=$DOCKER_TAG_BACKEND'
-		   sh 'echo $DOCKER_TAG_BACKEND'
+		   sh 'lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2)'
 		   sh 'echo $lastTagStage'
-		    sh 'echo $DOCKER_TAG_BACKEND'
+
 		   
 	            }
 
@@ -179,9 +176,7 @@ pipeline {
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
-		   sh 'echo $DOCKER_TAG_BACKEND'
-		   sh 'echo env.DOCKER_TAG_BACKEND'
-		    sh 'lastTagProd=$DOCKER_TAG_BACKEND'
+		   sh 'echo $lastTagStage'
 
 	            }
 	       post {

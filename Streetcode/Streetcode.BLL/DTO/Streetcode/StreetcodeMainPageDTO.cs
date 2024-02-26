@@ -15,6 +15,7 @@ namespace Streetcode.BLL.DTO.Streetcode
         public string? Alias { get; set; }
         public string? Teaser { get; set; }
         public string? Text { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public int ImageId { get; set; }
 
         public string TransliterationUrl { get; set; }

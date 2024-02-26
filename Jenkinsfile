@@ -81,7 +81,6 @@ pipeline {
                     echo "${env.CODE_VERSION}"
                     def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
                     currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}:${gitCommit}"
-			sh "	export DOCKER_TAG_BACKEND='test'"
 
                 }
             }
@@ -178,6 +177,8 @@ pipeline {
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
+		   sh "	export DOCKER_TAG_BACKEND='test'"
+		   sh "echo $DOCKER_TAG_BACKEND"
 		   sh 'echo env.DOCKER_TAG_BACKEND'
 		    sh 'lastTagProd=$DOCKER_TAG_BACKEND'
 

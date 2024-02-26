@@ -161,7 +161,7 @@ pipeline {
 
     }
        stage('Deploy Prod'){
-	agent { label 'prod' }
+	agent { label 'production' }
            steps {
 	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
 

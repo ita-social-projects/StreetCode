@@ -159,6 +159,8 @@ pipeline {
 //			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
 //			docker compose down && sleep 10
 //			docker compose --env-file /etc/environment up -d
+		   sh 'export varName=3456'
+		   sh 'echo "${"$varName"}"'
 		   sh 'lastTagStage=$DOCKER_TAG_BACKEND'
 		   sh 'echo $DOCKER_TAG_BACKEND'
 		   sh 'echo $lastTagStage'

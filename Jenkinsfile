@@ -161,10 +161,20 @@ pipeline {
 //			docker compose --env-file /etc/environment up -d
 		   // sh """ lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2) """
 		 // sh """ lastTagStage=\$(docker inspect \$(docker ps | awk '{print \$2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2) """
- 		  sh ''' lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep "streetcode:" | cut -d ":" -f2 | head -c -2) '''
+ 		 // sh ''' lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep "streetcode:" | cut -d ":" -f2 | head -c -2) '''
 
-		    sh 'echo ${lastTagStage}'
+		   // sh 'echo ${lastTagStage}'
 
+		                       def dockerInspectOutput = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID)', returnStdout: true).trim()
+
+                    // Parse the output using jq and grep
+                    def repoTags = sh(script: 'echo \'' + dockerInspectOutput + '\' | jq \'.[].RepoTags\' | grep "streetcode:"', returnStdout: true).trim()
+
+                    // Extract the tag using cut
+                    def lastTagStage = sh(script: 'echo \'' + repoTags + '\' | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+
+                    // Print the value
+                    echo "Last Tag Stage: ${lastTagStage}"
 		   
 	            }
 

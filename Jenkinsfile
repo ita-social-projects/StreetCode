@@ -163,7 +163,7 @@ pipeline {
 		 // sh """ lastTagStage=\$(docker inspect \$(docker ps | awk '{print \$2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2) """
  		  sh ''' lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep "streetcode:" | cut -d ":" -f2 | head -c -2) '''
 
-		   sh 'echo lastTagStage'
+		    sh 'echo ${lastTagStage}'
 
 		   
 	            }
@@ -179,7 +179,7 @@ pipeline {
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
 			 sh 'echo DEPLOY prod'
-		   sh 'echo lastTagStage'
+		   sh 'echo ${lastTagStage}'
 
 	            }
 	       post {

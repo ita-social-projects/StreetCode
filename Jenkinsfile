@@ -241,7 +241,7 @@ pipeline {
 			sh 'echo ${vers}'
 			
 		script {
-       			def githubRelease = githubRelease(
+       			def githubRelease = createGitHubRelease(
 	                        apiUri: 'https://api.github.com',
 	                        credentialsId: 'GithubTokenTest',
 	                        owner: 'ita-social-projects',

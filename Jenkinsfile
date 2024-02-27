@@ -254,6 +254,7 @@ pipeline {
                 }
 
         }
+       }
 	stage('Rollback Prod') {  
               steps {
 	           input message: 'Do you want to rollback deploy prod?', ok: 'Yes'
@@ -269,6 +270,7 @@ pipeline {
         }
 	    
 }
+    }
 post { 
         always { 
             sh 'docker stop local_sql_server'

@@ -237,6 +237,7 @@ pipeline {
 			sh 'zip -r  source-code.tar.gz *'
 			sh 'ls'
 			sh "echo ${env.CODE_VERSION}"
+			sh 'git status'
 			sh 'echo ${vers}'
 			uploadGithubReleaseAsset(
 			        credentialId: 'GithubTokenTest',

@@ -3,6 +3,7 @@ def IS_IMAGE_BUILDED = false
 def myVariable
 def lastTagProd
 def lastTagStage
+def vers
 pipeline {
    agent { //maybe we will need to run the stages in docker containers
         label 'stage' 
@@ -229,11 +230,13 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
+			vers = sh(script: 'cat version', returnStdout: true).trim()
 			sh "echo ${env.CODE_VERSION}"
+			sh 'echo ${vers}'
 			uploadGithubReleaseAsset(
 			        credentialId: 'GithubTokenTest',
 			        repository: 'ita-social-projects/StreetCode',
-			        tagName: "${env.CODE_VERSION}", 
+			        tagName: '${vers}', 
 			        uploadAssets: [
 			               //  [filePath: 'releasenotes.md'], 
 					[filePath: 'source-code.tar.gz'], 

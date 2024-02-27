@@ -234,7 +234,7 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
-			
+			sh 'ls'
 			sh "echo ${env.CODE_VERSION}"
 			sh 'echo ${vers}'
 			uploadGithubReleaseAsset(

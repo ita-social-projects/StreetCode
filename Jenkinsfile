@@ -219,6 +219,8 @@ pipeline {
                  //   sh "git push origin main" 
                   
 			echo 'after prod deploy'
+			 sh 'zip -r  ${env.CODE_VERSION}_source_code.zip *'
+			sh 'zip -r  ${env.CODE_VERSION}_source_code.tar.gz *'
                 }
             }
             post {
@@ -230,26 +232,40 @@ pipeline {
 			        repository: 'ita-social-projects/StreetCode',
 			        tagName: '${env.CODE_VERSION}', 
 			        uploadAssets: [
-			                [filePath: 'releasenotes.md'], 
-			                [filePath: ' ${env.CODE_VERSION}.zip']
+			               //  [filePath: 'releasenotes.md'], 
+					[filePath: '${env.CODE_VERSION}_source_code.tar.gz'], 
+			                [filePath: '${env.CODE_VERSION}_source_code.zip']
 			        ]
 		)
 		}
             }
         }
        stage('Rollback Stage') {  
-            steps {
-                script {
-                   sh ''
+           steps {
+	           input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
+
+	         //    docker image prune --force --filter "until=72h"
+		 //    docker system prune --force --filter "until=72h"
+		 //    docker compose down && sleep 10
+		  //   docker compose --env-file /etc/environment up -d
+		 script {
+                    echo "Using lastTagStage : ${lastTagStage}"
+                    // You can use lastTagStage here in any way you need
                 }
-            }
+
         }
 	stage('Rollback Prod') {  
-            steps {
-                script {
-                   sh ''
+              steps {
+	           input message: 'Do you want to rollback deploy prod?', ok: 'Yes'
+
+	         //    docker image prune --force --filter "until=72h"
+		 //    docker system prune --force --filter "until=72h"
+		 //    docker compose down && sleep 10
+		  //   docker compose --env-file /etc/environment up -d
+		 script {
+                    echo "Using : ${lastTagProd}"
+                    // You can use lastTagStage here in any way you need
                 }
-            }
         }
 	    
 }

@@ -226,7 +226,7 @@ pipeline {
                   echo 'DDD'
 			
 			uploadGithubReleaseAsset(
-			        credentialId: 'StreetcodeGithubCreds',
+			        credentialId: 'GithubTokenTest',
 			        repository: 'ita-social-projects/StreetCode',
 			        tagName: '${env.CODE_VERSION}', 
 			        uploadAssets: [

@@ -170,6 +170,7 @@ pipeline {
 		 script {
                     lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode:" | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
+		    vers = sh(script: 'cat version', returnStdout: true).trim()
                 }
 		   
 	            }
@@ -230,7 +231,7 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
-			vers = sh(script: 'cat version', returnStdout: true).trim()
+			
 			sh "echo ${env.CODE_VERSION}"
 			sh 'echo ${vers}'
 			uploadGithubReleaseAsset(

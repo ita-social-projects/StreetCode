@@ -81,6 +81,7 @@ pipeline {
                     echo "${env.CODE_VERSION}"
                     def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
                     currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}:${gitCommit}"
+			sh "echo ${env.CODE_VERSION}"
 
                 }
             }
@@ -146,7 +147,7 @@ pipeline {
                         sh "docker push ${username}/streetcode:latest"
                         sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
-			    sh "echo ${env.CODE_VERSION}"
+			    
                     }
                 }
             }
@@ -185,6 +186,7 @@ pipeline {
 		 script {
                     echo "Using lastTagStage in next stage: ${lastTagStage}"
                     // You can use lastTagStage here in any way you need
+			 
                 }
 
 	            }
@@ -227,11 +229,11 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
-			
+			sh "echo ${env.CODE_VERSION}"
 			uploadGithubReleaseAsset(
 			        credentialId: 'GithubTokenTest',
 			        repository: 'ita-social-projects/StreetCode',
-			        tagName: '${env.CODE_VERSION}', 
+			        tagName: "${env.CODE_VERSION}", 
 			        uploadAssets: [
 			               //  [filePath: 'releasenotes.md'], 
 					[filePath: 'source-code.tar.gz'], 

@@ -170,7 +170,8 @@ pipeline {
 		 script {
                     lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode:" | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
-		    vers = sh(script: 'cat version', returnStdout: true).trim()
+		    vers = sh(script: 'cat version', returnStdout: true)
+			 sh 'echo ${vers}'
                 }
 		   
 	            }
@@ -237,7 +238,7 @@ pipeline {
 			uploadGithubReleaseAsset(
 			        credentialId: 'GithubTokenTest',
 			        repository: 'ita-social-projects/StreetCode',
-			        tagName: '${vers}', 
+			        tagName: 'v${vers}', 
 			        uploadAssets: [
 			               //  [filePath: 'releasenotes.md'], 
 					[filePath: 'source-code.tar.gz'], 

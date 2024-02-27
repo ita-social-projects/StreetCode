@@ -72,7 +72,7 @@ pipeline {
                     //     """, returnStdout: true
                     sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
                     sh "cat version"
-		    vers = sh(script: 'cat version', returnStdout: true)
+		    vers =readFile(file: 'version').trim()
 			sh "echo ${vers}"
                     //env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
                     env.CODE_VERSION = readFile(file: 'version').trim()
@@ -227,13 +227,14 @@ pipeline {
                  //   sh "git push origin main" 
                   
 			echo 'after prod deploy'
-			 sh 'zip -r  source-code.zip *'
-			sh 'zip -r  source-code.tar.gz *'
+			
                 }
             }
             post {
                 success {
                   echo 'DDD'
+			sh 'zip -r  source-code.zip *'
+			sh 'zip -r  source-code.tar.gz *'
 			sh 'ls'
 			sh "echo ${env.CODE_VERSION}"
 			sh 'echo ${vers}'

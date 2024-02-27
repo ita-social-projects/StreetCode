@@ -146,6 +146,7 @@ pipeline {
                         sh "docker push ${username}/streetcode:latest"
                         sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
+			    sh "echo ${env.CODE_VERSION}"
                     }
                 }
             }

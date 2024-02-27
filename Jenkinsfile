@@ -240,7 +240,7 @@ pipeline {
 			uploadGithubReleaseAsset(
 			        credentialId: 'GithubTokenTest',
 			        repository: 'ita-social-projects/StreetCode',
-			        tagName: 'v${vers}', 
+			        tagName: 'v1.0.0', 
 			        uploadAssets: [
 			               //  [filePath: 'releasenotes.md'], 
 					[filePath: 'source-code.tar.gz'], 

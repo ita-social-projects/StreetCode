@@ -72,7 +72,7 @@ pipeline {
                     //     """, returnStdout: true
                     sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
                     sh "cat version"
-		    vers =readFile(file: 'version').trim()
+		    vers = readFile(file: 'version').trim()
 			sh "echo ${vers}"
                     //env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
                     env.CODE_VERSION = readFile(file: 'version').trim()
@@ -237,18 +237,25 @@ pipeline {
 			sh 'zip -r  source-code.tar.gz *'
 			sh 'ls'
 			sh "echo ${env.CODE_VERSION}"
-			sh 'git status'
+			
 			sh 'echo ${vers}'
-			uploadGithubReleaseAsset(
-			        credentialId: 'GithubTokenTest',
-			        repository: 'ita-social-projects/StreetCode',
-			        tagName: 'v1.0.0', 
-			        uploadAssets: [
-			               //  [filePath: 'releasenotes.md'], 
-					[filePath: 'source-code.tar.gz'], 
-			                [filePath: 'source-code.zip']
-			        ]
-		)
+			
+		script {
+       			def githubRelease = githubRelease(
+	                        apiUri: 'https://api.github.com',
+	                        credentialsId: 'GithubTokenTest',
+	                        owner: 'ita-social-projects',
+	                        repo: 'StreetCode',
+	                        tagName: 'v1.0.0', // Specify the tag name of the release
+	                        assets: [
+	                            [assetFile: 'source-code.zip', assetName: 'source-code.zip'],
+	                            [assetFile: 'source-code.tar.gz', assetName: 'source-code.tar.gz']
+	                            // Add more assets as needed
+	                        ]
+                    )
+                    // Publish the release
+                    githubRelease.publishRelease()
+                }	
 		}
             }
         }

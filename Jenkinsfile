@@ -219,8 +219,8 @@ pipeline {
                  //   sh "git push origin main" 
                   
 			echo 'after prod deploy'
-			 sh 'zip -r  ${env.CODE_VERSION}_source_code.zip *'
-			sh 'zip -r  ${env.CODE_VERSION}_source_code.tar.gz *'
+			 sh 'zip -r  source-code.zip *'
+			sh 'zip -r  source-code.tar.gz *'
                 }
             }
             post {
@@ -233,8 +233,8 @@ pipeline {
 			        tagName: '${env.CODE_VERSION}', 
 			        uploadAssets: [
 			               //  [filePath: 'releasenotes.md'], 
-					[filePath: '${env.CODE_VERSION}_source_code.tar.gz'], 
-			                [filePath: '${env.CODE_VERSION}_source_code.zip']
+					[filePath: 'source-code.tar.gz'], 
+			                [filePath: 'source-code.zip']
 			        ]
 		)
 		}

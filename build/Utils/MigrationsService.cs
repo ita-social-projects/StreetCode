@@ -13,17 +13,14 @@ namespace Utils
     {
         public static IEnumerable<string> GetAllMigrationsNames()
         {
-            string migrationNamePattern = @"^\d*_\w*$";
-            string DALProject = Path.Combine(RootDirectory, "Streetcode", "Streetcode.DAL");
-            string APIProject = Path.Combine(RootDirectory, "Streetcode", "Streetcode.WebApi");
-            var migrationsNames = EntityFrameworkMigrationsList(_ => _
-                .SetProject(DALProject)
-                .SetStartupProject(APIProject))
-                .Where(line => Regex.IsMatch(line.Text, migrationNamePattern))
-                .Select(line => line.Text)
-                .ToList();
+            string migrationNamePattern = GetMigrationNamePattern();
+            DirectoryInfo migrationsDdirectory = new DirectoryInfo(GetMigrationFolderPath());
+            IEnumerable<string> migrationNames = migrationsDdirectory
+                .GetFiles()
+                .Where(migrFile => Regex.IsMatch(migrFile.Name, migrationNamePattern))
+                .Select(migrFile => migrFile.Name.Replace(".cs", string.Empty));
 
-            return migrationsNames;
+            return migrationNames;
         }
 
         public static string GetLastMigrationFullName()
@@ -32,6 +29,16 @@ namespace Utils
                 .Last();
 
             return lastMigrationFullName;
+        }
+
+        private static string GetMigrationFolderPath()
+        {
+            return RootDirectory / "Streetcode" / "Streetcode.DAL" / "Persistence" / "Migrations";
+        }
+
+        private static string GetMigrationNamePattern()
+        {
+            return @"^\d*_\w*.cs$";
         }
     }
 }

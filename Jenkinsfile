@@ -21,7 +21,11 @@ pipeline {
 //}
 // environment {
   // HOME = '/tmp'
-//} 
+//}   
+     environment {
+        GH_TOKEN = credentials('GH_TOKEN')
+        
+    }
     options {
     skipDefaultCheckout true
     disableConcurrentBuilds()
@@ -57,6 +61,7 @@ pipeline {
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
                     sh 'docker system prune --force --all --filter "until=72h"'
+		    sh 'gh auth login  --with-token  $GH_TOKEN'
                  
                 }
             }

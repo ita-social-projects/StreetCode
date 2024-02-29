@@ -177,9 +177,8 @@ pipeline {
 		 script {
                     lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
-		    vers = readFile(file: 'version').trim()
-			 sh 'ls'
-			 sh 'echo ${vers}'
+		     vers = readFile(file: 'version').trim()
+			sh "echo ${vers}"
                 }
 		   
 	            }

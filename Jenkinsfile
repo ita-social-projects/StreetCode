@@ -233,29 +233,14 @@ pipeline {
             post {
                 success {
                   echo 'DDD'
-			sh 'zip -r  source-code.zip *'
-			sh 'zip -r  source-code.tar.gz *'
-			sh 'ls'
-			sh "echo ${env.CODE_VERSION}"
+		//	sh 'zip -r  source-code.zip *'
+		//	sh 'zip -r  source-code.tar.gz *'
+		//	sh 'ls'
+		//	sh "echo ${env.CODE_VERSION}"
 			
 			sh 'echo ${vers}'
+			sh 'gh auth status'
 			
-		script {
-       			def githubRelease = createGitHubRelease(
-	                        apiUri: 'https://api.github.com',
-	                        credentialsId: 'GithubTokenTest',
-	                        owner: 'ita-social-projects',
-	                        repo: 'StreetCode',
-	                        tagName: 'v1.0.0', // Specify the tag name of the release
-	                        assets: [
-	                            [assetFile: 'source-code.zip', assetName: 'source-code.zip'],
-	                            [assetFile: 'source-code.tar.gz', assetName: 'source-code.tar.gz']
-	                            // Add more assets as needed
-	                        ]
-                    )
-                    // Publish the release
-                    githubRelease.publishRelease()
-                }	
 		}
             }
         }

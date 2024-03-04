@@ -5,26 +5,11 @@ def lastTagProd
 def lastTagStage
 def vers
 pipeline {
-   agent { //maybe we will need to run the stages in docker containers
+   agent { 
         label 'stage' 
     }
-   // agent {
-     
- // docker {
-
-        //image 'ubuntu:22.04'
-      //  label 'stage'
-    //     args  '-v /tmp:/tmp'
-
-  //  }
-//
-//}
-// environment {
-  // HOME = '/tmp'
-//}   
      environment {
-        GH_TOKEN = credentials('GH_TOKEN')
-        
+        GH_TOKEN = credentials('GH_TOKEN')     
     }
     options {
     skipDefaultCheckout true
@@ -118,11 +103,8 @@ pipeline {
                     SONAR = credentials('sonar_token')
                 }
             steps {
-                 sh 'java -version' // Verify the Java version
                       sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      
-                      sh 'java -version' // Verify the Java version
-                sh '''          echo "Sonar scan"
+                      sh '''    echo "Sonar scan"
                                 dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
@@ -228,7 +210,7 @@ pipeline {
 			sh 'echo ${BRANCH_NAME}'
 			sh "git checkout master" 
 			sh 'echo ${BRANCH_NAME}'
-               //     sh "git merge ${}" 
+               //     sh "git merge ${BRANCH_NAME}" 
                  //   sh "git push origin main" 
                   
 			echo 'after prod deploy'
@@ -237,12 +219,6 @@ pipeline {
             }
             post {
                 success {
-                  echo 'DDD'
-		//	sh 'zip -r  source-code.zip *'
-		//	sh 'zip -r  source-code.tar.gz *'
-		//	sh 'ls'
-		//	sh "echo ${env.CODE_VERSION}"
-			
 			sh 'echo ${vers}'
 			sh 'gh auth status'
 			sh "gh release create v${vers} --generate-notes"

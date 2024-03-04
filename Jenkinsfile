@@ -253,7 +253,7 @@ pipeline {
                 success {
 			sh 'echo ${vers}'
 			sh 'gh auth status'
-			sh "gh release create v${vers} --generate-notes"
+			sh "gh release create v${vers} --draft"
 			
 		}
             }

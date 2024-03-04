@@ -166,12 +166,27 @@ pipeline {
 	            }
 
     }
-       stage('Deploy Prod'){
-	agent { label 'production' }
-           steps {
-	           input message: 'Do you want to approve deploy prod?', ok: 'Yes'
+	
+        stage('WHAT IS THE NEXT STEP') {
+        steps {
+            
+                script {
+                    CHOICES = ["deployProd", "rollbackStage"];    
+                        env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed',id :'choice_id',
+                                        parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
+                        } 
 
-	         //    docker image prune --force --filter "until=72h"
+                
+            }
+        }
+    
+    stage('Deploy prod') {
+	agent { label 'production' }
+        when {
+            expression { env.yourChoice == 'deployProd' }
+        }
+        steps {
+            	         //    docker image prune --force --filter "until=72h"
 		 //    docker system prune --force --filter "until=72h"
 		 //    docker compose down && sleep 10
 		  //   docker compose --env-file /etc/environment up -d
@@ -194,9 +209,26 @@ pipeline {
                  
 		}
             }
-
+        }
     }
+    stage('Rollback Stage') {
+        when {
+            expression { env.yourChoice == 'rollbackStage' }
+        }
+	 steps {
+	           input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
 
+	         //    docker image prune --force --filter "until=72h"
+		 //    docker system prune --force --filter "until=72h"
+		 //    docker compose down && sleep 10
+		  //   docker compose --env-file /etc/environment up -d
+		 script {
+                    echo "Using lastTagStage : ${lastTagStage}"
+                    // You can use lastTagStage here in any way you need
+                }
+
+        }
+    }    
 	  stage('Sync after release') {
             when {
                expression { myVariable == '1' }
@@ -226,21 +258,7 @@ pipeline {
 		}
             }
         }
-       stage('Rollback Stage') {  
-           steps {
-	           input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
 
-	         //    docker image prune --force --filter "until=72h"
-		 //    docker system prune --force --filter "until=72h"
-		 //    docker compose down && sleep 10
-		  //   docker compose --env-file /etc/environment up -d
-		 script {
-                    echo "Using lastTagStage : ${lastTagStage}"
-                    // You can use lastTagStage here in any way you need
-                }
-
-        }
-       }
 	stage('Rollback Prod') {  
               steps {
 	           input message: 'Do you want to rollback deploy prod?', ok: 'Yes'

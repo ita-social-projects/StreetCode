@@ -210,7 +210,7 @@ pipeline {
 		}
             }
         }
-    }
+    
     stage('Rollback Stage') {
         when {
             expression { env.yourChoice == 'rollbackStage' }

@@ -216,7 +216,7 @@ pipeline {
             expression { env.yourChoice == 'rollbackStage' }
         }
 	 steps {
-	           input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
+	        //   input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
 
 	         //    docker image prune --force --filter "until=72h"
 		 //    docker system prune --force --filter "until=72h"

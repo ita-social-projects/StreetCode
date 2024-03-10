@@ -5,7 +5,8 @@
       "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Local"
+        "ASPNETCORE_ENVIRONMENT": "Local",
+        "STREETCODE_CORS__PreflightMaxAge": "12300"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000;https://localhost:5001"

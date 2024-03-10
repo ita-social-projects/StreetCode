@@ -30,6 +30,7 @@ using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
+using Streetcode.WebApi.Utils;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -100,19 +101,15 @@ public static class ServiceCollectionExtensions
                     };
                 });
 
-        var corsConfig = configuration.GetSection("CORS").Get<CorsConfiguration>();
+        var corsSettings = SettingsExtracter.GetCorsSettings(configuration);
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
             {
-                // policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
-                // policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
-                // policy.WithMethods(corsConfig.AllowedMethods.ToArray());
-                // policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
-
-                policy.AllowAnyOrigin()
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                policy.WithOrigins(corsSettings.AllowedOrigins)
+                   .WithHeaders(corsSettings.AllowedHeaders)
+                   .WithMethods(corsSettings.AllowedMethods)
+                   .SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAge));
             });
         });
 
@@ -159,13 +156,5 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
-    }
-
-    public class CorsConfiguration
-    {
-        public List<string> AllowedOrigins { get; set; }
-        public List<string> AllowedHeaders { get; set; }
-        public List<string> AllowedMethods { get; set; }
-        public int PreflightMaxAge { get; set; }
     }
 }

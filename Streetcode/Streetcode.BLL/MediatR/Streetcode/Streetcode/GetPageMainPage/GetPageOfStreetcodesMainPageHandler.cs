@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 
             if (streetcodes != null)
             {
-                const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
+                const int keyNumOfImageToDisplay = (int)ImageAssigment.BlackAndWhite;
                 foreach (var streetcode in streetcodes)
                 {
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();

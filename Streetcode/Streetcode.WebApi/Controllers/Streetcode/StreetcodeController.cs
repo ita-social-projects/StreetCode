@@ -23,6 +23,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetLastWithOffset;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
@@ -117,6 +118,12 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> GetByIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index)));
+    }
+
+    [HttpGet("{offset}")]
+    public async Task<IActionResult> GetLastWithOffset([FromRoute] int offset)
+    {
+        return HandleResult(await Mediator.Send(new GetLastWithOffsetQuery(offset)));
     }
 
     [HttpPost]

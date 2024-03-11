@@ -81,6 +81,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return _dbContext.Database.ExecuteSqlRawAsync(query);
     }
 
+    public Task<List<T>> ExecuteSelectSqlRaw(string query)
+    {
+        return _dbContext.Set<T>().FromSqlRaw(query).ToListAsync();
+    }
+
     public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
     {
         IIncludableQueryable<T, object>? query = default;
@@ -135,10 +140,25 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQueryable(predicate, include, selector).FirstOrDefaultAsync();
     }
 
+    public async Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, T>> selector,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        Expression<Func<T, object>>? orderByASC = default,
+        Expression<Func<T, object>>? orderByDESC = default,
+        int? offset = null)
+    {
+        return await GetQueryable(predicate, include, selector, orderByASC, orderByDESC, offset: offset).FirstOrDefaultAsync();
+    }
+
     private IQueryable<T> GetQueryable(
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        Expression<Func<T, T>>? selector = default)
+        Expression<Func<T, T>>? selector = default,
+        Expression<Func<T, object>>? orderByASC = default,
+        Expression<Func<T, object>>? orderByDESC = default,
+        int? limit = null,
+        int? offset = null)
     {
         var query = _dbContext.Set<T>().AsNoTracking();
 
@@ -155,6 +175,26 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         if (selector is not null)
         {
             query = query.Select(selector);
+        }
+
+        if (orderByASC is not null)
+        {
+            query = query.OrderBy(orderByASC);
+        }
+
+        if (orderByDESC is not null)
+        {
+            query = query.OrderByDescending(orderByDESC);
+        }
+
+        if (offset.HasValue && offset.Value >= 0)
+        {
+            query = query.Skip(offset.Value);
+        }
+
+        if (limit.HasValue && limit.Value > 0)
+        {
+            query = query.Take(limit.Value);
         }
 
         return query.AsNoTracking();

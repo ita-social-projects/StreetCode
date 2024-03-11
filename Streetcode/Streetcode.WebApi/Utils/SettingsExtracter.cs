@@ -8,16 +8,18 @@ namespace Streetcode.WebApi.Utils
         {
             return new CorsSettings()
             {
-                AllowedHeaders = GetArrayFromString(configuration.GetValue<string>("CORS:AllowedHeaders")),
-                AllowedMethods = GetArrayFromString(configuration.GetValue<string>("CORS:AllowedMethods")),
-                AllowedOrigins = GetArrayFromString(configuration.GetValue<string>("CORS:AllowedOrigins")),
+                AllowedHeaders = GetAllowedCorsValues(configuration, "AllowedHeaders"),
+                AllowedMethods = GetAllowedCorsValues(configuration, "AllowedMethods"),
+                AllowedOrigins = GetAllowedCorsValues(configuration, "AllowedOrigins"),
                 PreflightMaxAge = int.Parse(configuration.GetValue<string>("CORS:PreflightMaxAge") ?? "600"),
             };
         }
 
-        private static string[] GetArrayFromString(string? value)
+        private static string[] GetAllowedCorsValues(IConfiguration configuration, string key)
         {
-            return (value ?? "*").Split(',', StringSplitOptions.RemoveEmptyEntries);
+            string? allowedCorsValuesStringified = configuration.GetValue<string>($"CORS:{key}");
+            return (allowedCorsValuesStringified ?? "*")
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

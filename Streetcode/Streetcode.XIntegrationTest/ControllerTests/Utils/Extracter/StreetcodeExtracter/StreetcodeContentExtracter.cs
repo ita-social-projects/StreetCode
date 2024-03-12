@@ -5,7 +5,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
 {
     public static class StreetcodeContentExtracter
     {
-        public static StreetcodeContent Extract(int id, int index, string transliterationUrl, Audio? audio = null)
+        public static StreetcodeContent Extract(int id, int index, string transliterationUrl, Audio? audio = null, DateTime? createdAt = null)
         {
             StreetcodeContent testStreetcodeContent = TestDataProvider.GetTestData<StreetcodeContent>();
             testStreetcodeContent.Id = id;
@@ -15,6 +15,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
             {
                 testStreetcodeContent.Audio = audio;
                 testStreetcodeContent.AudioId = audio.Id;
+            }
+
+            if (createdAt is null)
+            {
+                testStreetcodeContent.CreatedAt = DateTime.Now;
+            }
+            else
+            {
+                testStreetcodeContent.CreatedAt = (DateTime)createdAt;
             }
 
             return BaseExtracter.Extract<StreetcodeContent>(testStreetcodeContent, strCont => strCont.Id == id);

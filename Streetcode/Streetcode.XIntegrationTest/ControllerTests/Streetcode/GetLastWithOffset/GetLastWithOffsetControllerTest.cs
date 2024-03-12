@@ -9,7 +9,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.GetLastWithOffs
 public class GetLastWithOffsetControllerTest : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private StreetcodeContent _testStreetcodeContent;
-    
+
     public GetLastWithOffsetControllerTest(CustomWebApplicationFactory<Program> factory) 
         : base(factory,"/api/Streetcode")
     {
@@ -17,36 +17,35 @@ public class GetLastWithOffsetControllerTest : BaseControllerTests, IClassFixtur
             .Extract(
                 this.GetHashCode(),
                 this.GetHashCode(),
-                Guid.NewGuid().ToString());
+                Guid.NewGuid().ToString(), createdAt: DateTime.MaxValue);
+
     }
     
-    public override void Dispose()
-    {
-        StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-    }
-
     [Fact]
     public async Task GetLastWithOffsetReturnSuccessStatusCode()
     {
-        StreetcodeContent expectedStreetcode = this._testStreetcodeContent;
         int expectedOffset = 0;
-        var response = await this.client.GetResponse($"/GetLastWithOffset/{0}");
+        var result = await this.client.GetResponse($"/GetLastWithOffset/{expectedOffset}");
 
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeMainPageDTO>(response.Content);
-
-        Assert.True(response.IsSuccessStatusCode);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeMainPageDTO>(result.Content);
+        Assert.True(result.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
-        Assert.Multiple(() => Assert.Equal(expectedStreetcode.Id, returnedValue.Id));
+        Assert.Equal(_testStreetcodeContent.Id, returnedValue.Id);
     }
 
     [Fact]
     public async Task GetLastWithOffsetIncorrectReturnBadRequest()
     {
-        int expectedOffset = Int32.MaxValue;
+        long expectedOffset = Int64.MaxValue;
         var response = await this.client.GetResponse($"/GetLastWithOffset/{expectedOffset}");
-    
+
         Assert.Multiple(
             () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.False(response.IsSuccessStatusCode));
+    }
+
+    public override void Dispose()
+    {
+        StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
     }
 }

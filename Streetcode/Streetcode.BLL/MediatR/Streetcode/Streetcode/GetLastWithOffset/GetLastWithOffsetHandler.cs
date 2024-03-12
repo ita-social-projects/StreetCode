@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetLastWithOffset
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src =>
                     src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
-                orderByDESC: sc => sc.Id,
+                orderByDESC: sc => sc.CreatedAt,
                 offset: request.offset);
 
             if (streetcode != null)

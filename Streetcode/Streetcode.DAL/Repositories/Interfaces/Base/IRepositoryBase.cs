@@ -35,6 +35,8 @@ public interface IRepositoryBase<T>
 
     public Task ExecuteSqlRaw(string query);
 
+    public Task<List<T>> ExecuteSelectSqlRaw(string query);
+
     IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
     Task<IEnumerable<T>> GetAllAsync(
@@ -45,6 +47,25 @@ public interface IRepositoryBase<T>
         Expression<Func<T, T>> selector,
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
+
+    Task<IEnumerable<T>?> GetAllSortedAsync(
+        Expression<Func<T, T>>? selector = default,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        Expression<Func<T, object>>? sortingKeySelector = default);
+
+    Task<IEnumerable<T>?> GetAllSortedByDescendingAsync(
+        Expression<Func<T, T>>? selector = default,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        Expression<Func<T, object>>? sortingKeySelector = default);
+
+    public Task<IEnumerable<T>?> GetAllPaginatedAsync(
+        Expression<Func<T, T>>? selector = default,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        int? limit = default,
+        int? offset = default);
 
     Task<T?> GetSingleOrDefaultAsync(
         Expression<Func<T, bool>>? predicate = default,
@@ -58,4 +79,11 @@ public interface IRepositoryBase<T>
         Expression<Func<T, T>> selector,
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
+    Task<T?> GetFirstOrDefaultAsync(
+        Expression<Func<T, T>> selector,
+        Expression<Func<T, bool>>? predicate = default,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
+        Expression<Func<T, object>>? orderByASC = default,
+        Expression<Func<T, object>>? orderByDESC = default,
+        int? offset = null);
 }

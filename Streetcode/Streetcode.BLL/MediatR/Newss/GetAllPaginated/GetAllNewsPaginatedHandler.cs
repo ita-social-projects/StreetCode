@@ -3,18 +3,17 @@ using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Util;
 using Streetcode.DAL.Entities.News;
+using Streetcode.BLL.Util;
 
-namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
+namespace Streetcode.BLL.MediatR.Newss.GetAllPaginated
 {
-    public class SortedByDateTimeHandler : IRequestHandler<SortedByDateTimeQuery, Result<IEnumerable<NewsDTO>>>
+    public class GetAllNewsPaginatedHandler : IRequestHandler<GetAllNewsPaginatedQuery, Result<IEnumerable<NewsDTO>>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
@@ -22,7 +21,7 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public SortedByDateTimeHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public GetAllNewsPaginatedHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -31,19 +30,15 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<IEnumerable<NewsDTO>>> Handle(SortedByDateTimeQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsPaginatedQuery request, CancellationToken cancellationToken)
         {
-            int limit = request.pageSize;
-            int offset = (request.page - 1) * request.pageSize;
-            IEnumerable<News>? paginatedNews = await _repositoryWrapper
-                .NewsRepository
-                .GetAllPaginatedAsync(limit: limit, offset: offset);
-
-            paginatedNews = paginatedNews?.OrderByDescending(news => news.CreationDate);
+            IEnumerable<News>? news = await _repositoryWrapper.NewsRepository
+                .GetAllAsync(include: cat => cat.Include(img => img.Image));
+            IEnumerable<News>? paginatedNews = news?.Paginate(request.page, request.pageSize);
 
             if (paginatedNews is null || !paginatedNews.Any())
             {
-                string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
+                string errorMsg = _stringLocalizerNo["New's weren't found"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
@@ -52,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
 
             foreach (var dto in newsDTOs)
             {
-                if (dto.Image is not null)
+                if(dto.Image is not null)
                 {
                     dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
                 }

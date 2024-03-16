@@ -1,16 +1,16 @@
-﻿using AutoMapper;
+﻿using System.Web;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Util;
 using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
 {
@@ -21,35 +21,52 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SortedByDateTimeHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public SortedByDateTimeHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            IBlobService blobService,
+            ILoggerService logger,
+            IStringLocalizer<NoSharedResource> stringLocalizerNo,
+            IHttpContextAccessor httpContextAccessor)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _blobService = blobService;
             _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Result<IEnumerable<NewsDTO>>> Handle(SortedByDateTimeQuery request, CancellationToken cancellationToken)
         {
-            int limit = request.pageSize;
-            int offset = (request.page - 1) * request.pageSize;
-            IEnumerable<News>? paginatedNews = await _repositoryWrapper
+            PaginationResponse<News> paginationResponseNews = await _repositoryWrapper
                 .NewsRepository
-                .GetAllPaginatedAsync(limit: limit, offset: offset);
+                .GetAllPaginatedAsync(
+                    request.page,
+                    request.pageSize,
+                    ascendingSortKeySelector: news => news.CreationDate);
 
-            paginatedNews = paginatedNews?.OrderByDescending(news => news.CreationDate);
-
-            if (paginatedNews is null || !paginatedNews.Any())
+            if (paginationResponseNews.Entities is null || !paginationResponseNews.Entities.Any())
             {
                 string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 
-            var newsDTOs = _mapper.Map<IEnumerable<NewsDTO>>(paginatedNews);
+            var newsDTOs = MapToNewsDTOs(paginationResponseNews.Entities);
+            AddPaginationHeader(
+                paginationResponseNews.PageSize,
+                paginationResponseNews.CurrentPage,
+                paginationResponseNews.TotalPages);
 
+            return Result.Ok(newsDTOs);
+        }
+
+        private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)
+        {
+            var newsDTOs = _mapper.Map<IEnumerable<NewsDTO>>(entities);
             foreach (var dto in newsDTOs)
             {
                 if (dto.Image is not null)
@@ -58,7 +75,21 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
                 }
             }
 
-            return Result.Ok(newsDTOs);
+            return newsDTOs;
+        }
+
+        private void AddPaginationHeader(ushort pageSize, ushort currentPage, ushort totalPages)
+        {
+            var metadata = new
+            {
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
+                PageSize = pageSize
+            };
+
+            _httpContextAccessor.HttpContext!.Response.Headers.Add(
+                "X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(metadata));
         }
     }
 }

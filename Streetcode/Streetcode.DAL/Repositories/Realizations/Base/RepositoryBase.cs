@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using MimeKit;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -136,14 +137,25 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQueryable(predicate, include, selector, orderByDESC: sortingKeySelector).ToListAsync() ?? new List<T>();
     }
 
-    public async Task<IEnumerable<T>?> GetAllPaginatedAsync(
+    public async Task<PaginationResponse<T>> GetAllPaginatedAsync(
+        ushort pageNumber = default,
+        ushort pageSize = default,
         Expression<Func<T, T>>? selector = default,
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        int? limit = default,
-        int? offset = default)
+        Expression<Func<T, object>>? ascendingSortKeySelector = default,
+        Expression<Func<T, object>>? descendingSortKeySelector = default)
     {
-        return await GetQueryable(predicate, include, selector, limit: limit, offset: offset).ToListAsync() ?? new List<T>();
+        IQueryable<T> query = GetQueryable(
+            predicate,
+            include,
+            selector,
+            orderByASC: ascendingSortKeySelector,
+            orderByDESC: descendingSortKeySelector);
+        return await PaginationResponse<T>.Create(
+            query,
+            pageNumber,
+            pageSize);
     }
 
     public async Task<T?> GetSingleOrDefaultAsync(

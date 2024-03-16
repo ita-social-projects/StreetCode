@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
@@ -60,12 +61,14 @@ public interface IRepositoryBase<T>
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
         Expression<Func<T, object>>? sortingKeySelector = default);
 
-    public Task<IEnumerable<T>?> GetAllPaginatedAsync(
+    public Task<PaginationResponse<T>> GetAllPaginatedAsync(
+        ushort pageNumber = default,
+        ushort pageSize = default,
         Expression<Func<T, T>>? selector = default,
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        int? limit = default,
-        int? offset = default);
+        Expression<Func<T, object>>? ascendingSortKeySelector = default,
+        Expression<Func<T, object>>? descendingSortKeySelector = default);
 
     Task<T?> GetSingleOrDefaultAsync(
         Expression<Func<T, bool>>? predicate = default,

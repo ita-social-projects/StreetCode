@@ -11,6 +11,7 @@ namespace Streetcode.WebApi.Utils
                 AllowedHeaders = GetAllowedCorsValues(configuration, "AllowedHeaders"),
                 AllowedMethods = GetAllowedCorsValues(configuration, "AllowedMethods"),
                 AllowedOrigins = GetAllowedCorsValues(configuration, "AllowedOrigins"),
+                ExposedHeaders = GetAllowedCorsValues(configuration, "ExposedHeaders"),
                 PreflightMaxAge = int.Parse(configuration.GetValue<string>("CORS:PreflightMaxAge") ?? "600"),
             };
         }

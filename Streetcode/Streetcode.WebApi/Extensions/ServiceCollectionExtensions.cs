@@ -109,6 +109,7 @@ public static class ServiceCollectionExtensions
                 policy.WithOrigins(corsSettings.AllowedOrigins)
                    .WithHeaders(corsSettings.AllowedHeaders)
                    .WithMethods(corsSettings.AllowedMethods)
+                   .WithExposedHeaders(corsSettings.ExposedHeaders)
                    .SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAge));
             });
         });

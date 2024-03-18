@@ -46,20 +46,14 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
                 .GetAllPaginatedAsync(
                     request.page,
                     request.pageSize,
-                    ascendingSortKeySelector: news => news.CreationDate);
-
-            if (paginationResponseNews.Entities is null || !paginationResponseNews.Entities.Any())
-            {
-                string errorMsg = _stringLocalizerNo["NoNewsInTheDatabase"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
-            }
+                    descendingSortKeySelector: news => news.CreationDate);
 
             var newsDTOs = MapToNewsDTOs(paginationResponseNews.Entities);
             AddPaginationHeader(
                 paginationResponseNews.PageSize,
                 paginationResponseNews.CurrentPage,
-                paginationResponseNews.TotalPages);
+                paginationResponseNews.TotalPages,
+                paginationResponseNews.TotalItems);
 
             return Result.Ok(newsDTOs);
         }
@@ -78,13 +72,14 @@ namespace Streetcode.BLL.MediatR.Newss.SortedByDateTime
             return newsDTOs;
         }
 
-        private void AddPaginationHeader(ushort pageSize, ushort currentPage, ushort totalPages)
+        private void AddPaginationHeader(ushort pageSize, ushort currentPage, ushort totalPages, ushort totalItems)
         {
             var metadata = new
             {
                 CurrentPage = currentPage,
                 TotalPages = totalPages,
-                PageSize = pageSize
+                PageSize = pageSize,
+                TotalItems = totalItems
             };
 
             _httpContextAccessor.HttpContext!.Response.Headers.Add(

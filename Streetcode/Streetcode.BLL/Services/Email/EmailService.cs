@@ -54,9 +54,9 @@ namespace Streetcode.BLL.Services.Email
                     await client.SendAsync(mailMessage);
                     return true;
                 }
-                catch
+                catch(Exception e)
                 {
-                    // Logger
+                    Console.WriteLine(e.Message);
                     return false;
                 }
                 finally

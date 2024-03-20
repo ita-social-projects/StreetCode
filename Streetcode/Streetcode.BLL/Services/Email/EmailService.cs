@@ -1,6 +1,7 @@
 using MailKit.Net.Smtp;
 using MimeKit;
 using Streetcode.BLL.Interfaces.Email;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
 
 namespace Streetcode.BLL.Services.Email
@@ -8,10 +9,12 @@ namespace Streetcode.BLL.Services.Email
     public class EmailService : IEmailService
     {
         private readonly EmailConfiguration _emailConfig;
+        private readonly ILoggerService _logger;
 
-        public EmailService(EmailConfiguration emailConfig)
+        public EmailService(EmailConfiguration emailConfig, ILoggerService logger)
         {
             _emailConfig = emailConfig;
+            _logger = logger;
         }
 
         public async Task<bool> SendEmailAsync(Message message)
@@ -54,9 +57,9 @@ namespace Streetcode.BLL.Services.Email
                     await client.SendAsync(mailMessage);
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Logger
+                    _logger.LogWarning(ex.Message);
                     return false;
                 }
                 finally

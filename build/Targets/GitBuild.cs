@@ -10,7 +10,7 @@ partial class Build
     readonly string Msg = "make changes to the project";
 
     [Parameter("update Streetcode_Client submodule")]
-    readonly bool WithCli = true;
+    readonly bool WithCli = false;
 
     [Parameter("checkout to branch")]
     readonly bool Checkout = false;

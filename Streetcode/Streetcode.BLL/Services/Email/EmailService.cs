@@ -1,3 +1,4 @@
+using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Streetcode.BLL.Interfaces.Email;
@@ -46,7 +47,7 @@ namespace Streetcode.BLL.Services.Email
 
         private async Task<bool> SendAsync(MimeMessage mailMessage)
         {
-            using (var client = new SmtpClient())
+            using (var client = new SmtpClient(new ProtocolLogger(Console.OpenStandardOutput())))
             {
                 try
                 {

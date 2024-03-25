@@ -3,6 +3,8 @@ def IS_IMAGE_BUILDED = false
 def myVariable
 def lastTagProd
 def lastTagStage
+def rollbackStage // це ті які були до деплою
+def rollbackProd // це ті які були до деплою
 def vers
 pipeline {
    agent { 
@@ -46,7 +48,6 @@ pipeline {
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
                     sh 'docker system prune --force --all --filter "until=72h"'
-		//    sh 'gh auth login  --with-token  $GH_TOKEN'
                  
                 }
             }
@@ -57,24 +58,16 @@ pipeline {
                     sh './Streetcode/build.sh Run'
                     sh(script: 'dotnet gitversion > GITVERSION_PROPERTIES', returnStdout: true)
                     sh "cat GITVERSION_PROPERTIES"
-                    // env.CODE_VERSION = sh script: """
-                    //         grep -oP \''(?<="MajorMinorPatch": ")[^"]*\'' GITVERSION_PROPERTIES
-                    //     """, returnStdout: true
                     sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
                     sh "cat version"
-		    vers = readFile(file: 'version').trim()
-			sh "echo ${vers}"
-                    //env.CODE_VERSION = sh(returnStdout: true, script: "cat version").trim()
+                    vers = readFile(file: 'version').trim()
+                    sh "echo ${vers}"
                     env.CODE_VERSION = readFile(file: 'version').trim()
                     echo "${env.CODE_VERSION}"
-                    // env.CODE_VERSION = sh script: """
-                    //         dotnet gitversion | grep -oP '(?<="MajorMinorPatch": ")[^"]*'
-                    //     """, returnStatus: true
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
                     def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
                     currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}:${gitCommit}"
-			sh "echo ${env.CODE_VERSION}"
 
                 }
             }
@@ -84,18 +77,18 @@ pipeline {
                 sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
-	stage('Run tests') {
-		  steps {
-		    parallel(
-		      Unit_test: {
-		        sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
-		      },
-		      Integration_test: {
-		        sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
- 		      }
-		    )
-		  }
-		}
+    stage('Run tests') {
+          steps {
+            parallel(
+              Unit_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+              },
+              Integration_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+              }
+            )
+          }
+        }
 //        stage('Sonar scan') {
 //
  //           environment {
@@ -137,38 +130,36 @@ pipeline {
                         sh "docker push ${username}/streetcode:latest"
                         sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
-			    
+                
                     }
                 }
             }
         }
-	stage('Deploy Stage'){
+    stage('Deploy Stage'){
            steps {
-	         input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'jenkins-user, jenkins-user2'
-  			
-//  			docker image prune --force --filter "until=72h"
-//		       docker system prune --force --filter "until=72h"
-//			export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-//			docker compose down && sleep 10
-//			docker compose --env-file /etc/environment up -d
-		   // sh """ lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2) """
-		 // sh """ lastTagStage=\$(docker inspect \$(docker ps | awk '{print \$2}' | grep -v ID) | jq .[].RepoTags | grep '${username}/streetcode:' | cut -d ":" -f2 | head -c -2) """
- 		 // sh ''' lastTagStage=$(docker inspect $(docker ps | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep "streetcode:" | cut -d ":" -f2 | head -c -2) '''
+             input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'jenkins-user, jenkins-user2'
+            
+//              docker image prune --force --filter "until=72h"
+//             docker system prune --force --filter "until=72h"
+//          export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
+//          docker compose down && sleep 10
+//          docker compose --env-file /etc/environment up -d
 
-		   // sh 'echo ${lastTagStage}'
-		 script {
+           // sh 'echo ${lastTagStage}'
+         script {
                     lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
-		    lastTagStageFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+            lastTagStageFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStageFront}"
-		     vers = readFile(file: 'version').trim()
-			sh "echo ${vers}"
+                     vers = readFile(file: 'version').trim()
+                    sh "echo ${vers}"
+                    sh "echo ${env.CODE_VERSION}"
                 }
-		   
-	            }
+           
+                }
 
     }
-	
+    
         stage('WHAT IS THE NEXT STEP') {
         steps {
             
@@ -183,39 +174,39 @@ pipeline {
         }
     
     stage('Deploy prod') {
-	agent { label 'production' }
+    agent { label 'production' }
         when {
             expression { env.yourChoice == 'deployProd' }
         }
         steps {
-            	         //    docker image prune --force --filter "until=72h"
-		 //    docker system prune --force --filter "until=72h"
-		 //    docker compose down && sleep 10
-		  //   docker compose --env-file /etc/environment up -d
-		 script {
+                         //    docker image prune --force --filter "until=72h"
+         //    docker system prune --force --filter "until=72h"
+         //    docker compose down && sleep 10
+          //   docker compose --env-file /etc/environment up -d
+         script {
                     echo "Using lastTagStage in next stage: ${lastTagStage}"
-		    lastTagProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+            lastTagProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
-		    lastTagProdFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+            lastTagProdFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag StageFRPNT: ${lastTagStageFront}"
-		   echo "Last Tag lastTagProd: ${lastTagProd}"
-		    echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
+           echo "Last Tag lastTagProd: ${lastTagProd}"
+            echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
                     // You can use lastTagStage here in any way you need
-			 
+             
                 }
 
-	            }
-	       post {
+                }
+           post {
                 always {
                     echo 'Always'
                 }
                 success {
-		    script {
-		               myVariable = '1'
-		
-		            }
+            script {
+                       myVariable = '1'
+        
+                    }
                  
-		}
+        }
             }
         }
     
@@ -223,26 +214,26 @@ pipeline {
         when {
             expression { env.yourChoice == 'rollbackStage' }
         }
-	 steps {
-	        //   input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
+     steps {
+            //   input message: 'Do you want to rollback deploy stage?', ok: 'Yes'
 
-	         //    docker image prune --force --filter "until=72h"
-		 //    docker system prune --force --filter "until=72h"
-		 //    docker compose down && sleep 10
-		  //   docker compose --env-file /etc/environment up -d
-		 script {
-		    echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
+             //    docker image prune --force --filter "until=72h"
+         //    docker system prune --force --filter "until=72h"
+         //    docker compose down && sleep 10
+          //   docker compose --env-file /etc/environment up -d
+         script {
+            echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
                     echo "Using lastTagStage : ${lastTagStage}"
                     // You can use lastTagStage here in any way you need
-		    echo "Last Tag Prod: ${lastTagProdFront}"
-		    sh 'docker inspect $(docker ps  | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep -m 1 "streetcodeua/streetcode:"'
+            echo "Last Tag Prod: ${lastTagProdFront}"
+            sh 'docker inspect $(docker ps  | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep -m 1 "streetcodeua/streetcode:"'
 
-		    sh 'touch  ${lastTagProdFront}.txt'
+           
                 }
 
         }
     }    
-	  stage('Sync after release') {
+      stage('Sync after release') {
             when {
                expression { myVariable == '1' }
             }   
@@ -252,46 +243,46 @@ pipeline {
                    
                  //  PUSH   sh "git push origin ${env.CODE_VERSION}"
                   // RELIASE MARGE
-			sh 'echo ${BRANCH_NAME}'
-			sh "git checkout master" 
-			sh 'echo ${BRANCH_NAME}'
+            sh 'echo ${BRANCH_NAME}'
+            sh "git checkout master" 
+            sh 'echo ${BRANCH_NAME}'
                //     sh "git merge ${BRANCH_NAME}" 
                  //   sh "git push origin main" 
                   
-			echo 'after prod deploy'
-			
+            echo 'after prod deploy'
+            
                 }
             }
             post {
                 success {
-			sh 'echo ${vers}'
-			sh 'gh auth status'
-			sh "gh release create v${vers}  --generate-notes --draft"
-			
-		}
+            sh 'echo ${vers}'
+            sh 'gh auth status'
+            sh "gh release create v${vers}  --generate-notes --draft"
+            
+        }
             }
         }
 
-	stage('Rollback Prod') {  
+    stage('Rollback Prod') {  
               steps {
-	           input message: 'Do you want to rollback deploy prod?', ok: 'Yes'
+               input message: 'Do you want to rollback deploy prod?', ok: 'Yes'
 
-	         //    docker image prune --force --filter "until=72h"
-		 //    docker system prune --force --filter "until=72h"
-		 //    docker compose down && sleep 10
-		  //   docker compose --env-file /etc/environment up -d
-		 script {
+             //    docker image prune --force --filter "until=72h"
+         //    docker system prune --force --filter "until=72h"
+         //    docker compose down && sleep 10
+          //   docker compose --env-file /etc/environment up -d
+         script {
                     echo "Using : ${lastTagProd}"
                     // You can use lastTagStage here in any way you need
                 }
         }
-	    
+        
 }
     }
 post { 
         always { 
             sh 'docker stop local_sql_server'
-	     sh 'docker rm local_sql_server'
+         sh 'docker rm local_sql_server'
         }
     }
 }

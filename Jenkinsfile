@@ -3,8 +3,6 @@ def IS_IMAGE_BUILDED = false
 def myVariable
 def lastTagProd
 def lastTagStage
-def rollbackStage // це ті які були до деплою
-def rollbackProd // це ті які були до деплою
 def vers
 pipeline {
    agent { 
@@ -145,15 +143,15 @@ pipeline {
 //          docker compose down && sleep 10
 //          docker compose --env-file /etc/environment up -d
 
-           // sh 'echo ${lastTagStage}'
          script {
-                    lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                    echo "Last Tag Stage: ${lastTagStage}"
-            lastTagStageFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                    echo "Last Tag Stage: ${lastTagStageFront}"
-                     vers = readFile(file: 'version').trim()
-                    sh "echo ${vers}"
-                    sh "echo ${env.CODE_VERSION}"
+                preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Stage backend: ${preDeployBackStage}"
+                preDeployFrontStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Stage frontend: ${preDeployFrontStage}"
+                
+                    
+                echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
+                echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
                 }
            
                 }
@@ -184,14 +182,11 @@ pipeline {
          //    docker compose down && sleep 10
           //   docker compose --env-file /etc/environment up -d
          script {
-                    echo "Using lastTagStage in next stage: ${lastTagStage}"
-            lastTagProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                    echo "Last Tag Stage: ${lastTagStage}"
-            lastTagProdFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                    echo "Last Tag StageFRPNT: ${lastTagStageFront}"
-           echo "Last Tag lastTagProd: ${lastTagProd}"
-            echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
-                    // You can use lastTagStage here in any way you need
+                preDeployBackProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Prod backend: ${preDeployBackProd}"
+                preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Prod frontend: ${preDeployFrontProd}"
+                
              
                 }
 
@@ -222,13 +217,10 @@ pipeline {
          //    docker compose down && sleep 10
           //   docker compose --env-file /etc/environment up -d
          script {
-            echo "Last Tag lastTagProdFront: ${lastTagProdFront}"
-                    echo "Using lastTagStage : ${lastTagStage}"
-                    // You can use lastTagStage here in any way you need
-            echo "Last Tag Prod: ${lastTagProdFront}"
-            sh 'docker inspect $(docker ps  | awk '{print $2}' | grep -v ID) | jq .[].RepoTags | grep -m 1 "streetcodeua/streetcode:"'
+                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
+                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
+                
 
-           
                 }
 
         }
@@ -272,8 +264,10 @@ pipeline {
          //    docker compose down && sleep 10
           //   docker compose --env-file /etc/environment up -d
          script {
-                    echo "Using : ${lastTagProd}"
-                    // You can use lastTagStage here in any way you need
+                    echo "Rollback Tag Prod backend: ${preDeployBackProd}"
+                    echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"
+                
+
                 }
         }
         

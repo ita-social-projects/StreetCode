@@ -1,0 +1,19 @@
+name: Sync Done To Closed State Of Issue
+
+on: 
+  schedule:
+    # At minute 0 every 2 hours
+    - cron: 0 0-23/2 * * *
+
+jobs:
+  issue-state-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Sync issue states
+        uses: dasmerlon/project-issue-state-sync@v2
+        with:
+          github_token: ${{ secrets.WORKFLOWS_PAT }} 
+          owner: ita-social-projects
+          project_number: 21
+          closed_statuses: ✅ Done

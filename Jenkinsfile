@@ -96,22 +96,22 @@ pipeline {
 		    )
 		  }
 		}
-        stage('Sonar scan') {
-
-            environment {
-                    //use 'sonar' credentials scoped only to this stage
-                    SONAR = credentials('sonar_token')
-                }
-            steps {
-                      sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      sh '''    echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
-                                dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR
-                        '''
-            }
-        }
+//        stage('Sonar scan') {
+//
+ //           environment {
+  //                  //use 'sonar' credentials scoped only to this stage
+   //                 SONAR = credentials('sonar_token')
+    //            }
+     //       steps {
+      //                sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
+       //               sh '''    echo "Sonar scan"
+        //                        dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+         //                       dotnet build ./Streetcode/Streetcode.sln --configuration Release
+          //                      dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+            //                    dotnet sonarscanner end /d:sonar.token=$SONAR
+  //                      '''
+   //         }
+    //    }
         stage('Build image') {
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"

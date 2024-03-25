@@ -159,6 +159,8 @@ pipeline {
 		 script {
                     lastTagStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage: ${lastTagStage}"
+		    lastTagStageFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                    echo "Last Tag Stage: ${lastTagStageFront}"
 		     vers = readFile(file: 'version').trim()
 			sh "echo ${vers}"
                 }
@@ -192,6 +194,9 @@ pipeline {
 		  //   docker compose --env-file /etc/environment up -d
 		 script {
                     echo "Using lastTagStage in next stage: ${lastTagStage}"
+		    lastTagProdFront = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                    echo "Last Tag Stage: ${lastTagStageFront}"
+		    echo "Last Tag Prod: ${lastTagProdFront}"
                     // You can use lastTagStage here in any way you need
 			 
                 }
@@ -225,6 +230,8 @@ pipeline {
 		 script {
                     echo "Using lastTagStage : ${lastTagStage}"
                     // You can use lastTagStage here in any way you need
+		    echo "Last Tag Prod: ${lastTagProdFront}"
+		    sh 'touch  ${lastTagProdFront}.txt'
                 }
 
         }

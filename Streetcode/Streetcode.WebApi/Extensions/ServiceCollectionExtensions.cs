@@ -14,8 +14,8 @@ using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.AudioService;
-using Streetcode.BLL.Interfaces.Users;
-using Streetcode.BLL.Services.Users;
+using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Services.Authentication;
 using Microsoft.FeatureManagement;
 using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Payment;
@@ -31,6 +31,8 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
+using Microsoft.AspNetCore.Identity;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -78,6 +80,9 @@ public static class ServiceCollectionExtensions
             });
         });
 
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<StreetcodeDbContext>();
+
         services.AddHangfire(config =>
         {
             config.UseSqlServerStorage(connectionString);
@@ -85,9 +90,15 @@ public static class ServiceCollectionExtensions
 
         services.AddHangfireServer();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,

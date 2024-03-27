@@ -1,14 +1,17 @@
 ﻿using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.Partners;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Partners
 {
-    public class PartnersControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class PartnersControllerTests : BaseControllerTests<PartnersClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeContent _testStreetcodeContent;
         private Partner _testPartner;
@@ -16,9 +19,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
-            this._testPartner = PartnerExtracter.Extract(this.GetHashCode());
+                .Extract(
+                uniqueId,
+                uniqueId,
+                Guid.NewGuid().ToString());
+            this._testPartner = PartnerExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()

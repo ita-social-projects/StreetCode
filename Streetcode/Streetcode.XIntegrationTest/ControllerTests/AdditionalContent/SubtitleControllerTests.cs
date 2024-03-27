@@ -1,20 +1,24 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using System.Net;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class SubtitleControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Subtitle _testSubtitle;
 
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
-            this._testSubtitle = SubtitleExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testSubtitle = SubtitleExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()

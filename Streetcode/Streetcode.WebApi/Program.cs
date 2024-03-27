@@ -90,7 +90,6 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 
 app.UseIpRateLimiting();
 app.UseRateLimiter();
-
 app.MapControllers();
 
 app.Run();

@@ -1,14 +1,17 @@
 ﻿using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
-    public class ImageControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class ImageControllerTests : BaseControllerTests<ImageClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Image _testImage;
         private StreetcodeContent _testStreetcodeContent;
@@ -16,11 +19,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public ImageControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Image")
         {
-            this._testImage = ImageExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testImage = ImageExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    this.GetHashCode(),
-                    this.GetHashCode(),
+                    uniqueId,
+                    uniqueId,
                     Guid.NewGuid().ToString());
         }
 

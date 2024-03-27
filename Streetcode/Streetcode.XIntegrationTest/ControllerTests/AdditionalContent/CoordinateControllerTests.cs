@@ -1,20 +1,27 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Xunit;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-   public class CoordinateControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class CoordinateControllerTests : BaseControllerTests<CoordinateClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeContent _testStreetcodeContent;
 
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Coordinate")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
             this._testStreetcodeContent = StreetcodeContentExtracter
-                .Extract(this.GetHashCode(), this.GetHashCode(), Guid.NewGuid().ToString());
+                .Extract(
+                uniqueId,
+                uniqueId,
+                Guid.NewGuid().ToString());
         }
 
         public override void Dispose()

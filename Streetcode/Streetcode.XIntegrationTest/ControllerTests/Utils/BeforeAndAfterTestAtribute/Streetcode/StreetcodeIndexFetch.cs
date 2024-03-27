@@ -1,4 +1,5 @@
 ﻿using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
 {

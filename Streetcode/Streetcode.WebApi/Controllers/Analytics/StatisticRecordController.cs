@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete;
@@ -7,6 +8,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Analytics
 {
@@ -37,6 +39,9 @@ namespace Streetcode.WebApi.Controllers.Analytics
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDTO)
         {
@@ -44,6 +49,9 @@ namespace Streetcode.WebApi.Controllers.Analytics
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Update(int id)
         {
@@ -51,6 +59,9 @@ namespace Streetcode.WebApi.Controllers.Analytics
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
         public async Task<IActionResult> Delete(int id)
         {

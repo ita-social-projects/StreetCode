@@ -18,6 +18,7 @@ using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Realizations.Base;
+using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.WebApi.Extensions
 {
@@ -307,20 +308,9 @@ namespace Streetcode.WebApi.Extensions
                     }
                 }
 
-                if (!dbContext.Users.Any())
+                if (!dbContext.Roles.Any())
                 {
-                    dbContext.Users.AddRange(
-                        new DAL.Entities.Users.User
-                        {
-                            Email = "admin",
-                            Role = UserRole.MainAdministrator,
-                            Login = "admin",
-                            Name = "admin",
-                            Password = "admin",
-                            Surname = "admin",
-                        });
-
-                    await dbContext.SaveChangesAsync();
+                    await RoleAndUserConfiguration.AddUsersAndRoles(app.Services);
                 }
 
                 if (!dbContext.News.Any())

@@ -9,14 +9,14 @@ public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilte
 	public bool Authorize(DashboardContext context)
 	{
 		var user = GetUser(context);
-		var isMainAdministrator = IsMainAdministrator(user);
+		var isAdmin = IsAdmin(user);
 
-		return isMainAdministrator;
+		return isAdmin;
 	}
 
-	public bool IsMainAdministrator(ClaimsPrincipal user)
+	public bool IsAdmin(ClaimsPrincipal user)
 	{
-		return user.IsInRole(UserRole.MainAdministrator.ToString());
+		return user.IsInRole(nameof(UserRole.Admin));
 	}
 
 	public virtual ClaimsPrincipal GetUser(DashboardContext context)

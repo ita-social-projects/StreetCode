@@ -20,13 +20,14 @@ namespace Streetcode.DAL.Helpers
 
         public IEnumerable<T> Entities { get; set; }
 
-        public static async Task<PaginationResponse<T>> Create(IQueryable<T> source, ushort pageNumber, ushort pageSize)
+        public static PaginationResponse<T> Create(IQueryable<T> source, ushort pageNumber, ushort pageSize)
         {
             ushort count = (ushort)(source?.Count() ?? 0);
-            var items = await (source?
+            var items = source?
                     .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize) ?? Enumerable.Empty<T>().AsQueryable())
-                .ToListAsync();
+                    .Take(pageSize)
+                    .AsEnumerable() ?? Enumerable.Empty<T>();
+
             return new PaginationResponse<T>(items, count, pageNumber, pageSize);
         }
     }

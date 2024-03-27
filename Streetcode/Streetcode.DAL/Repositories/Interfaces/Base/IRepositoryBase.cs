@@ -61,7 +61,7 @@ public interface IRepositoryBase<T>
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
         Expression<Func<T, object>>? sortingKeySelector = default);
 
-    public Task<PaginationResponse<T>> GetAllPaginatedAsync(
+    public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,
         Expression<Func<T, T>>? selector = default,

@@ -137,7 +137,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQueryable(predicate, include, selector, orderByDESC: sortingKeySelector).ToListAsync() ?? new List<T>();
     }
 
-    public async Task<PaginationResponse<T>> GetAllPaginatedAsync(
+    public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,
         Expression<Func<T, T>>? selector = default,
@@ -152,7 +152,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
             selector,
             orderByASC: ascendingSortKeySelector,
             orderByDESC: descendingSortKeySelector);
-        return await PaginationResponse<T>.Create(
+        return PaginationResponse<T>.Create(
             query,
             pageNumber,
             pageSize);

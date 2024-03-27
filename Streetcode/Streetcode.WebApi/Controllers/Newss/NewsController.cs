@@ -4,11 +4,9 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Delete;
 using Streetcode.BLL.MediatR.Newss.GetAll;
-using Streetcode.BLL.MediatR.Newss.GetAllPaginated;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
 using Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl;
-using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.DAL.Enums;
 
@@ -19,7 +17,7 @@ namespace Streetcode.WebApi.Controllers.Newss
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllNewsPaginatedQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]
@@ -38,12 +36,6 @@ namespace Streetcode.WebApi.Controllers.Newss
         public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SortedNewsByDateTime([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
-        {
-            return HandleResult(await Mediator.Send(new SortedByDateTimeQuery(page, pageSize)));
         }
 
         [HttpPost]

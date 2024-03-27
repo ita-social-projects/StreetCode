@@ -48,6 +48,7 @@ public static class ServiceCollectionExtensions
         services.AddRepositoryServices();
         services.AddFeatureManagement();
         services.AddMemoryCache();
+        services.AddHttpContextAccessor();
 
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);

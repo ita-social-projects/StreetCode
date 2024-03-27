@@ -7,7 +7,6 @@ using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
 using Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl;
-using Streetcode.BLL.MediatR.Newss.SortedByDateTime;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.DAL.Enums;
 
@@ -16,9 +15,9 @@ namespace Streetcode.WebApi.Controllers.Newss
     public class NewsController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllNewsQuery()));
+            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]
@@ -37,12 +36,6 @@ namespace Streetcode.WebApi.Controllers.Newss
         public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SortedNewsByDateTime()
-        {
-            return HandleResult(await Mediator.Send(new SortedByDateTimeQuery()));
         }
 
         [HttpPost]

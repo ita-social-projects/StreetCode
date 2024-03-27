@@ -89,11 +89,7 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 });
 
 app.UseIpRateLimiting();
-<<<<<<< HEAD
 app.UseRateLimiter();
-
-=======
->>>>>>> 5969cb94 (Add global regex timeout)
 app.MapControllers();
 
 app.Run();

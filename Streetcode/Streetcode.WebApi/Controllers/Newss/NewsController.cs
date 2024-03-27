@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Delete;
+<<<<<<< HEAD
 using Streetcode.BLL.MediatR.Newss.GetAll;
+=======
+>>>>>>> 59ca5e63 (feat: delete endpoint /api/news/GetAll)
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
 using Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl;
@@ -14,12 +17,15 @@ namespace Streetcode.WebApi.Controllers.Newss
 {
     public class NewsController : BaseApiController
     {
+<<<<<<< HEAD
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
             return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
+=======
+>>>>>>> 59ca5e63 (feat: delete endpoint /api/news/GetAll)
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {

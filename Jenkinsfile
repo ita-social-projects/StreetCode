@@ -234,6 +234,9 @@ pipeline {
         }
     }
     stage('Rollback Prod') {  
+        when {
+           expression { env.yourChoice == 'deployProd' }
+            }
         steps {
             input message: 'Do you want to rollback deploy prod?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak '
                 script {

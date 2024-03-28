@@ -2,8 +2,8 @@ name: Move Tasks To New Iteration
 
 on:
   schedule:
-    # Runs "at 05:00, only on Thursday"
-    - cron: '0 13 * * 4'
+    # Runs "at 05:00 GMT+2, only on Thursday"
+    - cron: '0 3 * * 4'
 
 jobs:
   move-to-next-iteration:

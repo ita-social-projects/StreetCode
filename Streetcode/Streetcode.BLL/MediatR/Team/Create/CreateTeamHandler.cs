@@ -27,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
             if (teamMember.ImageId == 0)
             {
                 _logger.LogError(request, "Invalid imageId value");
-                return Result.Fail("Invalid imageId value");
+                return Result.Fail<TeamMemberDTO>("Invalid imageId value");
             }
 
             try

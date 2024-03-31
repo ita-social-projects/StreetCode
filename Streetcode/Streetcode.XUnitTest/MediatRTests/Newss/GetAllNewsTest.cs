@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Newtonsoft.Json;
 using Streetcode.BLL.DTO.News;
@@ -116,7 +117,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                     It.IsAny<ushort>(),
                     null,
                     null,
-                    null,
+                    It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>?>(),
                     null,
                     It.IsAny<Expression<Func<News, object>>?>()))
                 .Returns(GetPaginationResponse(pageNumber, pageSize));

@@ -24,15 +24,13 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot,
-            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate)
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerFailed = stringLocalizerFailed;
             _stringLocalizerCannot = stringLocalizerCannot;
-            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
         }
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
@@ -40,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews.ImageId == 0)
             {
-                string errorMsg = _stringLocalizerCannotCreate["Invalid imageId value"].Value;
+                string errorMsg = _stringLocalizerFailed["Invalid imageId value"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

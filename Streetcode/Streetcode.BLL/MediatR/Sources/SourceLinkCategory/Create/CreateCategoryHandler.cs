@@ -16,22 +16,19 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
         private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
-        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
 
         public CreateCategoryHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             ILoggerService logger,
             IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot,
-            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate)
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
             _stringLocalizerFailed = stringLocalizerFailed;
             _stringLocalizerCannot = stringLocalizerCannot;
-            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
         }
 
         public async Task<Result<DAL.Entities.Sources.SourceLinkCategory>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -44,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 
             if (category.ImageId == 0)
             {
-                string errorMsg = _stringLocalizerCannotCreate["Invalid imageId value"].Value;
+                string errorMsg = _stringLocalizerFailed["Invalid imageId value"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

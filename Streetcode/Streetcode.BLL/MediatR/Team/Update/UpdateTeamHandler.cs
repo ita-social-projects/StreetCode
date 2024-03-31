@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
             {
                 if (team.ImageId == 0)
                 {
-                    throw new Exception("Invalid imageId value");
+                    throw new Exception("Failed to update a team");
                 }
 
                 var links = await _repositoryWrapper.TeamLinkRepository

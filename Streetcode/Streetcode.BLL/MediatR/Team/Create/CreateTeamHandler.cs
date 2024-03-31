@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
             {
                 if (teamMember.ImageId == 0)
                 {
-                    throw new Exception("Invalid imageId value");
+                    throw new Exception("Failed to create a team member");
                 }
 
                 teamMember.Positions.Clear();

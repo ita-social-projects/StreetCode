@@ -62,46 +62,14 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Set<T>().RemoveRange(items);
     }
 
-    public void Attach(T entity)
-    {
-        _dbContext.Set<T>().Attach(entity);
-    }
-
     public EntityEntry<T> Entry(T entity)
     {
         return _dbContext.Entry(entity);
     }
 
-    public void Detach(T entity)
-    {
-        _dbContext.Entry(entity).State = EntityState.Detached;
-    }
-
     public Task ExecuteSqlRaw(string query)
     {
         return _dbContext.Database.ExecuteSqlRawAsync(query);
-    }
-
-    public Task<List<T>> ExecuteSelectSqlRaw(string query)
-    {
-        return _dbContext.Set<T>().FromSqlRaw(query).ToListAsync();
-    }
-
-    public IQueryable<T> Include(params Expression<Func<T, object>>[] includes)
-    {
-        IIncludableQueryable<T, object>? query = default;
-
-        if (includes.Any())
-        {
-            query = _dbContext.Set<T>().Include(includes[0]);
-        }
-
-        for (int queryIndex = 1; queryIndex < includes.Length; ++queryIndex)
-        {
-            query = query!.Include(includes[queryIndex]);
-        }
-
-        return (query is null) ? _dbContext.Set<T>() : query.AsQueryable();
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(

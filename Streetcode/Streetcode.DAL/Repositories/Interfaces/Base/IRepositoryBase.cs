@@ -28,17 +28,9 @@ public interface IRepositoryBase<T>
 
     void DeleteRange(IEnumerable<T> items);
 
-    void Attach(T entity);
-
-    void Detach(T entity);
-
     EntityEntry<T> Entry(T entity);
 
     public Task ExecuteSqlRaw(string query);
-
-    public Task<List<T>> ExecuteSelectSqlRaw(string query);
-
-    IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
 
     Task<IEnumerable<T>> GetAllAsync(
         Expression<Func<T, bool>>? predicate = default,

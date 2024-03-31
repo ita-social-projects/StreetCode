@@ -18,7 +18,6 @@ namespace Streetcode.BLL.MediatR.Newss.Create
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
         private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
-        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
         public CreateNewsHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,

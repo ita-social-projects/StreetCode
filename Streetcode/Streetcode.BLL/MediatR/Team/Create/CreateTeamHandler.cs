@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -24,14 +26,14 @@ namespace Streetcode.BLL.MediatR.Team.Create
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
-            if (teamMember.ImageId == 0)
-            {
-                _logger.LogError(request, "Invalid imageId value");
-                return Result.Fail<TeamMemberDTO>("Invalid imageId value");
-            }
 
             try
             {
+                if (teamMember.ImageId == 0)
+                {
+                    throw new Exception("Invalid imageId value");
+                }
+
                 teamMember.Positions.Clear();
                 var links = await _repository.TeamLinkRepository
                 .GetAllAsync(predicate: l => l.TeamMemberId == request.teamMember.Id);

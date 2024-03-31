@@ -24,14 +24,14 @@ namespace Streetcode.BLL.MediatR.Team.Update
         public async Task<Result<TeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
         {
             var team = _mapper.Map<TeamMember>(request.TeamMember);
-            if (team.ImageId == 0)
-            {
-                _logger.LogError(request, "Invalid imageId value");
-                return Result.Fail("Invalid imageId value");
-            }
 
             try
             {
+                if (team.ImageId == 0)
+                {
+                    throw new Exception("Invalid imageId value");
+                }
+
                 var links = await _repositoryWrapper.TeamLinkRepository
                    .GetAllAsync(predicate: l => l.TeamMemberId == team.Id);
 

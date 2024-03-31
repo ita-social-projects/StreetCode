@@ -24,6 +24,12 @@ namespace Streetcode.BLL.MediatR.Team.Create
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
+            if (teamMember.ImageId == 0)
+            {
+                _logger.LogError(request, "Invalid imageId value");
+                return Result.Fail("Invalid imageId value");
+            }
+
             try
             {
                 teamMember.Positions.Clear();

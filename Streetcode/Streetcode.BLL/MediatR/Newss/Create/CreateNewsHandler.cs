@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -17,33 +18,38 @@ namespace Streetcode.BLL.MediatR.Newss.Create
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
         private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
+        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
         public CreateNewsHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot,
+            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerFailed = stringLocalizerFailed;
             _stringLocalizerCannot = stringLocalizerCannot;
+            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
         }
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
             var newNews = _mapper.Map<News>(request.newNews);
+            if (newNews.ImageId == 0)
+            {
+                string errorMsg = _stringLocalizerCannotCreate["Invalid imageId value"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             if (newNews is null)
             {
                 string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
-            }
-
-            if (newNews.ImageId == 0)
-            {
-                newNews.ImageId = null;
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);

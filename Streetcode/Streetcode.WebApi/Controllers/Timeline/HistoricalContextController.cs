@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById;
@@ -39,6 +40,15 @@ namespace Streetcode.WebApi.Controllers.Timeline
         public async Task<IActionResult> Delete(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteHistoricalContextCommand(id)));
+        }
+
+        [HttpPost]
+        [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> Create([FromBody]HistoricalContextDTO contextDto)
+        {
+            return HandleResult(await Mediator.Send(new CreateHistoricalContextCommand(contextDto)));
         }
     }
 }

@@ -36,11 +36,6 @@ public interface IRepositoryBase<T>
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 
-    Task<IEnumerable<T>?> GetAllAsync(
-        Expression<Func<T, T>> selector,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
-
     public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,

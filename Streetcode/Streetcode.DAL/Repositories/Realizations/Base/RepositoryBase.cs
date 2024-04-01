@@ -79,14 +79,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQueryable(predicate, include).ToListAsync();
     }
 
-    public async Task<IEnumerable<T>?> GetAllAsync(
-        Expression<Func<T, T>> selector,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default)
-    {
-        return await GetQueryable(predicate, include, selector).ToListAsync() ?? new List<T>();
-    }
-
     public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,

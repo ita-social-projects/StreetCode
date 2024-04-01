@@ -87,24 +87,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         return await GetQueryable(predicate, include, selector).ToListAsync() ?? new List<T>();
     }
 
-    public async Task<IEnumerable<T>?> GetAllSortedAsync(
-        Expression<Func<T, T>>? selector,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        Expression<Func<T, object>>? sortingKeySelector = default)
-    {
-        return await GetQueryable(predicate, include, selector, orderByASC: sortingKeySelector).ToListAsync() ?? new List<T>();
-    }
-
-    public async Task<IEnumerable<T>?> GetAllSortedByDescendingAsync(
-        Expression<Func<T, T>>? selector = default,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        Expression<Func<T, object>>? sortingKeySelector = default)
-    {
-        return await GetQueryable(predicate, include, selector, orderByDESC: sortingKeySelector).ToListAsync() ?? new List<T>();
-    }
-
     public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,

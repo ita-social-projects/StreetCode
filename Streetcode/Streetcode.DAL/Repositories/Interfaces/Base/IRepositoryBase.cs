@@ -41,18 +41,6 @@ public interface IRepositoryBase<T>
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 
-    Task<IEnumerable<T>?> GetAllSortedAsync(
-        Expression<Func<T, T>>? selector = default,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        Expression<Func<T, object>>? sortingKeySelector = default);
-
-    Task<IEnumerable<T>?> GetAllSortedByDescendingAsync(
-        Expression<Func<T, T>>? selector = default,
-        Expression<Func<T, bool>>? predicate = default,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,
-        Expression<Func<T, object>>? sortingKeySelector = default);
-
     public PaginationResponse<T> GetAllPaginated(
         ushort pageNumber = default,
         ushort pageSize = default,

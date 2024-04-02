@@ -151,10 +151,18 @@ pipeline {
 
                 }  
             }
-      post {
+     }    
+    stage('WHAT IS THE NEXT STEP') {
+        steps {
+            script {
+                    CHOICES = ["deployProd", "rollbackStage"];    
+                        env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'deploy_admin',id :'choice_id',
+                                        parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
+            } 
+        }
+        post {
           aborted{
             script{
-               input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'Develop Team, dev'
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
@@ -169,15 +177,7 @@ pipeline {
             }
             
          }
-      }  }    
-    stage('WHAT IS THE NEXT STEP') {
-        steps {
-            script {
-                    CHOICES = ["deployProd", "rollbackStage"];    
-                        env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'deploy_admin',id :'choice_id',
-                                        parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
-            } 
-        }
+      }
     }
     stage('Deploy prod') {
         agent { label 'production' }

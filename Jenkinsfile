@@ -131,7 +131,7 @@ pipeline {
         }
     stage('Deploy Stage'){
         steps {
-            input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'deploy_admin, deploy_dev'
+            input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'deploy_admin, Develop Team'
                 script {
                     preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage backend: ${preDeployBackStage}"
@@ -153,7 +153,7 @@ pipeline {
             }
       post {
           aborted{
-              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'deploy_dev'
+              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'Develop Team'
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"

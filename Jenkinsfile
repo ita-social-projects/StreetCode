@@ -259,7 +259,7 @@ post {
     }
     aborted{
        script {
-           input message: 'Do you want to rollback deploy stage?', ok: 'Yes', , submitter: 'deploy_dev'
+           input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'deploy_dev'
 
          echo "Rollback Tag Stage backend: ${preDeployBackStage}"
          echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"

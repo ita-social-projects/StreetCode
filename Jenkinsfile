@@ -151,7 +151,23 @@ pipeline {
 
                 }  
             }
-        }    
+      post {
+          aborted{
+              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'deploy_dev'
+      
+               echo "Rollback Tag Stage backend: ${preDeployBackStage}"
+               echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
+      //                    docker image prune --force --filter "until=72h"
+      //                    docker system prune --force --filter "until=72h"
+      //                    export DOCKER_TAG_BACKEND=${preDeployBackStage}
+      //                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
+      //                    docker compose down && sleep 10
+      //                    docker compose --env-file /etc/environment up -d
+                      
+      
+            
+         }
+      }  }    
     stage('WHAT IS THE NEXT STEP') {
         steps {
             script {
@@ -257,21 +273,5 @@ post {
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-    aborted{
-       script {
-           input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'deploy_dev'
-
-         echo "Rollback Tag Stage backend: ${preDeployBackStage}"
-         echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-//                    docker image prune --force --filter "until=72h"
-//                    docker system prune --force --filter "until=72h"
-//                    export DOCKER_TAG_BACKEND=${preDeployBackStage}
-//                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-//                    docker compose down && sleep 10
-//                    docker compose --env-file /etc/environment up -d
-                
-
-      }
-   }
 }
 }

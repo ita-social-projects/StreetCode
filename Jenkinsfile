@@ -153,7 +153,8 @@ pipeline {
             }
       post {
           aborted{
-              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'Develop Team'
+            script{
+               input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'Develop Team, dev'
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
@@ -165,6 +166,7 @@ pipeline {
       //                    docker compose --env-file /etc/environment up -d
                       
       
+            }
             
          }
       }  }    

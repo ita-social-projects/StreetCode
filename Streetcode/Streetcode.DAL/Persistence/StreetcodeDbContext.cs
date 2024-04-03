@@ -232,7 +232,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
             entity.HasOne(d => d.Art)
                 .WithMany(d => d.StreetcodeArts)
                 .HasForeignKey(d => d.ArtId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.Property(e => e.Index)
                 .HasDefaultValue(1);

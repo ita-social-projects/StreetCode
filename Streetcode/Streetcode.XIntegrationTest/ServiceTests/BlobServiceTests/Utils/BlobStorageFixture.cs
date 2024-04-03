@@ -26,7 +26,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
             });
             blobPath = environmentVariables.Value.BlobStorePath;
             blobKey = environmentVariables.Value.BlobStoreKey;
-                       
+
             blobService = new BlobService(environmentVariables); // add repo
             Directory.CreateDirectory(blobPath);
         }

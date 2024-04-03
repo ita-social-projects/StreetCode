@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -26,5 +26,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
   </ItemGroup>
-
+	
+  <PropertyGroup>
+	<SonarQubeExclude>true</SonarQubeExclude>
+  </PropertyGroup>
 </Project>

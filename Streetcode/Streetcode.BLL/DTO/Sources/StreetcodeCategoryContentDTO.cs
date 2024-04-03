@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.BLL.DTO.Sources
 {
     public class StreetcodeCategoryContentDTO
     {
         [Required]
-        [MaxLength(10000)]
+        [MaxLength(15000)]
         public string Text { get; set; }
 
         [Required]

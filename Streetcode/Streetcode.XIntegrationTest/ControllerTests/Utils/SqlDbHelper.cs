@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.EntityFrameworkCore;
+using Polly;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
@@ -28,7 +30,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            if (this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate: s => (int)idProp?.GetValue(s)! == id) == null)
+            if (this.dbContext.Set<T>()
+                .AsEnumerable()
+                .FirstOrDefault(predicate: s => (int)idProp?.GetValue(s)! == id) == null)
             {
                 return false;
             }
@@ -40,19 +44,50 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
+            return this.dbContext.Set<T>()
+                .AsEnumerable()
+                .FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
         }
 
         public T AddNewItem<T>(T newItem)
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            object value = idProp?.GetValue(newItem);
-            if (value != null && (int)value != 0)
+            string? value = idProp?.GetValue(newItem) as string;
+            if (!string.IsNullOrEmpty(value))
             {
-                idProp?.SetValue(newItem, 0);
+                int n;
+                if (int.TryParse(value, out n))
+                {
+                    idProp?.SetValue(newItem, 0);
+                    return this.dbContext.Set<T>().Add(newItem).Entity;
+                }
             }
+
             return this.dbContext.Set<T>().Add(newItem).Entity;
+        }
+
+        public void AddItemWithCustomId<T>(T newItem)
+            where T : class, new()
+        {
+            this.dbContext.Database.OpenConnection();
+            try
+            {
+                string tableSchema = this.dbContext.Model.FindEntityType(typeof(T)).GetSchema();
+                string tableName = this.dbContext.Model.FindEntityType(typeof(T)).GetTableName();
+
+                string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
+                string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
+
+                this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                this.dbContext.Add(newItem);
+                this.dbContext.SaveChanges();
+                this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
+            }
+            finally
+            {
+                this.dbContext.Database.CloseConnection();
+            }
         }
 
         public T GetExistItem<T>(Func<T, bool>? predicate = default)
@@ -66,15 +101,26 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return this.dbContext.Set<T>().FirstOrDefault();
         }
 
+        public bool Any<T>(Func<T, bool>? predicate = default)
+           where T : class, new()
+        {
+            if (predicate != null)
+            {
+                return this.dbContext.Set<T>().AsNoTracking().Any(predicate);
+            }
+
+            return this.dbContext.Set<T>().AsNoTracking().Any();
+        }
+
         public IEnumerable<T> GetAll<T>(Func<T, bool>? predicate = default)
              where T : class
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsEnumerable().Where(predicate);
+                return this.dbContext.Set<T>().AsNoTracking().AsEnumerable().Where(predicate);
             }
 
-            return this.dbContext.Set<T>();
+            return this.dbContext.Set<T>().AsNoTracking();
         }
 
         public T DeleteItem<T>(T item)

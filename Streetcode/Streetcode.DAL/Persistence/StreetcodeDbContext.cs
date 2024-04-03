@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Streetcode.DAL.Entities.AdditionalContent;
@@ -24,7 +25,7 @@ using StreetcodeArtSlide = Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide
 
 namespace Streetcode.DAL.Persistence;
 
-public class StreetcodeDbContext : DbContext
+public class StreetcodeDbContext : IdentityDbContext<User>
 {
     public StreetcodeDbContext()
     {
@@ -61,7 +62,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<StreetcodeCategoryContent> StreetcodeCategoryContent { get; set; }
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
     public DbSet<StreetcodeArtSlide> StreetcodeArtSlides { get; set; }
-    public DbSet<User> Users { get; set; }
+    public override DbSet<User> Users { get; set; }
     public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
     public DbSet<TeamMember> TeamMembers { get; set; }
     public DbSet<TeamMemberLink> TeamMemberLinks { get; set; }
@@ -77,7 +78,6 @@ public class StreetcodeDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<StatisticRecord>()

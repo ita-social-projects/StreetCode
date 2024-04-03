@@ -1,0 +1,14 @@
+﻿{
+  "Index": 1,
+  "Teaser": "Test_Teaser",
+  "DateString": "11/11/2000",
+  "Alias": "Test_Alias",
+  "Status": 1,
+  "Title": "Test_Title",
+  "TransliterationUrl": "111-111-111-111-111",
+  "ViewCount": 1,
+  "CreatedAt": "2000-11-11 11:11:11.1111111",
+  "UpdatedAt": "2001-11-11 11:11:11.1111111",
+  "EventStartOrPersonBirthDate": "2000-11-11 11:11:11.1111111",
+  "EventEndOrPersonDeathDate": "2000-11-11 11:11:11.1111111"
+}

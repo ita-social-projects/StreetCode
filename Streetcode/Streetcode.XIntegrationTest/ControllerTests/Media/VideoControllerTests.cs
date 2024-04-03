@@ -1,31 +1,43 @@
 ﻿using Streetcode.BLL.DTO.Media;
-using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+using Streetcode.DAL.Entities.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media.Video;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
+
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-    public class VideoControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class VideoControllerTests : BaseControllerTests<VideoClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Video _testVideo;
+
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testVideo = VideoExtracter.Extract(uniqueId);
+        }
+
+        public override void Dispose()
+        {
+            VideoExtracter.Remove(this._testVideo);
         }
 
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await client.GetAllAsync();
+            var response = await this.client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<VideoDTO>>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
         }
 
         [Fact]
-        [ExtractTestVideo]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            int id = ExtractTestVideo.VideoForTest.Id;
+            int id = this._testVideo.Id;
             var response = await client.GetByIdAsync(id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
@@ -38,7 +50,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var response = await client.GetByIdAsync(id);
+            var response = await this.client.GetByIdAsync(id);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -46,12 +58,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         }
 
         [Fact]
-        [ExtractTestVideo]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = ExtractTestVideo.StreetcodeWithVideo.Id;
-            int videoId = ExtractTestVideo.VideoForTest.Id;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            int streetcodeId = this._testVideo.StreetcodeId;
+            int videoId = this._testVideo.Id;
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -65,7 +76,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),

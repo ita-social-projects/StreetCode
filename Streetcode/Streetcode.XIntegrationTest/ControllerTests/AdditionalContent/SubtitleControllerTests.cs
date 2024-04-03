@@ -1,18 +1,29 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Subtitle;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using System.Net;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class SubtitleControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Subtitle _testSubtitle;
+
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testSubtitle = SubtitleExtracter.Extract(uniqueId);
+        }
+
+        public override void Dispose()
+        {
+            SubtitleExtracter.Remove(this._testSubtitle);
         }
 
         [Fact]
@@ -25,12 +36,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
-        [ExtractTestSubtitle]
         public async Task GetById_ReturnSuccessContent()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
-            Subtitle expectedSubtitle = ExtractTestSubtitle.SubtitleForTest;
+            Subtitle expectedSubtitle = this._testSubtitle;
 
             var response = await this.client.GetByIdAsync(expectedSubtitle.Id);
 
@@ -55,11 +63,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
-        [ExtractTestSubtitle]
         public async Task GetByStreetcodeId_ReturnSuccess()
         {
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            int streetcodeId = this._testSubtitle.StreetcodeId;
             var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);

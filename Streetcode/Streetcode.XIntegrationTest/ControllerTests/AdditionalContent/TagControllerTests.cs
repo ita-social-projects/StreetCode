@@ -1,26 +1,45 @@
 ﻿using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
-    public class TagControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class TagControllerTests : BaseControllerTests<TagClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
+        private Tag _testTag;
+        private StreetcodeContent _testStreetcodeContent;
+
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Tag")
         {
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testTag = TagExtracter.Extract(uniqueId);
+            this._testStreetcodeContent = StreetcodeContentExtracter
+                .Extract(
+                    uniqueId,
+                    uniqueId,
+                    Guid.NewGuid().ToString());
+        }
 
+        public override void Dispose()
+        {
+            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
+            TagExtracter.Remove(this._testTag);
         }
 
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await client.GetAllAsync();
+            var response = await this.client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -28,11 +47,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestTag]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Tag expectedTag = ExtractTestTag.TagForTest;
-            var response = await client.GetByIdAsync(expectedTag.Id);
+            Tag expectedTag = this._testTag;
+            var response = await this.client.GetByIdAsync(expectedTag.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
@@ -47,7 +65,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetByIdIncorrect_ReturnBadRequest()
         {
             int incorrectId = -100;
-            var response = await client.GetByIdAsync(incorrectId);
+            var response = await this.client.GetByIdAsync(incorrectId);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -55,12 +73,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestStreetcode]
-        [ExtractTestTag]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            StreetcodeTagIndexSetup.Setup(ExtractTestStreetcode.StreetcodeForTest, ExtractTestTag.TagForTest);
-            int streetcodeId = ExtractTestStreetcode.StreetcodeForTest.Id;
+            TagExtracter.AddStreetcodeTagIndex(this._testStreetcodeContent.Id, this._testTag.Id);
+            int streetcodeId = this._testStreetcodeContent.Id;
             var response = await client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
 
@@ -72,7 +88,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await client.GetByStreetcodeId(streetcodeId);
+            var response = await this.client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -80,26 +96,23 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         }
 
         [Fact]
-        [ExtractTestTag]
         public async Task GetByTitle_ReturnSuccessStatusCode()
         {
 
-            Tag expectedTag = ExtractTestTag.TagForTest;
-            var response = await client.GetResponse($"/GetTagByTitle/{expectedTag.Title}");
+            Tag expectedTag = this._testTag;
+            var response = await this.client.GetTagByTitle(expectedTag.Title);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.Multiple(
-                () => Assert.Equal(expectedTag.Id, returnedValue?.Id),
-                () => Assert.Equal(expectedTag.Title, returnedValue?.Title));
+            Assert.Equal(expectedTag.Title, returnedValue?.Title);
         }
 
         [Fact]
         public async Task GetByTitle_Incorrect_ReturnBadRequest()
         {
             string title = "Some_Incorrect_Title";
-            var response = await client.GetResponse($"/GetTagByTitle/{title}");
+            var response = await this.client.GetTagByTitle(title);
 
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),

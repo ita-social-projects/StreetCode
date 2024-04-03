@@ -5,10 +5,10 @@ using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.DAL.Repositories.Realizations.Users
 {
-    internal class UserRepository : RepositoryBase<User>, IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
-        public UserRepository(StreetcodeDbContext context)
-            : base(context)
+        public UserRepository(StreetcodeDbContext dbContext)
+            : base(dbContext)
         {
         }
     }

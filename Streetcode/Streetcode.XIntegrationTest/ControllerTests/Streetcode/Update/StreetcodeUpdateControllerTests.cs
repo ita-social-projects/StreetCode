@@ -2,41 +2,54 @@
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.Enums;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using System.Net;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
 {
+    [Collection("Authorization")]
     public class StreetcodeUpdateControllerTests :
-        BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+        BaseAuthorizationControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory)
-            : base(factory, "/api/Streetcode")
-        {
+        private StreetcodeUpdateDTO _testStreetcodeUpdateDTO;
 
+        public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
+            : base(factory, "/api/Streetcode", tokenStorage)
+        {
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testStreetcodeUpdateDTO = StreetcodeUpdateDTOExtracter.Extract(
+                uniqueId,
+                uniqueId,
+                Guid.NewGuid().ToString());
+        }
+
+        public override void Dispose()
+        {
+            StreetcodeUpdateDTOExtracter.Remove(this._testStreetcodeUpdateDTO);
         }
 
         [Fact]
-        [ExtractTestUpdateStreetcode]
         public async Task Update_ReturnSuccessStatusCode()
         {
-            StreetcodeUpdateDTO updateStreetCodeDTO = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await this.client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
             Assert.True(response.IsSuccessStatusCode);
         }
 
         [Fact]
-        [ExtractTestUpdateStreetcode]
         public async Task Update_ChangesTitleAndTransliterationUrl()
         {
-            StreetcodeUpdateDTO updateStreetCodeDTO = ExtractTestUpdateStreetcode.StreetcodeForTest;
-            await client.UpdateAsync(updateStreetCodeDTO);
+            StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
+            await this.client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
-            var responseGetByIdUpdated = await client.GetByIdAsync(updateStreetCodeDTO.Id);
+            var responseGetByIdUpdated = await this.client.GetByIdAsync(updateStreetCodeDTO.Id);
             var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);
             Assert.Multiple(() =>
             {
@@ -46,33 +59,30 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
         }
 
         [Fact]
-        [ExtractTestUpdateStreetcode]
         public async Task Update_WithInvalidId_ReturnsBadRequest()
         {
-            StreetcodeUpdateDTO updateStreetCodeDTO = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
             updateStreetCodeDTO.Id++;
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
-        [ExtractTestUpdateStreetcode]
         public async Task Update_WithInvalidData_ReturnsBadRequest()
         {
-            StreetcodeUpdateDTO updateStreetCodeDTO = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
             updateStreetCodeDTO.Title = null; // Invalid data
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [Fact]
-        [ExtractTestUpdateStreetcode]
         public async Task Update_WithInvalidTags_ReturnsBadRequest()
         {
-            StreetcodeUpdateDTO updateStreetCodeDTO = ExtractTestUpdateStreetcode.StreetcodeForTest;
+            StreetcodeUpdateDTO updateStreetCodeDTO = this._testStreetcodeUpdateDTO;
 
             // Invalid tag data
             updateStreetCodeDTO.Tags = new List<StreetcodeTagUpdateDTO>
@@ -88,7 +98,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode.Update
                         },
                     };
 
-            var response = await client.UpdateAsync(updateStreetCodeDTO);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, this._tokenStorage.AdminToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }

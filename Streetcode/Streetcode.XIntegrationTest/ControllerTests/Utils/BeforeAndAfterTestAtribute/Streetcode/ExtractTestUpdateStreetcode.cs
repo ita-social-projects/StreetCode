@@ -93,8 +93,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 DateString = "22 травня 2023",
                 TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
                 RelatedFigures = new List<RelatedFigureUpdateDTO>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
+                StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
                 StatisticRecords = new List<StatisticRecordUpdateDTO>(),
                 StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
             };

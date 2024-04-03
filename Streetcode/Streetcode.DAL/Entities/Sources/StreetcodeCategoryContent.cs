@@ -8,7 +8,7 @@ namespace Streetcode.DAL.Entities.Sources;
 public class StreetcodeCategoryContent
 {
     [Required]
-    [MaxLength(10000)]
+    [MaxLength(15000)]
     public string? Text { get; set; }
 
     [Required]

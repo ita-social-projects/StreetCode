@@ -5,13 +5,18 @@ public class Program
 {
     static int Main(string[] args)
     {
-        string migrationPath = Path.Combine(Directory.GetCurrentDirectory(),
-            "Streetcode.DAL", "Persistence", "ScriptsMigration");
+        string rootDirectory = GetRootFolderPath();
+        string pathToSqlScripts = Path.Combine(
+            rootDirectory,
+            "Streetcode",
+            "Streetcode.DAL",
+            "Persistence",
+            "ScriptsMigration");
 
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "Streetcode.WebApi"))
+            .SetBasePath(Path.Combine(rootDirectory, "Streetcode", "Streetcode.WebApi"))
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")
@@ -19,17 +24,10 @@ public class Program
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        string pathToScript = "";
-
-        Console.WriteLine("Enter '-m' to MIGRATE or '-s' to SEED db:");
-        pathToScript = Console.ReadLine();
-
-        pathToScript = migrationPath;
-        
         var upgrader =
             DeployChanges.To
                 .SqlDatabase(connectionString)
-                .WithScriptsFromFileSystem(pathToScript)
+                .WithScriptsFromFileSystem(pathToSqlScripts)
                 .LogToConsole()
                 .Build();
 
@@ -50,5 +48,18 @@ public class Program
         Console.WriteLine("Success!");
         Console.ResetColor();
         return 0;
+    }
+
+    private static string GetRootFolderPath()
+    {
+        // By root folder we mean folder, that contains .gitignore file.
+        string currentDirectoryPath = Directory.GetCurrentDirectory();
+        var directory = new DirectoryInfo(currentDirectoryPath);
+        while (directory is not null && !directory.GetFiles(".gitignore").Any())
+        {
+            directory = directory.Parent;
+        }
+
+        return directory?.FullName ?? throw new NullReferenceException("Cannot find root folder");
     }
 }

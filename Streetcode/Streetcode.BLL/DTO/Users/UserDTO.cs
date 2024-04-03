@@ -5,7 +5,7 @@ namespace Streetcode.BLL.DTO.Users
 {
     public class UserDTO
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -17,11 +17,9 @@ namespace Streetcode.BLL.DTO.Users
         public string Email { get; set; }
         [Required]
         [MaxLength(20)]
-        public string Login { get; set; }
+        public string UserName { get; set; }
         [Required]
         [MaxLength(20)]
         public string Password { get; set; }
-        [Required]
-        public UserRole Role { get; set; }
     }
 }

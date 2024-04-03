@@ -1,11 +1,12 @@
 using System.Globalization;
+using System.Threading.RateLimiting;
 using AspNetCoreRateLimit;
 using Hangfire;
-using Streetcode.WebApi.Extensions;
-using Microsoft.AspNetCore.Localization;
-using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Middleware;
+using Streetcode.BLL.Services.Hangfire;
+using Streetcode.WebApi.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication();
@@ -25,6 +26,26 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
+        factory: partition => new FixedWindowRateLimiterOptions
+        {
+            AutoReplenishment = true,
+            PermitLimit = 3,
+            QueueLimit = 0,
+            Window = TimeSpan.FromMinutes(5)
+        }));
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+        await context.HttpContext.Response.WriteAsync("Too many requests.", cancellationToken: token);
+    };
+});
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -66,8 +87,9 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
 });
-app.UseIpRateLimiting();
 
+app.UseIpRateLimiting();
+app.UseRateLimiter();
 app.MapControllers();
 
 app.Run();

@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="EfCore.SchemaCompare" Version="6.0.0" />
     <PackageReference Include="MailKit" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.25" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
       <PrivateAssets>all</PrivateAssets>
@@ -41,13 +42,11 @@
   
   <ItemGroup>
     <Folder Include="Persistence\Migrations\" />
-    <Folder Include="Persistence\ScriptsMigration\" />
   </ItemGroup>
 	
   <ItemGroup>
 	<SonarQubeSetting Include="sonar.exclusions">
 		<Value>**/Migrations/*</Value>
-		<Value>**/ScriptsMigration/*</Value>
 	</SonarQubeSetting>
   </ItemGroup>
 </Project>

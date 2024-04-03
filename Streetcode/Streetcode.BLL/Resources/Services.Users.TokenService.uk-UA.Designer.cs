@@ -39,7 +39,7 @@ namespace Streetcode.BLL.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Services.Users.TokenService", typeof(Services_Users_TokenService_uk_UA).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Services.Authentication.TokenService", typeof(Services_Users_TokenService_uk_UA).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

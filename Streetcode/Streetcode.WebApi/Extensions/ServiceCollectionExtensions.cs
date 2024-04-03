@@ -14,8 +14,8 @@ using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.AudioService;
-using Streetcode.BLL.Interfaces.Users;
-using Streetcode.BLL.Services.Users;
+using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Services.Authentication;
 using Microsoft.FeatureManagement;
 using Streetcode.BLL.Interfaces.Audio;
 using Streetcode.BLL.Interfaces.Payment;
@@ -30,6 +30,9 @@ using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
+using Streetcode.WebApi.Utils;
+using Microsoft.AspNetCore.Identity;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -77,6 +80,9 @@ public static class ServiceCollectionExtensions
             });
         });
 
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<StreetcodeDbContext>();
+
         services.AddHangfire(config =>
         {
             config.UseSqlServerStorage(connectionString);
@@ -84,9 +90,15 @@ public static class ServiceCollectionExtensions
 
         services.AddHangfireServer();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -100,19 +112,16 @@ public static class ServiceCollectionExtensions
                     };
                 });
 
-        var corsConfig = configuration.GetSection("CORS").Get<CorsConfiguration>();
+        var corsSettings = SettingsExtracter.GetCorsSettings(configuration);
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
             {
-                // policy.WithOrigins(corsConfig.AllowedOrigins.ToArray());
-                // policy.WithHeaders(corsConfig.AllowedHeaders.ToArray());
-                // policy.WithMethods(corsConfig.AllowedMethods.ToArray());
-                // policy.SetPreflightMaxAge(TimeSpan.FromDays(corsConfig.PreflightMaxAge));
-
-                policy.AllowAnyOrigin()
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
+                policy.WithOrigins(corsSettings.AllowedOrigins)
+                   .WithHeaders(corsSettings.AllowedHeaders)
+                   .WithMethods(corsSettings.AllowedMethods)
+                   .WithExposedHeaders(corsSettings.ExposedHeaders)
+                   .SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAge));
             });
         });
 
@@ -159,13 +168,5 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
-    }
-
-    public class CorsConfiguration
-    {
-        public List<string> AllowedOrigins { get; set; }
-        public List<string> AllowedHeaders { get; set; }
-        public List<string> AllowedMethods { get; set; }
-        public int PreflightMaxAge { get; set; }
     }
 }

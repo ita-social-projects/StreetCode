@@ -1,15 +1,17 @@
 ﻿using Streetcode.BLL.DTO.Media.Audio;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
 using Xunit;
+using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-    public class AudioControllerTests : BaseControllerTests, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private Audio _testAudio;
         private StreetcodeContent _testStreetcodeContent;
@@ -17,11 +19,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Audio")
         {
-            this._testAudio = AudioExtracter.Extract(this.GetHashCode());
+            int uniqueId = UniqueNumberGenerator.Generate();
+            this._testAudio = AudioExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    this.GetHashCode(),
-                    this.GetHashCode(),
+                    uniqueId,
+                    uniqueId,
                     Guid.NewGuid().ToString(),
                     audio: this._testAudio);
         }

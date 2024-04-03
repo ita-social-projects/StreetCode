@@ -11,11 +11,10 @@ namespace Streetcode.XUnitTest.Hangfire;
 
 public class HangfireAuthorizationFilterTests
 {
-    public static IEnumerable<object[]> NonMainAdministratorRoles =>
+    public static IEnumerable<object[]> NonAdminRoles =>
         new List<object[]>
         {
-            new object[] { UserRole.Administrator.ToString() },
-            new object[] { UserRole.Moderator.ToString() },
+            new object[] { nameof(UserRole.User) },
             new object[] { string.Empty },
         };
 
@@ -43,40 +42,40 @@ public class HangfireAuthorizationFilterTests
     }
 
     [Fact]
-    public void IsMainAdministrator_UserIsMainAdministrator_ReturnsTrue()
+    public void IsAdmin_UserIsAdmin_ReturnsTrue()
     {
         // Arrange
-        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, UserRole.MainAdministrator.ToString()) }));
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, nameof(UserRole.Admin).ToString()) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
-        bool result = filter.IsMainAdministrator(user);
+        bool result = filter.IsAdmin(user);
 
         // Assert
         Assert.True(result);
     }
 
     [Theory]
-    [MemberData(nameof(NonMainAdministratorRoles))]
-    public void IsMainAdministrator_UserIsNotMainAdministrator_ReturnsFalse(string role)
+    [MemberData(nameof(NonAdminRoles))]
+    public void IsAdmin_UserIsNotAdmin_ReturnsFalse(string role)
     {
         // Arrange
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
-        bool result = filter.IsMainAdministrator(user);
+        bool result = filter.IsAdmin(user);
 
         // Assert
         Assert.False(result);
     }
 
     [Fact]
-    public void Authorize_UserIsMainAdministrator_ReturnsTrue()
+    public void Authorize_UserIsAdmin_ReturnsTrue()
     {
         // Arrange
         var mockDashboardContext = new MockDashboardContext(new Mock<JobStorage>().Object, new Mock<DashboardOptions>().Object);
-        var mockFilter = new MockHangfireDashboardAuthorizationFilter(UserRole.MainAdministrator.ToString());
+        var mockFilter = new MockHangfireDashboardAuthorizationFilter(nameof(UserRole.Admin));
 
         // Act
         bool result = mockFilter.Authorize(mockDashboardContext);
@@ -86,8 +85,8 @@ public class HangfireAuthorizationFilterTests
     }
 
     [Theory]
-    [MemberData(nameof(NonMainAdministratorRoles))]
-    public void Authorize_UserIsNotMainAdministrator_ReturnsFalse(string role)
+    [MemberData(nameof(NonAdminRoles))]
+    public void Authorize_UserIsNotAdmin_ReturnsFalse(string role)
     {
         // Arrange
         var mockDashboardContext = new MockDashboardContext(new Mock<JobStorage>().Object, new Mock<DashboardOptions>().Object);

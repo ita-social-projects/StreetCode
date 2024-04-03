@@ -1,0 +1,22 @@
+name: Move Tasks To New Iteration
+
+on:
+  schedule:
+    # Runs "at 05:00, only on Monday"
+    - cron: '0 5 * * 1'
+
+jobs:
+  move-to-next-iteration:
+    name: Move to next iteration
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: blombard/move-to-next-iteration@master
+      with:
+        owner: ita-social-projects
+        number: 21
+        token: ${{ secrets.WORKFLOWS_PAT }} 
+        iteration-field: Sprint
+        iteration: last
+        new-iteration: current
+        statuses: '✍Planned,🏗 In progress,👀PR'

@@ -131,7 +131,7 @@ pipeline {
         }
     stage('Deploy Stage'){
         steps {
-            input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'deploy_admin, Develop Team, dev'
+            input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
                     preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage backend: ${preDeployBackStage}"
@@ -156,13 +156,13 @@ pipeline {
         steps {
             script {
                     CHOICES = ["deployProd", "rollbackStage"];    
-                        env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'deploy_admin',id :'choice_id',
+                        env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
                                         parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
             } 
         }
         post {
           aborted{
-              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'deploy_admin, Develop Team, dev'
+              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
             script{
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.BLL.MediatR.Team.Update;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -28,7 +29,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldReturnSuccessfully_TeamUpdated()
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
 
             MapperSetup(teamMember, updateQuery.TeamMember);
@@ -52,7 +53,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             const string exceptionMessage = "Failed to update a team";
 
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
             MapperSetup(teamMember, updateQuery.TeamMember);
             BasicRepositorySetup(updateQuery.TeamMember);
@@ -72,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeleteUnusedTeamLinks(int unusedLinkId)
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
             var existingLinks = GetTeamMemberLinksList().ToList();
             existingLinks.Add(new TeamMemberLink { Id = unusedLinkId });
@@ -96,7 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeleteUnusedTeamPositions(int unusedPositionId)
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
             var existingPositions = GetTeamMemberPositionsList().ToList();
             existingPositions.Add(GetTeamMemberPositions(teamMember.Id, unusedPositionId));
@@ -119,7 +120,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task WhenNewPositionIdIsNegative_UpdatesPositionAndTeamMemberPosition(int id, string posName)
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var existingPositions = GetTeamMemberPositionsList().ToList();
             existingPositions.Add(GetTeamMemberPositions(teamMember.Id, id));
 
@@ -150,6 +151,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             _mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
             _mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
+        }
+        [Fact]
+        public async Task ShouldReturnFail_ImageIdIsZero()
+        {
+            // Arrange
+            string expectedErrorMessage = "Invalid ImageId Value";
+            var teamMember = GetTeamMember();
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            MapperSetup(teamMember, updateQuery.TeamMember);
+            var handler = new UpdateTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+            // Act
+            var result = await handler.Handle(updateQuery, CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
         }
         private void BasicRepositorySetup(TeamMemberDTO updatedTeamMember)
         {
@@ -183,13 +202,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 .Returns(updatedTeamMember);
         }
 
-        private TeamMember GetTeamMember()
+        private TeamMember GetTeamMember(int imageId = 0)
         {
             return new TeamMember
             {
                 Id = 1,
                 Positions = GetPositionsList(),
-                TeamMemberLinks = GetTeamMemberLinksList()
+                TeamMemberLinks = GetTeamMemberLinksList(),
+                ImageId = imageId
             };
         }
         private TeamMemberDTO GetTeamMemberDTO()

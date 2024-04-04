@@ -1,9 +1,9 @@
-using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
-
+﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 namespace Streetcode.BLL.DTO.Analytics
 {
-    public class StatisticRecordDTO
+    public class StatisticRecordResponseDTO
     {
+        public int Id { get; set; }
         public StreetcodeCoordinateDTO StreetcodeCoordinate { get; set; }
         public int QrId { get; set; }
         public int Count { get; set; }

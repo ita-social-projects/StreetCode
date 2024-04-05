@@ -14,6 +14,8 @@ using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using MediatR;
+using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.MediatR.Team.Create;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 {
@@ -39,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         public async Task ShouldReturnSuccessfully_WhenCreated(int returnNumber)
         {
             // Arrange
-            var testCategory = GetCategory();
+            var testCategory = GetCategory(1);
             var testCategoryDTO = GetCategoryDTO();
 
             SetupCreateRepository(returnNumber);
@@ -83,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         public async Task ShouldThrowException_SaveChangesAsyncIsNotSuccessful(int returnNumber)
         {
             // Arrange
-            var testCategory = GetCategory();
+            var testCategory = GetCategory(1);
             var testCategoryDTO = GetCategoryDTO();
 
             SetupCreateRepository(returnNumber);
@@ -109,7 +111,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         {
             // Arrange
             SetupCreateRepository(returnNumber);
-            SetupMapper(GetCategory(), GetCategoryDTO());
+            SetupMapper(GetCategory(1), GetCategoryDTO());
             SetupImageRepository();
 
             var handler = new CreateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
@@ -119,6 +121,24 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             // Assert
             Assert.True(result.IsSuccess);
+        }
+        [Fact]
+        public async Task ShouldReturnFail_ImageIdIsZero()
+        {
+            // Arrange
+            string expectedErrorMessage = "Invalid ImageId Value";
+            var catedory = GetCategory();
+            SetupMapper(GetCategory(), GetCategoryDTO());
+            var handler = new CreateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateCategoryCommand(new SourceLinkCategoryDTO()), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
         }
 
         private void SetupCreateRepository(int returnNumber)
@@ -149,12 +169,12 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 )).ReturnsAsync((Image)null);
         }
 
-        private static DAL.Entities.Sources.SourceLinkCategory GetCategory()
+        private static DAL.Entities.Sources.SourceLinkCategory GetCategory(int imageId = 0)
         {
             return new DAL.Entities.Sources.SourceLinkCategory()
             {
                 Id = 1,
-                ImageId = 1
+                ImageId = imageId
             };
         }
 

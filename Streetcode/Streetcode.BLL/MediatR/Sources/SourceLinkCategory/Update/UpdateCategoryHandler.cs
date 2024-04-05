@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 
             if (category.ImageId == 0)
             {
-                string errorMsg = _stringLocalizerFailedToUpdate["Invalid imageId value"].Value;
+                string errorMsg = "Invalid ImageId Value";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

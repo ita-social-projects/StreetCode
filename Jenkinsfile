@@ -147,12 +147,12 @@ pipeline {
                     echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
 
-                    docker image prune --force --filter "until=72h"
-                    docker system prune --force --filter "until=72h"
-                    export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                    docker compose down && sleep 10
-                    docker compose --env-file /etc/environment up -d
+                    sh 'docker image prune --force --filter "until=72h"'
+                    sh "docker system prune --force --filter "until=72h"'
+                    sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
+                    sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
+                    sh 'docker compose down && sleep 10'
+                    sh 'docker compose --env-file /etc/environment up -d'
 
                 }  
             }
@@ -175,12 +175,12 @@ pipeline {
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-               docker image prune --force --filter "until=72h"
-               docker system prune --force --filter "until=72h"
-               export DOCKER_TAG_BACKEND=${preDeployBackStage}
-               export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-               docker compose down && sleep 10
-               docker compose --env-file /etc/environment up -d
+               sh 'docker image prune --force --filter "until=72h"'
+               sh 'docker system prune --force --filter "until=72h"'
+               sh 'export DOCKER_TAG_BACKEND=${preDeployBackStage}'
+               sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
+               sh 'docker compose down && sleep 10'
+               sh 'docker compose --env-file /etc/environment up -d'
                       
       
             }
@@ -199,12 +199,12 @@ pipeline {
                 echo "Last Tag Prod backend: ${preDeployBackProd}"
                 preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                 echo "Last Tag Prod frontend: ${preDeployFrontProd}"
-                docker image prune --force --filter "until=72h"
-                docker system prune --force --filter "until=72h"
-                export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-                export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-                docker compose down && sleep 10
-                docker compose --env-file /etc/environment up -d
+                sh 'docker image prune --force --filter "until=72h"'
+                sh 'docker system prune --force --filter "until=72h"'
+                sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
+                sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
+                sh 'docker compose down && sleep 10'
+                sh 'docker compose --env-file /etc/environment up -d'
                   
             }
         }
@@ -227,12 +227,12 @@ pipeline {
             script {
                 echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                 echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-                docker image prune --force --filter "until=72h"
-                docker system prune --force --filter "until=72h"
-                export DOCKER_TAG_BACKEND=${preDeployBackStage}
-                export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                docker compose down && sleep 10
-                docker compose --env-file /etc/environment up -d
+                sh 'docker image prune --force --filter "until=72h"'
+                sh 'docker system prune --force --filter "until=72h"'
+                sh 'export DOCKER_TAG_BACKEND=${preDeployBackStage}'
+                sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
+                sh 'docker compose down && sleep 10'
+                sh 'docker compose --env-file /etc/environment up -d'
                 
 
             }
@@ -269,12 +269,12 @@ pipeline {
                 script {
                     echo "Rollback Tag Prod backend: ${preDeployBackProd}"
                     echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"
-                    docker image prune --force --filter "until=72h"
-                    docker system prune --force --filter "until=72h"
-                    export DOCKER_TAG_BACKEND=${preDeployBackProd}
-                    export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-                    docker compose down && sleep 10
-                    docker compose --env-file /etc/environment up -d
+                    sh 'docker image prune --force --filter "until=72h"'
+                    sh 'docker system prune --force --filter "until=72h"'
+                    sh 'export DOCKER_TAG_BACKEND=${preDeployBackProd}'
+                    sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
+                    sh 'docker compose down && sleep 10'
+                    sh 'docker compose --env-file /etc/environment up -d'
                 }
             }    
         }

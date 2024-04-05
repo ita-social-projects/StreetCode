@@ -35,16 +35,16 @@ namespace Streetcode.BLL.MediatR.Newss.Create
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
             var newNews = _mapper.Map<News>(request.newNews);
-            if (newNews.ImageId == 0)
+            if (newNews is null)
             {
-                string errorMsg = _stringLocalizerFailed["Invalid imageId value"].Value;
+                string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 
-            if (newNews is null)
+            if (newNews.ImageId == 0)
             {
-                string errorMsg = _stringLocalizerCannot["CannotConvertNullToNews"].Value;
+                string errorMsg = _stringLocalizerFailed["Invalid imageId value"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

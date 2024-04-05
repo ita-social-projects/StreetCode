@@ -141,7 +141,7 @@ pipeline {
                     
                     echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
-                   def feedback = input(submitterParameter: 'submitter', ...)
+                   def feedback = input(submitterParameter: 'submitter')
                   echo "It was ${feedback.submitter} who submitted the dialog."
 
 //                    docker image prune --force --filter "until=72h"

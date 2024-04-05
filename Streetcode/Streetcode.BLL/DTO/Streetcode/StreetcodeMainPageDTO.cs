@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
-
-namespace Streetcode.BLL.DTO.Streetcode
+﻿namespace Streetcode.BLL.DTO.Streetcode
 {
     public class StreetcodeMainPageDTO
     {

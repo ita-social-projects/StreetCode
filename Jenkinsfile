@@ -1,5 +1,6 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
+def IS_IMAGE_PUSH = false
 def isSuccess
 def vers
 pipeline {
@@ -124,12 +125,16 @@ pipeline {
                         sh "docker push ${username}/streetcode:latest"
                         sh "docker tag  ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
+                        IS_IMAGE_PUSH = true
                 
                     }
                 }
             }
         }
     stage('Deploy Stage'){
+        when {
+                expression { IS_IMAGE_PUSH == true }
+            }  
         steps {
             input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
@@ -141,8 +146,6 @@ pipeline {
                     
                     echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
-                   def feedback = input(submitterParameter: 'submitter')
-                  echo "It was ${feedback.submitter} who submitted the dialog."
 
 //                    docker image prune --force --filter "until=72h"
 //                    docker system prune --force --filter "until=72h"
@@ -155,6 +158,9 @@ pipeline {
             }
      }    
     stage('WHAT IS THE NEXT STEP') {
+       when {
+                expression { IS_IMAGE_PUSH == true }
+            }  
         steps {
             script {
                     CHOICES = ["deployProd", "rollbackStage"];    
@@ -184,7 +190,7 @@ pipeline {
     }
     stage('Deploy prod') {
         agent { label 'production' }
-            when {
+         when {
                 expression { env.yourChoice == 'deployProd' }
             }
         steps {

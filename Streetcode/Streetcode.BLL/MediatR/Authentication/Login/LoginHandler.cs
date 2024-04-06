@@ -22,7 +22,12 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         private readonly ILoggerService _logger;
         private readonly UserManager<User> _userManager;
 
-        public LoginHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITokenService tokenService, ILoggerService logger, UserManager<User> userManager)
+        public LoginHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            ITokenService tokenService,
+            ILoggerService logger,
+            UserManager<User> userManager)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -45,12 +50,12 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 var token = _tokenService.GenerateJWTToken(user!);
                 var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
                 var userDTO = _mapper.Map<UserDTO>(user);
-                userDTO.Password = request.UserLogin.Password;
+                string? userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+                userDTO.Role = userRole ?? "User";
                 var response = new LoginResponseDTO()
                 {
                     User = userDTO,
                     Token = stringToken,
-                    ExpireAt = token.ValidTo
                 };
                 return Result.Ok(response);
             }

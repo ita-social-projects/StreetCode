@@ -6,6 +6,5 @@ namespace Streetcode.BLL.DTO.Authentication.Login
     {
         public UserDTO User { get; set; }
         public string Token { get; set; }
-        public DateTime ExpireAt { get; set; }
     }
 }

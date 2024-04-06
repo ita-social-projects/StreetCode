@@ -54,7 +54,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var result = await handler.Handle(new CreateCategoryCommand(testCategoryDTO), CancellationToken.None);
 
             // Assert
-            // Assert
             Assert.True(result.IsSuccess);
         }
 

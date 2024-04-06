@@ -53,10 +53,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var result = await handler.Handle(new UpdateCategoryCommand(testCategoryDTO), CancellationToken.None);
 
             // Assert
-            // Assert
             Assert.True(result.IsSuccess);
-            Assert.Empty(result.Errors); // Перевірка відсутності помилок
-            Assert.Equal(Unit.Value, result.Value); // Перевірка на відсутність додаткових даних
+            Assert.Empty(result.Errors); 
+            Assert.Equal(Unit.Value, result.Value); 
         }
 
 

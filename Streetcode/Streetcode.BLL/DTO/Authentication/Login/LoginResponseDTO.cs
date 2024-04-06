@@ -6,6 +6,6 @@ namespace Streetcode.BLL.DTO.Authentication.Login
     {
         public UserDTO User { get; set; }
         public string AccessToken { get; set; }
-        public string ResreshToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

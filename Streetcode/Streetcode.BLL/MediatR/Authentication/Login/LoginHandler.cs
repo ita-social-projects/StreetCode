@@ -58,7 +58,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                     {
                         User = userDTO,
                         AccessToken = stringToken,
-                        ResreshToken = refreshToken,
+                        RefreshToken = refreshToken,
                     };
                     return Result.Ok(response);
                 }

@@ -63,8 +63,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private void ObtainTokens()
         {
-            this.AdminToken = this._tokenService.GenerateJWTToken(this._users["Admin"]).RawData;
-            this.UserToken = this._tokenService.GenerateJWTToken(this._users["User"]).RawData;
+            this.AdminToken = this._tokenService.GenerateAccessToken(this._users["Admin"]).RawData;
+            this.UserToken = this._tokenService.GenerateAccessToken(this._users["User"]).RawData;
         }
 
         private void SeedDatabaseWithInitialUsers()

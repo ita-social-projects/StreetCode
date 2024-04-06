@@ -33,6 +33,7 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
+using System.Net.Security;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -82,7 +83,8 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<StreetcodeDbContext>();
+            .AddEntityFrameworkStores<StreetcodeDbContext>()
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"]);
 
         services.AddHangfire(config =>
         {

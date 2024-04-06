@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public void ShouldThrowException_InputParameterIsNull()
         {
             // Arrange.
-            var exceptionAction = this._tokenService.GenerateJWTToken;
+            var exceptionAction = this._tokenService.GenerateAccessToken;
 
             // Act.
 
@@ -54,7 +54,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             User user = this.GetUser();
 
             // Act.
-            var token = this._tokenService.GenerateJWTToken(user);
+            var token = this._tokenService.GenerateAccessToken(user);
 
             // Assert.
             Assert.NotNull(token);
@@ -70,7 +70,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             this.SetupMockDbContextGetUserRoles();
 
             // Act.
-            var token = this._tokenService.GenerateJWTToken(expectedUser);
+            var token = this._tokenService.GenerateAccessToken(expectedUser);
 
             // Assert.
             Assert.Equal(expectedUser.Email, token.Claims.FirstOrDefault(claim => claim.Type == "email") !.Value);

@@ -7,8 +7,6 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 using System.IdentityModel.Tokens.Jwt;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -19,7 +17,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
     public class HandleLoginTest
     {
         private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
         private readonly Mock<ITokenService> _mockTokenService;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<UserManager<User>> _mockUserManager;
@@ -29,7 +26,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         /// </summary>
         public HandleLoginTest()
         {
-            this._mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
             this._mockMapper = new Mock<IMapper>();
             this._mockLogger = new Mock<ILoggerService>();
             this._mockTokenService = new Mock<ITokenService>();
@@ -42,7 +38,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnSuccess_ValidInputData()
         {
             // Arrange.
-            this.SetupMockRepositoryGetAllAsync(existing: true);
             this.SetupMockUserManagerCheckPassword(true);
             this.SetupMockTokenService();
             this.SetupMockMapper();
@@ -61,7 +56,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnFail_UserNotExistInDb()
         {
             // Arrange.
-            this.SetupMockRepositoryGetAllAsync(existing: false);
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -75,7 +69,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnFail_InvalidPassword()
         {
             // Arrange.
-            this.SetupMockRepositoryGetAllAsync(existing: true);
             this.SetupMockUserManagerCheckPassword(false);
             var handler = this.GetLoginHandler();
 
@@ -103,7 +96,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         {
             return new ()
             {
-                Id = "1",
                 Email = "one@gmail.com",
                 UserName = "One_one",
             };
@@ -127,16 +119,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             };
         }
 
-        private void SetupMockRepositoryGetAllAsync(bool existing)
-        {
-            this._mockRepositoryWrapper
-                .Setup(wrapper => wrapper.UserRepository
-                    .GetAllAsync(
-                        It.IsAny<Expression<Func<User, bool>>>(),
-                        It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
-                .ReturnsAsync(existing ? GetUserCollection() : new List<User>());
-        }
-
         private void SetupMockUserManagerCheckPassword(bool checkReturn)
         {
             this._mockUserManager
@@ -149,8 +131,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         {
             this._mockTokenService
                 .Setup(service => service
-                    .GenerateJWTToken(It.IsAny<User>()))
-                .Returns(new JwtSecurityToken());
+                    .GenerateAccessTokenAsync(It.IsAny<User>()))
+                .ReturnsAsync(new JwtSecurityToken());
         }
 
         private void SetupMockMapper()
@@ -164,7 +146,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         private LoginHandler GetLoginHandler()
         {
             return new LoginHandler(
-                this._mockRepositoryWrapper.Object,
                 this._mockMapper.Object,
                 this._mockTokenService.Object,
                 this._mockLogger.Object,

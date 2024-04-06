@@ -20,28 +20,30 @@ namespace Streetcode.BLL.Services.Authentication
         private readonly JwtOptions _jwtOptions;
         private readonly StreetcodeDbContext _dbContext;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
+        private readonly UserManager<User> _userManager;
 
-        public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext)
+        public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext, UserManager<User> userManager)
         {
             _jwtOptions = configuration
               .GetSection("Jwt")
-              .Get<JwtOptions>() !;
+              .Get<JwtOptions>()!;
 
             _dbContext = dbContext;
+            _userManager = userManager;
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             _signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
-        public JwtSecurityToken GenerateJWTToken(User? user)
+        public async Task<JwtSecurityToken> GenerateAccessTokenAsync(User? user)
         {
             if (user is null)
             {
                 throw new ArgumentNullException(nameof(user));
             }
 
-            var tokenDescriptor = GetTokenDescriptor(user);
+            var tokenDescriptor = await GetTokenDescriptorAsync(user);
             var token = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return token;
@@ -61,6 +63,28 @@ namespace Streetcode.BLL.Services.Authentication
             var newToken = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
 
             return newToken;
+        }
+
+        public async Task<string> GetRefreshTokenAsync(User user)
+        {
+            string tokenPurpose = "refresh";
+            string tokenName = "RefreshToken";
+            string tokenProvider = _jwtOptions.Issuer;
+            string? previousRefreshToken = await _userManager.GetAuthenticationTokenAsync(user, tokenProvider, tokenName);
+
+            // Delete old refresh token, generate new one and add it to DB.
+            if (previousRefreshToken is not null)
+            {
+                Console.WriteLine(previousRefreshToken);
+                await _userManager.RemoveAuthenticationTokenAsync(user, _jwtOptions.Issuer, tokenName);
+            }
+
+            string refreshToken = await _userManager
+                .GenerateUserTokenAsync(user!, _jwtOptions.Issuer, tokenPurpose);
+            await _userManager
+                .SetAuthenticationTokenAsync(user, _jwtOptions.Issuer, tokenName, refreshToken);
+
+            return refreshToken;
         }
 
         private ClaimsPrincipal GetPrinciplesFromToken(string token)
@@ -92,17 +116,10 @@ namespace Streetcode.BLL.Services.Authentication
             return claimsPrincipal;
         }
 
-        private SecurityTokenDescriptor GetTokenDescriptor(User user)
+        private async Task<SecurityTokenDescriptor> GetTokenDescriptorAsync(User user)
         {
-            var userRoleId = _dbContext.UserRoles
-                .AsNoTracking()
-                .Where(userRole => userRole.UserId == user.Id)
-                .Select(userRole => userRole.RoleId)
-                .FirstOrDefault();
-            var userRole = _dbContext.Roles
-                .AsNoTracking()
-                .FirstOrDefault(role => role.Id == userRoleId);
-            string userRoleName = userRole!.Name;
+            var userRolesList = await _userManager.GetRolesAsync(user);
+            string userRole = userRolesList.FirstOrDefault() ?? string.Empty;
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
@@ -110,8 +127,8 @@ namespace Streetcode.BLL.Services.Authentication
                 {
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Surname, user.Surname),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, userRoleName),
+                    new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
+                    new Claim(ClaimTypes.Role, userRole),
                 }),
                 Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
                 SigningCredentials = _signingCredentials,

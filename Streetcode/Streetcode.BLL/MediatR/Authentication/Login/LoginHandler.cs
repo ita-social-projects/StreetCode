@@ -11,25 +11,23 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.Extensions.Configuration;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
 {
     public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResponseDTO>>
     {
         private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ITokenService _tokenService;
         private readonly ILoggerService _logger;
         private readonly UserManager<User> _userManager;
 
         public LoginHandler(
-            IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             ITokenService tokenService,
             ILoggerService logger,
             UserManager<User> userManager)
         {
-            _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _tokenService = tokenService;
             _logger = logger;
@@ -38,42 +36,44 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
 
         public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var userExistsExpression = GetUserExistsPredicate(request);
-            var user = (await _repositoryWrapper.UserRepository
-                .GetAllAsync())
-                .FirstOrDefault(userExistsExpression);
-            bool isUserNull = user is null;
-
-            bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user, request.UserLogin.Password);
-            if (isValid)
+            try
             {
-                var token = _tokenService.GenerateJWTToken(user!);
-                var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-                var userDTO = _mapper.Map<UserDTO>(user);
-                string? userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-                userDTO.Role = userRole ?? "User";
-                var response = new LoginResponseDTO()
+                var user = await _userManager.FindByEmailAsync(request.UserLogin.Login) ??
+                await _userManager.FindByNameAsync(request.UserLogin.Login);
+                bool isUserNull = user is null;
+
+                bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);
+                if (isValid)
                 {
-                    User = userDTO,
-                    Token = stringToken,
-                };
-                return Result.Ok(response);
+                    string refreshToken = await _tokenService.GetRefreshTokenAsync(user!);
+
+                    var token = await _tokenService.GenerateAccessTokenAsync(user!);
+                    var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                    var userDTO = _mapper.Map<UserDTO>(user);
+                    string? userRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+                    userDTO.Role = userRole ?? "User";
+
+                    var response = new LoginResponseDTO()
+                    {
+                        User = userDTO,
+                        AccessToken = stringToken,
+                        ResreshToken = refreshToken,
+                    };
+                    return Result.Ok(response);
+                }
+
+                string errorMessage = isUserNull ?
+                    "User with such Email and Username in not found" :
+                    "Password is incorrect";
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(errorMessage);
             }
-
-            string errorMessage = isUserNull ?
-                "User with such Email and Username in not found" :
-                "Password is incorrect";
-            _logger.LogError(request, errorMessage);
-            return Result.Fail(errorMessage);
-        }
-
-        private Func<User, bool> GetUserExistsPredicate(LoginQuery request)
-        {
-            Func<User, bool> userExistsPredicate = user =>
+            catch (Exception e)
             {
-                return user.UserName == request.UserLogin.Login || user.Email == request.UserLogin.Login;
-            };
-            return userExistsPredicate;
+                _logger.LogError(request, e.Message);
+                return Result.Fail(e.Message);
+            }
         }
     }
 }

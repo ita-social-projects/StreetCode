@@ -1,7 +1,7 @@
 ﻿using System;
 using Nuke.Common.Tooling;
 
-namespace Utils.DockerCompose;
+namespace Utils;
 
 [Serializable]
 public class DockerComposeUpSettings : DockerComposeSettings
@@ -13,7 +13,7 @@ public class DockerComposeUpSettings : DockerComposeSettings
         Detach = detach;
         return this;
     }
-
+    
     public DockerComposeUpSettings EnableDetach()
     {
         Detach = true;

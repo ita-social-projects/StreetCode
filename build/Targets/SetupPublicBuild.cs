@@ -2,7 +2,7 @@
 using Nuke.Common.Tools.Docker;
 using System.Linq;
 using Nuke.Common.Tooling;
-using static Utils.DockerCompose.DockerComposeTasks;
+using static Utils.DockerComposeTasks;
 using static Nuke.Common.Tools.Docker.DockerTasks;
 using System.IO;
 

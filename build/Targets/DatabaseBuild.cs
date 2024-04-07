@@ -1,117 +1,80 @@
-﻿using Nuke.Common;
+﻿using System;
+using Nuke.Common;
 using Nuke.Common.Tooling;
+using JetBrains.Annotations;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.PowerShell.PowerShellTasks;
 using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 using System.IO;
-using static Utils.MigrationsService;
-using Utils;
 
 namespace Targets;
 
 partial class Build
 {
-    [Parameter("Specifies migration name during its creation", Name = "migrname")]
-    readonly string MigrationName;
+    [Parameter("Specifies migration name during its creation")]
+    readonly string MigrName = "New Migration Added";
 
-    [Parameter("Specifies script file name", Name = "name")]
-    string ScriptName = string.Empty;
-
-    [Parameter("Specifies FROM migration for script generationg", Name = "from")]
-    string FromMigration = string.Empty;
-
-    [Parameter("Specifies TO migration for script generationg", Name = "to")]
-    string ToMigration = string.Empty;
+    bool CheckForMigration() =>
+        GitHasCleanCopy(DALDirectory / "Entities")
+        && GitHasCleanCopy(DALDirectory / "Enums") 
+        && GitHasCleanCopy(DALDirectory / "Extensions") 
+        && GitHasCleanCopy(DALDirectory / "Persistence" / "StreetcodeDbContext.cs");
 
     Target AddMigration => _ => _
-        .Before(GenerateSQLScripts, SetScriptParametersForMigrationAndScriptAutogeneration)
-        .Requires(() => MigrationName)
+        .OnlyWhenStatic(() => CheckForMigration())
         .Executes(() =>
         {
             EntityFrameworkMigrationsAdd(_ => _
                 .SetProcessWorkingDirectory(SourceDirectory)
-                .SetName(MigrationName)
+                .SetName(MigrName)
                 .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
+                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")  
+                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")            
                 .SetConfiguration(Configuration)
-                .SetOutputDirectory(@"Persistence\Migrations")
-                .EnablePrefixOutput());
+                .SetOutputDirectory(@"Persistence\Migrations"));
         });
+
+    [Parameter("Specifies migration name during db update")]
+    [CanBeNull] 
+    readonly string UpdMigrName = default;
+
+    [Parameter("Specifies whether a migration rollback should be committed")]
+    readonly bool RollbackMigration = false;
 
     Target UpdateDatabase => _ => _
         .Executes(() =>
         {
             DotNetRun(s => s
             .SetProjectFile(DbUpdateDirectory)
-            .SetConfiguration(Configuration));
+            .SetConfiguration(Configuration)
+            );
         });
 
-    Target GenerateSQLScripts => _ => _
-        .Requires(() => ScriptName)
-        .Requires(() => FromMigration)
-        .Requires(() => ToMigration)
-        .OnlyWhenDynamic(() => ScriptsService.IsScriptNameValid(ScriptName))
+    Target CreateSQLScripts => _ => _
         .Executes(() =>
         {
-            var startupProjectPath = APIDirectory;
-            var outputScriptPath = Path.Combine(DALDirectory, "Persistence", "ScriptsMigration");
-            string scriptFullName = Path.Combine(outputScriptPath, $"{ScriptName}.sql");
+            Console.WriteLine("Select name of SQL script:");
+            string queryName = Console.ReadLine();
 
-            EntityFrameworkMigrationsScript(_ => _
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .SetOutput(scriptFullName)
-                .SetFrom(FromMigration)
-                .SetTo(ToMigration)
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration)
-                .SetIdempotent(true)
-                .SetNoTransactions(true));
-        });
+            Console.WriteLine("Select -s for SEED or -m for MIGRATE SQL script:");
+            string queryType = Console.ReadLine();
 
-    Target GenerateMigrationAndScript => _ => _
-        .Requires(() => MigrationName)
-        .DependsOn(
-            AddMigration,
-            SetScriptParametersForMigrationAndScriptAutogeneration,
-            GenerateSQLScripts);
+            if (queryType == "-s")
+            {
+                queryType = "ScriptsSeeding";
+            } 
+            else 
+            {
+                queryType = "ScriptsMigration";
+            }
 
-    Target SetScriptParametersForMigrationAndScriptAutogeneration => _ => _
-        .Requires(() => MigrationName)
-        .Before(GenerateSQLScripts)
-        .Executes(() =>
-        {
-            ScriptsService.SetScriptParametersForSingleMigration(
-                MigrationName,
-                out ScriptName,
-                out FromMigration,
-                out ToMigration);
-        });
+            var dbPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.WebApi");
+            var outputScriptPath = Path.Combine(RootDirectory, "Streetcode/Streetcode.DAL", "Persistence", queryType);
 
-    Target RemoveMigrationAndScript => _ => _
-        .DependsOn(DeleteMirationScriptFile, RemoveMigration);
-
-    Target DeleteMirationScriptFile => _ => _
-        .Before(RemoveMigration)
-        .Executes(() =>
-        {
-            string migrationFullName = GetLastMigrationFullName();
-            ScriptsService.DeleteMigrationScriptFile(migrationFullName);
-        });
-
-    Target RemoveMigration => _ => _
-        .Executes(() =>
-        {
-            EntityFrameworkMigrationsRemove(_ => _
-                .SetProcessWorkingDirectory(SourceDirectory)
-                .SetProject(@"Streetcode.DAL\Streetcode.DAL.csproj")
-                .SetStartupProject(@"Streetcode.WebApi\Streetcode.WebApi.csproj")
-                .SetContext("Streetcode.DAL.Persistence.StreetcodeDbContext")
-                .SetConfiguration(Configuration)
-                .EnableForce());
+            PowerShell("if (-not (Get-Command dotnet-ef.exe -ErrorAction SilentlyContinue)) {dotnet tool install--global dotnet - ef}");
+            PowerShell(@$"dotnet ef migrations script --idempotent --output {outputScriptPath}/{queryName}.sql  --project {dbPath}");
         });
 
     Target DropDatabase => _ => _

@@ -13,5 +13,7 @@ namespace Streetcode.DAL.Entities.Users
         [Required]
         [MaxLength(50)]
         public string Surname { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiry { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Nuke.Common.Tooling;
 
-namespace Utils;
+namespace Utils.DockerCompose;
 
 [Serializable]
 public class DockerComposeBuildSettings : DockerComposeSettings
@@ -15,19 +15,19 @@ public class DockerComposeBuildSettings : DockerComposeSettings
         NoCache = noCache;
         return this;
     }
-    
+
     public DockerComposeBuildSettings SetQuiet(bool quiet)
     {
         Quiet = quiet;
         return this;
     }
-    
+
     public DockerComposeBuildSettings EnableQuiet()
     {
         Quiet = true;
         return this;
     }
-    
+
     public DockerComposeBuildSettings EnableNoCache()
     {
         NoCache = true;

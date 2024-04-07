@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Nuke.Common.Tooling;
 
-namespace Utils.DockerCompose;
+namespace Utils;
 
 public static class DockerComposeTasks
 {
@@ -17,13 +17,13 @@ public static class DockerComposeTasks
                 Serilog.Log.Debug(output);
                 break;
             case OutputType.Err:
-                {
-                    if (output.StartsWith("WARNING!"))
-                        Serilog.Log.Warning(output);
-                    else
-                        Serilog.Log.Debug(output);
-                    break;
-                }
+            {
+                if (output.StartsWith("WARNING!"))
+                    Serilog.Log.Warning(output);
+                else
+                    Serilog.Log.Debug(output);
+                break;
+            }
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
@@ -40,7 +40,7 @@ public static class DockerComposeTasks
 
     public static IReadOnlyCollection<Output> DockerComposeDown(DockerComposeDownSettings settings = null) =>
         StartProcess(settings ?? new DockerComposeDownSettings());
-
+    
     public static IReadOnlyCollection<Output> DockerComposeBuild(Configure<DockerComposeBuildSettings> configure) =>
         DockerComposeBuild(configure(new DockerComposeBuildSettings()));
 
@@ -49,7 +49,7 @@ public static class DockerComposeTasks
 
     public static IReadOnlyCollection<Output> DockerComposeLogs(Configure<DockerComposeLogsSettings> configure) =>
         DockerComposeLogs(configure(new DockerComposeLogsSettings()));
-
+        
     public static IReadOnlyCollection<Output> DockerComposeLogs(DockerComposeLogsSettings settings = null) =>
         StartProcess(settings ?? new DockerComposeLogsSettings());
 

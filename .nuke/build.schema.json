@@ -34,10 +34,6 @@
           "type": "boolean",
           "description": "Build in Docker"
         },
-        "from": {
-          "type": "string",
-          "description": "Specifies FROM migration for script generationg"
-        },
         "Help": {
           "type": "boolean",
           "description": "Shows the help text for this build assembly"
@@ -67,17 +63,13 @@
           "type": "boolean",
           "description": "enable integration tests"
         },
-        "migrname": {
+        "MigrName": {
           "type": "string",
           "description": "Specifies migration name during its creation"
         },
         "Msg": {
           "type": "string",
           "description": "commit message"
-        },
-        "name": {
-          "type": "string",
-          "description": "Specifies script file name"
         },
         "NewB": {
           "type": "boolean",
@@ -101,6 +93,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "RollbackMigration": {
+          "type": "boolean",
+          "description": "Specifies whether a migration rollback should be committed"
         },
         "Root": {
           "type": "string",
@@ -127,22 +123,17 @@
               "CompileAPI",
               "CompileCli",
               "CreateDatabaseForIntegrationTests",
-              "DeleteMirationScriptFile",
+              "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
-              "GenerateMigrationAndScript",
-              "GenerateSQLScripts",
               "IntegrationTest",
               "PullBackEnd",
               "Push",
               "PushAll",
               "RemoveEnvVariables",
-              "RemoveMigration",
-              "RemoveMigrationAndScript",
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
-              "SetScriptParametersForMigrationAndScriptAutogeneration",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
@@ -184,22 +175,17 @@
               "CompileAPI",
               "CompileCli",
               "CreateDatabaseForIntegrationTests",
-              "DeleteMirationScriptFile",
+              "CreateSQLScripts",
               "DropDatabase",
               "EndAll",
-              "GenerateMigrationAndScript",
-              "GenerateSQLScripts",
               "IntegrationTest",
               "PullBackEnd",
               "Push",
               "PushAll",
               "RemoveEnvVariables",
-              "RemoveMigration",
-              "RemoveMigrationAndScript",
               "Restore",
               "Run",
               "SetLocalEnvironmentVariables",
-              "SetScriptParametersForMigrationAndScriptAutogeneration",
               "Setup",
               "SetupBackEnd",
               "SetupDocker",
@@ -216,9 +202,9 @@
             ]
           }
         },
-        "to": {
+        "UpdMigrName": {
           "type": "string",
-          "description": "Specifies TO migration for script generationg"
+          "description": "Specifies migration name during db update"
         },
         "UTest": {
           "type": "boolean",

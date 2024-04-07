@@ -1,7 +1,7 @@
 ﻿using System;
 using Nuke.Common.Tooling;
 
-namespace Utils.DockerCompose;
+namespace Utils;
 
 [Serializable]
 public class DockerComposeLogsSettings : DockerComposeSettings

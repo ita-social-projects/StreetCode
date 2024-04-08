@@ -5,10 +5,11 @@
       "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Local"
+        "ASPNETCORE_ENVIRONMENT": "Local",
+        "ADMIN_PASSWORD": "Admin/123456789"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5000;https://localhost:5001"
+      "applicationUrl": "https://localhost:5001"
     },
 
     "Streetcode_Dev": {

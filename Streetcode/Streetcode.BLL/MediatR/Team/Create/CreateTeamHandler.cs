@@ -8,7 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
 {
-    public class CreateTeamHandler : IRequestHandler<CreateTeamQuery, Result<TeamMemberDTO>>
+    public class CreateTeamHandler : IRequestHandler<CreateTeamQuery, Result<CreateTeamMemberDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
@@ -21,7 +21,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
             _logger = logger;
         }
 
-        public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CreateTeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
             try
@@ -77,7 +77,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 }
 
                 _repository.SaveChanges();
-                return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
+                return Result.Ok(_mapper.Map<CreateTeamMemberDTO>(teamMember));
             }
             catch (Exception ex)
             {

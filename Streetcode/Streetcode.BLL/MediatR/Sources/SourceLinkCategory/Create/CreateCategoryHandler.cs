@@ -6,10 +6,11 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.BLL.DTO.Sources;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 {
-    public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<DAL.Entities.Sources.SourceLinkCategory>>
+    public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<CreateSourceLinkCategoryDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -31,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             _stringLocalizerCannot = stringLocalizerCannot;
         }
 
-        public async Task<Result<DAL.Entities.Sources.SourceLinkCategory>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CreateSourceLinkCategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category.ImageId != 0)
@@ -50,7 +51,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                return Result.Ok(returned);
+                return Result.Ok(_mapper.Map<CreateSourceLinkCategoryDTO>(returned));
             }
             else
             {

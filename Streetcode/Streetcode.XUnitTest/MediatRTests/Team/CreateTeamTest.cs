@@ -197,7 +197,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             return new TeamMember
             {
-                Id = 1, Positions = new List<Positions>()
+                Id = 1,
+                ImageId = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                Positions = new List<Positions>()
             };
         }
 
@@ -221,6 +226,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             return new CreateTeamMemberDTO
             {
+                ImageId = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
                 Positions = newPositions
             };
         }

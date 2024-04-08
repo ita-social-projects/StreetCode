@@ -109,13 +109,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             return new DAL.Entities.News.News()
             {
-                Id = 1
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test",
+                CreationDate = new DateTime(2015, 12, 25)
             };
         }
 
         private static CreateNewsDTO GetNewsDTO()
         {
-            return new CreateNewsDTO();
+            return new CreateNewsDTO()
+            {
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
         }
     }
 }

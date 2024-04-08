@@ -163,13 +163,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             return new DAL.Entities.News.News()
             {
                 Id = 1,
-                ImageId = 1
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
+                CreationDate = new DateTime(2015, 12, 25)
             };
         }
 
         private static UpdateNewsDTO GetNewsDTO()
         {
-            return new UpdateNewsDTO();
+            return new UpdateNewsDTO()
+            {
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
         }
 
         private static DAL.Entities.News.News GetNewsWithNotExistId() => null;

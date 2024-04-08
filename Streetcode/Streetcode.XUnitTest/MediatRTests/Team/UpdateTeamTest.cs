@@ -188,6 +188,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             return new TeamMember
             {
                 Id = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
                 Positions = GetPositionsList(),
                 TeamMemberLinks = GetTeamMemberLinksList()
             };
@@ -197,6 +200,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             return new UpdateTeamMemberDTO
             {
                 Id = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
                 Positions = GetPositionsDTOList(),
                 TeamMemberLinks = GetTeamMemberLinksDTOList()
             };

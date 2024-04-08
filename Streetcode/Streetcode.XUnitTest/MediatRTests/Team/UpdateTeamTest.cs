@@ -123,7 +123,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var existingPositions = GetTeamMemberPositionsList().ToList();
             existingPositions.Add(GetTeamMemberPositions(teamMember.Id, id));
 
-            var teamMemberDto = new TeamMemberDTO
+            var teamMemberDto = new UpdateTeamMemberDTO
             {
                 Positions = new List<PositionDTO>
                 {
@@ -151,7 +151,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
             _mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
-        private void BasicRepositorySetup(TeamMemberDTO updatedTeamMember)
+        private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
         {
             _mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))
             .Callback<TeamMember>(tm => {
@@ -174,12 +174,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(posList);
         }
 
-        private void MapperSetup(TeamMember teamMember, TeamMemberDTO updatedTeamMember)
+        private void MapperSetup(TeamMember teamMember, UpdateTeamMemberDTO updatedTeamMember)
         {
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(updatedTeamMember))
                 .Returns(teamMember);
 
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(teamMember))
+            _mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDTO>(teamMember))
                 .Returns(updatedTeamMember);
         }
 
@@ -192,9 +192,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 TeamMemberLinks = GetTeamMemberLinksList()
             };
         }
-        private TeamMemberDTO GetTeamMemberDTO()
+        private UpdateTeamMemberDTO GetTeamMemberDTO()
         {
-            return new TeamMemberDTO
+            return new UpdateTeamMemberDTO
             {
                 Id = 1,
                 Positions = GetPositionsDTOList(),

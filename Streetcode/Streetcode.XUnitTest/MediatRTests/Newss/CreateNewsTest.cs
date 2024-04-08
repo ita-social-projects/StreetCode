@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
 
             // Assert
-            Assert.IsType<NewsDTO>(result.Value);
+            Assert.IsType<CreateNewsDTO>(result.Value);
         }
 
         [Fact]
@@ -85,9 +85,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
         private void SetupMockMapping(DAL.Entities.News.News testNews)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<CreateNewsDTO>()))
                 .Returns(testNews);
-            _mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
+            _mockMapper.Setup(x => x.Map<CreateNewsDTO>(It.IsAny<DAL.Entities.News.News>()))
                 .Returns(GetNewsDTO());
         }
 
@@ -113,9 +113,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             };
         }
 
-        private static NewsDTO GetNewsDTO()
+        private static CreateNewsDTO GetNewsDTO()
         {
-            return new NewsDTO();
+            return new CreateNewsDTO();
         }
     }
 }

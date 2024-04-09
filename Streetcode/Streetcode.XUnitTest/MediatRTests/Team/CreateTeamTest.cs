@@ -175,7 +175,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),

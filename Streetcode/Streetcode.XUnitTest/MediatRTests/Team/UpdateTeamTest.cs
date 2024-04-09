@@ -171,7 +171,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             );
 
         }
-        private void BasicRepositorySetup(TeamMemberDTO updatedTeamMember)
+        private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
         {
             _mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))
             .Callback<TeamMember>(tm => {
@@ -179,7 +179,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             });
             _mockRepository.Setup(repo => repo.SaveChanges());
         }
-
+        
         private void GetsAsyncRepositorySetup(TeamMember teamMember, List<TeamMemberLink>? link = null, List<TeamMemberPositions>? memberPos = null)
         {
             var linkList = link ?? teamMember.TeamMemberLinks;

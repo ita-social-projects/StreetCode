@@ -75,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(new NewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(new CreateNewsDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -135,7 +135,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 .Returns(GetNewsWithNotExistId());
         }
         private static DAL.Entities.News.News GetNewsWithNotExistId() => null;
-        private static NewsDTO GetNewsDTOWithNotExistId() => null;
+        private static CreateNewsDTO GetNewsDTOWithNotExistId() => null;
 
         private void SetupMockRepositoryCreate(DAL.Entities.News.News testNews)
         {
@@ -168,6 +168,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             return new CreateNewsDTO()
             {
+                Id = 1,
                 ImageId = 1,
                 Title = "Title",
                 Text = "test",

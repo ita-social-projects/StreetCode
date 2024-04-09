@@ -42,6 +42,13 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
+            if (category.ImageId == 0)
+            {
+                string errorMsg = "Invalid ImageId Value";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             _repositoryWrapper.SourceCategoryRepository.Update(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;

@@ -35,16 +35,23 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
         public async Task<Result<CreateSourceLinkCategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
-            if (category.ImageId != 0)
-            {
-                category.Image = null;
-            }
-
             if (category is null)
             {
                 string errorMsg = _stringLocalizerCannot["CannotConvertNullToCategory"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
+            }
+
+            if (category.ImageId != 0)
+            {
+                category.Image = null;
+            }
+
+            if (category.ImageId == 0)
+            {
+                string errorMsg = "Invalid ImageId Value";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var returned = _repositoryWrapper.SourceCategoryRepository.Create(category);

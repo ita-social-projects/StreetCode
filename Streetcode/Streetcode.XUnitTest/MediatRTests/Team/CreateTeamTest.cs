@@ -226,6 +226,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             return new CreateTeamMemberDTO
             {
+                Id = 1,
                 ImageId = 1,
                 Name = "Test",
                 Description = "Test",

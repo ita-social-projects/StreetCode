@@ -131,4 +131,24 @@ public class GetCategoryByIdTest
     {
         return null;
     }
+
+    private CreateSourceLinkCategoryDTO GetCreateSourceLinkCategoryDTO()
+    {
+        return new CreateSourceLinkCategoryDTO()
+        {
+            Id = 1,
+            Title = "Title",
+            ImageId = 1
+        };
+    }
+
+    private UpdateSourceLinkCategoryDTO GetUpdateSourceLinkCategoryDTO()
+    {
+        return new UpdateSourceLinkCategoryDTO()
+        {
+            Id = 1,
+            Title = "Title",
+            ImageId = 1
+        };
+    }
 }

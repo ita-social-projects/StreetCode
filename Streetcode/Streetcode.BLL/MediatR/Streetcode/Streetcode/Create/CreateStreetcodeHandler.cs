@@ -21,6 +21,7 @@ using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -142,6 +143,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
     {
+        if (imagesIds.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("There is no valid imagesIds value", null, System.Net.HttpStatusCode.BadRequest);
+        }
+
         await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
         {
             ImageId = imageId,
@@ -151,9 +157,22 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     private async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
     {
+        if(imageDetails.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
+        }
+
         if(imageDetails == null)
         {
-            return;
+            throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
+        }
+
+        foreach (var detail in imageDetails)
+        {
+            if(detail.Alt == null)
+            {
+                throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
+            }
         }
 
         await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));

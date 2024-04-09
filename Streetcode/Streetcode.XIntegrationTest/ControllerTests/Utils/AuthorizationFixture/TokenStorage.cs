@@ -35,9 +35,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             this._streetcodeDbContext.Dispose();
         }
 
-        public string AdminToken { get; private set; }
+        public string AdminAccessToken { get; private set; }
 
-        public string UserToken { get; private set; }
+        public string UserAccessToken { get; private set; }
+
+        public string AdminRefreshToken { get; private set; }
+
+        public string UserRefreshToken { get; private set; }
 
         private StreetcodeDbContext GetDbContext()
         {
@@ -63,8 +67,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private async Task ObtainTokensAsync()
         {
-            this.AdminToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["Admin"])).RawData;
-            this.UserToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["User"])).RawData;
+            this.AdminAccessToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["Admin"])).RawData;
+            this.UserAccessToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["User"])).RawData;
+            this.AdminRefreshToken = this._tokenService.SetNewRefreshTokenForUser(this._users["Admin"]);
+            this.UserRefreshToken = this._tokenService.SetNewRefreshTokenForUser(this._users["User"]);
         }
 
         private void SeedDatabaseWithInitialUsers()

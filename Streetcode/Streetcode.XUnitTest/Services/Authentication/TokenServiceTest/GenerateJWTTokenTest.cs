@@ -17,7 +17,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         private readonly string _JwtKey = "s_dkcLEWRlcksdmcQWE_124";
         private readonly string _JwtIssuer = "Jwt_Issuer";
         private readonly string _JwtAudience = "Jwt_Audience";
-        private readonly string _TokenLifetimeInHours = "1";
+        private readonly string _AccessTokenLifetimeInMinutes = "15";
         private readonly Mock<StreetcodeDbContext> _mockDbContext;
         private readonly IConfiguration _fakeConfiguration;
         private readonly TokenService _tokenService;
@@ -132,7 +132,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
                 { "Jwt:Key", this._JwtKey },
                 { "Jwt:Issuer", this._JwtIssuer },
                 { "Jwt:Audience", this._JwtAudience },
-                { "Jwt:LifetimeInHours", this._TokenLifetimeInHours },
+                { "Jwt:AccessTokenLifetimeInMinutes", this._AccessTokenLifetimeInMinutes },
             };
             var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(appSettingsStub)

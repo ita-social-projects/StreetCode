@@ -71,15 +71,9 @@ namespace Streetcode.BLL.Services.Authentication
             return newToken;
         }
 
-        public string GetRefreshTokenData(User user)
+        public string SetNewRefreshTokenForUser(User user)
         {
-            User? userFromDb = _dbContext.Users
-                .FirstOrDefault(userInDb => userInDb.UserName == user.UserName);
-            if (userFromDb is null)
-            {
-                string errorMessage = $"Cannot find in database user with UserName: {user.UserName}";
-                throw new NullReferenceException(errorMessage);
-            }
+            User? userFromDb = GetUserFromDb(user.Email);
 
             string refreshToken = GenerateRefreshToken();
             userFromDb.RefreshToken = refreshToken;
@@ -90,10 +84,10 @@ namespace Streetcode.BLL.Services.Authentication
             return refreshToken;
         }
 
-        private User GetUserFromDb(string userEmail)
+        private User GetUserFromDb(string? userEmail)
         {
             User? userFromDb = _dbContext.Users
-                .FirstOrDefault(userInDb => userInDb.Email == userEmail);
+                .FirstOrDefault(userInDb => userInDb.Email == (userEmail ?? string.Empty));
             string errorMessage = $"Cannot find in database user with Email: {userEmail}";
 
             return userFromDb ?? throw new NullReferenceException(errorMessage);

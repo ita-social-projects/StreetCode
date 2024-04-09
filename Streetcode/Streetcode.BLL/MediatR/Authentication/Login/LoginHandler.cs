@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);
                 if (isValid)
                 {
-                    string refreshToken = _tokenService.GetRefreshTokenData(user!);
+                    string refreshToken = _tokenService.SetNewRefreshTokenForUser(user!);
 
                     var token = await _tokenService.GenerateAccessTokenAsync(user!);
                     var stringToken = new JwtSecurityTokenHandler().WriteToken(token);

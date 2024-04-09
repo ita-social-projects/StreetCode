@@ -37,7 +37,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             var jobCreateDTO = ExtractCreateTestJob.JobCreateForTest;
 
             // Act
-            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminToken);
+            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -65,7 +65,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             var jobCreateDTO = ExtractCreateTestJob.JobCreateForTest;
 
             // Act
-            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.UserToken);
+            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.UserAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -79,7 +79,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             var jobCreateDTO = ExtractCreateTestJob.JobCreateForTest;
 
             // Act
-            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminToken);
+            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminAccessToken);
             var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<JobDto>(response.Content);
 
             // Assert
@@ -95,7 +95,22 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             jobCreateDTO.Title = null;  // Invalid data
 
             // Act
-            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminToken);
+            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminAccessToken);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractCreateTestJob]
+        public async Task Create_WithExistingJob_ReturnsConflict()
+        {
+            // Arrange
+            var jobCreateDTO = ExtractCreateTestJob.JobForTest;
+            jobCreateDTO.Id = this._testJob.Id;
+
+            // Act
+            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

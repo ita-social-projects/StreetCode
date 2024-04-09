@@ -41,6 +41,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             this.SetupMockUserManagerCheckPassword(true);
             this.SetupMockTokenService();
             this.SetupMockMapper();
+            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
+            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupMockUserManagerGetRolesAsync();
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -79,17 +82,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             Assert.True(result.IsFailed);
         }
 
-        private static IEnumerable<User> GetUserCollection()
+        [Fact]
+        public async Task ShouldReturnFait_ExceptionThrown()
         {
-            return new List<User>()
-            {
-                new User()
-                {
-                    Id = "1",
-                    Email = "one@gmail.com",
-                    UserName = "One_one",
-                },
-            };
+            // Arrange.
+            string expectedErrorMessage = "Expected error message";
+            this.SetupMockUserManagerThrowException(expectedErrorMessage);
+            var handler = this.GetLoginHandler();
+
+            // Act.
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+            // Assert.
+            Assert.True(result.IsFailed);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         private static UserDTO GetUserDTO()
@@ -125,6 +131,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 .Setup(manager => manager
                     .CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(checkReturn);
+        }
+
+        private void SetupMockUserManagerThrowException(string errorMessage = "Default error message")
+        {
+            this._mockUserManager
+                .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
+                .ThrowsAsync(new Exception(errorMessage));
+        }
+
+        private void SetupMockUserManagerFindUserByEmailOrUsername(User? userToReturn = null)
+        {
+            this._mockUserManager
+                .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
+                .ReturnsAsync(userToReturn);
+        }
+
+        private void SetupMockUserManagerGetRolesAsync()
+        {
+            this._mockUserManager
+                .Setup(manager => manager.GetRolesAsync(It.IsAny<User>()))
+                .ReturnsAsync(new List<string> { "User" });
         }
 
         private void SetupMockTokenService()

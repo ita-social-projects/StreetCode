@@ -7,6 +7,6 @@ namespace Streetcode.BLL.Interfaces.Authentication
     {
         public Task<JwtSecurityToken> GenerateAccessTokenAsync(User user);
         public JwtSecurityToken RefreshToken(string accessToken, string refreshToken);
-        public string GetRefreshTokenData(User user);
+        public string SetNewRefreshTokenForUser(User user);
     }
 }

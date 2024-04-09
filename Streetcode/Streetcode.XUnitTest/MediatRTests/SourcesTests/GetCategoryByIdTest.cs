@@ -136,7 +136,6 @@ public class GetCategoryByIdTest
     {
         return new CreateSourceLinkCategoryDTO()
         {
-            Id = 1,
             Title = "Title",
             ImageId = 1
         };

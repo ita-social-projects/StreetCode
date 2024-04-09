@@ -122,7 +122,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             return new CreateNewsDTO()
             {
-                Id = 1,
                 ImageId = 1,
                 Title = "Title",
                 Text = "test",

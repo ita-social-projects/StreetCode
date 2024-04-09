@@ -45,6 +45,13 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
+            if (news.ImageId == 0)
+            {
+                string errorMsg = _stringLocalizerFailedToUpdate["Invalid imageId value"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var response = _mapper.Map<NewsDTO>(news);
 
             if (news.Image is not null)

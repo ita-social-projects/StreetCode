@@ -26,7 +26,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             this._configuration = this.GetConfiguration();
             this._tokenService = new TokenService(this._configuration, this._streetcodeDbContext);
 
-            this.ObtainTokens();
+            this.ObtainTokensAsync().GetAwaiter().GetResult();
         }
 
         public void Dispose()
@@ -61,10 +61,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return configBuilder.Build();
         }
 
-        private void ObtainTokens()
+        private async Task ObtainTokensAsync()
         {
-            this.AdminToken = this._tokenService.GenerateAccessToken(this._users["Admin"]).RawData;
-            this.UserToken = this._tokenService.GenerateAccessToken(this._users["User"]).RawData;
+            this.AdminToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["Admin"])).RawData;
+            this.UserToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["User"])).RawData;
         }
 
         private void SeedDatabaseWithInitialUsers()

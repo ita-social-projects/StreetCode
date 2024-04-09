@@ -37,16 +37,16 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public void ShouldThrowException_InputParameterIsNull()
         {
             // Arrange.
-            var exceptionAction = this._tokenService.GenerateAccessToken;
+            var exceptionAction = this._tokenService.GenerateAccessTokenAsync;
 
             // Act.
 
             // Assert.
-            Assert.Throws<ArgumentNullException>(() => exceptionAction(null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => exceptionAction(null));
         }
 
         [Fact]
-        public void ShouldReturnNotNullToken_InputUserIsValid()
+        public async void ShouldReturnNotNullToken_InputUserIsValid()
         {
             // Arrange.
             this.SetupMockDbContextGetRoles();
@@ -54,14 +54,14 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             User user = this.GetUser();
 
             // Act.
-            var token = this._tokenService.GenerateAccessToken(user);
+            var token = await this._tokenService.GenerateAccessTokenAsync(user);
 
             // Assert.
             Assert.NotNull(token);
         }
 
         [Fact]
-        public void ShouldReturnCorrectData_InputUserIsValid()
+        public async void ShouldReturnCorrectData_InputUserIsValid()
         {
             // Arrange.
             User expectedUser = this.GetUser();
@@ -70,7 +70,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             this.SetupMockDbContextGetUserRoles();
 
             // Act.
-            var token = this._tokenService.GenerateAccessToken(expectedUser);
+            var token = await this._tokenService.GenerateAccessTokenAsync(expectedUser);
 
             // Assert.
             Assert.Equal(expectedUser.Email, token.Claims.FirstOrDefault(claim => claim.Type == "email") !.Value);

@@ -2,10 +2,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Identity;
+using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.DAL.Entities.Users;
@@ -16,20 +15,19 @@ namespace Streetcode.BLL.Services.Authentication
 {
     public sealed class TokenService : ITokenService
     {
+        public const string InvalidRefreshTokenErrorMessage = "Invalid refresh token";
         private readonly SigningCredentials _signingCredentials;
         private readonly JwtOptions _jwtOptions;
         private readonly StreetcodeDbContext _dbContext;
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
-        private readonly UserManager<User> _userManager;
 
-        public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext, UserManager<User> userManager)
+        public TokenService(IConfiguration configuration, StreetcodeDbContext dbContext)
         {
             _jwtOptions = configuration
               .GetSection("Jwt")
               .Get<JwtOptions>()!;
 
             _dbContext = dbContext;
-            _userManager = userManager;
 
             var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             _signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
@@ -49,13 +47,21 @@ namespace Streetcode.BLL.Services.Authentication
             return token;
         }
 
-        public JwtSecurityToken RefreshToken(string token)
+        public JwtSecurityToken RefreshToken(string accessToken, string refreshToken)
         {
-            var principles = GetPrinciplesFromToken(token);
+            var principles = GetPrinciplesFromExpiredToken(accessToken);
+            string userEmail = principles?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value ?? string.Empty;
+
+            User user = GetUserFromDb(userEmail);
+            if (user.RefreshToken != refreshToken || user.RefreshTokenExpiry <= DateTime.UtcNow)
+            {
+                throw new Exception(InvalidRefreshTokenErrorMessage);
+            }
+
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(principles.Claims),
-                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenLifetimeInMinutes),
                 SigningCredentials = _signingCredentials,
                 Issuer = _jwtOptions.Issuer,
                 Audience = _jwtOptions.Audience
@@ -65,29 +71,35 @@ namespace Streetcode.BLL.Services.Authentication
             return newToken;
         }
 
-        public async Task<string> GetRefreshTokenAsync(User user)
+        public string GetRefreshTokenData(User user)
         {
-            string tokenPurpose = "refresh";
-            string tokenName = "RefreshToken";
-            string tokenProvider = _jwtOptions.Issuer;
-            string? previousRefreshToken = await _userManager.GetAuthenticationTokenAsync(user, tokenProvider, tokenName);
-
-            // Delete old refresh token, generate new one and add it to DB.
-            if (previousRefreshToken is not null)
+            User? userFromDb = _dbContext.Users
+                .FirstOrDefault(userInDb => userInDb.UserName == user.UserName);
+            if (userFromDb is null)
             {
-                Console.WriteLine(previousRefreshToken);
-                await _userManager.RemoveAuthenticationTokenAsync(user, _jwtOptions.Issuer, tokenName);
+                string errorMessage = $"Cannot find in database user with UserName: {user.UserName}";
+                throw new NullReferenceException(errorMessage);
             }
 
-            string refreshToken = await _userManager
-                .GenerateUserTokenAsync(user!, _jwtOptions.Issuer, tokenPurpose);
-            await _userManager
-                .SetAuthenticationTokenAsync(user, _jwtOptions.Issuer, tokenName, refreshToken);
+            string refreshToken = GenerateRefreshToken();
+            userFromDb.RefreshToken = refreshToken;
+            userFromDb.RefreshTokenExpiry = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenLifetimeInDays);
+            _dbContext.Users.Update(userFromDb);
+            _dbContext.SaveChanges();
 
             return refreshToken;
         }
 
-        private ClaimsPrincipal GetPrinciplesFromToken(string token)
+        private User GetUserFromDb(string userEmail)
+        {
+            User? userFromDb = _dbContext.Users
+                .FirstOrDefault(userInDb => userInDb.Email == userEmail);
+            string errorMessage = $"Cannot find in database user with Email: {userEmail}";
+
+            return userFromDb ?? throw new NullReferenceException(errorMessage);
+        }
+
+        private ClaimsPrincipal GetPrinciplesFromExpiredToken(string token)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var tokenValidationParameters = new TokenValidationParameters
@@ -98,15 +110,14 @@ namespace Streetcode.BLL.Services.Authentication
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = securityKey,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha256 },
             };
 
             ClaimsPrincipal claimsPrincipal;
-            SecurityToken securityToken;
             try
             {
-                claimsPrincipal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+                claimsPrincipal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out _);
             }
             catch (SecurityTokenValidationException ex)
             {
@@ -118,8 +129,16 @@ namespace Streetcode.BLL.Services.Authentication
 
         private async Task<SecurityTokenDescriptor> GetTokenDescriptorAsync(User user)
         {
-            var userRolesList = await _userManager.GetRolesAsync(user);
-            string userRole = userRolesList.FirstOrDefault() ?? string.Empty;
+            var userRoleId = _dbContext.UserRoles
+                .AsNoTracking()
+                .Where(userRole => userRole.UserId == user.Id)
+                .Select(userRole => userRole.RoleId)
+                .FirstOrDefault();
+            var userRole = _dbContext.Roles
+                .AsNoTracking()
+                .FirstOrDefault(role => role.Id == userRoleId);
+            string userRoleName = userRole?.Name ??
+                throw new NullReferenceException($"Cannot find role for user ${user.UserName}");
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
@@ -128,15 +147,23 @@ namespace Streetcode.BLL.Services.Authentication
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Surname, user.Surname),
                     new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
-                    new Claim(ClaimTypes.Role, userRole),
+                    new Claim(ClaimTypes.Role, userRoleName),
                 }),
-                Expires = DateTime.UtcNow.AddHours(_jwtOptions.LifetimeInHours),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenLifetimeInMinutes),
                 SigningCredentials = _signingCredentials,
                 Issuer = _jwtOptions.Issuer,
                 Audience = _jwtOptions.Audience
             };
 
             return tokenDescriptor;
+        }
+
+        private static string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }

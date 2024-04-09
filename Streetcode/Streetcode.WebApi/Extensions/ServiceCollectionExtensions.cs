@@ -1,4 +1,5 @@
 using System.Text;
+using System.Net.Security;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,7 +34,6 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
-using System.Net.Security;
 
 namespace Streetcode.WebApi.Extensions;
 

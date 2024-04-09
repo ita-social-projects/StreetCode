@@ -1,17 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.Extensions.Configuration;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
 {
@@ -45,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);
                 if (isValid)
                 {
-                    string refreshToken = await _tokenService.GetRefreshTokenAsync(user!);
+                    string refreshToken = _tokenService.GetRefreshTokenData(user!);
 
                     var token = await _tokenService.GenerateAccessTokenAsync(user!);
                     var stringToken = new JwtSecurityTokenHandler().WriteToken(token);

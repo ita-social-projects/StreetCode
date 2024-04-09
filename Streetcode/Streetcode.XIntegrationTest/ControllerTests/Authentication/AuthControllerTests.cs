@@ -126,7 +126,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                Token = this._tokenStorage.UserToken,
+                AccessToken = this._tokenStorage.UserToken,
             };
 
             // Act.
@@ -142,7 +142,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                Token = "invalid_Token",
+                AccessToken = "invalid_Token",
             };
 
             // Act.

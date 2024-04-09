@@ -60,7 +60,7 @@ namespace Streetcode.BLL.Services.Authentication
 
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                Subject = new ClaimsIdentity(principles.Claims),
+                Subject = new ClaimsIdentity(principles?.Claims),
                 Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenLifetimeInMinutes),
                 SigningCredentials = _signingCredentials,
                 Issuer = _jwtOptions.Issuer,

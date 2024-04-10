@@ -61,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICaptchaService, CaptchaService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();

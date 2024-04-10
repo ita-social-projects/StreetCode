@@ -238,13 +238,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtDTO> arts)
     {
-        var newArtSldies = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
-        foreach (var artSlide in newArtSldies)
+        var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
+        foreach (var artSlide in newArtSlides)
         {
             artSlide.StreetcodeId = streetcode.Id;
         }
 
-        await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSldies);
+        await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSlides);
         await _repositoryWrapper.SaveChangesAsync();
 
         var newArts = _mapper.Map<List<Art>>(arts);
@@ -265,7 +265,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var newStreetcodeArt = _mapper.Map<StreetcodeArt>(streetcodeArt);
                 newStreetcodeArt.StreetcodeId = streetcode.Id;
                 newStreetcodeArt.ArtId = newArts[streetcodeArt.ArtId - 1].Id;
-                newStreetcodeArt.StreetcodeArtSlideId = newArtSldies[artSlides.IndexOf(artSlide)].Id;
+                newStreetcodeArt.StreetcodeArtSlideId = newArtSlides[artSlides.IndexOf(artSlide)].Id;
 
                 newStreetcodeArts.Add(newStreetcodeArt);
             }

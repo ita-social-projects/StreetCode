@@ -24,5 +24,7 @@ public class SourceLinkCategoryProfile : Profile
             .ForMember(dest => dest.StreetcodeCategoryContents, opt => opt.Ignore())
             .ForPath(dest => dest.Image!.Streetcodes, c => c.Ignore())
             .ForMember(dest => dest.ImageId, opt => opt.MapFrom(dto => dto.ImageId));
+        CreateMap<SourceLinkCategoryCreateDTO, SourceLinkCategory>()
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image));
     }
 }

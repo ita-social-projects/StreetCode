@@ -48,7 +48,7 @@ public class SourcesController : BaseApiController
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryDTO category)
+    public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryCreateDTO category)
     {
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));
     }

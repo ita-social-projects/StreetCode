@@ -10,6 +10,7 @@ public class ImageProfile : Profile
     public ImageProfile()
     {
         CreateMap<Image, ImageDTO>().ReverseMap();
+        CreateMap<ImageDTOCreateEntities, ImageDTO>();
 
         CreateMap<ImageFileBaseCreateDTO, Image>();
 

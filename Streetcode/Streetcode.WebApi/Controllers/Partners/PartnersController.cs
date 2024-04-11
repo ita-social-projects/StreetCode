@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
+using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Partners.GetAllPartnerShort;
@@ -65,7 +66,7 @@ public class PartnersController : BaseApiController
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody] CreatePartnerDTO partner)
+    public async Task<IActionResult> Update([FromBody] UpdatePartnerDTO partner)
     {
         return HandleResult(await Mediator.Send(new BLL.MediatR.Partners.Update.UpdatePartnerQuery(partner)));
     }

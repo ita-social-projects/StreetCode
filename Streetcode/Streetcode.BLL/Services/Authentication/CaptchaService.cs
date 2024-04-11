@@ -19,11 +19,11 @@ namespace Streetcode.BLL.Services.Authentication
             _configuration = configuration;
         }
 
-        public async Task<Result> ValidateReCaptchaAsync(string publicKey, CancellationToken? cancellationToken = null)
+        public async Task<Result> ValidateReCaptchaAsync(string captchaToken, CancellationToken? cancellationToken = null)
         {
             string reCaptchaUrl = _configuration["ReCaptcha:Url"] ?? string.Empty;
             string reCaptchaSecretKey = _configuration["ReCaptcha:SecretKey"] ?? string.Empty;
-            string reCaptchaRequestUri = $"{reCaptchaUrl}?secret={reCaptchaSecretKey}&response={publicKey}";
+            string reCaptchaRequestUri = $"{reCaptchaUrl}?secret={reCaptchaSecretKey}&response={captchaToken}";
 
             var reCaptchaResponse = cancellationToken is null ?
                 await _httpClient.PostAsync(reCaptchaRequestUri, null) :

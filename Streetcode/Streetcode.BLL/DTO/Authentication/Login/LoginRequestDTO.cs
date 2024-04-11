@@ -18,5 +18,5 @@ public class LoginRequestDTO
     public string Password { get; set; }
 
     [Required]
-    public string CaptchaPublicKey { get; set; }
+    public string CaptchaToken { get; set; }
 }

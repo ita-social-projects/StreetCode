@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         {
             try
             {
-                var reCaptchaValidationResult = await _captchaService.ValidateReCaptchaAsync(request.UserLogin.CaptchaPublicKey, cancellationToken);
+                var reCaptchaValidationResult = await _captchaService.ValidateReCaptchaAsync(request.UserLogin.CaptchaToken, cancellationToken);
                 if (reCaptchaValidationResult.IsFailed)
                 {
                     string captchaErrorMessage = reCaptchaValidationResult.Errors[0].Message;

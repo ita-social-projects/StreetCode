@@ -28,7 +28,7 @@ public class TermController : BaseApiController
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] TermDTO term)
+    public async Task<IActionResult> Create([FromBody] TermCreateDTO term)
     {
         return HandleResult(await Mediator.Send(new CreateTermCommand(term)));
     }

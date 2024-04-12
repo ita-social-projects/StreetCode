@@ -35,7 +35,7 @@ public class FactController : BaseApiController
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] FactDto fact)
+    public async Task<IActionResult> Create([FromBody] FactCreateDTO fact)
     {
         return HandleResult(await Mediator.Send(new CreateFactCommand(fact)));
     }

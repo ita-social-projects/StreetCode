@@ -206,46 +206,17 @@ pipeline {
 //                    docker compose down && sleep 10
 //                    docker compose --env-file /etc/environment up -d
  
-            sh 'docker ps'
            }
         }
            
         post {
-            // always {
-            //    script {
-            //       agent { label 'stage' }
-                
-            //           sh 'docker ps'
-            //     }
-               
-               
-            // }
             success {
                 script {
                     isSuccess = '1'
                 } 
             }
         }
-    }
-    stage('Rollback Stage') {
-        when {
-            expression { env.yourChoice == 'rollbackStage' }
-        }
-        steps {
-            script {
-                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
-                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-//                    docker image prune --force --filter "until=72h"
-//                    docker system prune --force --filter "until=72h"
-//                    export DOCKER_TAG_BACKEND=${preDeployBackStage}
-//                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-//                    docker compose down && sleep 10
-//                    docker compose --env-file /etc/environment up -d
-                
-
-            }
-        }
-    }   
+    } 
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }

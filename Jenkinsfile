@@ -206,20 +206,19 @@ pipeline {
 //                    docker compose down && sleep 10
 //                    docker compose --env-file /etc/environment up -d
  
-            node('stage') {
-                  script {
-                    sh "docker ps"
-                  }
-                }
+            sh 'docker ps'
+            agent { label 'stage' }
+            steps {
+                sh 'docker ps'
+            }
         }}
            
         post {
             always {
-                node('production') {
-                  script {
-                    sh "docker ps"
-                  }
-                }
+                agent { label 'production' }
+            steps {
+                sh 'docker ps'
+            }
                
                
             }

@@ -158,9 +158,9 @@ pipeline {
             }
      }    
     stage('WHAT IS THE NEXT STEP') {
-       when {
-                expression { IS_IMAGE_PUSH == true }
-            }  
+       // when {
+       //          expression { IS_IMAGE_PUSH == true }
+       //      }  
         steps {
             script {
                     CHOICES = ["deployProd", "rollbackStage"];    

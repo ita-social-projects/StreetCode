@@ -182,6 +182,7 @@ pipeline {
                // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
                // sh 'docker compose down && sleep 10'
                // sh 'docker compose --env-file /etc/environment up -d'
+               
                       
       
             }
@@ -213,6 +214,7 @@ pipeline {
                 // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
                 // sh 'docker compose down && sleep 10'
                 // sh 'docker compose --env-file /etc/environment up -d'
+               sh 'docker ps'
             }
         }
         post {

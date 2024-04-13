@@ -163,7 +163,7 @@ pipeline {
        //      }  
         steps {
             script {
-                    CHOICES = ["deployProd", "rollbackStage"];    
+                    CHOICES = ["deployProd"];    
                         env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
                                         parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
             } 
@@ -211,15 +211,15 @@ pipeline {
         }
            
         post {
-            always {
-               script {
-                  agent { label 'stage' }
+            // always {
+            //    script {
+            //       agent { label 'stage' }
                 
-                      sh 'docker ps'
-                }
+            //           sh 'docker ps'
+            //     }
                
                
-            }
+            // }
             success {
                 script {
                     isSuccess = '1'

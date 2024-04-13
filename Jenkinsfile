@@ -132,9 +132,9 @@ pipeline {
             }
         }
     stage('Deploy Stage'){
-        when {
-                expression { IS_IMAGE_PUSH == true }
-            }  
+        // when {
+        //         expression { IS_IMAGE_PUSH == true }
+        //     }  
         steps {
             input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {

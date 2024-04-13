@@ -205,14 +205,17 @@ pipeline {
 //                    export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
 //                    docker compose down && sleep 10
 //                    docker compose --env-file /etc/environment up -d
-             agent { label 'stage' }
-               sh 'docker ps'     
+ 
+               agent ('stage'){
+                sh 'docker ps'  
             }
         }
         post {
             always {
-               agent { label 'production' }
-               sh 'docker ps'
+               agent ('production'){
+                sh 'docker ps'  
+               }
+               
             }
             success {
                 script {

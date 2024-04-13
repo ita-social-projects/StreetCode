@@ -132,9 +132,9 @@ pipeline {
             }
         }
     stage('Deploy Stage'){
-         when {
-                 expression { IS_IMAGE_PUSH == true }
-             }  
+        when {
+                expression { IS_IMAGE_PUSH == true }
+            }  
         steps {
             input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
@@ -147,26 +147,27 @@ pipeline {
                     echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
 
-//                    docker image prune --force --filter "until=72h"
-//                    docker system prune --force --filter "until=72h"
-//                    export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-//                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-//                    docker compose down && sleep 10
-//                    docker compose --env-file /etc/environment up -d
+                    // sh 'docker image prune --force --filter "until=72h"'
+                    // sh 'docker system prune --force --filter "until=72h"'
+                    // sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
+                    // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
+                    // sh 'docker compose down && sleep 10'
+                    // sh 'docker compose --env-file /etc/environment up -d'
 
                 }  
             }
      }    
     stage('WHAT IS THE NEXT STEP') {
-       // when {
-       //          expression { IS_IMAGE_PUSH == true }
-       //      }  
+       when {
+                expression { IS_IMAGE_PUSH == true }
+            }  
         steps {
-            script {
+             script {
                     CHOICES = ["deployProd"];    
                         env.yourChoice = input  message: 'Please validate, choose one', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
                                         parameters: [choice(choices: CHOICES, description: 'Do you want to deploy or to rollback?', name: 'CHOICE')]
             } 
+            
         }
         post {
           aborted{
@@ -175,21 +176,28 @@ pipeline {
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-      //                    docker image prune --force --filter "until=72h"
-      //                    docker system prune --force --filter "until=72h"
-      //                    export DOCKER_TAG_BACKEND=${preDeployBackStage}
-      //                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-      //                    docker compose down && sleep 10
-      //                    docker compose --env-file /etc/environment up -d
+               // sh 'docker image prune --force --filter "until=72h"'
+               // sh 'docker system prune --force --filter "until=72h"'
+               // sh 'export DOCKER_TAG_BACKEND=${preDeployBackStage}'
+               // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
+               // sh 'docker compose down && sleep 10'
+               // sh 'docker compose --env-file /etc/environment up -d'
                       
       
             }
             
          }
+         success {
+                script {
+                    isSuccess = '1'
+                } 
+            }
       }
     }
-    stage('Deploy prod') {
-        agent { label 'production' }
+   stage('Deploy prod') {
+         agent { 
+           label 'production' 
+              }
          when {
                 expression { env.yourChoice == 'deployProd' }
             }
@@ -199,16 +207,14 @@ pipeline {
                 echo "Last Tag Prod backend: ${preDeployBackProd}"
                 preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                 echo "Last Tag Prod frontend: ${preDeployFrontProd}"
-//                    docker image prune --force --filter "until=72h"
-//                    docker system prune --force --filter "until=72h"
-//                    export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-//                    export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-//                    docker compose down && sleep 10
-//                    docker compose --env-file /etc/environment up -d
- 
-           }
+                // sh 'docker image prune --force --filter "until=72h"'
+                // sh 'docker system prune --force --filter "until=72h"'
+                // sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
+                // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
+                // sh 'docker compose down && sleep 10'
+                // sh 'docker compose --env-file /etc/environment up -d'
+            }
         }
-           
         post {
             success {
                 script {
@@ -216,44 +222,47 @@ pipeline {
                 } 
             }
         }
-    } 
+    }
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
         }   
         steps {
             script {
-               // ?? 
+               
                 sh 'echo ${BRANCH_NAME}'
-                sh "git checkout master" 
-                sh 'echo ${BRANCH_NAME}'
-               //     sh "git merge release/${env.CODE_VERSION}" 
-               //   sh "git push origin main" 
+                // sh "git checkout master" 
+                // sh 'echo ${BRANCH_NAME}'
+                // sh "git merge release/${env.CODE_VERSION}" 
+                // sh "git push origin main" 
                   
             }
         }
         post {
             success {
                 sh 'gh auth status'
-//                sh "gh release create v${vers}  --generate-notes --draft"
+                // sh "gh release create v${vers}  --generate-notes --draft"
             }
         }
     }
     stage('Rollback Prod') {  
+        agent { 
+           label 'production' 
+              }
         when {
-           expression { env.yourChoice == 'deployProd' }
+            expression { env.yourChoice == 'deployProd' }
             }
         steps {
             input message: 'Do you want to rollback deploy prod?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak '
                 script {
                     echo "Rollback Tag Prod backend: ${preDeployBackProd}"
                     echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"
-//                    docker image prune --force --filter "until=72h"
-//                    docker system prune --force --filter "until=72h"
-//                    export DOCKER_TAG_BACKEND=${preDeployBackProd}
-//                    export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-//                    docker compose down && sleep 10
-//                    docker compose --env-file /etc/environment up -d
+                    // sh 'docker image prune --force --filter "until=72h"'
+                    // sh 'docker system prune --force --filter "until=72h"'
+                    // sh 'export DOCKER_TAG_BACKEND=${preDeployBackProd}'
+                    // sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
+                    // sh 'docker compose down && sleep 10'
+                    // sh 'docker compose --env-file /etc/environment up -d'
                 }
             }    
         }

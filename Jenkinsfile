@@ -148,7 +148,7 @@ pipeline {
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
 
                     sh 'docker image prune --force --filter "until=72h"'
-                    sh "docker system prune --force --filter "until=72h"'
+                    sh 'docker system prune --force --filter "until=72h"'
                     sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
                     sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
                     sh 'docker compose down && sleep 10'

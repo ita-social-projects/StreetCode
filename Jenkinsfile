@@ -214,10 +214,9 @@ pipeline {
             always {
                script {
                   agent { label 'stage' }
-                  steps {
+                
                       sh 'docker ps'
-                  }
-               }
+                }
                
                
             }

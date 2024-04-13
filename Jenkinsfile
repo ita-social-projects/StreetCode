@@ -205,12 +205,14 @@ pipeline {
 //                    export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
 //                    docker compose down && sleep 10
 //                    docker compose --env-file /etc/environment up -d
-                  
+             agent { label 'stage' }
+               sh 'whoami'     
             }
         }
         post {
             always {
-                echo 'Always'
+               agent { label 'production' }
+               sh 'whoami'
             }
             success {
                 script {

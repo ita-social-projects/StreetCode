@@ -165,7 +165,7 @@ pipeline {
              script {
                     CHOICES = ["deployProd"];    
                         env.yourChoice = input  message: 'Do you want to deploy production?', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
-                                        parameters: [choice(choices: CHOICES, description: 'Developer team can abort to switch next step as rollback', name: 'CHOICE')]
+                                        parameters: [choice(choices: CHOICES, description: 'Developer team can abort to switch next step as rollback stage', name: 'CHOICE')]
             } 
             
         }

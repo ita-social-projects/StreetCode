@@ -207,15 +207,12 @@ pipeline {
 //                    docker compose --env-file /etc/environment up -d
  
             sh 'docker ps'
-            agent { label 'stage' }
-            steps {
-                sh 'docker ps'
-            }
-        }}
+           }
+        }
            
         post {
             always {
-                agent { label 'production' }
+                agent { label 'stage' }
             steps {
                 sh 'docker ps'
             }

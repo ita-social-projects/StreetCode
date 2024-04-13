@@ -162,19 +162,12 @@ pipeline {
                 expression { IS_IMAGE_PUSH == true }
             }  
         steps {
-            input message: 'Do you want to deployProd deploy prod?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak'
-                script {
-                      preDeployBackProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                      echo "Last Tag Prod backend: ${preDeployBackProd}"
-                      preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
-                      echo "Last Tag Prod frontend: ${preDeployFrontProd}"
-                      sh 'docker image prune --force --filter "until=72h"'
-                      sh 'docker system prune --force --filter "until=72h"'
-                      sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
-                      sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
-                      sh 'docker compose down && sleep 10'
-                      sh 'docker compose --env-file /etc/environment up -d'
-                }
+             script {
+                    CHOICES = ["deployProd"];    
+                        env.yourChoice = input  message: 'Do you want to deploy production?', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
+                                        parameters: [choice(choices: CHOICES, description: 'Developer team can abort to switch next step as rollback stage', name: 'CHOICE')]
+            } 
+            
         }
         post {
           aborted{
@@ -189,8 +182,7 @@ pipeline {
                sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
                sh 'docker compose down && sleep 10'
                sh 'docker compose --env-file /etc/environment up -d'
-                      
-      
+               
             }
             
          }
@@ -201,7 +193,35 @@ pipeline {
             }
       }
     }
-   
+   stage('Deploy prod') {
+         agent { 
+           label 'production' 
+              }
+         when {
+                expression { env.yourChoice == 'deployProd' }
+            }
+        steps {
+            script {
+                preDeployBackProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Prod backend: ${preDeployBackProd}"
+                preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
+                echo "Last Tag Prod frontend: ${preDeployFrontProd}"
+                sh 'docker image prune --force --filter "until=72h"'
+                sh 'docker system prune --force --filter "until=72h"'
+                sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
+                sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
+                sh 'docker compose down && sleep 10'
+                sh 'docker compose --env-file /etc/environment up -d'
+            }
+        }
+        post {
+            success {
+                script {
+                    isSuccess = '1'
+                } 
+            }
+        }
+    }
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -225,8 +245,11 @@ pipeline {
         }
     }
     stage('Rollback Prod') {  
+        agent { 
+           label 'production' 
+              }
         when {
-           expression { isSuccess == '1' }
+            expression { env.yourChoice == 'deployProd' }
             }
         steps {
             input message: 'Do you want to rollback deploy prod?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak '

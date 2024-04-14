@@ -24,6 +24,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -120,12 +121,18 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
 
     [HttpPut("{id:int}/{status}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PatchStage(
         [FromRoute] int id,
         [FromRoute] StreetcodeStatus status)
@@ -134,18 +141,27 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> SoftDelete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteSoftStreetcodeCommand(id)));
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
     }
 
     [HttpPut]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));

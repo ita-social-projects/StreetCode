@@ -1,9 +1,12 @@
+using FluentResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetParsed;
+using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
@@ -30,6 +33,9 @@ public class TextController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateParsedText([FromBody] TextPreviewDTO text)
     {
         return HandleResult(await Mediator.Send(new UpdateParsedTextForAdminPreviewCommand(text.TextContent)));

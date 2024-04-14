@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
 using Streetcode.DAL.Enums;
 using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -33,18 +34,27 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
     {
         return HandleResult(await Mediator.Send(new CreateImageCommand(image)));
     }
 
     [HttpPut]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDTO image)
     {
         return HandleResult(await Mediator.Send(new UpdateImageCommand(image)));
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteImageCommand(id)));

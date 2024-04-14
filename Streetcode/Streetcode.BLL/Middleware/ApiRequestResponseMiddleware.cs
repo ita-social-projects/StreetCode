@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Streetcode.BLL.Middleware
@@ -106,6 +107,10 @@ namespace Streetcode.BLL.Middleware
                 }
 
                 return jsonObject.ToString();
+            }
+            catch (JsonReaderException jsonEx)
+            {
+                return "Response body is in gzip format";
             }
             catch (Exception ex)
             {

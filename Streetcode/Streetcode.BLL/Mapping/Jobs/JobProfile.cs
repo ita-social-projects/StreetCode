@@ -11,7 +11,7 @@ namespace Streetcode.BLL.Mapping.Jobs
 			CreateMap<Job, JobDto>().ReverseMap();
 			CreateMap<JobCreateDto, Job>();
 			CreateMap<JobUpdateDto, Job>();
-            CreateMap<Job, JobShortDto>();
+			CreateMap<Job, JobShortDto>();
 		}
 	}
 }

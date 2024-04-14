@@ -36,17 +36,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             _mockLocalizerCannotSave = new Mock<IStringLocalizer<CannotSaveSharedResource>>();
         }
 
-        private (RelatedTermDTO relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
+        private (RelatedTermCreateDTO relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
         {
-            var relatedTermDTO = new RelatedTermDTO { TermId = termId, Word = word };
+            var relatedTermDTO = new RelatedTermCreateDTO { TermId = termId, Word = word };
             var entity = new Entity { TermId = relatedTermDTO.TermId, Word = relatedTermDTO.Word };
 
             return (relatedTermDTO, entity);
         }
 
-        private void SetupMapperMockToMapEntity(RelatedTermDTO relatedTermDTO, Entity entity)
+        private void SetupMapperMockToMapEntity(RelatedTermCreateDTO relatedTermDTO, Entity entity)
         {
-            _mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermDTO>())).Returns(entity);
+            _mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermCreateDTO>())).Returns(entity);
         }
 
         private void SetupGetAllAsyncWithExistingTerms(List<Entity> existingTerms)
@@ -97,9 +97,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         public async Task Handle_Should_Return_Error_When_Related_Term_Is_Null()
         {
             // Arrange
-            SetupMapperMockToMapEntity(It.IsAny<RelatedTermDTO>(), null);
+            SetupMapperMockToMapEntity(It.IsAny<RelatedTermCreateDTO>(), null);
             var handler = new CreateRelatedTermHandler(_repositoryWrapperMock.Object, _mapperMock.Object, _mockLogger.Object, _mockLocalizerCannotSave.Object, _mockLocalizerCannotMap.Object, _mockLocalizer.Object, _mockLocalizerCannotCreate.Object);
-            var command = new CreateRelatedTermCommand(new RelatedTermDTO());
+            var command = new CreateRelatedTermCommand(new RelatedTermCreateDTO());
             SetupLocalizers();
 
             // Act

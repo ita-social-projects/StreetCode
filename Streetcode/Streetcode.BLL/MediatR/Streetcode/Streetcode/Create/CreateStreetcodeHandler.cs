@@ -201,7 +201,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
         foreach (var detail in imageDetails)
         {
-            if(detail.Alt == null)
+            if(string.IsNullOrEmpty(detail.Alt))
             {
                 throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
             }

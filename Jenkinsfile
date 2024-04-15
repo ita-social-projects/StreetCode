@@ -136,7 +136,7 @@ pipeline {
                 expression { IS_IMAGE_PUSH == true }
             }  
         steps {
-            input message: 'Do you want to approve deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
+            input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
                     preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage backend: ${preDeployBackStage}"

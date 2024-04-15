@@ -154,8 +154,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
                 .Returns(teamMemberLink);
-            _mockMapper.Setup(x => x.Map<TeamMemberLinkCreateDTO>(It.IsAny<TeamMemberLink>()))
-                .Returns(GetTeamMemberLinkDTO());
+            _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
+                .Returns(new TeamMemberLinkDTO());
         }
 
         private void SetupCreateMethod(TeamMemberLink teamMemberLink)

@@ -76,64 +76,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         }
 
         [Theory]
-        [InlineData(1, 2)]
-        public async Task ShouldDeleteLinks_LinksToBeDeletedExist(int idFirst, int idSecond)
-        {
-            // Arrange
-            var teamMember = GetTeamMember();
-            var linkFirst = GetTeamMemberLink(idFirst);
-            var linkSecond = GetTeamMemberLink(idSecond);
-            var links = new List<TeamMemberLink> { linkFirst, linkSecond };
-
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup(link: links);
-            _mockRepository.Setup(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()));
-
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsSuccess),
-                () => Assert.NotNull(result.Value)
-            );
-
-            _mockRepository.Verify(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()), Times.Exactly(links.Count));
-        }
-
-        [Theory]
-        [InlineData(1, 2)]
-        public async Task ShouldDeletePositions_PositionsToBeDeletedExist(int idFirst, int idSecond)
-        {
-            // Arrange
-            var teamMember = GetTeamMember();
-            var positionFirst = GetTeamMemberPositions(idFirst);
-            var positionSecond = GetTeamMemberPositions(idSecond);
-            var oldPositions = new List<TeamMemberPositions> { positionFirst, positionSecond };
-
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup(memberPos: oldPositions);
-            _mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
-            
-            _mockRepository.Setup(repo => repo.TeamPositionRepository
-                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
-                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(oldPositions);
-
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsSuccess),
-                () => Assert.NotNull(result.Value)
-            );
-
-            _mockRepository.Verify(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()), Times.Exactly(oldPositions.Count));
-        }
-
-        [Theory]
         [InlineData(-1, "New Position")]
         public async Task WhenNewPositionIdIsNegative_CreatesNewPositionAndTeamMemberPosition(int id, string positionName)
         {

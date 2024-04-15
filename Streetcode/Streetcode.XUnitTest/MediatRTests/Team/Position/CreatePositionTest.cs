@@ -96,8 +96,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         {
             _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
                 .Returns(positions);
-            _mockMapper.Setup(x => x.Map<PositionCreateDTO>(It.IsAny<Positions>()))
-                .Returns(GetPositionsDTO());
+            _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+                .Returns(new PositionDTO());
         }
 
         private void SetupCreateAsyncMethod(Positions positions)

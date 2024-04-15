@@ -53,6 +53,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 }
 
                 _repository.SaveChanges();
+                var resulted = _mapper.Map<TeamMemberDTO>(teamMember);
                 return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
             }
             catch (Exception ex)

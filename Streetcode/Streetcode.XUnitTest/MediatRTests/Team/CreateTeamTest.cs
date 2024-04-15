@@ -189,8 +189,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
                 .Returns(member);
 
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberCreateDTO>(It.IsAny<object>()))
-                .Returns(new TeamMemberCreateDTO());
+            _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
+                .Returns(new TeamMemberDTO());
         }
 
         private static TeamMember GetTeamMember()

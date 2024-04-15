@@ -11,6 +11,7 @@ using Xunit;
 using System.IdentityModel.Tokens.Jwt;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Users;
+using FluentResults;
 
 namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
 {
@@ -20,6 +21,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         private readonly Mock<ITokenService> _mockTokenService;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<UserManager<User>> _mockUserManager;
+        private readonly Mock<ICaptchaService> _mockCaptchaService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleLoginTest"/> class.
@@ -29,6 +31,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             this._mockMapper = new Mock<IMapper>();
             this._mockLogger = new Mock<ILoggerService>();
             this._mockTokenService = new Mock<ITokenService>();
+            this._mockCaptchaService = new Mock<ICaptchaService>();
 
             var store = new Mock<IUserStore<User>>();
             this._mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
@@ -38,27 +41,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnSuccess_ValidInputData()
         {
             // Arrange.
-            this.SetupMockUserManagerCheckPassword(true);
-            this.SetupMockTokenService();
-            this.SetupMockMapper();
-            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
-            this.SetupMockUserManagerGetRolesAsync();
-            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupServicesForSuccessfulResult();
             var handler = this.GetLoginHandler();
 
             // Act.
             var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
 
             // Assert.
-            Assert.Multiple(
-                () => Assert.True(result.IsSuccess),
-                () => Assert.IsType<LoginResponseDTO>(result.ValueOrDefault));
+            Assert.True(result.IsSuccess);
+            Assert.IsType<LoginResponseDTO>(result.ValueOrDefault);
         }
 
         [Fact]
         public async Task ShouldReturnFail_UserNotExistInDb()
         {
             // Arrange.
+            this.SetupMockCaptchaService(true);
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -72,6 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         public async Task ShouldReturnFail_InvalidPassword()
         {
             // Arrange.
+            this.SetupMockCaptchaService(true);
             this.SetupMockUserManagerCheckPassword(false);
             var handler = this.GetLoginHandler();
 
@@ -83,11 +82,28 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         }
 
         [Fact]
-        public async Task ShouldReturnFait_ExceptionThrown()
+        public async Task ShouldReturnFail_CaptchaValidationUnsuccessful()
+        {
+            // Arrange.
+            string errorMessage = "Captcha validation error";
+            this.SetupMockCaptchaService(isValidationSuccessful: false, errorMessage);
+            var handler = this.GetLoginHandler();
+
+            // Act.
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+            // Assert.
+            Assert.True(result.IsFailed);
+            Assert.Equal(errorMessage, result.Errors[0].Message);
+        }
+
+        [Fact]
+        public async Task ShouldReturnFail_ExceptionThrown()
         {
             // Arrange.
             string expectedErrorMessage = "Expected error message";
             this.SetupMockUserManagerThrowException(expectedErrorMessage);
+            this.SetupMockCaptchaService(true);
             var handler = this.GetLoginHandler();
 
             // Act.
@@ -96,6 +112,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             // Assert.
             Assert.True(result.IsFailed);
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
+        }
+
+        private void SetupServicesForSuccessfulResult()
+        {
+            this.SetupMockUserManagerCheckPassword(true);
+            this.SetupMockTokenService();
+            this.SetupMockMapper();
+            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
+            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupMockCaptchaService(true);
         }
 
         private static UserDTO GetUserDTO()
@@ -140,6 +167,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 .ThrowsAsync(new Exception(errorMessage));
         }
 
+        private void SetupMockCaptchaService(bool isValidationSuccessful, string errorMessage = "Error")
+        {
+            var result = isValidationSuccessful ?
+                Result.Ok() : Result.Fail(errorMessage);
+            this._mockCaptchaService
+                .Setup(service => service.ValidateReCaptchaAsync(It.IsAny<string>(), It.IsAny<CancellationToken?>()))
+                .ReturnsAsync(result);
+        }
+
         private void SetupMockUserManagerFindUserByEmailOrUsername(User? userToReturn = null)
         {
             this._mockUserManager
@@ -176,7 +212,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 this._mockMapper.Object,
                 this._mockTokenService.Object,
                 this._mockLogger.Object,
-                this._mockUserManager.Object);
+                this._mockUserManager.Object,
+                this._mockCaptchaService.Object);
         }
     }
 }

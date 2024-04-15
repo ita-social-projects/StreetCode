@@ -171,7 +171,7 @@ pipeline {
         }
         post {
           aborted{
-              input message: 'Do you want to rollback deploy stage?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
+              input message: 'Do you want to rollback Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
             script{
       
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"

@@ -252,7 +252,7 @@ pipeline {
             expression { env.yourChoice == 'deployProd' }
             }
         steps {
-            input message: 'Do you want to rollback deploy prod?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak '
+            input message: 'Do you want to rollback Production deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak '
                 script {
                     echo "Rollback Tag Prod backend: ${preDeployBackProd}"
                     echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"

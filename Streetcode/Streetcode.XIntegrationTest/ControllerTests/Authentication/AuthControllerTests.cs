@@ -24,6 +24,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         {
             (this._testUser, this._testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
+                userName: Guid.NewGuid().ToString(),
                 password: this.GenerateTestPassword(),
                 nameof(UserRole.User),
                 nameof(UserRole.Admin));
@@ -176,6 +177,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             {
                 Login = this._testUser.Email,
                 Password = this._testPassword,
+                CaptchaToken = "test_captcha_token",
             };
         }
 

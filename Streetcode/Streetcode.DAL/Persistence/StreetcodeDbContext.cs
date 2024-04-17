@@ -306,8 +306,9 @@ public class StreetcodeDbContext : IdentityDbContext<User>
                     .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Audio)
-                    .WithOne(p => p.Streetcode)
-                    .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(p => p.Streetcode)
+                .HasForeignKey<StreetcodeContent>(d => d.AudioId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(d => d.Text)
                     .WithOne(p => p.Streetcode)

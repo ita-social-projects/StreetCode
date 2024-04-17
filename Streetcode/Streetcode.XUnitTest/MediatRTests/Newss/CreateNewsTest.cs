@@ -175,13 +175,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             {
                 Id = 1,
                 ImageId = imageId,
-                URL = url
+                Title = "Title",
+                Text = "test",
+                URL = url,
+                CreationDate = new DateTime(2015, 12, 25)
             };
         }
 
         private static NewsDTO GetNewsDTO()
         {
-            return new NewsDTO();
+            return new NewsDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
         }
     }
 }

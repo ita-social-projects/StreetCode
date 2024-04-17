@@ -1,7 +1,7 @@
 ﻿using System;
 using Nuke.Common.Tooling;
 
-namespace Utils;
+namespace Utils.DockerCompose;
 
 [Serializable]
 public class DockerComposeDownSettings : DockerComposeSettings

@@ -51,7 +51,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             if (newNews.URL.Contains("/"))
             {
-                string errorMsg = _stringLocalizerCannot["UrlContainsSlash"].Value;
+                string errorMsg = "Url Is Invalid";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

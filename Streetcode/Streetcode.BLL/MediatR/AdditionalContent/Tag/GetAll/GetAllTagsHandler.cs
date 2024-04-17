@@ -29,7 +29,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
         var tags = await _repositoryWrapper.TagRepository.GetAllAsync();
-        var sorted_tags = tags.OrderByDescending(tag => tag.Title);
+        var sorted_tags = tags.OrderBy(tag => tag.Title);
         if (tags is null)
         {
             string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;

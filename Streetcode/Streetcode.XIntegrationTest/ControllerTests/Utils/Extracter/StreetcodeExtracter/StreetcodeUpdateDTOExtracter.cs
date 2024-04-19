@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners.Update;
@@ -49,7 +50,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 Subtitles = new List<SubtitleUpdateDTO>(),
                 TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
                 RelatedFigures = new List<RelatedFigureUpdateDTO>(),
-                StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>(),
+                Arts = new List<ArtCreateUpdateDTO>(),
+                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
                 StatisticRecords = new List<StatisticRecordUpdateDTO>(),
                 StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
             };

@@ -1,0 +1,10 @@
+﻿{
+  "index": 0,
+  "streetcodeId": 54,
+  "streetcodeArts": [{
+    "index": 0,
+    "artId" : 1
+  }],
+  "template": 0,
+  "modelState": 0
+}

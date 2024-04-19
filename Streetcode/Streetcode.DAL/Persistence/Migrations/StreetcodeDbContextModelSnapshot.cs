@@ -378,6 +378,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<int>("ImageId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("StreetcodeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -386,6 +389,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("ImageId")
                         .IsUnique();
+
+                    b.HasIndex("StreetcodeId");
 
                     b.ToTable("arts", "media");
                 });
@@ -669,10 +674,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArt", b =>
                 {
-                    b.Property<int>("ArtId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("StreetcodeId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ArtId")
                         .HasColumnType("int");
 
                     b.Property<int>("Index")
@@ -680,13 +688,47 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.HasKey("ArtId", "StreetcodeId");
+                    b.Property<int?>("StreetcodeArtSlideId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StreetcodeArtSlideId");
 
                     b.HasIndex("StreetcodeId");
 
-                    b.HasIndex("ArtId", "StreetcodeId");
+                    b.HasIndex("ArtId", "StreetcodeArtSlideId");
 
                     b.ToTable("streetcode_art", "streetcode");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Template")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("streetcode_art_slide", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
@@ -1373,7 +1415,14 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("Arts")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("Image");
+
+                    b.Navigation("Streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.ImageDetails", b =>
@@ -1521,16 +1570,32 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Art", "Art")
                         .WithMany("StreetcodeArts")
                         .HasForeignKey("ArtId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide", "StreetcodeArtSlide")
+                        .WithMany("StreetcodeArts")
+                        .HasForeignKey("StreetcodeArtSlideId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany("StreetcodeArts")
+                        .HasForeignKey("StreetcodeId");
+
+                    b.Navigation("Art");
+
+                    b.Navigation("Streetcode");
+
+                    b.Navigation("StreetcodeArtSlide");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
+                        .WithMany("StreetcodeArtSlides")
                         .HasForeignKey("StreetcodeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Art");
 
                     b.Navigation("Streetcode");
                 });
@@ -1750,8 +1815,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("StreetcodeCategoryContents");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide", b =>
+                {
+                    b.Navigation("StreetcodeArts");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", b =>
                 {
+                    b.Navigation("Arts");
+
                     b.Navigation("Coordinates");
 
                     b.Navigation("Facts");
@@ -1759,6 +1831,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Observers");
 
                     b.Navigation("StatisticRecords");
+
+                    b.Navigation("StreetcodeArtSlides");
 
                     b.Navigation("StreetcodeArts");
 

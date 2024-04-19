@@ -44,10 +44,25 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
-
             if (news.ImageId == 0)
             {
                 string errorMsg = _stringLocalizerFailedToUpdate["Invalid imageId value"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title);
+            if (existingNewsByTitle != null)
+            {
+                string errorMsg = "A news with the same title already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Text == request.news.Text);
+            if (existingNewsByText != null)
+            {
+                string errorMsg = "A news with the same text already exists.";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

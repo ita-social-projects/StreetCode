@@ -13,6 +13,7 @@ using System.Threading;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.MediatR.Newss.Create;
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
@@ -120,7 +121,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert
             Assert.True(result.IsSuccess);
         }
+        [Fact]
+        public async Task ShouldReturnFail_NewsWithSameTitleExists()
+        {
+            // Arrange
+            var testNews = GetNews();
+            var testNewsDTO = GetNewsDTO();
+            var expectedError = "A news with the same title already exists.";
+            SetupMapper(testNews, testNewsDTO);
+            SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
+            // Act
+            var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedError, result.Errors.First().Message)
+            );
+        }
         private void SetupUpdateRepository(int returnNumber)
         {
             _mockRepository.Setup(x => x.NewsRepository.Update(It.IsAny<DAL.Entities.News.News>()));
@@ -145,6 +165,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
                 .Returns(GetNewsWithNotExistId());
+        }
+        private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
+        {
+            _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
+                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
+                           .ReturnsAsync(() =>
+                           {
+                               var newsList = new List<DAL.Entities.News.News>
+                               {
+                           new DAL.Entities.News.News { Title = title }
+                               };
+                               return newsList.FirstOrDefault();
+                           });
         }
 
         private void SetupImageRepository()

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Org.BouncyCastle.Asn1.Cmp;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
@@ -16,15 +17,18 @@ namespace Streetcode.BLL.MediatR.Team.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
 
         public CreateTeamHandler(
             IMapper mapper,
             IRepositoryWrapper repository,
-            ILoggerService logger)
+            ILoggerService logger,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
+            _stringLocalizerCannot = stringLocalizerCannot;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
@@ -50,6 +54,18 @@ namespace Streetcode.BLL.MediatR.Team.Create
                     if (!newLinkIds.Contains(link.Id))
                     {
                         _repository.TeamLinkRepository.Delete(link);
+                    }
+                }
+
+                var newLogoTypes = request.teamMember.TeamMemberLinks.Select(links => links.LogoType).ToList();
+
+                foreach (var logoType in newLogoTypes)
+                {
+                    if (!Enum.IsDefined(typeof(LogoTypeDTO), logoType))
+                    {
+                        string errorMsg = _stringLocalizerCannot["CannotCreateTeamMemberLinkWithInvalidLogoType"].Value;
+                        _logger.LogError(request, errorMsg);
+                        return Result.Fail(errorMsg);
                     }
                 }
 

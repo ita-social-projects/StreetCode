@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.DTO.Sources;
@@ -8,9 +9,11 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Sources.SourceLink.Create;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
+using System.Security.Policy;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
@@ -142,6 +145,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 () => Assert.Equal(expectedError, result.Errors.First().Message)
             );
         }
+        [Fact]
+        public async Task ShouldThrowException_NewsWithSameTextExists()
+        {
+            // Arrange
+            var testNews = GetNews(1);
+            var expectedError = "A news with the same text already exists.";
+            SetupMockMapping(testNews);
+            SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(testNews.Text);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedError, result.Errors.First().Message)
+            );
+        }
+
+
         private void SetupMockMapping(DAL.Entities.News.News testNews)
         {
             _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
@@ -167,10 +191,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
         }
-        private void SetupMockRepositorySaveChangesReturns(int number)
-        {
-            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
-        }
         private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
         {
             _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
@@ -185,18 +205,40 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                                return newsList.FirstOrDefault();
                            });
         }
+        private void SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(string text)
+        {
+            _mockRepository.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
+                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
+                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
+                           .ReturnsAsync(() =>
+                           {
+                               var newsList = new List<DAL.Entities.News.News>
+                               {
+                           new DAL.Entities.News.News { Text = text }
+                               };
+                               return newsList.FirstOrDefault();
+                           });
+        }
+        private void SetupMockRepositorySaveChangesReturns(int number)
+        {
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
+        }
         private static DAL.Entities.News.News GetNews(int imageId = 0)
         {
             return new DAL.Entities.News.News()
             {
                 Id = 1,
-                ImageId = imageId
+                ImageId = imageId,
             };
         }
 
         private static NewsDTO GetNewsDTO()
         {
-            return new NewsDTO();
+            return new NewsDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+            };
         }
     }
 }

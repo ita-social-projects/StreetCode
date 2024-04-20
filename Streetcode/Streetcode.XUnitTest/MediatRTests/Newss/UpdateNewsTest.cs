@@ -4,7 +4,6 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 using Streetcode.DAL.Entities.Media.Images;
 using Microsoft.EntityFrameworkCore.Query;
@@ -14,6 +13,10 @@ using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.MediatR.Newss.Create;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
@@ -65,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var expectedError = "Cannot convert null to news";
             _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
-            .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
+                .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
             SetupUpdateRepository(returnNumber);
             SetupMapperWithNullNews();
 
@@ -93,7 +96,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
             var expectedError = "Failed to update news";
             _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateNews"])
-            .Returns(new LocalizedString("FailedToUpdateNews", expectedError));
+                .Returns(new LocalizedString("FailedToUpdateNews", expectedError));
             var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
@@ -129,7 +132,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var testNewsDTO = GetNewsDTO();
             var expectedError = "A news with the same title already exists.";
             SetupMapper(testNews, testNewsDTO);
-            SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
+            SetupRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedError, result.Errors.First().Message)
+            );
+        }
+        [Fact]
+        public async Task ShouldThrowException_NewsWithSameTextExists()
+        {
+            // Arrange
+            var testNews = GetNews();
+            var testNewsDTO = GetNewsDTO();
+            var expectedError = "A news with the same text already exists.";
+            SetupMapper(testNews, testNewsDTO);
+            SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(testNews.Text);
             var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
@@ -166,16 +189,30 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
                 .Returns(GetNewsWithNotExistId());
         }
-        private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
+        private void SetupRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
         {
             _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
+                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
+                .ReturnsAsync((Expression<Func<DAL.Entities.News.News, bool>> predicate, Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>> include) =>
+                {
+                    var newsList = new List<DAL.Entities.News.News>
+                    {
+                        new DAL.Entities.News.News { Title = title }
+                    };
+                    return newsList.FirstOrDefault(predicate.Compile());
+                });
+        }
+        private void SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(string text)
+        {
+            _mockRepository.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
                 It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
                            .ReturnsAsync(() =>
                            {
                                var newsList = new List<DAL.Entities.News.News>
                                {
-                           new DAL.Entities.News.News { Title = title }
+                           new DAL.Entities.News.News { Text = text }
                                };
                                return newsList.FirstOrDefault();
                            });

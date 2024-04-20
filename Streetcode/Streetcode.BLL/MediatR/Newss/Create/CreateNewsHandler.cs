@@ -49,7 +49,6 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
-            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Text == request.newNews.Text);
             var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
             if (existingNewsByTitle != null)
             {
@@ -57,6 +56,8 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
+
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.newNews.Text);
 
             if (existingNewsByText != null)
             {

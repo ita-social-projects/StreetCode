@@ -60,7 +60,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(errorMsg);
             }
 
-            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Text == request.news.Text);
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.news.Text);
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";

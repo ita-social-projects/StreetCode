@@ -2,7 +2,10 @@ def CODE_VERSION = ''
 def IS_IMAGE_BUILDED = false
 def IS_IMAGE_PUSH = false
 def isSuccess
+def preDeployFrontStage
+def preDeployBackStage
 def vers
+def SEM_VERSION = ''
 pipeline {
    agent { 
         label 'stage' 
@@ -61,6 +64,7 @@ pipeline {
                     sh "echo ${vers}"
                     env.CODE_VERSION = readFile(file: 'version').trim()
                     echo "${env.CODE_VERSION}"
+                    SEM_VERSION="${env.CODE_VERSION}"
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
                     def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
@@ -138,6 +142,10 @@ pipeline {
         steps {
             input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
+                    checkout scmGit(
+                      branches: [[name: 'main']],
+                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode-DevOps.git']])
+                   
                     preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                     echo "Last Tag Stage backend: ${preDeployBackStage}"
                     preDeployFrontStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
@@ -149,10 +157,14 @@ pipeline {
 
                     sh 'docker image prune --force --filter "until=72h"'
                     sh 'docker system prune --force --filter "until=72h"'
-                    sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
-                    sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
-                    sh 'docker compose down && sleep 10'
-                    sh 'docker compose --env-file /etc/environment up -d'
+                    sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
+                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
+                    docker stop backend frontend nginx loki certbot
+                    docker container prune -f                
+                    docker volume prune -f
+                    docker network prune -f
+                    sleep 10
+                    docker compose --env-file /etc/environment up -d"""
 
                 }  
             }
@@ -173,15 +185,19 @@ pipeline {
           aborted{
               input message: 'Do you want to rollback Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
             script{
-      
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
                sh 'docker image prune --force --filter "until=72h"'
                sh 'docker system prune --force --filter "until=72h"'
-               sh 'export DOCKER_TAG_BACKEND=${preDeployBackStage}'
-               sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontStage}'
-               sh 'docker compose down && sleep 10'
-               sh 'docker compose --env-file /etc/environment up -d'
+               sh """
+               export DOCKER_TAG_BACKEND=${preDeployBackStage}
+               export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
+               docker stop backend frontend nginx loki certbot
+               docker container prune -f
+               docker volume prune -f
+               docker network prune -f
+               sleep 10
+               docker compose --env-file /etc/environment up -d"""
                
             }
             
@@ -202,16 +218,27 @@ pipeline {
             }
         steps {
             script {
+               checkout scmGit(
+                      branches: [[name: 'main']],
+                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'https://github.com/ita-social-projects/Streetcode-DevOps.git']])
+                   
+                 
                 preDeployBackProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                 echo "Last Tag Prod backend: ${preDeployBackProd}"
                 preDeployFrontProd = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
                 echo "Last Tag Prod frontend: ${preDeployFrontProd}"
                 sh 'docker image prune --force --filter "until=72h"'
                 sh 'docker system prune --force --filter "until=72h"'
-                sh 'export DOCKER_TAG_BACKEND=${env.CODE_VERSION}'
-                sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
-                sh 'docker compose down && sleep 10'
-                sh 'docker compose --env-file /etc/environment up -d'
+
+               sh """
+                  export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
+                  export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
+                  docker stop backend frontend nginx loki certbot
+                  docker container prune -f
+                  docker volume prune -f
+                  docker network prune -f
+                  sleep 10
+                  docker compose --env-file /etc/environment up -d"""
             }
         }
         post {
@@ -232,7 +259,7 @@ pipeline {
                 sh 'echo ${BRANCH_NAME}'
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
-                sh "git merge release/${env.CODE_VERSION}" 
+                sh "git merge release/${env.SEM_VERSION}" 
                 sh "git push origin main" 
                   
             }
@@ -258,10 +285,14 @@ pipeline {
                     echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"
                     sh 'docker image prune --force --filter "until=72h"'
                     sh 'docker system prune --force --filter "until=72h"'
-                    sh 'export DOCKER_TAG_BACKEND=${preDeployBackProd}'
-                    sh 'export DOCKER_TAG_FRONTEND=${preDeployFrontProd}'
-                    sh 'docker compose down && sleep 10'
-                    sh 'docker compose --env-file /etc/environment up -d'
+                     sh """ export DOCKER_TAG_BACKEND=${preDeployBackProd}
+                        export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
+                        docker stop backend frontend nginx loki certbot
+                        docker container prune -f
+                        docker volume prune -f
+                        docker network prune -f
+                        sleep 10
+                        docker compose --env-file /etc/environment up -d"""
                 }
             }    
         }

@@ -17,22 +17,35 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFindSharedResource;
         public UpdateCategoryHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             ILoggerService logger,
             IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
             _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
+            _stringLocalizerCannotFindSharedResource = stringLocalizerCannotFind;
         }
 
         public async Task<Result<Unit>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
+            var existingCategory = await _repositoryWrapper.SourceCategoryRepository
+                .GetFirstOrDefaultAsync(a => a.Id == request.Category.Id);
+
+            if (existingCategory is null)
+            {
+                string errorMsg = _stringLocalizerCannotFindSharedResource["CannotFindAnySrcCategoryByTheCorrespondingId", request.Category.Id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category is null)
             {

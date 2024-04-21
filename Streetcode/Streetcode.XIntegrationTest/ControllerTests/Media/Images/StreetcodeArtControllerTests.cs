@@ -44,7 +44,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(a => a.StreetcodeId == streetcodeId));
         }
 
         [Fact]

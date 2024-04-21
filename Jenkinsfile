@@ -5,6 +5,7 @@ def isSuccess
 def preDeployFrontStage
 def preDeployBackStage
 def vers
+def SEM_VERSION = ''
 pipeline {
    agent { 
         label 'stage' 
@@ -63,6 +64,7 @@ pipeline {
                     sh "echo ${vers}"
                     env.CODE_VERSION = readFile(file: 'version').trim()
                     echo "${env.CODE_VERSION}"
+                    SEM_VERSION="${env.CODE_VERSION}"
                     env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
                     echo "${env.CODE_VERSION}"
                     def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
@@ -257,7 +259,7 @@ pipeline {
                 sh 'echo ${BRANCH_NAME}'
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
-                sh "git merge release/${env.CODE_VERSION}" 
+                sh "git merge release/${env.SEM_VERSION}" 
                 sh "git push origin main" 
                   
             }

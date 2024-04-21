@@ -50,7 +50,6 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
-await app.SeedDataAsync();
 
 var supportedCulture = new[]
 {

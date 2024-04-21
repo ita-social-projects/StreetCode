@@ -131,7 +131,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new CreateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateCategoryCommand(new SourceLinkCategoryDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateCategoryCommand(new CreateSourceLinkCategoryDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -146,17 +146,17 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, CreateSourceLinkCategoryDTO testCategoryDTO)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<CreateSourceLinkCategoryDTO>()))
                 .Returns(testCategory);
-            _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            _mockMapper.Setup(x => x.Map<CreateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
 
         private void SetupMapperWithNullCategory()
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<CreateSourceLinkCategoryDTO>()))
                 .Returns(GetCategoryWithNotExistId());
         }
 
@@ -173,17 +173,23 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             return new DAL.Entities.Sources.SourceLinkCategory()
             {
                 Id = 1,
-                ImageId = imageId
+                ImageId = imageId,
+                Title = "Title"
             };
         }
 
-        private static SourceLinkCategoryDTO GetCategoryDTO()
+        private static CreateSourceLinkCategoryDTO GetCategoryDTO()
         {
-            return new SourceLinkCategoryDTO();
+            return new CreateSourceLinkCategoryDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title"
+            };
         }
 
         private static DAL.Entities.Sources.SourceLinkCategory GetCategoryWithNotExistId() => null;
 
-        private static SourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
+        private static CreateSourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
     }
 }

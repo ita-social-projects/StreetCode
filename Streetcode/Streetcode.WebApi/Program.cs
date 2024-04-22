@@ -1,12 +1,19 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
+using System.IO.Compression;
 using AspNetCoreRateLimit;
 using Hangfire;
+using Streetcode.WebApi.Extensions;
+using Microsoft.AspNetCore.Localization;
+using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Streetcode.BLL.Middleware;
 using Streetcode.BLL.Services.Hangfire;
 using Streetcode.WebApi.Extensions;
+using Streetcode.WebApi.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication();
@@ -21,6 +28,7 @@ builder.Services.ConfigureInstagram(builder);
 builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRequestResponseMiddlewareOptions(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
+builder.Services.ConfigureResponseCompressingMiddleware(builder);
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
@@ -91,6 +99,7 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.UseIpRateLimiting();
 app.UseRateLimiter();
 app.MapControllers();
+app.UseMiddleware<CustomResponseCompressionMiddleware>();
 
 app.Run();
 public partial class Program

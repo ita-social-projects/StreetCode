@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Org.BouncyCastle.Asn1.Cmp;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -14,7 +17,10 @@ namespace Streetcode.BLL.MediatR.Team.Create
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
 
-        public CreateTeamHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
+        public CreateTeamHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
@@ -24,6 +30,13 @@ namespace Streetcode.BLL.MediatR.Team.Create
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
+            if (teamMember.ImageId == 0)
+            {
+                string errormsg = "Invalid ImageId Value";
+                _logger.LogError(request, errormsg);
+                return Result.Fail(errormsg);
+            }
+
             try
             {
                 teamMember.Positions.Clear();

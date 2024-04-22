@@ -25,8 +25,6 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
             UpdateHistoricalContextCommand request,
             CancellationToken cancellationToken)
         {
-            /* have some shitty code right here, if you delete the DAL.Entities.Timeline. part it will show error
-            even if you have using Streetcode.DAL.Entities.Timeline; so sad :( */
             var historicalContext =
                 await _repositoryWrapper.HistoricalContextRepository.GetFirstOrDefaultAsync(x =>
                     x.Id == request.HistoricalContext.Id);
@@ -37,8 +35,21 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
                 return Result.Fail(exMessage);
             }
 
+            var historicalContextRepeat = await _repositoryWrapper.HistoricalContextRepository.GetFirstOrDefaultAsync(
+                x =>
+                    x.Title == request.HistoricalContext.Title);
+
+            if (historicalContextRepeat is not null)
+            {
+                string exMessage = $"There is already a context with title - {request.HistoricalContext.Title}";
+                _logger.LogError(request, exMessage);
+                return Result.Fail(exMessage);
+            }
+
             try
             {
+                /* have some shitty code right here, if you delete the DAL.Entities.Timeline. part it will show error
+                even if you have using Streetcode.DAL.Entities.Timeline; so sad :( */
                 var contextToUpdate = _mapper.Map<DAL.Entities.Timeline.HistoricalContext>(request.HistoricalContext);
                 _repositoryWrapper.HistoricalContextRepository.Update(contextToUpdate);
                 await _repositoryWrapper.SaveChangesAsync();

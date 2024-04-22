@@ -2,15 +2,19 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.DTO.Sources.Validation;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 {
-    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<Unit>>
+    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<SourceLinkCategoryDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -34,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             _stringLocalizerCannotFindSharedResource = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<Unit>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<SourceLinkCategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var existingCategory = await _repositoryWrapper.SourceCategoryRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Category.Id);
@@ -42,6 +46,16 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             if (existingCategory is null)
             {
                 string errorMsg = _stringLocalizerCannotFindSharedResource["CannotFindAnySrcCategoryByTheCorrespondingId", request.Category.Id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
+            var validator = new SourceLinkCategoryDTOValidator();
+            var validationResult = validator.Validate(request.Category);
+
+            if (!validationResult.IsValid)
+            {
+                string errorMsg = validationResult.Errors.First().ErrorMessage;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -54,19 +68,23 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
-            if (category.ImageId == 0)
+            var existingImage = await _repositoryWrapper.ImageRepository
+                .GetFirstOrDefaultAsync(a => a.Id == request.Category.ImageId);
+
+            if (existingImage is null)
             {
-                string errorMsg = "Invalid ImageId Value";
+                string errorMsg = _stringLocalizerCannotFindSharedResource["CannotFindImageWithCorrespondingId", request.Category.ImageId].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repositoryWrapper.SourceCategoryRepository.Update(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
+            var returnCategory = _mapper.Map<SourceLinkCategoryDTO>(category);
+            if (resultIsSuccess)
             {
-                return Result.Ok(Unit.Value);
+                return Result.Ok(returnCategory);
             }
             else
             {

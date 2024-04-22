@@ -17,23 +17,33 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizer;
+    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
 
     public CreateImageHandler(
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         IMapper mapper,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizer)
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizer,
+        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
         _stringLocalizer = stringLocalizer;
+        _stringLocalizerCannot = stringLocalizerCannot;
     }
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
+        if (request.Image.Alt is null)
+        {
+            string errorMsg = _stringLocalizerCannot["CannotCreateImageWithoutAlt"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(errorMsg);
+        }
+
         string hashBlobStorageName = _blobService.SaveFileInStorage(
             request.Image.BaseFormat,
             request.Image.Title,

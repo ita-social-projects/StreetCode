@@ -166,11 +166,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResource.CannotSaveSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SharedResource.FailedToCreateSharedResource.en-US.resx</DependentUpon>
-    </Compile>
     <Compile Update="Resources\SharedResource.FailedToCreateSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -307,8 +302,7 @@
       <LastGenOutput>SharedResource.CannotSaveSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SharedResource.FailedToCreateSharedResource.en-US.Designer.cs</LastGenOutput>
+      <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>

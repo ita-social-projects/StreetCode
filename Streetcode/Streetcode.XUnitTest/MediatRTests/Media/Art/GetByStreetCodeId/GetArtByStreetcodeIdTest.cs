@@ -90,12 +90,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                 new Art()
                 {
                     Id = 1,
-                    Image = new Image()
+                    Image = new DAL.Entities.Media.Images.Image(),
                 },
                 new Art()
                 {
                     Id = 2,
-                    Image = new Image()
+                    Image = new DAL.Entities.Media.Images.Image(),
                 },
             };
         }

@@ -31,6 +31,15 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 				return Result.Fail(exMessage);
 			}
 
+			existedTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x => x.Title == request.tag.Title);
+
+			if (existedTag is not null)
+			{
+                var errMessage = $"Tag with title {request.tag.Title} already exists";
+                _logger.LogError(request, errMessage);
+                return Result.Fail(errMessage);
+            }
+
 			try
 			{
 				var tagToUpdate = _mapper.Map<TagEntity>(request.tag);

@@ -9,10 +9,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     public class ExtractCreateTestJob: BeforeAfterTestAttribute
     {
         public static JobDto JobForTest;
+        public static JobCreateDto JobCreateForTest;
 
         public override void Before(MethodInfo methodUnderTest)
         {
             JobForTest = new JobDto
+            {
+                Title = "Test",
+                Status = false,
+                Description = "Test",
+                Salary = "100",
+            };
+
+            JobCreateForTest = new JobCreateDto
             {
                 Title = "Test",
                 Status = false,

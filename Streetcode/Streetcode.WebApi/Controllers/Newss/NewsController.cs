@@ -42,7 +42,7 @@ namespace Streetcode.WebApi.Controllers.Newss
         [Authorize(Roles = nameof(UserRole.Admin))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create([FromBody] CreateNewsDTO partner)
+        public async Task<IActionResult> Create([FromBody] NewsCreateDTO partner)
         {
             return HandleResult(await Mediator.Send(new CreateNewsCommand(partner)));
         }

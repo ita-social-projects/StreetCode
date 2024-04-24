@@ -11,6 +11,7 @@ namespace Streetcode.BLL.Mapping.Newss
             CreateMap<News, NewsDTO>().ReverseMap();
             CreateMap<News, CreateNewsDTO>().ReverseMap();
             CreateMap<News, UpdateNewsDTO>().ReverseMap();
+            CreateMap<NewsCreateDTO, News>();
         }
     }
 }

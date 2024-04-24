@@ -5,5 +5,5 @@ using Streetcode.BLL.DTO.Streetcode.TextContent;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 {
-    public record CreateCategoryCommand(CreateSourceLinkCategoryDTO Category) : IRequest<Result<CreateSourceLinkCategoryDTO>>;
+    public record CreateCategoryCommand(SourceLinkCategoryCreateDTO Category) : IRequest<Result<CreateSourceLinkCategoryDTO>>;
 }

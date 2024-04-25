@@ -40,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
             Assert.True(result.IsSuccess);
         }
@@ -59,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
             Assert.Equal(exceptionMessage, result.Errors.First().Message);
         }
@@ -75,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
             Assert.IsType<TeamMemberDTO>(result.Value);
         }
@@ -178,7 +178,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object    );
 
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -240,7 +240,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
                 .Returns(dto);
         }
-        
+
         private void MapperSetup(TeamMember member)
         {
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
@@ -284,7 +284,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             return new TeamMember
             {
-                Id = 1, Positions = new List<Positions>(), ImageId = imageId
+                Id = 1,
+                ImageId = imageId,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                Positions = new List<Positions>()
             };
         }
 
@@ -304,10 +309,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static TeamMemberDTO GetTeamMemberDTO(List<PositionDTO> newPositions)
+        private static TeamMemberCreateDTO GetTeamMemberDTO(List<PositionDTO> newPositions)
         {
-            return new TeamMemberDTO
+            return new TeamMemberCreateDTO
             {
+                ImageId = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
                 Positions = newPositions
             };
         }

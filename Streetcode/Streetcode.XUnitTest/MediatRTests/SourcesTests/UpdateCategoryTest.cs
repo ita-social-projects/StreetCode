@@ -55,7 +55,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             // Assert
             Assert.True(result.IsSuccess);
             Assert.Empty(result.Errors); 
-            Assert.Equal(Unit.Value, result.Value); 
+            Assert.Equal(testCategoryDTO, result.Value); 
         }
 
 
@@ -132,7 +132,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new UpdateCategoryCommand(new SourceLinkCategoryDTO()), CancellationToken.None);
+            var result = await handler.Handle(new UpdateCategoryCommand(new UpdateSourceLinkCategoryDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -153,17 +153,17 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, UpdateSourceLinkCategoryDTO testCategoryDTO)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
                 .Returns(testCategory);
-            _mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            _mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
 
         private void SetupMapperWithNullCategory()
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
                 .Returns(GetCategoryWithNotExistId());
         }
 
@@ -184,13 +184,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static SourceLinkCategoryDTO GetCategoryDTO()
+        private static UpdateSourceLinkCategoryDTO GetCategoryDTO()
         {
-            return new SourceLinkCategoryDTO();
+            return new UpdateSourceLinkCategoryDTO();
         }
 
         private static DAL.Entities.Sources.SourceLinkCategory GetCategoryWithNotExistId() => null;
 
-        private static SourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
+        private static UpdateSourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
     }
 }

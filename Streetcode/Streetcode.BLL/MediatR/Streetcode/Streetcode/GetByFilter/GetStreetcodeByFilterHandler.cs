@@ -100,20 +100,20 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 }
             }
 
-            foreach (var streetcodeArt in await _repositoryWrapper.ArtRepository.GetAllAsync(
-            include: i => i.Include(x => x.StreetcodeArts),
-            predicate: x => x.StreetcodeArts.Any(art => art.Streetcode != null && art.Streetcode.Status == DAL.Enums.StreetcodeStatus.Published)))
+            foreach (var streetcodeArt in await _repositoryWrapper.StreetcodeArtRepository.GetAllAsync(
+            include: i => i.Include(sArt => sArt.Art).Include(sArt => sArt.StreetcodeArtSlide).ThenInclude(slide => slide.Streetcode),
+            predicate: x => x.StreetcodeArtSlide.Streetcode != null && x.StreetcodeArtSlide.Streetcode.Status == DAL.Enums.StreetcodeStatus.Published))
             {
-                if (!string.IsNullOrEmpty(streetcodeArt.Description) && streetcodeArt.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrEmpty(streetcodeArt.Art.Description) && streetcodeArt.Art.Description.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
                 {
-                    streetcodeArt.StreetcodeArts.ForEach(art =>
+                    streetcodeArt.StreetcodeArtSlide.StreetcodeArts.ForEach(art =>
                     {
-                        if (art.Streetcode == null)
+                        if (art.Art == null)
                         {
                             return;
                         }
 
-                        results.Add(CreateFilterResult(art.Streetcode, streetcodeArt.Description, "Арт-галерея", "art-gallery"));
+                        results.Add(CreateFilterResult(art.StreetcodeArtSlide.Streetcode, streetcodeArt.Art.Description, "Арт-галерея", "art-gallery"));
                     });
                     continue;
                 }

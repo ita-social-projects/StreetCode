@@ -17,5 +17,6 @@ public class FactProfile : Profile
           .ForMember(x => x.Streetcode, opt => opt.MapFrom(src => null as StreetcodeContent))
           .ForMember(x => x.Image, opt => opt.MapFrom(src => src.ModelState == Enums.ModelState.Deleted ? new Image { Id = src.ImageId, BlobName = string.Empty, MimeType = string.Empty } : null))
           .ReverseMap();
+        CreateMap<FactCreateDTO, Fact>();
     }
 }

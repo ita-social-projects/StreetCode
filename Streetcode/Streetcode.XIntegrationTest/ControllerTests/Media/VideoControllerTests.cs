@@ -16,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testVideo = VideoExtracter.Extract(uniqueId);
         }
 

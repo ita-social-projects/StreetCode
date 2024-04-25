@@ -81,64 +81,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         }
 
         [Theory]
-        [InlineData(1, 2)]
-        public async Task ShouldDeleteLinks_LinksToBeDeletedExist(int idFirst, int idSecond)
-        {
-            // Arrange
-            var teamMember = GetTeamMember(1);
-            var linkFirst = GetTeamMemberLink(idFirst);
-            var linkSecond = GetTeamMemberLink(idSecond);
-            var links = new List<TeamMemberLink> { linkFirst, linkSecond };
-
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup(link: links);
-            _mockRepository.Setup(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()));
-
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsSuccess),
-                () => Assert.NotNull(result.Value)
-            );
-
-            _mockRepository.Verify(repo => repo.TeamLinkRepository.Delete(It.IsAny<TeamMemberLink>()), Times.Exactly(links.Count));
-        }
-
-        [Theory]
-        [InlineData(1, 2)]
-        public async Task ShouldDeletePositions_PositionsToBeDeletedExist(int idFirst, int idSecond)
-        {
-            // Arrange
-            var teamMember = GetTeamMember(1);
-            var positionFirst = GetTeamMemberPositions(idFirst);
-            var positionSecond = GetTeamMemberPositions(idSecond);
-            var oldPositions = new List<TeamMemberPositions> { positionFirst, positionSecond };
-
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup(memberPos: oldPositions);
-            _mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
-            
-            _mockRepository.Setup(repo => repo.TeamPositionRepository
-                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
-                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(oldPositions);
-
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsSuccess),
-                () => Assert.NotNull(result.Value)
-            );
-
-            _mockRepository.Verify(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()), Times.Exactly(oldPositions.Count));
-        }
-
-        [Theory]
         [InlineData(-1, "New Position")]
         public async Task WhenNewPositionIdIsNegative_CreatesNewPositionAndTeamMemberPosition(int id, string positionName)
         {
@@ -232,12 +174,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
                 IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
         }
-        private void MapperSetupWithLinks(TeamMember member, TeamMemberDTO dto)
+
+        private void MapperSetupWithLinks(TeamMember member, TeamMemberCreateDTO dto)
         {
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
                 .Returns(member);
 
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
+            _mockMapper.Setup(mapper => mapper.Map<TeamMemberCreateDTO>(It.IsAny<object>()))
                 .Returns(dto);
         }
 
@@ -250,24 +193,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 .Returns(new TeamMemberDTO());
         }
 
-        private TeamMemberDTO GetTeamMemberWithLinksDTO()
+        private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
         {
-            var teamMemberLink = new TeamMemberLinkDTO { Id = 1, LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
-            return new TeamMemberDTO
+            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
+            return new TeamMemberCreateDTO
             {
-                Id = 1,
                 Name = "Test",
                 Description = "Test",
                 IsMain = true,
                 ImageId = 1,
-                TeamMemberLinks = new List<TeamMemberLinkDTO> { teamMemberLink },
+                TeamMemberLinks = new List<TeamMemberLinkCreateDTO> { teamMemberLink },
                 Positions = new List<PositionDTO>()
             };
         }
 
         private TeamMember GetTeamMemberWithLinks()
         {
-            var teamMemberLink = new TeamMemberLink { Id = 1, LogoType = (DAL.Enums.LogoType)10 };
+            var teamMemberLink = new TeamMemberLink { LogoType = (DAL.Enums.LogoType)10 };
             return new TeamMember
             {
                 Id = 1,

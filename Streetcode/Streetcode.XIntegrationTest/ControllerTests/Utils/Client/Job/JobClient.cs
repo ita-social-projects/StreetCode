@@ -11,7 +11,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Job
         {
         }
 
-        public async Task<RestResponse> CreateAsync(JobDto createJobDTO, string authToken = "")
+        public async Task<RestResponse> CreateAsync(JobCreateDto createJobDTO, string authToken = "")
         {
             return await this.SendCommand("/Create", Method.Post, createJobDTO, authToken);
         }

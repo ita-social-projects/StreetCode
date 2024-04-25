@@ -5,6 +5,6 @@ using Streetcode.BLL.DTO.News;
 
 namespace Streetcode.BLL.MediatR.Jobs.Create
 {
-    public record CreateJobCommand(JobDto job)
+    public record CreateJobCommand(JobCreateDto job)
         : IRequest<Result<JobDto>>;
 }

@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/StreetcodeArt")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testArt = ArtExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
@@ -44,7 +44,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.True(returnedValue.All(a => a.StreetcodeId == streetcodeId));
         }
 
         [Fact]

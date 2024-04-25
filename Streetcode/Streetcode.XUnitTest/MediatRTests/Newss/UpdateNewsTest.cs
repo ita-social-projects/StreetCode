@@ -58,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.IsType<NewsDTO>(result.Value);
+            Assert.IsType<UpdateNewsDTO>(result.Value);
         }
 
         [Theory]
@@ -176,17 +176,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.News.News testNews, NewsDTO testNewsDTO)
+        private void SetupMapper(DAL.Entities.News.News testNews, UpdateNewsDTO testNewsDTO)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<UpdateNewsDTO>()))
                 .Returns(testNews);
-            _mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
+            _mockMapper.Setup(x => x.Map<UpdateNewsDTO>(It.IsAny<DAL.Entities.News.News>()))
                 .Returns(testNewsDTO);
         }
 
         private void SetupMapperWithNullNews()
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<UpdateNewsDTO>()))
                 .Returns(GetNewsWithNotExistId());
         }
         private void SetupRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
@@ -234,17 +234,29 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             return new DAL.Entities.News.News()
             {
                 Id = 1,
-                ImageId = 1
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
+                CreationDate = new DateTime(2015, 12, 25)
             };
         }
 
-        private static NewsDTO GetNewsDTO()
+        private static UpdateNewsDTO GetNewsDTO()
         {
-            return new NewsDTO();
+            return new UpdateNewsDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
         }
 
         private static DAL.Entities.News.News GetNewsWithNotExistId() => null;
 
-        private static NewsDTO GetNewsDTOWithNotExistId() => null;
+        private static UpdateNewsDTO GetNewsDTOWithNotExistId() => null;
     }
 }

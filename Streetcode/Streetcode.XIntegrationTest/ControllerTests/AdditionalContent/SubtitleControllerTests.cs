@@ -17,7 +17,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testSubtitle = SubtitleExtracter.Extract(uniqueId);
         }
 

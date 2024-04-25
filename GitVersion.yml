@@ -12,7 +12,7 @@ legacy-semver-padding: 4
 build-metadata-padding: 4
 commits-since-version-source-padding: 4
 tag-pre-release-weight: 60000
-commit-message-incrementing: Disabled
+commit-message-incrementing: Enabled
 branches:
     develop:
         mode: ContinuousDeployment
@@ -21,8 +21,7 @@ branches:
         prevent-increment-of-merged-branch-version: false
         track-merge-target: true
         regex: ^dev(elop)?(ment)?$
-        source-branches:
-        - main
+        source-branches: []
         tracks-release-branches: true
         is-release-branch: false
         is-mainline: false
@@ -34,9 +33,11 @@ branches:
         prevent-increment-of-merged-branch-version: true
         track-merge-target: false
         regex: ^master$|^main$
-        source-branches: []
+        source-branches:
+        - develop
+        - release
         tracks-release-branches: false
-        is-release-branch: false
+        is-release-branch: true
         is-mainline: true
         pre-release-weight: 55000
     release:
@@ -49,6 +50,8 @@ branches:
         source-branches:
         - develop
         - main
+        - support
+        - release
         tracks-release-branches: false
         is-release-branch: true
         is-mainline: false
@@ -62,8 +65,30 @@ branches:
         regex: ^features?[/-]
         source-branches:
         - develop
+        - main
         - release
         - feature
+        - support
+        - hotfix
+        tracks-release-branches: false
+        is-release-branch: false
+        is-mainline: false
+        pre-release-weight: 30000
+    pull-request:
+        mode: ContinuousDelivery
+        tag: PullRequest
+        increment: Inherit
+        prevent-increment-of-merged-branch-version: false
+        tag-number-pattern: '[/-](?<number>\d+)'
+        track-merge-target: false
+        regex: ^(pull|pull\-requests|pr)[/-]
+        source-branches:
+        - develop
+        - main
+        - release
+        - feature
+        - support
+        - hotfix
         tracks-release-branches: false
         is-release-branch: false
         is-mainline: false
@@ -76,28 +101,26 @@ branches:
         track-merge-target: false
         regex: ^hotfix(es)?[/-]
         source-branches:
+        - develop
+        - main
+        - support
+        tracks-release-branches: false
+        is-release-branch: false
+        is-mainline: false
+        pre-release-weight: 30000
+    support:
+        mode: ContinuousDelivery
+        tag: ''
+        increment: Patch
+        prevent-increment-of-merged-branch-version: true
+        track-merge-target: false
+        regex: ^support[/-]
+        source-branches:
         - main
         tracks-release-branches: false
         is-release-branch: false
-        is-mainline: false
-        pre-release-weight: 30000
-    pull-request:
-        mode: ContinuousDelivery
-        tag: PullRequest
-        increment: None
-        prevent-increment-of-merged-branch-version: true
-        tag-number-pattern: '[/-](?<number>\d+)'
-        track-merge-target: false
-        regex: ^(pull|pull\-requests|pr)[/-]
-        source-branches:
-        - develop
-        - release
-        - feature
-        - hotfix
-        tracks-release-branches: false
-        is-release-branch: false
-        is-mainline: false
-        pre-release-weight: 30000
+        is-mainline: true
+        pre-release-weight: 55000
 ignore:
     sha: []
 commit-date-format: yyyy-MM-dd

@@ -81,7 +81,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 {
                     _repositoryWrapper.ImageRepository.Delete(img);
                 }
-            }   
+            }
             
             _repositoryWrapper.NewsRepository.Update(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;

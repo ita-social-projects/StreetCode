@@ -5,5 +5,9 @@ public enum LogoTypeDTO : byte
     Twitter,
     Instagram,
     Facebook,
-    YouTube
+    YouTube,
+    Linkedin,
+    Tiktok,
+    Behance,
+    Http
 }

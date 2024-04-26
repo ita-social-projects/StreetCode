@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Org.BouncyCastle.Crypto;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
@@ -18,12 +19,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public CreateTeamTest()
         {
             _mockMapper = new Mock<IMapper>();
             _mockRepository = new Mock<IRepositoryWrapper>();
             _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -35,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
@@ -54,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
             _mockRepository.Setup(repo => repo.SaveChanges()).Throws(new Exception(exceptionMessage));
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
@@ -70,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
             // Assert
@@ -94,7 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>()))
                 .Returns(new Positions());
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
             // Act
             var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
             // Assert
@@ -114,7 +117,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             string expectedErrorMessage = "Invalid ImageId Value";
             var teamMember = GetTeamMember();
             MapperSetup(teamMember);
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object    );
 
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
@@ -125,6 +128,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             );
 
         }
+
+        [Fact]
+        public async Task ShouldReturnFail_InvalidLogoType()
+        {
+            // Arrange
+            string expectedErrorMessage = "CannotCreateTeamMemberLinkWithInvalidLogoType";
+            _mockLocalizerConvertNull.Setup(x => x["CannotCreateTeamMemberLinkWithInvalidLogoType"])
+            .Returns(new LocalizedString("CannotCreateTeamMemberLinkWithInvalidLogoType", expectedErrorMessage));
+
+            var teamMemberDTO = GetTeamMemberWithLinksDTO();
+            var teamMember = GetTeamMemberWithLinks();
+            GetsAsyncRepositorySetup();
+            MapperSetupWithLinks(teamMember, teamMemberDTO);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
+        }
+
         private void BasicRepositorySetup(TeamMember teamMember)
         {
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
@@ -146,6 +175,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
         }
 
+        private void MapperSetupWithLinks(TeamMember member, TeamMemberCreateDTO dto)
+        {
+            _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
+                .Returns(member);
+
+            _mockMapper.Setup(mapper => mapper.Map<TeamMemberCreateDTO>(It.IsAny<object>()))
+                .Returns(dto);
+        }
+
         private void MapperSetup(TeamMember member)
         {
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
@@ -153,6 +191,35 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
                 .Returns(new TeamMemberDTO());
+        }
+
+        private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
+        {
+            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
+            return new TeamMemberCreateDTO
+            {
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                ImageId = 1,
+                TeamMemberLinks = new List<TeamMemberLinkCreateDTO> { teamMemberLink },
+                Positions = new List<PositionDTO>()
+            };
+        }
+
+        private TeamMember GetTeamMemberWithLinks()
+        {
+            var teamMemberLink = new TeamMemberLink { LogoType = (DAL.Enums.LogoType)10 };
+            return new TeamMember
+            {
+                Id = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                ImageId = 1,
+                TeamMemberLinks = new List<TeamMemberLink> { teamMemberLink },
+                Positions = new List<Positions>()
+            };
         }
 
         private static TeamMember GetTeamMember(int imageId = 0)

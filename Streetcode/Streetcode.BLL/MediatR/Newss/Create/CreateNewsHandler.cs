@@ -62,6 +62,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";
+            }
 
             if (newNews.URL.Contains("/"))
             {

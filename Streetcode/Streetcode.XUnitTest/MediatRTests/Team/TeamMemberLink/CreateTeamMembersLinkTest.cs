@@ -136,7 +136,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
                 .Returns(new LocalizedString("CannotConvertNullToTeamLink", expectedErrorMessage));
             //Arrange
             //The specific setup of the 'Map' method returned null, causing an error.
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
+            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
                 .Returns((TeamMemberLink)null);
 
             var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
@@ -152,10 +152,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 
         private void SetupMapMethod(TeamMemberLink teamMemberLink)
         {
-            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkDTO>()))
+            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
                 .Returns(teamMemberLink);
             _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
-                .Returns(GetTeamMemberLinkDTO());
+                .Returns(new TeamMemberLinkDTO());
         }
 
         private void SetupCreateMethod(TeamMemberLink teamMemberLink)
@@ -184,9 +184,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             };
         }
 
-        private static TeamMemberLinkDTO GetTeamMemberLinkDTO()
+        private static TeamMemberLinkCreateDTO GetTeamMemberLinkDTO()
         {
-            return new TeamMemberLinkDTO();
+            return new TeamMemberLinkCreateDTO();
         }
     }
 }

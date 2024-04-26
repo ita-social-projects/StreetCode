@@ -11,7 +11,7 @@ using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 {
-    public class CreateStatisticRecordHandler : IRequestHandler<CreateStatisticRecordCommand, Result<StatisticRecordDTO>>
+    public class CreateStatisticRecordHandler : IRequestHandler<CreateStatisticRecordCommand, Result<StatisticRecordResponseDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<StatisticRecordDTO>> Handle(CreateStatisticRecordCommand request, CancellationToken cancellationToken)
+        public async Task<Result<StatisticRecordResponseDTO>> Handle(CreateStatisticRecordCommand request, CancellationToken cancellationToken)
         {
             var statRecord = _mapper.Map<Entity>(request.StatisticRecordDTO);
 
@@ -62,7 +62,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var mappedCreatedRecord = _mapper.Map<StatisticRecordDTO>(createdRecord);
+            var mappedCreatedRecord = _mapper.Map<StatisticRecordResponseDTO>(createdRecord);
 
             if (mappedCreatedRecord == null)
             {

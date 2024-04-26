@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Mapping\Payment\" />
     <Folder Include="MediatR\AdditionalContent\Tag\" />
     <Folder Include="Exceptions\" />
     <Folder Include="DTO\Instagram\" />
@@ -306,6 +307,9 @@
     <EmbeddedResource Update="Resources\SharedResource.CannotSaveSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResource.CannotSaveSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
+      <Generator></Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>

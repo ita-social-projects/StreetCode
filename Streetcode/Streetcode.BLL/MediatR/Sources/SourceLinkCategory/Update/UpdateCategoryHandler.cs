@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 {
-    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<SourceLinkCategoryDTO>>
+    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<UpdateSourceLinkCategoryDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Coordinate.Create;
 
@@ -28,7 +29,7 @@ public class CreateCoordinateHandler : IRequestHandler<CreateCoordinateCommand, 
 
     public async Task<Result<Unit>> Handle(CreateCoordinateCommand request, CancellationToken cancellationToken)
     {
-        var streetcodeCoordinate = _mapper.Map<DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate>(request.StreetcodeCoordinate);
+        var streetcodeCoordinate = _mapper.Map<StreetcodeCoordinate>(request.StreetcodeCoordinate);
 
         if (streetcodeCoordinate is null)
         {

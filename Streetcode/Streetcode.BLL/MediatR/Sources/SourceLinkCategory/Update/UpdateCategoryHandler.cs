@@ -11,6 +11,7 @@ using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using SourcesEntity = Streetcode.DAL.Entities.Sources;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 {
@@ -38,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             _stringLocalizerCannotFindSharedResource = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<SourceLinkCategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateSourceLinkCategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var existingCategory = await _repositoryWrapper.SourceCategoryRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Category.Id);
@@ -60,7 +61,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
+            var category = _mapper.Map<SourcesEntity.SourceLinkCategory>(request.Category);
             if (category is null)
             {
                 string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToCategory"].Value;
@@ -81,7 +82,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             _repositoryWrapper.SourceCategoryRepository.Update(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            var returnCategory = _mapper.Map<SourceLinkCategoryDTO>(category);
+            var returnCategory = _mapper.Map<UpdateSourceLinkCategoryDTO>(category);
             if (resultIsSuccess)
             {
                 return Result.Ok(returnCategory);

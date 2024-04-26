@@ -5,7 +5,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.DTO.Sources.Validation
 {
-    public class SourceLinkCategoryDTOValidator : AbstractValidator<SourceLinkCategoryDTO>
+    public class SourceLinkCategoryDTOValidator : AbstractValidator<UpdateSourceLinkCategoryDTO>
     {
         public SourceLinkCategoryDTOValidator()
         {

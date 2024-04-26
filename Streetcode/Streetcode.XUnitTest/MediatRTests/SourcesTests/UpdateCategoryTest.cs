@@ -25,6 +25,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFindSharedResource;
 
         public UpdateCategoryTests()
         {
@@ -33,6 +34,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
             _mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            _mockLocalizerCannotFindSharedResource = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -47,7 +49,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             SetupMapper(testCategory, testCategoryDTO);
             SetupImageRepository();
 
-            var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateCategoryHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
 
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(testCategoryDTO), CancellationToken.None);
@@ -70,8 +78,14 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             SetupUpdateRepository(returnNumber);
             SetupMapperWithNullCategory();
 
-            var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
-
+            var handler = new UpdateCategoryHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
+            
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(GetCategoryDTOWithNotExistId()), CancellationToken.None);
 
@@ -95,7 +109,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var expectedError = "Failed to update category";
             _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateCategory"])
             .Returns(new LocalizedString("FailedToUpdateCategory", expectedError));
-            var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateCategoryHandler(_mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
+
 
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(testCategoryDTO), CancellationToken.None);
@@ -114,7 +134,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             SetupMapper(GetCategory(1), GetCategoryDTO());
             SetupImageRepository();
 
-            var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateCategoryHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
 
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(GetCategoryDTO()), CancellationToken.None);
@@ -122,6 +148,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             // Assert
             Assert.True(result.IsSuccess);
         }
+
         [Fact]
         public async Task ShouldReturnFail_ImageIdIsZero()
         {
@@ -129,7 +156,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             string expectedErrorMessage = "Invalid ImageId Value";
             var teamMember = GetCategory();
             SetupMapper(GetCategory(), GetCategoryDTO());
-            var handler = new UpdateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+            var handler = new UpdateCategoryHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
 
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(new UpdateSourceLinkCategoryDTO()), CancellationToken.None);

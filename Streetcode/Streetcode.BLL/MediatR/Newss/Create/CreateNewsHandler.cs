@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -34,7 +33,6 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
         public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
-
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
             {
@@ -66,7 +64,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
+            if (resultIsSuccess)
             {
                 return Result.Ok(_mapper.Map<NewsDTO>(entity));
             }

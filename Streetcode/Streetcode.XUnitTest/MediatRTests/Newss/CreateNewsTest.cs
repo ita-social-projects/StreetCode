@@ -41,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
             Assert.IsType<NewsDTO>(result.Value);
@@ -75,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(new NewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -114,7 +114,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -134,7 +134,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.First().Message);
@@ -142,7 +142,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
         private void SetupMockMapping(DAL.Entities.News.News testNews)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsCreateDTO>()))
                 .Returns(testNews);
             _mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
                 .Returns(GetNewsDTO());
@@ -153,7 +153,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 .Returns(GetNewsWithNotExistId());
         }
         private static DAL.Entities.News.News GetNewsWithNotExistId() => null;
-        private static NewsDTO GetNewsDTOWithNotExistId() => null;
+        private static NewsCreateDTO GetNewsDTOWithNotExistId() => null;
 
         private void SetupMockRepositoryCreate(DAL.Entities.News.News testNews)
         {
@@ -180,6 +180,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 URL = url,
                 CreationDate = new DateTime(2015, 12, 25)
             };
+        }
+
+        private static NewsCreateDTO GetNewsCreateDTO()
+        {
+            return new NewsCreateDTO();
         }
 
         private static NewsDTO GetNewsDTO()

@@ -5,7 +5,7 @@ namespace Streetcode.XIntegrationTest.Base
     {
         private static object _lock = new object();
 
-        public static int Generate()
+        public static int GenerateInt()
         {
             lock (_lock)
             {

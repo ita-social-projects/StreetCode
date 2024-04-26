@@ -63,6 +63,8 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(updatedAudio);
 
+        createdAudio.Base64 = _blobService.FindFileInStorageAsBase64(createdAudio.BlobName);
+
         if (resultIsSuccess)
         {
             return Result.Ok(createdAudio);

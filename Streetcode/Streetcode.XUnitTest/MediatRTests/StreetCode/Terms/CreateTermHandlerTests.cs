@@ -27,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 			_mockMapper = new();
 			_mockRepository = new();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+			_mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
             _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
             _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
 		}
@@ -41,13 +41,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         _mockRepository.Setup(x => x.TermRepository.Create(It.IsAny<Term>())).Returns(createdTerm);
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>())).Returns(createdTerm);
+        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>())).Returns(createdTerm);
         _mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
 
         var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
 
         // Act
-        var result = await handler.Handle(new CreateTermCommand(GetTermDTO()), CancellationToken.None);
+        var result = await handler.Handle(new CreateTermCommand(GetTermCreateDTO()), CancellationToken.None);
 
   //Assert
         Assert.True(result.IsSuccess);
@@ -61,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         _mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
         _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>()))
           .Returns(GetNotExistingTerm()!);
 
         var expectedError = "Cannot convert null to Term";
@@ -80,8 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 		}
 
 		private static Term GetTerm() => new();
-		private static TermDTO GetTermDTO() => new();
-		private static Term? GetNotExistingTerm() => null;
-		private static TermDTO? GetNotExistingTermDTO() => null;
+		private static TermCreateDTO GetTermCreateDTO() => new();
+        private static TermDTO GetTermDTO() => new();
+        private static Term? GetNotExistingTerm() => null;
+		private static TermCreateDTO? GetNotExistingTermDTO() => null;
 	}
 }

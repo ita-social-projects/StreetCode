@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             _stringLocalizerCannotConvertNull = stringLocalizerCannotConvertNull;
         }
 
-        public async Task<Result<NewsDTO>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateNewsDTO>> Handle(UpdateNewsCommand request, CancellationToken cancellationToken)
         {
             var news = _mapper.Map<News>(request.news);
             if (news is null)

@@ -49,6 +49,13 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
+            if (newNews.URL.Contains("/"))
+            {
+                string errorMsg = "Url Is Invalid";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
             if (existingNewsByTitle != null)
             {
@@ -62,13 +69,6 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";
-            }
-
-            if (newNews.URL.Contains("/"))
-            {
-                string errorMsg = "Url Is Invalid";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);

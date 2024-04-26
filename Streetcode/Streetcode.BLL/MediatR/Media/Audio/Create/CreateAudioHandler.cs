@@ -49,7 +49,9 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
 
         var createdAudio = _mapper.Map<AudioDTO>(audio);
 
-        if(resultIsSuccess)
+        createdAudio.Base64 = _blobService.FindFileInStorageAsBase64(createdAudio.BlobName);
+
+        if (resultIsSuccess)
         {
             return Result.Ok(createdAudio);
         }

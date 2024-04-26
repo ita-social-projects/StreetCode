@@ -137,7 +137,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -156,7 +156,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

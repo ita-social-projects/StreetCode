@@ -83,12 +83,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             );
 
         }
+
         [Fact]
         public async Task ShouldReturnFail_UrlIsInvalid()
         {
             // Arrange
             string expectedErrorMessage = "Url Is Invalid";
             var testNews = GetNews(1);
+            SetupMockMapping(testNews);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
+        }
+
+        [Fact]
+        public async Task ShouldReturnFail_CreationDateIsRequired()
+        {
+            // Arrange
+            string expectedErrorMessage = "CreationDate field is required";
+            var testNews = GetNewsWithDefaultCreationDate();
             SetupMockMapping(testNews);
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
@@ -184,7 +204,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
         private static NewsCreateDTO GetNewsCreateDTO()
         {
-            return new NewsCreateDTO();
+            return new NewsCreateDTO()
+            {
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
+        }
+
+        private static DAL.Entities.News.News GetNewsWithDefaultCreationDate()
+        {
+            return new DAL.Entities.News.News()
+            {
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test"
+            };
         }
 
         private static NewsDTO GetNewsDTO()

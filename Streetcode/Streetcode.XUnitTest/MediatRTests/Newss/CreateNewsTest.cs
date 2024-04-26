@@ -33,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task ShouldReturnSuccessfully_TypeIsCorrect()
         {
             // Arrange
-            var testNews = GetNews(1);
+            var testNews = GetNews(1, "test");
             SetupMockMapping(testNews);
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
@@ -53,7 +53,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             var expectedError = "Cannot convert null to news";
             _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
             .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
-            var testNews = GetNews(1);
+            var testNews = GetNews(1, "test");
             SetupMapperWithNullNews();
 
             var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
@@ -83,12 +83,30 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             );
 
         }
+        [Fact]
+        public async Task ShouldReturnFail_UrlIsInvalid()
+        {
+            // Arrange
+            string expectedErrorMessage = "Url Is Invalid";
+            var testNews = GetNews(1);
+            SetupMockMapping(testNews);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
+        }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_WhenNewsAdded()
         {
             // Arrange
-            var testNews = GetNews(1);
+            var testNews = GetNews(1, "test");
             SetupMockMapping(testNews);
             SetupMockRepositoryCreate(testNews);
             SetupMockRepositorySaveChangesReturns(1);
@@ -106,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         public async Task ShouldThrowException_SaveChangesIsNotSuccessful()
         {
             // Arrange
-            var testNews = GetNews(1);
+            var testNews = GetNews(1, "test");
             var expectedError = "Failed to create a news";
             _mockLocalizerFail.Setup(x => x["FailedToCreateNews"]).Returns(new LocalizedString("FailedToCreateNews", expectedError));
             SetupMockMapping(testNews);
@@ -151,7 +169,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
         }
 
-        private static DAL.Entities.News.News GetNews(int imageId = 0)
+        private static DAL.Entities.News.News GetNews(int imageId = 0, string url = "/test")
         {
             return new DAL.Entities.News.News()
             {
@@ -159,7 +177,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 ImageId = imageId,
                 Title = "Title",
                 Text = "test",
-                URL = "test",
+                URL = url,
                 CreationDate = new DateTime(2015, 12, 25)
             };
         }
@@ -171,7 +189,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
         private static NewsDTO GetNewsDTO()
         {
-            return new NewsDTO();
+            return new NewsDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "test",
+                URL = "test",
+                CreationDate = new DateTime(2015, 12, 25)
+            };
         }
     }
 }

@@ -49,6 +49,13 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
+            if (newNews.URL.Contains("/"))
+            {
+                string errorMsg = "Url Is Invalid";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)

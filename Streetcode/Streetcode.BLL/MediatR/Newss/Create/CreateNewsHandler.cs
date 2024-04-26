@@ -69,6 +69,8 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);

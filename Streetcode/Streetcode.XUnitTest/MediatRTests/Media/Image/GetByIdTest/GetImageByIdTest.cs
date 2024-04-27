@@ -80,9 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 
         }
 
-        private Image GetImage()
+        private DAL.Entities.Media.Images.Image GetImage()
         {
-            return new Image()
+            return new DAL.Entities.Media.Images.Image()
             {
                 Id = 2,
                 BlobName = "https://",
@@ -98,12 +98,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private void GetMockRepositoryAndMapper(Image Image, ImageDTO ImageDTO)
+        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Image Image, ImageDTO ImageDTO)
         {
             _mockRepo.Setup(r => r.ImageRepository.GetFirstOrDefaultAsync(
-            It.IsAny<Expression<Func<Image, bool>>>(),
-            It.IsAny<Func<IQueryable<Image>,
-            IIncludableQueryable<Image, object>>>()))
+            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Image, bool>>>(),
+            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Image>,
+            IIncludableQueryable<DAL.Entities.Media.Images.Image, object>>>()))
             .ReturnsAsync(Image);
 
             _mockMapper.Setup(x => x.Map<ImageDTO>(It.IsAny<object>()))

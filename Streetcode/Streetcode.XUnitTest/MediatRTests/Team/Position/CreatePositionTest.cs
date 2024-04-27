@@ -97,7 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             _mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionDTO>()))
                 .Returns(positions);
             _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
-                .Returns(GetPositionsDTO());
+                .Returns(new PositionDTO());
         }
 
         private void SetupCreateAsyncMethod(Positions positions)
@@ -126,9 +126,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             };
         }
 
-        private static PositionDTO GetPositionsDTO()
+        private static PositionCreateDTO GetPositionsDTO()
         {
-            return new PositionDTO();
+            return new PositionCreateDTO();
         }
     }
 }

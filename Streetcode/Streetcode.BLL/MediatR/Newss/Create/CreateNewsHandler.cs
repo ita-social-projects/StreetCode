@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -43,7 +44,16 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             if (newNews.ImageId == 0)
             {
-                newNews.ImageId = null;
+                string errorMsg = "Invalid ImageId Value";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            if (newNews.URL.Contains("/"))
+            {
+                string errorMsg = "Url Is Invalid";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);

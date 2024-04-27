@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Audio")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testAudio = AudioExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(

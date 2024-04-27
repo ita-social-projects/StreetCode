@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Org.BouncyCastle.Asn1.Cmp;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,30 +17,43 @@ namespace Streetcode.BLL.MediatR.Team.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
 
-        public CreateTeamHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
+        public CreateTeamHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            ILoggerService logger,
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
+            _stringLocalizerCannot = stringLocalizerCannot;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
+            if (teamMember.ImageId == 0)
+            {
+                string errormsg = "Invalid ImageId Value";
+                _logger.LogError(request, errormsg);
+                return Result.Fail(errormsg);
+            }
+
             try
             {
                 teamMember.Positions.Clear();
-                var links = await _repository.TeamLinkRepository
-                .GetAllAsync(predicate: l => l.TeamMemberId == request.teamMember.Id);
 
-                var newLinkIds = request.teamMember.TeamMemberLinks.Select(l => l.Id).ToList();
+                var newLogoTypes = request.teamMember.TeamMemberLinks.Select(links => links.LogoType).ToList();
 
-                foreach (var link in links)
+                foreach (var logoType in newLogoTypes)
                 {
-                    if (!newLinkIds.Contains(link.Id))
+                    if (!Enum.IsDefined(typeof(LogoTypeDTO), logoType))
                     {
-                        _repository.TeamLinkRepository.Delete(link);
+                        string errorMsg = _stringLocalizerCannot["CannotCreateTeamMemberLinkWithInvalidLogoType"].Value;
+                        _logger.LogError(request, errorMsg);
+                        return Result.Fail(errorMsg);
                     }
                 }
 
@@ -44,18 +61,6 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 _repository.SaveChanges();
 
                 var newPositions = request.teamMember.Positions.ToList();
-                var newPositionsIds = newPositions.Select(s => s.Id).ToList();
-
-                var oldPositions = await _repository.TeamPositionRepository
-                    .GetAllAsync(ps => ps.TeamMemberId == teamMember.Id);
-
-                foreach (var old in oldPositions!)
-                {
-                    if (!newPositionsIds.Contains(old.PositionsId))
-                    {
-                        _repository.TeamPositionRepository.Delete(old);
-                    }
-                }
 
                 foreach (var newPosition in newPositions)
                 {
@@ -69,7 +74,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
                         _repository.TeamPositionRepository.Create(
                             new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = tpm.Id });
                     }
-                    else if (oldPositions.FirstOrDefault(x => x.PositionsId == newPosition.Id) == null)
+                    else
                     {
                         _repository.TeamPositionRepository.Create(
                             new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = newPosition.Id });
@@ -77,6 +82,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 }
 
                 _repository.SaveChanges();
+                var resulted = _mapper.Map<TeamMemberDTO>(teamMember);
                 return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
             }
             catch (Exception ex)

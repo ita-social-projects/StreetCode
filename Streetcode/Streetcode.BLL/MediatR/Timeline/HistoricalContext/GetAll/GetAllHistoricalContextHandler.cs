@@ -29,7 +29,6 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             var historicalContextItems = await _repositoryWrapper
                 .HistoricalContextRepository
                 .GetAllAsync();
-            var historicalContexts = historicalContextItems.OrderBy(context => context.Title);
 
             if (historicalContextItems is null)
             {
@@ -37,6 +36,8 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
+
+            var historicalContexts = historicalContextItems.OrderBy(context => context.Title);
 
             return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContexts));
         }

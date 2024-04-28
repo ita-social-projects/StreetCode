@@ -10,6 +10,5 @@ namespace Streetcode.BLL.DTO.Team
         public int? ImageId { get; set; }
         public List<TeamMemberLinkCreateDTO>? TeamMemberLinks { get; set; } = new List<TeamMemberLinkCreateDTO>();
         public List<PositionDTO>? Positions { get; set; } = new List<PositionDTO>();
-        public ImageDTO? Image { get; set; }
     }
 }

@@ -678,7 +678,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ArtId")
                         .HasColumnType("int");
@@ -711,7 +711,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Index")
                         .ValueGeneratedOnAdd()
@@ -830,6 +830,11 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<int?>("ImageId")
                         .HasColumnType("int");
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<int>("StreetcodeId")
                         .HasColumnType("int");
@@ -1570,7 +1575,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Art", "Art")
                         .WithMany("StreetcodeArts")
                         .HasForeignKey("ArtId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide", "StreetcodeArtSlide")

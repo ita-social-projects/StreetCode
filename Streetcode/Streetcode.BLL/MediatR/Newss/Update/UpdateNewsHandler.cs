@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -52,8 +52,38 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(errorMsg);
             }
 
-            _repositoryWrapper.NewsRepository.Update(news);
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title);
+            if (existingNewsByTitle != null)
+            {
+                string errorMsg = "A news with the same title already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
 
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.news.Text);
+            if (existingNewsByText != null)
+            {
+                string errorMsg = "A news with the same text already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var response = _mapper.Map<NewsDTO>(news);
+
+            if (news.Image is not null)
+            {
+                response.Image.Base64 = _blobSevice.FindFileInStorageAsBase64(response.Image.BlobName);
+            }
+            else
+            {
+                var img = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == response.ImageId);
+                if (img != null)
+                {
+                    _repositoryWrapper.ImageRepository.Delete(img);
+                }
+            }
+
+            _repositoryWrapper.NewsRepository.Update(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if(resultIsSuccess)

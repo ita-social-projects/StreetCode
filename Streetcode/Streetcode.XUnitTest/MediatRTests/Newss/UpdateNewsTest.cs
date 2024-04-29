@@ -1,22 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.MediatR.Newss.Update;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Xunit;
-using Streetcode.DAL.Entities.Media.Images;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Threading.Tasks;
-using System.Threading;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
+using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.MediatR.Newss.Create;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
+using Xunit;
+
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss
 {
@@ -80,6 +75,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal(expectedError, result.Errors.First().Message);
+        }
+
+
+        [Fact]
+        public async Task ShouldReturnFail_CreationDateIsRequired()
+        {
+            // Arrange
+            string expectedErrorMessage = "CreationDate field is required";
+            var testNews = GetNewsWithDefaultCreationDate();
+            var testNewsDto = GetNewsDTOWithDefaultCreationDate();
+            SetupMapper(testNews, testNewsDto);
+            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new UpdateNewsCommand(testNewsDto), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
         }
 
         [Theory]
@@ -242,6 +258,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             };
         }
 
+        private static DAL.Entities.News.News GetNewsWithDefaultCreationDate()
+        {
+            return new DAL.Entities.News.News()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
+            };
+        }
+
         private static UpdateNewsDTO GetNewsDTO()
         {
             return new UpdateNewsDTO()
@@ -252,6 +280,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 Text = "Text",
                 URL = "URL",
                 CreationDate = new DateTime(2015, 12, 25)
+            };
+        }
+
+        private static UpdateNewsDTO GetNewsDTOWithDefaultCreationDate()
+        {
+            return new UpdateNewsDTO()
+            {
+                Id = 1,
+                ImageId = 1,
+                Title = "Title",
+                Text = "Text",
+                URL = "URL",
             };
         }
 

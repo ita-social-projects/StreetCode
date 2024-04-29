@@ -52,6 +52,13 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(errorMsg);
             }
 
+            if (news.CreationDate == default(DateTime))
+            {
+                string errorMsg = "CreationDate field is required";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title);
             if (existingNewsByTitle != null)
             {

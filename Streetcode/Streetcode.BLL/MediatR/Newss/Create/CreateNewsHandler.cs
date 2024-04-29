@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -52,6 +51,13 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (newNews.URL.Contains("/"))
             {
                 string errorMsg = "Url Is Invalid";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            if (newNews.CreationDate == default(DateTime))
+            {
+                string errorMsg = "CreationDate field is required";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

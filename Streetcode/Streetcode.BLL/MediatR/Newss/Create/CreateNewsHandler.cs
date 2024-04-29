@@ -61,7 +61,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
-            
+
             var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
             if (existingNewsByTitle != null)
             {

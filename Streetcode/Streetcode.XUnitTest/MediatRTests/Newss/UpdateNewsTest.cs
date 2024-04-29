@@ -1,18 +1,16 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.MediatR.Newss.Update;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Xunit;
-using Streetcode.DAL.Entities.Media.Images;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Threading.Tasks;
-using System.Threading;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
+using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.MediatR.Newss.Create;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using System.Linq.Expressions;
+using Xunit;
 
 
 namespace Streetcode.XUnitTest.MediatRTests.Newss

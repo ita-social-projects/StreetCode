@@ -5,5 +5,5 @@ using Streetcode.BLL.DTO.Team;
 
 namespace Streetcode.BLL.MediatR.Team.Update
 {
-    public record UpdateTeamQuery(TeamMemberDTO TeamMember) : IRequest<Result<TeamMemberDTO>>;
+    public record UpdateTeamQuery(UpdateTeamMemberDTO TeamMember) : IRequest<Result<UpdateTeamMemberDTO>>;
 }

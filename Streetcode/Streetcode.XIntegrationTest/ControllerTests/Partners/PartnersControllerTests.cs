@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,

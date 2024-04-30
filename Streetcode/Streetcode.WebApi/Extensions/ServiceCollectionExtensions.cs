@@ -1,4 +1,5 @@
 using System.Text;
+using System.Net.Security;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddRepositoryServices();
         services.AddFeatureManagement();
         services.AddMemoryCache();
+        services.AddHttpContextAccessor();
 
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(currentAssemblies);
@@ -59,6 +61,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICaptchaService, CaptchaService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
@@ -81,7 +84,8 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<StreetcodeDbContext>();
+            .AddEntityFrameworkStores<StreetcodeDbContext>()
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"]);
 
         services.AddHangfire(config =>
         {

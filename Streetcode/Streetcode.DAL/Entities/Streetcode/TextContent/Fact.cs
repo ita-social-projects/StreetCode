@@ -26,4 +26,8 @@ public class Fact
     public int StreetcodeId { get; set; }
 
     public StreetcodeContent? Streetcode { get; set; }
+
+    [Required]
+    [Range(0, int.MaxValue)]
+    public int Index { get; set; }
 }

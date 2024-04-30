@@ -5,6 +5,6 @@ using Streetcode.BLL.DTO.News;
 
 namespace Streetcode.BLL.MediatR.Jobs.Update
 {
-	public record UpdateJobCommand(JobDto job)
+	public record UpdateJobCommand(JobUpdateDto job)
 		: IRequest<Result<JobDto>>;
 }

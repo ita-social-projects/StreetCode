@@ -30,6 +30,11 @@ public class BaseApiController : ControllerBase
                 NotFound("Not Found") : Ok(result.Value);
         }
 
+        if (result.HasError(error => error.Message == "Unauthorized"))
+        {
+            return Unauthorized();
+        }
+
         return BadRequest(result.Reasons);
     }
 }

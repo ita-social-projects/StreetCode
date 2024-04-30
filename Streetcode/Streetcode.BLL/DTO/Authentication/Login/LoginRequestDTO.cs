@@ -16,4 +16,7 @@ public class LoginRequestDTO
     [DefaultValue(AuthConstants.Password)]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
     public string Password { get; set; }
+
+    [Required]
+    public string CaptchaToken { get; set; }
 }

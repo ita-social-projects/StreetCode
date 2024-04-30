@@ -11,6 +11,7 @@ namespace Streetcode.BLL.Mapping.Analytics
         public StatisticRecordProfile()
         {
             CreateMap<StatisticRecord, StatisticRecordDTO>().ReverseMap();
+            CreateMap<StatisticRecord, StatisticRecordResponseDTO>().ReverseMap();
 
             CreateMap<StatisticRecordUpdateDTO, StreetcodeCoordinate>()
                 .ForMember(sc => sc.Id, conf => conf.MapFrom(sru => sru.StreetcodeCoordinate.Id))

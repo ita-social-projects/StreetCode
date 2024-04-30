@@ -91,7 +91,8 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.UseIpRateLimiting();
 app.UseRateLimiter();
 app.MapControllers();
-
+app.UseMiddleware<CustomResponseCompressionMiddleware>();
+await app.SeedDataAsync();
 app.Run();
 public partial class Program
 {

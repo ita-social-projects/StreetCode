@@ -5,7 +5,8 @@
       "launchBrowser": false,
       "environmentVariables": {
         "STREETCODE_ENVIRONMENT": "Local",
-        "ASPNETCORE_ENVIRONMENT": "Local"
+        "ASPNETCORE_ENVIRONMENT": "Local",
+        "ADMIN_PASSWORD": "Str$$tC0dEwofpmjojfop"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000;https://localhost:5001"

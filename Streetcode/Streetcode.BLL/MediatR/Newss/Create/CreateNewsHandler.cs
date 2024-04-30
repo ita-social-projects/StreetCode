@@ -43,7 +43,17 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             if (newNews.ImageId == 0)
             {
-                newNews.ImageId = null;
+                string errorMsg = "Invalid ImageId Value";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
+            if (existingNewsByTitle != null)
+            {
+                string errorMsg = "A news with the same title already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);

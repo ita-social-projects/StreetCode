@@ -4,6 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline.Update;
@@ -17,10 +18,12 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -68,6 +71,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
+                AddTextContent(request.Streetcode.Text, streetcode);
+                AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
                 await AddImagesDetails(request.Streetcode.ImagesDetails);
@@ -105,6 +110,22 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                     Alt = fact.ImageDescription, ImageId = fact.ImageId
                 });
             }
+        }
+    }
+
+    private void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
+    {
+        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
+        }
+    }
+
+    private void AddVideoContent(VideoCreateDTO video,  StreetcodeContent streetcode)
+    {
+        if(streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 

@@ -17,7 +17,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         private readonly string _JwtKey = "s_dkcLEWRlcksdmcQWE_124";
         private readonly string _JwtIssuer = "Jwt_Issuer";
         private readonly string _JwtAudience = "Jwt_Audience";
-        private readonly string _TokenLifetimeInHours = "1";
+        private readonly string _AccessTokenLifetimeInMinutes = "15";
         private readonly Mock<StreetcodeDbContext> _mockDbContext;
         private readonly IConfiguration _fakeConfiguration;
         private readonly TokenService _tokenService;
@@ -37,16 +37,16 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public void ShouldThrowException_InputParameterIsNull()
         {
             // Arrange.
-            var exceptionAction = this._tokenService.GenerateJWTToken;
+            var exceptionAction = this._tokenService.GenerateAccessTokenAsync;
 
             // Act.
 
             // Assert.
-            Assert.Throws<ArgumentNullException>(() => exceptionAction(null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => exceptionAction(null));
         }
 
         [Fact]
-        public void ShouldReturnNotNullToken_InputUserIsValid()
+        public async void ShouldReturnNotNullToken_InputUserIsValid()
         {
             // Arrange.
             this.SetupMockDbContextGetRoles();
@@ -54,14 +54,14 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             User user = this.GetUser();
 
             // Act.
-            var token = this._tokenService.GenerateJWTToken(user);
+            var token = await this._tokenService.GenerateAccessTokenAsync(user);
 
             // Assert.
             Assert.NotNull(token);
         }
 
         [Fact]
-        public void ShouldReturnCorrectData_InputUserIsValid()
+        public async void ShouldReturnCorrectData_InputUserIsValid()
         {
             // Arrange.
             User expectedUser = this.GetUser();
@@ -70,7 +70,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             this.SetupMockDbContextGetUserRoles();
 
             // Act.
-            var token = this._tokenService.GenerateJWTToken(expectedUser);
+            var token = await this._tokenService.GenerateAccessTokenAsync(expectedUser);
 
             // Assert.
             Assert.Equal(expectedUser.Email, token.Claims.FirstOrDefault(claim => claim.Type == "email") !.Value);
@@ -132,7 +132,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
                 { "Jwt:Key", this._JwtKey },
                 { "Jwt:Issuer", this._JwtIssuer },
                 { "Jwt:Audience", this._JwtAudience },
-                { "Jwt:LifetimeInHours", this._TokenLifetimeInHours },
+                { "Jwt:AccessTokenLifetimeInMinutes", this._AccessTokenLifetimeInMinutes },
             };
             var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(appSettingsStub)

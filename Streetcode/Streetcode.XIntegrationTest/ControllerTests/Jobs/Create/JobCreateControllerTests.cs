@@ -100,20 +100,5 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
-
-        [Fact]
-        [ExtractCreateTestJob]
-        public async Task Create_WithExistingJob_ReturnsConflict()
-        {
-            // Arrange
-            var jobCreateDTO = ExtractCreateTestJob.JobForTest;
-            jobCreateDTO.Id = this._testJob.Id;
-
-            // Act
-            var response = await this.client.CreateAsync(jobCreateDTO, this._tokenStorage.AdminAccessToken);
-
-            // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
     }
 }

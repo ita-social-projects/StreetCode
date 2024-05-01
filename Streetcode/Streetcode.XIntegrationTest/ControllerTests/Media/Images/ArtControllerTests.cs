@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public ArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Art")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testArt = ArtExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(

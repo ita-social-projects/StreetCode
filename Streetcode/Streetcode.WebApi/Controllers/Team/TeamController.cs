@@ -42,7 +42,7 @@ namespace Streetcode.WebApi.Controllers.Team
         [Authorize(Roles = nameof(UserRole.Admin))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create([FromBody] CreateTeamMemberDTO teamMember)
+        public async Task<IActionResult> Create([FromBody] TeamMemberCreateDTO teamMember)
         {
             return HandleResult(await Mediator.Send(new CreateTeamQuery(teamMember)));
         }

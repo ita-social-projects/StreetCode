@@ -1,20 +1,22 @@
-﻿using Moq;
-using Streetcode.BLL.MediatR.Media.Image.GetAll;
-using Streetcode.BLL.DTO.Media.Images;
+﻿using System.Linq.Expressions;
 using AutoMapper;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Xunit;
-using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Query;
 using FluentResults;
-using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
+using Moq;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
+using Streetcode.BLL.MediatR.Media.Image.GetAll;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 {
+   using ImageEntity = DAL.Entities.Media.Images;
     public class GetAllImagesTest
     {
         private readonly Mock<IRepositoryWrapper> _mockRepo;
@@ -51,7 +53,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsZero()
         {
             //Arrange
-            MockRepositoryAndMapper(new List<DAL.Entities.Media.Images.Image>() { }, new List<ImageDTO>() { });
+            MockRepositoryAndMapper(new List<ImageEntity.Image>() { }, new List<ImageDTO>() { });
             var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             int expectedResult = 0;
 
@@ -78,18 +80,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         }
 
 
-        private List<DAL.Entities.Media.Images.Image> GetImagesList()
+        private List<ImageEntity.Image> GetImagesList()
         {
-            return new List<DAL.Entities.Media.Images.Image>()
+            return new List<ImageEntity.Image>()
             {
-                new DAL.Entities.Media.Images.Image()
+                new ImageEntity.Image()
                 {
                     Id = 1,
                     BlobName = "https://",
                     MimeType = "",
 
                 },
-                new DAL.Entities.Media.Images.Image()
+                new ImageEntity.Image()
                 {
                     Id = 2,
                     BlobName = "https://",
@@ -113,12 +115,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private void MockRepositoryAndMapper(List<DAL.Entities.Media.Images.Image> ImageList, List<ImageDTO> ImageListDTO)
+        private void MockRepositoryAndMapper(List<ImageEntity.Image> ImageList, List<ImageDTO> ImageListDTO)
         {
             _mockRepo.Setup(r => r.ImageRepository.GetAllAsync(
-            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Image, bool>>>(),
-            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Image>,
-            IIncludableQueryable<DAL.Entities.Media.Images.Image, object>>>()))
+            It.IsAny<Expression<Func<ImageEntity.Image, bool>>>(),
+            It.IsAny<Func<IQueryable<ImageEntity.Image>,
+            IIncludableQueryable<ImageEntity.Image, object>>>()))
             .ReturnsAsync(ImageList);
 
             _mockMapper.Setup(x => x.Map<IEnumerable<ImageDTO>>(It.IsAny<IEnumerable<object>>()))

@@ -21,7 +21,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public TagControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Tag")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testTag = TagExtracter.Extract(uniqueId);
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(

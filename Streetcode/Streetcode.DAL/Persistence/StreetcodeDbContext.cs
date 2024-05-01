@@ -21,6 +21,7 @@ using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
+using StreetcodeArtSlide = Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide;
 
 namespace Streetcode.DAL.Persistence;
 
@@ -60,6 +61,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
     public DbSet<Video> Videos { get; set; }
     public DbSet<StreetcodeCategoryContent> StreetcodeCategoryContent { get; set; }
     public DbSet<StreetcodeArt> StreetcodeArts { get; set; }
+    public DbSet<StreetcodeArtSlide> StreetcodeArtSlides { get; set; }
     public override DbSet<User> Users { get; set; }
     public DbSet<StreetcodeTagIndex> StreetcodeTagIndices { get; set; }
     public DbSet<TeamMember> TeamMembers { get; set; }
@@ -194,13 +196,37 @@ public class StreetcodeDbContext : IdentityDbContext<User>
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<StreetcodeArtSlide>(entity =>
+        {
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.StreetcodeArtSlides)
+                .HasForeignKey(d => d.StreetcodeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.Property(e => e.Index)
+                .HasDefaultValue(1);
+        });
+
+        modelBuilder.Entity<Art>(entity =>
+        {
+            entity.HasOne(d => d.Streetcode)
+                .WithMany(d => d.Arts)
+                .HasForeignKey(d => d.StreetcodeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Image)
+                .WithOne(d => d.Art)
+                .HasForeignKey<Art>(d => d.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<StreetcodeArt>(entity =>
         {
-            entity.HasKey(d => new { d.ArtId, d.StreetcodeId });
+            entity.HasKey(d => new { d.Id });
 
-            entity.HasOne(d => d.Streetcode)
+            entity.HasOne(d => d.StreetcodeArtSlide)
                 .WithMany(d => d.StreetcodeArts)
-                .HasForeignKey(d => d.StreetcodeId)
+                .HasForeignKey(d => d.StreetcodeArtSlideId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Art)
@@ -212,7 +238,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
                 .HasDefaultValue(1);
 
             entity
-                .HasIndex(d => new { d.ArtId, d.StreetcodeId })
+                .HasIndex(d => new { d.ArtId, d.StreetcodeArtSlideId })
                 .IsUnique(false);
         });
 
@@ -280,8 +306,9 @@ public class StreetcodeDbContext : IdentityDbContext<User>
                     .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.Audio)
-                    .WithOne(p => p.Streetcode)
-                    .OnDelete(DeleteBehavior.Cascade);
+                .WithOne(p => p.Streetcode)
+                .HasForeignKey<StreetcodeContent>(d => d.AudioId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(d => d.Text)
                     .WithOne(p => p.Streetcode)

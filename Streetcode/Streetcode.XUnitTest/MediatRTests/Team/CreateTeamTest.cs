@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
@@ -28,14 +30,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldReturnSuccessfully_TeamCreated()
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             MapperSetup(teamMember);
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
             Assert.True(result.IsSuccess);
         }
@@ -46,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             const string exceptionMessage = "Failed to create a team member";
 
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             MapperSetup(teamMember);
             GetsAsyncRepositorySetup();
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
@@ -54,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
             Assert.Equal(exceptionMessage, result.Errors.First().Message);
         }
@@ -63,16 +65,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldReturnSuccessfully_CorrectType()
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             MapperSetup(teamMember);
             BasicRepositorySetup(teamMember);
             GetsAsyncRepositorySetup();
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
-            Assert.IsType<TeamMemberDTO>(result.Value);
+            Assert.IsType<CreateTeamMemberDTO>(result.Value);
         }
 
         [Theory]
@@ -80,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeleteLinks_LinksToBeDeletedExist(int idFirst, int idSecond)
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var linkFirst = GetTeamMemberLink(idFirst);
             var linkSecond = GetTeamMemberLink(idSecond);
             var links = new List<TeamMemberLink> { linkFirst, linkSecond };
@@ -92,7 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsSuccess),
@@ -107,7 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeletePositions_PositionsToBeDeletedExist(int idFirst, int idSecond)
         {
             // Arrange
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var positionFirst = GetTeamMemberPositions(idFirst);
             var positionSecond = GetTeamMemberPositions(idSecond);
             var oldPositions = new List<TeamMemberPositions> { positionFirst, positionSecond };
@@ -123,7 +125,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
             // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsSuccess),
@@ -140,7 +142,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             var newPosition = new PositionDTO { Id = id, Position = positionName };
             var newPositions = new List<PositionDTO> { newPosition };
-            var teamMember = GetTeamMember();
+            var teamMember = GetTeamMember(1);
             var teamMemberDTO = GetTeamMemberDTO(newPositions);
             
             MapperSetup(teamMember);
@@ -163,6 +165,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
+        [Fact]
+        public async Task ShouldReturnFail_ImageIdIsZero()
+        {
+            // Arrange
+            string expectedErrorMessage = "Invalid ImageId Value";
+            var teamMember = GetTeamMember();
+            MapperSetup(teamMember);
+            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateTeamQuery(new CreateTeamMemberDTO()), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
+            );
+
+        }
         private void BasicRepositorySetup(TeamMember teamMember)
         {
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
@@ -184,20 +204,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
         }
 
+       
+
         private void MapperSetup(TeamMember member)
         {
             _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
                 .Returns(member);
 
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
-                .Returns(new TeamMemberDTO());
+            _mockMapper.Setup(mapper => mapper.Map<CreateTeamMemberDTO>(It.IsAny<object>()))
+                .Returns(new CreateTeamMemberDTO());
         }
 
-        private static TeamMember GetTeamMember()
+        private static TeamMember GetTeamMember(int imageId = 0)
         {
             return new TeamMember
             {
-                Id = 1, Positions = new List<Positions>()
+                Id = 1,
+                ImageId = imageId,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                Positions = new List<Positions>()
             };
         }
 
@@ -217,10 +244,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static TeamMemberDTO GetTeamMemberDTO(List<PositionDTO> newPositions)
+        private static CreateTeamMemberDTO GetTeamMemberDTO(List<PositionDTO> newPositions)
         {
-            return new TeamMemberDTO
+            return new CreateTeamMemberDTO
             {
+                ImageId = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
                 Positions = newPositions
             };
         }

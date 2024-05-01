@@ -1,29 +1,42 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Org.BouncyCastle.Asn1.Cmp;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
 {
-    public class CreateTeamHandler : IRequestHandler<CreateTeamQuery, Result<TeamMemberDTO>>
+    public class CreateTeamHandler : IRequestHandler<CreateTeamQuery, Result<CreateTeamMemberDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
 
-        public CreateTeamHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
+        public CreateTeamHandler(
+            IMapper mapper,
+            IRepositoryWrapper repository,
+            ILoggerService logger)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
         }
 
-        public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
+        public async Task<Result<CreateTeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
+            if (teamMember.ImageId == 0)
+            {
+                string errormsg = "Invalid ImageId Value";
+                _logger.LogError(request, errormsg);
+                return Result.Fail(errormsg);
+            }
+
             try
             {
                 teamMember.Positions.Clear();
@@ -77,7 +90,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
                 }
 
                 _repository.SaveChanges();
-                return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
+                return Result.Ok(_mapper.Map<CreateTeamMemberDTO>(teamMember));
             }
             catch (Exception ex)
             {

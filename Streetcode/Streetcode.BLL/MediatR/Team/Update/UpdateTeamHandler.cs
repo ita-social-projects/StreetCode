@@ -8,7 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Update
 {
-    public class UpdateTeamHandler : IRequestHandler<UpdateTeamQuery, Result<TeamMemberDTO>>
+    public class UpdateTeamHandler : IRequestHandler<UpdateTeamQuery, Result<UpdateTeamMemberDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -21,9 +21,15 @@ namespace Streetcode.BLL.MediatR.Team.Update
             _logger = logger;
         }
 
-        public async Task<Result<TeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateTeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
         {
             var team = _mapper.Map<TeamMember>(request.TeamMember);
+            if (team.ImageId == 0)
+            {
+                string errormsg = "Invalid ImageId Value";
+                _logger.LogError(request, errormsg);
+                return Result.Fail(errormsg);
+            }
 
             try
             {
@@ -78,7 +84,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 }
 
                 _repositoryWrapper.SaveChanges();
-                var dbo = _mapper.Map<TeamMemberDTO>(team);
+                var dbo = _mapper.Map<UpdateTeamMemberDTO>(team);
                 dbo.Positions = newPositions;
                 return Result.Ok(dbo);
             }

@@ -51,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsZero()
         {
             //Arrange
-            MockRepositoryAndMapper(new List<Image>() { }, new List<ImageDTO>() { });
+            MockRepositoryAndMapper(new List<DAL.Entities.Media.Images.Image>() { }, new List<ImageDTO>() { });
             var handler = new GetAllImagesHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             int expectedResult = 0;
 
@@ -78,24 +78,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         }
 
 
-        private List<Image> GetImagesList()
+        private List<DAL.Entities.Media.Images.Image> GetImagesList()
         {
-            return new List<Image>()
+            return new List<DAL.Entities.Media.Images.Image>()
             {
-                new Image()
+                new DAL.Entities.Media.Images.Image()
                 {
                     Id = 1,
                     BlobName = "https://",
-                    MimeType = ""
+                    MimeType = "",
 
                 },
-                new Image()
+                new DAL.Entities.Media.Images.Image()
                 {
                     Id = 2,
                     BlobName = "https://",
-                    MimeType = ""
+                    MimeType = "",
                 },
-             };
+            };
         }
 
         private List<ImageDTO> GetImagesDTOList()
@@ -113,12 +113,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private void MockRepositoryAndMapper(List<Image> ImageList, List<ImageDTO> ImageListDTO)
+        private void MockRepositoryAndMapper(List<DAL.Entities.Media.Images.Image> ImageList, List<ImageDTO> ImageListDTO)
         {
             _mockRepo.Setup(r => r.ImageRepository.GetAllAsync(
-            It.IsAny<Expression<Func<Image, bool>>>(),
-            It.IsAny<Func<IQueryable<Image>,
-            IIncludableQueryable<Image, object>>>()))
+            It.IsAny<Expression<Func<DAL.Entities.Media.Images.Image, bool>>>(),
+            It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Image>,
+            IIncludableQueryable<DAL.Entities.Media.Images.Image, object>>>()))
             .ReturnsAsync(ImageList);
 
             _mockMapper.Setup(x => x.Map<IEnumerable<ImageDTO>>(It.IsAny<IEnumerable<object>>()))

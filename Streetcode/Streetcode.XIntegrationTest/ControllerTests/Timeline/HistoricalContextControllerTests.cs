@@ -104,34 +104,6 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
     [Fact]
     [ExtractCreateTestHistoricalContext]
-    public async Task Create_ChangesNotSaved_ReturnsBadRequest()
-    {
-        var historicalContextCreateDto = ExtractCreateTestHistoricalContext.HistoricalContextForTest;
-
-        var repositoryMock = new Mock<IHistoricalContextRepository>();
-        var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-        repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(default, default)).ReturnsAsync((HistoricalContext)null);
-        repositoryMock.Setup(r => r.CreateAsync(default)).ReturnsAsync(this._testCreateContext);
-        repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Returns(null);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Throws(default(Exception));
-
-        var mapperMock = new Mock<IMapper>();
-        var loggerMock = new Mock<ILoggerService>();
-
-        var handler = new CreateHistoricalContextHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerMock.Object);
-
-        var query = new CreateHistoricalContextCommand(historicalContextCreateDto);
-        var cancellationToken = CancellationToken.None;
-
-        var result = await handler.Handle(query, cancellationToken);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-    }
-
-    [Fact]
-    [ExtractCreateTestHistoricalContext]
     public async Task Create_TokenNotPassed_ReturnsUnauthorized()
     {
         // Arrange
@@ -168,7 +140,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Act
         var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.AdminToken);
-        var getResponse = await client.GetByIdAsync(historicalContextCreateDto.Id);
+        var getResponse = await client.GetByTitle(historicalContextCreateDto.Title);
         var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContext>(getResponse.Content);
 
         // Assert

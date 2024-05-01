@@ -5,6 +5,7 @@ using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById;
+using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetByTitle;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update;
 using Streetcode.DAL.Enums;
 
@@ -22,6 +23,12 @@ namespace Streetcode.WebApi.Controllers.Timeline
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetHistoricalContextByIdQuery(id)));
+        }
+
+        [HttpGet("{title}")]
+        public async Task<IActionResult> GetByTitle(string title)
+        {
+            return HandleResult(await Mediator.Send(new GetHistoricalContextByTitleQuery(title)));
         }
 
         [HttpPut]

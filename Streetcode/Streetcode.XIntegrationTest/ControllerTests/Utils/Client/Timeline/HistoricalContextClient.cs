@@ -10,6 +10,12 @@ public class HistoricalContextClient : StreetcodeRelatedBaseClient
         : base(client, secondPartUrl)
     {
     }
+
+    public async Task<RestResponse> GetByTitle(string title, string authToken = "")
+    {
+        return await this.SendQuery($"/GetByTitle/{title}", authToken);
+    }
+
     public async Task<RestResponse> UpdateAsync(HistoricalContextDTO updateTagDTO, string authToken = "")
     {
         return await this.SendCommand("/Update", Method.Put, updateTagDTO, authToken);

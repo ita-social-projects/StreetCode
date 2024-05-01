@@ -18,7 +18,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public StreetcodeCreateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Streetcode", tokenStorage)
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             _testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
@@ -39,7 +39,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -67,7 +67,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.UserToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.UserAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -82,7 +82,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             var streetcodeCreateDTO = ExtractCreateTestStreetcode.StreetcodeForTest;
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminAccessToken);
             var streetcodeId = StreetcodeIndexFetch.GetStreetcodeByIndex(streetcodeCreateDTO.Index);
             var getResponse = await client.GetByIdAsync(streetcodeId);
             var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(getResponse.Content);
@@ -101,7 +101,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             streetcodeCreateDTO.Title = null;  // Invalid data
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -116,7 +116,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             streetcodeCreateDTO.Index = _testStreetcodeContent.Index;
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -132,7 +132,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             streetcodeCreateDTO.TransliterationUrl = new string('a', transliterationUrlMaxLength + 1);
 
             // Act
-            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(streetcodeCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

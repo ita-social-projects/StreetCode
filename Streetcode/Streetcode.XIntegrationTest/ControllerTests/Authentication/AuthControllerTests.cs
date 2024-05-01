@@ -24,6 +24,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         {
             (this._testUser, this._testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
+                userName: Guid.NewGuid().ToString(),
                 password: this.GenerateTestPassword(),
                 nameof(UserRole.User),
                 nameof(UserRole.Admin));
@@ -126,7 +127,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                Token = this._tokenStorage.UserToken,
+                AccessToken = this._tokenStorage.UserAccessToken,
+                RefreshToken = this._tokenStorage.UserRefreshToken,
             };
 
             // Act.
@@ -137,12 +139,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        public async Task RefreshToken_InvalidToken_ReturnsBadRequest()
+        public async Task RefreshToken_InvalidAccessToken_ReturnsBadRequest()
         {
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                Token = "invalid_Token",
+                AccessToken = "invalid_Token",
             };
 
             // Act.
@@ -152,12 +154,30 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
+        [Fact]
+        public async Task RefreshToken_InvalidRefreshToken_ReturnsUnauthorized()
+        {
+            // Arrange.
+            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            {
+                AccessToken = _tokenStorage.UserAccessToken,
+                RefreshToken = "invalid_token",
+            };
+
+            // Act.
+            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
+
+            // Assert.
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
         private LoginRequestDTO GetLoginRequestDTO()
         {
             return new LoginRequestDTO()
             {
                 Login = this._testUser.Email,
                 Password = this._testPassword,
+                CaptchaToken = "test_captcha_token",
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using TagEntity = Streetcode.DAL.Entities.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.Streetcode;
@@ -49,7 +49,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
                     uniqueId,
                     Guid.NewGuid().ToString());
         }
-
+        
         public override void Dispose()
         {
             StreetcodeContentExtracter.Remove(this._testStreetcodeContent);

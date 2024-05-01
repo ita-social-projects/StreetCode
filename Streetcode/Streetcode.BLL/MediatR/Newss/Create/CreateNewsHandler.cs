@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -10,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.Create
 {
-    public class CreateNewsHandler : IRequestHandler<CreateNewsCommand, Result<NewsDTO>>
+    public class CreateNewsHandler : IRequestHandler<CreateNewsCommand, Result<CreateNewsDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -31,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             _stringLocalizerCannot = stringLocalizerCannot;
         }
 
-        public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<Result<CreateNewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
@@ -43,14 +44,16 @@ namespace Streetcode.BLL.MediatR.Newss.Create
 
             if (newNews.ImageId == 0)
             {
-                newNews.ImageId = null;
+                string errorMsg = "Invalid ImageId Value";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
             }
 
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             if(resultIsSuccess)
             {
-                return Result.Ok(_mapper.Map<NewsDTO>(entity));
+                return Result.Ok(_mapper.Map<CreateNewsDTO>(entity));
             }
             else
             {

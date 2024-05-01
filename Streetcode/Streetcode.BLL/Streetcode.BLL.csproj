@@ -42,6 +42,7 @@
     <Folder Include="MediatR\AdditionalContent\Tag\" />
     <Folder Include="Exceptions\" />
     <Folder Include="DTO\Instagram\" />
+    <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -205,6 +206,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResource.NoSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Remove="ByteArrayFormatter.cs" />
   </ItemGroup>
 
   <ItemGroup>

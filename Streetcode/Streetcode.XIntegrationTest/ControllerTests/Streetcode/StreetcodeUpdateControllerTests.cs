@@ -21,7 +21,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public StreetcodeUpdateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
             : base(factory, "/api/Streetcode", tokenStorage)
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             _testStreetcodeUpdateDTO = StreetcodeUpdateDTOExtracter.Extract(
                 uniqueId,
                 uniqueId,

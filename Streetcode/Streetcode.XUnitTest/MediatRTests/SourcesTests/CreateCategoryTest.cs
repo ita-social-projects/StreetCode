@@ -131,7 +131,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var handler = new CreateCategoryHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateCategoryCommand(new CreateSourceLinkCategoryDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateCategoryCommand(new SourceLinkCategoryCreateDTO()), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
@@ -146,11 +146,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, CreateSourceLinkCategoryDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryCreateDTO testCategoryDTO)
         {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<CreateSourceLinkCategoryDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryCreateDTO>()))
                 .Returns(testCategory);
-            _mockMapper.Setup(x => x.Map<CreateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            _mockMapper.Setup(x => x.Map<SourceLinkCategoryCreateDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
 
@@ -178,18 +178,17 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static CreateSourceLinkCategoryDTO GetCategoryDTO()
+        private static SourceLinkCategoryCreateDTO GetCategoryDTO()
         {
-            return new CreateSourceLinkCategoryDTO()
+            return new SourceLinkCategoryCreateDTO()
             {
-                Id = 1,
                 ImageId = 1,
-                Title = "Title"
+                Title = "Title",
             };
         }
 
         private static DAL.Entities.Sources.SourceLinkCategory GetCategoryWithNotExistId() => null;
 
-        private static CreateSourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
+        private static SourceLinkCategoryCreateDTO GetCategoryDTOWithNotExistId() => null;
     }
 }

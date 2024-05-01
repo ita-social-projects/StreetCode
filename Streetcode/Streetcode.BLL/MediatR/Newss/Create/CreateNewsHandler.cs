@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -11,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.Create
 {
-    public class CreateNewsHandler : IRequestHandler<CreateNewsCommand, Result<CreateNewsDTO>>
+    public class CreateNewsHandler : IRequestHandler<CreateNewsCommand, Result<NewsDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             _stringLocalizerCannot = stringLocalizerCannot;
         }
 
-        public async Task<Result<CreateNewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<Result<NewsDTO>> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
             var newNews = _mapper.Map<News>(request.newNews);
             if (newNews is null)
@@ -49,11 +48,43 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
+            if (newNews.URL.Contains("/"))
+            {
+                string errorMsg = "Url Is Invalid";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            if (newNews.CreationDate == default(DateTime))
+            {
+                string errorMsg = "CreationDate field is required";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
+            if (existingNewsByTitle != null)
+            {
+                string errorMsg = "A news with the same title already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.newNews.Text);
+
+            if (existingNewsByText != null)
+            {
+                string errorMsg = "A news with the same text already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
+
+            if (resultIsSuccess)
             {
-                return Result.Ok(_mapper.Map<CreateNewsDTO>(entity));
+                return Result.Ok(_mapper.Map<NewsDTO>(entity));
             }
             else
             {

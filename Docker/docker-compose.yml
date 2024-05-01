@@ -1,3 +1,4 @@
+version: "3"
 services:
   sqlserver:
     container_name: local_sql_server
@@ -6,4 +7,4 @@ services:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "sdlLKMCD234!@#lkcmds"
     ports:
-      - 1433:1433
+      - 1455:1433

@@ -16,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Coordinate")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,

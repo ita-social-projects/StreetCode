@@ -1,5 +1,3 @@
-<a href="https://softserve.academy/"><div align="center"><img src="https://github.com/ita-social-projects/StreetCode/blob/master/StreetCodeLogo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></div></a>
-
 # Streetcode
 This is a Back-end part of our Streetcode project.
 Front-end part: https://github.com/ita-social-projects/StreetCode_Client

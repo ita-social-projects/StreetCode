@@ -99,6 +99,22 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }
     }
 
+    public void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
+    {
+        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
+        }
+    }
+
+    public void AddVideoContent(VideoCreateDTO video, StreetcodeContent streetcode)
+    {
+        if (streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
+        }
+    }
+
     private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
     {
         foreach (FactUpdateCreateDto fact in facts)
@@ -111,22 +127,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                     ImageId = fact.ImageId
                 });
             }
-        }
-    }
-
-    private void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
-        }
-    }
-
-    private void AddVideoContent(VideoCreateDTO video, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 

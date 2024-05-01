@@ -5,7 +5,8 @@ namespace Streetcode.BLL.Interfaces.Authentication
 {
     public interface ITokenService
     {
-        public JwtSecurityToken GenerateJWTToken(User user);
-        public JwtSecurityToken RefreshToken(string token);
+        public Task<JwtSecurityToken> GenerateAccessTokenAsync(User user);
+        public JwtSecurityToken RefreshToken(string accessToken, string refreshToken);
+        public string SetNewRefreshTokenForUser(User user);
     }
 }

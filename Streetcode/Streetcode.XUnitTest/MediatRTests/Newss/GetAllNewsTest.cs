@@ -21,6 +21,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         private Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+        private readonly GetAllNewsHandler _handler;
 
         public GetAllNewsTest()
         {
@@ -28,6 +29,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             this._mockMapper = new Mock<IMapper>();
             this._blobService = new Mock<IBlobService>();
             this._mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            this._handler = this.GetHandler();
         }
 
         [Fact]
@@ -60,10 +62,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
             var httpHeaders = GetEmptyHTTPHeaders();
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(pageSize), httpHeaders);
-            var handler = this.GetHandler();
 
             // Act.
-            var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -79,10 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             ushort pageNumber = 99;
 
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
-            var handler = this.GetHandler();
-
+            
             // Act.
-            var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -98,10 +98,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             ushort pageNumber = 1;
 
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
-            var handler = this.GetHandler();
 
             // Act.
-            var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(

@@ -1,10 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using FluentResults;
 using MediatR;
-using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Services.Authentication;
 namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
     public class RefreshTokenHandler : IRequestHandler<RefreshTokenQuery, Result<RefreshTokenResponceDTO>>
@@ -23,7 +23,12 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             JwtSecurityToken? token = null;
             try
             {
-                token = _tokenService.RefreshToken(request.token.Token);
+                token = _tokenService.RefreshToken(request.token.AccessToken, request.token.RefreshToken);
+            }
+            catch (Exception ex) when (ex.Message == TokenService.InvalidRefreshTokenErrorMessage)
+            {
+                _logger.LogError(request, ex.Message);
+                return Result.Fail("Unauthorized");
             }
             catch (Exception ex)
             {
@@ -33,8 +38,7 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 
             return new RefreshTokenResponceDTO()
             {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ExpireAt = token!.ValidTo,
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
             };
         }
     }

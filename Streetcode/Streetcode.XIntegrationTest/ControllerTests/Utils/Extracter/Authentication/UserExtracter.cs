@@ -6,10 +6,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
 {
     public class UserExtracter
     {
-        public static (User user, string password) Extract(string userId, string password, params string[] roleNames)
+        public static (User user, string password) Extract(string userId, string userName, string password, params string[] roleNames)
         {
             User testUser = TestDataProvider.GetTestData<User>();
             testUser.Id = userId;
+            testUser.UserName = userName;
             testUser.PasswordHash = HashPassword(password, testUser);
             BaseExtracter.Extract<User>(testUser, user => user.Id == userId, false);
             if (roleNames.Length == 0)

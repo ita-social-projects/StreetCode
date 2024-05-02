@@ -148,6 +148,20 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }
     }
 
+    public async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
+    {
+        if (imagesIds.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("There is no valid imagesIds value", null, System.Net.HttpStatusCode.BadRequest);
+        }
+
+        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
+        {
+            ImageId = imageId,
+            StreetcodeId = streetcode.Id,
+        }));
+    }
+
     private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
     {
         foreach (FactUpdateCreateDto fact in facts)
@@ -193,20 +207,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private void AddAudio(StreetcodeContent streetcode, int? audioId)
     {
         streetcode.AudioId = audioId;
-    }
-
-    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
-    {
-        if (imagesIds.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("There is no valid imagesIds value", null, System.Net.HttpStatusCode.BadRequest);
-        }
-
-        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
-        {
-            ImageId = imageId,
-            StreetcodeId = streetcode.Id,
-        }));
     }
 
     private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)

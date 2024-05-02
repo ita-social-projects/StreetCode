@@ -96,7 +96,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         var historicalContextCreateDto = ExtractCreateTestHistoricalContext.HistoricalContextForTest;
 
         // Act
-        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.AdminToken);
+        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -124,7 +124,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         var historicalContextCreateDto = ExtractCreateTestHistoricalContext.HistoricalContextForTest;
 
         // Act
-        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.UserToken);
+        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -139,7 +139,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         var historicalContextCreateDto = ExtractCreateTestHistoricalContext.HistoricalContextForTest;
 
         // Act
-        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.AdminToken);
+        var response = await client.CreateAsync(historicalContextCreateDto, _tokenStorage.AdminAccessToken);
         var getResponse = await client.GetByTitle(historicalContextCreateDto.Title);
         var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContext>(getResponse.Content);
 
@@ -156,7 +156,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         historicalContextCreateDto.Title = null; // Invalid data
 
         // Act
-        var response = await client.CreateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.CreateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -171,7 +171,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         historicalContextCreateDto.Title = _testCreateContext.Title;
 
         // Act
-        var response = await client.CreateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.CreateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -186,7 +186,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         historicalContextCreateDto.Id = this._testCreateContext.Id;
 
         // Act
-        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -200,7 +200,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContext.HistoricalContextForTest;
 
         // Act
-        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Multiple(
@@ -230,7 +230,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContext.HistoricalContextForTest;
 
         // Act
-        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.UserToken);
+        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -245,7 +245,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         historicalContextCreateDto.Title = null; // Invalid data
 
         // Act
-        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -261,7 +261,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         historicalContextCreateDto.Title = this._testUpdateContext.Title;
 
         // Act
-        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminToken);
+        var response = await client.UpdateAsync(historicalContextCreateDto, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -312,7 +312,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         int id = this._testCreateContext.Id;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.AdminToken);
+        var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -338,7 +338,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         int id = this._testCreateContext.Id;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.UserToken);
+        var response = await this.client.Delete(id, this._tokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -351,7 +351,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         int id = -100;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.AdminToken);
+        var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

@@ -163,6 +163,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockLocalizerFailedToUpdate.Object,
                 _mockLocalizerConvertNull.Object,
                 _mockLocalizerCannotFindSharedResource.Object);
+            _mockRepository.Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<int, bool>>>(),
+    It.IsAny<Func<IQueryable<int>, IIncludableQueryable<int, object>>>()))
+
+                Setup(repo => repo.GetFirstOrDefaultAsync(
+    It.IsAny<Expression<Func<int, bool>>>(),
+    It.IsAny<Func<IQueryable<int>, IIncludableQueryable<int, object>>>()))
+    .ReturnsAsync(expectedValue)
 
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(new UpdateSourceLinkCategoryDTO()), CancellationToken.None);

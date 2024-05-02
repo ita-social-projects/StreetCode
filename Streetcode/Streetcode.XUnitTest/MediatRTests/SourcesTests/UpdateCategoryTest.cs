@@ -153,9 +153,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         public async Task ShouldReturnFail_ImageIdIsZero()
         {
             // Arrange
-            string expectedErrorMessage = "Invalid ImageId Value";
-            var teamMember = GetCategory();
-            SetupMapper(GetCategory(), GetCategoryDTO());
+            string title = "Tested";
+            var sourceCategory = GetCategory();
+            var sourceCategoryDto = GetCategoryDTO();
+            sourceCategory.Title = title;
+            sourceCategoryDto.Title = title;
+            SetupMapper(sourceCategory, sourceCategoryDto);
+
             var handler = new UpdateCategoryHandler(
                 _mockRepository.Object,
                 _mockMapper.Object,
@@ -163,16 +167,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockLocalizerFailedToUpdate.Object,
                 _mockLocalizerConvertNull.Object,
                 _mockLocalizerCannotFindSharedResource.Object);
-            _mockRepository.Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<int, bool>>>(),
-    It.IsAny<Func<IQueryable<int>, IIncludableQueryable<int, object>>>()))
 
-                Setup(repo => repo.GetFirstOrDefaultAsync(
-    It.IsAny<Expression<Func<int, bool>>>(),
-    It.IsAny<Func<IQueryable<int>, IIncludableQueryable<int, object>>>()))
-    .ReturnsAsync(expectedValue)
+            _mockRepository.Setup(p => p.SourceCategoryRepository
+            .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
+             It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
+             IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
+                .ReturnsAsync(sourceCategory);
 
+            SetupImageRepository();
+
+            string expectedErrorMessage = "Cannot find an image with corresponding id: 0";
+            _mockLocalizerCannotFindSharedResource.Setup(x => x["CannotFindImageWithCorrespondingId", sourceCategory.ImageId])
+            .Returns(new LocalizedString("CannotFindImageWithCorrespondingId", expectedErrorMessage));
             // Act
-            var result = await handler.Handle(new UpdateCategoryCommand(new UpdateSourceLinkCategoryDTO()), CancellationToken.None);
+            var result = await handler.Handle(new UpdateCategoryCommand(sourceCategoryDto), CancellationToken.None);
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),

@@ -125,6 +125,10 @@ public class StreetcodeDbContext : IdentityDbContext<User>
             .WithOne(p => p.Toponym)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<Fact>()
+            .Property(b => b.Index)
+            .HasDefaultValue(0);
+
         modelBuilder.Entity<Partner>(entity =>
         {
             entity.HasMany(d => d.PartnerSourceLinks)

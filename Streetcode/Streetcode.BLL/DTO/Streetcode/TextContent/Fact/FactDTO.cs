@@ -6,4 +6,5 @@ public class FactDto
     public string Title { get; set; }
     public int ImageId { get; set; }
     public string FactContent { get; set; }
+    public int Index { get; set; }
 }

@@ -14,8 +14,6 @@ public class SourceLinkCategory
     public int Id { get; set; }
 
     [Required]
-    [StringLength(23, ErrorMessage = "Title cannot be longer than 23 characters.")]
-    [RegularExpression(@"\S", ErrorMessage = "Title cannot be empty or whitespace.")]
     public string? Title { get; set; }
 
     [Required]

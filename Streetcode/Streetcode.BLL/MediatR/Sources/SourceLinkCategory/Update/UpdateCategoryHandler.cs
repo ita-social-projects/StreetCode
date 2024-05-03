@@ -74,7 +74,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 
             if (existingImage is null)
             {
-                string errorMsg = _stringLocalizerCannotFindSharedResource["CannotFindImageWithCorrespondingId", request.Category.ImageId].Value;
+                string errorMsg = $"Cannot find an image with corresponding id: {request.Category.ImageId}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

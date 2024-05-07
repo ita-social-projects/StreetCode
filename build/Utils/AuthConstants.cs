@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
+using System;
 
 namespace Utils
 {
@@ -29,6 +30,8 @@ namespace Utils
             Surname = "User_Admin",
             Email = "user@admin.com",
             UserName = "User_Admin_T",
+            RefreshToken = "User_Admin_Refresh_Token",
+            RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };
 
         public static readonly User TEST_USER_USER = new User()
@@ -38,6 +41,8 @@ namespace Utils
             Surname = "User_User",
             Email = "user@user.com",
             UserName = "User_User_T",
+            RefreshToken = "User_User_Refresh_Token",
+            RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };
 
         public static readonly User TEST_USER_LOGIN = new User()
@@ -47,6 +52,8 @@ namespace Utils
             Surname = "User_Login",
             Email = "user@login.com",
             UserName = "User_Login_T",
+            RefreshToken = "User_Login_Refresh_Token",
+            RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };
     }
 }

@@ -25,7 +25,6 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.DTO.Media.Create;
 using Microsoft.IdentityModel.Tokens;
 
-
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
 public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, Result<int>>

@@ -40,7 +40,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public TagControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
             : base(factory, "/api/Tag", tokenStorage)
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testCreateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
             this._testUpdateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
             this._testStreetcodeContent = StreetcodeContentExtracter
@@ -186,7 +186,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var tagCreateDTO = ExtractCreateTestTag.TagForTest;
 
             // Act
-            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -237,13 +237,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
         [Fact]
         [ExtractCreateTestTag]
-        public async Task Create_NotAdminTokenPassed_ReturnsForbidden()
+        public async Task Create_NotAdminAccessTokenPassed_ReturnsForbidden()
         {
             // Arrange
             var tagCreateDTO = ExtractCreateTestTag.TagForTest;
 
             // Act
-            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.UserToken);
+            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.UserAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -258,7 +258,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var tagCreateDTO = ExtractCreateTestTag.TagForTest;
 
             // Act
-            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminAccessToken);
             var getResponse = await client.GetTagByTitle(tagCreateDTO.Title);
             var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<TagEntity>(getResponse.Content);
 
@@ -275,7 +275,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             tagCreateDTO.Title = null;  // Invalid data
 
             // Act
-            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -290,7 +290,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             tagCreateDTO.Title = _testCreateTag.Title;
 
             // Act
-            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminToken);
+            var response = await client.CreateAsync(tagCreateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -305,7 +305,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             tagUpdateDTO.Id = this._testCreateTag.Id;
 
             // Act
-            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminToken);
+            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -319,7 +319,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var tagUpdateDTO = ExtractUpdateTestTag.TagForTest;
 
             // Act
-            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminToken);
+            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Multiple(
@@ -343,13 +343,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
         [Fact]
         [ExtractUpdateTestTag]
-        public async Task Update_NotAdminTokenPassed_ReturnsForbidden()
+        public async Task Update_NotAdminAccessTokenPassed_ReturnsForbidden()
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTag.TagForTest;
 
             // Act
-            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.UserToken);
+            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.UserAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -364,7 +364,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             tagUpdateDTO.Title = null;  // Invalid data
 
             // Act
-            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminToken);
+            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -380,7 +380,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             tagUpdateDTO.Title = this._testUpdateTag.Title;
 
             // Act
-            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminToken);
+            var response = await client.UpdateAsync(tagUpdateDTO, _tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -431,7 +431,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             int id = this._testCreateTag.Id;
 
             // Act
-            var response = await this.client.Delete(id, this._tokenStorage.AdminToken);
+            var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -451,13 +451,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         }
 
         [Fact]
-        public async Task Delete_NotAdminTokenPassed_ReturnsForbidden()
+        public async Task Delete_NotAdminAccessTokenPassed_ReturnsForbidden()
         {
             // Arrange
             int id = this._testCreateTag.Id;
 
             // Act
-            var response = await this.client.Delete(id, this._tokenStorage.UserToken);
+            var response = await this.client.Delete(id, this._tokenStorage.UserAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -470,7 +470,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             int id = -100;
 
             // Act
-            var response = await this.client.Delete(id, this._tokenStorage.AdminToken);
+            var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

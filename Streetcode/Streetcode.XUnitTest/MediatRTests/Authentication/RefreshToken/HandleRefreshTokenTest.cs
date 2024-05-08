@@ -4,12 +4,9 @@ using Moq;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
-using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.BLL.MediatR.Authentication.RefreshToken;
-using Streetcode.BLL.MediatR.Authentication.Register;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
@@ -39,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
             JwtSecurityToken expectedToken = this.GenerateToken();
             string expectedTokenString = new JwtSecurityTokenHandler().WriteToken(expectedToken);
             this._mockTokenService
-                .Setup(service => service.RefreshToken(It.IsAny<string>()))
+                .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedToken);
             var handler = this.GetRefreshTokenHandler();
 
@@ -47,7 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
             var result = await handler.Handle(new RefreshTokenQuery(this.GetRefreshTokenRequestDTO()), CancellationToken.None);
 
             // Assert.
-            Assert.Equal(expectedTokenString, result.Value.Token);
+            Assert.Equal(expectedTokenString, result.Value.AccessToken);
         }
 
         [Fact]
@@ -55,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         {
             // Arrange.
             this._mockTokenService
-                .Setup(service => service.RefreshToken(It.IsAny<string>()))
+                .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws<SecurityTokenValidationException>();
             var handler = this.GetRefreshTokenHandler();
 
@@ -71,7 +68,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         {
             // Arrange.
             this._mockTokenService
-                .Setup(service => service.RefreshToken(It.IsAny<string>()))
+                .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws<Exception>();
             var handler = this.GetRefreshTokenHandler();
 

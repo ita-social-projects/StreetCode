@@ -22,6 +22,15 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
 
         public async Task<Result<TagDTO>> Handle(CreateTagQuery request, CancellationToken cancellationToken)
         {
+            var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => request.tag.Title == t.Title);
+
+            if (exists is not null)
+            {
+                var errMessage = $"Tag with title {request.tag.Title} already exists";
+                _logger.LogError(request, errMessage);
+                return Result.Fail(errMessage);
+            }
+
             var newTag = await _repositoryWrapper.TagRepository.CreateAsync(new DAL.Entities.AdditionalContent.Tag()
             {
                 Title = request.tag.Title

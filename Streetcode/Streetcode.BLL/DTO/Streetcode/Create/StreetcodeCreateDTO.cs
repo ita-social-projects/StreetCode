@@ -4,6 +4,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners;
@@ -50,6 +51,6 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
         public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
-        public List<ArtDTO> Arts { get; set; }
+        public List<ArtCreateUpdateDTO> Arts { get; set; }
     }
 }

@@ -167,6 +167,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
             }
         }
+
+        if (imageDetails == null)
+        {
+            return;
+        }
+
+        await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     public async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
@@ -228,25 +235,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private void AddAudio(StreetcodeContent streetcode, int? audioId)
     {
         streetcode.AudioId = audioId;
-    }
-
-    private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
-    {
-        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
-        {
-            ImageId = imageId,
-            StreetcodeId = streetcode.Id,
-        }));
-    }
-
-    private async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
-    {
-        if (imageDetails == null)
-        {
-            return;
-        }
-
-        await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     private async Task AddTags(StreetcodeContent streetcode, List<StreetcodeTagDTO> tags)

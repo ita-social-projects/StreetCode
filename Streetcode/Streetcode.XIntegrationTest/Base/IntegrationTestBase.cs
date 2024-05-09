@@ -9,8 +9,8 @@ namespace Streetcode.XIntegrationTest
 
         public IntegrationTestBase()
         {
-            Environment.SetEnvironmentVariable("STREETCODE_ENVIRONMENT", "IntegrationTests");
-            var environment = Environment.GetEnvironmentVariable("STREETCODE_ENVIRONMENT") ?? "Local";
+            Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests");
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
             IConfigurationBuilder configBuilder = new ConfigurationBuilder()
                 .ConfigureCustom(environment);

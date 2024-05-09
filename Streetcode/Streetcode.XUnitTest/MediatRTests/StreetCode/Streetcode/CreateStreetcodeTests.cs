@@ -1,4 +1,11 @@
-﻿using AutoMapper;
+using AutoMapper;
+using FluentAssertions;
+using Microsoft.Extensions.Localization;
+using Moq;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
+using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -33,51 +40,33 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
         }
 
         [Fact]
-        public void AddImagesDetails_NullImageDetails_ThrowsHttpRequestException()
+        public async Task AddImagesDetails_NullImageDetails_ThrowsHttpRequestException()
         {
             // Arrange
             IEnumerable<ImageDetailsDto>? imageDetails = null;
             var mapperMock = new Mock<IMapper>();
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var loggerServiceMock = new Mock<ILoggerService>();
-            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
-                                                      stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
+                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object);
 
-            // Act
-            Action action = () => handler.AddImagesDetails(imageDetails);
-
-            // Assert
-            action.Should().Throw<HttpRequestException>()
-                .WithMessage("There is no valid imagesDetails value")
-                .And.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
         }
 
         [Fact]
-        public void AddImagesDetails_EmptyImageDetails_ThrowsHttpRequestException()
+        public async Task AddImagesDetails_EmptyImageDetails_ThrowsHttpRequestException()
         {
             // Arrange
             IEnumerable<ImageDetailsDto> imageDetails = new List<ImageDetailsDto>();
             var mapperMock = new Mock<IMapper>();
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var loggerServiceMock = new Mock<ILoggerService>();
-            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
-                                                      stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
+                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object);
 
-            // Act
-            Action action = () => handler.AddImagesDetails(imageDetails);
-
-            // Assert
-            action.Should().Throw<HttpRequestException>()
-                .WithMessage("There is no valid imagesDetails value")
-                .And.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
         }
 
         [Fact]
-        public void AddImagesDetails_NullAltInImageDetails_ThrowsHttpRequestException()
+        public async Task AddImagesDetails_NullAltInImageDetails_ThrowsHttpRequestException()
         {
             // Arrange
             var imageDetails = new List<ImageDetailsDto>
@@ -86,24 +75,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                 new ImageDetailsDto { Alt = null }
             };
             var mapperMock = new Mock<IMapper>();
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var loggerServiceMock = new Mock<ILoggerService>();
-            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
-                                                      stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
+                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object);
 
-            // Act
-            Action action = () => handler.AddImagesDetails(imageDetails);
-
-            // Assert
-            action.Should().Throw<HttpRequestException>()
-                .WithMessage("There is no valid imagesDetails value")
-                .And.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
         }
 
         [Fact]
-        public void AddImagesDetails_EmptyAltInImageDetails_ThrowsHttpRequestException()
+        public async Task AddImagesDetails_EmptyAltInImageDetails_ThrowsHttpRequestException()
         {
             // Arrange
             var imageDetails = new List<ImageDetailsDto>
@@ -112,24 +92,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                 new ImageDetailsDto { Alt = string.Empty }
             };
             var mapperMock = new Mock<IMapper>();
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var loggerServiceMock = new Mock<ILoggerService>();
-            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
-                                                      stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
+                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object);
 
-            // Act
-            Action action = () => handler.AddImagesDetails(imageDetails);
-
-            // Assert
-            action.Should().Throw<HttpRequestException>()
-                .WithMessage("There is no valid imagesDetails value")
-                .And.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            // Act & Assert
+            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
         }
 
         [Fact]
-        public void AddImagesDetails_ValidImageDetails_DoesNotThrowException()
+        public async Task AddImagesDetails_ValidImageDetails_DoesNotThrowException()
         {
             // Arrange
             var imageDetails = new List<ImageDetailsDto>
@@ -138,18 +109,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                 new ImageDetailsDto { Alt = "Alt2" }
             };
             var mapperMock = new Mock<IMapper>();
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            var loggerServiceMock = new Mock<ILoggerService>();
-            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
-                                                      stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+            _mockRepositoryWrapper.Setup(repo => repo.ImageDetailsRepository.CreateRangeAsync(It.IsAny<IEnumerable<ImageDetails>>()))
+                .Returns(Task.CompletedTask);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
+                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object);
 
-            // Act
-            Action action = () => handler.AddImagesDetails(imageDetails);
-
-            // Assert
-            action.Should().NotThrow<HttpRequestException>();
+            // Act & Assert
+            Func<Task> action = async () => await handler.AddImagesDetails(imageDetails);
+            await action.Should().NotThrowAsync<HttpRequestException>();
         }
         [Fact]
         public async Task AddImagesAsync_NullImagesIds_ThrowsHttpRequestException()

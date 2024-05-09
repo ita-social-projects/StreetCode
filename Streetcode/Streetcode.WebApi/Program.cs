@@ -100,7 +100,6 @@ app.UseIpRateLimiting();
 app.UseRateLimiter();
 app.MapControllers();
 app.UseMiddleware<CustomResponseCompressionMiddleware>();
-
 app.Run();
 public partial class Program
 {

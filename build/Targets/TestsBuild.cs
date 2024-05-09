@@ -1,11 +1,9 @@
 ﻿using Nuke.Common;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 using System;
 using Utils;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
-using static Nuke.Common.Tools.EntityFramework.EntityFrameworkTasks;
 
 namespace Targets;
 
@@ -31,6 +29,7 @@ partial class Build
 
     Target IntegrationTest => _ => _
         .OnlyWhenStatic(() => ITest)
+        .DependsOn(SetupIntegrationTestsEnvironment)
         .Executes(() =>
         {
             DotNetTest(_ => _
@@ -42,7 +41,14 @@ partial class Build
         });
 
     Target SetupIntegrationTestsEnvironment => _ => _
-        .DependsOn(UpdateDatabase, CreateDatabaseForIntegrationTests);
+        .DependsOn(SeedUsersToDatabase, UpdateDatabase, CreateDatabaseForIntegrationTests);
+
+    Target SeedUsersToDatabase => _ => _
+        .After(UpdateDatabase)
+        .Executes(() =>
+        {
+            SeedUsersAndRoles.SeedDatabaseWithInitialUsers();
+        });
 
     Target SetupIntegrationTestsEnvironmentVariables => _ => _
         .Before(SetupDocker)
@@ -50,6 +56,7 @@ partial class Build
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests", EnvironmentVariableTarget.Process);
         });
+
     Target CreateDatabaseForIntegrationTests => _ => _
         .DependsOn(SetupDocker, SetupIntegrationTestsEnvironmentVariables)
         .Before(UpdateDatabase)
@@ -58,4 +65,3 @@ partial class Build
             IntegrationTestsDatabaseConfiguration.CreateDatabase();
         });
 }
-

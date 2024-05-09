@@ -53,7 +53,7 @@ public class SourcesController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

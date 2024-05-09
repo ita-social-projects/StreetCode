@@ -2,10 +2,8 @@
 
 namespace Streetcode.BLL.DTO.Sources
 {
-    public class SourceLinkCategoryCreateDTO
+    public class SourceLinkCategoryCreateDTO : SourceLinkCreateUpdateCategoryDTO
     {
-        public string Title { get; set; }
-        public int ImageId { get; set; }
         public ImageDTO? Image { get; set; }
     }
 }

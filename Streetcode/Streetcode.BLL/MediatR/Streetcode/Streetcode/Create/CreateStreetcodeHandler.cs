@@ -22,6 +22,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.DTO.Media.Create;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
@@ -249,7 +250,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtDTO> arts)
+    private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtCreateUpdateDTO> arts)
     {
         var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
         foreach (var artSlide in newArtSlides)
@@ -264,7 +265,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         foreach (var art in newArts)
         {
             art.StreetcodeId = streetcode.Id;
-            art.Id = 0;
         }
 
         await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);

@@ -153,7 +153,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         return streetcodeArts;
     }
 
-    public void AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
+    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
     {
         if (imageDetails.IsNullOrEmpty())
         {

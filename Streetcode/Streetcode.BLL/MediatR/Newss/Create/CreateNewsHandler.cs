@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -49,11 +48,14 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
-            if (!Regex.IsMatch(newNews.URL, @"^[a-z0-9\-]+$"))
+            foreach (char c in newNews.URL)
             {
-                string errorMsg = "Url Is Invalid";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                if (!((c >= 'a' && c <= 'z') || char.IsDigit(c) || c == '-') || (c >= 'A' && c <= 'Z'))
+                {
+                    string errorMsg = "Url Is Invalid";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(errorMsg);
+                }
             }
 
             if (newNews.CreationDate == default(DateTime))

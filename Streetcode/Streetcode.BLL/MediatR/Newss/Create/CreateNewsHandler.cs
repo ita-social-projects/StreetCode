@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;

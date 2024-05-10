@@ -7,6 +7,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using System.Text.RegularExpressions;
 
 namespace Streetcode.BLL.MediatR.Newss.Create
 {
@@ -48,7 +49,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
-            if (newNews.URL.Contains("/"))
+            if (!Regex.IsMatch(newNews.URL, @"^[a-z0-9\-]+$"))
             {
                 string errorMsg = "Url Is Invalid";
                 _logger.LogError(request, errorMsg);

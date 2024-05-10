@@ -4,6 +4,7 @@ using MediatR;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Timeline.Update;
@@ -17,11 +18,13 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.DTO.Media.Create;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
@@ -70,6 +73,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
+                AddTextContent(request.Streetcode.Text, streetcode);
+                AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
                 AddImagesDetails(request.Streetcode.ImagesDetails);
@@ -93,6 +98,22 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
+        }
+    }
+
+    public void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
+    {
+        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
+        }
+    }
+
+    public void AddVideoContent(VideoCreateDTO video, StreetcodeContent streetcode)
+    {
+        if (streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
+        {
+            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 
@@ -132,7 +153,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         return streetcodeArts;
     }
 
-    public void AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
+    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
     {
         if (imageDetails.IsNullOrEmpty())
         {
@@ -146,6 +167,13 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
             }
         }
+
+        if (imageDetails == null)
+        {
+            return;
+        }
+
+        await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     public async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
@@ -249,7 +277,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtDTO> arts)
+    private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtCreateUpdateDTO> arts)
     {
         var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
         foreach (var artSlide in newArtSlides)
@@ -264,7 +292,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         foreach (var art in newArts)
         {
             art.StreetcodeId = streetcode.Id;
-            art.Id = 0;
         }
 
         await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);

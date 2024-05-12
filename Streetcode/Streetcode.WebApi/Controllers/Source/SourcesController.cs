@@ -45,7 +45,7 @@ public class SourcesController : BaseApiController
     }
 
     [HttpPost]
-    [Authorize(Roles = nameof(UserRole.Admin))]
+    //[Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryCreateDTO category)

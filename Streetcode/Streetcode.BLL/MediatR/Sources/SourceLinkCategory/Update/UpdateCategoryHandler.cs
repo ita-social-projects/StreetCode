@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
@@ -47,6 +48,15 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             if (existingCategory is null)
             {
                 string errorMsg = _stringLocalizerCannotFindSharedResource["CannotFindAnySrcCategoryByTheCorrespondingId", request.Category.Id].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
+            var existingTitleCategory = await _repositoryWrapper.SourceCategoryRepository
+                    .GetFirstOrDefaultAsync(a => a.Title == request.Category.Title);
+            if (existingTitleCategory is not null)
+            {
+                string errorMsg = $"Title: {request.Category.Title} already exists";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

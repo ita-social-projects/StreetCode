@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
@@ -38,7 +37,9 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContextItems));
+            var historicalContexts = historicalContextItems.OrderBy(context => context.Title);
+
+            return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContexts));
         }
     }
 }

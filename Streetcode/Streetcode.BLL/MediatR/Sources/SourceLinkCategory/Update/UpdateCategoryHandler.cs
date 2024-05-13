@@ -54,7 +54,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 
             var existingTitleCategory = await _repositoryWrapper.SourceCategoryRepository
                     .GetFirstOrDefaultAsync(a => a.Title == request.Category.Title);
-            if (existingTitleCategory is not null)
+            if (existingTitleCategory is not null && existingTitleCategory.Id != request.Category.Id)
             {
                 string errorMsg = $"Title: {request.Category.Title} already exists";
                 _logger.LogError(request, errorMsg);

@@ -81,7 +81,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
             }
             else
             {
-                string errorMsg = _stringLocalizerFailed["FailedToCreateCategory"].Value;
+                string errorMsg = "Failed to create category";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

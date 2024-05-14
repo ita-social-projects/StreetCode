@@ -148,7 +148,7 @@ pipeline {
                    
                     preDeployBackStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq \'.[].RepoTags\' | grep  -m 1 "streetcode:" | tail -n 1 | cut -d ":" -f2 | head -c -3', returnStdout: true).trim()
                     echo "Last Tag Stage backend: ${preDeployBackStage}"
-                    preDeployFrontStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq  \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -3', returnStdout: true).trim()
+                    preDeployFrontStage = sh(script: 'docker inspect $(docker ps | awk \'{print $2}\' | grep -v ID) | jq  \'.[].RepoTags\' | grep -m 1 "streetcode_client:" | tail -n 1 | cut -d ":" -f2 | head -c -2', returnStdout: true).trim()
 
                    echo "Last Tag Stage frontend: ${preDeployFrontStage}"
                     

@@ -4,11 +4,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Additional
 {
     public class TagExtracter
     {
-        public static Tag Extract(int tagId)
+        public static Tag Extract(int tagId, string tagTitle)
         {
             Tag testTag = TestDataProvider.GetTestData<Tag>();
 
             testTag.Id = tagId;
+            testTag.Title = tagTitle;
 
             return BaseExtracter.Extract<Tag>(testTag, tag => tag.Id == tagId);
         }

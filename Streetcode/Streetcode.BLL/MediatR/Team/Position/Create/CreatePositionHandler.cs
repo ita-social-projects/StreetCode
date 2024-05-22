@@ -23,22 +23,27 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
         public async Task<Result<PositionDTO>> Handle(CreatePositionQuery request, CancellationToken cancellationToken)
         {
-            var newPosition = await _repository.PositionRepository.CreateAsync(new Positions()
-            {
-                Position = request.position.Position
-            });
-
             try
             {
-                _repository.SaveChanges();
+                var context = _mapper.Map<Positions>(request.position);
+                var checkIfContextExists = await _repository.PositionRepository.GetFirstOrDefaultAsync(j => j.Position == request.position.Position);
+
+                if (checkIfContextExists is not null)
+                {
+                    string exceptionMessege = $"Team position with title '{request.position.Position}' is already exists.";
+                    _logger.LogError(request, exceptionMessege);
+                    return Result.Fail(exceptionMessege);
+                }
+
+                var createdContext = await _repository.PositionRepository.CreateAsync(context);
+                await _repository.SaveChangesAsync();
+                return Result.Ok(_mapper.Map<PositionDTO>(createdContext));
             }
             catch (Exception ex)
             {
                 _logger.LogError(request, ex.Message);
                 return Result.Fail(ex.Message);
             }
-
-            return Result.Ok(_mapper.Map<PositionDTO>(newPosition));
         }
     }
 }

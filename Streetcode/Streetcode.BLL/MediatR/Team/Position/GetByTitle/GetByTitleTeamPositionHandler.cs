@@ -22,7 +22,7 @@ public class GetByTitleTeamPositionHandler : IRequestHandler<GetByTitleTeamPosit
 
     public async Task<Result<PositionDTO>> Handle(GetByTitleTeamPositionQuery request, CancellationToken cancellationToken)
     {
-        var position = _repository.PositionRepository.GetFirstOrDefaultAsync(j => j.Position == request.position);
+        var position = await _repository.PositionRepository.GetFirstOrDefaultAsync(j => j.Position == request.position);
 
         if (position is null)
         {

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -48,11 +48,14 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
-            if (newNews.URL.Contains("/"))
+            foreach (char c in newNews.URL)
             {
-                string errorMsg = "Url Is Invalid";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                if (!((c >= 'a' && c <= 'z') || char.IsDigit(c) || c == '-') || (c >= 'A' && c <= 'Z'))
+                {
+                    string errorMsg = "Url Is Invalid";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(errorMsg);
+                }
             }
 
             if (newNews.CreationDate == default(DateTime))

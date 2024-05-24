@@ -81,6 +81,7 @@ else
     app.UseHsts();
 }
 
+// f
 // await app.ApplyMigrations();
 
 app.AddCleanAudiosJob();

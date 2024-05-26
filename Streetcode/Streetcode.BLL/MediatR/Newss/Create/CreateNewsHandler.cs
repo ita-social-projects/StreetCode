@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -48,11 +48,14 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
-            if (newNews.URL.Contains("/"))
+            foreach (char c in newNews.URL)
             {
-                string errorMsg = "Url Is Invalid";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                if (!((c >= 'a' && c <= 'z') || char.IsDigit(c) || c == '-') || (c >= 'A' && c <= 'Z'))
+                {
+                    string errorMsg = "Url Is Invalid";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(errorMsg);
+                }
             }
 
             if (newNews.CreationDate == default(DateTime))
@@ -75,6 +78,15 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByImageID = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.ImageId == request.newNews.ImageId);
+
+            if (existingNewsByImageID != null)
+            {
+                string errorMsg = "A news with the same ImageID already exists.";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

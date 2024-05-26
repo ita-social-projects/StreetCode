@@ -48,6 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var sourceCategoryDto = GetCategoryDTO();
             sourceCategoryDto.Title = title;
             sourceCategoryDto.ImageId = sourceCategory.ImageId;
+            sourceCategoryDto.Id = sourceCategory.Id;
             SetupMapper(sourceCategory, sourceCategoryDto);
 
             var handler = new UpdateCategoryHandler(
@@ -75,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var expectedError = "Cannot convert null to category";
             _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToCategory"])
             .Returns(new LocalizedString("CannotConvertNullToCategory", expectedError));
-            
+
             // Act
             var result = await handler.Handle(new UpdateCategoryCommand(sourceCategoryDto), CancellationToken.None);
 
@@ -131,6 +132,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var sourceCategoryDto = GetCategoryDTO();
             sourceCategoryDto.Title = title;
             sourceCategoryDto.ImageId = sourceCategory.ImageId;
+            sourceCategoryDto.Id = sourceCategory.Id;
             SetupMapper(sourceCategory, sourceCategoryDto);
 
             var handler = new UpdateCategoryHandler(
@@ -174,6 +176,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             var sourceCategory = GetCategory(1, title);
             var sourceCategoryDto = GetCategoryDTO();
             sourceCategoryDto.Title = title;
+            sourceCategoryDto.Id = sourceCategory.Id;
             sourceCategoryDto.ImageId = sourceCategory.ImageId;
             SetupMapper(sourceCategory, sourceCategoryDto);
 
@@ -208,9 +211,10 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         {
             // Arrange
             string title = "Tested";
-            var sourceCategory = GetCategory(1, title);
+            var sourceCategory = GetCategory(0, title);
             var sourceCategoryDto = GetCategoryDTO();
             sourceCategoryDto.Title = title;
+            sourceCategoryDto.Id = sourceCategory.Id;
             SetupMapper(sourceCategory, sourceCategoryDto);
 
             var handler = new UpdateCategoryHandler(
@@ -318,11 +322,47 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             Assert.Contains("Title cannot be empty.", result.Errors.First().Message);
         }
 
-        private void SetupUpdateRepository(int returnNumber)
+        [Fact]
+        public async Task UpdateCategoryHandler_TitleAlreadyExists_ReturnsErrorMessage()
         {
-            _mockRepository.Setup(x => x.SourceCategoryRepository.Update(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()));
-            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+            // Arrange
+            string title = "ExistingTitle";
+            var existingCategory = GetCategory(1, title);
+            var newCategoryDto = GetCategoryDTO();
+            newCategoryDto.Title = title;
+            newCategoryDto.Id = 2;
+
+            SetupMapper(existingCategory, newCategoryDto);
+
+            var handler = new UpdateCategoryHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerFailedToUpdate.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerCannotFindSharedResource.Object);
+
+            _mockRepository.Setup(p => p.SourceCategoryRepository
+          .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
+           It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
+           IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
+              .ReturnsAsync(existingCategory);
+
+            var expectedError = $"Title: {newCategoryDto.Title} already exists";
+
+            // Act
+            var result = await handler.Handle(new UpdateCategoryCommand(newCategoryDto), CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal(expectedError, result.Errors.First().Message);
         }
+
+        //private void SetupUpdateRepository(int returnNumber)
+        //{
+        //    _mockRepository.Setup(x => x.SourceCategoryRepository.Update(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()));
+        //    _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+        //}
 
         private void SetupCreateRepository(int returnNumber)
         {
@@ -336,12 +376,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 .Returns(testCategory);
             _mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
-        }
-
-        private void SetupMapperWithNullCategory()
-        {
-            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
-                .Returns(GetCategoryWithNotExistId());
         }
 
         private void SetupImageRepository()
@@ -366,9 +400,5 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         {
             return new UpdateSourceLinkCategoryDTO();
         }
-
-        private static DAL.Entities.Sources.SourceLinkCategory GetCategoryWithNotExistId() => null;
-
-        private static UpdateSourceLinkCategoryDTO GetCategoryDTOWithNotExistId() => null;
     }
 }

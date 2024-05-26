@@ -30,4 +30,9 @@ public class TeamPositionsClient : StreetcodeRelatedBaseClient
     {
         return await this.SendCommand($"/Delete/{id}", Method.Delete, new PositionDTO(), authToken);
     }
+
+    public async Task<RestResponse> GetAllWithTeamMembers(string authToken = "")
+    {
+        return await this.SendQuery($"/GetAllWithTeamMembers", authToken);
+    }
 }

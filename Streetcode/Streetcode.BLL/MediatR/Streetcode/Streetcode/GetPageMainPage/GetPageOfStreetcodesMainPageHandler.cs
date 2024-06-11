@@ -30,11 +30,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 
         public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
-            var random = new Random(request.shuffleSeed);
             var streetcodes = (await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails)))
-                .OrderBy(sc => random.Next());
+                .OrderByDescending(sc => sc.CreatedAt);
 
             if (streetcodes != null)
             {

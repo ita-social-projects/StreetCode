@@ -73,7 +73,14 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
-                AddTextContent(request.Streetcode.Text, streetcode);
+
+                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent))
+                {
+                    string errorMsg = "The 'title' key for the text is empty or missing.";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
+                }
+
                 AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
@@ -98,14 +105,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
-        }
-    }
-
-    public void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 

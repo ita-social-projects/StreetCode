@@ -74,6 +74,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateFactsDescription(request.Streetcode.ImagesDetails);
                     var deleteTransactionLinks = _repositoryWrapper.TransactLinksRepository.FindAll(t => t.StreetcodeId == streetcodeToUpdate.Id);
                     _repositoryWrapper.TransactLinksRepository.DeleteRange(deleteTransactionLinks);
+
+                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent))
+                    {
+                        string errorMsg = "The 'title' key for the text is empty or missing.";
+                        _logger.LogError(request, errorMsg);
+                        return Result.Fail(new Error(errorMsg));
+                    }
+
                     if (request.Streetcode.Text != null)
                     {
                         await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);

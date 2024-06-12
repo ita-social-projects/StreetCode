@@ -81,7 +81,14 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                     return Result.Fail(new Error(errorMsg));
                 }
 
-                AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
+                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) &&
+                    !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault().Url))
+                {
+                    string errorMsg = "The 'title' key for the video is empty or missing.";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
+                }
+
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
                 AddImagesDetails(request.Streetcode.ImagesDetails);
@@ -105,14 +112,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
-        }
-    }
-
-    public void AddVideoContent(VideoCreateDTO video, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 

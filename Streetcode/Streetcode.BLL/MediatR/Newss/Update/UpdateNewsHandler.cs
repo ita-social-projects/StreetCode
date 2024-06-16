@@ -75,21 +75,6 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var response = _mapper.Map<NewsDTO>(news);
-
-            if (news.Image is not null)
-            {
-                response.Image.Base64 = _blobSevice.FindFileInStorageAsBase64(response.Image.BlobName);
-            }
-            else
-            {
-                var img = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == response.ImageId);
-                if (img != null)
-                {
-                    _repositoryWrapper.ImageRepository.Delete(img);
-                }
-            }
-
             _repositoryWrapper.NewsRepository.Update(news);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 

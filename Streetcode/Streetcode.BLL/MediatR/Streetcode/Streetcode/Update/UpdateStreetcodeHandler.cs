@@ -87,7 +87,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
                     }
 
-                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
+                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
+                        && request.Streetcode.Videos != null
+                        && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
                     {
                         string errorMsg = "The 'title' key for the video is empty or missing.";
                         _logger.LogError(request, errorMsg);

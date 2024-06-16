@@ -81,8 +81,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                     return Result.Fail(new Error(errorMsg));
                 }
 
-                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) &&
-                    !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault().Url))
+                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
+                     && request.Streetcode.Videos != null
+                     && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
                 {
                     string errorMsg = "The 'title' key for the video is empty or missing.";
                     _logger.LogError(request, errorMsg);

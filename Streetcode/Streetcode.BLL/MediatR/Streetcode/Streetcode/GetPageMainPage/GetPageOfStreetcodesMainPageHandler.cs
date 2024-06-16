@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Cryptography;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,6 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Security.Cryptography;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 {

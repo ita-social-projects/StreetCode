@@ -77,7 +77,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
-                AddImagesDetails(request.Streetcode.ImagesDetails);
+                await AddImagesDetails(request.Streetcode.ImagesDetails);
                 await _repositoryWrapper.SaveChangesAsync();
 
                 if (isResultSuccess)
@@ -166,11 +166,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
             }
-        }
-
-        if (imageDetails == null)
-        {
-            return;
         }
 
         await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));

@@ -81,8 +81,7 @@ else
     app.UseHsts();
 }
 
-// f
-// await app.ApplyMigrations();
+await app.ApplyMigrations();
 
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();

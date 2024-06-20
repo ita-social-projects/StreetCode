@@ -59,35 +59,20 @@ namespace Streetcode.BLL.MediatR.Newss.Update
                 return Result.Fail(errorMsg);
             }
 
-            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title);
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title && n.Id != request.news.Id);
             if (existingNewsByTitle != null)
             {
                 string errorMsg = "A news with the same title already exists.";
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
 
-            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.news.Text);
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.news.Text && n.Id != request.news.Id);
             if (existingNewsByText != null)
             {
                 string errorMsg = "A news with the same text already exists.";
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(errorMsg);
-            }
-
-            var response = _mapper.Map<NewsDTO>(news);
-
-            if (news.Image is not null)
-            {
-                response.Image.Base64 = _blobSevice.FindFileInStorageAsBase64(response.Image.BlobName);
-            }
-            else
-            {
-                var img = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(x => x.Id == response.ImageId);
-                if (img != null)
-                {
-                    _repositoryWrapper.ImageRepository.Delete(img);
-                }
+                return Result.Fail(new Error(errorMsg));
             }
 
             _repositoryWrapper.NewsRepository.Update(news);

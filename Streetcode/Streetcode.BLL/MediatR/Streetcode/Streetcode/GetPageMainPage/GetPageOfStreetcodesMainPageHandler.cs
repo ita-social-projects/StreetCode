@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -46,13 +47,17 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 
                 var streetcodesPaginated = streetcodes.Paginate(request.page, request.pageSize);
 
-                var shuffledStreetcodes = streetcodes.OrderBy(sc =>
+                var shuffledStreetcodes = new List<StreetcodeContent>();
+
+                using (var rng = RandomNumberGenerator.Create())
                 {
-                    using var rng = RandomNumberGenerator.Create();
-                    byte[] random = new byte[4];
-                    rng.GetBytes(random);
-                    return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
-                });
+                    shuffledStreetcodes = streetcodesPaginated.OrderBy(sc =>
+                    {
+                        byte[] random = new byte[4];
+                        rng.GetBytes(random);
+                        return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
+                    }).ToList();
+                }
 
                 return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(shuffledStreetcodes));
             }

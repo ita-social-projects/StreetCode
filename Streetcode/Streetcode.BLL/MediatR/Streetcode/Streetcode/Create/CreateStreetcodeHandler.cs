@@ -73,8 +73,23 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
-                AddTextContent(request.Streetcode.Text, streetcode);
-                AddVideoContent(request.Streetcode.Videos.FirstOrDefault(), streetcode);
+
+                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent))
+                {
+                    string errorMsg = "The 'title' key for the text is empty or missing.";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
+                }
+
+                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
+                     && request.Streetcode.Videos != null
+                     && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
+                {
+                    string errorMsg = "The 'title' key for the video is empty or missing.";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(new Error(errorMsg));
+                }
+
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
                 await AddImagesDetails(request.Streetcode.ImagesDetails);
@@ -98,22 +113,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
-        }
-    }
-
-    public void AddTextContent(TextCreateDTO textContent, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !textContent.TextContent.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
-        }
-    }
-
-    public void AddVideoContent(VideoCreateDTO video, StreetcodeContent streetcode)
-    {
-        if (streetcode.Title.IsNullOrEmpty() && !video.Url.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("The title key is empty", null, System.Net.HttpStatusCode.BadRequest);
         }
     }
 

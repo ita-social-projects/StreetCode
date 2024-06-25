@@ -33,17 +33,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
         public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
-                1,
-                10,
+                request.page,
+                request.pageSize,
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
                 descendingSortKeySelector: sc => sc.CreatedAt)
                 .Entities;
-
-            // var streetcodes = (await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
-            //    predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-            //    include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails)))
-            //    .OrderByDescending(sc => sc.CreatedAt);
 
             if (streetcodes != null)
             {

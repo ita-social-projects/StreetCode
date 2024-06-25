@@ -32,10 +32,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 
         public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
-            var streetcodes = (await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
+            var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
+                1,
+                10,
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails)))
-                .OrderByDescending(sc => sc.CreatedAt);
+                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
+                descendingSortKeySelector: sc => sc.CreatedAt)
+                .Entities;
+
+            // var streetcodes = (await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
+            //    predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
+            //    include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails)))
+            //    .OrderByDescending(sc => sc.CreatedAt);
 
             if (streetcodes != null)
             {
@@ -45,13 +53,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                var streetcodesPaginated = streetcodes.Paginate(request.page, request.pageSize);
-
                 var shuffledStreetcodes = new List<StreetcodeContent>();
 
                 using (var rng = RandomNumberGenerator.Create())
                 {
-                    shuffledStreetcodes = streetcodesPaginated.OrderBy(sc =>
+                    shuffledStreetcodes = streetcodes.OrderBy(sc =>
                     {
                         byte[] random = new byte[4];
                         rng.GetBytes(random);

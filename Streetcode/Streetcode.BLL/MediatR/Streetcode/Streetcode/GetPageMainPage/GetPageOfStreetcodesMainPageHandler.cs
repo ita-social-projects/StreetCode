@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 descendingSortKeySelector: sc => sc.CreatedAt)
                 .Entities;
 
-            if (streetcodes != null)
+            if (streetcodes is not null && streetcodes.Any())
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
@@ -48,24 +48,25 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                var shuffledStreetcodes = new List<StreetcodeContent>();
-
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    shuffledStreetcodes = streetcodes.OrderBy(sc =>
-                    {
-                        byte[] random = new byte[4];
-                        rng.GetBytes(random);
-                        return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
-                    }).ToList();
-                }
-
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(shuffledStreetcodes));
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes)));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
+        }
+
+        private static List<StreetcodeContent> ShuffleStreetcodes(IEnumerable<StreetcodeContent> streetcodes)
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                return streetcodes.OrderBy(sc =>
+                {
+                    byte[] random = new byte[4];
+                    rng.GetBytes(random);
+                    return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
+                }).ToList();
+            }
         }
     }
 }

@@ -55,9 +55,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize, int shuffleSeed)
+    public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize, shuffleSeed)));
+        return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

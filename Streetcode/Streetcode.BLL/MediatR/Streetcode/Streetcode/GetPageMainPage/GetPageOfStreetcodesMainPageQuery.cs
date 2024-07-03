@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 {
-    public record GetPageOfStreetcodesMainPageQuery(ushort page, ushort pageSize, int shuffleSeed) : IRequest<Result<IEnumerable<StreetcodeMainPageDTO>>>;
+    public record GetPageOfStreetcodesMainPageQuery(ushort page, ushort pageSize) : IRequest<Result<IEnumerable<StreetcodeMainPageDTO>>>;
 }

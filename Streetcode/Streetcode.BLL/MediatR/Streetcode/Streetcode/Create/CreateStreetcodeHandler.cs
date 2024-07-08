@@ -273,39 +273,46 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     private async Task AddArtGallery(StreetcodeContent streetcode, List<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtCreateUpdateDTO> arts)
     {
+        var usedArtIds = new HashSet<int>(artSlides.SelectMany(slide => slide.StreetcodeArts).Select(streetcodeArt => streetcodeArt.ArtId));
+
+        var filteredArts = arts.Where(art => usedArtIds.Contains(art.Id)).ToList();
+
         var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
-        foreach (var artSlide in newArtSlides)
-        {
-            artSlide.StreetcodeId = streetcode.Id;
-        }
+        newArtSlides.ForEach(artSlide => artSlide.StreetcodeId = streetcode.Id);
 
         await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSlides);
         await _repositoryWrapper.SaveChangesAsync();
 
-        var newArts = _mapper.Map<List<Art>>(arts);
-        foreach (var art in newArts)
-        {
-            art.StreetcodeId = streetcode.Id;
-        }
+        var newArts = _mapper.Map<List<Art>>(filteredArts);
+        newArts.ForEach(art => art.StreetcodeId = streetcode.Id);
 
         await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);
         await _repositoryWrapper.SaveChangesAsync();
 
+        var artIdMap = filteredArts.Zip(newArts, (placeholderArt, newArt) => new { PlaceholderId = placeholderArt.Id, RealId = newArt.Id })
+                                   .ToDictionary(x => x.PlaceholderId, x => x.RealId);
+
         var newStreetcodeArts = new List<StreetcodeArt>();
         foreach (var artSlide in artSlides)
         {
+            var slideId = newArtSlides[artSlides.IndexOf(artSlide)].Id;
             foreach (var streetcodeArt in artSlide.StreetcodeArts)
             {
                 var newStreetcodeArt = _mapper.Map<StreetcodeArt>(streetcodeArt);
                 newStreetcodeArt.StreetcodeId = streetcode.Id;
-                newStreetcodeArt.ArtId = newArts[streetcodeArt.ArtId - 1].Id;
-                newStreetcodeArt.StreetcodeArtSlideId = newArtSlides[artSlides.IndexOf(artSlide)].Id;
+                if (artIdMap.TryGetValue(streetcodeArt.ArtId, out var newArtId))
+                {
+                    newStreetcodeArt.ArtId = newArtId;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"Art ID '{streetcodeArt.ArtId}' not found in the mapped arts.");
+                }
 
+                newStreetcodeArt.StreetcodeArtSlideId = slideId;
                 newStreetcodeArts.Add(newStreetcodeArt);
             }
         }
-
-        newStreetcodeArts = CreateStreetcodeArtsForUnusedArts(streetcode.Id, newArts, newStreetcodeArts);
 
         await _repositoryWrapper.StreetcodeArtRepository.CreateRangeAsync(newStreetcodeArts);
         await _repositoryWrapper.SaveChangesAsync();

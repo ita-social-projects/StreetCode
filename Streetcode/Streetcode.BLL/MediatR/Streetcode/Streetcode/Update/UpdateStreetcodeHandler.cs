@@ -258,37 +258,51 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private async Task UpdateArtGallery(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtCreateUpdateDTO> arts)
         {
             _repositoryWrapper.StreetcodeArtRepository.DeleteRange(await _repositoryWrapper.StreetcodeArtRepository.GetAllAsync(a => a.StreetcodeId == streetcode.Id));
+            await _repositoryWrapper.SaveChangesAsync();
 
-            var toCreateArts = new List<Art>();
+            var filteredCreatedArts = arts.Where(art => art.ModelState == ModelState.Created).ToList();
+
+            var usedArtIds = new HashSet<int>(artSlides.Where(slide => slide.ModelState != ModelState.Deleted).SelectMany(slide => slide.StreetcodeArts).Select(streetcodeArt => streetcodeArt.ArtId));
+
+            var filteredArts = filteredCreatedArts.Where(art => usedArtIds.Contains(art.Id)).ToList();
+            var filteredUnusedExistingArtsToDelete = arts.Where(art => !usedArtIds.Contains(art.Id) && art.ModelState == ModelState.Updated).ToList();
+
+            var unusedExistingArtsToDelete = filteredUnusedExistingArtsToDelete
+                .Select(art =>
+                {
+                    var mappedArt = _mapper.Map<Art>(art);
+                    mappedArt.Id = art.Id;
+                    return mappedArt;
+                })
+                .ToList();
+
+            var newArts = _mapper.Map<List<Art>>(filteredArts);
+            newArts.ForEach(art => art.StreetcodeId = streetcode.Id);
+
+            await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);
+            await _repositoryWrapper.SaveChangesAsync();
+
+            var artIdMap = filteredArts.Zip(newArts, (placeholderArt, newArt) => new { PlaceholderId = placeholderArt.Id, RealId = newArt.Id })
+                                       .ToDictionary(x => x.PlaceholderId, x => x.RealId);
+
             var toDeleteArts = new List<Art>();
             var toUpdateArts = new List<Art>();
-            var oldArtIds = new List<int>();
             foreach (var art in arts)
             {
                 var newArt = _mapper.Map<Art>(art);
                 newArt.StreetcodeId = streetcode.Id;
-
-                if (art.ModelState == ModelState.Created)
+                newArt.Id = art.Id;
+                if (art.ModelState == ModelState.Deleted)
                 {
-                    oldArtIds.Add(art.Id);
-                    toCreateArts.Add(newArt);
+                    toDeleteArts.Add(newArt);
                 }
-                else
+                else if (art.ModelState == ModelState.Updated && usedArtIds.Contains(art.Id))
                 {
-                    newArt.Id = art.Id;
-                    if (art.ModelState == ModelState.Deleted)
-                    {
-                        toDeleteArts.Add(newArt);
-                    }
-                    else
-                    {
-                        toUpdateArts.Add(newArt);
-                    }
+                    toUpdateArts.Add(newArt);
                 }
             }
 
-            await _repositoryWrapper.ArtRepository.CreateRangeAsync(toCreateArts);
-            _repositoryWrapper.ArtRepository.DeleteRange(toDeleteArts);
+            _repositoryWrapper.ArtRepository.DeleteRange(toDeleteArts.Concat(unusedExistingArtsToDelete));
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
@@ -304,7 +318,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 newArtSlide.StreetcodeArts = null;
 
                 var newStreetcodeArts =
-                    GetStreetcodeArtsWithNewArtsId(streetcode.Id, oldArtIds, artSlide, toCreateArts);
+                    GetStreetcodeArtsWithNewArtsId(streetcode.Id, artIdMap, artSlide);
 
                 DistributeArtSlide(artSlide, newArtSlide, newStreetcodeArts, ref toCreateSlide, ref toUpdateSlides, ref toDeleteSlides, ref toCreateStreetcodeArts);
 
@@ -321,8 +335,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     toCreateSlide = null;
                 }
             }
-
-            toCreateStreetcodeArts = CreateStreetcodeHandler.CreateStreetcodeArtsForUnusedArts(streetcode.Id, toCreateArts.Concat(toUpdateArts).ToList(), toCreateStreetcodeArts);
 
             _repositoryWrapper.StreetcodeArtSlideRepository.DeleteRange(toDeleteSlides);
             _repositoryWrapper.StreetcodeArtSlideRepository.UpdateRange(toUpdateSlides);
@@ -367,17 +379,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return (toUpdate, toCreate, toDelete);
         }
 
-        private List<StreetcodeArt> GetStreetcodeArtsWithNewArtsId(int streetcodeId, List<int> oldArtIds, StreetcodeArtSlideCreateUpdateDTO streetcodeArtSlide, List<Art> toCreateArts)
+        private List<StreetcodeArt> GetStreetcodeArtsWithNewArtsId(int streetcodeId, Dictionary<int, int> artIdMap, StreetcodeArtSlideCreateUpdateDTO streetcodeArtSlide)
         {
             var newStreetcodeArts = new List<StreetcodeArt>();
             foreach (var art in streetcodeArtSlide.StreetcodeArts)
             {
                 var newArt = _mapper.Map<StreetcodeArt>(art);
                 newArt.StreetcodeId = streetcodeId;
-
-                if (oldArtIds.Contains(art.ArtId))
+                if (artIdMap.TryGetValue(art.ArtId, out var newArtId))
                 {
-                    newArt.ArtId = toCreateArts[oldArtIds.IndexOf(art.ArtId)].Id;
+                    newArt.ArtId = newArtId;
                 }
                 else
                 {
@@ -395,22 +406,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             if (artSlideDto.ModelState == ModelState.Created)
             {
                 toCreateSlide = artSlide;
+                return;
             }
-            else
+
+            artSlide.Id = artSlideDto.SlideId;
+            if (artSlideDto.ModelState == ModelState.Deleted)
             {
-                artSlide.Id = artSlideDto.SlideId;
-                if (artSlideDto.ModelState == ModelState.Deleted)
+                toDeleteSlides.Add(artSlide);
+                return;
+            }
+
+            if (artSlideDto.ModelState == ModelState.Updated)
+            {
+                toUpdateSlides.Add(artSlide);
+                foreach (var streetcodeArt in newStreetcodeArts)
                 {
-                    toDeleteSlides.Add(artSlide);
-                }
-                else if (artSlideDto.ModelState == ModelState.Updated)
-                {
-                    toUpdateSlides.Add(artSlide);
-                    foreach (var streetcodeArt in newStreetcodeArts)
-                    {
-                        streetcodeArt.StreetcodeArtSlideId = artSlideDto.SlideId;
-                        toCreateStreetcodeArts.Add(streetcodeArt);
-                    }
+                    streetcodeArt.StreetcodeArtSlideId = artSlideDto.SlideId;
+                    toCreateStreetcodeArts.Add(streetcodeArt);
                 }
             }
         }

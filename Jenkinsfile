@@ -126,9 +126,9 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                        sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag  ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
-                        sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
+                      //  sh "docker push ${username}/streetcode:latest"
+                      //  sh "docker tag  ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
+                      //  sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
                         IS_IMAGE_PUSH = true
                 
                     }
@@ -157,16 +157,7 @@ pipeline {
                     echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
                     echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
 
-                    sh 'docker image prune --force --filter "until=72h"'
-                    sh 'docker system prune --force --filter "until=72h"'
-                    sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                    docker stop backend frontend nginx loki certbot
-                    docker container prune -f                
-                    docker volume prune -f
-                    docker network prune -f
-                    sleep 10
-                    docker compose --env-file /etc/environment up -d"""
+                    
 
                 }  
             }
@@ -189,18 +180,7 @@ pipeline {
             script{
                echo "Rollback Tag Stage backend: ${preDeployBackStage}"
                echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-               sh 'docker image prune --force --filter "until=72h"'
-               sh 'docker system prune --force --filter "until=72h"'
-               sh """
-               export DOCKER_TAG_BACKEND=${preDeployBackStage}
-               export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-               docker stop backend frontend nginx loki certbot
-               docker container prune -f
-               docker volume prune -f
-               docker network prune -f
-               sleep 10
-               docker compose --env-file /etc/environment up -d"""
-               
+
             }
             
          }
@@ -229,18 +209,9 @@ pipeline {
                 echo "Last Tag Prod backend: ${preDeployBackProd}"
                 preDeployFrontProd = sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode_client:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
                 echo "Last Tag Prod frontend: ${preDeployFrontProd}"
-                sh 'docker image prune --force --filter "until=72h"'
-                sh 'docker system prune --force --filter "until=72h"'
+              
 
-               sh """
-                  export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-                  export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-                  docker stop backend frontend nginx loki certbot
-                  docker container prune -f
-                  docker volume prune -f
-                  docker network prune -f
-                  sleep 10
-                  docker compose --env-file /etc/environment up -d"""
+           
             }
         }
         post {
@@ -259,17 +230,17 @@ pipeline {
             script {
                
                 sh 'echo ${BRANCH_NAME}'
-                sh "git checkout master" 
-                sh 'echo ${BRANCH_NAME}'
-                sh "git merge release/${env.SEM_VERSION}" 
-                sh "git push origin main" 
+               // sh "git checkout master" 
+               // sh 'echo ${BRANCH_NAME}'
+               // sh "git merge release/${env.SEM_VERSION}" 
+               // sh "git push origin main" 
                   
             }
         }
         post {
             success {
                 sh 'gh auth status'
-                sh "gh release create v${vers}  --generate-notes --draft"
+              //  sh "gh release create v${vers}  --generate-notes --draft"
             }
         }
     }
@@ -287,15 +258,7 @@ pipeline {
                     echo "Rollback Tag Prod frontend: ${preDeployFrontProd}"
                     sh 'docker image prune --force --filter "until=72h"'
                     sh 'docker system prune --force --filter "until=72h"'
-                     sh """ export DOCKER_TAG_BACKEND=${preDeployBackProd}
-                        export DOCKER_TAG_FRONTEND=${preDeployFrontProd}
-                        docker stop backend frontend nginx loki certbot
-                        docker container prune -f
-                        docker volume prune -f
-                        docker network prune -f
-                        sleep 10
-                        docker compose --env-file /etc/environment up -d"""
-                }
+               }
             }    
         }
     }

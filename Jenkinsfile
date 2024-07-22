@@ -24,7 +24,7 @@ pipeline {
                     $class: 'GitSCM',
                     branches: scm.branches,
                     extensions: scm.extensions + [[$class: 'LocalBranch'], [$class: 'WipeWorkspace']],
-                    userRemoteConfigs: [[ url: 'git@github.com:ita-social-projects/StreetCode.git']],
+                    userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/StreetCode.git']],
                     doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations
                 ])
             }

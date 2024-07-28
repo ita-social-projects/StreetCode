@@ -59,6 +59,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
+                if (streetcode.Index < 1 || streetcode.Index > 9999)
+                {
+                    string errorMessage = "The 'index' must be in range from 1 to 9999.";
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(new Error(errorMessage));
+                }
 
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);

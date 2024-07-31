@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Streetcode.BLL.DTO.Streetcode.Create;
 using Xunit;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
@@ -177,6 +178,36 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesAsync(streetcode, imagesIds);
             await action.Should().NotThrowAsync<HttpRequestException>();
+        }
+        
+        [Theory]
+        [InlineData(-5)]
+        [InlineData(10000000)]
+        public async Task Handle_IndexIsOutOfBounds_ReturnsFailure(int index)
+        {
+            // Arrange
+            StreetcodeCreateDTO streetcode = new StreetcodeCreateDTO() { Index = index };
+            var mapperMock = new Mock<IMapper>();
+            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+            repositoryWrapperMock.Setup(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()))
+                .Returns(Task.CompletedTask);
+            var loggerServiceMock = new Mock<ILoggerService>();
+            var stringLocalizerAnErrorOccurredMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
+            var stringLocalizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+
+            var command = new CreateStreetcodeCommand(streetcode);
+            var handler = new CreateStreetcodeHandler(mapperMock.Object, repositoryWrapperMock.Object, loggerServiceMock.Object,
+                stringLocalizerAnErrorOccurredMock.Object, stringLocalizerFailedToCreateMock.Object);
+
+            // Act
+            var result = await handler.Handle(command, default);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(
+                    "The 'index' must be in range from 1 to 9999.",
+                    result.Errors.Single().Message));
         }
     }
 }

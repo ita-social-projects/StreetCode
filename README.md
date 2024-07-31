@@ -51,14 +51,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 ### Environment
 environmental variables
 ```properties
-spring.datasource.url=${DATASOURCE_URL}
-spring.datasource.username=${DATASOURCE_USER}
-spring.datasource.password=${DATASOURCE_PASSWORD}
-spring.mail.username=${EMAIL_ADDRESS}
-spring.mail.password=${EMAIL_PASSWORD}
-cloud.name=${CLOUD_NAME}
-api.key=${API_KEY}
-api.secret=${API_SECRET}
+ADMIN_PASSWORD
 ```
 
 ### Clone
@@ -79,10 +72,11 @@ git@github.com:ita-social-projects/StreetCode.git
       Server={local_server_name};Database=StreetcodeDb;User Id={username};Password={password};MultipleActiveResultSets=true;TrustServerCertificate=true;
      ```
 
-  **2. Add database seeding**
-   - Go to `Program.cs` in **StreetCode.WebApi** project and add following code:
+  **2. Add database seeding and set environment variable**
+   - Go to `Program.cs` in **StreetCode.WebApi** project and add the following code (replace `{password}` with your password):
 
      ```csharp
+     Environment.SetEnvironmentVariable("ADMIN_PASSWORD", "{password}");
      await app.SeedDataAsync(); 
      ```
      
@@ -110,11 +104,15 @@ git@github.com:ita-social-projects/StreetCode.git
 12. Change password to the default system one - **"Admin@1234"**. Don't forget to confirm it afterwards
 13. On the left-hand side select **"Status"** page, and set **"Login"** radio-button to **"Enabled"**
 14. Click "Ok"
+15. Right click on **"localhost"** server on the left-hand side of the UI and click **"Restart"**
 
 Now you can connect to your localhost instance with login (sa) and password (Admin@1234)!
 
-**_NOTE:_** Here's the full walkthrough: https://www.youtube.com/watch?v=ANFnDqe4JBk&t=211s.
+### Troubleshooting
 
+- If you encounter an unhandled `Microsoft.Data.SqlClient.SqlException: 'A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)'` while seeding the DB check if you have `TrustServerCertificate=true;` parameter in your connection string and add if you haven't.
+
+- If you encounter an unhandled `System.IO.DirectoryNotFoundException` while seeding the DB try to specify the absolute paths in `SeedingLocalExtension.cs` to the files in DAL or Streetcode.XIntegrationTest projects.
 
 ### How to run Docker
 

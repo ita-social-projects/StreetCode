@@ -110,7 +110,7 @@ Now you can connect to your localhost instance with login (sa) and password (Adm
 
 ### Troubleshooting
 
-- If you encounter an unhandled `Microsoft.Data.SqlClient.SqlException: 'A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)'` while seeding the DB check if you have `TrustServerCertificate=true;` parameter in your connection string and add if you haven't.
+- If you encounter an unhandled `Microsoft.Data.SqlClient.SqlException: 'A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)'` while seeding the DB check if you have the `TrustServerCertificate=true;` parameter in your connection string and add it if you don't.
 
 - If you encounter an unhandled `System.IO.DirectoryNotFoundException` while seeding the DB try to specify the absolute paths in `SeedingLocalExtension.cs` to the files in DAL or Streetcode.XIntegrationTest projects.
 

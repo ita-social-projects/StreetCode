@@ -72,15 +72,35 @@ git@github.com:ita-social-projects/StreetCode.git
       Server={local_server_name};Database=StreetcodeDb;User Id={username};Password={password};MultipleActiveResultSets=true;TrustServerCertificate=true;
      ```
 
-  **2. Add database seeding and set environment variable**
-   - Go to `Program.cs` in **StreetCode.WebApi** project and add the following code (replace `{password}` with your password):
+  **2. Set environment variables**
+  - You can set environment variable before seeding the database in `Program.cs` in **StreetCode.WebApi** project (replace `{password}` with your password):
 
      ```csharp
      Environment.SetEnvironmentVariable("ADMIN_PASSWORD", "{password}");
+     ```
+
+  - Or by specifying in `launchSettings.json` file like:
+
+      ```csharp
+      {
+        "profiles": {
+          "Streetcode_Local": {
+            "environmentVariables": {
+              "ADMIN_PASSWORD": "password",
+            }
+          }
+        }
+      }
+      ```
+
+  **3. Add database seeding**
+   - Go to `Program.cs` in **StreetCode.WebApi** project and add the following code :
+
+     ```csharp
      await app.SeedDataAsync(); 
      ```
      
-  **3. Create and seed local database**  
+  **4. Create and seed local database**  
    * Run project and make sure that database was created and filled with data
 
 ### How to run local 
@@ -112,7 +132,21 @@ Now you can connect to your localhost instance with login (sa) and password (Adm
 
 - If you encounter an unhandled `Microsoft.Data.SqlClient.SqlException: 'A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)'` while seeding the DB check if you have the `TrustServerCertificate=true;` parameter in your connection string and add it if you don't.
 
-- If you encounter an unhandled `System.IO.DirectoryNotFoundException` while seeding the DB try to specify the absolute paths in `SeedingLocalExtension.cs` to the files in DAL or Streetcode.XIntegrationTest projects.
+- If you encounter an unhandled `System.IO.DirectoryNotFoundException` while seeding the DB try to specify relative paths in `SeedingLocalExtension.cs` to `images.json` and `audios.json` in DAL or Streetcode.XIntegrationTest projects like:
+
+  ```text
+  ../Streetcode.DAL/InitialData/images.json
+  ../Streetcode.DAL/InitialData/audios.json
+  ```
+
+  or
+
+  ```text
+  ../Streetcode.XIntegrationTest/TestData/InitialData/images.json
+  ../Streetcode.XIntegrationTest/TestData/InitialData/audios.json
+  ```
+
+  If exception is still present specify the absolute paths.
 
 ### How to run Docker
 

@@ -184,7 +184,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
                 () => Assert.Equal(
-                    "The 'index' must be in range from 1 to 9999.",
+                    $"The 'index' must be in range from {CreateStreetcodeHandler.StreetcodeIndexMinValue} to {CreateStreetcodeHandler.StreetcodeIndexMaxValue}.",
                     result.Errors.Single().Message));
         }
     }

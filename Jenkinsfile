@@ -52,6 +52,8 @@ pipeline {
                 }
             }
         }
+        
+        
         stage('Build image') {
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"

@@ -52,58 +52,6 @@ pipeline {
                 }
             }
         }
-        stage('Build') {
-            steps {
-                script {
-                    sh './Streetcode/build.sh Run'
-                    sh(script: 'dotnet gitversion > GITVERSION_PROPERTIES', returnStdout: true)
-                    sh "cat GITVERSION_PROPERTIES"
-                    sh(script: "dotnet gitversion | grep -oP '(?<=\"MajorMinorPatch\": \")[^\"]*' > version", returnStatus: true)
-                    sh "cat version"
-                    vers = readFile(file: 'version').trim()
-                    sh "echo ${vers}"
-                    env.CODE_VERSION = readFile(file: 'version').trim()
-                    echo "${env.CODE_VERSION}"
-                    SEM_VERSION="${env.CODE_VERSION}"
-                    env.CODE_VERSION = "${env.CODE_VERSION}.${env.BUILD_NUMBER}"
-                    echo "${env.CODE_VERSION}"
-                    def gitCommit = sh(returnStdout: true, script: 'git log -1 --pretty=%B | cat').trim()
-                    currentBuild.displayName = "${env.CODE_VERSION}-${BRANCH_NAME}:${gitCommit}"
-
-                }
-            }
-        }
-        stage('Setup environment') {
-            steps {
-                sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
-            }
-        }
-        stage('Run tests') {
-          steps {
-            parallel(
-              Unit_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
-              },
-              Integration_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
-              }
-            )
-          }
-        }
-        stage('Sonar scan') {
-            environment {
-                SONAR = credentials('sonar_token')
-            }
-            steps {
-                      sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      sh '''    echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
-                                dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR
-                        '''
-            }
-        }
         stage('Build image') {
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"

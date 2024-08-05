@@ -48,6 +48,14 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
+            var imageExists = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == newNews.ImageId);
+            if (imageExists == null)
+            {
+                string errorMsg = "Image with provided ImageId does not exist";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             foreach (char c in newNews.URL)
             {
                 if (!((c >= 'a' && c <= 'z') || char.IsDigit(c) || c == '-') || (c >= 'A' && c <= 'Z'))

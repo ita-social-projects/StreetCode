@@ -49,7 +49,7 @@ namespace Streetcode.BLL.MediatR.Newss.Create
             }
 
             var imageExists = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == newNews.ImageId);
-            if (imageExists == null)
+            if (imageExists is null)
             {
                 string errorMsg = "Image with provided ImageId does not exist";
                 _logger.LogError(request, errorMsg);

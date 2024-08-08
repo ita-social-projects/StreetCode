@@ -1,6 +1,8 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Streetcode.DAL.Configurations;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -80,6 +82,8 @@ public class StreetcodeDbContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
         modelBuilder.Entity<StatisticRecord>()
               .HasOne(x => x.StreetcodeCoordinate)
               .WithOne(x => x.StatisticRecord)
@@ -156,34 +160,6 @@ public class StreetcodeDbContext : IdentityDbContext<User>
             .WithOne(p => p.SourceLinkCategory)
             .HasForeignKey(d => d.SourceLinkCategoryId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<Image>(entity =>
-        {
-            entity.HasOne(d => d.Art)
-                .WithOne(a => a.Image)
-                .HasForeignKey<Art>(a => a.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(im => im.ImageDetails)
-                .WithOne(info => info.Image)
-                .HasForeignKey<ImageDetails>(a => a.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(d => d.Partner)
-                .WithOne(p => p.Logo)
-                .HasForeignKey<Partner>(d => d.LogoId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(d => d.Facts)
-                .WithOne(p => p.Image)
-                .HasForeignKey(d => d.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(i => i.SourceLinkCategories)
-                .WithOne(s => s.Image)
-                .HasForeignKey(d => d.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
 
         modelBuilder.Entity<RelatedFigure>(entity =>
         {

@@ -22,7 +22,7 @@ pipeline {
         label 'stage' 
     }
      environment {
-        GH_TOKEN = credentials('GH_TOKEN')     
+        GH_TOKEN = credentials('GH_TOKEN_CHECKS')     
     }
     options {
     skipDefaultCheckout true

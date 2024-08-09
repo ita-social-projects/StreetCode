@@ -8,9 +8,11 @@ public static class WebApplicationExtensions
     public static async Task ApplyMigrations(this WebApplication app)
     {
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
         try
         {
-            var streetcodeContext = app.Services.GetRequiredService<StreetcodeDbContext>();
+            using IServiceScope localScope = app.Services.CreateScope();
+            var streetcodeContext = localScope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
             await streetcodeContext.Database.MigrateAsync();
         }
         catch (Exception ex)

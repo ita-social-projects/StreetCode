@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Persistence;
 using static Streetcode.WebApi.Utils.Constants.UserDatabaseSeedingConstants;
 
 namespace Streetcode.WebApi.Configuration
@@ -62,9 +62,15 @@ namespace Streetcode.WebApi.Configuration
         {
             // UserManager has scoped lifetime
             using IServiceScope localScope = serviceProvider.CreateScope();
-            UserManager<User> userManager = localScope.ServiceProvider.GetService<UserManager<User>>() !;
+            UserManager<User> userManager = localScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-            User user = await userManager!.FindByEmailAsync(email);
+            User? user = await userManager!.FindByEmailAsync(email);
+
+            if (user is null)
+            {
+                throw new InvalidOperationException($"User with email '{email}' not found.");
+            }
+
             await userManager.AddToRoleAsync(user, role);
         }
     }

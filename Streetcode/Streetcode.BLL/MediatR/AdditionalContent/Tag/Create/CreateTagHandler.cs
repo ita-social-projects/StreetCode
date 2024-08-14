@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
 {
-  public class CreateTagHandler : IRequestHandler<CreateTagQuery, Result<TagDTO>>
+  public class CreateTagHandler : IRequestHandler<CreateTagCommand, Result<TagDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
             _logger = logger;
         }
 
-        public async Task<Result<TagDTO>> Handle(CreateTagQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TagDTO>> Handle(CreateTagCommand request, CancellationToken cancellationToken)
         {
             var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => request.tag.Title == t.Title);
 

@@ -44,7 +44,7 @@ public class TagController : BaseApiController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] CreateTagDTO tagTitle)
     {
-        return HandleResult(await Mediator.Send(new CreateTagQuery(tagTitle)));
+        return HandleResult(await Mediator.Send(new CreateTagCommand(tagTitle)));
     }
 
     [HttpDelete("{id:int}")]

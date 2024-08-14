@@ -212,7 +212,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             var handler = new CreateTagHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
 
-            var query = new CreateTagQuery(tagCreateDTO);
+            var query = new CreateTagCommand(tagCreateDTO);
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(query, cancellationToken);

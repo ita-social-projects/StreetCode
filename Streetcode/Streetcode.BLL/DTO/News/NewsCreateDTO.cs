@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.DTO.News
 {

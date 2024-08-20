@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class PositionCreateDTO
+    public class PositionCreateDTO : PositionCreateUpdateDTO
     {
-        public string Position { get; set; }
     }
 }

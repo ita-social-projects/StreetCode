@@ -3,7 +3,8 @@ using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class TeamMemberCreateDTO : TeamMemberCreateUpdateDTO<TeamMemberLinkCreateDTO>
+    public class TeamMemberCreateDTO : TeamMemberCreateUpdateDTO
     {
+        public List<TeamMemberLinkCreateDTO>? TeamMemberLinks { get; set; }
     }
 }

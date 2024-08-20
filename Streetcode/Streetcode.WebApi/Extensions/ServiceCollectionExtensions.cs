@@ -34,6 +34,7 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.PipelineBehaviour;
@@ -147,6 +148,10 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
         services.AddControllers();
     }
 

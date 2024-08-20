@@ -1,5 +1,6 @@
 using System.Text;
 using System.Net.Security;
+using FluentValidation;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,6 +35,7 @@ using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
 using Streetcode.BLL.PipelineBehaviour;
+using Streetcode.BLL.Validators.SourceLinkCategory;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
@@ -57,6 +59,7 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(currentAssemblies);
         services.AddScoped<ILoggerService, LoggerService>();
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
 
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();

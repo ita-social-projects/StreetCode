@@ -4,15 +4,10 @@ using Streetcode.BLL.MediatR.Sources.SourceLink.Update;
 
 namespace Streetcode.BLL.Validators.SourceLinkCategory;
 
-public class UpdateCategoryValidator : CreateCategoryValidator, IValidator<UpdateCategoryCommand>
+public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryCommand>
 {
-    public ValidationResult Validate(UpdateCategoryCommand instance)
+    public UpdateCategoryValidator()
     {
-        return Validate(instance.Category);
-    }
-
-    public Task<ValidationResult> ValidateAsync(UpdateCategoryCommand instance, CancellationToken cancellation = new CancellationToken())
-    {
-        return ValidateAsync(instance.Category, cancellation);
+        RuleFor(c => c.Category).SetValidator(new BaseCategoryValidator());
     }
 }

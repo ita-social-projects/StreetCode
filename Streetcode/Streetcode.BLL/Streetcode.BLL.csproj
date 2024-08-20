@@ -205,10 +205,19 @@
     </Compile>
     <Compile Remove="ByteArrayFormatter.cs" />
     <Compile Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs" />
+    <Compile Update="Resources\SharedResource.FailedToValidateSharedResource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.FailedToValidateSharedResource.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.FailedToValidateSharedResource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToValidateSharedResource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

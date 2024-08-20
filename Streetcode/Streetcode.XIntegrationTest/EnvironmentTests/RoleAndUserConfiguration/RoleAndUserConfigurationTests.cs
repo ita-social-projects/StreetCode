@@ -3,7 +3,6 @@ using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.EnvironmentTests.Utils.BeforeAndAfterTestAtribute.RoleAndUserConfiguration;
-using System.Net;
 using Xunit;
 using static Streetcode.WebApi.Utils.Constants.UserDatabaseSeedingConstants;
 

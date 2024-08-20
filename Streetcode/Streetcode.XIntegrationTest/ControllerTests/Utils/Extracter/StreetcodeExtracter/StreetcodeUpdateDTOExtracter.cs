@@ -17,13 +17,15 @@ using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter
 {
-    public class StreetcodeUpdateDTOExtracter
+#pragma warning disable S101 // Types should be named in PascalCase
+    public static class StreetcodeUpdateDTOExtracter
+#pragma warning restore S101 // Types should be named in PascalCase
     {
         public static StreetcodeUpdateDTO Extract(int id, int index, string transliterationUrl)
         {
             StreetcodeContent testStreetcode = StreetcodeContentExtracter.Extract(id, index, transliterationUrl);
 
-            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl);
+            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl!);
         }
 
         public static void Remove(StreetcodeUpdateDTO entity)

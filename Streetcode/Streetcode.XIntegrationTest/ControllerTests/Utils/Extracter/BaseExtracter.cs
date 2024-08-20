@@ -1,23 +1,15 @@
-﻿
-using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+﻿using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
 {
     public static class BaseExtracter
     {
-        private static SqlDbHelper _dbHelper;
-        private static object _lock;
-
-        static BaseExtracter()
-        {
-            _dbHelper = BaseControllerTests.GetSqlDbHelper();
-            _lock = new object();
-        }
+        private static readonly object _lock = new object();
+        private static SqlDbHelper _dbHelper = BaseControllerTests.GetSqlDbHelper();
 
         public static T Extract<T>(T entity, Func<T, bool> searchPredicate, bool hasIdentity = true)
             where T : class, new()
         {
-
             lock (_lock)
             {
                 if (!_dbHelper.Any<T>(searchPredicate))
@@ -33,7 +25,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
                     }
                 }
 
-                return _dbHelper.GetExistItem<T>(searchPredicate);
+                return _dbHelper.GetExistItem<T>(searchPredicate) !;
             }
         }
 

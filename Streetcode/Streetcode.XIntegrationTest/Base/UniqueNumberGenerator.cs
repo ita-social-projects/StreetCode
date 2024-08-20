@@ -1,9 +1,8 @@
-﻿
-namespace Streetcode.XIntegrationTest.Base
+﻿namespace Streetcode.XIntegrationTest.Base
 {
-    public class UniqueNumberGenerator
+    public static class UniqueNumberGenerator
     {
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
 
         public static int GenerateInt()
         {

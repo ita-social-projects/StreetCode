@@ -4,22 +4,42 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 {
     public class BlobServiceTestBase : IClassFixture<BlobStorageFixture>, IDisposable
     {
-        protected readonly BlobStorageFixture _fixture;
-        protected string _seededFileName;
-        protected string _filePath;
+        private bool _disposed;
 
         public BlobServiceTestBase(BlobStorageFixture fixture, string seededFileName = "")
         {
-            _fixture = fixture;
-            _seededFileName = seededFileName;
-            _filePath = Path.Combine(_fixture.blobPath, $"{_seededFileName}.png");
+            this.Fixture = fixture;
+            this.SeededFileName = seededFileName;
+            this.FilePath = Path.Combine(this.Fixture.BlobPath, $"{this.SeededFileName}.png");
         }
+
+        protected string FilePath { get; set; }
+
+        protected string SeededFileName { get; set; }
+
+        protected BlobStorageFixture Fixture { get; set; }
 
         public void Dispose()
         {
-            if (!string.IsNullOrEmpty(_filePath) && File.Exists(_filePath))
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this._disposed)
             {
-                File.Delete(_filePath);
+                return;
+            }
+
+            if (disposing)
+            {
+                if (!string.IsNullOrEmpty(this.FilePath) && File.Exists(this.FilePath))
+                {
+                    File.Delete(this.FilePath);
+                }
+
+                this._disposed = true;
             }
         }
     }

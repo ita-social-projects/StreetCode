@@ -1,20 +1,20 @@
 ﻿using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
-using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ImageControllerTests : BaseControllerTests<ImageClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private Image _testImage;
-        private StreetcodeContent _testStreetcodeContent;
+        private readonly Image _testImage;
+        private readonly StreetcodeContent _testStreetcodeContent;
 
         public ImageControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Image")
@@ -37,7 +37,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetAllReturn_SuccessStatusCode()
         {
-            var response = await this.client.GetAllAsync();
+            var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
 
             Assert.Multiple(
@@ -49,7 +49,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public async Task GetById_ReturnSuccessStatusCode()
         {
             Image expectedImage = this._testImage;
-            var response = await this.client.GetByIdAsync(expectedImage.Id);
+            var response = await this.Client.GetByIdAsync(expectedImage.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ImageDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -64,7 +64,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var response = await this.client.GetByIdAsync(id);
+            var response = await this.Client.GetByIdAsync(id);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -76,17 +76,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         {
             ImageExtracter.AddStreetcodeImage(this._testStreetcodeContent.Id, this._testImage.Id);
             int streetcodeId = this._testStreetcodeContent.Id;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
         }
 
+        [Fact]
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),

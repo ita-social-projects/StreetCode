@@ -16,6 +16,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         private readonly ITokenService _tokenService;
         private readonly Dictionary<string, User> _users;
 
+        private bool _disposed = false;
+
         public TokenStorage()
         {
             this._users = new Dictionary<string, User>
@@ -24,7 +26,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 ["User"] = TEST_USER_USER,
             };
 
-            this._streetcodeDbContext = GetDbContext();
+            this._streetcodeDbContext = this.GetDbContext();
             this._configuration = GetConfiguration();
 
             this._tokenService = new TokenService(this._configuration, this._streetcodeDbContext);
@@ -32,28 +34,33 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             this.ObtainTokensAsync().GetAwaiter().GetResult();
         }
 
+        public string AdminAccessToken { get; private set; } = null!;
+
+        public string UserAccessToken { get; private set; } = null!;
+
+        public string AdminRefreshToken { get; private set; } = null!;
+
+        public string UserRefreshToken { get; private set; } = null!;
+
         public void Dispose()
         {
-            this._streetcodeDbContext.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public string AdminAccessToken { get; private set; }
-
-        public string UserAccessToken { get; private set; }
-
-        public string AdminRefreshToken { get; private set; }
-
-        public string UserRefreshToken { get; private set; }
-
-        private StreetcodeDbContext GetDbContext()
+        protected virtual void Dispose(bool disposing)
         {
-            var sqlConnectionString = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.IntegrationTests.json")
-                .Build()
-                .GetConnectionString("DefaultConnection");
-            var optionBuilder = new DbContextOptionsBuilder<StreetcodeDbContext>();
-            optionBuilder.UseSqlServer(sqlConnectionString);
-            return new StreetcodeDbContext(optionBuilder.Options);
+            if (this._disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                this._streetcodeDbContext.Dispose();
+            }
+
+            this._disposed = true;
         }
 
         private static IConfiguration GetConfiguration()
@@ -65,6 +72,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 .ConfigureCustom(environment);
 
             return configBuilder.Build();
+        }
+
+        private StreetcodeDbContext GetDbContext()
+        {
+            var sqlConnectionString = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.IntegrationTests.json")
+                .Build()
+                .GetConnectionString("DefaultConnection");
+            var optionBuilder = new DbContextOptionsBuilder<StreetcodeDbContext>();
+            optionBuilder.UseSqlServer(sqlConnectionString);
+            return new StreetcodeDbContext(optionBuilder.Options);
         }
 
         private async Task ObtainTokensAsync()

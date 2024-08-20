@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
@@ -10,12 +9,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private static Func<HttpClient, string, T> CreateClientInitializerFunction()
         {
-            ConstructorInfo TestClassConstructorCache = typeof(T).GetConstructor(new[] { typeof(HttpClient), typeof(string) })!;
+            ConstructorInfo testClassConstructorCache = typeof(T).GetConstructor(new[] { typeof(HttpClient), typeof(string) }) !;
             ParameterExpression clientParameter = Expression.Parameter(typeof(HttpClient), "_client");
             ParameterExpression secondPartUrlParameter = Expression.Parameter(typeof(string), "secondPartUrl");
 
             NewExpression constructorExpression = Expression.New(
-                TestClassConstructorCache,
+                testClassConstructorCache,
                 clientParameter,
                 secondPartUrlParameter);
 

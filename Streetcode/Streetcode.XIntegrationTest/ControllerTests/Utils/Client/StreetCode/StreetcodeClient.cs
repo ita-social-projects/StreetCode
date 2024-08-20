@@ -1,8 +1,8 @@
 ﻿using RestSharp;
-using RestSharp.Serializers;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
+
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
 {
     public class StreetcodeClient : StreetcodeRelatedBaseClient

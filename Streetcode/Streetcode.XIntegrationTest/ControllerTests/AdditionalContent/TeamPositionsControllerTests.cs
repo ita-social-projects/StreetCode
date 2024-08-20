@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.Delete;
 using Streetcode.BLL.MediatR.Team.Position.Update;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -17,6 +18,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Positions;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
@@ -26,9 +28,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent;
 public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<TeamPositionsClient>,
     IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private Positions _testCreatePosition;
-    private Positions _testUpdatePosition;
-    private StreetcodeContent _testStreetcodeContent;
+    private readonly Image _testTeamMemberImage;
+    private readonly TeamMember _testTeamMember;
+    private readonly Positions _testCreatePosition;
+    private readonly Positions _testUpdatePosition;
+    private readonly StreetcodeContent _testStreetcodeContent;
 
     public TeamPositionsControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/Position", tokenStorage)
@@ -36,6 +40,8 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int uniqueId = UniqueNumberGenerator.GenerateInt();
         this._testCreatePosition = TeamPositionsExtracter.Extract(uniqueId);
         this._testUpdatePosition = TeamPositionsExtracter.Extract(uniqueId);
+        this._testTeamMemberImage = ImageExtracter.Extract(1);
+        this._testTeamMember = TeamMemberExtracter.Extract(uniqueId);
         this._testStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,
@@ -47,12 +53,15 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
         TeamPositionsExtracter.Remove(this._testCreatePosition);
+        TeamPositionsExtracter.Remove(this._testUpdatePosition);
+        ImageExtracter.Remove(this._testTeamMemberImage);
+        TeamMemberExtracter.Remove(this._testTeamMember);
     }
 
     [Fact]
     public async Task GetAll_ReturnSuccessStatusCode()
     {
-        var response = await this.client.GetAllAsync();
+        var response = await this.Client.GetAllAsync();
         var returnedValue =
             CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
 
@@ -60,10 +69,12 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         Assert.NotNull(returnedValue);
     }
 
+    // [Fact(Skip = "There is no Position that has TeamMembers, so it will fail without them.")]
     [Fact]
     public async Task GetAllWithTeamMembers_ReturnSuccessStatusCode()
     {
-        var response = await this.client.GetAllWithTeamMembers();
+        TeamPositionsExtracter.AddTeamMemberPositions(this._testTeamMember.Id, this._testCreatePosition.Id);
+        var response = await this.Client.GetAllWithTeamMembers();
         var returnedValue =
             CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
 
@@ -75,7 +86,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task GetById_ReturnSuccessStatusCode()
     {
         Positions expectedPosition = this._testCreatePosition;
-        var response = await this.client.GetByIdAsync(expectedPosition.Id);
+        var response = await this.Client.GetByIdAsync(expectedPosition.Id);
 
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PositionDTO>(response.Content);
 
@@ -90,7 +101,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task GetByIdIncorrect_ReturnBadRequest()
     {
         int incorrectId = -100;
-        var response = await this.client.GetByIdAsync(incorrectId);
+        var response = await this.Client.GetByIdAsync(incorrectId);
 
         Assert.Multiple(
             () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -98,89 +109,88 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     }
 
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_ReturnsSuccessStatusCode()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto, _tokenStorage.AdminAccessToken);
+        var response = await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_TokenNotPassed_ReturnsUnauthorized()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto);
+        var response = await this.Client.CreateAsync(positionCreateDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto, _tokenStorage.UserAccessToken);
+        var response = await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_CreatesNewTeamPositionContext()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto, _tokenStorage.AdminAccessToken);
-        var getResponse = await client.GetByTitle(positionCreateDto.Position);
+        await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
+        var getResponse = await this.Client.GetByTitle(positionCreateDto.Position);
         var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<Positions>(getResponse.Content);
 
         // Assert
-        Assert.Equal(positionCreateDto.Position, fetchedStreetcode.Position);
+        Assert.Equal(positionCreateDto.Position, fetchedStreetcode?.Position);
     }
 
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
-        positionCreateDto.Position = null; // Invalid data
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
+        positionCreateDto.Position = null!; // Invalid data
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
-    [ExtractCreateTestPosition]
+    [ExtractCreateTestPositionAttribute]
     public async Task Create_WithExistingTeamPosition_ReturnsConflict()
     {
         // Arrange
-        var positionCreateDto = ExtractCreateTestPosition.PositionForTest;
-        positionCreateDto.Position = _testCreatePosition.Position;
+        var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
+        positionCreateDto.Position = this._testCreatePosition.Position!;
 
         // Act
-        var response = await client.CreateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -191,11 +201,11 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_ReturnSuccessStatusCode()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
         positionCreateDto.Id = this._testCreatePosition.Id;
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -206,10 +216,10 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_Incorect_ReturnBadRequest()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Multiple(
@@ -222,10 +232,10 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_TokenNotPassed_ReturnsUnauthorized()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto);
+        var response = await this.Client.UpdateAsync(positionCreateDto);
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -236,10 +246,10 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto, this._tokenStorage.UserAccessToken);
+        var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -250,11 +260,11 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
-        positionCreateDto.Position = null; // Invalid data
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
+        positionCreateDto.Position = null!; // Invalid data
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -265,12 +275,12 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_WithExistingTitle_ReturnsBadRequest()
     {
         // Arrange
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
         positionCreateDto.Id = this._testCreatePosition.Id;
-        positionCreateDto.Position = this._testUpdatePosition.Position;
+        positionCreateDto.Position = this._testUpdatePosition.Position!;
 
         // Act
-        var response = await client.UpdateAsync(positionCreateDto, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -281,9 +291,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Update_ChangesNotSaved_ReturnsBadRequest()
     {
         // Arrange
-        Expression<Func<Positions, bool>> testExpression = x => x.Id == this._testUpdatePosition.Id;
-
-        var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
+        var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
         positionCreateDto.Id = this._testUpdatePosition.Id;
 
         var repositoryMock = new Mock<IPositionRepository>();
@@ -307,6 +315,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         var query = new UpdateTeamPositionCommand(positionCreateDto);
         var cancellationToken = CancellationToken.None;
+
         // Act
         var result = await handler.Handle(query, cancellationToken);
 
@@ -321,7 +330,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int id = this._testCreatePosition.Id;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -334,7 +343,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int id = this._testCreatePosition.Id;
 
         // Act
-        var response = await this.client.Delete(id);
+        var response = await this.Client.Delete(id);
 
         // Assert
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -347,7 +356,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int id = this._testCreatePosition.Id;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.UserAccessToken);
+        var response = await this.Client.Delete(id, this.TokenStorage.UserAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -360,7 +369,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int id = -100;
 
         // Act
-        var response = await this.client.Delete(id, this._tokenStorage.AdminAccessToken);
+        var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -375,7 +384,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
             .ReturnsAsync(this._testUpdatePosition);
-        repositoryMock.Setup(r => r.Delete(default));
+        repositoryMock.Setup(r => r.Delete(default!));
 
         repositoryWrapperMock.SetupGet(wrapper => wrapper.PositionRepository).Returns(repositoryMock.Object);
         repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
@@ -387,6 +396,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         var query = new DeleteTeamPositionCommand(id);
         var cancellationToken = CancellationToken.None;
+
         // Act
         var result = await handler.Handle(query, cancellationToken);
 

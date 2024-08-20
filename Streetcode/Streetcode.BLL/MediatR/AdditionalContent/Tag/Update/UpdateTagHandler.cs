@@ -28,28 +28,22 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 			{
 				string exMessage = $"No tag found by entered Id - {request.tag.Id}";
 				_logger.LogError(request, exMessage);
+
 				return Result.Fail(exMessage);
 			}
-
-			existedTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x => x.Title == request.tag.Title);
-
-			if (existedTag is not null)
-			{
-                var errMessage = $"Tag with title {request.tag.Title} already exists";
-                _logger.LogError(request, errMessage);
-                return Result.Fail(errMessage);
-            }
 
 			try
 			{
 				var tagToUpdate = _mapper.Map<TagEntity>(request.tag);
 				_repositoryWrapper.TagRepository.Update(tagToUpdate);
 				await _repositoryWrapper.SaveChangesAsync();
+
 				return Result.Ok(_mapper.Map<TagDTO>(tagToUpdate));
 			}
 			catch(Exception ex)
 			{
 				_logger.LogError(request, ex.Message);
+
 				return Result.Fail(ex.Message);
 			}
 		}

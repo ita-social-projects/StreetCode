@@ -28,6 +28,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
             {
                 var errMessage = $"Tag with title {request.tag.Title} already exists";
                 _logger.LogError(request, errMessage);
+
                 return Result.Fail(errMessage);
             }
 
@@ -43,6 +44,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
             catch(Exception ex)
             {
                 _logger.LogError(request, ex.ToString());
+
                 return Result.Fail(ex.ToString());
             }
 

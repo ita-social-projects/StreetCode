@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
@@ -6,19 +7,17 @@ using Newtonsoft.Json;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Newss.GetAll;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Newss
+namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class GetAllNewsTest
     {
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
         private readonly GetAllNewsHandler _handler;
@@ -64,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(pageSize), httpHeaders);
 
             // Act.
-            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -80,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             ushort pageNumber = 99;
 
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
-            
+
             // Act.
             var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
@@ -108,6 +107,45 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 () => Assert.Empty(result.Value));
         }
 
+        private static PaginationResponse<DAL.Entities.News.News> GetPaginationResponse(ushort pageNumber, ushort pageSize)
+        {
+            var news = new List<DAL.Entities.News.News>
+            {
+                new DAL.Entities.News.News
+                {
+                    Id = 1,
+                },
+                new DAL.Entities.News.News
+                {
+                    Id = 2,
+                },
+                new DAL.Entities.News.News
+                {
+                    Id = 3,
+                },
+                new DAL.Entities.News.News
+                {
+                    Id = 4,
+                },
+            };
+
+            return PaginationResponse<DAL.Entities.News.News>.Create(news.AsQueryable(), pageNumber, pageSize);
+        }
+
+        private static IEnumerable<NewsDTO> GetNewsDTOs(ushort count)
+        {
+            var newsDTO = Enumerable
+                .Range(0, count)
+                .Select((news, index) => new NewsDTO() { Id = index });
+
+            return newsDTO;
+        }
+
+        private static IHeaderDictionary GetEmptyHTTPHeaders()
+        {
+            return new HeaderDictionary();
+        }
+
         private void SetupMockRepositoryGetAllPaginatedAsync(ushort pageNumber, ushort pageSize)
         {
             this._mockRepository
@@ -116,16 +154,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                     It.IsAny<ushort>(),
                     null,
                     null,
-                    It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>?>(),
+                    It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>?>(),
                     null,
-                    It.IsAny<Expression<Func<News, object>>?>()))
+                    It.IsAny<Expression<Func<DAL.Entities.News.News, object>>?>()))
                 .Returns(GetPaginationResponse(pageNumber, pageSize));
         }
 
         private void SetupMockMapper(IEnumerable<NewsDTO> mapperReturnCollection)
         {
             this._mockMapper
-                .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<News>>()))
+                .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
                 .Returns(mapperReturnCollection);
         }
 
@@ -145,45 +183,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             this.SetupMockMapper(mapperReturnCollection);
             this.SetupMockHttpAccessorToReturnHeadersCollection(headersCollection);
             this.SetupMockRepositoryGetAllPaginatedAsync(pageNumber, pageSize);
-        }
-
-        private static PaginationResponse<News> GetPaginationResponse(ushort pageNumber, ushort pageSize)
-        {
-            var news = new List<News>
-            {
-                new News
-                {
-                    Id = 1,
-                },
-                new News
-                {
-                    Id = 2,
-                },
-                new News
-                {
-                    Id = 3,
-                },
-                new News
-                {
-                    Id = 4,
-                },
-            };
-
-            return PaginationResponse<News>.Create(news.AsQueryable(), pageNumber, pageSize);
-        }
-
-        private static IEnumerable<NewsDTO> GetNewsDTOs(ushort count)
-        {
-            var newsDTO = Enumerable
-                .Range(0, count)
-                .Select((news, index) => new NewsDTO() { Id = index });
-
-            return newsDTO;
-        }
-
-        private static IHeaderDictionary GetEmptyHTTPHeaders()
-        {
-            return new HeaderDictionary();
         }
 
         private string GetPaginationHeaderInJSON(ushort pageSize, ushort currentPage, ushort totalItems)

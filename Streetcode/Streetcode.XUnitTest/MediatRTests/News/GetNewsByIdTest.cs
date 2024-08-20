@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -8,14 +9,12 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
+
 using Xunit;
 using NewsModel = Streetcode.DAL.Entities.News.News;
 
-
-namespace Streetcode.XUnitTest.MediatRTests.Newss
+namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class GetNewsByIdTest
     {
@@ -27,11 +26,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
         public GetNewsByIdTest()
         {
-            _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepositoryWrapper>();
-            _mockBlobService = new Mock<IBlobService>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
+            this._mockMapper = new Mock<IMapper>();
+            this._mockRepository = new Mock<IRepositoryWrapper>();
+            this._mockBlobService = new Mock<IBlobService>();
+            this._mockLogger = new Mock<ILoggerService>();
+            this._mockLocalizer = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Theory]
@@ -41,20 +40,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNewsDTO = GetNewsDTO(id);
             var testNews = GetNews(id);
-            RepositorySetup(testNews);
-            MapperSetup(testNewsDTO);
-            BlobServiceSetup(expectedBase64);
+            this.RepositorySetup(testNews);
+            this.MapperSetup(testNewsDTO);
+            this.BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockBlobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsSuccess),
                 () => Assert.Equal(result.Value.Id, id),
                 () => Assert.NotNull(result.Value.Image),
-                () => Assert.Equal(expectedBase64, result.Value.Image.Base64)
-            );
+                () => Assert.Equal(expectedBase64, result.Value.Image?.Base64));
         }
 
         [Theory]
@@ -64,18 +64,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Arrange
             var testNewsDTO = new NewsDTO { Id = id };
             var testNews = GetNews(id);
-            RepositorySetup(testNews);
-            MapperSetup(testNewsDTO);
-            BlobServiceSetup(expectedBase64);
+            this.RepositorySetup(testNews);
+            this.MapperSetup(testNewsDTO);
+            this.BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockBlobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsSuccess),
-                () => Assert.Null(result.Value.Image)
-            );
+                () => Assert.Null(result.Value.Image));
         }
 
         [Theory]
@@ -84,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             // Arrange
             string expectedError = $"No news by entered Id - {id}";
-            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            this._mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)
                 {
@@ -93,65 +94,48 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
 
                 return new LocalizedString(key, "Cannot find any news with unknown id");
             });
-            RepositorySetup(null);
-            MapperSetup(null);
-            BlobServiceSetup(null);
+            this.RepositorySetup(null);
+            this.MapperSetup(null);
+            this.BlobServiceSetup(null);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetNewsByIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockBlobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+
             // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message)
-            );
+                () => Assert.Equal(expectedError, result.Errors[0].Message));
         }
 
         [Theory]
         [InlineData(1, "base64-encoded-image")]
         public async Task ShouldReturnSuccessfully_CorrectType(int id, string expectedBase64)
         {
-            //Arrange
+            // Arrange
             var testNewsDTO = GetNewsDTO(id);
             var testNews = GetNews(id);
-            RepositorySetup(testNews);
-            MapperSetup(testNewsDTO);
-            BlobServiceSetup(expectedBase64);
+            this.RepositorySetup(testNews);
+            this.MapperSetup(testNewsDTO);
+            this.BlobServiceSetup(expectedBase64);
 
-            var handler = new GetNewsByIdHandler(_mockMapper.Object, _mockRepository.Object, _mockBlobService.Object, _mockLogger.Object, _mockLocalizer.Object);
-            //Act
+            var handler = new GetNewsByIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockBlobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
-            //Assert
+
+            // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<NewsDTO>(result.ValueOrDefault)
-            );
-        }
-
-        private void RepositorySetup(NewsModel? news)
-        {
-            _mockRepository.Setup(repo => repo.NewsRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<NewsModel, bool>>>(), It.IsAny<Func<IQueryable<NewsModel>,
-                IIncludableQueryable<NewsModel, object>>>())).ReturnsAsync(news);
-        }
-
-        private void MapperSetup(NewsDTO? news)
-        {
-            _mockMapper.Setup(mapper => mapper.Map<NewsDTO>(It.IsAny<NewsModel>()))
-                .Returns(news);
-        }
-
-        private void BlobServiceSetup(string? expectedBase64)
-        {
-            _mockBlobService.Setup(blob => blob.FindFileInStorageAsBase64(It.IsAny<string>()))
-                .Returns(expectedBase64);
+                () => Assert.IsType<NewsDTO>(result.ValueOrDefault));
         }
 
         private static ImageDTO GetImageDTO()
         {
             return new ImageDTO
             {
-                BlobName = It.IsAny<string>()
+                BlobName = It.IsAny<string>(),
             };
         }
 
@@ -159,7 +143,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             return new NewsModel
             {
-                Id = id
+                Id = id,
             };
         }
 
@@ -168,8 +152,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             return new NewsDTO
             {
                 Id = id,
-                Image = GetImageDTO()
+                Image = GetImageDTO(),
             };
+        }
+
+        private void RepositorySetup(NewsModel? news)
+        {
+            this._mockRepository.Setup(repo => repo.NewsRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<NewsModel, bool>>>(), It.IsAny<Func<IQueryable<NewsModel>,
+                IIncludableQueryable<NewsModel, object>>>())).ReturnsAsync(news);
+        }
+
+        private void MapperSetup(NewsDTO? news)
+        {
+            this._mockMapper.Setup(mapper => mapper.Map<NewsDTO?>(It.IsAny<NewsModel>()))
+                .Returns(news);
+        }
+
+        private void BlobServiceSetup(string? expectedBase64)
+        {
+            this._mockBlobService.Setup<string?>(blob => blob.FindFileInStorageAsBase64(It.IsAny<string>()))
+                .Returns(expectedBase64);
         }
     }
 }

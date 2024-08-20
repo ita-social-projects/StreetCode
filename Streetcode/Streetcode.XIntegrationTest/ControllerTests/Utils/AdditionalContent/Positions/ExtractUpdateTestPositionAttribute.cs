@@ -6,9 +6,9 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Positions;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-public class ExtractUpdateTestPosition : BeforeAfterTestAttribute
+public class ExtractUpdateTestPositionAttribute : BeforeAfterTestAttribute
 {
-    public static PositionDTO PositionForTest;
+    public static PositionDTO PositionForTest { get; set; } = null!;
 
     public override void Before(MethodInfo methodUnderTest)
     {

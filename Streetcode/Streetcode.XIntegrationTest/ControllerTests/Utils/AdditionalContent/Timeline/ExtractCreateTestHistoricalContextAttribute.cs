@@ -7,16 +7,15 @@ using Xunit.Sdk;
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Timeline;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-public class ExtractUpdateTestHistoricalContext : BeforeAfterTestAttribute
+public class ExtractCreateTestHistoricalContextAttribute : BeforeAfterTestAttribute
 {
-    public static HistoricalContextDTO HistoricalContextForTest;
+    public static HistoricalContextDTO HistoricalContextForTest { get; set; } = null!;
 
     public override void Before(MethodInfo methodUnderTest)
     {
         HistoricalContextForTest = new HistoricalContextDTO
         {
-            Id = 1,
-            Title = "New Title Test",
+            Title = "Test",
         };
     }
 

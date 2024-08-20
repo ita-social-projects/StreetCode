@@ -16,11 +16,11 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
         RuleFor(x => x.Title)
                 .NotEmpty().WithMessage(x => localizer["TitleRequired"])
                 .MaximumLength(100).WithMessage(x => localizer["TitleMaxLength"])
-                .MustAsync(BeUniqueTitle).WithMessage(x => localizer["TitleAlreadyExists"]);
+                .MustAsync(BeUniqueTitle).WithMessage(x => localizer["TitleNewsAlreadyExists"]);
 
         RuleFor(x => x.Text)
                 .NotEmpty().WithMessage(x => localizer["TextRequired"])
-                .MustAsync(BeUniqueText).WithMessage(x => localizer["TextAlreadyExists"]);
+                .MustAsync(BeUniqueText).WithMessage(x => localizer["TextNewsAlreadyExists"]);
 
         RuleFor(x => x.ImageId)
                 .GreaterThan(0).WithMessage(x => localizer["InvalidImageIdValue"])
@@ -32,7 +32,7 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
         RuleFor(x => x.URL)
                 .NotEmpty().WithMessage(x => localizer["URLRequired"])
                 .Matches("^[a-zA-Z0-9-]*$").WithMessage(x => localizer["URLInvalid"])
-                .MustAsync(BeUniqueUrl).WithMessage(x => localizer["URLAlreadyExists"]);
+                .MustAsync(BeUniqueUrl).WithMessage(x => localizer["URLAlreadyExistsNews"]);
     }
 
     private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

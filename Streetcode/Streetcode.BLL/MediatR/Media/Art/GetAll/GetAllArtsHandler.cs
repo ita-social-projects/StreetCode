@@ -30,7 +30,7 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
     {
         var arts = await _repositoryWrapper.ArtRepository.GetAllAsync();
 
-        if (arts is null)
+        if (!arts.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArts"].Value;
             _logger.LogError(request, errorMsg);

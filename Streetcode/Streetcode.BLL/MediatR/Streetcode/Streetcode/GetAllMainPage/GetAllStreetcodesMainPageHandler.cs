@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails));
 
-            if (streetcodes != null)
+            if (streetcodes.Any())
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)

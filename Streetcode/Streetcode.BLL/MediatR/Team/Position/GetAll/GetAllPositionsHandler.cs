@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
                 .PositionRepository
                 .GetAllAsync();
 
-            if (positions is null)
+            if (!positions.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
                 _logger.LogError(request, errorMsg);

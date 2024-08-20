@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Delete;

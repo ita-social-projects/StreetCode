@@ -1,22 +1,17 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
-using System.IO.Compression;
 using AspNetCoreRateLimit;
 using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
-using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.ResponseCompression;
 using Streetcode.BLL.Middleware;
-using Streetcode.BLL.Services.Hangfire;
-using Streetcode.WebApi.Extensions;
+using Streetcode.WebApi.Hangfire;
 using Streetcode.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureApplication();
+builder.Host.ConfigureApplication(builder);
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -38,7 +33,7 @@ builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
         partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
-        factory: partition => new FixedWindowRateLimiterOptions
+        factory: _ => new FixedWindowRateLimiterOptions
         {
             AutoReplenishment = true,
             PermitLimit = 3,

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;

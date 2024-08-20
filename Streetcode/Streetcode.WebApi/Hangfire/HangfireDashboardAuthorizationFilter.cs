@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Hangfire.Dashboard;
 using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.Services.Hangfire;
+namespace Streetcode.WebApi.Hangfire;
 
 public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilter
 {
@@ -19,7 +19,7 @@ public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilte
 		return user.IsInRole(nameof(UserRole.Admin));
 	}
 
-	public virtual ClaimsPrincipal GetUser(DashboardContext context)
+	protected virtual ClaimsPrincipal GetUser(DashboardContext context)
 	{
 		return context.GetHttpContext().User;
 	}

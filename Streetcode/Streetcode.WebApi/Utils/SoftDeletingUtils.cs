@@ -1,6 +1,8 @@
 ﻿using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.Streetcode;
+
 namespace Streetcode.WebApi.Utils;
 
 public class SoftDeletingUtils
@@ -20,12 +22,14 @@ public class SoftDeletingUtils
             include: s => s.Include(x => x.Observers)
                            .Include(x => x.Targets));
 
-        if (streetcodes is null || streetcodes.Count() == 0)
+        var streetcodeContents = streetcodes as StreetcodeContent[] ?? streetcodes.ToArray();
+
+        if (!streetcodeContents.Any())
         {
             return;
         }
 
-        foreach (var streetcode in streetcodes)
+        foreach (var streetcode in streetcodeContents)
         {
             _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
 

@@ -7,8 +7,9 @@ namespace Streetcode.BLL.Validators.TeamMember;
 
 public class CreateTeamValidator : AbstractValidator<CreateTeamQuery>
 {
-    public CreateTeamValidator(BaseTeamValidator<TeamMemberLinkCreateDTO> baseTeamValidator)
+    public CreateTeamValidator(BaseTeamValidator baseTeamValidator, BaseTeamMemberLinkValidator baseTeamMemberLinkValidator)
     {
         RuleFor(c => c.teamMember).SetValidator(baseTeamValidator);
+        RuleForEach(c => c.teamMember.TeamMemberLinks).SetValidator(baseTeamMemberLinkValidator);
     }
 }

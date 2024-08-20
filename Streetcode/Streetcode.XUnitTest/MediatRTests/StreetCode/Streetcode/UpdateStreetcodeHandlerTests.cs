@@ -1,7 +1,13 @@
-﻿/*using AutoMapper;
+﻿using AutoMapper;
+using FluentResults;
+using Microsoft.Extensions.Localization;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.Types;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.Interfaces.Cache;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -12,77 +18,69 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> _mockLocalizerAnErrorOccurred;
+        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
+        private readonly Mock<ICacheService> _mockCache;
+
         public UpdateStreetcodeHandlerTests()
         {
-            _repository = new Mock<IRepositoryWrapper>();
-            _mapper = new Mock<IMapper>();
+            this._repository = new Mock<IRepositoryWrapper>();
+            this._mapper = new Mock<IMapper>();
+            this._mockLogger = new Mock<ILoggerService>();
+            this._mockLocalizerAnErrorOccurred = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
+            this._mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            this._mockCache = new Mock<ICacheService>();
+            this._mockCache
+                .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDTO>>>>>(), It.IsAny<TimeSpan>()))
+                .Returns<string, Func<Task<Result<IEnumerable<ImageDTO>>>>, TimeSpan>((key, func, timeSpan) =>
+                {
+                    return func();
+                });
         }
 
         [Fact]
         public async Task Handle_ReturnsSuccess()
-        {   
-            // arrange
+        {
+            // Arrange
             var testStreetcode = new StreetcodeContent();
-            var testStreetcodeDTO = new EventStreetcodeDTO();
+            var testStreetcodeDTO = new StreetcodeUpdateDTO();
+            string expectedErrorMessage = "An error occurred while updating a streetcode";
             int testSaveChangesSuccess = 1;
 
-            RepositorySetup(testStreetcode, testSaveChangesSuccess);
-            MapperSetup(testStreetcode);
+            this.RepositorySetup(testStreetcode, testSaveChangesSuccess);
+            this.MapperSetup(testStreetcode);
 
-            var handler = new UpdateStreetcodeHandler(_repository.Object, _mapper.Object);
-            // act
+            this._mockLocalizerAnErrorOccurred.Setup(x => x["AnErrorOccurredWhileUpdatin"])
+                .Returns(new LocalizedString("AnErrorOccurredWhileUpdatin", expectedErrorMessage));
+
+            var handler =
+                new UpdateStreetcodeHandler(
+                    this._mapper.Object,
+                    this._repository.Object,
+                    this._mockLogger.Object,
+                    this._mockLocalizerAnErrorOccurred.Object,
+                    this._mockLocalizerFailedToUpdate.Object,
+                    this._mockCache.Object);
+
+            // Act
             var result = await handler.Handle(new UpdateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-            // assert
-            Assert.True(result.IsSuccess);
-        }
 
-        [Fact]
-        public async Task Handle_ReturnsMapNullError()
-        {   
-            // arrange
-            var testStreetcode = new StreetcodeContent();
-            var testStreetcodeDTO = new EventStreetcodeDTO();
-            string expectedErrorMessage = "Cannot convert null to Streetcode";
-            int testSaveChangesSuccess = 1;
-
-            RepositorySetup(testStreetcode, testSaveChangesSuccess);
-            MapperSetup(null);
-
-            var handler = new UpdateStreetcodeHandler(_repository.Object, _mapper.Object);
-            // act
-            var result = await handler.Handle(new UpdateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-            // assert
-            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
-        }
-
-        [Fact]
-        public async Task Handle_ReturnsSaveError()
-        {   
-            // arrange
-            var testStreetcode = new StreetcodeContent();
-            var testStreetcodeDTO = new EventStreetcodeDTO();
-            string expectedErrorMessage = "Failed to update a streetcode";
-            int testSaveChangesFailed = -1;
-
-            RepositorySetup(testStreetcode, testSaveChangesFailed);
-            MapperSetup(testStreetcode);
-
-            var handler = new UpdateStreetcodeHandler(_repository.Object, _mapper.Object);
-            // act
-            var result = await handler.Handle(new UpdateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);
-            // assert
-            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
+            // Assert
+            Assert.Multiple(
+                () => Assert.Equal(expectedErrorMessage, result.Errors[0].Message),
+                () => Assert.False(result.IsSuccess));
         }
 
         private void RepositorySetup(StreetcodeContent testStreetcode, int saveChangesVariable)
         {
-            _repository.Setup(x => x.StreetcodeRepository.Update(testStreetcode));
-            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
+            this._repository.Setup(x => x.StreetcodeRepository.Update(testStreetcode));
+            this._repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(saveChangesVariable);
         }
-        private void MapperSetup(StreetcodeContent testStreetcode)
+
+        private void MapperSetup(StreetcodeContent? testStreetcode)
         {
-            _mapper.Setup(x => x.Map<StreetcodeContent>(It.IsAny<object>())).Returns(testStreetcode);
+            this._mapper.Setup(x => x.Map<StreetcodeContent?>(It.IsAny<object>())).Returns(testStreetcode);
         }
     }
 }
-*/

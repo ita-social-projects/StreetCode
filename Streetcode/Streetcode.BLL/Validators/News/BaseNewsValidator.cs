@@ -1,14 +1,61 @@
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
+using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.News;
 
 public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
 {
-    protected BaseNewsValidator()
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    public BaseNewsValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IRepositoryWrapper repositoryWrapper)
     {
-        RuleFor(n => n.Title)
-            .Length(1, 100)
-            .WithMessage("Max Length of Title is 100");
+        _repositoryWrapper = repositoryWrapper;
+
+        RuleFor(x => x.Title)
+                .NotEmpty().WithMessage(x => localizer["TitleRequired"])
+                .MaximumLength(100).WithMessage(x => localizer["TitleMaxLength"])
+                .MustAsync(BeUniqueTitle).WithMessage(x => localizer["TitleAlreadyExists"]);
+
+        RuleFor(x => x.Text)
+                .NotEmpty().WithMessage(x => localizer["TextRequired"])
+                .MustAsync(BeUniqueText).WithMessage(x => localizer["TextAlreadyExists"]);
+
+        RuleFor(x => x.ImageId)
+                .GreaterThan(0).WithMessage(x => localizer["InvalidImageIdValue"])
+                .MustAsync(BeExistingImageId).WithMessage(x => localizer["ImageIdNotExists"]);
+
+        RuleFor(x => x.CreationDate)
+                .NotEmpty().WithMessage(x => localizer["CreationDateRequired"]);
+
+        RuleFor(x => x.URL)
+                .NotEmpty().WithMessage(x => localizer["URLRequired"])
+                .Matches("^[a-zA-Z0-9-]*$").WithMessage(x => localizer["URLInvalid"])
+                .MustAsync(BeUniqueUrl).WithMessage(x => localizer["URLAlreadyExists"]);
+    }
+
+    private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+    {
+        var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Title == title);
+        return existingNewsByTitle == null;
+    }
+
+    private async Task<bool> BeUniqueText(string text, CancellationToken cancellationToken)
+    {
+        var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.Text == text);
+        return existingNewsByText == null;
+    }
+
+    private async Task<bool> BeUniqueUrl(string url, CancellationToken cancellationToken)
+    {
+        var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.URL == url);
+        return existingNewsByUrl == null;
+    }
+
+    private async Task<bool> BeExistingImageId(int imageId, CancellationToken cancellationToken)
+    {
+        var existingImage = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == imageId);
+        return existingImage != null;
     }
 }

@@ -4,15 +4,10 @@ using Streetcode.BLL.MediatR.Newss.Update;
 
 namespace Streetcode.BLL.Validators.News;
 
-public class UpdateNewsValidator : CreateNewsValidator, IValidator<UpdateNewsCommand>
+public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
 {
-    public ValidationResult Validate(UpdateNewsCommand instance)
+    public UpdateNewsValidator(BaseNewsValidator baseNewsValidator)
     {
-        return Validate(instance.news);
-    }
-
-    public Task<ValidationResult> ValidateAsync(UpdateNewsCommand instance, CancellationToken cancellation = new CancellationToken())
-    {
-        return ValidateAsync(instance.news, cancellation);
+        RuleFor(n => n.news).SetValidator(baseNewsValidator);
     }
 }

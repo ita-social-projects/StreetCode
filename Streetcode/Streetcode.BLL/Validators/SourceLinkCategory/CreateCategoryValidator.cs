@@ -7,8 +7,8 @@ namespace Streetcode.BLL.Validators.SourceLinkCategory;
 
 public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
 {
-    public CreateCategoryValidator()
+    public CreateCategoryValidator(BaseCategoryValidator baseCategoryValidator)
     {
-        RuleFor(c => c.Category).SetValidator(new BaseCategoryValidator());
+        RuleFor(c => c.Category).SetValidator(baseCategoryValidator);
     }
 }

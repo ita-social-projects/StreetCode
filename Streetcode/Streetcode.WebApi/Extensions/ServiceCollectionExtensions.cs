@@ -34,8 +34,11 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.MediatR.Newss.Create;
+using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.PipelineBehaviour;
 using Streetcode.BLL.Validators.SourceLinkCategory;
+using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
@@ -61,6 +64,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
 
+        services.AddTransient<IValidator<CreateNewsCommand>, CreateNewsValidator>();
+        services.AddTransient<IValidator<UpdateNewsCommand>, UpdateNewsValidator>();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();

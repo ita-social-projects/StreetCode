@@ -19,17 +19,17 @@ public class UpdatePositionTest
 
     public UpdatePositionTest()
     {
-        _mockRepo = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
+        this._mockRepo = new Mock<IRepositoryWrapper>();
+        this._mockMapper = new Mock<IMapper>();
+        this._mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
     {
         // Arrange
-        _mockRepo.Setup(repo => repo.PositionRepository.Update(new Positions()));
-        _mockRepo.Setup(repo =>
+        this._mockRepo.Setup(repo => repo.PositionRepository.Update(new Positions()));
+        this._mockRepo.Setup(repo =>
                 repo.PositionRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
             .ReturnsAsync((Expression<Func<Positions, bool>> expr, IIncludableQueryable<Positions, bool> include) =>
             {
@@ -38,16 +38,15 @@ public class UpdatePositionTest
                 return member.Member.Name == "Id" ? new Positions() : null;
             });
 
-        _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
+        this._mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+        this._mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
 
+        var handler = new UpdateTeamPositionHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object);
 
-        var handler = new UpdateTeamPositionHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
-
-        //Act
+        // Act
         var result = await handler.Handle(new UpdateTeamPositionCommand(new PositionDTO()), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.IsType<PositionDTO>(result.Value),
             () => Assert.True(result.IsSuccess));

@@ -1,23 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Streetcode.BLL.Services.Authentication;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Persistence;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 {
     public class SetNewRefreshTokenForUserTest
     {
-        private readonly string _RefreshTokenLifetimeInDays = "5";
+        private readonly string _refreshTokenLifetimeInDays = "5";
 
         private readonly Mock<StreetcodeDbContext> _mockDbContext;
         private readonly IConfiguration _fakeConfiguration;
@@ -63,16 +56,16 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 
         private IConfiguration GetFakeConfiguration()
         {
-            var appSettingsStub = new Dictionary<string, string>
+            var appSettingsStub = new Dictionary<string, string?>
             {
                 { "Jwt:Key", "TestKey" },
                 { "Jwt:Issuer", "TestIssuer" },
                 { "Jwt:Audience", "TestAudience" },
-                { "Jwt:RefreshTokenLifetimeInDays", this._RefreshTokenLifetimeInDays },
+                { "Jwt:RefreshTokenLifetimeInDays", this._refreshTokenLifetimeInDays },
             };
             var fakeConfiguration = new ConfigurationBuilder()
-            .AddInMemoryCollection(appSettingsStub)
-            .Build();
+                .AddInMemoryCollection(appSettingsStub)
+                .Build();
 
             return fakeConfiguration;
         }

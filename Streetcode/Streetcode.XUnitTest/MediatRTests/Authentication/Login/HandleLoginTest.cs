@@ -1,17 +1,16 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.Login;
-using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Login;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Users;
 using Xunit;
-using System.IdentityModel.Tokens.Jwt;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
-using Streetcode.BLL.DTO.Users;
-using FluentResults;
 
 namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
 {
@@ -114,17 +113,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
-        private void SetupServicesForSuccessfulResult()
-        {
-            this.SetupMockUserManagerCheckPassword(true);
-            this.SetupMockTokenService();
-            this.SetupMockMapper();
-            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
-            this.SetupMockUserManagerGetRolesAsync();
-            this.SetupMockUserManagerGetRolesAsync();
-            this.SetupMockCaptchaService(true);
-        }
-
         private static UserDTO GetUserDTO()
         {
             return new ()
@@ -150,6 +138,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 Login = "one@gmail.com",
                 Password = "One111oneOne#@#",
             };
+        }
+
+        private void SetupServicesForSuccessfulResult()
+        {
+            this.SetupMockUserManagerCheckPassword(true);
+            this.SetupMockTokenService();
+            this.SetupMockMapper();
+            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
+            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupMockUserManagerGetRolesAsync();
+            this.SetupMockCaptchaService(true);
         }
 
         private void SetupMockUserManagerCheckPassword(bool checkReturn)

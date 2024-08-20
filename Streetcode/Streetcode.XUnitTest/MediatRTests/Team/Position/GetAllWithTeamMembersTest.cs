@@ -18,61 +18,45 @@ public class GetAllWithTeamMembersTest
 
     public GetAllWithTeamMembersTest()
     {
-        _mockMapper = new Mock<IMapper>();
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockLogger = new Mock<ILoggerService>();
+        this._mockMapper = new Mock<IMapper>();
+        this._mockRepository = new Mock<IRepositoryWrapper>();
+        this._mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
     {
-        //Arrange
-        SetupMapMethod(GetListPositionDTO());
-        SetupGetAllAsyncMethod(GetPositionsList());
+        // Arrange
+        this.SetupMapMethod(GetListPositionDTO());
+        this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault)
-        );
+            () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault));
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_WhenCountMatch()
     {
-        //Arrange
-        SetupMapMethod(GetListPositionDTO());
-        SetupGetAllAsyncMethod(GetPositionsList());
+        // Arrange
+        this.SetupMapMethod(GetListPositionDTO());
+        this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.Equal(GetPositionsList().Count(), result.Value.Count())
-        );
-    }
-
-    private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
-    {
-        _mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
-            .Returns(positionDTOs);
-    }
-
-    private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
-    {
-        _mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
-            .ReturnsAsync(positions);
+            () => Assert.Equal(GetPositionsList().Count(), result.Value.Count()));
     }
 
     private static IEnumerable<Positions> GetPositionsList()
@@ -81,34 +65,50 @@ public class GetAllWithTeamMembersTest
         {
             new Positions
             {
-                Id = 1
+                Id = 1,
+                TeamMembers = new List<TeamMember>
+                {
+                    new TeamMember { Id = 2 },
+                },
             },
             new Positions
             {
-                Id = 2
-            }
+                Id = 2,
+            },
         };
         return partners;
     }
 
-    private static List<Positions> GetPositionsListWithNotExistingId()
-    {
-        return new List<Positions>(); // Return an empty list instead of null
-    }
-
     private static List<PositionDTO> GetListPositionDTO()
     {
-        var PositionDTO = new List<PositionDTO>
+        var positionDTO = new List<PositionDTO>
         {
             new PositionDTO
             {
-                Id = 1
+                Id = 1,
             },
             new PositionDTO
             {
                 Id = 2,
-            }
+            },
         };
-        return PositionDTO;
+        return positionDTO;
+    }
+
+    private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
+    {
+        this._mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+            .Returns(positionDTOs);
+    }
+
+    private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
+    {
+        this._mockRepository
+            .Setup(x => x.PositionRepository
+                .GetAllAsync(
+                    null,
+                    It.IsAny<Func<IQueryable<Positions>,
+                    IIncludableQueryable<Positions, object>>>()))
+            .ReturnsAsync(positions);
     }
 }

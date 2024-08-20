@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -9,7 +10,6 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
@@ -23,91 +23,89 @@ public class GetFactByStreetcodeIdTest
 
     public GetFactByStreetcodeIdTest()
     {
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this._mockRepository = new Mock<IRepositoryWrapper>();
+        this._mockMapper = new Mock<IMapper>();
+        this._mockLogger = new Mock<ILoggerService>();
+        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
     [InlineData(1)]
     public async Task ShouldReturnSuccessfully_ExistingId(int streetCodeId)
     {
-        //Arrange
-        _mockRepository.Setup(x => x.FactRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-              IIncludableQueryable<Fact, object>>>()))
-              .ReturnsAsync(GetListFacts());
+        // Arrange
+        this._mockRepository.Setup(x => x.FactRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(GetListFacts());
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.NotEmpty(result.Value)
-        );
+            () => Assert.NotEmpty(result.Value));
     }
 
     [Theory]
     [InlineData(2)]
     public async Task ShouldReturnSuccessfully_CorrectType(int streetCodeId)
     {
-        //Arrange
-        _mockRepository.Setup(x => x.FactRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-              IIncludableQueryable<Fact, object>>>()))
-              .ReturnsAsync(GetListFacts());
+        // Arrange
+        this._mockRepository.Setup(x => x.FactRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(GetListFacts());
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault)
-        );
+            () => Assert.IsType<List<FactDto>>(result.ValueOrDefault));
     }
 
     [Theory]
     [InlineData(1)]
     public async Task ShouldThrowError_IdNotExist(int streetCodeId)
     {
-        //Arrange
-        _mockRepository.Setup(x => x.FactRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-              IIncludableQueryable<Fact, object>>>()))
-              .ReturnsAsync(GetListFactsWithNotExistingStreetcodeId());
+        // Arrange
+        this._mockRepository.Setup(x => x.FactRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Fact, bool>>>(),
+                It.IsAny<Func<IQueryable<Fact>,
+                IIncludableQueryable<Fact, object>>>()))
+            .ReturnsAsync(GetListFactsWithNotExistingStreetcodeId() !);
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
-            .Returns(GetListFactsDTOWithNotExistingId());
+            .Returns(GetListFactsDTOWithNotExistingId() !);
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
-        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int streetCodeId)
             {
@@ -117,16 +115,15 @@ public class GetFactByStreetcodeIdTest
             return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
         });
 
-        var handler = new GetFactByStreetcodeIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors.First().Message)
-        );
+            () => Assert.Equal(expectedError, result.Errors[0].Message));
     }
 
     private static IQueryable<Fact> GetListFacts()
@@ -139,44 +136,34 @@ public class GetFactByStreetcodeIdTest
                 Title = "Викуп з кріпацтва",
                 ImageId = null,
                 Streetcode = new StreetcodeContent
-            {
-                Id = 1
-            },
+                {
+                    Id = 1,
+                },
                 StreetcodeId = 1,
-                FactContent = "Навесні 1838-го Карл Брюллов..."
+                FactContent = "Навесні 1838-го Карл Брюллов...",
             },
         };
 
         return facts.AsQueryable();
     }
 
-    private static List<StreetcodeContent> GetStreetcodes()
-    {
-        var streetCodes = new List<StreetcodeContent>
-        {
-            new StreetcodeContent
-            {
-                Id = 1
-            },
-        };
-
-        return streetCodes;
-    }
     private static List<Fact>? GetListFactsWithNotExistingStreetcodeId()
     {
         return null;
     }
+
     private static List<FactDto>? GetListFactsDTOWithNotExistingId()
     {
         return null;
     }
+
     private static List<FactDto> GetListFactDTO()
     {
         var facts = new List<FactDto>
         {
             new FactDto
             {
-                Id = 1
+                Id = 1,
             },
         };
 

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -8,9 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
@@ -22,71 +21,71 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+
         public GetCategoriesByStreetcodeIdTest()
         {
-            _mockRepository = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _blobService = new Mock<IBlobService>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this._mockRepository = new Mock<IRepositoryWrapper>();
+            this._mockMapper = new Mock<IMapper>();
+            this._blobService = new Mock<IBlobService>();
+            this._mockLogger = new Mock<ILoggerService>();
+            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
+
         [Theory]
         [InlineData(1)]
         public async Task ShouldReturnSuccesfully(int id)
         {
-            // arrange 
-            _mockRepository.Setup(x => x.SourceCategoryRepository
+            // Arrange
+            this._mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
-               It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>,
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(GetSourceLinkCategories());
 
-            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            this._mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                _mockRepository.Object,
-                _mockMapper.Object,
-                _blobService.Object,
-                _mockLogger.Object,
-                _mockLocalizerCannotFind.Object);
+                this._mockRepository.Object,
+                this._mockMapper.Object,
+                this._blobService.Object,
+                this._mockLogger.Object,
+                this._mockLocalizerCannotFind.Object);
 
-            // act
-
+            // Act
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
-            // assert
+            // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault)
-            );
+                () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault));
         }
 
         [Theory]
         [InlineData(1)]
         public async Task ShouldReturnNull_NotExistingId(int id)
         {
-            // arrange 
-            _mockRepository.Setup(x => x.SourceCategoryRepository
+            // Arrange
+            this._mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
-               It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>,
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
-            .ReturnsAsync(GetSourceLinkCategoriesNotExists());
+            .ReturnsAsync(this.GetSourceLinkCategoriesNotExists());
 
-            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            this._mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                _mockRepository.Object,
-                _mockMapper.Object,
-                _blobService.Object,
-                _mockLogger.Object,
-                _mockLocalizerCannotFind.Object);
+                this._mockRepository.Object,
+                this._mockMapper.Object,
+                this._blobService.Object,
+                this._mockLogger.Object,
+                this._mockLocalizerCannotFind.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";
-            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)
                 {
@@ -95,48 +94,51 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
                 return new LocalizedString(key, "Cannot find any source category with unknown id");
             });
-            // act
 
+            // Act
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
-            // assert
-
-            Assert.Equal(expectedError, result.Errors.First().Message);
-        }
-
-        private List<SourceLinkCategory>? GetSourceLinkCategoriesNotExists()
-        {
-            return null;
+            // Assert
+            Assert.Equal(expectedError, result.Errors[0].Message);
         }
 
         private static List<SourceLinkCategory> GetSourceLinkCategories()
         {
-            return new List<SourceLinkCategory>() 
+            return new List<SourceLinkCategory>()
             {
-                new SourceLinkCategory() { 
+                new SourceLinkCategory()
+                {
                     Id = 1,
-                    Image = new DAL.Entities.Media.Images.Image()
+                    Image = new DAL.Entities.Media.Images.Image(),
                 },
-                new SourceLinkCategory() {
+                new SourceLinkCategory()
+                {
                     Id = 2,
-                    Image = new DAL.Entities.Media.Images.Image()
-                }
+                    Image = new DAL.Entities.Media.Images.Image(),
+                },
             };
         }
+
         private static List<SourceLinkCategoryDTO> GetSourceDTOs()
         {
             return new List<SourceLinkCategoryDTO>()
             {
-                new SourceLinkCategoryDTO() {
+                new SourceLinkCategoryDTO()
+                {
                     Id = 1,
-                    Image = new BLL.DTO.Media.Images.ImageDTO()
+                    Image = new BLL.DTO.Media.Images.ImageDTO(),
                 },
-                new SourceLinkCategoryDTO() { 
+                new SourceLinkCategoryDTO()
+                {
                     Id = 2,
-                    Image = new BLL.DTO.Media.Images.ImageDTO()
-                }
+                    Image = new BLL.DTO.Media.Images.ImageDTO(),
+                },
             };
+        }
+
+        private List<SourceLinkCategory> GetSourceLinkCategoriesNotExists()
+        {
+            return new List<SourceLinkCategory>();
         }
     }
 }
-

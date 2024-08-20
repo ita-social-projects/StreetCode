@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             // Assert.
             Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault()!.Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             // Assert.
             Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             // Assert.
             Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             // Assert.
             Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             // Assert.
             Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors.FirstOrDefault() !.Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         private User GetSampleUser()
@@ -210,9 +210,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             this._mockRepositoryWrapper
                 .Setup(wrapper => wrapper.UserRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<User, bool>>>(),
-                    It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+                    .GetFirstOrDefaultAsync(
+                        It.IsAny<Expression<Func<User, bool>>>(),
+                        It.IsAny<Func<IQueryable<User>,
+                        IIncludableQueryable<User, object>>>()))
                 .ReturnsAsync(isExists ? this.GetSampleUser() : null);
         }
 
@@ -226,8 +227,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                     Id = user.Id,
                     Name = user.Name,
                     Surname = user.Surname,
-                    Email = user.Email,
-                    UserName = user.UserName,
+                    Email = user.Email!,
+                    UserName = user.UserName!,
                 };
             }
 

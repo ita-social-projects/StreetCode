@@ -16,20 +16,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetTagsByStreetcodeIdHandlerTests
     {
+        private const int _streetcode_id = 1;
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-
-        public GetTagsByStreetcodeIdHandlerTests()
-        {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
-
-        private const int _streetcode_id = 1;
 
         private readonly List<StreetcodeTagIndex> tags = new List<StreetcodeTagIndex>()
         {
@@ -37,34 +28,35 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             {
                 Index = 1,
                 IsVisible = true,
-                Streetcode =  new StreetcodeContent {
-                        Id = _streetcode_id
-                    },
+                Streetcode = new StreetcodeContent
+                {
+                    Id = _streetcode_id,
+                },
                 StreetcodeId = _streetcode_id,
                 Tag = new Tag()
                 {
-                    Id  = 1,
-                    Title = "title"
-                }
+                    Id = 1,
+                    Title = "title",
+                },
             },
             new StreetcodeTagIndex
             {
                 Index = 2,
                 IsVisible = true,
-                Streetcode =  new StreetcodeContent {
-                        Id = _streetcode_id
-                    },
+                Streetcode = new StreetcodeContent
+                {
+                    Id = _streetcode_id,
+                },
                 StreetcodeId = _streetcode_id,
                 Tag = new Tag()
                 {
-                    Id  = 2,
-                    Title = "title"
-                }
-            }
-
-            
+                    Id = 2,
+                    Title = "title",
+                },
+            },
         };
-        private readonly List<StreetcodeTagDTO> tagDTOs = new List<StreetcodeTagDTO>()  
+
+        private readonly List<StreetcodeTagDTO> tagDTOs = new List<StreetcodeTagDTO>()
         {
             new StreetcodeTagDTO
             {
@@ -79,57 +71,68 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 Title = "title",
                 IsVisible = true,
                 Index = 2,
-            }
+            },
         };
 
-        async Task SetupRepository(List<StreetcodeTagIndex> returnList)
+        public GetTagsByStreetcodeIdHandlerTests()
         {
-            _mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
-                It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
-                It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
-                IIncludableQueryable<StreetcodeTagIndex, object>>>()))
-                .ReturnsAsync(returnList);
-        }
-        async Task SetupMapper(List<StreetcodeTagDTO> returnList)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(returnList);
+            this._mockRepo = new Mock<IRepositoryWrapper>();
+            this._mockMapper = new Mock<IMapper>();
+            this._mockLogger = new Mock<ILoggerService>();
+            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_NotEmpty_List()
         {
-            //Arrange
-            await SetupRepository(tags);
-            await SetupMapper(tagDTOs);
+            // Arrange
+            this.SetupRepository(this.tags);
+            this.SetupMapper(this.tagDTOs);
 
-            var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetTagByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
 
-            //Act
+            // Act
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
-            //Assert
-            /*Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value),
-                () => Assert.True(result.Value.All(x => x.Streetcodes.All(y => y.Id == _streetcode_id))));*/
+            // Assert
+            Assert.Multiple(
+                () => Assert.IsType<List<StreetcodeTagDTO>>(result.Value),
+                () => Assert.NotEmpty(result.Value));
         }
 
         [Fact]
-        public async Task Handler_Returns_Empty_List()
+        public async Task Handler_Returns_Error()
         {
-            //Arrange
-            await SetupRepository(new List<StreetcodeTagIndex>());
-            await SetupMapper(new List<StreetcodeTagDTO>());
+            // Arrange
+            this.SetupRepository(new List<StreetcodeTagIndex>());
+            this.SetupMapper(new List<StreetcodeTagDTO>());
 
-            var handler = new GetTagByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var expectedError = $"Cannot find any tag by the streetcode id: {_streetcode_id}";
+            this._mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", _streetcode_id])
+                .Returns(new LocalizedString("CannotFindAnyTagByTheStreetcodeId", expectedError));
 
-            //Act
+            var handler = new GetTagByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
 
-            //Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<StreetcodeTagDTO>>(result.Value),
-                () => Assert.Empty(result.Value));
+            // Assert
+            Assert.Equal(expectedError, result.Errors.Single().Message);
+        }
+
+        private void SetupRepository(List<StreetcodeTagIndex> returnList)
+        {
+            this._mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
+                IIncludableQueryable<StreetcodeTagIndex, object>>>()))
+                .ReturnsAsync(returnList);
+        }
+
+        private void SetupMapper(List<StreetcodeTagDTO> returnList)
+        {
+            this._mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
+                .Returns(returnList);
         }
     }
 }

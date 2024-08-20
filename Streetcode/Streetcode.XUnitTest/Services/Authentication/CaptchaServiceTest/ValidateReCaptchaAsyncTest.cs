@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Net;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
 using Streetcode.BLL.Services.Authentication;
-using System.Net;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
 {
     public class ValidateReCaptchaAsyncTest
     {
-        private readonly string _ReCaptchaUrl = "https://fakeUrl.com";
-        private readonly string _ReCaptchaSecretKey = "fake_secret_key";
+        private readonly string _reCaptchaUrl = "https://fakeUrl.com";
+        private readonly string _reCaptchaSecretKey = "fake_secret_key";
         private readonly string _testReCaptchaToken = "test_reCaptcha_token";
         private readonly IConfiguration _fakeConfiguration;
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
@@ -25,7 +25,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         }
 
         [Fact]
-        public async void ShouldReturnSuccess_ValidCaptchaToken()
+        public async Task ShouldReturnSuccess_ValidCaptchaToken()
         {
             // Arrange.
             this.SetupMockHttpClient(true);
@@ -39,7 +39,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         }
 
         [Fact]
-        public async void ShouldFail_ReCaptchaRequestFailed()
+        public async Task ShouldFail_ReCaptchaRequestFailed()
         {
             // Arrange.
             this.SetupMockHttpClient(false);
@@ -53,7 +53,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         }
 
         [Fact]
-        public async void ShouldFail_InvalidCaptcha()
+        public async Task ShouldFail_InvalidCaptcha()
         {
             // Arrange.
             this.SetupMockHttpClient(true, false);
@@ -84,10 +84,10 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
 
         private IConfiguration GetFakeConfiguration()
         {
-            var appSettingsStub = new Dictionary<string, string>
+            var appSettingsStub = new Dictionary<string, string?>
             {
-                { "ReCaptcha:Url", this._ReCaptchaUrl },
-                { "ReCaptcha:SecretKey", this._ReCaptchaSecretKey },
+                { "ReCaptcha:Url", this._reCaptchaUrl },
+                { "ReCaptcha:SecretKey", this._reCaptchaSecretKey },
             };
             var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(appSettingsStub)

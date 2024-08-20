@@ -1,20 +1,16 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.RefreshToken;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.IdentityModel.Tokens.Jwt;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
 {
     public class HandleRefreshTokenTest
     {
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
         private readonly Mock<ITokenService> _mockTokenService;
         private readonly Mock<ILoggerService> _mockLogger;
 
@@ -23,8 +19,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         /// </summary>
         public HandleRefreshTokenTest()
         {
-            this._mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
             this._mockTokenService = new Mock<ITokenService>();
             this._mockLogger = new Mock<ILoggerService>();
         }
@@ -96,8 +90,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                Expires = new DateTime(2000, 10, 20),
-                NotBefore = new DateTime(2000, 10, 10),
+                Expires = new DateTime(2000, 10, 20, 0, 0, 0, DateTimeKind.Utc),
+                NotBefore = new DateTime(2000, 10, 10, 0, 0, 0, DateTimeKind.Utc),
             };
 
             return tokenHandler.CreateJwtSecurityToken(tokenDescriptor);

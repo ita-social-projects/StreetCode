@@ -2,11 +2,9 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -21,17 +19,17 @@ public class UpdateHistoricalContextTest
 
     public UpdateHistoricalContextTest()
     {
-        _mockRepo = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
+        this._mockRepo = new Mock<IRepositoryWrapper>();
+        this._mockMapper = new Mock<IMapper>();
+        this._mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
     {
         // Arrange
-        _mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(new HistoricalContext()));
-        _mockRepo.Setup(repo =>
+        this._mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(new HistoricalContext()));
+        this._mockRepo.Setup(repo =>
                 repo.HistoricalContextRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
             .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>
             {
@@ -40,16 +38,15 @@ public class UpdateHistoricalContextTest
                 return member.Member.Name == "Id" ? new HistoricalContext() : null;
             });
 
-        _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        _mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
+        this._mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+        this._mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
 
+        var handler = new UpdateHistoricalContextHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object);
 
-        var handler = new UpdateHistoricalContextHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
-
-        //Act
+        // Act
         var result = await handler.Handle(new UpdateHistoricalContextCommand(new HistoricalContextDTO()), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.IsType<HistoricalContextDTO>(result.Value),
             () => Assert.True(result.IsSuccess));

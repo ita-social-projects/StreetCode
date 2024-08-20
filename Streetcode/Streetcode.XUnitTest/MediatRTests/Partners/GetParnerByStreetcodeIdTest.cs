@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
@@ -10,7 +11,6 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Partners;
@@ -22,131 +22,127 @@ public class GetParnerByStreetcodeIdTest
     private readonly Mock<ILoggerService> _mockLogger;
     private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
-
     public GetParnerByStreetcodeIdTest()
     {
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this._mockRepository = new Mock<IRepositoryWrapper>();
+        this._mockMapper = new Mock<IMapper>();
+        this._mockLogger = new Mock<ILoggerService>();
+        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_ExistingId()
     {
-        //Arrange
-        var testStreetcodeContent = GetStreetcodeList().First();
+        // Arrange
+        var testStreetcodeContent = GetStreetcodeList()[0];
 
-        _mockRepository.Setup(x => x.StreetcodeRepository
+        this._mockRepository.Setup(x => x.StreetcodeRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 null))
             .ReturnsAsync(testStreetcodeContent);
 
-        _mockRepository.Setup(x => x.PartnersRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Partner, bool>>>(),
-                    It.IsAny<Func<IQueryable<Partner>,
-              IIncludableQueryable<Partner, object>>>()))
-              .ReturnsAsync(GetPartnerList());
+        this._mockRepository.Setup(x => x.PartnersRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Partner, bool>>>(),
+                It.IsAny<Func<IQueryable<Partner>,
+                IIncludableQueryable<Partner, object>>>()))
+            .ReturnsAsync(GetPartnerList());
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.True(result.IsSuccess),
-            () => Assert.NotEmpty(result.Value)
-        );
+            () => Assert.NotEmpty(result.Value));
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {
-        //Arrange
-        var testStreetcodeContent = GetStreetcodeList().First();
+        // Arrange
+        var testStreetcodeContent = GetStreetcodeList()[0];
 
-        _mockRepository.Setup(x => x.StreetcodeRepository
+        this._mockRepository.Setup(x => x.StreetcodeRepository
             .GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 null))
             .ReturnsAsync(testStreetcodeContent);
 
-        _mockRepository.Setup(x => x.PartnersRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Partner, bool>>>(),
-                    It.IsAny<Func<IQueryable<Partner>,
-              IIncludableQueryable<Partner, object>>>()))
-              .ReturnsAsync(GetPartnerList());
+        this._mockRepository.Setup(x => x.PartnersRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Partner, bool>>>(),
+                It.IsAny<Func<IQueryable<Partner>,
+                IIncludableQueryable<Partner, object>>>()))
+            .ReturnsAsync(GetPartnerList());
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetPartnersByStreetcodeIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess),
-            () => Assert.IsType<List<PartnerDTO>>(result.ValueOrDefault)
-        );
+            () => Assert.IsType<List<PartnerDTO>>(result.ValueOrDefault));
     }
 
     [Fact]
     public async Task ShouldThrowError_IdNotExist()
     {
-        //Arrange
-        var testStreetcodeContent = GetStreetcodeList().First();
+        // Arrange
+        var testStreetcodeContent = GetStreetcodeList()[0];
         var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
-        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
-            if (args != null && args.Length > 0 && args[0] is int id)
+            if (args != null && args.Length > 0 && args[0] is int)
             {
                 return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}");
             }
 
             return new LocalizedString(key, "Cannot find any partners with unknown Id");
         });
-            _mockRepository.Setup(x => x.StreetcodeRepository
-            .GetSingleOrDefaultAsync(
-                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-                null))
-            .ReturnsAsync(testStreetcodeContent);
+        this._mockRepository.Setup(x => x.StreetcodeRepository
+        .GetSingleOrDefaultAsync(
+            It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+            null))
+        .ReturnsAsync(testStreetcodeContent);
 
-        _mockRepository.Setup(x => x.PartnersRepository
-              .GetAllAsync(
-                  It.IsAny<Expression<Func<Partner, bool>>>(),
-                    It.IsAny<Func<IQueryable<Partner>,
-              IIncludableQueryable<Partner, object>>>()))
-              .ReturnsAsync(GetPartnerListWithNotExistingStreetcodeId());
+        this._mockRepository.Setup(x => x.PartnersRepository
+            .GetAllAsync(
+                It.IsAny<Expression<Func<Partner, bool>>>(),
+                It.IsAny<Func<IQueryable<Partner>,
+                IIncludableQueryable<Partner, object>>>()))
+            .ReturnsAsync(GetPartnerListWithNotExistingStreetcodeId());
 
-        _mockMapper
+        this._mockMapper
             .Setup(x => x
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOListWithNotExistingId());
 
-        var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
-    
-        //Act
+        var handler = new GetPartnersByStreetcodeIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+
+        // Act
         var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors.First().Message)
-        );
+            () => Assert.Equal(expectedError, result.Errors[0].Message));
     }
 
     private static IEnumerable<Partner> GetPartnerList()
@@ -156,7 +152,7 @@ public class GetParnerByStreetcodeIdTest
             new Partner
             {
                 Id = 1,
-                Streetcodes = GetStreetcodeList()
+                Streetcodes = GetStreetcodeList(),
             },
         };
 
@@ -169,27 +165,30 @@ public class GetParnerByStreetcodeIdTest
         {
             new StreetcodeContent
             {
-                Id = 1
+                Id = 1,
             },
         };
 
         return streetCodes;
     }
-    private static List<Partner>? GetPartnerListWithNotExistingStreetcodeId()
+
+    private static List<Partner> GetPartnerListWithNotExistingStreetcodeId()
     {
-        return null;
+        return new List<Partner>();
     }
-    private static List<PartnerDTO>? GetPartnerDTOListWithNotExistingId()
+
+    private static List<PartnerDTO> GetPartnerDTOListWithNotExistingId()
     {
-        return null;
+        return new List<PartnerDTO>();
     }
+
     private static List<PartnerDTO> GetPartnerDTOList()
     {
         var partners = new List<PartnerDTO>
         {
             new PartnerDTO
             {
-                Id = 1
+                Id = 1,
             },
         };
 

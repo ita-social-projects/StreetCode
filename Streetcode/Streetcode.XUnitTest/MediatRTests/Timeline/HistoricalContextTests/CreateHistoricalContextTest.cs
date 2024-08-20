@@ -17,21 +17,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         public CreateHistoricalContextTest()
         {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
+            this._mockRepo = new Mock<IRepositoryWrapper>();
+            this._mockMapper = new Mock<IMapper>();
+            this._mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
         {
             // Arrange
-            _mockRepo.Setup(repo => repo.HistoricalContextRepository.CreateAsync(new HistoricalContext()));
-            _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+            this._mockRepo.Setup(repo => repo.HistoricalContextRepository.CreateAsync(new HistoricalContext()));
+            this._mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
-            _mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
+            this._mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
 
-            var handler = new CreateHistoricalContextHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object);
+            var handler = new CreateHistoricalContextHandler(this._mockMapper.Object, this._mockRepo.Object, this._mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreateHistoricalContextCommand(new HistoricalContextDTO()), CancellationToken.None);

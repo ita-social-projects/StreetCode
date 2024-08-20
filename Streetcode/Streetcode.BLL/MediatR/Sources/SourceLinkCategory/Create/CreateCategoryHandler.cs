@@ -35,21 +35,11 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 
         public async Task<Result<CreateSourceLinkCategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var validator = new SourceLinkCategoryDTOValidator();
-            var validationResult = validator.Validate(request.Category);
-
             var existingTitleCategory = await _repositoryWrapper.SourceCategoryRepository
                         .GetFirstOrDefaultAsync(a => a.Title == request.Category.Title);
             if(existingTitleCategory is not null)
             {
                 string errorMsg = $"Title: {request.Category.Title} already exists";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            if (!validationResult.IsValid)
-            {
-                string errorMsg = validationResult.Errors.First().ErrorMessage;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

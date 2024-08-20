@@ -61,16 +61,6 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var validator = new SourceLinkCategoryDTOValidator();
-            var validationResult = validator.Validate(request.Category);
-
-            if (!validationResult.IsValid)
-            {
-                string errorMsg = validationResult.Errors.First().ErrorMessage;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var category = _mapper.Map<SourcesEntity.SourceLinkCategory>(request.Category);
             if (category is null)
             {

@@ -22,7 +22,7 @@ public class SoftDeletingUtils
             include: s => s.Include(x => x.Observers)
                            .Include(x => x.Targets));
 
-        var streetcodeContents = streetcodes as StreetcodeContent[] ?? streetcodes.ToArray();
+        var streetcodeContents = streetcodes.ToArray();
 
         if (!streetcodeContents.Any())
         {

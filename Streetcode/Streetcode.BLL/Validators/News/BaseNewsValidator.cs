@@ -38,24 +38,28 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
     private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
     {
         var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Title == title);
-        return existingNewsByTitle == null;
+
+        return existingNewsByTitle is null;
     }
 
     private async Task<bool> BeUniqueText(string text, CancellationToken cancellationToken)
     {
         var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.Text == text);
-        return existingNewsByText == null;
+
+        return existingNewsByText is null;
     }
 
     private async Task<bool> BeUniqueUrl(string url, CancellationToken cancellationToken)
     {
         var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.URL == url);
-        return existingNewsByUrl == null;
+
+        return existingNewsByUrl is null;
     }
 
     private async Task<bool> BeExistingImageId(int imageId, CancellationToken cancellationToken)
     {
         var existingImage = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(i => i.Id == imageId);
-        return existingImage != null;
+
+        return existingImage is not null;
     }
 }

@@ -64,7 +64,7 @@ namespace Streetcode.WebApi.Configuration
         private static async Task AssignRole(IServiceProvider services, string email, string role)
         {
             UserManager<User> userManager = services.GetService<UserManager<User>>() !;
-            User? user = await userManager!.FindByEmailAsync(email);
+            User? user = await userManager.FindByEmailAsync(email);
             if (user is not null)
             {
                 await userManager.AddToRoleAsync(user, role);

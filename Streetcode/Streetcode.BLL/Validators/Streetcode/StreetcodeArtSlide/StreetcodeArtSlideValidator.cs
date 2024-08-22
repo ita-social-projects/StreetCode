@@ -9,8 +9,8 @@ public class StreetcodeArtSlideValidator : AbstractValidator<StreetcodeArtSlideC
     public StreetcodeArtSlideValidator(StreetcodeArtCreateUpdateDTOValidator streetcodeArtCreateUpdateDtoValidator)
     {
         RuleFor(dto => dto.Index)
-            .InclusiveBetween(BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMinValue)
-            .WithMessage($"Index should be between {BaseStreetcodeValidator.IndexMinValue} and {BaseStreetcodeValidator.IndexMinValue}");
+            .InclusiveBetween(BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMaxValue)
+            .WithMessage($"Index should be between {BaseStreetcodeValidator.IndexMinValue} and {BaseStreetcodeValidator.IndexMaxValue}");
 
         RuleFor(dto => dto.StreetcodeArts)
             .NotEmpty().WithMessage("StreetcodeArts cannot be empty.")

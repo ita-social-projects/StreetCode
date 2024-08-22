@@ -8,7 +8,7 @@ public class StreetcodeArtCreateUpdateDTOValidator : AbstractValidator<Streetcod
     public StreetcodeArtCreateUpdateDTOValidator()
     {
         RuleFor(dto => dto.Index)
-            .InclusiveBetween(BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMinValue)
-            .WithMessage($"Index should be between {BaseStreetcodeValidator.IndexMinValue} and {BaseStreetcodeValidator.IndexMinValue}");
+            .InclusiveBetween(BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMaxValue)
+            .WithMessage($"Index should be between {BaseStreetcodeValidator.IndexMinValue} and {BaseStreetcodeValidator.IndexMaxValue}");
     }
 }

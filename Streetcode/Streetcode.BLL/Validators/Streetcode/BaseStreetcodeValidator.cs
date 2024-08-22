@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Validators.Common;
+using Streetcode.BLL.Validators.Streetcode.Toponyms;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
@@ -14,7 +15,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int DateStringMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
-    public BaseStreetcodeValidator()
+    public BaseStreetcodeValidator(StreetcodeToponymValidator streetcodeToponymValidator)
     {
         RuleFor(dto => dto.FirstName)
             .NotEmpty().WithMessage("First name cannot be empty")
@@ -68,5 +69,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.EventEndOrPersonDeathDate)
             .Must(DateValidator.IsValidDate).WithMessage("EventEndOrPersonDeathDate has incorrect date");
+
+        RuleForEach(dto => dto.Toponyms).SetValidator(streetcodeToponymValidator);
     }
 }

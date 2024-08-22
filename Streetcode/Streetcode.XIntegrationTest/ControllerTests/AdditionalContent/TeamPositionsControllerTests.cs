@@ -28,21 +28,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent;
 public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<TeamPositionsClient>,
     IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly Image _testTeamMemberImage;
-    private readonly TeamMember _testTeamMember;
-    private readonly Positions _testCreatePosition;
-    private readonly Positions _testUpdatePosition;
-    private readonly StreetcodeContent _testStreetcodeContent;
+    private readonly Image testTeamMemberImage;
+    private readonly TeamMember testTeamMember;
+    private readonly Positions testCreatePosition;
+    private readonly Positions testUpdatePosition;
+    private readonly StreetcodeContent testStreetcodeContent;
 
     public TeamPositionsControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/Position", tokenStorage)
     {
         int uniqueId = UniqueNumberGenerator.GenerateInt();
-        this._testCreatePosition = TeamPositionsExtracter.Extract(uniqueId);
-        this._testUpdatePosition = TeamPositionsExtracter.Extract(uniqueId);
-        this._testTeamMemberImage = ImageExtracter.Extract(1);
-        this._testTeamMember = TeamMemberExtracter.Extract(uniqueId);
-        this._testStreetcodeContent = StreetcodeContentExtracter
+        this.testCreatePosition = TeamPositionsExtracter.Extract(uniqueId);
+        this.testUpdatePosition = TeamPositionsExtracter.Extract(uniqueId);
+        this.testTeamMemberImage = ImageExtracter.Extract(1);
+        this.testTeamMember = TeamMemberExtracter.Extract(uniqueId);
+        this.testStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,
                 uniqueId,
@@ -51,11 +51,11 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
     public override void Dispose()
     {
-        StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-        TeamPositionsExtracter.Remove(this._testCreatePosition);
-        TeamPositionsExtracter.Remove(this._testUpdatePosition);
-        ImageExtracter.Remove(this._testTeamMemberImage);
-        TeamMemberExtracter.Remove(this._testTeamMember);
+        StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+        TeamPositionsExtracter.Remove(this.testCreatePosition);
+        TeamPositionsExtracter.Remove(this.testUpdatePosition);
+        ImageExtracter.Remove(this.testTeamMemberImage);
+        TeamMemberExtracter.Remove(this.testTeamMember);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     [Fact]
     public async Task GetAllWithTeamMembers_ReturnSuccessStatusCode()
     {
-        TeamPositionsExtracter.AddTeamMemberPositions(this._testTeamMember.Id, this._testCreatePosition.Id);
+        TeamPositionsExtracter.AddTeamMemberPositions(this.testTeamMember.Id, this.testCreatePosition.Id);
         var response = await this.Client.GetAllWithTeamMembers();
         var returnedValue =
             CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
@@ -85,7 +85,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     [Fact]
     public async Task GetById_ReturnSuccessStatusCode()
     {
-        Positions expectedPosition = this._testCreatePosition;
+        Positions expectedPosition = this.testCreatePosition;
         var response = await this.Client.GetByIdAsync(expectedPosition.Id);
 
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PositionDTO>(response.Content);
@@ -187,7 +187,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractCreateTestPositionAttribute.PositionForTest;
-        positionCreateDto.Position = this._testCreatePosition.Position!;
+        positionCreateDto.Position = this.testCreatePosition.Position!;
 
         // Act
         var response = await this.Client.CreateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
@@ -202,7 +202,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
-        positionCreateDto.Id = this._testCreatePosition.Id;
+        positionCreateDto.Id = this.testCreatePosition.Id;
 
         // Act
         var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
@@ -276,8 +276,8 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
-        positionCreateDto.Id = this._testCreatePosition.Id;
-        positionCreateDto.Position = this._testUpdatePosition.Position!;
+        positionCreateDto.Id = this.testCreatePosition.Id;
+        positionCreateDto.Position = this.testUpdatePosition.Position!;
 
         // Act
         var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
@@ -292,7 +292,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
-        positionCreateDto.Id = this._testUpdatePosition.Id;
+        positionCreateDto.Id = this.testUpdatePosition.Id;
 
         var repositoryMock = new Mock<IPositionRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
@@ -300,7 +300,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
             .ReturnsAsync((Expression<Func<Positions, bool>> expr, IIncludableQueryable<Positions, bool> include) =>
             {
                 var compiledExpr = expr.Compile();
-                return compiledExpr(this._testUpdatePosition) ? this._testUpdatePosition : null;
+                return compiledExpr(this.testUpdatePosition) ? this.testUpdatePosition : null;
             });
 
         repositoryWrapperMock.SetupGet(wrapper => wrapper.PositionRepository).Returns(repositoryMock.Object);
@@ -308,7 +308,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
 
         var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(m => m.Map<Positions>(default)).Returns(this._testUpdatePosition);
+        mapperMock.Setup(m => m.Map<Positions>(default)).Returns(this.testUpdatePosition);
         var loggerMock = new Mock<ILoggerService>();
 
         var handler = new UpdateTeamPositionHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
@@ -327,7 +327,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Delete_ReturnsSuccessStatusCode()
     {
         // Arrange
-        int id = this._testCreatePosition.Id;
+        int id = this.testCreatePosition.Id;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
@@ -340,7 +340,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Delete_TokenNotPassed_ReturnsUnathorized()
     {
         // Arrange
-        int id = this._testCreatePosition.Id;
+        int id = this.testCreatePosition.Id;
 
         // Act
         var response = await this.Client.Delete(id);
@@ -353,7 +353,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     public async Task Delete_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
-        int id = this._testCreatePosition.Id;
+        int id = this.testCreatePosition.Id;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.UserAccessToken);
@@ -378,12 +378,12 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     [Fact]
     public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
     {
-        int id = this._testUpdatePosition.Id;
+        int id = this.testUpdatePosition.Id;
 
         var repositoryMock = new Mock<IPositionRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
-            .ReturnsAsync(this._testUpdatePosition);
+            .ReturnsAsync(this.testUpdatePosition);
         repositoryMock.Setup(r => r.Delete(default!));
 
         repositoryWrapperMock.SetupGet(wrapper => wrapper.PositionRepository).Returns(repositoryMock.Object);

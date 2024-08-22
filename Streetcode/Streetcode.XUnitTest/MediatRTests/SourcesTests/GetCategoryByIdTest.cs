@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests;
 
 public class GetCategoryByIdTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<IBlobService> _mockBlobService;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<IBlobService> mockBlobService;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetCategoryByIdTest()
     {
-        this._mockBlobService = new Mock<IBlobService>();
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockBlobService = new Mock<IBlobService>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -36,22 +36,22 @@ public class GetCategoryByIdTest
     public async Task ShouldReturnSuccesfully(int id)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.SourceCategoryRepository
+        this.mockRepository.Setup(x => x.SourceCategoryRepository
         .GetFirstOrDefaultAsync(
             It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
             It.IsAny<Func<IQueryable<SourceLinkCategory>,
             IIncludableQueryable<SourceLinkCategory, object>>>()))
         .ReturnsAsync(this.GetSourceLinkCategory());
 
-        this._mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
             .Returns(this.GetSourceDTO());
 
         var handler = new GetCategoryByIdHandler(
-            this._mockRepository.Object,
-            this._mockMapper.Object,
-            this._mockBlobService.Object,
-            this._mockLogger.Object,
-            this._mockLocalizerCannotFind.Object);
+            this.mockRepository.Object,
+            this.mockMapper.Object,
+            this.mockBlobService.Object,
+            this.mockLogger.Object,
+            this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);
@@ -67,25 +67,25 @@ public class GetCategoryByIdTest
     public async Task ShouldReturnNull_NotExistingId(int id)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.SourceCategoryRepository
+        this.mockRepository.Setup(x => x.SourceCategoryRepository
         .GetFirstOrDefaultAsync(
             It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
             It.IsAny<Func<IQueryable<SourceLinkCategory>,
             IIncludableQueryable<SourceLinkCategory, object>>>()))
         .ReturnsAsync(this.GetSourceLinkCategoryNotExists());
 
-        this._mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
             .Returns(this.GetSourceDTO());
 
         var handler = new GetCategoryByIdHandler(
-            this._mockRepository.Object,
-            this._mockMapper.Object,
-            this._mockBlobService.Object,
-            this._mockLogger.Object,
-            this._mockLocalizerCannotFind.Object);
+            this.mockRepository.Object,
+            this.mockMapper.Object,
+            this.mockBlobService.Object,
+            this.mockLogger.Object,
+            this.mockLocalizerCannotFind.Object);
 
         var expectedError = $"Cannot find any srcCategory by the corresponding id: {id}";
-        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int id)
             {

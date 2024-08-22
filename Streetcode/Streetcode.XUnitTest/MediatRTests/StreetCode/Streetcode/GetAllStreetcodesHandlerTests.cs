@@ -16,15 +16,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
     public class GetAllStreetcodesHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mapper;
+        private readonly Mock<ILoggerService> mockLogger;
 
         public GetAllStreetcodesHandlerTests()
         {
-            this._repository = new Mock<IRepositoryWrapper>();
-            this._mapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -34,15 +34,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var testModel = new Model();
             var testDTO = new PersonStreetcodeDTO();
 
-            this._repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
+            this.repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
                 .ReturnsAsync(testModel);
 
-            this._mapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
+            this.mapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
                 .Returns(testDTO);
 
             var request = new GetAllStreetcodesRequestDTO();
 
-            var handler = new GetAllStreetcodesHandler(this._repository.Object, this._mapper.Object, this._mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
@@ -58,13 +58,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var testModelList = new List<Model>();
             var testDTOList = new List<StreetcodeDTO>();
 
-            this._repository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
+            this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
                 .ReturnsAsync(testModelList);
 
-            this._mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
             .Returns(testDTOList);
 
-            var handler = new GetAllStreetcodesHandler(this._repository.Object, this._mapper.Object, this._mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object);
 
             var request = new GetAllStreetcodesRequestDTO();
 
@@ -161,7 +161,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .Setup(x => x.StreetcodeRepository)
                 .Returns(streetcodeRepositoryMock.Object);
 
-            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object, this._mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object, this.mockLogger.Object);
 
             return (handler, repositoryWrapperMock);
         }

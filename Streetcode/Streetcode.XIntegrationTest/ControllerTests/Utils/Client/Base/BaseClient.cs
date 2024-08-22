@@ -5,11 +5,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
 {
     public class BaseClient
     {
-        private readonly RestClient _client;
+        private readonly RestClient client;
 
         public BaseClient(HttpClient client, string secondPartUrl = "")
         {
-            this._client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
+            this.client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
             this.SecondPartUrl = secondPartUrl;
         }
 
@@ -56,7 +56,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
             request.AddHeader("Authorization", $"Bearer {authToken}");
             request.AddHeader("Content-Type", "application/json");
 
-            var response = await this._client.ExecuteAsync(request);
+            var response = await this.client.ExecuteAsync(request);
             return response;
         }
     }

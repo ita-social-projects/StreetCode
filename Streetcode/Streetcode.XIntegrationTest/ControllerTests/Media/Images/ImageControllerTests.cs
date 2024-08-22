@@ -13,15 +13,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ImageControllerTests : BaseControllerTests<ImageClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Image _testImage;
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly Image testImage;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public ImageControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Image")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testImage = ImageExtracter.Extract(uniqueId);
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testImage = ImageExtracter.Extract(uniqueId);
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
@@ -30,8 +30,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            ImageExtracter.Remove(this._testImage);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            ImageExtracter.Remove(this.testImage);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Image expectedImage = this._testImage;
+            Image expectedImage = this.testImage;
             var response = await this.Client.GetByIdAsync(expectedImage.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ImageDTO>(response.Content);
 
@@ -74,8 +74,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            ImageExtracter.AddStreetcodeImage(this._testStreetcodeContent.Id, this._testImage.Id);
-            int streetcodeId = this._testStreetcodeContent.Id;
+            ImageExtracter.AddStreetcodeImage(this.testStreetcodeContent.Id, this.testImage.Id);
+            int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
 

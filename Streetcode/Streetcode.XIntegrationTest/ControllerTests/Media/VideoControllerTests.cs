@@ -11,18 +11,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     public class VideoControllerTests : BaseControllerTests<VideoClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Video _testVideo;
+        private readonly Video testVideo;
 
         public VideoControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Video")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testVideo = VideoExtracter.Extract(uniqueId);
+            this.testVideo = VideoExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            VideoExtracter.Remove(this._testVideo);
+            VideoExtracter.Remove(this.testVideo);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            int id = this._testVideo.Id;
+            int id = this.testVideo.Id;
             var response = await this.Client.GetByIdAsync(id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 
@@ -60,8 +60,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = this._testVideo.StreetcodeId;
-            int videoId = this._testVideo.Id;
+            int streetcodeId = this.testVideo.StreetcodeId;
+            int videoId = this.testVideo.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
 

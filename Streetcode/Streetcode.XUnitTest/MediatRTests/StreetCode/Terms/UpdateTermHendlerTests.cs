@@ -14,19 +14,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
     public class UpdateTermHendlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerCannotConvertNull;
 
         public UpdateTermHendlerTests()
         {
-            this._mockRepository = new ();
-            this._mockMapper = new ();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
-            this._mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockRepository = new ();
+            this.mockMapper = new ();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            this.mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Theory]
@@ -34,13 +34,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         public async Task ShouldReturnSuccessfully_WhenUpdated(int returnNuber)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this._mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
             .Returns(GetTerm());
 
-            var handler = new UpdateTermHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -56,17 +56,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         public async Task ShouldThrowExeption_TryMapNullRequest(int returnNuber)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId() !));
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId() !));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this._mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
                 .Returns(GetTermWithNotExistId() !);
 
             var expectedError = "Cannot convert null to Term";
-            this._mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+            this.mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
                 .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
 
-            var handler = new UpdateTermHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTermCommand(GetTermDTOWithNotExistId() !), CancellationToken.None);
@@ -82,16 +82,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int returnNuber)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this._mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
                 .Returns(GetTerm());
 
             var expectedError = "Failed to update a term";
-            this._mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateTerm"])
+            this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateTerm"])
                .Returns(new LocalizedString("FailedToUpdateTerm", expectedError));
-            var handler = new UpdateTermHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
@@ -107,13 +107,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
         public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNuber)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+            this.mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this._mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
                 .Returns(GetTerm());
 
-            var handler = new UpdateTermHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);

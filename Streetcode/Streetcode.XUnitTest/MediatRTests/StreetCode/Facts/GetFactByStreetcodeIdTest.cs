@@ -16,17 +16,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetFactByStreetcodeIdTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetFactByStreetcodeIdTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -34,19 +34,19 @@ public class GetFactByStreetcodeIdTest
     public async Task ShouldReturnSuccessfully_ExistingId(int streetCodeId)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository
+        this.mockRepository.Setup(x => x.FactRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetListFacts());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
@@ -63,19 +63,19 @@ public class GetFactByStreetcodeIdTest
     public async Task ShouldReturnSuccessfully_CorrectType(int streetCodeId)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository
+        this.mockRepository.Setup(x => x.FactRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetListFacts());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactDTO());
 
-        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);
@@ -92,20 +92,20 @@ public class GetFactByStreetcodeIdTest
     public async Task ShouldThrowError_IdNotExist(int streetCodeId)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository
+        this.mockRepository.Setup(x => x.FactRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetListFactsWithNotExistingStreetcodeId() !);
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId() !);
 
         var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
-        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int streetCodeId)
             {
@@ -115,7 +115,7 @@ public class GetFactByStreetcodeIdTest
             return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
         });
 
-        var handler = new GetFactByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByStreetcodeIdQuery(streetCodeId), CancellationToken.None);

@@ -12,18 +12,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Subtitle _testSubtitle;
+        private readonly Subtitle testSubtitle;
 
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testSubtitle = SubtitleExtracter.Extract(uniqueId);
+            this.testSubtitle = SubtitleExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            SubtitleExtracter.Remove(this._testSubtitle);
+            SubtitleExtracter.Remove(this.testSubtitle);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetById_ReturnSuccessContent()
         {
-            Subtitle expectedSubtitle = this._testSubtitle;
+            Subtitle expectedSubtitle = this.testSubtitle;
 
             var response = await this.Client.GetByIdAsync(expectedSubtitle.Id);
 
@@ -65,7 +65,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccess()
         {
-            int streetcodeId = this._testSubtitle.StreetcodeId;
+            int streetcodeId = this.testSubtitle.StreetcodeId;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);

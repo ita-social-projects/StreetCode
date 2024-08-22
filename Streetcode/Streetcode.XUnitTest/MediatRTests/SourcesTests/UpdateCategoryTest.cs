@@ -16,20 +16,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
     public class UpdateCategoryTest
     {
         private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFindSharedResource;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFindSharedResource;
 
         public UpdateCategoryTest()
         {
             this._mockRepository = new ();
-            this._mockMapper = new ();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            this._mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
-            this._mockLocalizerCannotFindSharedResource = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockMapper = new ();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            this.mockLocalizerCannotFindSharedResource = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -48,11 +48,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -67,11 +67,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image());
 
-            this._mockMapper.Setup(m => m.Map<DAL.Entities.Sources.SourceLinkCategory?>(It.IsAny<SourceLinkCreateUpdateCategoryDTO>()))
+            this.mockMapper.Setup(m => m.Map<DAL.Entities.Sources.SourceLinkCategory?>(It.IsAny<SourceLinkCreateUpdateCategoryDTO>()))
                 .Returns((DAL.Entities.Sources.SourceLinkCategory?)null);
 
             var expectedError = "Cannot convert null to category";
-            this._mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToCategory"])
+            this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToCategory"])
             .Returns(new LocalizedString("CannotConvertNullToCategory", expectedError));
 
             // Act
@@ -94,11 +94,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -108,7 +108,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 .ReturnsAsync((DAL.Entities.Sources.SourceLinkCategory?)null);
 
             var expectedError = "Cannot find any srcCategory by the corresponding id: 0";
-            this._mockLocalizerCannotFindSharedResource.Setup(x => x["CannotFindAnySrcCategoryByTheCorrespondingId", sourceCategoryDto.Id])
+            this.mockLocalizerCannotFindSharedResource.Setup(x => x["CannotFindAnySrcCategoryByTheCorrespondingId", sourceCategoryDto.Id])
             .Returns(new LocalizedString("CannotFindAnySrcCategoryByTheCorrespondingId", expectedError));
 
             // Act
@@ -135,11 +135,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -155,7 +155,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 .ReturnsAsync(new Image());
 
             var expectedError = "Failed to update category";
-            this._mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateCategory"])
+            this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateCategory"])
             .Returns(new LocalizedString("FailedToUpdateCategory", expectedError));
 
             // Act
@@ -182,11 +182,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -221,11 +221,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -265,11 +265,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                        this._mockRepository.Object,
-                       this._mockMapper.Object,
-                       this._mockLogger.Object,
-                       this._mockLocalizerFailedToUpdate.Object,
-                       this._mockLocalizerConvertNull.Object,
-                       this._mockLocalizerCannotFindSharedResource.Object);
+                       this.mockMapper.Object,
+                       this.mockLogger.Object,
+                       this.mockLocalizerFailedToUpdate.Object,
+                       this.mockLocalizerConvertNull.Object,
+                       this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -304,11 +304,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                        this._mockRepository.Object,
-                       this._mockMapper.Object,
-                       this._mockLogger.Object,
-                       this._mockLocalizerFailedToUpdate.Object,
-                       this._mockLocalizerConvertNull.Object,
-                       this._mockLocalizerCannotFindSharedResource.Object);
+                       this.mockMapper.Object,
+                       this.mockLogger.Object,
+                       this.mockLocalizerFailedToUpdate.Object,
+                       this.mockLocalizerConvertNull.Object,
+                       this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -339,11 +339,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             var handler = new UpdateCategoryHandler(
                 this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerFailedToUpdate.Object,
-                this._mockLocalizerConvertNull.Object,
-                this._mockLocalizerCannotFindSharedResource.Object);
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerFailedToUpdate.Object,
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.SourceCategoryRepository.GetFirstOrDefaultAsync(
@@ -385,9 +385,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
         private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, UpdateSourceLinkCategoryDTO testCategoryDTO)
         {
-            this._mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
                 .Returns(testCategory);
-            this._mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            this.mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
 

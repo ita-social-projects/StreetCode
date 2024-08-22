@@ -11,15 +11,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 {
     public class CreatePositionTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
 
         public CreatePositionTest()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -30,17 +30,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             var testPositionDTO = GetPositionDTO();
             var testPositionCreateDTO = GetPositionCreateDTO();
 
-            this._mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
                 .Returns(testPosition);
-            this._mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
                 .Returns(testPositionDTO);
 
-            this._mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
+            this.mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
                 .ReturnsAsync(testPosition);
-            this._mockRepo.Setup(x => x.SaveChanges())
+            this.mockRepo.Setup(x => x.SaveChanges())
                 .Returns(1);
 
-            var handler = new CreatePositionHandler(this._mockMapper.Object, this._mockRepo.Object, this._mockLogger.Object);
+            var handler = new CreatePositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreatePositionQuery(testPositionCreateDTO), CancellationToken.None);
@@ -56,13 +56,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
         {
             // Arrange
-            this._mockRepo.Setup(repo => repo.PositionRepository.CreateAsync(new Positions()));
-            this._mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+            this.mockRepo.Setup(repo => repo.PositionRepository.CreateAsync(new Positions()));
+            this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
-            this._mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
                 .Returns(new PositionDTO());
 
-            var handler = new CreatePositionHandler(this._mockMapper.Object, this._mockRepo.Object, this._mockLogger.Object);
+            var handler = new CreatePositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreatePositionQuery(new PositionCreateDTO()), CancellationToken.None);
@@ -80,18 +80,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             var testPosition = GetPosition();
             var expectedError = "Failed to create a Position";
 
-            this._mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
                 .Returns(testPosition);
-            this._mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
                 .Returns(GetPositionDTO());
 
-            this._mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
+            this.mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
                 .ReturnsAsync(testPosition);
 
-            this._mockRepo.Setup(x => x.SaveChangesAsync())
+            this.mockRepo.Setup(x => x.SaveChangesAsync())
                 .Throws(new Exception(expectedError));
 
-            var handler = new CreatePositionHandler(this._mockMapper.Object, this._mockRepo.Object, this._mockLogger.Object);
+            var handler = new CreatePositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new CreatePositionQuery(GetPositionCreateDTO()), CancellationToken.None);

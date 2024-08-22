@@ -15,14 +15,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
         private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
 
         public DeleteStreetcodeHandlerTests()
         {
             this._repository = new Mock<IRepositoryWrapper>();
             this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
             this._mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
         }
 
@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             this.RepositorySetup(testStreetcode, relatedFigure, testSaveChangesSuccess);
 
-            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             string expectedErrorMessage = $"Cannot find a streetcode with corresponding categoryId: {id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
                .Returns((string key, object[] args) =>
                {
                    if (args != null && args.Length > 0 && args[0] is int id)
@@ -67,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var relatedFigure = new RelatedFigure();
 
             this.RepositorySetup(null!, relatedFigure, testSaveChangesSuccess);
-            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
@@ -91,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             this.RepositorySetup(testStreetcode, relatedFigure, testSaveChangesFailed);
 
-            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new DeleteStreetcodeHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);

@@ -13,31 +13,31 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class CoordinateControllerTests : BaseControllerTests<CoordinateClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly StreetcodeContent _testStreetcodeContent;
-        private readonly StreetcodeCoordinate _testStreetcodeCoordinate;
+        private readonly StreetcodeContent testStreetcodeContent;
+        private readonly StreetcodeCoordinate testStreetcodeCoordinate;
 
         public CoordinateControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Coordinate")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
-            this._testStreetcodeCoordinate = CoordinateExtracter.Extract(uniqueId, this._testStreetcodeContent.Id);
+            this.testStreetcodeCoordinate = CoordinateExtracter.Extract(uniqueId, this.testStreetcodeContent.Id);
         }
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            CoordinateExtracter.Remove(this._testStreetcodeCoordinate);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            CoordinateExtracter.Remove(this.testStreetcodeCoordinate);
         }
 
         [Fact]
         public async Task GetByStreetcodeId_SuccsessStatusCode()
         {
-            int streetcodeId = this._testStreetcodeContent.Id;
+            int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeCoordinateDTO>>(response.Content);
 

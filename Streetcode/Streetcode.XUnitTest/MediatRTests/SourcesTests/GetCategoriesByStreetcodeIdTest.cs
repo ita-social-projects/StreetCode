@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 {
     public class GetCategoriesByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IBlobService> _blobService;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IBlobService> blobService;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetCategoriesByStreetcodeIdTest()
         {
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._blobService = new Mock<IBlobService>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.blobService = new Mock<IBlobService>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -36,22 +36,22 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         public async Task ShouldReturnSuccesfully(int id)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.SourceCategoryRepository
+            this.mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>,
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(GetSourceLinkCategories());
 
-            this._mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._blobService.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerCannotFind.Object);
+                this.mockRepository.Object,
+                this.mockMapper.Object,
+                this.blobService.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
@@ -67,25 +67,25 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         public async Task ShouldReturnNull_NotExistingId(int id)
         {
             // Arrange
-            this._mockRepository.Setup(x => x.SourceCategoryRepository
+            this.mockRepository.Setup(x => x.SourceCategoryRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>,
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(this.GetSourceLinkCategoriesNotExists());
 
-            this._mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._blobService.Object,
-                this._mockLogger.Object,
-                this._mockLocalizerCannotFind.Object);
+                this.mockRepository.Object,
+                this.mockMapper.Object,
+                this.blobService.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerCannotFind.Object);
 
             var expectedError = $"Cant find any source category with the streetcode id {id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)
                 {

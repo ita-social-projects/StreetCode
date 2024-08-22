@@ -14,11 +14,11 @@ using Xunit;
 
 public class AddTermsToTextServiceTests
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
 
     public AddTermsToTextServiceTests()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
     }
 
     [Theory]
@@ -29,7 +29,7 @@ public class AddTermsToTextServiceTests
     {
         string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Sample Description</Desc></Popover> ";
         this.SetupRepository(this.GetTerm(), this.GetRelatedTerm());
-        var service = new AddTermsToTextService(this._mockRepository.Object);
+        var service = new AddTermsToTextService(this.mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -45,7 +45,7 @@ public class AddTermsToTextServiceTests
         string expectedOutput = inputText + ' ';
         this.SetupRepository(null, null);
 
-        var service = new AddTermsToTextService(this._mockRepository.Object);
+        var service = new AddTermsToTextService(this.mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -61,7 +61,7 @@ public class AddTermsToTextServiceTests
         string expectedOutput = $"<Popover><Term>{inputText}</Term><Desc>Desc from term for related</Desc></Popover> ";
         this.SetupRepository(null, this.GetRelatedTerm());
 
-        var service = new AddTermsToTextService(this._mockRepository.Object);
+        var service = new AddTermsToTextService(this.mockRepository.Object);
 
         // Act
         var result = await service.AddTermsTag(inputText);
@@ -72,13 +72,13 @@ public class AddTermsToTextServiceTests
 
     private void SetupRepository(Term? term, RelatedTerm? relatedTerm)
     {
-        this._mockRepository?.Setup(repo => repo.RelatedTermRepository.GetFirstOrDefaultAsync(
+        this.mockRepository?.Setup(repo => repo.RelatedTermRepository.GetFirstOrDefaultAsync(
            It.IsAny<Expression<Func<RelatedTerm, bool>>>(),
            It.IsAny<Func<IQueryable<RelatedTerm>,
             IIncludableQueryable<RelatedTerm, object>>>()))
         .ReturnsAsync(relatedTerm);
 
-        this._mockRepository?.Setup(repo => repo.TermRepository.GetFirstOrDefaultAsync(
+        this.mockRepository?.Setup(repo => repo.TermRepository.GetFirstOrDefaultAsync(
            It.IsAny<Expression<Func<Term, bool>>>(),
            It.IsAny<Func<IQueryable<Term>,
             IIncludableQueryable<Term, object>>>()))

@@ -17,31 +17,31 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetTagByTitleRequestHandlerTests
     {
-        private static string _title = "test_title";
+        private static string title = "test_title";
 
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly Tag tag = new Tag
         {
             Id = 1,
-            Title = _title,
+            Title = title,
         };
 
         private readonly TagDTO tagDTO = new TagDTO
         {
             Id = 1,
-            Title = _title,
+            Title = title,
         };
 
         public GetTagByTitleRequestHandlerTests()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -51,15 +51,15 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupRepository(this.tag);
             this.SetupMapper(this.tagDTO);
 
-            var handler = new GetTagByTitleHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByTitleQuery(title), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<TagDTO>(result.Value),
-                () => Assert.Equal(result.Value.Title, _title));
+                () => Assert.Equal(result.Value.Title, title));
         }
 
         [Fact]
@@ -69,10 +69,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupRepository(new Tag());
             this.SetupMapper(new TagDTO());
 
-            var handler = new GetTagByTitleHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByTitleQuery(title), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -82,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupRepository(Tag tag)
         {
-            this._mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
+            this.mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Tag, bool>>>(),
                 It.IsAny<Func<IQueryable<Tag>,
                 IIncludableQueryable<Tag, object>>>()))
@@ -91,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupMapper(TagDTO tagDTO)
         {
-            this._mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
+            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
                 .Returns(tagDTO);
         }
     }

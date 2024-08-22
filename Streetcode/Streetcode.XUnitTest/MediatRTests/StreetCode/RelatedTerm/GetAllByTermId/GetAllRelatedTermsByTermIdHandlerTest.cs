@@ -15,19 +15,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
 {
     public class GetAllRelatedTermsByTermIdHandlerTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotGetSharedResource>> _mockLocalizerCannotGet;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotGetSharedResource>> mockLocalizerCannotGet;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> mockLocalizerCannotCreate;
 
         public GetAllRelatedTermsByTermIdHandlerTest()
         {
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            this._mockLocalizerCannotGet = new Mock<IStringLocalizer<CannotGetSharedResource>>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            this.mockLocalizerCannotGet = new Mock<IStringLocalizer<CannotGetSharedResource>>();
         }
 
         [Theory]
@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             // Arrange
             var query = new GetAllRelatedTermsByTermIdQuery(id);
 
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.RelatedTermRepository
                     .GetAllAsync(
                         It.IsAny<Expression<Func<Entity, bool>>>(),
@@ -45,9 +45,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                         IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(new List<Entity>());
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotGet.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
             var expectedError = "Cannot get words by term id";
-            this._mockLocalizerCannotGet.Setup(x => x["CannotGetWordsByTermId"])
+            this.mockLocalizerCannotGet.Setup(x => x["CannotGetWordsByTermId"])
            .Returns(new LocalizedString("CannotGetWordsByTermId", expectedError));
 
             // Act
@@ -65,20 +65,20 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             var query = new GetAllRelatedTermsByTermIdQuery(id);
             var relatedTerms = new List<Entity> { new Entity() };
 
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.RelatedTermRepository.
                     GetAllAsync(
                         It.IsAny<Expression<Func<Entity, bool>>>(),
                         It.IsAny<Func<IQueryable<Entity>,
                         IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
-            this._mockMapper
+            this.mockMapper
                 .Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
                 .Returns(new List<RelatedTermDTO>());
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotGet.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
             var expectedError = "Cannot create DTOs for related words!";
-            this._mockLocalizerCannotCreate.Setup(x => x["CannotCreateDTOsForRelatedWords"])
+            this.mockLocalizerCannotCreate.Setup(x => x["CannotCreateDTOsForRelatedWords"])
            .Returns(new LocalizedString("CannotCreateDTOsForRelatedWords", expectedError));
 
             // Act
@@ -99,16 +99,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
 
             var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
 
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.RelatedTermRepository
                     .GetAllAsync(
                         It.IsAny<Expression<Func<Entity, bool>>>(),
                         It.IsAny<Func<IQueryable<Entity>,
                         IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
-            this._mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
 
-            var handler = new GetAllRelatedTermsByTermIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotGet.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);
@@ -128,9 +128,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             var relatedTerms = new List<Entity> { relatedTerm };
             var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
 
-            this._mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
 
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.RelatedTermRepository
                     .GetAllAsync(
                         It.IsAny<Expression<Func<Entity, bool>>>(),
@@ -139,7 +139,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
 
             var query = new GetAllRelatedTermsByTermIdQuery(termId);
-            var handler = new GetAllRelatedTermsByTermIdHandler(this._mockMapper.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockLocalizerCannotGet.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
 
             // Act
             var result = await handler.Handle(query, CancellationToken.None);

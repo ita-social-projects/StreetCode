@@ -14,32 +14,32 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class UpdateFactTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-    private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
+    private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
 
     public UpdateFactTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-        this._mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+        this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_WhenUpdated()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
-        this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        this.mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
+        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        this._mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
-        var handler = new UpdateFactHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
 
         // Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
@@ -52,18 +52,18 @@ public class UpdateFactTest
     public async Task ShouldThrowExeption_TryMapNullRequest()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository.Update(GetFactWithNotExistId() !));
-        this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        this.mockRepository.Setup(x => x.FactRepository.Update(GetFactWithNotExistId() !));
+        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x.Map<Fact?>(It.IsAny<FactDto>()))
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
-        this._mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToFact"])
+        this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToFact"])
            .Returns(new LocalizedString("CannotConvertNullToFact", expectedError));
 
-        var handler = new UpdateFactHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
 
         // Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTOWithNotExistId() !), CancellationToken.None);
@@ -76,17 +76,17 @@ public class UpdateFactTest
     public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
-        this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
+        this.mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
+        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
 
-        this._mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
         var expectedError = "Failed to update a fact";
-        this._mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateFact"])
+        this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateFact"])
            .Returns(new LocalizedString("FailedToUpdateFact", expectedError));
 
-        var handler = new UpdateFactHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
 
         // Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
@@ -99,13 +99,13 @@ public class UpdateFactTest
     public async Task ShouldReturnSuccessfully_TypeIsCorrect()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
-        this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        this.mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
+        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        this._mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
             .Returns(GetFact());
 
-        var handler = new UpdateFactHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerFailedToUpdate.Object, this._mockLocalizerConvertNull.Object);
+        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
 
         // Act
         var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);

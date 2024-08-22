@@ -10,13 +10,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position;
 
 public class DeletePositionTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<ILoggerService> mockLogger;
 
     public DeletePositionTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockLogger = new Mock<ILoggerService>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class DeletePositionTest
         this.SetupMockRepositoryGetFirstOrDefault(testPositions);
         this.SetupMockRepositorySaveChangesReturns(1);
 
-        var handler = new DeleteTeamPositionHandler(this._mockRepository.Object, this._mockLogger.Object);
+        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new DeleteTeamPositionCommand(testPositions.Id), CancellationToken.None);
@@ -37,10 +37,10 @@ public class DeletePositionTest
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess));
 
-        this._mockRepository.Verify(
+        this.mockRepository.Verify(
             x => x.PositionRepository.Delete(It.Is<Positions>(x => x.Id == testPositions.Id)),
             Times.Once);
-        this._mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+        this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -51,14 +51,14 @@ public class DeletePositionTest
         var expectedError = $"No position found by entered Id - {testPositions.Id}";
         this.SetupMockRepositoryGetFirstOrDefault(null);
 
-        var handler = new DeleteTeamPositionHandler(this._mockRepository.Object, this._mockLogger.Object);
+        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new DeleteTeamPositionCommand(testPositions.Id), CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedError, result.Errors[0].Message);
-        this._mockRepository.Verify(x => x.PositionRepository.Delete(It.IsAny<Positions>()), Times.Never);
+        this.mockRepository.Verify(x => x.PositionRepository.Delete(It.IsAny<Positions>()), Times.Never);
     }
 
     private static Positions DeletePositions()
@@ -71,7 +71,7 @@ public class DeletePositionTest
 
     private void SetupMockRepositoryGetFirstOrDefault(Positions? position)
     {
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.PositionRepository
                 .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), null))
             .ReturnsAsync(position);
@@ -79,6 +79,6 @@ public class DeletePositionTest
 
     private void SetupMockRepositorySaveChangesReturns(int number)
     {
-        this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
+        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
     }
 }

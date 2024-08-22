@@ -13,17 +13,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class DeleteFactTest
 {
-    private readonly Mock<IRepositoryWrapper> _repository;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> repository;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> mockLocalizerFailedToDelete;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public DeleteFactTest()
     {
-        this._repository = new Mock<IRepositoryWrapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        this._mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+        this.repository = new Mock<IRepositoryWrapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
     }
 
     [Theory]
@@ -31,19 +31,19 @@ public class DeleteFactTest
     public async Task ShouldDeleteSuccessfully(int id)
     {
         // Arrange
-        this._repository
+        this.repository
             .Setup(x => x.FactRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFact(id));
 
-        this._repository.Setup(x => x.FactRepository
+        this.repository.Setup(x => x.FactRepository
             .Delete(GetFact(id)));
 
-        this._repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        this.repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        var handler = new DeleteFactHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new DeleteFactHandler(this.repository.Object, this.mockLogger.Object, this.mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
@@ -59,19 +59,19 @@ public class DeleteFactTest
     public async Task ShouldThrowExeption_IdNotExisting(int id)
     {
         // Arrange
-        this._repository
+        this.repository
             .Setup(x => x.FactRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFactWithNotExistingId());
 
-        this._repository
+        this.repository
             .Setup(x => x.FactRepository
             .Delete(GetFactWithNotExistingId() !));
 
         var expectedError = $"Cannot find a fact with corresponding categoryId: {id}";
-        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int id)
             {
@@ -82,7 +82,7 @@ public class DeleteFactTest
         });
 
         // Act
-        var handler = new DeleteFactHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new DeleteFactHandler(this.repository.Object, this.mockLogger.Object, this.mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 
@@ -95,24 +95,24 @@ public class DeleteFactTest
     public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int id)
     {
         // Arrange
-        this._repository
+        this.repository
             .Setup(x => x.FactRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFact(id));
 
-        this._repository.Setup(x => x.FactRepository
+        this.repository.Setup(x => x.FactRepository
             .Delete(GetFact(id)));
 
-        this._repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
+        this.repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
 
         var expectedError = "Failed to delete a fact";
-        this._mockLocalizerFailedToDelete.Setup(x => x["FailedToDeleteFact"])
+        this.mockLocalizerFailedToDelete.Setup(x => x["FailedToDeleteFact"])
            .Returns(new LocalizedString("FailedToDeleteFact", expectedError));
 
         // Act
-        var handler = new DeleteFactHandler(this._repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new DeleteFactHandler(this.repository.Object, this.mockLogger.Object, this.mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
         var result = await handler.Handle(new DeleteFactCommand(id), CancellationToken.None);
 

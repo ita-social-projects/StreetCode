@@ -20,22 +20,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
     public class HandleRegisterTest
     {
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<UserManager<User>> _mockUserManager;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IRepositoryWrapper> mockRepositoryWrapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<UserManager<User>> mockUserManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleRegisterTest"/> class.
         /// </summary>
         public HandleRegisterTest()
         {
-            this._mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
 
             var store = new Mock<IUserStore<User>>();
-            this._mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
         }
 
         [Fact]
@@ -208,7 +208,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockRepositoryGetFirstOrDefault(bool isExists)
         {
-            this._mockRepositoryWrapper
+            this.mockRepositoryWrapper
                 .Setup(wrapper => wrapper.UserRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<User, bool>>>(),
@@ -232,7 +232,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 };
             }
 
-            this._mockMapper
+            this.mockMapper
                 .Setup(x => x
                 .Map<RegisterResponseDTO>(It.IsAny<User>()))
                 .Returns(registerResponseToReturnFromMapper);
@@ -247,7 +247,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 sampleUser.Email = string.Empty;
             }
 
-            this._mockMapper
+            this.mockMapper
                .Setup(x => x
                .Map<User>(It.IsAny<RegisterRequestDTO>()))
                .Returns(sampleUser);
@@ -255,7 +255,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerCreate(bool isSuccess)
         {
-            this._mockUserManager
+            this.mockUserManager
                 .Setup(manager => manager
                     .CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(isSuccess ? IdentityResult.Success : IdentityResult.Failed());
@@ -263,7 +263,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerCreateThrowsException(string message)
         {
-            this._mockUserManager
+            this.mockUserManager
                 .Setup(manager => manager
                     .CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception(message));
@@ -271,7 +271,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerAddToRoleThrowsException(string message)
         {
-            this._mockUserManager
+            this.mockUserManager
                 .Setup(manager => manager
                     .AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception(message));
@@ -280,10 +280,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         private RegisterHandler GetRegisterHandler()
         {
             return new RegisterHandler(
-                this._mockRepositoryWrapper.Object,
-                this._mockLogger.Object,
-                this._mockMapper.Object,
-                this._mockUserManager.Object);
+                this.mockRepositoryWrapper.Object,
+                this.mockLogger.Object,
+                this.mockMapper.Object,
+                this.mockUserManager.Object);
         }
     }
 }

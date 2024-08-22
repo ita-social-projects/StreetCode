@@ -15,17 +15,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetFactByIdTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetFactByIdTest()
     {
-        this._mockMapper = new Mock<IMapper>();
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -33,7 +33,7 @@ public class GetFactByIdTest
     public async Task ShouldReturnSuccessfully_ExistingId(int id)
     {
         // Arrange
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.FactRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Fact, bool>>>(),
@@ -41,12 +41,12 @@ public class GetFactByIdTest
                     IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFact(id));
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -63,7 +63,7 @@ public class GetFactByIdTest
     public async Task ShouldReturnSuccessfully_NotExistingId(int id)
     {
         // Arrange
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.FactRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Fact, bool>>>(),
@@ -71,12 +71,12 @@ public class GetFactByIdTest
                     IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFactWithNotExistingId());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x.Map<FactDto?>(It.IsAny<Fact>()))
             .Returns(GetFactDTOWithNotExistingId());
 
         var expectedError = $"Cannot find any fact with corresponding id: {id}";
-        this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int id)
             {
@@ -86,7 +86,7 @@ public class GetFactByIdTest
             return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
         });
 
-        var handler = new GetFactByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
@@ -103,7 +103,7 @@ public class GetFactByIdTest
     public async Task ShouldReturnSuccessfully_CorrectType(int id)
     {
         // Arrange
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.FactRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Fact, bool>>>(),
@@ -111,12 +111,12 @@ public class GetFactByIdTest
                     IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetFact(id));
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<FactDto>(It.IsAny<Fact>()))
             .Returns(GetFactDTO(id));
 
-        var handler = new GetFactByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);

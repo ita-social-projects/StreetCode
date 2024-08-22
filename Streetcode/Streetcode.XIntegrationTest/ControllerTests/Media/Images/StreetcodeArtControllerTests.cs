@@ -13,15 +13,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class StreetcodeArtControllerTests : BaseControllerTests<StreetcodeArtClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Art _testArt;
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly Art testArt;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/StreetcodeArt")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testArt = ArtExtracter.Extract(uniqueId);
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testArt = ArtExtracter.Extract(uniqueId);
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
@@ -30,15 +30,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            ArtExtracter.Remove(this._testArt);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            ArtExtracter.Remove(this.testArt);
         }
 
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            ArtExtracter.AddStreetcodeArt(this._testStreetcodeContent.Id, this._testArt.Id);
-            int streetcodeId = this._testStreetcodeContent.Id;
+            ArtExtracter.AddStreetcodeArt(this.testStreetcodeContent.Id, this.testArt.Id);
+            int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeArtDTO>>(response.Content);
 

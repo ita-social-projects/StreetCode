@@ -15,19 +15,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
     public class CreateAudioTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IBlobService> _mockBlobService;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IBlobService> mockBlobService;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFail;
 
         public CreateAudioTests()
         {
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockBlobService = new Mock<IBlobService>();
-            this._mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockBlobService = new Mock<IBlobService>();
+            this.mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             this.SetupBlobService();
             this.SetupMapper(testAudio, testAudioDTO);
 
-            var handler = new CreateAudioHandler(this._mockBlobService.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockMapper.Object, this._mockLocalizerFail.Object);
+            var handler = new CreateAudioHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object);
 
             // Act
             var result = await handler.Handle(new CreateAudioCommand(testCreateAudioDTO), CancellationToken.None);
@@ -56,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             var expectedError = "Extension is required";
-            this._mockLocalizerFail.Setup(x => x["ExtensionIsRequired"])
+            this.mockLocalizerFail.Setup(x => x["ExtensionIsRequired"])
             .Returns(new LocalizedString("ExtensionIsRequired", expectedError));
 
             var testCreateAudioDTO = GetCreateAudioDTO_WithoutExtension();
@@ -67,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             this.SetupBlobService();
             this.SetupMapper(testAudio, testAudioDTO);
 
-            var handler = new CreateAudioHandler(this._mockBlobService.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockMapper.Object, this._mockLocalizerFail.Object);
+            var handler = new CreateAudioHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object);
 
             // Act
             var result = await handler.Handle(new CreateAudioCommand(testCreateAudioDTO), CancellationToken.None);
@@ -82,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             var expectedError = "Title is required";
-            this._mockLocalizerFail.Setup(x => x["TitleIsRequired"])
+            this.mockLocalizerFail.Setup(x => x["TitleIsRequired"])
             .Returns(new LocalizedString("TitleIsRequired", expectedError));
 
             var testCreateAudioDTO = GetCreateAudioDTO_WithoutTitle();
@@ -93,7 +93,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             this.SetupBlobService();
             this.SetupMapper(testAudio, testAudioDTO);
 
-            var handler = new CreateAudioHandler(this._mockBlobService.Object, this._mockRepository.Object, this._mockLogger.Object, this._mockMapper.Object, this._mockLocalizerFail.Object);
+            var handler = new CreateAudioHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object);
 
             // Act
             var result = await handler.Handle(new CreateAudioCommand(testCreateAudioDTO), CancellationToken.None);
@@ -158,27 +158,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
         private void SetupCreateRepository(int returnNumber)
         {
-            this._mockRepository.Setup(x => x.AudioRepository.Create(It.IsAny<AudioEntity>()));
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+            this.mockRepository.Setup(x => x.AudioRepository.Create(It.IsAny<AudioEntity>()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
         private void SetupBlobService()
         {
-            this._mockBlobService.Setup(service => service.SaveFileInStorage(
+            this.mockBlobService.Setup(service => service.SaveFileInStorage(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>()))
                 .Returns("fake_blob_name");
-            this._mockBlobService.Setup(service => service.FindFileInStorageAsBase64(
+            this.mockBlobService.Setup(service => service.FindFileInStorageAsBase64(
                 It.IsAny<string>()))
                 .Returns("fake_base64_string");
         }
 
         private void SetupMapper(AudioEntity testAudio, AudioDTO testAudioDTO)
         {
-            this._mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseCreateDTO>()))
                 .Returns(testAudio);
-            this._mockMapper.Setup(x => x.Map<AudioDTO>(It.IsAny<AudioEntity>()))
+            this.mockMapper.Setup(x => x.Map<AudioDTO>(It.IsAny<AudioEntity>()))
                 .Returns(testAudioDTO);
         }
     }

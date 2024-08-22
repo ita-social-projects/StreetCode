@@ -15,10 +15,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetAllTagsRequestHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly List<Tag> tags = new List<Tag>()
         {
@@ -50,10 +50,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         public GetAllTagsRequestHandlerTests()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupRepository(this.tags);
             this.SetupMapper(this.tagDTOs);
 
-            var handler = new GetAllTagsHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
@@ -82,10 +82,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupMapper(new List<TagDTO>());
 
             var expectedError = $"Cannot find any tags";
-            this._mockLocalizer.Setup(localizer => localizer["CannotFindAnyTags"])
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTags"])
                 .Returns(new LocalizedString("CannotFindAnyTags", expectedError));
 
-            var handler = new GetAllTagsHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupRepository(List<Tag> returnList)
         {
-            this._mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
+            this.mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Tag, bool>>>(),
                 It.IsAny<Func<IQueryable<Tag>,
                 IIncludableQueryable<Tag, object>>>()))
@@ -105,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupMapper(List<TagDTO> returnList)
         {
-            this._mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

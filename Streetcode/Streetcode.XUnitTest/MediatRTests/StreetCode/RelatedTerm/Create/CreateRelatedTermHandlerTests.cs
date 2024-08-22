@@ -17,23 +17,23 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 {
     public class CreateRelatedTermHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repositoryWrapperMock;
-        private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
-        private readonly Mock<IStringLocalizer<CannotMapSharedResource>> _mockLocalizerCannotMap;
-        private readonly Mock<IStringLocalizer<CreateRelatedTermHandler>> _mockLocalizer;
-        private readonly Mock<IStringLocalizer<CannotSaveSharedResource>> _mockLocalizerCannotSave;
+        private readonly Mock<IRepositoryWrapper> repositoryWrapperMock;
+        private readonly Mock<IMapper> mapperMock;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> mockLocalizerCannotCreate;
+        private readonly Mock<IStringLocalizer<CannotMapSharedResource>> mockLocalizerCannotMap;
+        private readonly Mock<IStringLocalizer<CreateRelatedTermHandler>> mockLocalizer;
+        private readonly Mock<IStringLocalizer<CannotSaveSharedResource>> mockLocalizerCannotSave;
 
         public CreateRelatedTermHandlerTests()
         {
-            this._repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            this._mapperMock = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CreateRelatedTermHandler>>();
-            this._mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            this._mockLocalizerCannotMap = new Mock<IStringLocalizer<CannotMapSharedResource>>();
-            this._mockLocalizerCannotSave = new Mock<IStringLocalizer<CannotSaveSharedResource>>();
+            this.repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+            this.mapperMock = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CreateRelatedTermHandler>>();
+            this.mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            this.mockLocalizerCannotMap = new Mock<IStringLocalizer<CannotMapSharedResource>>();
+            this.mockLocalizerCannotSave = new Mock<IStringLocalizer<CannotSaveSharedResource>>();
         }
 
         [Theory]
@@ -44,20 +44,20 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var (relatedTermDTO, entity) = this.CreateRelatedTermObjects(termId, word);
             var createRelatedTermCommand = new CreateRelatedTermCommand(relatedTermDTO);
 
-            this._repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Create(entity));
-            this._repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
+            this.repositoryWrapperMock.Setup(r => r.RelatedTermRepository.Create(entity));
+            this.repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
             this.SetupMapperMockToMapEntity(entity);
             this.SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(this._repositoryWrapperMock.Object, this._mapperMock.Object, this._mockLogger.Object, this._mockLocalizerCannotSave.Object, this._mockLocalizerCannotMap.Object, this._mockLocalizer.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(this.repositoryWrapperMock.Object, this.mapperMock.Object, this.mockLogger.Object, this.mockLocalizerCannotSave.Object, this.mockLocalizerCannotMap.Object, this.mockLocalizer.Object, this.mockLocalizerCannotCreate.Object);
 
             // Act
             var result = await handler.Handle(createRelatedTermCommand, CancellationToken.None);
 
             // Assert
             result.IsSuccess.Should().BeFalse();
-            this._repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
-            this._repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
+            this.repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(entity), Times.Once);
+            this.repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         {
             // Arrange
             this.SetupMapperMockToMapEntity(null);
-            var handler = new CreateRelatedTermHandler(this._repositoryWrapperMock.Object, this._mapperMock.Object, this._mockLogger.Object, this._mockLocalizerCannotSave.Object, this._mockLocalizerCannotMap.Object, this._mockLocalizer.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(this.repositoryWrapperMock.Object, this.mapperMock.Object, this.mockLogger.Object, this.mockLocalizerCannotSave.Object, this.mockLocalizerCannotMap.Object, this.mockLocalizer.Object, this.mockLocalizerCannotCreate.Object);
             var command = new CreateRelatedTermCommand(new RelatedTermCreateDTO());
             this.SetupLocalizers();
 
@@ -89,7 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             this.SetupGetAllAsyncWithExistingTerms(existingTerms);
             this.SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(this._repositoryWrapperMock.Object, this._mapperMock.Object, this._mockLogger.Object, this._mockLocalizerCannotSave.Object, this._mockLocalizerCannotMap.Object, this._mockLocalizer.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(this.repositoryWrapperMock.Object, this.mapperMock.Object, this.mockLogger.Object, this.mockLocalizerCannotSave.Object, this.mockLocalizerCannotMap.Object, this.mockLocalizer.Object, this.mockLocalizerCannotCreate.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
@@ -118,7 +118,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
             this.SetupLocalizers();
 
-            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object, this._mockLogger.Object, this._mockLocalizerCannotSave.Object, this._mockLocalizerCannotMap.Object, this._mockLocalizer.Object, this._mockLocalizerCannotCreate.Object);
+            var handler = new CreateRelatedTermHandler(repositoryMock.Object, mapperMock.Object, this.mockLogger.Object, this.mockLocalizerCannotSave.Object, this.mockLocalizerCannotMap.Object, this.mockLocalizer.Object, this.mockLocalizerCannotCreate.Object);
             var command = new CreateRelatedTermCommand(relatedTermDTO);
 
             // Act
@@ -132,19 +132,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
         private void SetupLocalizers()
         {
             // Setup for _mockLocalizer
-            this._mockLocalizer.Setup(x => x[It.IsAny<string>()])
+            this.mockLocalizer.Setup(x => x[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, $"Word with this definition already exists"));
 
             // Setup for _mockLocalizerCannotCreate
-            this._mockLocalizerCannotCreate.Setup(x => x[It.IsAny<string>()])
+            this.mockLocalizerCannotCreate.Setup(x => x[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, $"Cannot create new related word for a term"));
 
             // Setup for _mockLocalizerCannotMap
-            this._mockLocalizerCannotMap.Setup(x => x[It.IsAny<string>()])
+            this.mockLocalizerCannotMap.Setup(x => x[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, $"Cannot map entity"));
 
             // Setup for _mockLocalizerCannotSave
-            this._mockLocalizerCannotSave.Setup(x => x[It.IsAny<string>()])
+            this.mockLocalizerCannotSave.Setup(x => x[It.IsAny<string>()])
                 .Returns((string key) => new LocalizedString(key, $"Cannot save changes in the database after related word creation"));
         }
 
@@ -158,12 +158,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 
         private void SetupMapperMockToMapEntity(Entity? entity)
         {
-            this._mapperMock.Setup(m => m.Map<Entity?>(It.IsAny<RelatedTermCreateDTO>())).Returns(entity);
+            this.mapperMock.Setup(m => m.Map<Entity?>(It.IsAny<RelatedTermCreateDTO>())).Returns(entity);
         }
 
         private void SetupGetAllAsyncWithExistingTerms(List<Entity> existingTerms)
         {
-            this._repositoryWrapperMock
+            this.repositoryWrapperMock
                 .Setup(r => r.RelatedTermRepository
                     .GetAllAsync(
                         It.IsAny<Expression<Func<Entity, bool>>>(),
@@ -174,8 +174,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 
         private void VerifyCreateAndSaveChangesNever()
         {
-            this._repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()), Times.Never);
-            this._repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never);
+            this.repositoryWrapperMock.Verify(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()), Times.Never);
+            this.repositoryWrapperMock.Verify(r => r.SaveChangesAsync(), Times.Never);
         }
     }
 }

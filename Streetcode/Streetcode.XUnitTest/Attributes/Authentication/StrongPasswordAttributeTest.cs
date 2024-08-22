@@ -6,11 +6,11 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
 {
     public class StrongPasswordAttributeTest
     {
-        private readonly StrongPasswordAttribute _strongPasswordAttribute;
+        private readonly StrongPasswordAttribute strongPasswordAttribute;
 
         public StrongPasswordAttributeTest()
         {
-            this._strongPasswordAttribute = new StrongPasswordAttribute();
+            this.strongPasswordAttribute = new StrongPasswordAttribute();
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             object? nullParam = null;
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(nullParam, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(nullParam, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result !.ErrorMessage);
@@ -35,7 +35,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             object? nullParam = new object();
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(nullParam, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(nullParam, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -49,7 +49,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwer";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwer tyqwertyqwerty";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -77,7 +77,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwertyqweqwerty";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -91,7 +91,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwerty1qwertyqwe";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -105,7 +105,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwerty1@%qwertyqwe";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -119,7 +119,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "qwerty1@qwertyqwe";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -133,7 +133,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string password = "QWERTY1@QWERTYQWE";
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -149,7 +149,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             // Arrange.
 
             // Act.
-            var result = this._strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
+            var result = this.strongPasswordAttribute.GetValidationResult(password, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(ValidationResult.Success, result);

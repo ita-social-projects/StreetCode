@@ -15,17 +15,17 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
     public class GetTextByIdTest
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetTextByIdTest()
         {
-            this._repository = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -34,7 +34,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
         {
             var testText = new Text() { Id = id };
 
-            this._repository
+            this.repository
                 .Setup(repo => repo.TextRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<Text, bool>>>(),
@@ -42,11 +42,11 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(testText);
 
-            this._mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
+            this.mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
             {
                 return new TextDTO { Id = sourceText.Id };
             });
-            var handler = new GetTextByIdHandler(this._repository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
 
@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
         {
             var testText = new Text() { Id = id };
 
-            this._repository
+            this.repository
                 .Setup(repo => repo.TextRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<Text, bool>>>(),
@@ -68,12 +68,12 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(testText);
 
-            this._mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
+            this.mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
             {
                 return new TextDTO { Id = sourceText.Id };
             });
 
-            var handler = new GetTextByIdHandler(this._repository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(2), CancellationToken.None);
 

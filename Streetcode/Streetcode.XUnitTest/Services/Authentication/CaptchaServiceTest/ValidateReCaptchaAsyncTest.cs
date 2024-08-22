@@ -9,19 +9,19 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
 {
     public class ValidateReCaptchaAsyncTest
     {
-        private readonly string _reCaptchaUrl = "https://fakeUrl.com";
-        private readonly string _reCaptchaSecretKey = "fake_secret_key";
-        private readonly string _testReCaptchaToken = "test_reCaptcha_token";
-        private readonly IConfiguration _fakeConfiguration;
-        private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
+        private readonly string reCaptchaUrl = "https://fakeUrl.com";
+        private readonly string reCaptchaSecretKey = "fake_secret_key";
+        private readonly string testReCaptchaToken = "test_reCaptcha_token";
+        private readonly IConfiguration fakeConfiguration;
+        private readonly Mock<HttpMessageHandler> mockHttpMessageHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidateReCaptchaAsyncTest"/> class.
         /// </summary>
         public ValidateReCaptchaAsyncTest()
         {
-            this._fakeConfiguration = this.GetFakeConfiguration();
-            this._mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+            this.fakeConfiguration = this.GetFakeConfiguration();
+            this.mockHttpMessageHandler = new Mock<HttpMessageHandler>();
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
             var captchaService = this.GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this._testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsSuccess);
@@ -46,7 +46,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
             var captchaService = this.GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this._testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsFailed);
@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
             var captchaService = this.GetCaptchaService();
 
             // Act.
-            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this._testReCaptchaToken);
+            var captchaValidationResult = await captchaService.ValidateReCaptchaAsync(this.testReCaptchaToken);
 
             // Assert.
             Assert.True(captchaValidationResult.IsFailed);
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
             {
                 Content = new StringContent($$"""{ "success": {{isCaptchaValid.ToString().ToLower()}}, "errorCodes": [] }"""),
             };
-            this._mockHttpMessageHandler
+            this.mockHttpMessageHandler
                 .Protected()
                .Setup<Task<HttpResponseMessage>>(
                   "SendAsync",
@@ -86,8 +86,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         {
             var appSettingsStub = new Dictionary<string, string?>
             {
-                { "ReCaptcha:Url", this._reCaptchaUrl },
-                { "ReCaptcha:SecretKey", this._reCaptchaSecretKey },
+                { "ReCaptcha:Url", this.reCaptchaUrl },
+                { "ReCaptcha:SecretKey", this.reCaptchaSecretKey },
             };
             var fakeConfiguration = new ConfigurationBuilder()
             .AddInMemoryCollection(appSettingsStub)
@@ -99,8 +99,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.CaptchaServiceTest
         private CaptchaService GetCaptchaService()
         {
             return new CaptchaService(
-                this._fakeConfiguration,
-                new HttpClient(this._mockHttpMessageHandler.Object));
+                this.fakeConfiguration,
+                new HttpClient(this.mockHttpMessageHandler.Object));
         }
     }
 }

@@ -17,17 +17,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
     public class GetStreetcodeByIdHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetStreetcodeByIdHandlerTests()
         {
-            this._repository = new Mock<IRepositoryWrapper>();
-            this._mapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -41,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.RepositorySetup(testContent);
             this.MapperSetup(testContentDTO);
 
-            var handler = new GetStreetcodeByIdHandler(this._repository.Object, this._mapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetStreetcodeByIdHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
@@ -61,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.RepositorySetup(testContent);
             this.MapperSetup(testContentDTO);
 
-            var handler = new GetStreetcodeByIdHandler(this._repository.Object, this._mapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetStreetcodeByIdHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // arrange
             string expectedErrorMessage = $"Cannot find any streetcode with corresponding id: {id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
                .Returns((string key, object[] args) =>
                {
                    if (args != null && args.Length > 0 && args[0] is int id)
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.RepositorySetup(null);
             this.MapperSetup(null);
 
-            var handler = new GetStreetcodeByIdHandler(this._repository.Object, this._mapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetStreetcodeByIdHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
@@ -101,10 +101,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private void RepositorySetup(StreetcodeContent? streetcode)
         {
-            this._repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+            this.repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(streetcode);
-            this._repository.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+            this.repository.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
                It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
                It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
                IIncludableQueryable<StreetcodeTagIndex, object>>>()))
@@ -113,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private void MapperSetup(EventStreetcodeDTO? streetcodeDTO)
         {
-            this._mapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<object>()))
+            this.mapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<object>()))
                 .Returns(streetcodeDTO);
         }
     }

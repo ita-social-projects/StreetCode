@@ -17,25 +17,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 {
     public class GetAllHistoricalContextTest
     {
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-        private Mock<IRepositoryWrapper> _mockRepository;
-        private Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private Mock<IRepositoryWrapper> mockRepository;
+        private Mock<IMapper> mockMapper;
 
         public GetAllHistoricalContextTest()
         {
-            this._mockRepository = new ();
-            this._mockMapper = new ();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepository = new ();
+            this.mockMapper = new ();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_CorectType()
         {
             // Arrange
-            (this._mockMapper, this._mockRepository) = GetMapperAndRepo(this._mockMapper, this._mockRepository);
-            var hendler = new GetAllHistoricalContextHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
+            var hendler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await hendler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);
@@ -50,8 +50,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         public async Task ShouldReturnSuccessfully_CountMatch()
         {
             // Arrange
-            (this._mockMapper, this._mockRepository) = GetMapperAndRepo(this._mockMapper, this._mockRepository);
-            var hendler = new GetAllHistoricalContextHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
+            var hendler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await hendler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);
@@ -66,23 +66,23 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         public async Task ShouldThrowException_WhenNotFound()
         {
             // Arrange
-            this._mockRepository.Setup(x => x.HistoricalContextRepository
+            this.mockRepository.Setup(x => x.HistoricalContextRepository
                 .GetAllAsync(
                     It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
                     It.IsAny<Func<IQueryable<HistoricalContext>,
                     IIncludableQueryable<HistoricalContext, object>>>()))
                 .ReturnsAsync(GetEmptyListHistoricalContext());
 
-            this._mockMapper
+            this.mockMapper
                 .Setup(x => x
                 .Map<IEnumerable<HistoricalContextDTO>>(It.IsAny<IEnumerable<HistoricalContext>>()))
                 .Returns(GetEmptyListHistoricalContextDTO());
 
             var expectedError = "Cannot find any historical contexts";
-            this._mockLocalizerCannotFind.Setup(x => x["CannotFindAnyHistoricalContexts"])
+            this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyHistoricalContexts"])
                .Returns(new LocalizedString("CannotFindAnyHistoricalContexts", expectedError));
 
-            var handler = new GetAllHistoricalContextHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);

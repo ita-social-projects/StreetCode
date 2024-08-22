@@ -22,16 +22,16 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         private readonly Mock<IRepositoryWrapper> repository;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<IBlobService> blobService;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         public GetStreetcodeArtByStreetcodeIdTest()
         {
             this.repository = new Mock<IRepositoryWrapper>();
             this.mockMapper = new Mock<IMapper>();
             this.blobService = new Mock<IBlobService>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
@@ -57,7 +57,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 

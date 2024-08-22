@@ -15,26 +15,26 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetAllFactsTest
 {
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+    private Mock<IRepositoryWrapper> mockRepository;
+    private Mock<IMapper> mockMapper;
 
     public GetAllFactsTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {
         // Arrange
-        (this._mockMapper, this._mockRepository) = GetMapperAndRepo(this._mockMapper, this._mockRepository);
+        (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
 
-        var handler = new GetAllFactsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllFactsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -49,9 +49,9 @@ public class GetAllFactsTest
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
         // Arrange
-        (this._mockMapper, this._mockRepository) = GetMapperAndRepo(this._mockMapper, this._mockRepository);
+        (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
 
-        var handler = new GetAllFactsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllFactsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);
@@ -66,22 +66,22 @@ public class GetAllFactsTest
     public async Task ShouldThrowExeption_IdNotExist()
     {
         // Arrange
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.FactRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Fact, bool>>>(),
                 It.IsAny<Func<IQueryable<Fact>,
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetListFactsWithNotExistingId());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x.Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
             .Returns(GetListFactsDTOWithNotExistingId());
 
         var expectedError = "Cannot find any fact";
-        this._mockLocalizerCannotFind.Setup(x => x["CannotFindAnyFact"])
+        this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyFact"])
            .Returns(new LocalizedString("CannotFindAnyFact", expectedError));
 
-        var handler = new GetAllFactsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllFactsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllFactsQuery(), CancellationToken.None);

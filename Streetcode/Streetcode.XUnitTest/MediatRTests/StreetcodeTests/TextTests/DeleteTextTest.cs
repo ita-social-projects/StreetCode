@@ -14,16 +14,16 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
     public class DeleteTextTest
     {
         private readonly Mock<IRepositoryWrapper> repository;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> mockLocalizerFailedToDelete;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public DeleteTextTest()
         {
             this.repository = new Mock<IRepositoryWrapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-            this._mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
         }
 
         [Theory]
@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             this.repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new DeleteTextHandler(this.repository.Object, this._mockLogger.Object, this._mockLocalizerFailedToDelete.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new DeleteTextHandler(this.repository.Object, this.mockLogger.Object, this.mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new DeleteTextCommand(id), CancellationToken.None);
 

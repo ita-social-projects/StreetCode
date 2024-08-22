@@ -31,17 +31,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
     [Collection("Authorization")]
     public class TagControllerTests : BaseAuthorizationControllerTests<TagClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly TagEntity _testCreateTag;
-        private readonly TagEntity _testUpdateTag;
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly TagEntity testCreateTag;
+        private readonly TagEntity testUpdateTag;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public TagControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
             : base(factory, "/api/Tag", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testCreateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
-            this._testUpdateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testCreateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
+            this.testUpdateTag = TagExtracter.Extract(uniqueId, Guid.NewGuid().ToString());
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
@@ -50,8 +50,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            TagExtracter.Remove(this._testCreateTag);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            TagExtracter.Remove(this.testCreateTag);
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            TagEntity expectedTag = this._testCreateTag;
+            TagEntity expectedTag = this.testCreateTag;
             var response = await this.Client.GetByIdAsync(expectedTag.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
@@ -122,8 +122,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            TagExtracter.AddStreetcodeTagIndex(this._testStreetcodeContent.Id, this._testCreateTag.Id);
-            int streetcodeId = this._testStreetcodeContent.Id;
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, this.testCreateTag.Id);
+            int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
 
@@ -134,7 +134,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetByStreetcodeId_ReturnBadRequest()
         {
-            TagExtracter.AddStreetcodeTagIndex(this._testStreetcodeContent.Id, this._testCreateTag.Id);
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, this.testCreateTag.Id);
             int streetcodeId = -100;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
@@ -159,7 +159,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetByTitle_ReturnSuccessStatusCode()
         {
-            TagEntity expectedTag = this._testCreateTag;
+            TagEntity expectedTag = this.testCreateTag;
             var response = await this.Client.GetTagByTitle(expectedTag.Title);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
 
@@ -202,7 +202,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var repositoryMock = new Mock<ITagRepository>();
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(default, default)).ReturnsAsync((TagEntity?)null);
-            repositoryMock.Setup(r => r.CreateAsync(default!)).ReturnsAsync(this._testCreateTag);
+            repositoryMock.Setup(r => r.CreateAsync(default!)).ReturnsAsync(this.testCreateTag);
             repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository).Returns(repositoryMock.Object);
             repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Returns(null);
             repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Throws(default(Exception));
@@ -286,7 +286,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagCreateDTO = ExtractCreateTestTagAttribute.TagForTest;
-            tagCreateDTO.Title = this._testCreateTag.Title;
+            tagCreateDTO.Title = this.testCreateTag.Title;
 
             // Act
             var response = await this.Client.CreateAsync(tagCreateDTO, this.TokenStorage.AdminAccessToken);
@@ -301,7 +301,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTagAttribute.TagForTest;
-            tagUpdateDTO.Id = this._testCreateTag.Id;
+            tagUpdateDTO.Id = this.testCreateTag.Id;
 
             // Act
             var response = await this.Client.UpdateAsync(tagUpdateDTO, this.TokenStorage.AdminAccessToken);
@@ -375,8 +375,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTagAttribute.TagForTest;
-            tagUpdateDTO.Id = this._testCreateTag.Id;
-            tagUpdateDTO.Title = this._testUpdateTag.Title;
+            tagUpdateDTO.Id = this.testCreateTag.Id;
+            tagUpdateDTO.Title = this.testUpdateTag.Title;
 
             // Act
             var response = await this.Client.UpdateAsync(tagUpdateDTO, this.TokenStorage.AdminAccessToken);
@@ -391,7 +391,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTagAttribute.TagForTest;
-            tagUpdateDTO.Id = this._testUpdateTag.Id;
+            tagUpdateDTO.Id = this.testUpdateTag.Id;
 
             var repositoryMock = new Mock<ITagRepository>();
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
@@ -399,7 +399,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             .ReturnsAsync((Expression<Func<TagEntity, bool>> expr, IIncludableQueryable<TagEntity, bool> include) =>
             {
                 var compiledExpr = expr.Compile();
-                return compiledExpr(this._testUpdateTag) ? this._testUpdateTag : null;
+                return compiledExpr(this.testUpdateTag) ? this.testUpdateTag : null;
             });
 
             repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository).Returns(repositoryMock.Object);
@@ -407,7 +407,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
 
             var mapperMock = new Mock<IMapper>();
-            mapperMock.Setup(m => m.Map<TagEntity>(default)).Returns(this._testUpdateTag);
+            mapperMock.Setup(m => m.Map<TagEntity>(default)).Returns(this.testUpdateTag);
             var loggerMock = new Mock<ILoggerService>();
 
             var handler = new UpdateTagHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
@@ -426,7 +426,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task Delete_ReturnsSuccessStatusCode()
         {
             // Arrange
-            int id = this._testCreateTag.Id;
+            int id = this.testCreateTag.Id;
 
             // Act
             var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
@@ -439,7 +439,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task Delete_TokenNotPassed_ReturnsUnathorized()
         {
             // Arrange
-            int id = this._testCreateTag.Id;
+            int id = this.testCreateTag.Id;
 
             // Act
             var response = await this.Client.Delete(id);
@@ -452,7 +452,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task Delete_NotAdminAccessTokenPassed_ReturnsForbidden()
         {
             // Arrange
-            int id = this._testCreateTag.Id;
+            int id = this.testCreateTag.Id;
 
             // Act
             var response = await this.Client.Delete(id, this.TokenStorage.UserAccessToken);
@@ -477,12 +477,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
         {
-            int id = this._testUpdateTag.Id;
+            int id = this.testUpdateTag.Id;
 
             var repositoryMock = new Mock<ITagRepository>();
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<TagEntity, bool>>>(), default))
-            .ReturnsAsync(this._testUpdateTag);
+            .ReturnsAsync(this.testUpdateTag);
             repositoryMock.Setup(r => r.Delete(default!));
 
             repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository).Returns(repositoryMock.Object);

@@ -10,13 +10,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 {
     public class DeleteHistoricalContextTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<ILoggerService> mockLogger;
 
         public DeleteHistoricalContextTest()
         {
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             this.SetupMockRepositoryGetFirstOrDefault(testContexts);
             this.SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new DeleteHistoricalContextHandler(this._mockRepository.Object, this._mockLogger.Object);
+            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteHistoricalContextCommand(testContexts.Id), CancellationToken.None);
@@ -37,10 +37,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
                 () => Assert.NotNull(result),
                 () => Assert.True(result.IsSuccess));
 
-            this._mockRepository.Verify(
+            this.mockRepository.Verify(
                 x => x.HistoricalContextRepository.Delete(It.Is<HistoricalContext>(x => x.Id == testContexts.Id)),
                 Times.Once);
-            this._mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+            this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
@@ -51,14 +51,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var expectedError = $"No context found by entered Id - {testContexts.Id}";
             this.SetupMockRepositoryGetFirstOrDefault(null);
 
-            var handler = new DeleteHistoricalContextHandler(this._mockRepository.Object, this._mockLogger.Object);
+            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new DeleteHistoricalContextCommand(testContexts.Id), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
-            this._mockRepository.Verify(x => x.HistoricalContextRepository.Delete(It.IsAny<HistoricalContext>()), Times.Never);
+            this.mockRepository.Verify(x => x.HistoricalContextRepository.Delete(It.IsAny<HistoricalContext>()), Times.Never);
         }
 
         private static HistoricalContext DeleteContext()
@@ -71,7 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         private void SetupMockRepositoryGetFirstOrDefault(HistoricalContext? context)
         {
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.HistoricalContextRepository
                     .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), null))
                 .ReturnsAsync(context);
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         private void SetupMockRepositorySaveChangesReturns(int number)
         {
-            this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
         }
     }
 }

@@ -18,17 +18,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 {
     public class GetRelatedFiguresByStreetcodeIdHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetRelatedFiguresByStreetcodeIdHandlerTests()
         {
-            this._repository = new Mock<IRepositoryWrapper>();
-            this._mapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -53,15 +53,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 
             this.RepositorySetup(testRelatedList.AsQueryable(), new List<StreetcodeContent>());
 
-            this._repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
+            this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
                     It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
                     It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(testPersonStreetcodeList);
 
-            this._mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testRelatedDTOList);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this._mapper.Object, this._repository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
@@ -89,14 +89,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
 
-            this._repository.Setup(x => x.StreetcodeRepository
+            this.repository.Setup(x => x.StreetcodeRepository
                 .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(testStreetcodeContentList.AsQueryable());
 
             this.RepositorySetup(testRelatedFigureList.AsQueryable(), testStreetcodeContentList);
             this.MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this._mapper.Object, this._repository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
@@ -113,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>();
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)
                 {
@@ -126,7 +126,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             this.RepositorySetup(testRelatedFigureEmptyList.AsQueryable(), new List<StreetcodeContent>());
             this.MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this._mapper.Object, this._repository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
@@ -141,7 +141,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         {
             // Arrange
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)
                 {
@@ -155,7 +155,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             this.RepositorySetup(Enumerable.Empty<Entities.RelatedFigure>().AsQueryable(), new List<StreetcodeContent>());
             this.MapperSetup(testRelatedDTO);
 
-            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this._mapper.Object, this._repository.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
@@ -196,21 +196,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 
         private void MapperSetup(RelatedFigureDTO relatedFigureDTO)
         {
-            this._mapper.Setup(x => x.Map<RelatedFigureDTO>(It.IsAny<StreetcodeContent>()))
+            this.mapper.Setup(x => x.Map<RelatedFigureDTO>(It.IsAny<StreetcodeContent>()))
                 .Returns(relatedFigureDTO);
         }
 
         private void RepositorySetup(IQueryable<Entities.RelatedFigure> relatedFigures, List<StreetcodeContent> streetcodeContents)
         {
-            this._repository.Setup(x => x.RelatedFigureRepository
+            this.repository.Setup(x => x.RelatedFigureRepository
                 .FindAll(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>?>(), null))
                 .Returns(relatedFigures);
 
-            this._repository.Setup(x => x.StreetcodeRepository
+            this.repository.Setup(x => x.StreetcodeRepository
                 .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(streetcodeContents);
 
-            this._repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
+            this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(streetcodeContents);

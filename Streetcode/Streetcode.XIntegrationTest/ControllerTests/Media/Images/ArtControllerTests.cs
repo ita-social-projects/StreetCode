@@ -13,28 +13,28 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     public class ArtControllerTests : BaseControllerTests<ArtClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Art _testArt;
-        private readonly StreetcodeArtSlide _testStreetcodeArtSlide;
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly Art testArt;
+        private readonly StreetcodeArtSlide testStreetcodeArtSlide;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public ArtControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Art")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testArt = ArtExtracter.Extract(1);
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testArt = ArtExtracter.Extract(1);
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     54,
                     54,
                     Guid.NewGuid().ToString());
-            this._testStreetcodeArtSlide = StreetcodeArtSlideExtracter.Extract(uniqueId);
+            this.testStreetcodeArtSlide = StreetcodeArtSlideExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            ArtExtracter.Remove(this._testArt);
-            StreetcodeArtSlideExtracter.Remove(this._testStreetcodeArtSlide);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            ArtExtracter.Remove(this.testArt);
+            StreetcodeArtSlideExtracter.Remove(this.testStreetcodeArtSlide);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Art expectedArt = this._testArt;
+            Art expectedArt = this.testArt;
             var response = await this.Client.GetByIdAsync(expectedArt.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ArtDTO>(response.Content);
@@ -78,8 +78,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetArtsByStreetcodeId_ReturnSuccessStatusCode()
         {
-            ArtExtracter.AddStreetcodeArtWithStreetcodeArtSlide(this._testStreetcodeContent.Id, this._testArt.Id, this._testStreetcodeArtSlide.Id);
-            int streetcodeId = this._testStreetcodeContent.Id;
+            ArtExtracter.AddStreetcodeArtWithStreetcodeArtSlide(this.testStreetcodeContent.Id, this.testArt.Id, this.testStreetcodeArtSlide.Id);
+            int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetArtsByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
 

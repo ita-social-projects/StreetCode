@@ -6,16 +6,16 @@ namespace Streetcode.XIntegrationTest.Base
 {
     public class TestDBFixture : IntegrationTestBase
     {
-        private static readonly object _lock = new ();
-        private static bool _dbIsCreated;
+        private static readonly object @lock = new ();
+        private static bool dbIsCreated;
         private readonly string connectionString;
 
         public TestDBFixture()
         {
             this.connectionString = this.Configuration.GetConnectionString("DefaultConnection") !;
-            lock (_lock)
+            lock (@lock)
             {
-                if (!_dbIsCreated)
+                if (!dbIsCreated)
                 {
                     using (var context = CreateContext(this.connectionString))
                     {
@@ -23,7 +23,7 @@ namespace Streetcode.XIntegrationTest.Base
                         context.Database.EnsureCreated();
                     }
 
-                    _dbIsCreated = true;
+                    dbIsCreated = true;
                 }
             }
         }

@@ -16,10 +16,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 {
     public class GetAllTransactLinksHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         private readonly List<TransactionLink> transactions = new List<TransactionLink>()
         {
@@ -59,10 +59,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         public GetAllTransactLinksHandlerTests()
         {
-            this._mockMapper = new Mock<IMapper>();
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             this.SetupRepository(this.transactions);
             this.SetupMapper(this.transactionsDTOs);
 
-            var handler = new GetAllTransactLinksHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllTransactLinksHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
@@ -91,10 +91,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             this.SetupMapper(new List<TransactLinkDTO>());
 
             var expectedError = $"Cannot find any transaction link";
-            this._mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
+            this.mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
                 .Returns(new LocalizedString("CannotFindAnyTransactionLink", expectedError));
 
-            var handler = new GetAllTransactLinksHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllTransactLinksHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
@@ -105,14 +105,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         private void SetupRepository(List<TransactionLink> returnList)
         {
-            this._mockRepo.Setup(repo => repo.TransactLinksRepository.GetAllAsync(
+            this.mockRepo.Setup(repo => repo.TransactLinksRepository.GetAllAsync(
                 It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
                 IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(returnList);
         }
 
         private void SetupMapper(List<TransactLinkDTO> returnList)
         {
-            this._mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
         }
     }
 }

@@ -17,22 +17,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 {
     public class GetImageByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IBlobService> _blobService;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<ICacheService> _mockCache;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IBlobService> blobService;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<ICacheService> mockCache;
 
         public GetImageByStreetcodeIdTest()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._blobService = new Mock<IBlobService>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-            this._mockCache = new Mock<ICacheService>();
-            this._mockCache
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.blobService = new Mock<IBlobService>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockCache = new Mock<ICacheService>();
+            this.mockCache
                 .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDTO>>>>>(), It.IsAny<TimeSpan>()))
                 .Returns<string, Func<Task<Result<IEnumerable<ImageDTO>>>>, TimeSpan>((key, func, timeSpan) =>
                 {
@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             this.MockRepositoryAndMapper(this.GetImagesList(), this.GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._blobService.Object, this._mockLogger.Object, this._mockLocalizer.Object, this._mockCache.Object);
+            var handler = new GetImageByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object, this.mockCache.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         {
             // Arrange
             this.MockRepositoryAndMapper(this.GetImagesList(), this.GetImagesDTOList());
-            var handler = new GetImageByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._blobService.Object, this._mockLogger.Object, this._mockLocalizer.Object, this._mockCache.Object);
+            var handler = new GetImageByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object, this.mockCache.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), default);
@@ -80,10 +80,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             this.MockRepositoryAndMapper(new List<DAL.Entities.Media.Images.Image>(), new List<ImageDTO>());
 
             var expectedError = $"Cannot find an image with the corresponding streetcode id: {streetcodeId}";
-            this._mockLocalizer.Setup(x => x["CannotFindAnImageWithTheCorrespondingStreetcodeId", streetcodeId])
+            this.mockLocalizer.Setup(x => x["CannotFindAnImageWithTheCorrespondingStreetcodeId", streetcodeId])
                 .Returns(new LocalizedString("CannotFindAnImageWithTheCorrespondingStreetcodeId", expectedError));
 
-            var handler = new GetImageByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._blobService.Object, this._mockLogger.Object, this._mockLocalizer.Object, this._mockCache.Object);
+            var handler = new GetImageByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object, this.mockCache.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -124,14 +124,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 
         private void MockRepositoryAndMapper(List<DAL.Entities.Media.Images.Image> imageList, List<ImageDTO> imageListDTO)
         {
-            this._mockRepo
+            this.mockRepo
                 .Setup(r => r.ImageRepository.GetAllAsync(
                     It.IsAny<Expression<Func<DAL.Entities.Media.Images.Image, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Image>,
                     IIncludableQueryable<DAL.Entities.Media.Images.Image, object>>>()))
                 .ReturnsAsync(imageList);
 
-            this._mockMapper
+            this.mockMapper
                 .Setup(x => x.Map<IEnumerable<ImageDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(imageListDTO);
         }

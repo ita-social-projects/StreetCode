@@ -15,17 +15,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class DeletePartnerTest
 {
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<NoSharedResource>> mockLocalizerNoShared;
 
     public DeletePartnerTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
     }
 
     [Fact]
@@ -34,13 +34,13 @@ public class DeletePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this._mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
-        this._mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
+        this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);
 
-        var handler = new DeletePartnerHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object);
+        var handler = new DeletePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object);
 
         // Act
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
@@ -50,8 +50,8 @@ public class DeletePartnerTest
             () => Assert.NotNull(result),
             () => Assert.True(result.IsSuccess));
 
-        this._mockRepository.Verify(x => x.PartnersRepository.Delete(It.Is<Partner>(x => x.Id == testPartner.Id)), Times.Once);
-        this._mockRepository.Verify(x => x.SaveChanges(), Times.Once);
+        this.mockRepository.Verify(x => x.PartnersRepository.Delete(It.Is<Partner>(x => x.Id == testPartner.Id)), Times.Once);
+        this.mockRepository.Verify(x => x.SaveChanges(), Times.Once);
     }
 
     [Fact]
@@ -60,21 +60,21 @@ public class DeletePartnerTest
         // Arrange
         var testPartner = GetPartner();
         var expectedError = "No partner with such id";
-        this._mockLocalizerNoShared.Setup(x => x["NoPartnerWithSuchId"])
+        this.mockLocalizerNoShared.Setup(x => x["NoPartnerWithSuchId"])
             .Returns(new LocalizedString("NoPartnerWithSuchId", expectedError));
 
-        this._mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
+        this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(GetPartnerWithNotExistingId());
 
         // Act
-        var handler = new DeletePartnerHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object);
+        var handler = new DeletePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object);
 
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedError, result.Errors[0].Message);
 
-        this._mockRepository.Verify(x => x.PartnersRepository.Delete(It.IsAny<Partner>()), Times.Never);
+        this.mockRepository.Verify(x => x.PartnersRepository.Delete(It.IsAny<Partner>()), Times.Never);
     }
 
     [Fact]
@@ -84,16 +84,16 @@ public class DeletePartnerTest
         var testPartner = GetPartner();
         var expectedError = "The partner wasn`t added";
 
-        this._mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
-        this._mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
+        this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);
-        this._mockRepository.Setup(x => x.SaveChanges())
+        this.mockRepository.Setup(x => x.SaveChanges())
             .Throws(new Exception(expectedError));
 
         // Act
-        var handler = new DeletePartnerHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object);
+        var handler = new DeletePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object);
 
         var result = await handler.Handle(new DeletePartnerQuery(testPartner.Id), CancellationToken.None);
 

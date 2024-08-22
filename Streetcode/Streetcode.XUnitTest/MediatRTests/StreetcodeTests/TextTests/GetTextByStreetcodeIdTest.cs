@@ -17,15 +17,15 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
     {
         private readonly Mock<IRepositoryWrapper> repository;
         private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetTextByStreetcodeIdTest()
         {
             this.repository = new Mock<IRepositoryWrapper>();
             this.mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -46,7 +46,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             {
                 return new TextDTO { StreetcodeId = sourceText.StreetcodeId };
             });
-            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
 
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 return new TextDTO { StreetcodeId = sourceText.StreetcodeId };
             });
 
-            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
 

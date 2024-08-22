@@ -13,26 +13,26 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Audio _testAudio;
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly Audio testAudio;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Audio")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testAudio = AudioExtracter.Extract(uniqueId);
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testAudio = AudioExtracter.Extract(uniqueId);
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
                     Guid.NewGuid().ToString(),
-                    audio: this._testAudio);
+                    audio: this.testAudio);
         }
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            AudioExtracter.Remove(this._testAudio);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            AudioExtracter.Remove(this.testAudio);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Audio expected = this._testAudio;
+            Audio expected = this.testAudio;
             var response = await this.Client.GetByIdAsync(expected.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
@@ -72,8 +72,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = this._testStreetcodeContent.Id;
-            int audioId = this._testAudio.Id;
+            int streetcodeId = this.testStreetcodeContent.Id;
+            int audioId = this.testAudio.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
             Assert.True(response.IsSuccessStatusCode);

@@ -6,11 +6,11 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
 {
     public class ValidEmailAttributeTest
     {
-        private readonly ValidEmailAttribute _validEmailAttribute;
+        private readonly ValidEmailAttribute validEmailAttribute;
 
         public ValidEmailAttributeTest()
         {
-            this._validEmailAttribute = new ValidEmailAttribute();
+            this.validEmailAttribute = new ValidEmailAttribute();
         }
 
         [Fact]
@@ -21,7 +21,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             object? nullParam = null;
 
             // Act.
-            var result = this._validEmailAttribute.GetValidationResult(nullParam, this.GetValidationContext());
+            var result = this.validEmailAttribute.GetValidationResult(nullParam, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result !.ErrorMessage);
@@ -35,7 +35,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             object? nullParam = new object();
 
             // Act.
-            var result = this._validEmailAttribute.GetValidationResult(nullParam, this.GetValidationContext());
+            var result = this.validEmailAttribute.GetValidationResult(nullParam, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -54,7 +54,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             string expectedErrorMessage = "Incorrect email address format";
 
             // Act.
-            var result = this._validEmailAttribute.GetValidationResult(email, this.GetValidationContext());
+            var result = this.validEmailAttribute.GetValidationResult(email, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(expectedErrorMessage, result!.ErrorMessage);
@@ -71,7 +71,7 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
             // Arrange.
 
             // Act.
-            var result = this._validEmailAttribute.GetValidationResult(email, this.GetValidationContext());
+            var result = this.validEmailAttribute.GetValidationResult(email, this.GetValidationContext());
 
             // Assert.
             Assert.Equal(ValidationResult.Success, result);

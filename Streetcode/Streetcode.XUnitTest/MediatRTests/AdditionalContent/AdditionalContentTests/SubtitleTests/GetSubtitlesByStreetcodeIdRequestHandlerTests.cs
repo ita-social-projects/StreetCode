@@ -13,22 +13,22 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 {
     public class GetSubtitlesByStreetcodeIdRequestHandlerTests
     {
-        private const int _streetcode_id = 1;
-        private const int _subtitle_id = 2;
+        private const int streetcode_id = 1;
+        private const int subtitle_id = 2;
 
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
 
-        private readonly Subtitle subtitle = new Subtitle { Id = _subtitle_id, StreetcodeId = _streetcode_id };
+        private readonly Subtitle subtitle = new Subtitle { Id = subtitle_id, StreetcodeId = streetcode_id };
 
-        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = _subtitle_id, StreetcodeId = _streetcode_id };
+        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = subtitle_id, StreetcodeId = streetcode_id };
 
         public GetSubtitlesByStreetcodeIdRequestHandlerTests()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
@@ -38,10 +38,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             this.SetupRepository(this.subtitle);
             this.SetupMapper(this.subtitleDTO);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object);
+            var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -56,18 +56,18 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             this.SetupRepository(this.subtitle);
             this.SetupMapper(this.subtitleDTO);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object);
+            var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
 
             // Assert
-            Assert.True(result.Value.StreetcodeId == _streetcode_id);
+            Assert.True(result.Value.StreetcodeId == streetcode_id);
         }
 
         private void SetupRepository(Subtitle returnElement)
         {
-            this._mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+            this.mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupMapper(SubtitleDTO returnElement)
         {
-            this._mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+            this.mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
                 .Returns(returnElement);
         }
     }

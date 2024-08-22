@@ -13,13 +13,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
     [Collection("Authorization")]
     public class StreetcodeCreateControllerTests : BaseAuthorizationControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly StreetcodeContent _testStreetcodeContent;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public StreetcodeCreateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Streetcode", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
@@ -28,7 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
         }
 
         [Fact(Skip = "There are no images in the streetcode, so the test will fail without them.")]
@@ -112,7 +112,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         {
             // Arrange
             var streetcodeCreateDTO = ExtractCreateTestStreetcodeAttribute.StreetcodeForTest;
-            streetcodeCreateDTO.Index = this._testStreetcodeContent.Index;
+            streetcodeCreateDTO.Index = this.testStreetcodeContent.Index;
 
             // Act
             var response = await this.Client.CreateAsync(streetcodeCreateDTO, this.TokenStorage.AdminAccessToken);

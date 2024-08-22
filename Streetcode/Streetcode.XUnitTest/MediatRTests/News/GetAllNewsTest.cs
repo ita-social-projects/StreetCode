@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class GetAllNewsTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IBlobService> _blobService;
-        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
-        private readonly GetAllNewsHandler _handler;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IBlobService> blobService;
+        private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
+        private readonly GetAllNewsHandler handler;
 
         public GetAllNewsTest()
         {
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._blobService = new Mock<IBlobService>();
-            this._mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            this._handler = this.GetHandler();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.blobService = new Mock<IBlobService>();
+            this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            this.handler = this.GetHandler();
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(pageSize), httpHeaders);
 
             // Act.
-            await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -99,7 +99,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -148,7 +148,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private void SetupMockRepositoryGetAllPaginatedAsync(ushort pageNumber, ushort pageSize)
         {
-            this._mockRepository
+            this.mockRepository
                 .Setup(x => x.NewsRepository.GetAllPaginated(
                     It.IsAny<ushort>(),
                     It.IsAny<ushort>(),
@@ -162,14 +162,14 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private void SetupMockMapper(IEnumerable<NewsDTO> mapperReturnCollection)
         {
-            this._mockMapper
+            this.mockMapper
                 .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
                 .Returns(mapperReturnCollection);
         }
 
         private void SetupMockHttpAccessorToReturnHeadersCollection(IHeaderDictionary headersCollection)
         {
-            this._mockHttpContextAccessor
+            this.mockHttpContextAccessor
                 .Setup(accessor => accessor.HttpContext!.Response.Headers)
                 .Returns(headersCollection);
         }
@@ -201,9 +201,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private GetAllNewsHandler GetHandler() =>
             new GetAllNewsHandler(
-                this._mockRepository.Object,
-                this._mockMapper.Object,
-                this._blobService.Object,
-                this._mockHttpContextAccessor.Object);
+                this.mockRepository.Object,
+                this.mockMapper.Object,
+                this.blobService.Object,
+                this.mockHttpContextAccessor.Object);
     }
 }

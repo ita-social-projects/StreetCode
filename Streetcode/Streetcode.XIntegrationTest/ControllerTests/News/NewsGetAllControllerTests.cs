@@ -10,18 +10,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
 {
     public class NewsGetAllControllerTests : BaseControllerTests<NewsClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private DAL.Entities.News.News _testNews;
+        private DAL.Entities.News.News testNews;
 
         public NewsGetAllControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/News")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testNews = NewsExtracter.Extract(uniqueId);
+            this.testNews = NewsExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            NewsExtracter.Remove(this._testNews);
+            NewsExtracter.Remove(this.testNews);
         }
 
         [Fact]

@@ -16,11 +16,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetTagsByStreetcodeIdHandlerTests
     {
-        private const int _streetcode_id = 1;
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private const int streetcode_id = 1;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly List<StreetcodeTagIndex> tags = new List<StreetcodeTagIndex>()
         {
@@ -30,9 +30,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 IsVisible = true,
                 Streetcode = new StreetcodeContent
                 {
-                    Id = _streetcode_id,
+                    Id = streetcode_id,
                 },
-                StreetcodeId = _streetcode_id,
+                StreetcodeId = streetcode_id,
                 Tag = new Tag()
                 {
                     Id = 1,
@@ -45,9 +45,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 IsVisible = true,
                 Streetcode = new StreetcodeContent
                 {
-                    Id = _streetcode_id,
+                    Id = streetcode_id,
                 },
-                StreetcodeId = _streetcode_id,
+                StreetcodeId = streetcode_id,
                 Tag = new Tag()
                 {
                     Id = 2,
@@ -76,10 +76,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         public GetTagsByStreetcodeIdHandlerTests()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -89,10 +89,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupRepository(this.tags);
             this.SetupMapper(this.tagDTOs);
 
-            var handler = new GetTagByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -107,14 +107,14 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.SetupRepository(new List<StreetcodeTagIndex>());
             this.SetupMapper(new List<StreetcodeTagDTO>());
 
-            var expectedError = $"Cannot find any tag by the streetcode id: {_streetcode_id}";
-            this._mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", _streetcode_id])
+            var expectedError = $"Cannot find any tag by the streetcode id: {streetcode_id}";
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", streetcode_id])
                 .Returns(new LocalizedString("CannotFindAnyTagByTheStreetcodeId", expectedError));
 
-            var handler = new GetTagByStreetcodeIdHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(_streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);
@@ -122,7 +122,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupRepository(List<StreetcodeTagIndex> returnList)
         {
-            this._mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+            this.mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
                 IIncludableQueryable<StreetcodeTagIndex, object>>>()))
@@ -131,7 +131,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
         private void SetupMapper(List<StreetcodeTagDTO> returnList)
         {
-            this._mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

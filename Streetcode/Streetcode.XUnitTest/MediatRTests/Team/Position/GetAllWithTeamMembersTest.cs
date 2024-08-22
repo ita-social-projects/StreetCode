@@ -12,15 +12,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position;
 
 public class GetAllWithTeamMembersTest
 {
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<ILoggerService> mockLogger;
 
     public GetAllWithTeamMembersTest()
     {
-        this._mockMapper = new Mock<IMapper>();
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockLogger = new Mock<ILoggerService>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockLogger = new Mock<ILoggerService>();
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class GetAllWithTeamMembersTest
         this.SetupMapMethod(GetListPositionDTO());
         this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);
@@ -48,7 +48,7 @@ public class GetAllWithTeamMembersTest
         this.SetupMapMethod(GetListPositionDTO());
         this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);
@@ -97,13 +97,13 @@ public class GetAllWithTeamMembersTest
 
     private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
     {
-        this._mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+        this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
             .Returns(positionDTOs);
     }
 
     private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
     {
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.PositionRepository
                 .GetAllAsync(
                     null,

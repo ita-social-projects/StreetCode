@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
     public class GetAllAudioHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        private readonly Mock<IBlobService> _blob;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mapper;
+        private readonly Mock<IBlobService> blob;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         public GetAllAudioHandlerTests()
         {
-            this._repository = new Mock<IRepositoryWrapper>();
-            this._mapper = new Mock<IMapper>();
-            this._blob = new Mock<IBlobService>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mapper = new Mock<IMapper>();
+            this.blob = new Mock<IBlobService>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -50,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             this.MapperSetup(testAudioListDTO);
             this.BlobSetup(expectedBase64);
 
-            var handler = new GetAllAudiosHandler(this._repository.Object, this._mapper.Object, this._blob.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
@@ -68,10 +68,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             this.MapperSetup(new List<AudioDTO>());
             this.BlobSetup(null);
 
-            this._mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
                 .Returns(new LocalizedString("CannotFindAnyAudios", expectedErrorMessage));
 
-            var handler = new GetAllAudiosHandler(this._repository.Object, this._mapper.Object, this._blob.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
@@ -82,24 +82,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
         private void RepositorySetup(Model? audio, List<Model> audios)
         {
-            this._repository.Setup(repo => repo.AudioRepository
+            this.repository.Setup(repo => repo.AudioRepository
              .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), It.IsAny<Func<IQueryable<Model>, IIncludableQueryable<Model, Model>>?>()))
              .ReturnsAsync(audio);
 
-            this._repository.Setup(repo => repo.AudioRepository
+            this.repository.Setup(repo => repo.AudioRepository
                 .GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), It.IsAny<Func<IQueryable<Model>, IIncludableQueryable<Model, object>>>()))
                 .ReturnsAsync(audios);
         }
 
         private void MapperSetup(List<AudioDTO> audioDTOs)
         {
-            this._mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(audioDTOs);
         }
 
         private void BlobSetup(string? expectedBase64)
         {
-            this._blob
+            this.blob
                 .Setup(blob => blob.FindFileInStorageAsBase64(It.IsAny<string>()))
                 .Returns(expectedBase64!);
         }

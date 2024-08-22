@@ -14,17 +14,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 {
     public class GetAllPositionTest
     {
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetAllPositionTest()
         {
-            this._mockMapper = new Mock<IMapper>();
-            this._mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             this.SetupMapMethod(GetListPositionDTO());
             this.SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             this.SetupMapMethod(GetListPositionDTO());
             this.SetupGetAllAsyncMethod(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -68,12 +68,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         {
             // Arrange
             const string expectedError = "Cannot find any positions";
-            this._mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPositions"])
+            this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPositions"])
                .Returns(new LocalizedString("CannotFindAnyPositions", expectedError));
 
             this.SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
 
-            var handler = new GetAllPositionsHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
 
-            this._mockMapper.Verify(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()), Times.Never);
+            this.mockMapper.Verify(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()), Times.Never);
         }
 
         private static IEnumerable<Positions> GetPositionsList()
@@ -123,13 +123,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 
         private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
         {
-            this._mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
                 .Returns(positionDTOs);
         }
 
         private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
         {
-            this._mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
+            this.mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
                 null,
                 It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
                 .ReturnsAsync(positions);

@@ -15,17 +15,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Videos;
 
 public class GetVideoByIdTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     public GetVideoByIdTest()
     {
-        this._mockMapper = new Mock<IMapper>();
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Theory]
@@ -33,19 +33,19 @@ public class GetVideoByIdTest
     public async Task ShouldReturn_SuccessfullyExistingId(int id)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.VideoRepository
+        this.mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
             .ReturnsAsync(GetVideo(id));
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<VideoDTO>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(id));
 
-        var handler = new GetVideoByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(
@@ -64,25 +64,25 @@ public class GetVideoByIdTest
     public async Task ShouldThrowError_WhenIdNotExist(int id)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.VideoRepository
+        this.mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
             .ReturnsAsync(GetVideoWithNotExistingId());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<VideoDTO?>(It.IsAny<Video>()))
             .Returns(GetVideoDTOWithNotExistingId());
 
         var expectedError = $"Cannot find a video with corresponding id: {id}";
-        this._mockLocalizer
+        this.mockLocalizer
             .Setup(x => x["CannotFindVideoWithCorrespondingId", id])
             .Returns(new LocalizedString("CannotFindVideoWithCorrespondingId", expectedError));
 
         // Act
-        var handler = new GetVideoByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         var result = await handler.Handle(
             new GetVideoByIdQuery(id),
@@ -99,20 +99,20 @@ public class GetVideoByIdTest
     public async Task ShouldReturnSuccessfully_CorrectType(int id)
     {
         // Arrange
-        this._mockRepository.Setup(x => x.VideoRepository
+        this.mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
             .ReturnsAsync(GetVideo(id));
 
-        this._mockMapper
+        this.mockMapper
              .Setup(x => x
              .Map<VideoDTO>(It.IsAny<Video>()))
              .Returns(GetVideoDTO(id));
 
         // Act
-        var handler = new GetVideoByIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+        var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         var result = await handler.Handle(
             new GetVideoByIdQuery(id),

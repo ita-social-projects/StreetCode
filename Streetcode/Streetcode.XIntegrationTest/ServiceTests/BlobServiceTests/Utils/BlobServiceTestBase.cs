@@ -4,7 +4,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 {
     public class BlobServiceTestBase : IClassFixture<BlobStorageFixture>, IDisposable
     {
-        private bool _disposed;
+        private bool disposed;
 
         public BlobServiceTestBase(BlobStorageFixture fixture, string seededFileName = "")
         {
@@ -27,7 +27,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 
         protected virtual void Dispose(bool disposing)
         {
-            if (this._disposed)
+            if (this.disposed)
             {
                 return;
             }
@@ -39,7 +39,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
                     File.Delete(this.FilePath);
                 }
 
-                this._disposed = true;
+                this.disposed = true;
             }
         }
     }

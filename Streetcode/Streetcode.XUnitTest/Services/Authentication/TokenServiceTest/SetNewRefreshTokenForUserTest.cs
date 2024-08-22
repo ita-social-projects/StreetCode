@@ -10,18 +10,18 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 {
     public class SetNewRefreshTokenForUserTest
     {
-        private readonly string _refreshTokenLifetimeInDays = "5";
+        private readonly string refreshTokenLifetimeInDays = "5";
 
-        private readonly Mock<StreetcodeDbContext> _mockDbContext;
-        private readonly IConfiguration _fakeConfiguration;
-        private readonly TokenService _tokenService;
+        private readonly Mock<StreetcodeDbContext> mockDbContext;
+        private readonly IConfiguration fakeConfiguration;
+        private readonly TokenService tokenService;
 
         public SetNewRefreshTokenForUserTest()
         {
-            this._mockDbContext = new Mock<StreetcodeDbContext>();
-            this._fakeConfiguration = this.GetFakeConfiguration();
+            this.mockDbContext = new Mock<StreetcodeDbContext>();
+            this.fakeConfiguration = this.GetFakeConfiguration();
 
-            this._tokenService = this.GetTokenService();
+            this.tokenService = this.GetTokenService();
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             // Arrange.
             User inputUser = this.GetUser();
             this.SetupMockDbContext(null);
-            var exceptionAction = this._tokenService.SetNewRefreshTokenForUser;
+            var exceptionAction = this.tokenService.SetNewRefreshTokenForUser;
 
             // Act.
 
@@ -48,7 +48,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             this.SetupMockDbContext(inputUser);
 
             // Act.
-            string token = this._tokenService.SetNewRefreshTokenForUser(inputUser);
+            string token = this.tokenService.SetNewRefreshTokenForUser(inputUser);
 
             // Assert.
             Assert.False(string.IsNullOrEmpty(token));
@@ -61,7 +61,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
                 { "Jwt:Key", "TestKey" },
                 { "Jwt:Issuer", "TestIssuer" },
                 { "Jwt:Audience", "TestAudience" },
-                { "Jwt:RefreshTokenLifetimeInDays", this._refreshTokenLifetimeInDays },
+                { "Jwt:RefreshTokenLifetimeInDays", this.refreshTokenLifetimeInDays },
             };
             var fakeConfiguration = new ConfigurationBuilder()
                 .AddInMemoryCollection(appSettingsStub)
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             {
                 userToReturn ?? new User(),
             });
-            this._mockDbContext
+            this.mockDbContext
                 .Setup(context => context.Users)
                 .Returns(mockDbSet.Object);
         }
@@ -111,8 +111,8 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         private TokenService GetTokenService()
         {
             return new TokenService(
-                this._fakeConfiguration,
-                this._mockDbContext.Object);
+                this.fakeConfiguration,
+                this.mockDbContext.Object);
         }
     }
 }

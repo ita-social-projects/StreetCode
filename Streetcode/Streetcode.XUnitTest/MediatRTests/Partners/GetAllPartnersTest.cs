@@ -15,33 +15,33 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class GetAllPartnersTest
 {
-    private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetAllPartnersTest()
     {
-        this._mockRepository = new Mock<IRepositoryWrapper>();
-        this._mockMapper = new Mock<IMapper>();
-        this._mockLogger = new Mock<ILoggerService>();
-        this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
+        this.mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
             null,
             It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnerList());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
@@ -56,17 +56,17 @@ public class GetAllPartnersTest
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
         // Arrange
-        this._mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
+        this.mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
             null,
             It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnerList());
 
-        this._mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
@@ -82,10 +82,10 @@ public class GetAllPartnersTest
     {
         // Arrange
         var expectedError = "Cannot find any partners";
-        this._mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPartners"])
+        this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPartners"])
             .Returns(new LocalizedString("CannotFindAnyPartners", expectedError));
 
-        this._mockRepository
+        this.mockRepository
             .Setup(x => x.PartnersRepository
                 .GetAllAsync(
                     null,
@@ -93,7 +93,7 @@ public class GetAllPartnersTest
                     IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnersListWithNotExistingId());
 
-        var handler = new GetAllPartnersHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
@@ -101,7 +101,7 @@ public class GetAllPartnersTest
         // Assert
         Assert.Equal(expectedError, result.Errors[0].Message);
 
-        this._mockMapper.Verify(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()), Times.Never);
+        this.mockMapper.Verify(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()), Times.Never);
     }
 
     private static IEnumerable<Partner> GetPartnerList()

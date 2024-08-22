@@ -17,17 +17,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
     public class GetAllArtsTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<ILoggerService> mockLogger;
 
         public GetAllArtsTest()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             this.MockRepositoryAndMapper(this.GetArtsList(), this.GetArtsDTOList());
-            var handler = new GetAllArtsHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);
@@ -50,9 +50,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             // Arrange
             this.MockRepositoryAndMapper(new List<Art>() { }, new List<ArtDTO>() { });
             var expectedError = $"Cannot find any arts";
-            this._mockLocalizer.Setup(localizer => localizer["CannotFindAnyArts"])
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyArts"])
                 .Returns(new LocalizedString("CannotFindAnyArts", expectedError));
-            var handler = new GetAllArtsHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);
@@ -66,7 +66,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         {
             // Arrange
             this.MockRepositoryAndMapper(this.GetArtsList(), this.GetArtsDTOList());
-            var handler = new GetAllArtsHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizer.Object);
+            var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllArtsQuery(), default);
@@ -107,13 +107,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
         private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
         {
-           this._mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
+           this.mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
            It.IsAny<Expression<Func<Art, bool>>>(),
            It.IsAny<Func<IQueryable<Art>,
            IIncludableQueryable<Art, object>>>()))
            .ReturnsAsync(artList);
 
-           this._mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
+           this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
            .Returns(artListDTO);
         }
     }

@@ -16,23 +16,23 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class UpdateTagHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
 
         public UpdateTagHandlerTests()
         {
-            this._mockRepo = new Mock<IRepositoryWrapper>();
-            this._mockMapper = new Mock<IMapper>();
-            this._mockLogger = new Mock<ILoggerService>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
         {
             // Arrange
-            this._mockRepo.Setup(repo => repo.TagRepository.Update(new Tag()));
-            this._mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Tag, bool>>>(), default))
+            this.mockRepo.Setup(repo => repo.TagRepository.Update(new Tag()));
+            this.mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Tag, bool>>>(), default))
                 .ReturnsAsync((Expression<Func<Tag, bool>> expr, IIncludableQueryable<Tag, bool> include) =>
                 {
                     BinaryExpression eq = (BinaryExpression)expr.Body;
@@ -40,10 +40,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                     return member.Member.Name == "Id" ? new Tag() : null;
                 });
 
-            this._mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-            this._mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
+            this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
 
-            var handler = new UpdateTagHandler(this._mockRepo.Object, this._mockMapper.Object, this._mockLogger.Object);
+            var handler = new UpdateTagHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTagCommand(new UpdateTagDTO()), CancellationToken.None);

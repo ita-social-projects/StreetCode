@@ -16,13 +16,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
     [Collection("Authorization")]
     public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly User _testUser;
-        private readonly string _testPassword;
+        private readonly User testUser;
+        private readonly string testPassword;
 
         public AuthControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Auth", tokenStorage)
         {
-            (this._testUser, this._testPassword) = UserExtracter.Extract(
+            (this.testUser, this.testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
                 userName: Guid.NewGuid().ToString(),
                 password: this.GenerateTestPassword(),
@@ -32,7 +32,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
         public override void Dispose()
         {
-            UserExtracter.Remove(this._testUser);
+            UserExtracter.Remove(this.testUser);
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         {
             // Arrange.
             var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
-            registerRequest.Email = this._testUser.Email!;
+            registerRequest.Email = this.testUser.Email!;
 
             // Act.
             var response = await this.Client.Register(registerRequest);
@@ -85,7 +85,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         {
             // Arrange.
             var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
-            registerRequest.UserName = this._testUser.UserName!;
+            registerRequest.UserName = this.testUser.UserName!;
 
             // Act.
             var response = await this.Client.Register(registerRequest);
@@ -175,8 +175,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         {
             return new LoginRequestDTO()
             {
-                Login = this._testUser.Email!,
-                Password = this._testPassword,
+                Login = this.testUser.Email!,
+                Password = this.testPassword,
                 CaptchaToken = "test_captcha_token",
             };
         }

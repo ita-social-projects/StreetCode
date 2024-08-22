@@ -14,19 +14,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
     [Collection("Authorization")]
     public class JobCreateControllerTests : BaseAuthorizationControllerTests<JobClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Job _testJob;
+        private readonly Job testJob;
 
         public JobCreateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Job", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testJob = JobExtracter
+            this.testJob = JobExtracter
                 .Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            JobExtracter.Remove(this._testJob);
+            JobExtracter.Remove(this.testJob);
         }
 
         [Fact]

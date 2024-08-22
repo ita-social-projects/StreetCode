@@ -9,11 +9,11 @@ namespace Streetcode.XIntegrationTest.EnvironmentTests.Utils.BeforeAndAfterTestA
 {
     public class CleanInitialAdminFromDatabaseAttribute : BeforeAfterTestAttribute
     {
-        private readonly SqlDbHelper _sqlDbHelper;
+        private readonly SqlDbHelper sqlDbHelper;
 
         public CleanInitialAdminFromDatabaseAttribute()
         {
-            this._sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
+            this.sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
         }
 
         public override void Before(MethodInfo methodUnderTest)
@@ -28,13 +28,13 @@ namespace Streetcode.XIntegrationTest.EnvironmentTests.Utils.BeforeAndAfterTestA
 
         private void DeleteInitialAdminIfExists()
         {
-            User? initialAdminFromDb = this._sqlDbHelper
+            User? initialAdminFromDb = this.sqlDbHelper
                 .GetExistItem<User>(user => user.Email == AdminEmail && user.UserName == AdminUsername);
 
             if (initialAdminFromDb is not null)
             {
-                this._sqlDbHelper.DeleteItem(initialAdminFromDb);
-                this._sqlDbHelper.SaveChanges();
+                this.sqlDbHelper.DeleteItem(initialAdminFromDb);
+                this.sqlDbHelper.SaveChanges();
             }
         }
     }

@@ -13,25 +13,25 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
 {
     public class PartnersControllerTests : BaseControllerTests<PartnersClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly StreetcodeContent _testStreetcodeContent;
-        private readonly Partner _testPartner;
+        private readonly StreetcodeContent testStreetcodeContent;
+        private readonly Partner testPartner;
 
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
-            this._testPartner = PartnerExtracter.Extract(uniqueId);
+            this.testPartner = PartnerExtracter.Extract(uniqueId);
         }
 
         public override void Dispose()
         {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            PartnerExtracter.Remove(this._testPartner);
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            PartnerExtracter.Remove(this.testPartner);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Partner expectedPartner = this._testPartner;
+            Partner expectedPartner = this.testPartner;
             var response = await this.Client.GetByIdAsync(expectedPartner.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDTO>(response.Content);
 
@@ -76,7 +76,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = this._testStreetcodeContent.Id;
+            int streetcodeId = this.testStreetcodeContent.Id;
 
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);

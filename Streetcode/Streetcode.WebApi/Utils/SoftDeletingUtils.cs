@@ -14,6 +14,8 @@ public class SoftDeletingUtils
         _repositoryWrapper = repository;
     }
 
+    // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
     public async Task DeleteStreetcodeWithStageDeleted(int daysLife)
     {
         var streetcodes = await _repositoryWrapper.StreetcodeRepository
@@ -22,14 +24,12 @@ public class SoftDeletingUtils
             include: s => s.Include(x => x.Observers)
                            .Include(x => x.Targets));
 
-        var streetcodeContents = streetcodes.ToArray();
-
-        if (!streetcodeContents.Any())
+        if (!streetcodes.Any())
         {
             return;
         }
 
-        foreach (var streetcode in streetcodeContents)
+        foreach (var streetcode in streetcodes)
         {
             _repositoryWrapper.StreetcodeRepository.Delete(streetcode);
 

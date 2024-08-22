@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Validators.Common;
+using Streetcode.BLL.Validators.Streetcode.Art;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
 using Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
@@ -22,7 +23,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         StreetcodeToponymValidator streetcodeToponymValidator,
         TimelineItemValidator timelineItemValidator,
         ImageDetailsValidator imageDetailsValidator,
-        StreetcodeArtSlideValidator streetcodeArtSlideValidator)
+        StreetcodeArtSlideValidator streetcodeArtSlideValidator,
+        ArtCreateUpdateDTOValidator artCreateUpdateDtoValidator)
     {
         RuleFor(dto => dto.FirstName)
             .NotEmpty().WithMessage("First name cannot be empty")
@@ -87,5 +89,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleForEach(dto => dto.StreetcodeArtSlides)
             .SetValidator(streetcodeArtSlideValidator);
+
+        RuleForEach(dto => dto.Arts)
+            .SetValidator(artCreateUpdateDtoValidator);
     }
 }

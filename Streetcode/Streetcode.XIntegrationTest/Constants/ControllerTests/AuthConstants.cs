@@ -4,10 +4,12 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.XIntegrationTest.Constants.ControllerTests
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1310:Field names should not contain underscore",
+        Justification = "Underscores in constants make them more readable")]
     internal static class AuthConstants
     {
-#pragma warning disable SA1310 // Field names should not contain underscore
-
         public const string TEST_USER_LOGIN_PASSWORD = "User_Login_Password_Q123#";
 
         public static readonly IdentityRole TEST_ROLE_ADMIN = new IdentityRole()
@@ -56,7 +58,5 @@ namespace Streetcode.XIntegrationTest.Constants.ControllerTests
             RefreshToken = "User_Login_Refresh_Token",
             RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };
-
-#pragma warning restore SA1310 // Field names should not contain underscore
     }
 }

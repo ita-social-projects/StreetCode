@@ -17,9 +17,11 @@ using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter
 {
-#pragma warning disable S101 // Types should be named in PascalCase
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "DTOs are named this way throughout the project")]
     public static class StreetcodeUpdateDTOExtracter
-#pragma warning restore S101 // Types should be named in PascalCase
     {
         public static StreetcodeUpdateDTO Extract(int id, int index, string transliterationUrl)
         {

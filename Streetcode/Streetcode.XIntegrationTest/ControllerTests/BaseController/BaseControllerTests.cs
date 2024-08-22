@@ -10,8 +10,10 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
 {
-#pragma warning disable SA1402 // File may only contain a single type
-#pragma warning disable S3881 // "IDisposable" should be implemented correctly
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "StyleCop.CSharp.MaintainabilityRules",
+        "SA1402:File may only contain a single type",
+        Justification = "It's ok to have two classes that differ only by a generic argument in one file")]
 
     public abstract class BaseControllerTests<T> : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
     {
@@ -35,9 +37,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
 
         public abstract void Dispose();
     }
-
-#pragma warning restore S3881 // "IDisposable" should be implemented correctly
-#pragma warning restore SA1402 // File may only contain a single type
 
     public class BaseControllerTests : BaseControllerTests<BaseClient>
     {

@@ -46,7 +46,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 Images = new List<ImageUpdateDTO>(),
                 Videos = new List<VideoUpdateDTO>(),
                 Partners = new List<PartnersUpdateDTO>(),
-                Toponyms = new List<StreetcodeToponymUpdateDTO>(),
+                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
                 Subtitles = new List<SubtitleUpdateDTO>(),
                 TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
                 RelatedFigures = new List<RelatedFigureUpdateDTO>(),

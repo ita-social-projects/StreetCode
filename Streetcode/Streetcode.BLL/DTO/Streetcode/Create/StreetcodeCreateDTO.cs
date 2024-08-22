@@ -22,22 +22,18 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
   public class StreetcodeCreateDTO : StreetcodeCreateUpdateDTO
     {
         public string? ARBlockURL { get; set; }
+        public int ViewCount { get; set; }
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
-        public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
         public IEnumerable<int> ImagesIds { get; set; }
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; }
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
         public IEnumerable<FactUpdateCreateDto> Facts { get; set; }
         public IEnumerable<VideoCreateDTO> Videos { get; set; }
-        public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
         public IEnumerable<PartnerShortDTO> Partners { get; set; }
-        public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
-        public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
-        public List<ArtCreateUpdateDTO> Arts { get; set; }
     }
 }

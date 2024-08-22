@@ -363,7 +363,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);
     }
 
-    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
+    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
     {
         var toponymsName = toponyms.Select(x => x.StreetName);
         streetcode.Toponyms.AddRange(await _repositoryWrapper.ToponymRepository.GetAllAsync(x => toponymsName.Contains(x.StreetName)));

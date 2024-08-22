@@ -1,4 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.DTO.Media.Create;
+using Streetcode.BLL.DTO.Media.Images;
+using Streetcode.BLL.DTO.Timeline.Update;
+using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode;
@@ -17,4 +22,9 @@ public abstract class StreetcodeCreateUpdateDTO
     public string TransliterationUrl { get; set; }
     public string? EventStartOrPersonBirthDate { get; set; }
     public string? EventEndOrPersonDeathDate { get; set; }
+    public IEnumerable<StreetcodeToponymCreateUpdateDTO> Toponyms { get; set; }
+    public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
+    public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
+    public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; }
+    public List<ArtCreateUpdateDTO> Arts { get; set; }
 }

@@ -2,6 +2,7 @@
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
+using Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Streetcode.Toponyms;
 
@@ -20,7 +21,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public BaseStreetcodeValidator(
         StreetcodeToponymValidator streetcodeToponymValidator,
         TimelineItemValidator timelineItemValidator,
-        ImageDetailsValidator imageDetailsValidator)
+        ImageDetailsValidator imageDetailsValidator,
+        StreetcodeArtSlideValidator streetcodeArtSlideValidator)
     {
         RuleFor(dto => dto.FirstName)
             .NotEmpty().WithMessage("First name cannot be empty")
@@ -52,8 +54,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.Index)
             .NotNull().WithMessage("Index is required")
-            .LessThanOrEqualTo(IndexMaxValue).WithMessage($"Maximum index value is {IndexMaxValue}")
-            .GreaterThanOrEqualTo(IndexMinValue).WithMessage($"Minimum index value is {IndexMinValue}");
+            .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage($"Index should be between {IndexMinValue} and {IndexMaxValue}");
 
         RuleFor(dto => dto.DateString)
             .NotNull().WithMessage("DateString is required")
@@ -83,5 +84,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleForEach(dto => dto.ImagesDetails)
             .SetValidator(imageDetailsValidator);
+
+        RuleForEach(dto => dto.StreetcodeArtSlides)
+            .SetValidator(streetcodeArtSlideValidator);
     }
 }

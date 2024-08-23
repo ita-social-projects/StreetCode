@@ -25,15 +25,15 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public int ViewCount { get; set; }
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
-        public IEnumerable<int> ImagesIds { get; set; }
-        public IEnumerable<StreetcodeTagDTO> Tags { get; set; }
-        public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; }
-        public IEnumerable<FactUpdateCreateDto> Facts { get; set; }
-        public IEnumerable<VideoCreateDTO> Videos { get; set; }
-        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; }
-        public IEnumerable<PartnerShortDTO> Partners { get; set; }
-        public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
-        public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
-        public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
+        public IEnumerable<int> ImagesIds { get; set; } = null!; // one image black and white is required at front-end side, so at least one will be passed
+        public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = null!;
+        public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; } = null!; // subtitles are only in one example
+        public IEnumerable<FactUpdateCreateDto> Facts { get; set; } = null!;
+        public IEnumerable<VideoCreateDTO> Videos { get; set; } = null!; // video is only one
+        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
+        public IEnumerable<PartnerShortDTO> Partners { get; set; } = null!;
+        public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; } = null!;
+        public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; } = null!;
+        public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; } = null!;
     }
 }

@@ -34,10 +34,6 @@ public class StreetcodeProfile : Profile
                 .ForMember(x => x.Images, conf => conf.Ignore())
                 .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
                 .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
-                .ForMember(x => x.EventEndOrPersonDeathDate, conf =>
-                {
-                    conf.ConvertUsing(new StringToDateTimeConverter(), x => x.EventEndOrPersonDeathDate);
-                })
                 .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()

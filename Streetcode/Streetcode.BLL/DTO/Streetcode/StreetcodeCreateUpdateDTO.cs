@@ -20,8 +20,8 @@ public abstract class StreetcodeCreateUpdateDTO
     public StreetcodeType StreetcodeType { get; set; }
     public string Title { get; set; }
     public string TransliterationUrl { get; set; }
-    public string? EventStartOrPersonBirthDate { get; set; }
-    public string? EventEndOrPersonDeathDate { get; set; }
+    public DateTime? EventStartOrPersonBirthDate { get; set; }
+    public DateTime? EventEndOrPersonDeathDate { get; set; }
     public IEnumerable<StreetcodeToponymCreateUpdateDTO> Toponyms { get; set; }
     public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; }
     public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }

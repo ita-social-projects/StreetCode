@@ -5,7 +5,7 @@ namespace Streetcode.BLL.Validators.Common;
 
 public static class ValidationExtentions
 {
-    public static IRuleBuilderOptions<T, string?> MustBeValidUrl<T>(this IRuleBuilder<T, string?> ruleBuilder)
+    public static IRuleBuilderOptions<T, string?> MustBeValidUrl<T>(this IRuleBuilder<T, string?> ruleBuilder, string? host = null)
     {
         return ruleBuilder.Must(url =>
         {
@@ -14,8 +14,20 @@ public static class ValidationExtentions
                 return false;
             }
 
-            bool result = Uri.TryCreate(url, UriKind.Absolute, out var uriResult);
-            return result && (uriResult!.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            bool isUrl = Uri.TryCreate(url, UriKind.Absolute, out var uriResult);
+            if (uriResult != null)
+            {
+                bool isValidScheme = uriResult!.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps;
+                bool isValidHost = true;
+                if (host != null)
+                {
+                    isValidHost = uriResult.Host == host;
+                }
+
+                return isUrl && isValidScheme && isValidHost;
+            }
+
+            return false;
         }).WithMessage("The {PropertyName} must be valid url");
     }
 }

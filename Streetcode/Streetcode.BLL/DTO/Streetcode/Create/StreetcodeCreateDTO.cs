@@ -29,7 +29,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = null!;
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; } = null!; // subtitles are only in one example
         public IEnumerable<StreetcodeFactCreateDTO> Facts { get; set; } = null!;
-        public IEnumerable<VideoCreateDTO> Videos { get; set; } = null!; // video is only one
+        public IEnumerable<VideoCreateDTO>? Videos { get; set; } = null!; // video is only one
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
         public IEnumerable<PartnerShortDTO> Partners { get; set; } = null!;
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; } = null!;

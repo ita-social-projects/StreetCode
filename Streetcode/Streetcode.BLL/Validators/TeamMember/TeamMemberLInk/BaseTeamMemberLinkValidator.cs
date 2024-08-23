@@ -18,6 +18,6 @@ public class BaseTeamMemberLinkValidator : AbstractValidator<TeamMemberLinkCreat
             .NotNull().WithMessage("Url is required")
             .NotEmpty().WithMessage("Url cannot be empty")
             .MaximumLength(MaxTeamMemberLinkLength).WithMessage("Maximum length of url is 255")
-            .Must(UrlValidator.IsValid).WithMessage("Url is incorrect");
+            .MustBeValidUrl();
     }
 }

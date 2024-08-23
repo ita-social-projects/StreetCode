@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
+using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.Facts;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
 using Streetcode.BLL.Validators.Streetcode.Text;
@@ -17,6 +18,11 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         BaseFactValidator baseFactValidator)
     {
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
+
+        RuleFor(c => c.Streetcode.TransactionLink.Url)
+            .MustBeValidUrl()
+            .When(c => c.Streetcode.TransactionLink != null);
+
         RuleFor(c => c.Streetcode.Text).SetValidator(baseTextValidator);
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);

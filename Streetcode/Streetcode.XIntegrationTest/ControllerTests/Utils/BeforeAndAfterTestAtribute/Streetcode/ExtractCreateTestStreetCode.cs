@@ -42,8 +42,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 ARBlockURL = "test-arblock-url",
                 StreetcodeType = StreetcodeType.Event,
                 Status = StreetcodeStatus.Published,
-                EventStartOrPersonBirthDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                EventEndOrPersonDeathDate = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"),
+                EventStartOrPersonBirthDate = DateTime.Now,
+                EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
                 ViewCount = 1,
                 Teaser = "Test Teaser",
                 Text = new TextCreateDTO

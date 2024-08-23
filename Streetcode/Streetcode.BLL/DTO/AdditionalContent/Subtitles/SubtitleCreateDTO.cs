@@ -1,7 +1,6 @@
 namespace Streetcode.BLL.DTO.AdditionalContent.Subtitles
 {
-  public class SubtitleCreateDTO
+  public class SubtitleCreateDTO : SubtitleCreateUpdateDTO
   {
-    public string SubtitleText { get; set; }
   }
 }

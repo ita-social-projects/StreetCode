@@ -27,29 +27,23 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         ArtCreateUpdateDTOValidator artCreateUpdateDtoValidator)
     {
         RuleFor(dto => dto.FirstName)
-            .NotEmpty().WithMessage("First name cannot be empty")
             .MaximumLength(FirstNameMaxLength).WithMessage($"Maximum length of first name is {FirstNameMaxLength}");
 
         RuleFor(dto => dto.LastName)
-            .NotEmpty().WithMessage("Last name cannot be empty")
             .MaximumLength(LastNameMaxLength).WithMessage($"Maximum length of last name is {LastNameMaxLength}");
 
         RuleFor(dto => dto.Alias)
-            .NotEmpty().WithMessage("Alias cannot be empty")
             .MaximumLength(AliasMaxLength).WithMessage($"Maximum length of alias is {AliasMaxLength}");
 
         RuleFor(dto => dto.Teaser)
-            .NotNull().WithMessage("Teaser is required")
             .NotEmpty().WithMessage("Teaser cannot be empty")
             .MaximumLength(TeaserMaxLength).WithMessage($"Maximum length of teaser is {TeaserMaxLength}");
 
         RuleFor(dto => dto.Title)
-            .NotNull().WithMessage("Title is required")
             .NotEmpty().WithMessage("Title cannot be empty")
             .MaximumLength(TitleMaxLength).WithMessage($"Maximum length of title is {TitleMaxLength}");
 
         RuleFor(dto => dto.TransliterationUrl)
-            .NotNull().WithMessage("TransliterationUrl is required")
             .NotEmpty().WithMessage("TransliterationUrl cannot be empty")
             .Matches(@"^([A-Za-z]|[A-Za-z0-9]|-)*$")
             .WithMessage("TransliterationUrl must consists of latin characters, numbers and hyphen");
@@ -59,7 +53,6 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage($"Index should be between {IndexMinValue} and {IndexMaxValue}");
 
         RuleFor(dto => dto.DateString)
-            .NotNull().WithMessage("DateString is required")
             .NotEmpty().WithMessage("DateString cannot be empty")
             .MaximumLength(DateStringMaxLength).WithMessage($"Maximum length of date string is {DateStringMaxLength}");
 
@@ -72,11 +65,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .IsInEnum().WithMessage("Invalid status value");
 
         RuleFor(dto => dto.EventStartOrPersonBirthDate)
-            .NotNull().WithMessage("EventStartOrPersonBirthDate is required")
-            .Must(DateValidator.IsValidDate).WithMessage("EventStartOrPersonBirthDate has incorrect date");
-
-        RuleFor(dto => dto.EventEndOrPersonDeathDate)
-            .Must(DateValidator.IsValidDate).WithMessage("EventEndOrPersonDeathDate has incorrect date");
+            .NotNull().WithMessage("EventStartOrPersonBirthDate is required");
 
         RuleForEach(dto => dto.Toponyms)
             .SetValidator(streetcodeToponymValidator);

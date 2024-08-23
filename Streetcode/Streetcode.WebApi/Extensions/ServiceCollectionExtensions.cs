@@ -148,11 +148,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
-        services.Configure<ApiBehaviorOptions>(options =>
-        {
-            options.SuppressModelStateInvalidFilter = true;
-        });
-        services.AddControllers();
+        services.AddControllers(opt => opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
     }
 
     public static void AddSwaggerServices(this IServiceCollection services)

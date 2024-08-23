@@ -24,7 +24,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public TextUpdateDTO? Text { get; set; }
         public TransactionLinkUpdateDTO? TransactionLink { get; set; }
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; }
-        public IEnumerable<FactUpdateDto> Facts { get; set; }
+        public IEnumerable<StreetcodeFactUpdateDTO> Facts { get; set; }
         public IEnumerable<VideoUpdateDTO> Videos { get; set; }
         public IEnumerable<AudioUpdateDTO> Audios { get; set; }
         public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; }

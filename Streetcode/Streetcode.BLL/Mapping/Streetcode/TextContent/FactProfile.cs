@@ -13,7 +13,7 @@ public class FactProfile : Profile
     {
         CreateMap<Fact, FactDto>().ReverseMap();
         CreateMap<Fact, FactUpdateCreateDto>().ReverseMap();
-        CreateMap<FactUpdateDto, Fact>()
+        CreateMap<StreetcodeFactUpdateDTO, Fact>()
           .ForMember(x => x.Streetcode, opt => opt.MapFrom(src => null as StreetcodeContent))
           .ForMember(x => x.Image, opt => opt.MapFrom(src => src.ModelState == Enums.ModelState.Deleted ? new Image { Id = src.ImageId, BlobName = string.Empty, MimeType = string.Empty } : null))
           .ReverseMap();

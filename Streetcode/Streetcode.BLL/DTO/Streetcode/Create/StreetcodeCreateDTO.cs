@@ -28,7 +28,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<int> ImagesIds { get; set; } = null!; // one image black and white is required at front-end side, so at least one will be passed
         public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = null!;
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; } = null!; // subtitles are only in one example
-        public IEnumerable<FactUpdateCreateDto> Facts { get; set; } = null!;
+        public IEnumerable<StreetcodeFactCreateDTO> Facts { get; set; } = null!;
         public IEnumerable<VideoCreateDTO> Videos { get; set; } = null!; // video is only one
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
         public IEnumerable<PartnerShortDTO> Partners { get; set; } = null!;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Streetcode.BLL.Interfaces.Authentication;
@@ -10,7 +11,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "StyleCop.CSharp.MaintainabilityRules",
         "SA1402:File may only contain a single type",
         Justification = "It's ok to have two classes that differ only by a generic argument in one file")]

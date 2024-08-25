@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.XIntegrationTest.Constants.ControllerTests
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "StyleCop.CSharp.NamingRules",
         "SA1310:Field names should not contain underscore",
         Justification = "Underscores in constants make them more readable")]

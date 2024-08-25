@@ -1,6 +1,8 @@
-﻿namespace Streetcode.XIntegrationTest.Constants.ControllerTests
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Streetcode.XIntegrationTest.Constants.ControllerTests
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+    [SuppressMessage(
         "StyleCop.CSharp.NamingRules",
         "SA1310:Field names should not contain underscore",
         Justification = "Underscores in constants make them more readable")]

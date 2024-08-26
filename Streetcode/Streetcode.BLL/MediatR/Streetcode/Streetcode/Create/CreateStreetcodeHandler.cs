@@ -160,7 +160,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         return streetcodeArts;
     }
 
-    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
+    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto> imageDetails)
     {
         if (imageDetails.IsNullOrEmpty())
         {
@@ -192,7 +192,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }));
     }
 
-    private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    private Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
     {
         foreach (FactUpdateCreateDto fact in facts)
         {
@@ -205,9 +205,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 });
             }
         }
+
+        return Task.CompletedTask;
     }
 
-    private void AddTransactionLink(StreetcodeContent streetcode, string? url)
+    private void AddTransactionLink(StreetcodeContent streetcode, string url)
     {
         if (url != null)
         {

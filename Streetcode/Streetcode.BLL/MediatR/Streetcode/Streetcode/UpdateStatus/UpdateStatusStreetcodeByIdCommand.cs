@@ -4,4 +4,4 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
 
-public record UpdateStatusStreetcodeByIdCommand(int Id, StreetcodeStatus Status) : IRequest<Result<Unit>>;
+public record UpdateStatusStreetcodeByIdCommand(int Id, StreetcodeStatus Status): IRequest<Result<Unit>>;

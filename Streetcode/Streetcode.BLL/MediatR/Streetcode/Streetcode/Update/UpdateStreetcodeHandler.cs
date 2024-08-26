@@ -47,6 +47,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _cacheService = cacheService;
         }
 
@@ -129,7 +130,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
         }
 
-        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto> imageDetails)
         {
             if (imageDetails == null)
             {
@@ -342,11 +343,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await _repositoryWrapper.SaveChangesAsync();
         }
 
-        private async Task UpdateEntitiesAsync<T, U>(IEnumerable<U> updates, IRepositoryBase<T> repository)
+        private async Task UpdateEntitiesAsync<T, TUpdate>(IEnumerable<TUpdate> updates, IRepositoryBase<T> repository)
             where T : class
-            where U : IModelState
+            where TUpdate : IModelState
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<U>(updates);
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<TUpdate>(updates);
 
             await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
             repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));

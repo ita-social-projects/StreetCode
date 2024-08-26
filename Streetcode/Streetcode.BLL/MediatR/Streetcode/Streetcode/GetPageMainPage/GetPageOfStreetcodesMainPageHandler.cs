@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
+        public Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
                 request.page,
@@ -48,12 +48,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes)));
+                return Task.FromResult(Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes))));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
+            return Task.FromResult(Result.Fail<IEnumerable<StreetcodeMainPageDTO>>(errorMsg));
         }
 
         private static List<StreetcodeContent> ShuffleStreetcodes(IEnumerable<StreetcodeContent> streetcodes)

@@ -5,5 +5,5 @@ using Streetcode.BLL.DTO.Users;
 
 namespace Streetcode.BLL.MediatR.Authentication.Register
 {
-    public record RegisterQuery(RegisterRequestDTO registerRequestDTO) : IRequest<Result<RegisterResponseDTO>>;
+    public record RegisterQuery(RegisterRequestDTO registerRequestDTO): IRequest<Result<RegisterResponseDTO>>;
 }

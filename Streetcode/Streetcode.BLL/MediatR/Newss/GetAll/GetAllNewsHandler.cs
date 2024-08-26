@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<News> paginationResponseNews = _repositoryWrapper
                 .NewsRepository
@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 paginationResponseNews.TotalPages,
                 paginationResponseNews.TotalItems);
 
-            return Result.Ok(newsDTOs);
+            return Task.FromResult(Result.Ok(newsDTOs));
         }
 
         private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)

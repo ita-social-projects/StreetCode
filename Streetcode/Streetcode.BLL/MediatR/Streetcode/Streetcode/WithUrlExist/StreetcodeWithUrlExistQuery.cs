@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist
 {
-    public record StreetcodeWithUrlExistQuery(string url) : IRequest<Result<bool>>
+    public record StreetcodeWithUrlExistQuery(string url): IRequest<Result<bool>>
     {
     }
 }

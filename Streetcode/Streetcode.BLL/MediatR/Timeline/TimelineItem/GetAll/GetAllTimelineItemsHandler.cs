@@ -33,7 +33,7 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
             .TimelineRepository.GetAllAsync(
                 include: ti => ti
                   .Include(til => til.HistoricalContextTimelines)
-                    .ThenInclude(x => x.HistoricalContext)!);
+                    .ThenInclude(x => x.HistoricalContext) !);
 
         if (timelineItems is null)
         {

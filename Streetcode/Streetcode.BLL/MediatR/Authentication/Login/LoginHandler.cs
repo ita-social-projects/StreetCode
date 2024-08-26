@@ -62,7 +62,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                     var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
 
                     var userDTO = _mapper.Map<UserDTO>(user);
-                    string? userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
+                    string userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
                     userDTO.Role = userRole ?? "User";
 
                     var response = new LoginResponseDTO()

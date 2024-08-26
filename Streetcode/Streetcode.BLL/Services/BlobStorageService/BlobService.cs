@@ -12,7 +12,7 @@ public class BlobService : IBlobService
     private readonly string _keyCrypt;
     private readonly string _blobPath;
 
-    public BlobService(IOptions<BlobEnvironmentVariables> environment, IRepositoryWrapper? repositoryWrapper = null)
+    public BlobService(IOptions<BlobEnvironmentVariables> environment)
     {
         _envirovment = environment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;

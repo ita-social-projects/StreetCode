@@ -31,7 +31,7 @@ public class RegisterRequestDTO
     [Display(Name = "Phone Number")]
     [Phone]
     [DefaultValue(AuthConstants.PhoneNumber)]
-    public string? PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; }
 
     [Required]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]

@@ -18,7 +18,7 @@ namespace Streetcode.BLL.Services.CacheService
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ConcurrentDictionary<object, SemaphoreSlim> _locks = new ConcurrentDictionary<object, SemaphoreSlim>();
 
-        public CacheService(IMemoryCache cache, IServiceScopeFactory serviceScopeFactory )
+        public CacheService(IMemoryCache cache, IServiceScopeFactory serviceScopeFactory)
         {
             _cache = cache;
             _serviceScopeFactory = serviceScopeFactory;

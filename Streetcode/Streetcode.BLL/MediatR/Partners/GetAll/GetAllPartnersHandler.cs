@@ -38,7 +38,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         if (partners is null)
         {
-            string? errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
+            string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

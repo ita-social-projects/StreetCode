@@ -25,7 +25,7 @@ namespace Streetcode.BLL.Services.Authentication
         {
             _jwtOptions = configuration
               .GetSection("Jwt")
-              .Get<JwtOptions>()!;
+              .Get<JwtOptions>() !;
 
             _dbContext = dbContext;
 
@@ -34,7 +34,7 @@ namespace Streetcode.BLL.Services.Authentication
             _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
         }
 
-        public async Task<JwtSecurityToken> GenerateAccessTokenAsync(User? user)
+        public async Task<JwtSecurityToken> GenerateAccessTokenAsync(User user)
         {
             if (user is null)
             {
@@ -73,7 +73,7 @@ namespace Streetcode.BLL.Services.Authentication
 
         public string SetNewRefreshTokenForUser(User user)
         {
-            User? userFromDb = GetUserFromDb(user.Email);
+            User userFromDb = GetUserFromDb(user.Email);
 
             string refreshToken = GenerateRefreshToken();
             userFromDb.RefreshToken = refreshToken;
@@ -84,9 +84,9 @@ namespace Streetcode.BLL.Services.Authentication
             return refreshToken;
         }
 
-        private User GetUserFromDb(string? userEmail)
+        private User GetUserFromDb(string userEmail)
         {
-            User? userFromDb = _dbContext.Users
+            User userFromDb = _dbContext.Users
                 .FirstOrDefault(userInDb => userInDb.Email == (userEmail ?? string.Empty));
             string errorMessage = $"Cannot find in database user with Email: {userEmail}";
 
@@ -121,7 +121,7 @@ namespace Streetcode.BLL.Services.Authentication
             return claimsPrincipal;
         }
 
-        private async Task<SecurityTokenDescriptor> GetTokenDescriptorAsync(User user)
+        private Task<SecurityTokenDescriptor> GetTokenDescriptorAsync(User user)
         {
             var userRoleId = _dbContext.UserRoles
                 .AsNoTracking()
@@ -149,7 +149,7 @@ namespace Streetcode.BLL.Services.Authentication
                 Audience = _jwtOptions.Audience
             };
 
-            return tokenDescriptor;
+            return Task.FromResult(tokenDescriptor);
         }
 
         private static string GenerateRefreshToken()

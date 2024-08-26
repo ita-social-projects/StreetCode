@@ -31,7 +31,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
         var tags = await _repositoryWrapper.TagRepository.GetAllAsync();
         if (tags is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

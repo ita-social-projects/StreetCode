@@ -7,6 +7,6 @@ namespace Streetcode.BLL.DTO.Payment
         [Required]
         public long Amount { get; set; }
 
-        public string? RedirectUrl { get; set; }
+        public string RedirectUrl { get; set; }
     }
 }

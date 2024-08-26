@@ -22,20 +22,20 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
   public class StreetcodeCreateDTO
     {
         public int Index { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Title { get; set; }
         public string DateString { get; set; }
-        public string? Alias { get; set; }
+        public string Alias { get; set; }
         public string TransliterationUrl { get; set; }
-        public string? ARBlockURL { get; set; }
+        public string ARBlockURL { get; set; }
         public StreetcodeType StreetcodeType { get; set; }
         public StreetcodeStatus Status { get; set; }
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public int ViewCount { get; set; }
         public string Teaser { get; set; }
-        public TextCreateDTO? Text { get; set; }
+        public TextCreateDTO Text { get; set; }
         public int? AudioId { get; set; }
         public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; }
         public IEnumerable<int> ImagesIds { get; set; }
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; }
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; }
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; }
-        public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; }
+        public IEnumerable<ImageDetailsDto> ImagesDetails { get; set; }
         public List<ArtCreateUpdateDTO> Arts { get; set; }
     }
 }

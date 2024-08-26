@@ -22,7 +22,7 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
         _logger = logger;
     }
 
-    public async Task<Result<GetAllToponymsResponseDTO>> Handle(GetAllToponymsQuery query, CancellationToken cancellationToken)
+    public Task<Result<GetAllToponymsResponseDTO>> Handle(GetAllToponymsQuery query, CancellationToken cancellationToken)
     {
         var filterRequest = query.request;
 
@@ -44,7 +44,7 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
             Toponyms = toponymDtos
         };
 
-        return Result.Ok(response);
+        return Task.FromResult(Result.Ok(response));
     }
 
     private void FindStreetcodesWithMatchTitle(

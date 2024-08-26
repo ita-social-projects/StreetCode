@@ -11,14 +11,12 @@ public class BlobService : IBlobService
     private readonly BlobEnvironmentVariables _envirovment;
     private readonly string _keyCrypt;
     private readonly string _blobPath;
-    private readonly IRepositoryWrapper _repositoryWrapper;
 
     public BlobService(IOptions<BlobEnvironmentVariables> environment, IRepositoryWrapper? repositoryWrapper = null)
     {
         _envirovment = environment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;
         _blobPath = _envirovment.BlobStorePath;
-        _repositoryWrapper = repositoryWrapper;
     }
 
     public MemoryStream FindFileInStorageAsMemoryStream(string name)

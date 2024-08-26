@@ -49,7 +49,7 @@ public class AudioService : IAudioService
         }
         catch (Exception e)
         {
-            _loggerService.LogError(null, e.Message);
+            _loggerService.LogError(e, e.Message);
             throw;
         }
     }

@@ -108,7 +108,7 @@ namespace Streetcode.BLL.Middleware
 
                 return jsonObject.ToString();
             }
-            catch (JsonReaderException jsonEx)
+            catch (JsonReaderException)
             {
                 return "Response body is in gzip format";
             }

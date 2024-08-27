@@ -6,10 +6,16 @@ namespace Streetcode.BLL.Validators.Streetcode.Video;
 
 public class BaseVideoValidator : AbstractValidator<VideoCreateUpdateDTO>
 {
-    public const string VideoHost = "youtube.com";
+    public static readonly List<string> VideoHosts = new()
+    {
+        "www.youtube.com",
+        "youtube.com",
+        "youtu.be"
+    };
+
     public BaseVideoValidator()
     {
         RuleFor(dto => dto.Url)
-            .MustBeValidUrl(VideoHost).WithName("Video Url");
+            .MustBeValidUrl(VideoHosts).WithName("Video Url");
     }
 }

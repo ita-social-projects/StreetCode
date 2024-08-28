@@ -38,20 +38,6 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
     public async Task<Result<AudioDTO>> Handle(UpdateAudioCommand request, CancellationToken cancellationToken)
     {
-        if (request.Audio.Extension.IsNullOrEmpty())
-        {
-            string? errorMsg = _stringLocalizerFailedToUpdate?["ExtensionIsRequired"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
-
-        if (request.Audio.Title.IsNullOrEmpty())
-        {
-            string? errorMsg = _stringLocalizerFailedToUpdate?["TitleIsRequired"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
-
         var existingAudio = await _repositoryWrapper.AudioRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Audio.Id);
 

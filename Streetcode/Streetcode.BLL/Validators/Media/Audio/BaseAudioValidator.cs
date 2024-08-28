@@ -18,7 +18,7 @@ public class BaseAudioValidator : AbstractValidator<AudioFileBaseCreateDTO>
             .MaximumLength(MaxTitleLength).WithMessage(localizer["TitleMaxLength", MaxTitleLength]);
         RuleFor(dto => dto.MimeType)
             .NotEmpty().WithMessage(localizer["MimeTypeRequired"])
-            .MaximumLength(MaxMimeTypeLength).WithMessage(localizer["TitleMaxLength", MaxMimeTypeLength]);
+            .MaximumLength(MaxMimeTypeLength).WithMessage(localizer["MimeTypeMaxLength", MaxMimeTypeLength]);
         RuleFor(dto => dto.Extension)
             .NotEmpty().WithMessage(localizer["ExtensionRequired"])
             .Equal(Mp3Extension).WithMessage(localizer["ExtensionMustBeMp3"]);

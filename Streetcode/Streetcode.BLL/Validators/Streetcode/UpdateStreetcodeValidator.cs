@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
 using Streetcode.BLL.Validators.Common;
+using Streetcode.BLL.Validators.Streetcode.CategoryContent;
 using Streetcode.BLL.Validators.Streetcode.Facts;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
 using Streetcode.BLL.Validators.Streetcode.Text;
@@ -18,7 +19,8 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         BaseSubtitleValidator baseSubtitleValidator,
         BaseTagValidator tagValidator,
         BaseFactValidator baseFactValidator,
-        BaseVideoValidator videoValidator)
+        BaseVideoValidator videoValidator,
+        BaseCategoryContentValidator categoryContentValidator)
     {
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
 
@@ -36,6 +38,7 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);
+        RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);
     }
 
     private bool HasVideoWithTitle(StreetcodeUpdateDTO streetcode)

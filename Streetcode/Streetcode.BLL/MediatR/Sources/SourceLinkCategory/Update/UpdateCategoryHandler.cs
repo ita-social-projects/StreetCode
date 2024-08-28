@@ -1,16 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.DTO.Sources.Validation;
-using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using SourcesEntity = Streetcode.DAL.Entities.Sources;
 

@@ -22,7 +22,7 @@
         <value>Title is a required field</value>
     </data>
     <data name="TitleMaxLength" xml:space="preserve">
-        <value />
+        <value>Maximum length is {0}</value>
     </data>
     <data name="TitleNewsAlreadyExists" xml:space="preserve">
         <value />

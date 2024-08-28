@@ -21,4 +21,7 @@
     <data name="TitleRequired" xml:space="preserve">
         <value>Заголовок це обовʼязкове поле</value>
     </data>
+    <data name="TitleMaxLength" xml:space="preserve">
+        <value>Максимальна довжина {0}</value>
+    </data>
 </root>

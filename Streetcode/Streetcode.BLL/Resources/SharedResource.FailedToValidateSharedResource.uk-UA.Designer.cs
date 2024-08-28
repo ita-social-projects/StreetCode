@@ -50,5 +50,11 @@ namespace Streetcode.BLL.Resources {
                 return ResourceManager.GetString("TitleRequired", resourceCulture);
             }
         }
+        
+        internal static string TitleMaxLength {
+            get {
+                return ResourceManager.GetString("TitleMaxLength", resourceCulture);
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Partners.SourceLinks;
 
@@ -10,26 +12,32 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
     public const int TitleMaxLength = 100;
     public const int DescriptionMaxLength = 450;
     public const int UrlMaxLength = 200;
-    public BasePartnersValidator(PartnerSourceLinkValidator partnerSourceLinkValidator)
+    public BasePartnersValidator(
+        PartnerSourceLinkValidator partnerSourceLinkValidator,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IStringLocalizer<FailedToValidateSharedResource> localizer)
     {
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage("{PropertyName} cannot be empty")
-            .MaximumLength(TitleMaxLength).WithMessage($"Maximum length of {{PropertyName}} is {TitleMaxLength}");
+            .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["Title"]])
+            .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(dto => dto.Description)
-            .MaximumLength(DescriptionMaxLength).WithMessage($"Maximum length of {{PropertyName}} is {DescriptionMaxLength}");
+            .MaximumLength(DescriptionMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Description"], DescriptionMaxLength]);
 
         RuleFor(dto => dto.TargetUrl)
             .NotEmpty().When(dto => !string.IsNullOrWhiteSpace(dto.UrlTitle))
-            .WithMessage("The partner website url is missing")
-            .MaximumLength(UrlMaxLength).WithMessage($"Maximum length of {{PropertyName}} is {UrlMaxLength}");
+            .WithMessage(x => localizer["CannotBeEmptyWithCondition", fieldLocalizer["TargetUrl"], fieldLocalizer["UrlTitle"]]);
+
+        RuleFor(dto => dto.TargetUrl)
+            .MaximumLength(UrlMaxLength)
+            .WithMessage(x => localizer["MaxLength", fieldLocalizer["TargetUrl"], UrlMaxLength]);
 
         RuleFor(dto => dto.TargetUrl).MustBeValidUrl()
             .When(dto => dto.TargetUrl != null)
-            .WithMessage("{PropertyName} must be valid url");
+            .WithMessage(x => localizer["ValidUrl", fieldLocalizer["TargetUrl"]]);
 
         RuleFor(dto => dto.UrlTitle)
-            .MaximumLength(UrlMaxLength).WithMessage($"Maximum length of {{PropertyName}} is {UrlMaxLength}");
+            .MaximumLength(UrlMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["UrlTitle"], UrlMaxLength]);
 
         RuleForEach(dto => dto.PartnerSourceLinks).SetValidator(partnerSourceLinkValidator);
     }

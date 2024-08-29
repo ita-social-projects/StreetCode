@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.DAL.Enums;
 
@@ -8,24 +10,23 @@ namespace Streetcode.BLL.Validators.Partners.SourceLinks;
 public class PartnerSourceLinkValidator : AbstractValidator<CreatePartnerSourceLinkDTO>
 {
     public const int PartnerLinkMaxLength = 255;
-    public PartnerSourceLinkValidator()
+    public PartnerSourceLinkValidator(IStringLocalizer<FieldNamesSharedResource> fieldLocalizer, IStringLocalizer<FailedToValidateSharedResource> localizer)
     {
         RuleFor(dto => dto.LogoType)
-            .NotNull().WithMessage("{PropertyName} is required")
-            .IsInEnum().WithMessage("Incorrect logotype");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["LogoType"]])
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["LogoType"]]);
 
         RuleFor(dto => dto.TargetUrl)
-            .NotEmpty().WithMessage("{PropertyName} cannot be empty")
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["SourceLinkUrl"]])
             .MaximumLength(PartnerLinkMaxLength)
-            .WithMessage($"Maximum length of {{PropertyName}} is {PartnerLinkMaxLength}");
+            .WithMessage(localizer["MaxLength", fieldLocalizer["SourceLinkUrl"]]);
 
         RuleFor(dto => dto.TargetUrl)
             .MustBeValidUrl()
-            .WithName(dto => $"Source url '{dto.TargetUrl}'")
-            .WithMessage("{PropertyName} must be valid url");
+            .WithMessage(x => localizer["ValidUrl_UrlDisplayed", fieldLocalizer["SourceLinkUrl"], x.TargetUrl]);
 
         RuleFor(dto => dto)
-            .Must(MatchLogotypeAndUrl).WithMessage("Logo must match corresponding url");
+            .Must(MatchLogotypeAndUrl).WithMessage(localizer["LogoMustMatchUrl"]);
     }
 
     private bool MatchLogotypeAndUrl(CreatePartnerSourceLinkDTO dto)

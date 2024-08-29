@@ -55,7 +55,7 @@
         <value>Field '{0}' must be valid url</value>
     </data>
     <data name="CannotBeEmptyWithCondition" xml:space="preserve">
-        <value>Filed '{0}' cannot be empty if field '{1}' is provided</value>
+        <value>Field '{0}' cannot be empty if field '{1}' is provided</value>
     </data>
     <data name="IsRequired" xml:space="preserve">
         <value>Field '{0}' is required</value>
@@ -68,5 +68,8 @@
     </data>
     <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
         <value>Field '{0}' ({1}) must be valid url</value>
+    </data>
+    <data name="GreaterThan" xml:space="preserve">
+        <value>'{0}' must be greater than {1}</value>
     </data>
 </root>

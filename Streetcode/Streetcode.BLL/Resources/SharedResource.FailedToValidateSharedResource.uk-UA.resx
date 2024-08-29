@@ -51,4 +51,7 @@
     <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
         <value>Поле '{0}' ({1}) повинно бути дійсною URL адресою </value>
     </data>
+    <data name="GreaterThan" xml:space="preserve">
+        <value>'{0}' має бути більше ніж {1}</value>
+    </data>
 </root>

@@ -36,4 +36,7 @@
     <data name="SourceLinkUrl" xml:space="preserve">
         <value>Source link url</value>
     </data>
+    <data name="RedirectUrl" xml:space="preserve">
+        <value>Redirect url</value>
+    </data>
 </root>

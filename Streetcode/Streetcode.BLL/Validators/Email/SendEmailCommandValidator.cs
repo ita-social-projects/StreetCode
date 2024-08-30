@@ -8,16 +8,17 @@ namespace Streetcode.BLL.Validators.Email;
 
 public class SendEmailCommandValidator : AbstractValidator<SendEmailCommand>
 {
-    public SendEmailCommandValidator(IStringLocalizer<FailedToValidateSharedResource> localizer)
+    public SendEmailCommandValidator(
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IStringLocalizer<FailedToValidateSharedResource> localizer)
     {
         RuleFor(e => e.Email.From)
-            .NotEmpty().WithMessage(localizer["EmailCannotBeEmpty"])
-            .MaximumLength(80).WithMessage(localizer["MaxLengthEmail"])
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Email"]])
+            .MaximumLength(80).WithMessage(localizer["MaxLength", fieldLocalizer["Email"]])
             .EmailAddress(EmailValidationMode.Net4xRegex).WithMessage(localizer["EmailAddressFormat"]);
 
         RuleFor(e => e.Email.Token)
-            .NotNull()
-            .NotEmpty();
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Email"]]);
 
         RuleFor(e => e.Email.Content)
             .Length(1, 500).WithMessage(localizer["ContentLengthSendEmail"]);

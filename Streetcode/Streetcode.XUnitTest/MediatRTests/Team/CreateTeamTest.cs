@@ -195,7 +195,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
         private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
         {
-            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
+            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (DAL.Enums.LogoType)10 };
             return new TeamMemberCreateDTO
             {
                 Name = "Test",

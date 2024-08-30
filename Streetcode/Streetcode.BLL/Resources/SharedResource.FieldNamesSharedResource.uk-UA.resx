@@ -39,4 +39,25 @@
     <data name="RedirectUrl" xml:space="preserve">
         <value>Посилання переадресації</value>
     </data>
+    <data name="Name" xml:space="preserve">
+        <value>Ім'я</value>
+    </data>
+    <data name="Position" xml:space="preserve">
+        <value>Вакансія</value>
+    </data>
+    <data name="ImageId" xml:space="preserve">
+        <value>Ідентифікатор картинки</value>
+    </data>
+    <data name="IsMain" xml:space="preserve">
+        <value>Ключовий член команди</value>
+    </data>
+    <data name="LogoId" xml:space="preserve">
+        <value>Ідентифікатор логотипа</value>
+    </data>
+    <data name="IsKeyPartner" xml:space="preserve">
+        <value>Ключовий партнер</value>
+    </data>
+    <data name="IsVisibleEverywhere" xml:space="preserve">
+        <value>Видимий для всіх</value>
+    </data>
 </root>

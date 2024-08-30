@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.TeamMember.Positions;
 using Streetcode.BLL.Validators.TeamMember.TeamMemberLInk;
 
@@ -9,29 +11,28 @@ public class BaseTeamValidator : AbstractValidator<TeamMemberCreateUpdateDTO>
 {
     public const int NameMaxLength = 50;
     public const int DescriptionMaxLength = 150;
-    public BaseTeamValidator()
+    public BaseTeamValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.ImageId)
-            .NotNull().WithMessage("ImageId is required")
-            .NotEqual(0).WithMessage("Invalid ImageId Value");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["ImageId"]])
+            .NotEqual(0).WithMessage(localizer["Invalid", fieldLocalizer["ImageId"]]);
 
         RuleFor(dto => dto.Name)
-            .NotNull().WithMessage("Name is required")
-            .NotEmpty().WithMessage("Name cannot be empty")
-            .MaximumLength(NameMaxLength).WithMessage($"Maximum length of name is {NameMaxLength}");
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Name"]])
+            .MaximumLength(NameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Name"], NameMaxLength]);
 
         RuleFor(dto => dto.Description)
-            .MaximumLength(DescriptionMaxLength).WithMessage($"Maximum length of description is {DescriptionMaxLength}");
+            .MaximumLength(DescriptionMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Description"], DescriptionMaxLength]);
 
         RuleFor(dto => dto.IsMain)
-            .NotNull().WithMessage("IsMain is required");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["IsMain"]]);
 
         RuleForEach(dto => dto.Positions)
             .ChildRules(position =>
             {
                 position.RuleFor(p => p.Position)
-                    .NotNull().WithMessage("Position is required")
-                    .MaximumLength(BasePositionValidator.MaxPositionLength).WithMessage("Maximum length of position is 50");
+                    .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Position"]])
+                    .MaximumLength(BasePositionValidator.MaxPositionLength).WithMessage(localizer["MaxLength", fieldLocalizer["Position"], BasePositionValidator.MaxPositionLength]);
             });
     }
 }

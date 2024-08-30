@@ -19,43 +19,14 @@ public class PartnerSourceLinkValidator : AbstractValidator<CreatePartnerSourceL
         RuleFor(dto => dto.TargetUrl)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["SourceLinkUrl"]])
             .MaximumLength(PartnerLinkMaxLength)
-            .WithMessage(localizer["MaxLength", fieldLocalizer["SourceLinkUrl"]]);
+            .WithMessage(localizer["MaxLength", fieldLocalizer["SourceLinkUrl"], PartnerLinkMaxLength]);
 
         RuleFor(dto => dto.TargetUrl)
             .MustBeValidUrl()
             .WithMessage(x => localizer["ValidUrl_UrlDisplayed", fieldLocalizer["SourceLinkUrl"], x.TargetUrl]);
 
         RuleFor(dto => dto)
-            .Must(MatchLogotypeAndUrl).WithMessage(localizer["LogoMustMatchUrl"]);
-    }
-
-    private bool MatchLogotypeAndUrl(CreatePartnerSourceLinkDTO dto)
-    {
-        bool isUri = Uri.TryCreate(dto.TargetUrl, UriKind.Absolute, out var uri);
-        if (!isUri || !Enum.IsDefined(typeof(LogoType), dto.LogoType))
-        {
-            return false;
-        }
-
-        string host = uri!.Host;
-        switch (dto.LogoType)
-        {
-            case LogoType.Behance:
-                return host == "www.behance.net" || host == "behance.net";
-            case LogoType.Facebook:
-                return host == "facebook.com" || host == "www.facebook.com";
-            case LogoType.Instagram:
-                return host == "instagram.com" || host == "www.instagram.com";
-            case LogoType.Linkedin:
-                return host == "linkedin.com" || host == "www.linkedin.com";
-            case LogoType.Tiktok:
-                return host == "tiktok.com" || host == "www.tiktok.com" || host == "vm.tiktok.com";
-            case LogoType.Twitter:
-                return host == "x.com" || host == "www.x.com";
-            case LogoType.YouTube:
-                return host == "youtube.com" || host == "www.youtube.com" || host == "youtu.be";
-            default:
-                throw new ArgumentException("This type of logo is not supported by validation");
-        }
+            .Must(dto => ValidationExtentions.MatchLogotypeAndUrl(dto.TargetUrl, dto.LogoType))
+            .WithMessage(localizer["LogoMustMatchUrl"]);
     }
 }

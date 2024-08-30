@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.TeamMember.Positions;
@@ -8,12 +10,15 @@ public class BasePositionValidator : AbstractValidator<PositionCreateUpdateDTO>
 {
     public const int MaxPositionLength = 50;
     private readonly IRepositoryWrapper _repository;
-    public BasePositionValidator(IRepositoryWrapper repositoryWrapper)
+    public BasePositionValidator(
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IRepositoryWrapper repositoryWrapper)
     {
         _repository = repositoryWrapper;
         RuleFor(p => p.Position)
-            .NotNull().WithMessage("Position is required")
-            .MaximumLength(MaxPositionLength).WithMessage("Maximum length of position is 50")
+            .NotNull().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Position"]])
+            .MaximumLength(MaxPositionLength).WithMessage(localizer["MaxLength", fieldLocalizer["Position"], MaxPositionLength])
             .MustAsync(BeUniqueAsync).WithMessage("Position must be unique");
     }
 

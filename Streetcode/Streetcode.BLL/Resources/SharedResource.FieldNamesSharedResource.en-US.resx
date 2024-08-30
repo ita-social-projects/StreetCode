@@ -39,4 +39,25 @@
     <data name="RedirectUrl" xml:space="preserve">
         <value>Redirect url</value>
     </data>
+    <data name="Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Position" xml:space="preserve">
+        <value>Position</value>
+    </data>
+    <data name="ImageId" xml:space="preserve">
+        <value>Image Id</value>
+    </data>
+    <data name="IsMain" xml:space="preserve">
+        <value>IsMain</value>
+    </data>
+    <data name="LogoId" xml:space="preserve">
+        <value>Logo Id</value>
+    </data>
+    <data name="IsKeyPartner" xml:space="preserve">
+        <value>IsKeyPartner</value>
+    </data>
+    <data name="IsVisibleEverywhere" xml:space="preserve">
+        <value>IsVisibleEverywhere</value>
+    </data>
 </root>

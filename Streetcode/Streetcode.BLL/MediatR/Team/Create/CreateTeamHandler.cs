@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
@@ -49,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
                 foreach (var logoType in newLogoTypes)
                 {
-                    if (!Enum.IsDefined(typeof(LogoTypeDTO), logoType))
+                    if (!Enum.IsDefined(typeof(LogoType), logoType))
                     {
                         string errorMsg = _stringLocalizerCannot["CannotCreateTeamMemberLinkWithInvalidLogoType"].Value;
                         _logger.LogError(request, errorMsg);

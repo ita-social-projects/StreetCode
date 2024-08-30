@@ -69,11 +69,83 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ідентифікатор картинки.
+        /// </summary>
+        internal static string ImageId {
+            get {
+                return ResourceManager.GetString("ImageId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ключовий партнер.
+        /// </summary>
+        internal static string IsKeyPartner {
+            get {
+                return ResourceManager.GetString("IsKeyPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ключовий член команди.
+        /// </summary>
+        internal static string IsMain {
+            get {
+                return ResourceManager.GetString("IsMain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Видимий для всіх.
+        /// </summary>
+        internal static string IsVisibleEverywhere {
+            get {
+                return ResourceManager.GetString("IsVisibleEverywhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ідентифікатор логотипа.
+        /// </summary>
+        internal static string LogoId {
+            get {
+                return ResourceManager.GetString("LogoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Логотип.
         /// </summary>
         internal static string LogoType {
             get {
                 return ResourceManager.GetString("LogoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ім&apos;я.
+        /// </summary>
+        internal static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вакансія.
+        /// </summary>
+        internal static string Position {
+            get {
+                return ResourceManager.GetString("Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Посилання переадресації.
+        /// </summary>
+        internal static string RedirectUrl {
+            get {
+                return ResourceManager.GetString("RedirectUrl", resourceCulture);
             }
         }
         

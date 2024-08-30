@@ -69,11 +69,83 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image Id.
+        /// </summary>
+        internal static string ImageId {
+            get {
+                return ResourceManager.GetString("ImageId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IsKeyPartner.
+        /// </summary>
+        internal static string IsKeyPartner {
+            get {
+                return ResourceManager.GetString("IsKeyPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IsMain.
+        /// </summary>
+        internal static string IsMain {
+            get {
+                return ResourceManager.GetString("IsMain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IsVisibleEverywhere.
+        /// </summary>
+        internal static string IsVisibleEverywhere {
+            get {
+                return ResourceManager.GetString("IsVisibleEverywhere", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logo Id.
+        /// </summary>
+        internal static string LogoId {
+            get {
+                return ResourceManager.GetString("LogoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logo type.
         /// </summary>
         internal static string LogoType {
             get {
                 return ResourceManager.GetString("LogoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        internal static string Position {
+            get {
+                return ResourceManager.GetString("Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redirect url.
+        /// </summary>
+        internal static string RedirectUrl {
+            get {
+                return ResourceManager.GetString("RedirectUrl", resourceCulture);
             }
         }
         

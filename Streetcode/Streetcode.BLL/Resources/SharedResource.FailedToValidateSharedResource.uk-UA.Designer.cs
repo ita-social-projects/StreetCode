@@ -123,6 +123,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; приймає тільки наступні значення: {1}.
+        /// </summary>
+        internal static string MustBeOneOf {
+            get {
+                return ResourceManager.GetString("MustBeOneOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Максимальна довжина {0}.
         /// </summary>
         internal static string TitleMaxLength {

@@ -72,4 +72,7 @@
     <data name="MaxLength" xml:space="preserve">
         <value>Maximum length of field '{0}' is {1}</value>
     </data>
+    <data name="MustBeOneOf" xml:space="preserve">
+        <value>Field '{0}' accepts only following values: {1}</value>
+    </data>
 </root>

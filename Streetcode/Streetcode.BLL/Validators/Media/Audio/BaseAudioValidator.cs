@@ -11,16 +11,18 @@ public class BaseAudioValidator : AbstractValidator<AudioFileBaseCreateDTO>
     private const int MaxMimeTypeLength = 10;
     private const string Mp3Extension = "mp3";
 
-    public BaseAudioValidator(IStringLocalizer<FailedToValidateSharedResource> localizer)
+    public BaseAudioValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage(localizer["TitleRequired"])
-            .MaximumLength(MaxTitleLength).WithMessage(localizer["TitleMaxLength", MaxTitleLength]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Title"]])
+            .MaximumLength(MaxTitleLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], MaxTitleLength]);
+        RuleFor(dto => dto.BaseFormat)
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["BaseFormat"]]);
         RuleFor(dto => dto.MimeType)
-            .NotEmpty().WithMessage(localizer["MimeTypeRequired"])
-            .MaximumLength(MaxMimeTypeLength).WithMessage(localizer["MimeTypeMaxLength", MaxMimeTypeLength]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["MimeType"]])
+            .MaximumLength(MaxMimeTypeLength).WithMessage(localizer["MaxLength", fieldLocalizer["MimeType"], MaxMimeTypeLength]);
         RuleFor(dto => dto.Extension)
-            .NotEmpty().WithMessage(localizer["ExtensionRequired"])
-            .Equal(Mp3Extension).WithMessage(localizer["ExtensionMustBeMp3"]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Extension"]])
+            .Equal(Mp3Extension).WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], $"'{Mp3Extension}'"]);
     }
 }

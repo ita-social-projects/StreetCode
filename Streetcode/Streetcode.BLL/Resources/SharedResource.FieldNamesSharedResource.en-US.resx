@@ -60,4 +60,16 @@
     <data name="IsVisibleEverywhere" xml:space="preserve">
         <value>IsVisibleEverywhere</value>
     </data>
+    <data name="MimeType" xml:space="preserve">
+        <value>Mime type</value>
+    </data>
+    <data name="Extension" xml:space="preserve">
+        <value>Extension</value>
+    </data>
+    <data name="Alt" xml:space="preserve">
+        <value>Alt</value>
+    </data>
+    <data name="BaseFormat" xml:space="preserve">
+        <value>BaseFormat</value>
+    </data>
 </root>

@@ -66,4 +66,16 @@ public static class ValidationExtentions
                 throw new ArgumentException("This type of logo is not supported by validation");
         }
     }
+
+    public static string ConcatWithComma(List<string> values)
+    {
+        if (values.Count < 1)
+        {
+            return string.Empty;
+        }
+
+        var result = values[0];
+        result += string.Concat(values.Skip(1).Select(e => $", {e}"));
+        return result;
+    }
 }

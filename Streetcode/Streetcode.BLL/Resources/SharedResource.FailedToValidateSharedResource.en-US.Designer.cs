@@ -132,6 +132,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; accepts only following values: {1}.
+        /// </summary>
+        internal static string MustBeOneOf {
+            get {
+                return ResourceManager.GetString("MustBeOneOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string TextNewsAlreadyExists {

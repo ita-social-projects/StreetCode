@@ -8,10 +8,10 @@ namespace Streetcode.BLL.Validators.Timeline.HistoricalContext;
 public class BaseHistoricalContextValidator : AbstractValidator<HistoricalContextDTO>
 {
     private const int MaxTitleLength = 50;
-    public BaseHistoricalContextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer)
+    public BaseHistoricalContextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage(localizer["TitleRequired"])
-            .MaximumLength(MaxTitleLength).WithMessage(localizer["TitleMaxLength", MaxTitleLength]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Title"]])
+            .MaximumLength(MaxTitleLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], MaxTitleLength]);
     }
 }

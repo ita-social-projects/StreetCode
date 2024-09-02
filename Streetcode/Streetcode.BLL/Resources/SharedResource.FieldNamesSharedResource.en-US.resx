@@ -72,4 +72,16 @@
     <data name="BaseFormat" xml:space="preserve">
         <value>BaseFormat</value>
     </data>
+    <data name="Content" xml:space="preserve">
+        <value>Content</value>
+    </data>
+    <data name="CaptchaToken" xml:space="preserve">
+        <value>Captcha token</value>
+    </data>
+    <data name="Salary" xml:space="preserve">
+        <value>Salary</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Email</value>
+    </data>
 </root>

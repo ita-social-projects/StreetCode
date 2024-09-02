@@ -78,6 +78,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The email address must be in the correct format.
+        /// </summary>
+        internal static string EmailAddressFormat {
+            get {
+                return ResourceManager.GetString("EmailAddressFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; must be greater than {1}.
         /// </summary>
         internal static string GreaterThan {
@@ -110,6 +119,15 @@ namespace Streetcode.BLL.Resources {
         internal static string IsRequired {
             get {
                 return ResourceManager.GetString("IsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The length of the field &apos;{0}&apos; must be from {1} to {2}.
+        /// </summary>
+        internal static string LengthMustBeInRange {
+            get {
+                return ResourceManager.GetString("LengthMustBeInRange", resourceCulture);
             }
         }
         

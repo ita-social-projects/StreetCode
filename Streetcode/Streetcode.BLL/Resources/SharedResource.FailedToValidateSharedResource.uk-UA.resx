@@ -54,4 +54,10 @@
     <data name="MustBeOneOf" xml:space="preserve">
         <value>Поле '{0}' приймає тільки наступні значення: {1}</value>
     </data>
+    <data name="MustBeInRange" xml:space="preserve">
+        <value>Довжина поля '{0}' має бути від {1} до {2}</value>
+    </data>
+    <data name="EmailAddressFormat" xml:space="preserve">
+        <value>Адреса електронної пошти повинна бути в правильному форматі</value>
+    </data>
 </root>

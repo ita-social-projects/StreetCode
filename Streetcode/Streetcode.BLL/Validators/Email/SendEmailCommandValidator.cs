@@ -8,19 +8,24 @@ namespace Streetcode.BLL.Validators.Email;
 
 public class SendEmailCommandValidator : AbstractValidator<SendEmailCommand>
 {
+    private const int ContentMaxLength = 500;
+    private const int ContentMinLength = 1;
+    private const int EmailMaxLength = 50;
     public SendEmailCommandValidator(
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
         IStringLocalizer<FailedToValidateSharedResource> localizer)
     {
         RuleFor(e => e.Email.From)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Email"]])
-            .MaximumLength(80).WithMessage(localizer["MaxLength", fieldLocalizer["Email"]])
+            .MaximumLength(EmailMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Email"], EmailMaxLength])
             .EmailAddress(EmailValidationMode.Net4xRegex).WithMessage(localizer["EmailAddressFormat"]);
 
+        // EmailValidationMode.Net4xRegex
         RuleFor(e => e.Email.Token)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Email"]]);
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["CaptchaToken"]]);
 
         RuleFor(e => e.Email.Content)
-            .Length(1, 500).WithMessage(localizer["ContentLengthSendEmail"]);
+            .Length(ContentMinLength, ContentMaxLength)
+            .WithMessage(localizer["LengthMustBeInRange", fieldLocalizer["Content"], ContentMinLength, ContentMaxLength]);
     }
 }

@@ -78,6 +78,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Адреса електронної пошти повинна бути в правильному форматі.
+        /// </summary>
+        internal static string EmailAddressFormat {
+            get {
+                return ResourceManager.GetString("EmailAddressFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; має бути більше ніж {1}.
         /// </summary>
         internal static string GreaterThan {
@@ -119,6 +128,15 @@ namespace Streetcode.BLL.Resources {
         internal static string MaxLength {
             get {
                 return ResourceManager.GetString("MaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Довжина поля &apos;{0}&apos; має бути від {1} до {2}.
+        /// </summary>
+        internal static string MustBeInRange {
+            get {
+                return ResourceManager.GetString("MustBeInRange", resourceCulture);
             }
         }
         

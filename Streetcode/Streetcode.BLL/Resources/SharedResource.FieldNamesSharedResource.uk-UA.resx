@@ -72,4 +72,16 @@
     <data name="BaseFormat" xml:space="preserve">
         <value>Файл у форматі base64</value>
     </data>
+    <data name="Content" xml:space="preserve">
+        <value>Вміст</value>
+    </data>
+    <data name="CaptchaToken" xml:space="preserve">
+        <value>Капча токен</value>
+    </data>
+    <data name="Salary" xml:space="preserve">
+        <value>Зарплата</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Адреса електронної пошти</value>
+    </data>
 </root>

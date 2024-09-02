@@ -75,4 +75,10 @@
     <data name="MustBeOneOf" xml:space="preserve">
         <value>Field '{0}' accepts only following values: {1}</value>
     </data>
+    <data name="LengthMustBeInRange" xml:space="preserve">
+        <value>The length of the field '{0}' must be from {1} to {2}</value>
+    </data>
+    <data name="EmailAddressFormat" xml:space="preserve">
+        <value>The email address must be in the correct format</value>
+    </data>
 </root>

@@ -11,14 +11,14 @@ namespace Streetcode.BLL.Attributes.Authentication
 {
     public class StrongPasswordAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
             if (value is null)
             {
                 return new ValidationResult("Input parameter cannot be null");
             }
 
-            string password = value as string;
+            string? password = value as string;
 
             if (password is null)
             {
@@ -60,7 +60,7 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Password must contain at least one lowercase letter");
             }
 
-            return ValidationResult.Success;
+            return ValidationResult.Success!;
         }
     }
 }

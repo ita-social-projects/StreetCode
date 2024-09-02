@@ -6,14 +6,14 @@ namespace Streetcode.BLL.DTO.Toponyms;
 public class ToponymDTO
 {
     public int Id { get; set; }
-    public string Oblast { get; set; }
-    public string AdminRegionOld { get; set; }
-    public string AdminRegionNew { get; set; }
-    public string Gromada { get; set; }
-    public string Community { get; set; }
-    public string StreetName { get; set; }
-    public string StreetType { get; set; }
+    public string Oblast { get; set; } = null!;
+    public string AdminRegionOld { get; set; } = null!;
+    public string AdminRegionNew { get; set; } = null!;
+    public string Gromada { get; set; } = null!;
+    public string Community { get; set; } = null!;
+    public string StreetName { get; set; } = null!;
+    public string StreetType { get; set; } = null!;
 
-    public ToponymCoordinateDTO Coordinate { get; set; }
-    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
+    public ToponymCoordinateDTO Coordinate { get; set; } = null!;
+    public IEnumerable<StreetcodeDTO> Streetcodes { get; set; } = new List<StreetcodeDTO>();
 }

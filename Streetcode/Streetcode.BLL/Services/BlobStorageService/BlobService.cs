@@ -19,8 +19,13 @@ public class BlobService : IBlobService
         _blobPath = _envirovment.BlobStorePath;
     }
 
-    public MemoryStream FindFileInStorageAsMemoryStream(string name)
+    public MemoryStream FindFileInStorageAsMemoryStream(string? name)
     {
+        if (name is null)
+        {
+            throw new ArgumentNullException(nameof(name));
+        }
+
         string[] splitedName = name.Split('.');
 
         byte[] decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
@@ -64,17 +69,27 @@ public class BlobService : IBlobService
         EncryptFile(imageBytes, extension, name);
     }
 
-    public void DeleteFileInStorage(string name)
+    public void DeleteFileInStorage(string? name)
     {
+        if (name is null)
+        {
+            throw new ArgumentNullException("Blob name is null.");
+        }
+
         File.Delete($"{_blobPath}{name}");
     }
 
     public string UpdateFileInStorage(
-        string previousBlobName,
+        string? previousBlobName,
         string base64Format,
         string newBlobName,
         string extension)
     {
+        if (previousBlobName is null)
+        {
+            throw new ArgumentNullException("Previous blob name is null.");
+        }
+
         DeleteFileInStorage(previousBlobName);
 
         string hashBlobStorageName = SaveFileInStorage(

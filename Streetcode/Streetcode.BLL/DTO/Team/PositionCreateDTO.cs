@@ -8,6 +8,6 @@ namespace Streetcode.BLL.DTO.Team
 {
     public class PositionCreateDTO
     {
-        public string Position { get; set; }
+        public string Position { get; set; } = null!;
     }
 }

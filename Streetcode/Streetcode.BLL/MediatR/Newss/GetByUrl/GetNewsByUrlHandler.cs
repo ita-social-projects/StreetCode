@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetByUrl
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
                 predicate: sc => sc.URL == url,
                 include: scl => scl
-                    .Include(sc => sc.Image)));
+                    .Include(sc => sc.Image!)));
             if(newsDTO is null)
             {
                 string errorMsg = _stringLocalizerNo["NoNewsByEnteredUrl", url].Value;

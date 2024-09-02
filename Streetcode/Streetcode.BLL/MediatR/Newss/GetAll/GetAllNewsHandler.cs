@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    include: newsCollection => newsCollection.Include(news => news.Image),
+                    include: newsCollection => newsCollection.Include(news => news.Image!),
                     descendingSortKeySelector: news => news.CreationDate);
 
             var newsDTOs = MapToNewsDTOs(paginationResponseNews.Entities);

@@ -55,7 +55,7 @@ namespace Streetcode.BLL.Services.Text
 
                 var term = await _repositoryWrapper.TermRepository
                     .GetFirstOrDefaultAsync(
-                        t => t.Title.ToLower().Equals(resultedWord.ToLower()));
+                        t => t.Title!.ToLower().Equals(resultedWord.ToLower()));
 
                 if (term == null)
                 {
@@ -69,7 +69,7 @@ namespace Streetcode.BLL.Services.Text
                 {
                     if (!CheckInBuffer(term.Id))
                     {
-                        resultedWord = MarkTermWithDescription(resultedWord, term.Description);
+                        resultedWord = MarkTermWithDescription(resultedWord, term.Description!);
                         AddToBuffer(term.Id);
                     }
                 }
@@ -93,8 +93,8 @@ namespace Streetcode.BLL.Services.Text
         {
             var relatedTerm = await _repositoryWrapper.RelatedTermRepository
                 .GetFirstOrDefaultAsync(
-                rt => rt.Word.ToLower().Equals(clearedWord.ToLower()),
-                rt => rt.Include(rt => rt.Term));
+                    rt => rt.Word!.ToLower().Equals(clearedWord.ToLower()),
+                    rt => rt.Include(rt => rt.Term!));
 
             if (relatedTerm == null || relatedTerm.Term == null || CheckInBuffer(relatedTerm.TermId))
             {
@@ -103,7 +103,7 @@ namespace Streetcode.BLL.Services.Text
 
             AddToBuffer(relatedTerm.TermId);
 
-            return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description);
+            return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description!);
         }
 
         private (string _clearedWord, string _extras) CleanWord(string word)

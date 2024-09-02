@@ -61,7 +61,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         ref IQueryable<StreetcodeContent> streetcodes,
         string title)
     {
-        streetcodes = streetcodes.Where(s => s.Title
+        streetcodes = streetcodes.Where(s => s.Title!
             .ToLower()
             .Contains(title
             .ToLower()) || s.Index

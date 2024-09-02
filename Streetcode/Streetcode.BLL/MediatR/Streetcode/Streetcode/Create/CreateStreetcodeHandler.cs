@@ -33,7 +33,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 {
     public const int StreetcodeIndexMaxValue = 9999;
     public const int StreetcodeIndexMinValue = 1;
-    private static IMapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
@@ -228,8 +228,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         foreach (var statisticRecord in statisticRecords)
         {
             var newStatistic = _mapper.Map<StatisticRecord>(statisticRecord);
-            newStatistic.StreetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(
-              x => x.Latitude == newStatistic.StreetcodeCoordinate.Latitude && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+            var streetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(x =>
+                x.Latitude == newStatistic.StreetcodeCoordinate.Latitude
+                && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+
+            newStatistic.StreetcodeCoordinate = streetcodeCoordinate ?? throw new InvalidOperationException();
             statisticRecordsToCreate.Add(newStatistic);
         }
 
@@ -343,7 +346,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                .Select(x => new HistoricalContextTimeline
                {
                    HistoricalContextId = x.Id == 0
-                       ? newContextsDb.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                       ? newContextsDb.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
                        : x.Id
                })
                .ToList();

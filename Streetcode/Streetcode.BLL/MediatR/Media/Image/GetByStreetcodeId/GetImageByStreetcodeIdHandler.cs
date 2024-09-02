@@ -44,7 +44,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
                 var images = (await _repositoryWrapper.ImageRepository
                     .GetAllAsync(
                     f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
-                    include: q => q.Include(img => img.ImageDetails))).OrderBy(img => img.ImageDetails?.Alt);
+                    include: q => q.Include(img => img.ImageDetails!))).OrderBy(img => img.ImageDetails?.Alt);
 
                 if (images is null || request.StreetcodeId < 1)
                 {

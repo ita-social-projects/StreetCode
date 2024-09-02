@@ -55,7 +55,7 @@ public class ImageService : IImageService
         var imagesFromNews = _newsRepository
             .FindAll()
             .Where(news => news.ImageId.HasValue)
-            .Select(news => news.ImageId.Value)
+            .Select(news => news.ImageId!.Value)
             .ToList();
 
         var imagesFromSourceCategory = _sourceCategoryRepository
@@ -66,7 +66,7 @@ public class ImageService : IImageService
         var imagesFromFacts = _factRepository
             .FindAll()
             .Where(fact => fact.ImageId.HasValue)
-            .Select(fact => fact.ImageId.Value)
+            .Select(fact => fact.ImageId!.Value)
             .ToList();
 
         var imageFormStreetcodeImage = _streetcodeImageRepository
@@ -100,7 +100,7 @@ public class ImageService : IImageService
 
         foreach (var image in unreferencedImages)
         {
-            _loggerService.LogInformation(image.BlobName);
+            _loggerService.LogInformation(image.BlobName!);
         }
 
         if (unreferencedImages.Any())

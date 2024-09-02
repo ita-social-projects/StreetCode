@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));

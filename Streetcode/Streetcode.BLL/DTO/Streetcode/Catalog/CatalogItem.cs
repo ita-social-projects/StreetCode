@@ -3,8 +3,8 @@
 public class CatalogItem
 {
     public int Id { get; set; }
-    public string Title { get; set; }
-    public string Url { get; set; }
-    public string Alias { get; set; }
+    public string Title { get; set; } = null!;
+    public string Url { get; set; } = null!;
+    public string Alias { get; set; } = null!;
     public int ImageId { get; set; }
 }

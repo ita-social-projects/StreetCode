@@ -7,10 +7,10 @@ namespace Streetcode.BLL.DTO.Media.Art;
 public class ArtDTO : IModelState
 {
     public int Id { get; set; }
-    public string Description { get; set; }
-    public string Title { get; set; }
+    public string Description { get; set; } = null!;
+    public string Title { get; set; } = null!;
     public int ImageId { get; set; }
-    public ImageDTO Image { get; set; }
+    public ImageDTO Image { get; set; } = null!;
     public ModelState ModelState { get; set; }
     public bool IsPersisted { get; set; }
 }

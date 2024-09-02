@@ -7,6 +7,6 @@ namespace Streetcode.BLL.DTO.Streetcode.TextContent.Fact
   {
     public ModelState ModelState { get; set; }
     public int StreetcodeId { get; set; }
-    public string ImageDescription { get; set; }
+    public string ImageDescription { get; set; } = null!;
   }
 }

@@ -39,7 +39,7 @@ namespace Streetcode.BLL.Services.Instagram
 
             var postResponse = JsonSerializer.Deserialize<InstagramPostResponse>(jsonResponse, jsonOptions);
 
-            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse.Data);
+            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse!.Data);
 
             return posts;
         }

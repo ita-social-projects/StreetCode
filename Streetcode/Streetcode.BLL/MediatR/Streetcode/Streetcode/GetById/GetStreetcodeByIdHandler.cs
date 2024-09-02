@@ -42,7 +42,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
                                         .GetAllAsync(
                                             t => t.StreetcodeId == request.Id,
-                                            include: q => q.Include(ti => ti.Tag));
+                                            include: q => q.Include(ti => ti.Tag!));
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
 

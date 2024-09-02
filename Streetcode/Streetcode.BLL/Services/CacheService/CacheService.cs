@@ -30,10 +30,10 @@ namespace Streetcode.BLL.Services.CacheService
             {
                 var logger = scope.ServiceProvider.GetRequiredService<ILoggerService>();
                 logger.LogInformation(key + "GetOrSetAsync function start!");
-                if (_cache.TryGetValue(key, out T cachedItem))
+                if (_cache.TryGetValue(key, out T? cachedItem))
                 {
                     logger.LogInformation(key + "TryGetValue function true");
-                    return cachedItem;
+                    return cachedItem!;
                 }
 
                 logger.LogInformation(key + "TryGetValue function false");
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.Services.CacheService
                     if (_cache.TryGetValue(key, out cachedItem))
                     {
                         logger.LogInformation(key + "TryGetValue function true");
-                        return cachedItem;
+                        return cachedItem!;
                     }
 
                     logger.LogInformation(key + "TryGetValue function false");

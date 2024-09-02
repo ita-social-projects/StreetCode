@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
             try
             {
-                teamMember.Positions.Clear();
+                teamMember.Positions!.Clear();
 
                 var newLogoTypes = request.teamMember.TeamMemberLinks.Select(links => links.LogoType).ToList();
 

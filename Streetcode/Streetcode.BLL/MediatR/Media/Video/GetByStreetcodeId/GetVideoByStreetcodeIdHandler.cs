@@ -34,7 +34,7 @@ public class GetVideoByStreetcodeIdHandler : IRequestHandler<GetVideoByStreetcod
             .GetFirstOrDefaultAsync(video => video.StreetcodeId == request.StreetcodeId);
         if(video == null)
         {
-            StreetcodeContent streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId);
+            StreetcodeContent? streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId);
             if (streetcode is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyVideoByTheStreetcodeId", request.StreetcodeId].Value;

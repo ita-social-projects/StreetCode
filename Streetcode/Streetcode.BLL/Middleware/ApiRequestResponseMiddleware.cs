@@ -114,7 +114,7 @@ namespace Streetcode.BLL.Middleware
             }
             catch (Exception ex)
             {
-                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}.{MethodBase.GetCurrentMethod().Name}. Tried to parse body: {body}. Exception: {ex}");
+                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod() !.DeclaringType!.Name}.{MethodBase.GetCurrentMethod() !.Name}. Tried to parse body: {body}. Exception: {ex}");
                 return string.Empty;
             }
         }

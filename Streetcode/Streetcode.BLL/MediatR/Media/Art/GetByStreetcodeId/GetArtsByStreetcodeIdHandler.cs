@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         {
             var arts = await _repositoryWrapper.ArtRepository
                 .GetAllAsync(
-                predicate: art => art.StreetcodeArts.Any(sArt => sArt.StreetcodeArtSlide.StreetcodeId == request.StreetcodeId),
+                predicate: art => art.StreetcodeArts.Any(sArt => sArt.StreetcodeArtSlide!.StreetcodeId == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.Image) !);
 

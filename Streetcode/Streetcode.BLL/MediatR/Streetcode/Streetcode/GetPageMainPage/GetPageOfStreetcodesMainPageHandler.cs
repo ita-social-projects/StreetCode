@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 request.page,
                 request.pageSize,
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
+                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails!),
                 descendingSortKeySelector: sc => sc.CreatedAt)
                 .Entities;
 
@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 return Task.FromResult(Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes))));

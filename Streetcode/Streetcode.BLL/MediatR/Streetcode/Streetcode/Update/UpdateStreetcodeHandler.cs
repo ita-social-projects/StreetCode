@@ -172,7 +172,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                        ? createdContext.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
                         : x.Id
                 })
                 .ToList();
@@ -191,7 +191,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                          ? createdContext.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
                           : x.Id
                   })
                  .ToList();
@@ -307,7 +307,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
-            StreetcodeArtSlide toCreateSlide = null;
+            StreetcodeArtSlide? toCreateSlide = null;
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
 
@@ -402,7 +402,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return newStreetcodeArts;
         }
 
-        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide? toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
         {
             if (artSlideDto.ModelState == ModelState.Created)
             {

@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 
         public Task<Result<RefreshTokenResponceDTO>> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
         {
-            JwtSecurityToken token = null;
+            JwtSecurityToken? token = null;
             try
             {
                 token = _tokenService.RefreshToken(request.token.AccessToken, request.token.RefreshToken);

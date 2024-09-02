@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(streetcode.TransliterationUrl);
+            return Result.Ok(streetcode.TransliterationUrl!);
         }
     }
 }

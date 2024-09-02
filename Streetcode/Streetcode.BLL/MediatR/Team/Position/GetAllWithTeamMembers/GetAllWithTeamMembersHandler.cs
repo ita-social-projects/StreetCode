@@ -27,9 +27,9 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
         {
             var positions = await _repositoryWrapper
                 .PositionRepository
-                .GetAllAsync(include: x => x.Include(x => x.TeamMembers));
+                .GetAllAsync(include: x => x.Include(x => x.TeamMembers!));
 
-            var positionsWithMembers = positions.Where(x => x.TeamMembers.Any());
+            var positionsWithMembers = positions.Where(x => x.TeamMembers!.Any());
 
             if (positionsWithMembers is null)
             {

@@ -8,6 +8,6 @@ namespace Streetcode.BLL.Services.Instagram;
 
     public class InstagramEnvirovmentVariables
     {
-         public string InstagramID { get; set; }
-         public string InstagramToken { get; set; }
+         public string InstagramID { get; set; } = null!;
+         public string InstagramToken { get; set; } = null!;
     }

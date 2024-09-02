@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId
                     predicate: sArt => sArt.StreetcodeId == request.StreetcodeId,
                     include: sArt => sArt
                         .Include(a => a.Art)
-                        .Include(i => i.Art.Image) !);
+                        .Include(i => i.Art!.Image) !);
 
             if (streetcodeArts is null || request.StreetcodeId < 1)
             {

@@ -21,13 +21,13 @@ public class GetTickerStringHandler : IRequestHandler<GetTickerStringQuery, Resu
 
     public async Task<Result<string>> Handle(GetTickerStringQuery request, CancellationToken cancellationToken)
     {
-        var positions = await _repository.PositionRepository.GetAllAsync(include: p => p.Include(src => src.TeamMembers));
+        var positions = await _repository.PositionRepository.GetAllAsync(include: p => p.Include(src => src.TeamMembers!));
         string a = string.Empty;
         StringBuilder memberString = new StringBuilder();
 
         foreach (var position in positions)
         {
-            if (position.TeamMembers.Count > 0)
+            if (position.TeamMembers is not null && position.TeamMembers.Count > 0)
             {
                 memberString.Append(position.Position);
                 memberString.Append(": ");

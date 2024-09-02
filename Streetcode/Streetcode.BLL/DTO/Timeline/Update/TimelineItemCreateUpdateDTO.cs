@@ -7,11 +7,11 @@ namespace Streetcode.BLL.DTO.Timeline.Update
     public class TimelineItemCreateUpdateDTO : IModelState
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; } = null!;
+        public string Description { get; set; } = null!;
         public DateTime Date { get; set; }
         public DateViewPattern DateViewPattern { get; set; }
         public ModelState ModelState { get; set; } = ModelState.Updated;
-        public IEnumerable<HistoricalContextCreateUpdateDTO> HistoricalContexts { get; set; }
+        public IEnumerable<HistoricalContextCreateUpdateDTO> HistoricalContexts { get; set; } = new List<HistoricalContextCreateUpdateDTO>();
     }
 }

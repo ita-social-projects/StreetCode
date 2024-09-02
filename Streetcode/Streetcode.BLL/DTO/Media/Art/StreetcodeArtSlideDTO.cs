@@ -8,5 +8,5 @@ public class StreetcodeArtSlideDTO
     public int Index { get; set; }
     public int StreetcodeId { get; set; }
     public StreetcodeArtSlideTemplate Template { get; set; }
-    public IEnumerable<StreetcodeArtDTO> StreetcodeArts { get; set; }
+    public IEnumerable<StreetcodeArtDTO> StreetcodeArts { get; set; } = new List<StreetcodeArtDTO>();
 }

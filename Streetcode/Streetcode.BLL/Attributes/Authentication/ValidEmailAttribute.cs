@@ -10,7 +10,7 @@ namespace Streetcode.BLL.Attributes.Authentication
 {
     public class ValidEmailAttribute : ValidationAttribute
     {
-        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value is null)
             {
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Incorrect email address format");
             }
 
-            return ValidationResult.Success!;
+            return ValidationResult.Success;
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             }
 
             var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.news.Title && n.Id != request.news.Id);
-            if (existingNewsByTitle != null)
+            if (existingNewsByTitle != null && existingNewsByTitle.Id != request.news.Id)
             {
                 string errorMsg = "A news with the same title already exists.";
                 _logger.LogError(request, errorMsg);
@@ -68,7 +68,7 @@ namespace Streetcode.BLL.MediatR.Newss.Update
             }
 
             var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.news.Text && n.Id != request.news.Id);
-            if (existingNewsByText != null)
+            if (existingNewsByText != null && existingNewsByText.Id != request.news.Id)
             {
                 string errorMsg = "A news with the same text already exists.";
                 _logger.LogError(request, errorMsg);

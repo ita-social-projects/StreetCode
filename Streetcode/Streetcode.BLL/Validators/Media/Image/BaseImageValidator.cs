@@ -31,9 +31,9 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
             .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["MimeType"]])
             .MaximumLength(MaxMimeTypeLength)
             .WithMessage(localizer["MaxLength", fieldLocalizer["MimeType"], MaxMimeTypeLength])
-            .Must(x => _mimeTypes.Contains(x)).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(_mimeTypes)]);
+            .Must(x => _mimeTypes.Contains(x.ToLower())).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(_mimeTypes)]);
 
-        RuleFor(dto => dto.Extension).Must(x => _extensions.Contains(x))
+        RuleFor(dto => dto.Extension).Must(x => _extensions.Contains(x.ToLower()))
             .WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], ValidationExtentions.ConcatWithComma(_extensions)]);
     }
 }

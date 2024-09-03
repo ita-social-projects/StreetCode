@@ -15,7 +15,7 @@ namespace Streetcode.BLL.DTO.News
         [StringLength(15000, ErrorMessage = "Max Length is 15000")]
         public string Text { get; set; }
 
-        public int? ImageId { get; set; }
+        public int ImageId { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [StringLength(200, ErrorMessage = "Max Length is 200")]

@@ -12,7 +12,7 @@ public static class ValidationExtentions
         {
             if (url == null)
             {
-                return false;
+                return true;
             }
 
             bool isUrl = Uri.TryCreate(url, UriKind.Absolute, out var uriResult);

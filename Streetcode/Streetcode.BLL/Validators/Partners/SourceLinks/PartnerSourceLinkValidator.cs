@@ -22,6 +22,7 @@ public class PartnerSourceLinkValidator : AbstractValidator<CreatePartnerSourceL
             .WithMessage(localizer["MaxLength", fieldLocalizer["SourceLinkUrl"], PartnerLinkMaxLength]);
 
         RuleFor(dto => dto.TargetUrl)
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["SourceLinkUrl"]])
             .MustBeValidUrl()
             .WithMessage(x => localizer["ValidUrl_UrlDisplayed", fieldLocalizer["SourceLinkUrl"], x.TargetUrl]);
 

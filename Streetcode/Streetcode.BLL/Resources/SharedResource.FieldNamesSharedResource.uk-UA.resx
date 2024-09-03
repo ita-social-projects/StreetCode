@@ -108,4 +108,13 @@
     <data name="ImageTitle" xml:space="preserve">
         <value>Назва картинки</value>
     </data>
+    <data name="SubtitleText" xml:space="preserve">
+        <value>Текст бігучого рядка </value>
+    </data>
+    <data name="StreetcodeArts" xml:space="preserve">
+        <value>Арти</value>
+    </data>
+    <data name="Template" xml:space="preserve">
+        <value>Шаблон</value>
+    </data>
 </root>

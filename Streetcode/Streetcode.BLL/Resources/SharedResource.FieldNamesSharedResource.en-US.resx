@@ -108,4 +108,13 @@
     <data name="ImageTitle" xml:space="preserve">
         <value>Image title</value>
     </data>
+    <data name="SubtitleText" xml:space="preserve">
+        <value>Subtitle text</value>
+    </data>
+    <data name="StreetcodeArts" xml:space="preserve">
+        <value>StreetcodeArts</value>
+    </data>
+    <data name="Template" xml:space="preserve">
+        <value>Template</value>
+    </data>
 </root>

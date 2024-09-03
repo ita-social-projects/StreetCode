@@ -60,4 +60,10 @@
     <data name="EmailAddressFormat" xml:space="preserve">
         <value>Адреса електронної пошти повинна бути в правильному форматі</value>
     </data>
+    <data name="TransliterationUrlFormat" xml:space="preserve">
+        <value>Транслітероване посилання має містити тільки латинські літери, цифри та дефіс</value>
+    </data>
+    <data name="MustBeBetween" xml:space="preserve">
+        <value>Поле '{0}' має бути між {1} і {2}</value>
+    </data>
 </root>

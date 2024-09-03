@@ -81,4 +81,10 @@
     <data name="EmailAddressFormat" xml:space="preserve">
         <value>The email address must be in the correct format</value>
     </data>
+    <data name="TransliterationUrlFormat" xml:space="preserve">
+        <value>Transliteration url must consists of latin characters, numbers and hyphen</value>
+    </data>
+    <data name="MustBeBetween" xml:space="preserve">
+        <value>Field '{0}' must be between {1} and {2}</value>
+    </data>
 </root>

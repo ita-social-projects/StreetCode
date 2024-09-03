@@ -132,6 +132,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; має бути між {1} і {2}.
+        /// </summary>
+        internal static string MustBeBetween {
+            get {
+                return ResourceManager.GetString("MustBeBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Довжина поля &apos;{0}&apos; має бути від {1} до {2}.
         /// </summary>
         internal static string MustBeInRange {
@@ -164,6 +173,15 @@ namespace Streetcode.BLL.Resources {
         internal static string TitleRequired {
             get {
                 return ResourceManager.GetString("TitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Транслітероване посилання має містити тільки латинські літери, цифри та дефіс.
+        /// </summary>
+        internal static string TransliterationUrlFormat {
+            get {
+                return ResourceManager.GetString("TransliterationUrlFormat", resourceCulture);
             }
         }
         

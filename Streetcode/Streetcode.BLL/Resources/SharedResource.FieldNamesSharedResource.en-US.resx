@@ -144,4 +144,40 @@
     <data name="DateFormat" xml:space="preserve">
         <value>Date format</value>
     </data>
+    <data name="Video" xml:space="preserve">
+        <value>Video url</value>
+    </data>
+    <data name="FirstName" xml:space="preserve">
+        <value>First name</value>
+    </data>
+    <data name="LastName" xml:space="preserve">
+        <value>Last name</value>
+    </data>
+    <data name="Alias" xml:space="preserve">
+        <value>Alias</value>
+    </data>
+    <data name="Teaser" xml:space="preserve">
+        <value>Teaser</value>
+    </data>
+    <data name="TransliterationUrl" xml:space="preserve">
+        <value>Transliteration url</value>
+    </data>
+    <data name="Index" xml:space="preserve">
+        <value>Index</value>
+    </data>
+    <data name="DateString" xml:space="preserve">
+        <value>Date string</value>
+    </data>
+    <data name="StreetcodeType" xml:space="preserve">
+        <value>Streetcode type</value>
+    </data>
+    <data name="Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="ARBlockURL" xml:space="preserve">
+        <value>AR Block URL</value>
+    </data>
+    <data name="TransactionLinkUrl" xml:space="preserve">
+        <value>Transaction url</value>
+    </data>
 </root>

@@ -144,4 +144,40 @@
     <data name="DateFormat" xml:space="preserve">
         <value>Формат дати</value>
     </data>
+    <data name="Video" xml:space="preserve">
+        <value>Посилання на відео</value>
+    </data>
+    <data name="FirstName" xml:space="preserve">
+        <value>Ім'я</value>
+    </data>
+    <data name="LastName" xml:space="preserve">
+        <value>Прізвище</value>
+    </data>
+    <data name="Teaser" xml:space="preserve">
+        <value>Тизер</value>
+    </data>
+    <data name="Alias" xml:space="preserve">
+        <value>Псевдонім</value>
+    </data>
+    <data name="TransliterationUrl" xml:space="preserve">
+        <value>Транслітероване посилання</value>
+    </data>
+    <data name="Index" xml:space="preserve">
+        <value>Індекс</value>
+    </data>
+    <data name="DateString" xml:space="preserve">
+        <value>Рядок дати</value>
+    </data>
+    <data name="StreetcodeType" xml:space="preserve">
+        <value>Тип стріткоду</value>
+    </data>
+    <data name="Status" xml:space="preserve">
+        <value>Статус</value>
+    </data>
+    <data name="ARBlockURL" xml:space="preserve">
+        <value>Посилання для блоку AR</value>
+    </data>
+    <data name="TransactionLinkUrl" xml:space="preserve">
+        <value>Посилання для QR-коду</value>
+    </data>
 </root>

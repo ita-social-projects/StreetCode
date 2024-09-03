@@ -150,6 +150,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; must be between {1} and {2}.
+        /// </summary>
+        internal static string MustBeBetween {
+            get {
+                return ResourceManager.GetString("MustBeBetween", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; accepts only following values: {1}.
         /// </summary>
         internal static string MustBeOneOf {
@@ -200,6 +209,15 @@ namespace Streetcode.BLL.Resources {
         internal static string TitleRequired {
             get {
                 return ResourceManager.GetString("TitleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transliteration url must consists of latin characters, numbers and hyphen.
+        /// </summary>
+        internal static string TransliterationUrlFormat {
+            get {
+                return ResourceManager.GetString("TransliterationUrlFormat", resourceCulture);
             }
         }
         

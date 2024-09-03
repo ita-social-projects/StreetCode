@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.Art;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
@@ -24,48 +26,47 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         TimelineItemValidator timelineItemValidator,
         ImageDetailsValidator imageDetailsValidator,
         StreetcodeArtSlideValidator streetcodeArtSlideValidator,
-        ArtCreateUpdateDTOValidator artCreateUpdateDtoValidator)
+        ArtCreateUpdateDTOValidator artCreateUpdateDtoValidator,
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.FirstName)
-            .MaximumLength(FirstNameMaxLength).WithMessage($"Maximum length of first name is {FirstNameMaxLength}");
+            .MaximumLength(FirstNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["FirstName"], FirstNameMaxLength]);
 
         RuleFor(dto => dto.LastName)
-            .MaximumLength(LastNameMaxLength).WithMessage($"Maximum length of last name is {LastNameMaxLength}");
+            .MaximumLength(LastNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["LastName"], LastNameMaxLength]);
 
         RuleFor(dto => dto.Alias)
-            .MaximumLength(AliasMaxLength).WithMessage($"Maximum length of alias is {AliasMaxLength}");
+            .MaximumLength(AliasMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alias"], AliasMaxLength]);
 
         RuleFor(dto => dto.Teaser)
-            .NotEmpty().WithMessage("Teaser cannot be empty")
-            .MaximumLength(TeaserMaxLength).WithMessage($"Maximum length of teaser is {TeaserMaxLength}");
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Teaser"]])
+            .MaximumLength(TeaserMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Teaser"], TeaserMaxLength]);
 
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage("Title cannot be empty")
-            .MaximumLength(TitleMaxLength).WithMessage($"Maximum length of title is {TitleMaxLength}");
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
+            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(dto => dto.TransliterationUrl)
-            .NotEmpty().WithMessage("TransliterationUrl cannot be empty")
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TransliterationUrl"]])
             .Matches(@"^([A-Za-z]|[A-Za-z0-9]|-)*$")
-            .WithMessage("TransliterationUrl must consists of latin characters, numbers and hyphen");
+            .WithMessage(localizer["TransliterationUrlFormat"]);
 
         RuleFor(dto => dto.Index)
-            .NotNull().WithMessage("Index is required")
-            .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage($"Index should be between {IndexMinValue} and {IndexMaxValue}");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Index"]])
+            .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue]);
 
         RuleFor(dto => dto.DateString)
-            .NotEmpty().WithMessage("DateString cannot be empty")
-            .MaximumLength(DateStringMaxLength).WithMessage($"Maximum length of date string is {DateStringMaxLength}");
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])
+            .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength]);
 
         RuleFor(dto => dto.StreetcodeType)
-            .NotNull().WithMessage("Streetcode type is required")
-            .IsInEnum().WithMessage("Invalid streetcode type value");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["StreetcodeType"]])
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["StreetcodeType"]]);
 
         RuleFor(dto => dto.Status)
-            .NotNull().WithMessage("Status is required")
-            .IsInEnum().WithMessage("Invalid status value");
-
-        RuleFor(dto => dto.EventStartOrPersonBirthDate)
-            .NotNull().WithMessage("EventStartOrPersonBirthDate is required");
+            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Status"]])
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["Status"]]);
 
         RuleForEach(dto => dto.Toponyms)
             .SetValidator(streetcodeToponymValidator);

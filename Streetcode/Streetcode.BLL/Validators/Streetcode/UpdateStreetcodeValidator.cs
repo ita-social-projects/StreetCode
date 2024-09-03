@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.CategoryContent;
@@ -20,17 +22,20 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         BaseTagValidator tagValidator,
         BaseFactValidator baseFactValidator,
         BaseVideoValidator videoValidator,
-        BaseCategoryContentValidator categoryContentValidator)
+        BaseCategoryContentValidator categoryContentValidator,
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
 
         RuleFor(c => c.Streetcode.TransactionLink!.Url)
             .MustBeValidUrl()
-            .When(c => c.Streetcode.TransactionLink != null);
+            .When(c => c.Streetcode.TransactionLink != null)
+            .WithMessage(localizer["ValidUrl", fieldLocalizer["TransactionLinkUrl"]]);
 
         RuleFor(c => c.Streetcode)
             .Must(HasVideoWithTitle).When(c => c.Streetcode.Videos != null)
-            .WithMessage("The 'Title' key for the video is empty or missing");
+            .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["Title"], fieldLocalizer["Video"]]);
         RuleForEach(c => c.Streetcode.Videos)
             .SetValidator(videoValidator);
 

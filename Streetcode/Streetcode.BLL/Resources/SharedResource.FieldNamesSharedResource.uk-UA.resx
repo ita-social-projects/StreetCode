@@ -84,4 +84,28 @@
     <data name="Email" xml:space="preserve">
         <value>Адреса електронної пошти</value>
     </data>
+    <data name="ModelState" xml:space="preserve">
+        <value>Стан моделі</value>
+    </data>
+    <data name="ArtDescription" xml:space="preserve">
+        <value>Опис арта</value>
+    </data>
+    <data name="ArtTitle" xml:space="preserve">
+        <value>Назва арта</value>
+    </data>
+    <data name="CategoryContent" xml:space="preserve">
+        <value>Вміст категорії</value>
+    </data>
+    <data name="FactTitle" xml:space="preserve">
+        <value>Назва факту</value>
+    </data>
+    <data name="FactContent" xml:space="preserve">
+        <value>Вміст факту</value>
+    </data>
+    <data name="FactImageDescription" xml:space="preserve">
+        <value>Опис картинки факту</value>
+    </data>
+    <data name="ImageTitle" xml:space="preserve">
+        <value>Назва картинки</value>
+    </data>
 </root>

@@ -9,15 +9,15 @@ public class ArtCreateUpdateDTOValidator : AbstractValidator<ArtCreateUpdateDTO>
 {
     private const int MaxTitleLength = 150;
     private const int MaxDescriptionLength = 400;
-    public ArtCreateUpdateDTOValidator(IStringLocalizer<FailedToValidateSharedResource> localizer)
+    public ArtCreateUpdateDTOValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Description)
-            .MaximumLength(MaxDescriptionLength).WithMessage(localizer["DescriptionMaxLength", MaxDescriptionLength]);
+            .MaximumLength(MaxDescriptionLength).WithMessage(localizer["MaxLength", fieldLocalizer["ArtDescription"], MaxDescriptionLength]);
 
         RuleFor(dto => dto.Title)
-            .MaximumLength(MaxTitleLength).WithMessage(localizer["TitleMaxLength", MaxTitleLength]);
+            .MaximumLength(MaxTitleLength).WithMessage(localizer["MaxLength", fieldLocalizer["ArtTitle"], MaxTitleLength]);
 
         RuleFor(dto => dto.ModelState)
-            .IsInEnum().WithMessage(localizer["InvalidModelState"]);
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["ModelState"]]);
     }
 }

@@ -66,4 +66,10 @@
     <data name="MustBeBetween" xml:space="preserve">
         <value>Поле '{0}' має бути між {1} і {2}</value>
     </data>
+    <data name="MustBeUnique" xml:space="preserve">
+        <value>Поле '{0}' має бути унікальним</value>
+    </data>
+    <data name="ImageDoesntExist" xml:space="preserve">
+        <value>Картинка з ідентифікатором {0} не існує</value>
+    </data>
 </root>

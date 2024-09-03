@@ -17,9 +17,9 @@ public class BasePositionValidator : AbstractValidator<PositionCreateUpdateDTO>
     {
         _repository = repositoryWrapper;
         RuleFor(p => p.Position)
-            .NotNull().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Position"]])
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Position"]])
             .MaximumLength(MaxPositionLength).WithMessage(localizer["MaxLength", fieldLocalizer["Position"], MaxPositionLength])
-            .MustAsync(BeUniqueAsync).WithMessage("Position must be unique");
+            .MustAsync(BeUniqueAsync).WithMessage(localizer["MustBeUnique", fieldLocalizer["Position"]]);
     }
 
     private async Task<bool> BeUniqueAsync(string position, CancellationToken cancellationToken)

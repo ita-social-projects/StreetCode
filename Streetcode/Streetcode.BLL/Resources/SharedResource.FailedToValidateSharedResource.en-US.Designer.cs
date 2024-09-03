@@ -96,6 +96,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Image with id {0} doesnt exist.
+        /// </summary>
+        internal static string ImageDoesntExist {
+            get {
+                return ResourceManager.GetString("ImageDoesntExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; is invalid.
         /// </summary>
         internal static string Invalid {
@@ -164,6 +173,15 @@ namespace Streetcode.BLL.Resources {
         internal static string MustBeOneOf {
             get {
                 return ResourceManager.GetString("MustBeOneOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; must be unique.
+        /// </summary>
+        internal static string MustBeUnique {
+            get {
+                return ResourceManager.GetString("MustBeUnique", resourceCulture);
             }
         }
         

@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.SourceLinkCategory;
@@ -8,19 +10,16 @@ public class BaseCategoryValidator : AbstractValidator<SourceLinkCreateUpdateCat
 {
     public const int MaxCategoryLength = 23;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public BaseCategoryValidator(IRepositoryWrapper repositoryWrapper)
+    public BaseCategoryValidator(IRepositoryWrapper repositoryWrapper, IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         RuleFor(x => x.Title)
-            .NotNull().WithMessage("Title is required")
-            .NotEmpty().WithMessage("Title cannot be empty.")
-            .MaximumLength(MaxCategoryLength).WithMessage("Title cannot be longer than 23 characters.")
-            .Matches(@"\S").WithMessage("Title cannot be whitespace.")
-            .MustAsync(BeUniqueAsync).WithMessage("Title must be unique");
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
+            .MaximumLength(MaxCategoryLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], MaxCategoryLength])
+            .MustAsync(BeUniqueAsync).WithMessage(localizer["MustBeUnique", fieldLocalizer["Title"]]);
 
         RuleFor(x => x.ImageId)
-            .NotNull().WithMessage("ImageId is required")
-            .MustAsync(HasExistingImage).WithMessage("Image doesnt exist");
+            .MustAsync(HasExistingImage).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
     }
 
     public async Task<bool> BeUniqueAsync(string categoryTitle, CancellationToken token)

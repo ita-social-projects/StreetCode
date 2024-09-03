@@ -87,4 +87,10 @@
     <data name="MustBeBetween" xml:space="preserve">
         <value>Field '{0}' must be between {1} and {2}</value>
     </data>
+    <data name="MustBeUnique" xml:space="preserve">
+        <value>Field '{0}' must be unique</value>
+    </data>
+    <data name="ImageDoesntExist" xml:space="preserve">
+        <value>Image with id {0} doesnt exist</value>
+    </data>
 </root>

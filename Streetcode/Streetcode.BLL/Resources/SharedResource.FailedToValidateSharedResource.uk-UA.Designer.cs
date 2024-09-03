@@ -96,6 +96,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Картинка з ідентифікатором {0} не існує.
+        /// </summary>
+        internal static string ImageDoesntExist {
+            get {
+                return ResourceManager.GetString("ImageDoesntExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має недійсне значення.
         /// </summary>
         internal static string Invalid {
@@ -155,6 +164,15 @@ namespace Streetcode.BLL.Resources {
         internal static string MustBeOneOf {
             get {
                 return ResourceManager.GetString("MustBeOneOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; має бути унікальним.
+        /// </summary>
+        internal static string MustBeUnique {
+            get {
+                return ResourceManager.GetString("MustBeUnique", resourceCulture);
             }
         }
         

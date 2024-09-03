@@ -5,7 +5,6 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;

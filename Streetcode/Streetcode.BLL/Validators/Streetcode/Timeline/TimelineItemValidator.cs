@@ -1,25 +1,36 @@
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
 
 namespace Streetcode.BLL.Validators.Streetcode.TimelineItem;
 
 public class TimelineItemValidator : AbstractValidator<TimelineItemCreateUpdateDTO>
 {
-    public TimelineItemValidator(HistoricalContextValidator historicalContextValidator)
+    private const int TitleMaxLength = 100;
+    private const int DescriptionMaxLength = 600;
+    public TimelineItemValidator(
+        HistoricalContextValidator historicalContextValidator,
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
-            .MaximumLength(100)
-            .NotEmpty();
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TimelineItemTitle"]])
+            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TimelineItemTitle"], TitleMaxLength]);
+
         RuleFor(dto => dto.Description)
-            .MaximumLength(600)
-            .NotEmpty();
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TimelineItemDescription"]])
+            .MaximumLength(DescriptionMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TimelineItemDescription"], DescriptionMaxLength]);
+
         RuleFor(dto => dto.Date)
-            .NotEmpty();
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TimelineItemDate"]]);
+
         RuleFor(dto => dto.DateViewPattern)
-            .IsInEnum();
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["DateFormat"]]);
+
         RuleFor(dto => dto.ModelState)
-            .IsInEnum();
+            .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["ModelState"]]);
         RuleForEach(dto => dto.HistoricalContexts)
             .SetValidator(historicalContextValidator);
     }

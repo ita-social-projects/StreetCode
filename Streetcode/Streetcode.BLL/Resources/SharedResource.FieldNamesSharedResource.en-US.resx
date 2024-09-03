@@ -117,4 +117,31 @@
     <data name="Template" xml:space="preserve">
         <value>Template</value>
     </data>
+    <data name="TextTitle" xml:space="preserve">
+        <value>Text title</value>
+    </data>
+    <data name="TextContent" xml:space="preserve">
+        <value>Text content</value>
+    </data>
+    <data name="AdditionalText" xml:space="preserve">
+        <value>Additional text</value>
+    </data>
+    <data name="HistoricalContextTitle" xml:space="preserve">
+        <value>Historical context title</value>
+    </data>
+    <data name="StreetName" xml:space="preserve">
+        <value>Street name</value>
+    </data>
+    <data name="TimelineItemTitle" xml:space="preserve">
+        <value>Timeline item title</value>
+    </data>
+    <data name="TimelineItemDescription" xml:space="preserve">
+        <value>Timeline item description</value>
+    </data>
+    <data name="TimelineItemDate" xml:space="preserve">
+        <value>Timeline item date</value>
+    </data>
+    <data name="DateFormat" xml:space="preserve">
+        <value>Date format</value>
+    </data>
 </root>

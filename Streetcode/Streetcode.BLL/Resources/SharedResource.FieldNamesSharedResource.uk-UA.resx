@@ -117,4 +117,31 @@
     <data name="Template" xml:space="preserve">
         <value>Шаблон</value>
     </data>
+    <data name="TextTitle" xml:space="preserve">
+        <value>Назва тексту</value>
+    </data>
+    <data name="TextContent" xml:space="preserve">
+        <value>Вміст тексту </value>
+    </data>
+    <data name="AdditionalText" xml:space="preserve">
+        <value>Додатковий текст</value>
+    </data>
+    <data name="HistoricalContextTitle" xml:space="preserve">
+        <value>Назва історичного контексту</value>
+    </data>
+    <data name="StreetName" xml:space="preserve">
+        <value>Назва вулиці</value>
+    </data>
+    <data name="TimelineItemTitle" xml:space="preserve">
+        <value>Назва елементу хронології</value>
+    </data>
+    <data name="TimelineItemDescription" xml:space="preserve">
+        <value>Опис елементу хронології</value>
+    </data>
+    <data name="TimelineItemDate" xml:space="preserve">
+        <value>Дата елемента хронології</value>
+    </data>
+    <data name="DateFormat" xml:space="preserve">
+        <value>Формат дати</value>
+    </data>
 </root>

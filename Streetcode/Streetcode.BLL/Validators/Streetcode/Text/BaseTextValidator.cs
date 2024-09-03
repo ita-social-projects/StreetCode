@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Streetcode.Text;
 
@@ -8,19 +10,19 @@ public class BaseTextValidator : AbstractValidator<BaseTextDTO>
     public const int TitleMaxLength = 50;
     public const int TextMaxLength = 20000;
     public const int AdditionalTextMaxLength = 200;
-    public BaseTextValidator()
+    public BaseTextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
-            .MaximumLength(TitleMaxLength).WithMessage($"Maximum length of title is {TitleMaxLength}");
+            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TextTitle"], TitleMaxLength]);
         RuleFor(dto => dto.TextContent)
-            .MaximumLength(TextMaxLength).WithMessage($"Maximum length of text is {TextMaxLength}");
+            .MaximumLength(TextMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TextContent"], TextMaxLength]);
         RuleFor(dto => dto.AdditionalText)
-            .MaximumLength(AdditionalTextMaxLength).WithMessage($"Maximum length of additional text is {AdditionalTextMaxLength}");
+            .MaximumLength(AdditionalTextMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["AdditionalText"], AdditionalTextMaxLength]);
 
         RuleFor(dto => dto)
-            .Must(HaveTextWithTitle).WithMessage("The 'title' key for the text is empty or missing")
+            .Must(HaveTextWithTitle).WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["TextTitle"], fieldLocalizer["TextContent"]])
             .Must(HaveAdditionalTextWithMainText)
-            .WithMessage("The 'text' key for the additional text is empty or missing");
+            .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["TextContent"], fieldLocalizer["AdditionalText"]]);
     }
 
     private bool HaveTextWithTitle(BaseTextDTO dto)

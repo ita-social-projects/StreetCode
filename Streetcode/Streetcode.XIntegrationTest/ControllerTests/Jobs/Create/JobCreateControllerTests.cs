@@ -6,6 +6,7 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Job;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Xunit;
 
@@ -22,11 +23,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testJob = JobExtracter
                 .Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            JobExtracter.Remove(this.testJob);
         }
 
         [Fact]
@@ -99,6 +95,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                JobExtracter.Remove(this.testJob);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

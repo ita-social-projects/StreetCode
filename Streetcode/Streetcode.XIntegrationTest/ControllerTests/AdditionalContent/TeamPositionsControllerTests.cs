@@ -49,15 +49,6 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
                 Guid.NewGuid().ToString());
     }
 
-    public override void Dispose()
-    {
-        StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-        TeamPositionsExtracter.Remove(this.testCreatePosition);
-        TeamPositionsExtracter.Remove(this.testUpdatePosition);
-        ImageExtracter.Remove(this.testTeamMemberImage);
-        TeamMemberExtracter.Remove(this.testTeamMember);
-    }
-
     [Fact]
     public async Task GetAll_ReturnSuccessStatusCode()
     {
@@ -402,5 +393,19 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         // Assert
         Assert.False(result.IsSuccess);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            TeamPositionsExtracter.Remove(this.testCreatePosition);
+            TeamPositionsExtracter.Remove(this.testUpdatePosition);
+            ImageExtracter.Remove(this.testTeamMemberImage);
+            TeamMemberExtracter.Remove(this.testTeamMember);
+        }
+
+        base.Dispose(disposing);
     }
 }

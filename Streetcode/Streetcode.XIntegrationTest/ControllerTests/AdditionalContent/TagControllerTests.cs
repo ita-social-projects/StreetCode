@@ -48,12 +48,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
                     Guid.NewGuid().ToString());
         }
 
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            TagExtracter.Remove(this.testCreateTag);
-        }
-
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
@@ -501,6 +495,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             // Assert
             Assert.False(result.IsSuccess);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                TagExtracter.Remove(this.testCreateTag);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

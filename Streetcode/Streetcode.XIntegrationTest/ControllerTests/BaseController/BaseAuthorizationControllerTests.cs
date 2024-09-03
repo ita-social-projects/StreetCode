@@ -12,8 +12,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
 
         protected TokenStorage TokenStorage { get; }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                this.TokenStorage.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

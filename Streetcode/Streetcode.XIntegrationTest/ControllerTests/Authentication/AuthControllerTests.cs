@@ -30,13 +30,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
                 nameof(UserRole.Admin));
         }
 
-        public override void Dispose()
-        {
-            UserExtracter.Remove(this.testUser);
-        }
-
         [Fact]
-        [ExtractRegisterRequestAttribute]
+        [ExtractRegisterRequest]
         public async Task Register_ReturnsSuccessStatusCode()
         {
             // Arrange.
@@ -50,7 +45,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        [ExtractRegisterRequestAttribute]
+        [ExtractRegisterRequest]
         public async Task Register_InvalidInputData_Returns404BadRequest()
         {
             // Arrange.
@@ -65,7 +60,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        [ExtractRegisterRequestAttribute]
+        [ExtractRegisterRequest]
         public async Task Register_WithGivenEmailAlreadyInDatabase_Returns404BadRequest()
         {
             // Arrange.
@@ -80,7 +75,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        [ExtractRegisterRequestAttribute]
+        [ExtractRegisterRequest]
         public async Task Register_WithGivenUsernameAlreadyInDatabase_Returns404BadRequest()
         {
             // Arrange.
@@ -169,6 +164,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
             // Assert.
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UserExtracter.Remove(this.testUser);
+            }
+
+            base.Dispose(disposing);
         }
 
         private LoginRequestDTO GetLoginRequestDTO()

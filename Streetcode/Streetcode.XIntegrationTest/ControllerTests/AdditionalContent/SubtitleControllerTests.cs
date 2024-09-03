@@ -6,6 +6,7 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
@@ -19,11 +20,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testSubtitle = SubtitleExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            SubtitleExtracter.Remove(this.testSubtitle);
         }
 
         [Fact]
@@ -73,6 +69,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             Assert.True(response.IsSuccessful);
             Assert.NotNull(returnedValue);
             Assert.Equal(streetcodeId, returnedValue.StreetcodeId);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                SubtitleExtracter.Remove(this.testSubtitle);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

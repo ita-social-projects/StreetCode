@@ -28,12 +28,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             this.testStreetcodeCoordinate = CoordinateExtracter.Extract(uniqueId, this.testStreetcodeContent.Id);
         }
 
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            CoordinateExtracter.Remove(this.testStreetcodeCoordinate);
-        }
-
         [Fact]
         public async Task GetByStreetcodeId_SuccsessStatusCode()
         {
@@ -52,6 +46,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             int invalidStreetcodeId = -10;
             var response = await this.Client.GetByStreetcodeId(invalidStreetcodeId);
             Assert.False(response.IsSuccessStatusCode);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                CoordinateExtracter.Remove(this.testStreetcodeCoordinate);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

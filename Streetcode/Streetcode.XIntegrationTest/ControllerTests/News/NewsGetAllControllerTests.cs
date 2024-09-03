@@ -3,6 +3,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.News;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.News;
 using Xunit;
 
@@ -17,11 +18,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testNews = NewsExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            NewsExtracter.Remove(this.testNews);
         }
 
         [Fact]
@@ -54,6 +50,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
             Assert.Empty(returnedValue);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                NewsExtracter.Remove(this.testNews);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -4,6 +4,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Video;
 using Xunit;
 
@@ -18,11 +19,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testVideo = VideoExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            VideoExtracter.Remove(this.testVideo);
         }
 
         [Fact]
@@ -81,6 +77,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                VideoExtracter.Remove(this.testVideo);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

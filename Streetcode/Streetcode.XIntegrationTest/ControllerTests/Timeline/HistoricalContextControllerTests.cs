@@ -16,6 +16,7 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Timeline;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Timeline;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Timeline;
 using Xunit;
@@ -41,12 +42,6 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
-    }
-
-    public override void Dispose()
-    {
-        StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-        HistoricalContextExtracter.Remove(this.testCreateContext);
     }
 
     [Fact]
@@ -380,5 +375,16 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Assert
         Assert.False(result.IsSuccess);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+            HistoricalContextExtracter.Remove(this.testCreateContext);
+        }
+
+        base.Dispose(disposing);
     }
 }

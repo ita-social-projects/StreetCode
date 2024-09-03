@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
@@ -26,12 +27,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
                 uniqueId,
                 Guid.NewGuid().ToString());
             this.testPartner = PartnerExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            PartnerExtracter.Remove(this.testPartner);
         }
 
         [Fact]
@@ -94,6 +89,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
             Assert.Multiple(
                           () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                           () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                PartnerExtracter.Remove(this.testPartner);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

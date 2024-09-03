@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
@@ -26,12 +27,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
                     uniqueId,
                     uniqueId,
                     Guid.NewGuid().ToString());
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            ImageExtracter.Remove(this.testImage);
         }
 
         [Fact]
@@ -92,6 +87,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.Multiple(
               () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
               () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                ImageExtracter.Remove(this.testImage);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

@@ -7,6 +7,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
@@ -26,11 +27,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeUpdateDTOExtracter.Remove(this.testStreetcodeUpdateDTO);
         }
 
         [Fact]
@@ -100,6 +96,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
 
             var response = await this.Client.UpdateAsync(updateStreetCodeDTO, this.TokenStorage.AdminAccessToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeUpdateDTOExtracter.Remove(this.testStreetcodeUpdateDTO);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

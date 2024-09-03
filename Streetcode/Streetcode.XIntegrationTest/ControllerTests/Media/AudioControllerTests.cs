@@ -5,6 +5,7 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
@@ -27,12 +28,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
                     uniqueId,
                     Guid.NewGuid().ToString(),
                     audio: this.testAudio);
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            AudioExtracter.Remove(this.testAudio);
         }
 
         [Fact]
@@ -90,6 +85,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                AudioExtracter.Remove(this.testAudio);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

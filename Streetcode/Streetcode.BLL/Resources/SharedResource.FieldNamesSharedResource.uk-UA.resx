@@ -180,4 +180,19 @@
     <data name="TransactionLinkUrl" xml:space="preserve">
         <value>Посилання для QR-коду</value>
     </data>
+    <data name="Text" xml:space="preserve">
+        <value>Текст</value>
+    </data>
+    <data name="CreationDate" xml:space="preserve">
+        <value>Дата створення</value>
+    </data>
+    <data name="Address" xml:space="preserve">
+        <value>Адреса</value>
+    </data>
+    <data name="Latitude" xml:space="preserve">
+        <value>Широта</value>
+    </data>
+    <data name="Longtitude" xml:space="preserve">
+        <value>Довгота</value>
+    </data>
 </root>

@@ -180,4 +180,19 @@
     <data name="TransactionLinkUrl" xml:space="preserve">
         <value>Transaction url</value>
     </data>
+    <data name="Text" xml:space="preserve">
+        <value>Text</value>
+    </data>
+    <data name="CreationDate" xml:space="preserve">
+        <value>Creation date</value>
+    </data>
+    <data name="Address" xml:space="preserve">
+        <value>Address</value>
+    </data>
+    <data name="Latitude" xml:space="preserve">
+        <value>Latitude</value>
+    </data>
+    <data name="Longtitude" xml:space="preserve">
+        <value>Longtitude</value>
+    </data>
 </root>

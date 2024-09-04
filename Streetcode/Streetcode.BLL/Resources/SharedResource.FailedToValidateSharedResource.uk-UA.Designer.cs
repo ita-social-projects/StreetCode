@@ -114,6 +114,24 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;Посилання&apos; може приймати тільки малі латинські літери, дефіс та цифри.
+        /// </summary>
+        internal static string InvalidNewsUrl {
+            get {
+                return ResourceManager.GetString("InvalidNewsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; має неправильну точність.
+        /// </summary>
+        internal static string InvalidPrecision {
+            get {
+                return ResourceManager.GetString("InvalidPrecision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; обов&apos;язкове поле.
         /// </summary>
         internal static string IsRequired {

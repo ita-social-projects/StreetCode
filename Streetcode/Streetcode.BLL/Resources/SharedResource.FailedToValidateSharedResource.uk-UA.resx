@@ -72,4 +72,10 @@
     <data name="ImageDoesntExist" xml:space="preserve">
         <value>Картинка з ідентифікатором {0} не існує</value>
     </data>
+    <data name="InvalidNewsUrl" xml:space="preserve">
+        <value>Поле 'Посилання' може приймати тільки малі латинські літери, дефіс та цифри</value>
+    </data>
+    <data name="InvalidPrecision" xml:space="preserve">
+        <value>Поле '{0}' має неправильну точність</value>
+    </data>
 </root>

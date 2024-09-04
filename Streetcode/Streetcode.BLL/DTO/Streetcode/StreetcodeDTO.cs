@@ -9,7 +9,7 @@ public class StreetcodeDTO
     public int Index { get; set; }
     public string Title { get; set; } = null!;
     public string DateString { get; set; } = null!;
-    public string Alias { get; set; } = null!;
+    public string? Alias { get; set; }
     public string TransliterationUrl { get; set; } = null!;
     public StreetcodeStatus Status { get; set; }
     public DateTime EventStartOrPersonBirthDate { get; set; }

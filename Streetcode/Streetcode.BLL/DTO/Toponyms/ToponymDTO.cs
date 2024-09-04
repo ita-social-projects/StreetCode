@@ -7,10 +7,10 @@ public class ToponymDTO
 {
     public int Id { get; set; }
     public string Oblast { get; set; } = null!;
-    public string AdminRegionOld { get; set; } = null!;
-    public string AdminRegionNew { get; set; } = null!;
-    public string Gromada { get; set; } = null!;
-    public string Community { get; set; } = null!;
+    public string? AdminRegionOld { get; set; }
+    public string? AdminRegionNew { get; set; }
+    public string? Gromada { get; set; }
+    public string? Community { get; set; }
     public string StreetName { get; set; } = null!;
     public string StreetType { get; set; } = null!;
 

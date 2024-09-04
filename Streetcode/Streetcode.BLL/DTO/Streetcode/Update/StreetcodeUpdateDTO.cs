@@ -21,19 +21,19 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     public class StreetcodeUpdateDTO
     {
         public int Id { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public int Index { get; set; }
-        public string Teaser { get; set; } = null!;
+        public string? Teaser { get; set; }
         public string DateString { get; set; } = null!;
-        public string Alias { get; set; } = null!;
+        public string? Alias { get; set; }
         public StreetcodeStatus Status { get; set; }
         public StreetcodeType StreetcodeType { get; set; }
         public string Title { get; set; } = null!;
         public string TransliterationUrl { get; set; } = null!;
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
-        public TextUpdateDTO Text { get; set; } = null!;
+        public TextUpdateDTO? Text { get; set; }
         public TransactionLinkUpdateDTO TransactionLink { get; set; } = null!;
         public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; } = new List<StreetcodeToponymUpdateDTO>();
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = new List<SubtitleUpdateDTO>();

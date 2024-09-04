@@ -209,7 +209,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         return Task.CompletedTask;
     }
 
-    private void AddTransactionLink(StreetcodeContent streetcode, string url)
+    private void AddTransactionLink(StreetcodeContent streetcode, string? url)
     {
         if (url != null)
         {

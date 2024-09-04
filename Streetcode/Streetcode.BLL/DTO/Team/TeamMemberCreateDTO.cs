@@ -5,7 +5,7 @@ namespace Streetcode.BLL.DTO.Team
     public class TeamMemberCreateDTO
     {
         public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; }
         public bool? IsMain { get; set; }
         public int? ImageId { get; set; }
         public List<TeamMemberLinkCreateDTO> TeamMemberLinks { get; set; } = new List<TeamMemberLinkCreateDTO>();

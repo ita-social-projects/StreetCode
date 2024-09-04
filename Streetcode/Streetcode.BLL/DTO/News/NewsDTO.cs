@@ -10,7 +10,7 @@ namespace Streetcode.BLL.DTO.News
         public string Text { get; set; } = null!;
         public int? ImageId { get; set; }
         public string URL { get; set; } = null!;
-        public ImageDTO Image { get; set; } = null!;
+        public ImageDTO? Image { get; set; }
         public DateTime CreationDate { get; set; }
     }
 }

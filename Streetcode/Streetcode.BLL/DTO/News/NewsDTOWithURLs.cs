@@ -10,10 +10,10 @@ namespace Streetcode.BLL.DTO.News
     {
         public NewsDTO News { get; set; } = new NewsDTO();
 
-        public string PrevNewsUrl { get; set; } = null!;
+        public string? PrevNewsUrl { get; set; }
 
-        public string NextNewsUrl { get; set; } = null!;
+        public string? NextNewsUrl { get; set; }
 
-        public RandomNewsDTO RandomNews { get; set; } = new RandomNewsDTO();
+        public RandomNewsDTO? RandomNews { get; set; } = new RandomNewsDTO();
     }
 }

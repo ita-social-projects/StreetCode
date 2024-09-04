@@ -22,20 +22,20 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
   public class StreetcodeCreateDTO
     {
         public int Index { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
         public string Title { get; set; } = null!;
         public string DateString { get; set; } = null!;
-        public string Alias { get; set; } = null!;
+        public string? Alias { get; set; }
         public string TransliterationUrl { get; set; } = null!;
-        public string ARBlockURL { get; set; } = null!;
+        public string? ARBlockURL { get; set; }
         public StreetcodeType StreetcodeType { get; set; }
         public StreetcodeStatus Status { get; set; }
         public DateTime EventStartOrPersonBirthDate { get; set; }
         public DateTime? EventEndOrPersonDeathDate { get; set; }
         public int ViewCount { get; set; }
         public string Teaser { get; set; } = null!;
-        public TextCreateDTO Text { get; set; } = null!;
+        public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
         public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; } = new List<StreetcodeToponymUpdateDTO>();
         public IEnumerable<int> ImagesIds { get; set; } = new List<int>();

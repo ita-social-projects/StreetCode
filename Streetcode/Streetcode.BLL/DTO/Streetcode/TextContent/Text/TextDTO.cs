@@ -6,5 +6,5 @@ public class TextDTO
   public string Title { get; set; } = null!;
   public string TextContent { get; set; } = null!;
   public int StreetcodeId { get; set; }
-  public string AdditionalText { get; set; } = null!;
+  public string? AdditionalText { get; set; }
 }

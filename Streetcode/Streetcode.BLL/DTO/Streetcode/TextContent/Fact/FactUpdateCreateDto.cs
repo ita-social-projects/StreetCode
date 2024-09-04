@@ -2,6 +2,6 @@
 {
     public class FactUpdateCreateDto : FactDto
     {
-        public string ImageDescription { get; set; } = null!;
+        public string? ImageDescription { get; set; }
     }
 }

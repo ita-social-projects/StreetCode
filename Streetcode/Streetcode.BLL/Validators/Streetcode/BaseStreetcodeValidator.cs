@@ -61,7 +61,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         RuleFor(dto => dto.Index)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Index"]])
             .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue])
-            .MustAsync(BeUniqueIndex).WithMessage(x => localizer["IndexStreetcodeAlreadyExists"]);
+            .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
 
         RuleFor(dto => dto.DateString)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])

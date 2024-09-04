@@ -25,7 +25,7 @@ public class ImageDetailsValidator : AbstractValidator<ImageDetailsDto>
             .MaximumLength(AltMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alt"], AltMaxLength]);
 
         RuleFor(dto => dto.ImageId)
-            .MustAsync(BeUniqueImageIdInImageDetails);
+            .MustAsync(BeUniqueImageIdInImageDetails).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
     }
 
     private async Task<bool> BeUniqueImageIdInImageDetails(int imadeId, CancellationToken cancellationToken)

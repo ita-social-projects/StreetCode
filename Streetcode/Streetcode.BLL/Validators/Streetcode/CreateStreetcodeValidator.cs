@@ -27,10 +27,12 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
-        RuleFor(c => c.Streetcode.ARBlockURL).MustBeValidUrl().WithMessage(localizer["ValidUrl", fieldLocalizer["ARBlockURL"]]);
+        RuleFor(c => c.Streetcode.ARBlockURL)
+            .MustBeValidUrl().When(c => c.Streetcode.ARBlockURL is not null)
+            .WithMessage(localizer["ValidUrl", fieldLocalizer["ARBlockURL"]]);
 
         RuleFor(c => c.Streetcode)
-            .Must(HasVideoWithTitle).When(c => c.Streetcode.Videos != null)
+            .Must(HasVideoWithTitle).When(c => c.Streetcode.Videos is not null)
             .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["Title"], fieldLocalizer["Video"]]);
         RuleForEach(c => c.Streetcode.Videos)
             .SetValidator(videoValidator);

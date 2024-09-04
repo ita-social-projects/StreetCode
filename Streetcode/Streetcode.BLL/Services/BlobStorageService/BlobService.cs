@@ -21,10 +21,7 @@ public class BlobService : IBlobService
 
     public MemoryStream FindFileInStorageAsMemoryStream(string? name)
     {
-        if (name is null)
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
         string[] splitedName = name.Split('.');
 
@@ -71,10 +68,7 @@ public class BlobService : IBlobService
 
     public void DeleteFileInStorage(string? name)
     {
-        if (name is null)
-        {
-            throw new ArgumentNullException("Blob name is null.");
-        }
+        ArgumentNullException.ThrowIfNull(name);
 
         File.Delete($"{_blobPath}{name}");
     }
@@ -85,10 +79,7 @@ public class BlobService : IBlobService
         string newBlobName,
         string extension)
     {
-        if (previousBlobName is null)
-        {
-            throw new ArgumentNullException("Previous blob name is null.");
-        }
+        ArgumentNullException.ThrowIfNull(previousBlobName);
 
         DeleteFileInStorage(previousBlobName);
 

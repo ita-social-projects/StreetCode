@@ -62,7 +62,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
     }
 
-    private IQueryable<int>? GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)
+    private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)
     {
         try
         {
@@ -76,7 +76,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         }
         catch (ArgumentNullException)
         {
-            return null;
+            return Enumerable.Empty<int>().AsQueryable();
         }
     }
 }

@@ -346,7 +346,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                .Select(x => new HistoricalContextTimeline
                {
                    HistoricalContextId = x.Id == 0
-                       ? newContextsDb.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
+                       ? newContextsDb.First(h => h.Title!.Equals(x.Title)).Id
                        : x.Id
                })
                .ToList();

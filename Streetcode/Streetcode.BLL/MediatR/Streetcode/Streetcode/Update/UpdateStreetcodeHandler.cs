@@ -172,7 +172,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
+                        ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -191,7 +191,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(h => h.Title!.Equals(x.Title)) !.Id
+                          ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();

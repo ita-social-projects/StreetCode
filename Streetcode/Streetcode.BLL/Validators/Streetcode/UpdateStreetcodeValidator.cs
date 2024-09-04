@@ -33,8 +33,9 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
             .When(c => c.Streetcode.TransactionLink != null)
             .WithMessage(localizer["ValidUrl", fieldLocalizer["TransactionLinkUrl"]]);
 
-        RuleFor(c => c.Streetcode)
-            .Must(HasVideoWithTitle).When(c => c.Streetcode.Videos != null)
+        RuleFor(c => c.Streetcode.Text!.Title)
+            .NotEmpty()
+            .When(c => c.Streetcode.Videos is not null && c.Streetcode.Text is not null && c.Streetcode.Videos.Any())
             .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["Title"], fieldLocalizer["Video"]]);
         RuleForEach(c => c.Streetcode.Videos)
             .SetValidator(videoValidator);
@@ -45,12 +46,5 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);
         RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);
-    }
-
-    private bool HasVideoWithTitle(StreetcodeUpdateDTO streetcode)
-    {
-        bool hasTitle = !string.IsNullOrWhiteSpace(streetcode.Text?.Title);
-        bool hasVideo = streetcode.Videos != null;
-        return hasTitle && hasVideo;
     }
 }

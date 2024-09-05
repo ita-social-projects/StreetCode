@@ -266,7 +266,7 @@ pipeline {
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
                 sh 'git merge ${BRANCH_NAME}'
-                sh "git push origin main" 
+                sh "git push origin master" 
                   
             }
         }

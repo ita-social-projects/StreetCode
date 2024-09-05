@@ -1,7 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
@@ -49,9 +48,53 @@ namespace Streetcode.BLL.MediatR.Newss.Create
                 return Result.Fail(errorMsg);
             }
 
+            foreach (char c in newNews.URL)
+            {
+                if (!((c >= 'a' && c <= 'z') || char.IsDigit(c) || c == '-') || (c >= 'A' && c <= 'Z'))
+                {
+                    string errorMsg = "Url Is Invalid";
+                    _logger.LogError(request, errorMsg);
+                    return Result.Fail(errorMsg);
+                }
+            }
+
+            if (newNews.CreationDate == default(DateTime))
+            {
+                string errorMsg = "CreationDate field is required";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(predicate: n => n.Title == request.newNews.Title);
+            if (existingNewsByTitle != null)
+            {
+                string errorMsg = "A news with the same title already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.Text == request.newNews.Text);
+
+            if (existingNewsByText != null)
+            {
+                string errorMsg = "A news with the same text already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
+            var existingNewsByImageID = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(predicate: n => n.ImageId == request.newNews.ImageId);
+
+            if (existingNewsByImageID != null)
+            {
+                string errorMsg = "A news with the same ImageID already exists.";
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(errorMsg);
+            }
+
             var entity = _repositoryWrapper.NewsRepository.Create(newNews);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
+
+            if (resultIsSuccess)
             {
                 return Result.Ok(_mapper.Map<NewsDTO>(entity));
             }

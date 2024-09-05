@@ -16,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
         public NewsGetAllControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/News")
         {
-            int uniqueId = UniqueNumberGenerator.Generate();
+            int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testNews = NewsExtracter.Extract(uniqueId);
         }
 

@@ -9,8 +9,8 @@ namespace Streetcode.BLL.Validators.TeamMember;
 
 public class BaseTeamValidator : AbstractValidator<TeamMemberCreateUpdateDTO>
 {
-    public const int NameMaxLength = 50;
-    public const int DescriptionMaxLength = 150;
+    public const int NameMaxLength = 41;
+    public const int DescriptionMaxLength = 70;
     public BaseTeamValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.ImageId)

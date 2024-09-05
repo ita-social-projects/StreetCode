@@ -12,6 +12,7 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
     public const int TitleMaxLength = 100;
     public const int DescriptionMaxLength = 450;
     public const int UrlMaxLength = 200;
+    public const int UrlTitleMaxLength = 100;
     public BasePartnersValidator(
         PartnerSourceLinkValidator partnerSourceLinkValidator,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
@@ -37,7 +38,7 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
             .WithMessage(x => localizer["ValidUrl", fieldLocalizer["TargetUrl"]]);
 
         RuleFor(dto => dto.UrlTitle)
-            .MaximumLength(UrlMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["UrlTitle"], UrlMaxLength]);
+            .MaximumLength(UrlTitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["UrlTitle"], UrlTitleMaxLength]);
 
         RuleForEach(dto => dto.PartnerSourceLinks).SetValidator(partnerSourceLinkValidator);
     }

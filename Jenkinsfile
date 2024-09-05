@@ -261,7 +261,7 @@ pipeline {
                 sh 'echo ${BRANCH_NAME}'
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
-                sh "git merge release/${env.SEM_VERSION}" 
+                sh 'git merge ${BRANCH_NAME}'
                 sh "git push origin main" 
                   
             }

@@ -195,4 +195,7 @@
     <data name="Longtitude" xml:space="preserve">
         <value>Longtitude</value>
     </data>
+    <data name="Tag" xml:space="preserve">
+        <value>Tag</value>
+    </data>
 </root>

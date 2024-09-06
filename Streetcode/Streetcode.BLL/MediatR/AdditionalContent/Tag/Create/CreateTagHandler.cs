@@ -1,8 +1,10 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
@@ -12,12 +14,21 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
+        private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
 
-        public CreateTagHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public CreateTagHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            ILoggerService logger,
+            IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
+            IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
+            _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
+            _stringLocalizerFieldNames = stringLocalizerFieldNames;
         }
 
         public async Task<Result<TagDTO>> Handle(CreateTagQuery request, CancellationToken cancellationToken)
@@ -26,7 +37,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Create
 
             if (exists is not null)
             {
-                var errMessage = $"Tag with title {request.tag.Title} already exists";
+                var errMessage = _stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]];
                 _logger.LogError(request, errMessage);
 
                 return Result.Fail(errMessage);

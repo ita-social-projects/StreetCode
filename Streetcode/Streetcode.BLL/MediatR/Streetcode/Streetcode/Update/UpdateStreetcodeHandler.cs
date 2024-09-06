@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Create;
@@ -23,6 +24,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Transactions;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
@@ -34,19 +36,27 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
+        private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
+        private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
         private readonly ICacheService _cacheService;
+
         public UpdateStreetcodeHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
             IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
+            IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
             ICacheService cacheService)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
+            _stringLocalizerFieldNames = stringLocalizerFieldNames;
             _cacheService = cacheService;
         }
 
@@ -64,7 +74,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.RelatedFigures, _repositoryWrapper.RelatedFigureRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
-                    await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
+
+                    // await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
+                    await UpdateTags(request.Streetcode.Tags);
                     await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
@@ -120,9 +132,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
+                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdating", ex.Message].Value;
+
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }
@@ -351,6 +364,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
             repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
             repository.UpdateRange(_mapper.Map<IEnumerable<T>>(toUpdate));
+        }
+
+        private async Task UpdateTags(IEnumerable<StreetcodeTagUpdateDTO> tags)
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems(tags);
+
+            foreach (var newTag in toCreate)
+            {
+                var existingTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => t.Title == newTag.Title);
+                if (existingTag is not null)
+                {
+                    throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
+                }
+            }
+
+            await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toCreate));
+            _repositoryWrapper.StreetcodeTagIndexRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toDelete));
+            _repositoryWrapper.StreetcodeTagIndexRepository.UpdateRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toUpdate));
         }
 
         private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)

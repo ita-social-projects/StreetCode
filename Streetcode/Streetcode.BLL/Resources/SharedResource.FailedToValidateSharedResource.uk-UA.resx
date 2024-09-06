@@ -34,7 +34,7 @@
         <value>Поле '{0}' повинно бути дійсною URL адресою </value>
     </data>
     <data name="CannotBeEmptyWithCondition" xml:space="preserve">
-        <value>Поле '{0}' не може бути пусте, якщо введено поле '{0}'</value>
+        <value>Поле '{0}' не може бути пусте, якщо введено поле '{1}'</value>
     </data>
     <data name="IsRequired" xml:space="preserve">
         <value>'{0}' обов'язкове поле</value>

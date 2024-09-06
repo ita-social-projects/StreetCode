@@ -38,19 +38,25 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
     private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
+    private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
+    private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
 
     public CreateStreetcodeHandler(
         IMapper mapper,
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
+        IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
+        IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
         _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
         _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
+        _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
+        _stringLocalizerFieldNames = stringLocalizerFieldNames;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -255,6 +261,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
             if (tags[i].Id <= 0)
             {
+                var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => tags[i].Title == t.Title);
+                if (exists is not null)
+                {
+                    throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
+                }
+
                 var newTag = _mapper.Map<Tag>(tags[i]);
                 newTag.Id = 0;
                 newTagIndex.Tag = newTag;

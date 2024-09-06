@@ -8,14 +8,18 @@ namespace Streetcode.BLL.Validators.AdditionalContent.Tag;
 
 public class BaseTagValidator : AbstractValidator<CreateUpdateTagDTO>
 {
+    private const int TitleMaxLength = 50;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    public BaseTagValidator(IRepositoryWrapper repositoryWrapper, IStringLocalizer<FailedToValidateSharedResource> localizer)
+    public BaseTagValidator(
+        IRepositoryWrapper repositoryWrapper,
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         RuleFor(t => t.Title)
-            .NotEmpty().WithMessage(x => localizer["TitleTagRequired"])
-            .MaximumLength(50).WithMessage(x => localizer["TitleTagMaxLength"])
-            .MustAsync(BeUniqueTitle).WithMessage(localizer["TitleTagAlreadyExists"]);
+            .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["Title"]])
+            .MaximumLength(TitleMaxLength)
+            .WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
     }
 
     private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

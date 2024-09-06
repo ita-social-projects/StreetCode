@@ -46,12 +46,44 @@ public class GetStreetcodeByFilterHandlerTests
     }
 
     [Theory]
+    [InlineData("")]
+    public async Task Handle_ReturnsAllResults_WhenSearchQueryIsEmpty(string searchQuery)
+    {
+        // Arrange
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        this.SetupRepositoryMock("SomeContent");
+
+        // Act
+        var result = await this._handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeEmpty();
+    }
+
+    [Theory]
     [InlineData("NonExistent")]
     public async Task Handle_ReturnsEmptyList_WhenNoMatchesFound(string searchQuery)
     {
         // Arrange
         var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
 
+        this.SetupRepositoryMock(null, true);
+
+        // Act
+        var result = await this._handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("SomeQuery")]
+    public async Task Handle_ReturnsEmptyList_WhenAllRepositoriesReturnEmpty(string searchQuery)
+    {
+        // Arrange
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
         this.SetupRepositoryMock(null, true);
 
         // Act

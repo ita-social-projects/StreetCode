@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,11 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240905125058_MakeTeaserRequired")]
+    partial class MakeTeaserRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -505,7 +508,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasMaxLength(25000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -515,8 +517,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

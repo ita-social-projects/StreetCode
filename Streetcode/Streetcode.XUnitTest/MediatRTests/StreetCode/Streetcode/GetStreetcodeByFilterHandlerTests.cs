@@ -14,13 +14,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode;
 
 public class GetStreetcodeByFilterHandlerTests
 {
-    private readonly Mock<IRepositoryWrapper> _repositoryWrapper;
-    private readonly GetStreetcodeByFilterHandler _handler;
+    private readonly Mock<IRepositoryWrapper> repositoryWrapper;
+    private readonly GetStreetcodeByFilterHandler handler;
 
     public GetStreetcodeByFilterHandlerTests()
     {
-        this._repositoryWrapper = new Mock<IRepositoryWrapper>();
-        this._handler = new GetStreetcodeByFilterHandler(this._repositoryWrapper.Object);
+        this.repositoryWrapper = new Mock<IRepositoryWrapper>();
+        this.handler = new GetStreetcodeByFilterHandler(this.repositoryWrapper.Object);
     }
 
     [Theory]
@@ -37,7 +37,7 @@ public class GetStreetcodeByFilterHandlerTests
         this.SetupRepositoryMock(expectedContent);
 
         // Act
-        var result = await this._handler.Handle(query, CancellationToken.None);
+        var result = await this.handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -54,7 +54,7 @@ public class GetStreetcodeByFilterHandlerTests
         this.SetupRepositoryMock("SomeContent");
 
         // Act
-        var result = await this._handler.Handle(query, CancellationToken.None);
+        var result = await this.handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -71,7 +71,7 @@ public class GetStreetcodeByFilterHandlerTests
         this.SetupRepositoryMock(null, true);
 
         // Act
-        var result = await this._handler.Handle(query, CancellationToken.None);
+        var result = await this.handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -87,7 +87,7 @@ public class GetStreetcodeByFilterHandlerTests
         this.SetupRepositoryMock(null, true);
 
         // Act
-        var result = await this._handler.Handle(query, CancellationToken.None);
+        var result = await this.handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -101,12 +101,12 @@ public class GetStreetcodeByFilterHandlerTests
         // Arrange
         var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
 
-        this._repositoryWrapper.Setup(r => r.StreetcodeRepository
+        this.repositoryWrapper.Setup(r => r.StreetcodeRepository
             .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
             .ThrowsAsync(new Exception("Database error"));
 
         // Act & Assert
-        await FluentActions.Invoking(() => this._handler.Handle(query, CancellationToken.None)).Should().ThrowAsync<Exception>();
+        await FluentActions.Invoking(() => this.handler.Handle(query, CancellationToken.None)).Should().ThrowAsync<Exception>();
     }
 
     private void SetupRepositoryMock(string? expectedContent, bool returnEmptyList = false)
@@ -136,23 +136,23 @@ public class GetStreetcodeByFilterHandlerTests
             new () { Streetcode = new StreetcodeContent { Id = 1, Status = DAL.Enums.StreetcodeStatus.Published }, Title = expectedContent, Description = expectedContent },
         };
 
-        this._repositoryWrapper.Setup(r => r.StreetcodeRepository
+        this.repositoryWrapper.Setup(r => r.StreetcodeRepository
             .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
             .ReturnsAsync(streetcodes);
 
-        this._repositoryWrapper.Setup(r => r.TextRepository
+        this.repositoryWrapper.Setup(r => r.TextRepository
             .GetAllAsync(It.IsAny<Expression<Func<Text, bool>>>(), null))
             .ReturnsAsync(texts);
 
-        this._repositoryWrapper.Setup(r => r.StreetcodeArtRepository
+        this.repositoryWrapper.Setup(r => r.StreetcodeArtRepository
             .GetAllAsync(It.IsAny<Expression<Func<StreetcodeArt, bool>>>(), null))
             .ReturnsAsync(streetcodeArts);
 
-        this._repositoryWrapper.Setup(r => r.FactRepository
+        this.repositoryWrapper.Setup(r => r.FactRepository
             .GetAllAsync(It.IsAny<Expression<Func<Fact, bool>>>(), null))
             .ReturnsAsync(facts);
 
-        this._repositoryWrapper.Setup(r => r.TimelineRepository
+        this.repositoryWrapper.Setup(r => r.TimelineRepository
             .GetAllAsync(It.IsAny<Expression<Func<TimelineItem, bool>>>(), null))
             .ReturnsAsync(timelineItems);
     }

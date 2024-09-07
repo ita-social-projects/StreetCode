@@ -42,7 +42,7 @@ public class GetStreetcodeByFilterHandlerTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().ContainSingle();
-        result.Value.First().Content.Should().Be(expectedContent);
+        result.Value[0].Content.Should().Be(expectedContent);
     }
 
     [Theory]

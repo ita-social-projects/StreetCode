@@ -32,17 +32,6 @@ public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionComma
             return Result.Fail(exMessage);
         }
 
-        var positionRepeat = await _repository.PositionRepository.GetFirstOrDefaultAsync(
-            x =>
-                x.Position == request.positionDto.Position);
-
-        if (positionRepeat is not null)
-        {
-            string exMessage = $"There is already a position with title - {request.positionDto.Position}";
-            _logger.LogError(request, exMessage);
-            return Result.Fail(exMessage);
-        }
-
         try
         {
             var positionToUpdate = _mapper.Map<Positions>(request.positionDto);

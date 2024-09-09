@@ -24,14 +24,18 @@ public class ImageDetailsValidator : AbstractValidator<ImageDetailsDto>
         RuleFor(dto => dto.Alt)
             .MaximumLength(AltMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alt"], AltMaxLength]);
 
-        RuleFor(dto => dto.ImageId)
+        RuleFor(dto => dto)
             .MustAsync(BeUniqueImageIdInImageDetails).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
     }
 
-    private async Task<bool> BeUniqueImageIdInImageDetails(int imadeId, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueImageIdInImageDetails(ImageDetailsDto imageDetails, CancellationToken cancellationToken)
     {
-        var existingStreetcodeByIndex = await _repositoryWrapper.ImageDetailsRepository.GetFirstOrDefaultAsync(n => n.ImageId == imadeId);
+        var existingImageDetails = await _repositoryWrapper.ImageDetailsRepository.GetFirstOrDefaultAsync(n => n.ImageId == imageDetails.ImageId);
+        if (existingImageDetails != null)
+        {
+            return existingImageDetails.Id == imageDetails.Id;
+        }
 
-        return existingStreetcodeByIndex is null;
+        return true;
     }
 }

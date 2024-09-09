@@ -1,21 +1,18 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 {
-  internal class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>>>
+  internal class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -30,7 +27,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
+        // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
+        public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
@@ -40,20 +39,21 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));
 
-            if (streetcodes != null)
+            const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
+            foreach (var streetcode in streetcodes)
             {
-                const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
-                foreach (var streetcode in streetcodes)
-                {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
-                }
-
-                return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
+                streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
             }
 
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.tagId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            if (!streetcodes.Any())
+            {
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.tagId].Value;
+                _logger.LogError(request, errorMsg);
+
+                return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
+            }
+
+            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
         }
     }
 }

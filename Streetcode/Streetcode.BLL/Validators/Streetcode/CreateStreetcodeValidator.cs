@@ -10,12 +10,15 @@ using Streetcode.BLL.Validators.Streetcode.Facts;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
 using Streetcode.BLL.Validators.Streetcode.Text;
 using Streetcode.BLL.Validators.Streetcode.Video;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
 public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeCommand>
 {
+    private readonly IRepositoryWrapper _repositoryWrapper;
     public CreateStreetcodeValidator(
+        IRepositoryWrapper repositoryWrapper,
         BaseStreetcodeValidator baseStreetcodeValidator,
         BaseTextValidator baseTextValidator,
         BaseSubtitleValidator baseSubtitleValidator,
@@ -26,7 +29,10 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
+        _repositoryWrapper = repositoryWrapper;
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
+        RuleFor(c => c.Streetcode.Index)
+            .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
         RuleFor(c => c.Streetcode.ARBlockURL)
             .MustBeValidUrl().When(c => c.Streetcode.ARBlockURL is not null)
             .WithMessage(localizer["ValidUrl", fieldLocalizer["ARBlockURL"]]);
@@ -43,5 +49,12 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);
         RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);
+    }
+
+    private async Task<bool> BeUniqueIndex(int index, CancellationToken cancellationToken)
+    {
+        var existingStreetcodeByIndex = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(n => n.Index == index);
+
+        return existingStreetcodeByIndex is null;
     }
 }

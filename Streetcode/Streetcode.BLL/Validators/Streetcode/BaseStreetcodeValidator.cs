@@ -22,7 +22,6 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int DateStringMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
-    private readonly IRepositoryWrapper _repositoryWrapper;
 
     public BaseStreetcodeValidator(
         IRepositoryWrapper repositoryWrapper,
@@ -34,8 +33,6 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
-        _repositoryWrapper = repositoryWrapper;
-
         RuleFor(dto => dto.FirstName)
             .MaximumLength(FirstNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["FirstName"], FirstNameMaxLength]);
 
@@ -60,8 +57,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.Index)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Index"]])
-            .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue])
-            .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
+            .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue]);
 
         RuleFor(dto => dto.DateString)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])
@@ -89,12 +85,5 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleForEach(dto => dto.Arts)
             .SetValidator(artCreateUpdateDtoValidator);
-    }
-
-    private async Task<bool> BeUniqueIndex(int index, CancellationToken cancellationToken)
-    {
-        var existingStreetcodeByIndex = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(n => n.Index == index);
-
-        return existingStreetcodeByIndex is null;
     }
 }

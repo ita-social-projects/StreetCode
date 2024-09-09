@@ -10,12 +10,15 @@ using Streetcode.BLL.Validators.Streetcode.Facts;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
 using Streetcode.BLL.Validators.Streetcode.Text;
 using Streetcode.BLL.Validators.Streetcode.Video;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
 public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeCommand>
 {
+    private readonly IRepositoryWrapper _repositoryWrapper;
     public UpdateStreetcodeValidator(
+        IRepositoryWrapper repositoryWrapper,
         BaseStreetcodeValidator baseStreetcodeValidator,
         BaseTextValidator baseTextValidator,
         BaseSubtitleValidator baseSubtitleValidator,
@@ -26,8 +29,10 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
+        _repositoryWrapper = repositoryWrapper;
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
-
+        RuleFor(c => c.Streetcode)
+            .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
         RuleFor(c => c.Streetcode.TransactionLink!.Url)
             .MustBeValidUrl()
             .When(c => c.Streetcode.TransactionLink != null)
@@ -46,5 +51,16 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);
         RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);
+    }
+
+    private async Task<bool> BeUniqueIndex(StreetcodeUpdateDTO streetcode, CancellationToken cancellationToken)
+    {
+        var existingStreetcodeByIndex = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(n => n.Index == streetcode.Index);
+        if (existingStreetcodeByIndex != null)
+        {
+            return existingStreetcodeByIndex.Id == streetcode.Id;
+        }
+
+        return true;
     }
 }

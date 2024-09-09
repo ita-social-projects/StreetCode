@@ -14,12 +14,14 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 public class TextController : BaseApiController
 {
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TextDTO>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllTextsQuery()));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TextDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
          return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
@@ -27,6 +29,7 @@ public class TextController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [CompressResponse]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TextDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
        return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
@@ -34,6 +37,7 @@ public class TextController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateParsedText([FromBody] TextPreviewDTO text)

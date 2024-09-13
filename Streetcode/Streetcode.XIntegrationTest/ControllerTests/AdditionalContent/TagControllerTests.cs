@@ -37,6 +37,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         private TagEntity _testUpdateTag;
         private StreetcodeContent _testStreetcodeContent;
 
+        
         public TagControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
             : base(factory, "/api/Tag", tokenStorage)
         {
@@ -201,6 +202,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             var repositoryMock = new Mock<ITagRepository>();
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+            var mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+            var mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(default, default)).ReturnsAsync((TagEntity)null);
             repositoryMock.Setup(r => r.CreateAsync(default)).ReturnsAsync(this._testCreateTag);
             repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository).Returns(repositoryMock.Object);
@@ -210,7 +213,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var mapperMock = new Mock<IMapper>();
             var loggerMock = new Mock<ILoggerService>();
 
-            var handler = new CreateTagHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
+            var handler = new CreateTagHandler(
+                repositoryWrapperMock.Object,
+                mapperMock.Object,
+                loggerMock.Object,
+                mockStringLocalizerFailedToValidate.Object,
+                mockStringLocalizerFieldNames.Object);
 
             var query = new CreateTagQuery(tagCreateDTO);
             var cancellationToken = CancellationToken.None;
@@ -398,6 +406,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             var repositoryMock = new Mock<ITagRepository>();
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+            var mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+            var mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<TagEntity, bool>>>(), default))
             .ReturnsAsync((Expression<Func<TagEntity, bool>> expr, IIncludableQueryable<TagEntity, bool> include) =>
             {
@@ -413,7 +423,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             mapperMock.Setup(m => m.Map<TagEntity>(default)).Returns(this._testUpdateTag);
             var loggerMock = new Mock<ILoggerService>();
 
-            var handler = new UpdateTagHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
+            var handler = new UpdateTagHandler(
+                repositoryWrapperMock.Object,
+                mapperMock.Object,
+                loggerMock.Object,
+                mockStringLocalizerFailedToValidate.Object,
+                mockStringLocalizerFieldNames.Object);
 
             var query = new UpdateTagCommand(tagUpdateDTO);
             var cancellationToken = CancellationToken.None;

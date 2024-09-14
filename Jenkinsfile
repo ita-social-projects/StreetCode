@@ -258,10 +258,9 @@ pipeline {
         steps {
            
             script {
-                checkout scmGit(
-                      branches: [[name: 'master']],
-                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode.git']])
-                   
+
+              git branch: 'master', credentialsId: 'test_git_user', url: 'git@github.com:ita-social-projects/Streetcode.git' 
+
                 sh 'echo ${BRANCH_NAME}'
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
@@ -271,11 +270,9 @@ pipeline {
             }
         }
         post {
+
             success {
-                    checkout scmGit(
-                      branches: [[name: 'master']],
-                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode.git']])
-                  
+
                 sh 'gh auth status'
                 sh "gh release create v${vers}  --generate-notes --draft"
             }

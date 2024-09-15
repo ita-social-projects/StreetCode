@@ -41,7 +41,9 @@ pipeline {
 
                 echo "CHANGE_ID.............${env.CHANGE_ID}"
                 echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
+                echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
                 echo "BRANCH_NAME...........${env.BRANCH_NAME}"
+                echo "BRANCH................${env.BRANCH}"
             }
         }
         stage('Setup dependencies') {
@@ -77,23 +79,23 @@ pipeline {
                 }
             }
         }
-        stage('Setup environment') {
-            steps {
-                sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
-            }
-        }
-        stage('Run tests') {
-          steps {
-            parallel(
-              Unit_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
-              },
-              Integration_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
-              }
-            )
-          }
-        }
+        // stage('Setup environment') {
+        //     steps {
+        //         sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
+        //     }
+        // }
+        // stage('Run tests') {
+        //   steps {
+        //     parallel(
+        //       Unit_test: {
+        //         sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+        //       },
+        //       Integration_test: {
+        //         sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+        //       }
+        //     )
+        //   }
+        // }
         stage('Sonar scan') {
             environment {
                 SONAR = credentials('sonar_token')
@@ -101,7 +103,16 @@ pipeline {
             steps {
                       sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
                       sh '''    echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                                dotnet sonarscanner begin \
+                                /k:"ita-social-projects_StreetCode" \
+                                /o:"ita-social-projects" \
+                                /d:sonar.token=$SONAR \
+                                /d:sonar.host.url="https://sonarcloud.io" \
+                                /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                                /d:sonar.pullrequest.key=${env.CHANGE_ID} \
+                                /d:sonar.pullrequest.branch=${env.CHANGE_BRANCH} \
+                                /d:sonar.pullrequest.base=${env.CHANGE_TARGET}
+
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
                                 dotnet sonarscanner end /d:sonar.token=$SONAR

@@ -78,23 +78,23 @@ pipeline {
                 }
             }
         }
-        // stage('Setup environment') {
-        //     steps {
-        //         sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
-        //     }
-        // }
-        // stage('Run tests') {
-        //   steps {
-        //     parallel(
-        //       Unit_test: {
-        //         sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
-        //       },
-        //       Integration_test: {
-        //         sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
-        //       }
-        //     )
-        //   }
-        // }
+        stage('Setup environment') {
+            steps {
+                sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
+            }
+        }
+        stage('Run tests') {
+          steps {
+            parallel(
+              Unit_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+              },
+              Integration_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+              }
+            )
+          }
+        }
         stage('Sonar scan') {
             environment {
                 SONAR = credentials('sonar_token')

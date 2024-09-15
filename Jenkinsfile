@@ -43,7 +43,6 @@ pipeline {
                 echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
                 echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
                 echo "BRANCH_NAME...........${env.BRANCH_NAME}"
-                echo "BRANCH................${env.BRANCH}"
             }
         }
         stage('Setup dependencies') {
@@ -108,7 +107,7 @@ pipeline {
                                 /o:"ita-social-projects" \
                                 /d:sonar.token=$SONAR \
                                 /d:sonar.host.url="https://sonarcloud.io" \
-                                /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                                /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
                                 /d:sonar.pullrequest.key=${env.CHANGE_ID} \
                                 /d:sonar.pullrequest.branch=${env.CHANGE_BRANCH} \
                                 /d:sonar.pullrequest.base=${env.CHANGE_TARGET}

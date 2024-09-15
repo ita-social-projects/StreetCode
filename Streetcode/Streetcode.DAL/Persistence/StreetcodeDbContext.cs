@@ -77,13 +77,14 @@ public class StreetcodeDbContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        Console.WriteLine("Yeah, it's an OnModelCreating method");
         base.OnModelCreating(modelBuilder);
         modelBuilder.UseCollation("SQL_Ukrainian_CP1251_CI_AS");
 
         modelBuilder.Entity<StatisticRecord>()
-              .HasOne(x => x.StreetcodeCoordinate)
-              .WithOne(x => x.StatisticRecord)
-              .HasForeignKey<StatisticRecord>(x => x.StreetcodeCoordinateId);
+            .HasOne(x => x.StreetcodeCoordinate)
+            .WithOne(x => x.StatisticRecord)
+            .HasForeignKey<StatisticRecord>(x => x.StreetcodeCoordinateId);
 
         modelBuilder.Entity<News>()
             .HasOne(x => x.Image)
@@ -118,7 +119,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
             sp => sp.HasOne(x => x.Tag).WithMany(x => x.StreetcodeTagIndices).HasForeignKey(x => x.TagId));
 
         modelBuilder.Entity<StreetcodeTagIndex>()
-           .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
+            .HasKey(nameof(StreetcodeTagIndex.StreetcodeId), nameof(StreetcodeTagIndex.TagId));
 
         modelBuilder.Entity<Toponym>()
             .HasOne(d => d.Coordinate)
@@ -141,7 +142,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
         });
 
         modelBuilder.Entity<HistoricalContextTimeline>()
-             .HasKey(ht => new { ht.TimelineId, ht.HistoricalContextId });
+            .HasKey(ht => new { ht.TimelineId, ht.HistoricalContextId });
         modelBuilder.Entity<HistoricalContextTimeline>()
             .HasOne(ht => ht.Timeline)
             .WithMany(x => x.HistoricalContextTimelines)
@@ -302,7 +303,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
                     .UsingEntity<StreetcodePartner>(
                         sp => sp.HasOne(i => i.Partner).WithMany().HasForeignKey(x => x.PartnerId),
                         sp => sp.HasOne(i => i.Streetcode).WithMany().HasForeignKey(x => x.StreetcodeId))
-                   .ToTable("streetcode_partners", "streetcode");
+                    .ToTable("streetcode_partners", "streetcode");
 
             entity.HasMany(d => d.Videos)
                     .WithOne(p => p.Streetcode)

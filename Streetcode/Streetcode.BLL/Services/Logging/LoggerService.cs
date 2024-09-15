@@ -32,6 +32,11 @@ namespace Streetcode.BLL.Services.Logging
             _logger.Debug($"{msg}");
         }
 
+        public void UselessLogMethod(string msg)
+        {
+            Console.WriteLine("Log: {0}", msg);
+        }
+
         public void LogError(object request, string erroMsg)
         {
             if (request != null)

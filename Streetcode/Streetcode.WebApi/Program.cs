@@ -16,6 +16,8 @@ using Streetcode.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine("Start");
+
 builder.Host.ConfigureApplication();
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");

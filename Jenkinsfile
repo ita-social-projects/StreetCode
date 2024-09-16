@@ -102,21 +102,27 @@ pipeline {
             steps {
                       sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
                       withCredentials([string(credentialsId: 'sonar_token', variable: 'SONAR_TOKEN')]) {
-                        sh """  echo "Sonar scan"
-                                dotnet sonarscanner begin \
-                                /k:"ita-social-projects_StreetCode" \
-                                /o:"ita-social-projects" \
-                                /d:sonar.token=$SONAR_TOKEN \
-                                /d:sonar.host.url="https://sonarcloud.io" \
-                                /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
-                                /d:sonar.pullrequest.key=${env.CHANGE_ID} \
-                                /d:sonar.pullrequest.branch=${env.CHANGE_BRANCH} \
-                                /d:sonar.pullrequest.base=${env.CHANGE_TARGET}
+                        withEnv([
+                            "PR_KEY=${env.CHANGE_ID}",
+                            "PR_BRANCH=${env.CHANGE_BRANCH}",
+                            "PR_BASE=${env.CHANGE_TARGET}",
+                        ]) {
+                            sh '''  echo "Sonar scan"
+                                    dotnet sonarscanner begin \
+                                    /k:"ita-social-projects_StreetCode" \
+                                    /o:"ita-social-projects" \
+                                    /d:sonar.token=$SONAR_TOKEN \
+                                    /d:sonar.host.url="https://sonarcloud.io" \
+                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+                                    /d:sonar.pullrequest.key=$PR_KEY \
+                                    /d:sonar.pullrequest.branch=$PR_BRANCH \
+                                    /d:sonar.pullrequest.base=$PR_BASE
 
-                                dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR_TOKEN
-                           """
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet sonarscanner end /d:sonar.token=$SONAR_TOKEN
+                               '''
+                        }
                       }
             }
         }

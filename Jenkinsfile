@@ -38,6 +38,9 @@ pipeline {
                 echo "JOB_NAME..............${env.JOB_NAME}"
                 echo "NODE_NAME.............${env.NODE_NAME}"
                 echo "WORKSPACE.............${env.WORKSPACE}"
+                echo "CHANGE_ID.............${env.CHANGE_ID}"
+                echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
+                echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
             }
         }
         stage('Setup dependencies') {
@@ -96,12 +99,21 @@ pipeline {
             }
             steps {
                       sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      sh '''    echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+                      sh """    echo "Sonar scan"
+                                dotnet sonarscanner begin \
+                                /k:"ita-social-projects_StreetCode" \
+                                /o:"ita-social-projects" \
+                                /d:sonar.token=${SONAR} \
+                                /d:sonar.host.url="https://sonarcloud.io" \
+                                /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+                                /d:sonar.pullrequest.key=${env.CHANGE_ID} \
+                                /d:sonar.pullrequest.branch=${env.CHANGE_BRANCH} \
+                                /d:sonar.pullrequest.base=${env.CHANGE_TARGET}
+
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR
-                        '''
+                                dotnet sonarscanner end /d:sonar.token=${SONAR}
+                        """
             }
         }
         stage('Build image') {

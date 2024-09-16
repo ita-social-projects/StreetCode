@@ -101,21 +101,21 @@ pipeline {
             }
             steps {
                       sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      sh """    echo "Sonar scan"
+                      sh '''    echo "Sonar scan"
                                 dotnet sonarscanner begin \
                                 /k:"ita-social-projects_StreetCode" \
                                 /o:"ita-social-projects" \
-                                /d:sonar.token=${SONAR} \
+                                /d:sonar.token=$SONAR \
                                 /d:sonar.host.url="https://sonarcloud.io" \
                                 /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
-                                /d:sonar.pullrequest.key=${env.CHANGE_ID} \
-                                /d:sonar.pullrequest.branch=${env.CHANGE_BRANCH} \
-                                /d:sonar.pullrequest.base=${env.CHANGE_TARGET}
+                                /d:sonar.pullrequest.key="${env.CHANGE_ID}" \
+                                /d:sonar.pullrequest.branch="${env.CHANGE_BRANCH}" \
+                                /d:sonar.pullrequest.base="${env.CHANGE_TARGET}"
 
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
                                 dotnet sonarscanner end /d:sonar.token=${SONAR}
-                        """
+                        '''
             }
         }
         stage('Build image') {

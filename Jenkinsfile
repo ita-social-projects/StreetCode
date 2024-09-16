@@ -119,7 +119,7 @@ pipeline {
                                 
                                 dotnet build ./Streetcode/Streetcode.sln --configuration Release
                                 dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR_TOKEN
+                                dotnet sonarscanner end /d:sonar.token=$SONAR
                            '''
                     }
             }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Partners;
@@ -21,6 +22,8 @@ namespace Streetcode.BLL.MediatR.Partners.Create
             _logger = logger;
         }
 
+        // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
         public async Task<Result<PartnerDTO>> Handle(CreatePartnerQuery request, CancellationToken cancellationToken)
         {
             var newPartner = _mapper.Map<Partner>(request.newPartner);
@@ -28,13 +31,19 @@ namespace Streetcode.BLL.MediatR.Partners.Create
             {
                 newPartner.Streetcodes.Clear();
                 newPartner = await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner);
-                _repositoryWrapper.SaveChanges();
+                await _repositoryWrapper.SaveChangesAsync();
                 var streetcodeIds = request.newPartner.Streetcodes.Select(s => s.Id).ToList();
-                newPartner.Streetcodes.AddRange(await _repositoryWrapper
-                    .StreetcodeRepository
-                    .GetAllAsync(s => streetcodeIds.Contains(s.Id)));
+                var existingStreetcodes = await _repositoryWrapper.StreetcodeRepository
+                    .GetAllAsync(s => streetcodeIds.Contains(s.Id));
 
-                _repositoryWrapper.SaveChanges();
+                foreach (var streetcode in existingStreetcodes)
+                {
+                    _repositoryWrapper.StreetcodeRepository.Attach(streetcode);
+                }
+
+                newPartner.Streetcodes.AddRange(existingStreetcodes);
+
+                await _repositoryWrapper.SaveChangesAsync();
                 return Result.Ok(_mapper.Map<PartnerDTO>(newPartner));
             }
             catch(Exception ex)

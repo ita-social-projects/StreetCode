@@ -28,6 +28,8 @@ public interface IRepositoryBase<T>
 
     void DeleteRange(IEnumerable<T> items);
 
+    void Attach(T entity);
+
     EntityEntry<T> Entry(T entity);
 
     public Task ExecuteSqlRaw(string query);

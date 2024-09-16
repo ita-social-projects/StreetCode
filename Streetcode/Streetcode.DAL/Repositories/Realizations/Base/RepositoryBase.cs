@@ -62,6 +62,11 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
         _dbContext.Set<T>().RemoveRange(items);
     }
 
+    public void Attach(T entity)
+    {
+        _dbContext.Set<T>().Attach(entity);
+    }
+
     public EntityEntry<T> Entry(T entity)
     {
         return _dbContext.Entry(entity);

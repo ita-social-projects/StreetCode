@@ -373,7 +373,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             foreach (var newTag in toCreate)
             {
                 var existingTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => t.Title == newTag.Title);
-                if (existingTag is not null)
+                if (existingTag is not null && existingTag.Id != newTag.Id)
                 {
                     throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
                 }

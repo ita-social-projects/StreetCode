@@ -117,12 +117,6 @@ namespace Streetcode.BLL.Resources {
             }
         }
         
-        internal static string MustBeInRange {
-            get {
-                return ResourceManager.GetString("MustBeInRange", resourceCulture);
-            }
-        }
-        
         internal static string EmailAddressFormat {
             get {
                 return ResourceManager.GetString("EmailAddressFormat", resourceCulture);
@@ -162,6 +156,12 @@ namespace Streetcode.BLL.Resources {
         internal static string InvalidPrecision {
             get {
                 return ResourceManager.GetString("InvalidPrecision", resourceCulture);
+            }
+        }
+        
+        internal static string LengthMustBeInRange {
+            get {
+                return ResourceManager.GetString("LengthMustBeInRange", resourceCulture);
             }
         }
     }

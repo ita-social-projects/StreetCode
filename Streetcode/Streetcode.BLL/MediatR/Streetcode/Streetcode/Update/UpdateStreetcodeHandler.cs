@@ -379,15 +379,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 }
             }
 
-            foreach (var updateTag in toUpdate.Where(n => n.Id == 0))
-            {
-                var existingTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => t.Title == updateTag.Title);
-                if (existingTag is not null)
-                {
-                    throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
-                }
-            }
-
             await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toCreate));
             _repositoryWrapper.StreetcodeTagIndexRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toDelete));
             _repositoryWrapper.StreetcodeTagIndexRepository.UpdateRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toUpdate));

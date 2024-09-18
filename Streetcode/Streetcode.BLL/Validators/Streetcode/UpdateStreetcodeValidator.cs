@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
@@ -17,6 +18,7 @@ namespace Streetcode.BLL.Validators.Streetcode;
 public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeCommand>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+
     public UpdateStreetcodeValidator(
         IRepositoryWrapper repositoryWrapper,
         BaseStreetcodeValidator baseStreetcodeValidator,
@@ -48,6 +50,16 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleFor(c => c.Streetcode.Text).SetValidator(baseTextValidator);
 
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
+
+        // If the object's state is marked as Deleted or Updated, the Id field must not be 0,
+        // because to delete or update an object, it must already exist in the database.
+        // If the Id is 0, it indicates that the object has not been saved yet, and delete or update operations
+        // cannot be performed on a non-existing object.
+        RuleForEach(c => c.Streetcode.Tags)
+            .Where(t => t.ModelState == ModelState.Deleted || t.ModelState == ModelState.Updated)
+            .Must(t => t.Id != 0)
+            .WithMessage(localizer["Invalid", fieldLocalizer["Id"]]);
+
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);
         RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);

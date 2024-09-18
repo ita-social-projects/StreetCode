@@ -24,27 +24,6 @@
     <data name="TitleMaxLength" xml:space="preserve">
         <value>Maximum length is {0}</value>
     </data>
-    <data name="TitleNewsAlreadyExists" xml:space="preserve">
-        <value />
-    </data>
-    <data name="TextRequired" xml:space="preserve">
-        <value />
-    </data>
-    <data name="TextNewsAlreadyExists" xml:space="preserve">
-        <value />
-    </data>
-    <data name="InvalidImageIdValue" xml:space="preserve">
-        <value />
-    </data>
-    <data name="URLRequired" xml:space="preserve">
-        <value />
-    </data>
-    <data name="URLInvalid" xml:space="preserve">
-        <value />
-    </data>
-    <data name="URLAlreadyExistsNews" xml:space="preserve">
-        <value />
-    </data>
     <data name="CannotBeEmpty" xml:space="preserve">
         <value>Field '{0}' cannot be empty</value>
     </data>

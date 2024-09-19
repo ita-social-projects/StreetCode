@@ -39,10 +39,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));
 
-            const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
+            const int blackAndWhiteImageAssignmentKey = (int)ImageAssigment.Blackandwhite;
             foreach (var streetcode in streetcodes)
             {
-                streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(blackAndWhiteImageAssignmentKey.ToString())).ToList();
             }
 
             if (!streetcodes.Any())

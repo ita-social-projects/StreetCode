@@ -78,4 +78,7 @@
     <data name="LengthMustBeInRange" xml:space="preserve">
         <value>Довжина поля '{0}' має бути від {1} до {2}</value>
     </data>
+    <data name="DateStringFormat" xml:space="preserve">
+        <value>Поле 'Рядок дати' приймає лише кириличні літери, цифри, тире (–) і круглі дужки.</value>
+    </data>
 </root>

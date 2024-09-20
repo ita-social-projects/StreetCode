@@ -61,7 +61,9 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.DateString)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])
-            .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength]);
+            .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength])
+            .Matches(@"^[А-Яа-яЁёЇїІіЄєҐґ0-9\s\(\)\-]+$") // Cyrillic letters, digits, parentheses, hyphen
+            .WithMessage(localizer["DateStringFormat"]);
 
         RuleFor(dto => dto.StreetcodeType)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["StreetcodeType"]])

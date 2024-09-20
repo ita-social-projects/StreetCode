@@ -164,5 +164,11 @@ namespace Streetcode.BLL.Resources {
                 return ResourceManager.GetString("InvalidPrecision", resourceCulture);
             }
         }
+        
+        internal static string DateStringFormat {
+            get {
+                return ResourceManager.GetString("DateStringFormat", resourceCulture);
+            }
+        }
     }
 }

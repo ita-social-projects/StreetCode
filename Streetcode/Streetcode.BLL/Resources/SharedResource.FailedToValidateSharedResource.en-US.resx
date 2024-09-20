@@ -73,9 +73,12 @@
         <value>Image with id {0} doesnt exist</value>
     </data>
     <data name="InvalidNewsUrl" xml:space="preserve">
-        <value>Field 'Url' accepts only small latin alphabet letters,hyphen and numbers.</value>
+        <value>Field 'Url' accepts only small latin alphabet letters, hyphen and numbers.</value>
     </data>
     <data name="InvalidPrecision" xml:space="preserve">
         <value>Field '{0}' has invalid precision</value>
+    </data>
+    <data name="DateStringFormat" xml:space="preserve">
+        <value>Field 'Date String' accepts only cyrillic letters, numbers, dashes (–) and parentheses.</value>
     </data>
 </root>

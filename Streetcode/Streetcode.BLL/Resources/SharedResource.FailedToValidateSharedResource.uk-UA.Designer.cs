@@ -170,5 +170,23 @@ namespace Streetcode.BLL.Resources {
                 return ResourceManager.GetString("DateStringFormat", resourceCulture);
             }
         }
+        
+        internal static string MustContainExactlyOneAlt1 {
+            get {
+                return ResourceManager.GetString("MustContainExactlyOneAlt1", resourceCulture);
+            }
+        }
+        
+        internal static string MustContainAtMostOneAlt0 {
+            get {
+                return ResourceManager.GetString("MustContainAtMostOneAlt0", resourceCulture);
+            }
+        }
+        
+        internal static string MustContainAtMostOneAlt2 {
+            get {
+                return ResourceManager.GetString("MustContainAtMostOneAlt2", resourceCulture);
+            }
+        }
     }
 }

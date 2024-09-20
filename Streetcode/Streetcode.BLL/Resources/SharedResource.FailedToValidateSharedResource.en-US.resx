@@ -61,7 +61,7 @@
         <value>The email address must be in the correct format</value>
     </data>
     <data name="TransliterationUrlFormat" xml:space="preserve">
-        <value>Transliteration url must consists of latin characters, numbers and hyphen</value>
+        <value>Transliteration url must consists of small latin characters, numbers and hyphen</value>
     </data>
     <data name="MustBeBetween" xml:space="preserve">
         <value>Field '{0}' must be between {1} and {2}</value>
@@ -80,5 +80,14 @@
     </data>
     <data name="DateStringFormat" xml:space="preserve">
         <value>Field 'Date String' accepts only cyrillic letters, numbers, dashes (–) and parentheses.</value>
+    </data>
+    <data name="MustContainExactlyOneAlt1" xml:space="preserve">
+        <value>Field '{0}' must contain exactly one black and white image.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt0" xml:space="preserve">
+        <value>Field '{0}' may contain at most one colored image.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt2" xml:space="preserve">
+        <value>Field '{0}' may contain at most one image for links.</value>
     </data>
 </root>

@@ -8,6 +8,7 @@ using Streetcode.BLL.Validators.Streetcode.ImageDetails;
 using Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Streetcode.Toponyms;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
@@ -20,6 +21,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int AliasMaxLength = 33;
     public const int TeaserMaxLength = 520;
     public const int DateStringMaxLength = 100;
+    public const int TransliterationUrlMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
 
@@ -52,7 +54,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.TransliterationUrl)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TransliterationUrl"]])
-            .Matches(@"^([A-Za-z]|[A-Za-z0-9]|-)*$")
+            .MaximumLength(TransliterationUrlMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TransliterationUrl"], TransliterationUrlMaxLength])
+            .Matches(@"^[a-z0-9-]*$")
             .WithMessage(localizer["TransliterationUrlFormat"]);
 
         RuleFor(dto => dto.Index)
@@ -81,6 +84,21 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleForEach(dto => dto.ImagesDetails)
             .SetValidator(imageDetailsValidator);
+
+        // Validate that exactly one Black and White (Alt = "1") image exists
+        RuleFor(dto => dto.ImagesDetails)
+            .Must(images => images is not null && images.Count(i => i.Alt == $"{(int)ImageAssigment.Blackandwhite}") == 1)
+            .WithMessage(localizer["MustContainExactlyOneAlt1", fieldLocalizer["Alt"]]);
+
+        // Validate that at most one Colored (Alt = "0") image exists, if any
+        RuleFor(dto => dto.ImagesDetails)
+            .Must(images => images is null || images.Count(i => i.Alt == $"{(int)ImageAssigment.Animation}") <= 1)
+            .WithMessage(localizer["MustContainAtMostOneAlt0", fieldLocalizer["Alt"]]);
+
+        // Validate that at most one Optional (Alt = "2") image exists, if any
+        RuleFor(dto => dto.ImagesDetails)
+            .Must(images => images is null || images.Count(i => i.Alt == $"{(int)ImageAssigment.Relatedfigure}") <= 1)
+            .WithMessage(localizer["MustContainAtMostOneAlt2", fieldLocalizer["Alt"]]);
 
         RuleForEach(dto => dto.StreetcodeArtSlides)
             .SetValidator(streetcodeArtSlideValidator);

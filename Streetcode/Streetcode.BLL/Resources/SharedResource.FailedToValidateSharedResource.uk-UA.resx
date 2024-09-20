@@ -58,7 +58,7 @@
         <value>Адреса електронної пошти повинна бути в правильному форматі</value>
     </data>
     <data name="TransliterationUrlFormat" xml:space="preserve">
-        <value>Транслітероване посилання має містити тільки латинські літери, цифри та дефіс</value>
+        <value>Транслітероване посилання має містити тільки маленькі латинські літери, цифри та дефіс</value>
     </data>
     <data name="MustBeBetween" xml:space="preserve">
         <value>Поле '{0}' має бути між {1} і {2}</value>
@@ -80,5 +80,14 @@
     </data>
     <data name="DateStringFormat" xml:space="preserve">
         <value>Поле 'Рядок дати' приймає лише кириличні літери, цифри, тире (–) і круглі дужки.</value>
+    </data>
+    <data name="MustContainExactlyOneAlt1" xml:space="preserve">
+        <value>Поле '{0}' має містити рівно одне чорно-біле зображення.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt0" xml:space="preserve">
+        <value>Поле '{0}' може містити щонайбільше одне кольорове зображення.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt2" xml:space="preserve">
+        <value>Поле '{0}' може містити щонайбільше одне зображення для звʼязків.</value>
     </data>
 </root>

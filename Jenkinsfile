@@ -41,7 +41,6 @@ pipeline {
                 echo "CHANGE_ID.............${env.CHANGE_ID}"
                 echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
                 echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
-                echo "TEST.........${env.TEST}"
             }
         }
         stage('Setup dependencies') {
@@ -105,25 +104,8 @@ pipeline {
                         "PR_KEY=${env.CHANGE_ID}",
                         "PR_BRANCH=${env.CHANGE_BRANCH}",
                         "PR_BASE=${env.CHANGE_TARGET}",
-                        "TEST_1=${env.TEST}",
                     ]) {
-                        sh "echo ${env.TEST_1}"
-                        if (env.TEST_1 != null) {
-                            sh "echo env var is NOT null"
-                        } else {
-                            sh "echo env var is null"
-                        }
-                        if (env.TEST_1 != "null") {
-                            sh "echo env var is NOT null string"
-                        } else {
-                            sh "echo env var is null string"
-                        }
-                        if (env.TEST_1 != "") {
-                            sh "echo env var is NOT empty"
-                        } else {
-                            sh "echo env var is empty"
-                        }
-                        if (env.PR_KEY) {                        
+                        if (env.PR_KEY != "null") {                        
                             sh  ''' echo "Sonar scan"
                                     dotnet sonarscanner begin \
                                     /k:"ita-social-projects_StreetCode" \

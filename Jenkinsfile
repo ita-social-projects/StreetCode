@@ -38,11 +38,9 @@ pipeline {
                 echo "JOB_NAME..............${env.JOB_NAME}"
                 echo "NODE_NAME.............${env.NODE_NAME}"
                 echo "WORKSPACE.............${env.WORKSPACE}"
-
                 echo "CHANGE_ID.............${env.CHANGE_ID}"
                 echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
                 echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
-                echo "BRANCH_NAME...........${env.BRANCH_NAME}"
             }
         }
         stage('Setup dependencies') {

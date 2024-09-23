@@ -10,6 +10,9 @@ using Xunit;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
+using System.Linq.Expressions;
+using Streetcode.DAL.Helpers;
+using Streetcode.BLL.MediatR.Team.Position.GetAll;
 
 namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
@@ -28,30 +31,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
-        private void SetupGetAllTeams(List<TeamMember> teamList)
-        {
-            if (teamList == null)
-            {
-                _mockRepository.Setup(x => x.TeamRepository.GetAllAsync(
-                        null,
-                        It.IsAny<Func<IQueryable<TeamMember>, IIncludableQueryable<TeamMember, object>>>()))
-                    .ReturnsAsync((List<TeamMember>)null);
-            }
-            else
-            {
-                _mockRepository.Setup(x => x.TeamRepository.GetAllAsync(
-                        null,
-                        It.IsAny<Func<IQueryable<TeamMember>, IIncludableQueryable<TeamMember, object>>>()))
-                    .ReturnsAsync(teamList);
-            }
-        }
-
-        private void SetupMapTeamMembers(IEnumerable<TeamMember> teamList, IEnumerable<TeamMemberDTO> teamDTOList)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberDTO>>(It.IsAny<IEnumerable<TeamMember>>()))
-                .Returns(teamDTOList);
-        }
-
         [Fact]
         public async Task ShouldReturnSuccessfully_CorrectType()
         {
@@ -59,8 +38,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             var teamList = GetTeamList();
             var teamDTOList = GetListTeamDTO();
 
-            SetupGetAllTeams(teamList);
-            SetupMapTeamMembers(teamList, teamDTOList);
+            SetupPaginatedRepository(teamList);
+            SetupMapper(teamDTOList);
 
             var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -71,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.NotNull(result.Value),
-                () => Assert.IsType<List<TeamMemberDTO>>(result.ValueOrDefault)
+                () => Assert.IsType<List<TeamMemberDTO>>(result.ValueOrDefault.TeamMembers)
             );
         }
 
@@ -82,8 +61,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             var teamList = GetTeamList();
             var teamDTOList = GetListTeamDTO();
 
-            SetupGetAllTeams(teamList);
-            SetupMapTeamMembers(teamList, teamDTOList);
+            SetupPaginatedRepository(teamList);
+            SetupMapper(teamDTOList);
 
             var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -94,29 +73,46 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.NotNull(result.Value),
-                () => Assert.Equal(GetTeamList().Count(), result.Value.Count())
+                () => Assert.Equal(GetTeamList().Count(), result.Value.TeamMembers.Count())
             );
         }
 
         [Fact]
-        public async Task ShouldThrowException_IdNotExist()
+        public async Task Handler_Returns_Correct_PageSize()
         {
-            // Arrange
-            var expectedError = "Cannot find any team";
-            _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
-                .Returns(new LocalizedString("CannotFindAnyTeam", expectedError));
-
-            SetupGetAllTeams(GetTeamListWithNotExistingId());
+            //Arrange
+            ushort pageSize = 3;
+            SetupPaginatedRepository(GetTeamList().Take(pageSize));
+            SetupMapper(GetListTeamDTO().Take(pageSize).ToList());
 
             var handler = new GetAllTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-            // Act
-            var result = await handler.Handle(new GetAllTeamQuery(), CancellationToken.None);
+            //Act
+            var result = await handler.Handle(new GetAllTeamQuery(page: 1, pageSize: pageSize), CancellationToken.None);
 
-            // Assert
-            Assert.Equal(expectedError, result.Errors.First().Message);
+            //Assert
+            Assert.Multiple(
+                () => Assert.IsType<List<TeamMemberDTO>>(result.Value.TeamMembers),
+                () => Assert.Equal(pageSize, result.Value.TeamMembers.Count()));
+        }
 
-            _mockMapper.Verify(x => x.Map<IEnumerable<TeamMemberDTO>>(It.IsAny<IEnumerable<TeamMember>>()), Times.Never);
+        private void SetupPaginatedRepository(IEnumerable<TeamMember> returnList)
+        {
+            _mockRepository.Setup(repo => repo.TeamRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<TeamMember, TeamMember>>?>(),
+                It.IsAny<Expression<Func<TeamMember, bool>>?>(),
+                It.IsAny<Func<IQueryable<TeamMember>, IIncludableQueryable<TeamMember, object>>?>(),
+                It.IsAny<Expression<Func<TeamMember, object>>?>(),
+                It.IsAny<Expression<Func<TeamMember, object>>?>()))
+            .Returns(PaginationResponse<TeamMember>.Create(returnList.AsQueryable()));
+        }
+
+        private void SetupMapper(IEnumerable<TeamMemberDTO> teamDTOList)
+        {
+            _mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberDTO>>(It.IsAny<IEnumerable<TeamMember>>()))
+                .Returns(teamDTOList);
         }
 
         private static List<TeamMember> GetTeamList()
@@ -125,18 +121,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             {
                 new TeamMember
                 {
-                    Id = 1
+                    Id = 1,
                 },
                 new TeamMember
                 {
-                    Id = 2
-                }
+                    Id = 2,
+                },
+                new TeamMember
+                {
+                    Id = 3,
+                },
+                new TeamMember
+                {
+                    Id = 4,
+                },
+                new TeamMember
+                {
+                    Id = 5,
+                },
             };
-        }
-
-        private static List<TeamMember> GetTeamListWithNotExistingId()
-        {
-            return null;
         }
 
         private static List<TeamMemberDTO> GetListTeamDTO()
@@ -145,12 +148,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             {
                 new TeamMemberDTO
                 {
-                    Id = 1
+                    Id = 1,
                 },
                 new TeamMemberDTO
                 {
-                    Id = 2
-                }
+                    Id = 2,
+                },
+                new TeamMemberDTO
+                {
+                    Id = 3,
+                },
+                new TeamMemberDTO
+                {
+                    Id = 4,
+                },
+                new TeamMemberDTO
+                {
+                    Id = 5,
+                },
             };
         }
     }

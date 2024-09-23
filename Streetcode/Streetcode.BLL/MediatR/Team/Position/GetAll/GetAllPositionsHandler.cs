@@ -8,10 +8,14 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
+using Streetcode.DAL.Entities.Team;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 {
-    public class GetAllPositionsHandler : IRequestHandler<GetAllPositionsQuery, Result<IEnumerable<PositionDTO>>>
+    public class GetAllPositionsHandler : IRequestHandler<GetAllPositionsQuery, Result<GetAllPositionsDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -26,20 +30,28 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<IEnumerable<PositionDTO>>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllPositionsDTO>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
         {
-            var positions = await _repositoryWrapper
+            PaginationResponse<Positions> paginationResponse = _repositoryWrapper
                 .PositionRepository
-                .GetAllAsync();
+                .GetAllPaginated(
+                    request.page,
+                    request.pageSize);
 
-            if (positions is null)
+            if (paginationResponse is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                return Task.FromResult(Result.Fail<GetAllPositionsDTO>(new Error(errorMsg)));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<PositionDTO>>(positions));
+            GetAllPositionsDTO getAllPositionsDTO = new GetAllPositionsDTO()
+            {
+                TotalAmount = paginationResponse.TotalItems,
+                Positions = _mapper.Map<IEnumerable<PositionDTO>>(paginationResponse.Entities),
+            };
+
+            return Task.FromResult(Result.Ok(getAllPositionsDTO));
         }
     }
 }

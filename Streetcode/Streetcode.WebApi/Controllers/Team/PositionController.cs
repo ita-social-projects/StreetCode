@@ -17,9 +17,9 @@ namespace Streetcode.WebApi.Controllers.Team
     public class PositionController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllPositionsQuery()));
+            return HandleResult(await Mediator.Send(new GetAllPositionsQuery(page, pageSize)));
         }
 
         [HttpGet]

@@ -31,8 +31,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
 public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, Result<int>>
 {
-    public const int StreetcodeIndexMaxValue = 9999;
-    public const int StreetcodeIndexMinValue = 1;
     private static IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
@@ -61,12 +59,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
-                if (streetcode.Index < StreetcodeIndexMinValue || streetcode.Index > StreetcodeIndexMaxValue)
-                {
-                    string errorMessage = $"The 'index' must be in range from {StreetcodeIndexMinValue} to {StreetcodeIndexMaxValue}.";
-                    _logger.LogError(request, errorMessage);
-                    return Result.Fail(new Error(errorMessage));
-                }
 
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);

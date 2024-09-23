@@ -19,4 +19,4 @@ jobs:
         iteration-field: Sprint
         iteration: last
         new-iteration: current
-        statuses: '✍Planned,🏗 In progress,👀PR,🔎In Q/A,🚫Blocked'
+        statuses: '✍Planned,🏗 In progress,👀PR'

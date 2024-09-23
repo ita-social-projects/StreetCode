@@ -15,9 +15,9 @@ namespace Streetcode.WebApi.Controllers.Team
     public class TeamController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllTeamQuery()));
+            return HandleResult(await Mediator.Send(new GetAllTeamQuery(page, pageSize)));
         }
 
         [HttpGet]

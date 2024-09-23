@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Team;
 
 namespace Streetcode.BLL.MediatR.Team.GetAll
 {
-    public record GetAllTeamQuery : IRequest<Result<IEnumerable<TeamMemberDTO>>>;
+    public record GetAllTeamQuery(ushort? page = null, ushort? pageSize = null): IRequest<Result<GetAllTeamDTO>>;
 }

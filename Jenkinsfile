@@ -108,10 +108,20 @@ pipeline {
                         "TEST_1=${env.TEST}",
                     ]) {
                         sh "echo ${env.TEST_1}"
-                        if (env.TEST_1){
+                        if (env.TEST_1 != null) {
                             sh "echo env var is NOT null"
                         } else {
                             sh "echo env var is null"
+                        }
+                        if (env.TEST_1 != "null") {
+                            sh "echo env var is NOT null string"
+                        } else {
+                            sh "echo env var is null string"
+                        }
+                        if (env.TEST_1 != "") {
+                            sh "echo env var is NOT empty"
+                        } else {
+                            sh "echo env var is empty"
                         }
                         if (env.PR_KEY) {                        
                             sh  ''' echo "Sonar scan"

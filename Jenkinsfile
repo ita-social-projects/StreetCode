@@ -105,6 +105,7 @@ pipeline {
                         "PR_BRANCH=${env.CHANGE_BRANCH}",
                         "PR_BASE=${env.CHANGE_TARGET}",
                     ]) {
+                        sh "echo ${env.PR_KEY}"
                         if (env.PR_KEY) {                        
                             sh  ''' echo "Sonar scan"
                                     dotnet sonarscanner begin \

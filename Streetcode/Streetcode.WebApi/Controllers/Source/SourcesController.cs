@@ -21,9 +21,9 @@ public class SourcesController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllCategories()
+    public async Task<IActionResult> GetAllCategories([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery()));
+        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

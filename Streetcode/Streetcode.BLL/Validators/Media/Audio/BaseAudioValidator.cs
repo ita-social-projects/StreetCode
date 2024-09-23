@@ -7,9 +7,9 @@ namespace Streetcode.BLL.Validators.Media.Audio;
 
 public class BaseAudioValidator : AbstractValidator<AudioFileBaseCreateDTO>
 {
-    private const int MaxTitleLength = 100;
-    private const int MaxMimeTypeLength = 10;
-    private const string Mp3Extension = "mp3";
+    public const int MaxTitleLength = 100;
+    public const int MaxMimeTypeLength = 10;
+    public const string Mp3Extension = "mp3";
 
     public BaseAudioValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {

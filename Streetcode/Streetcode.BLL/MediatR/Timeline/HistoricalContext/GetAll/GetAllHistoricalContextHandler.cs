@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 {
-    public class GetAllHistoricalContextHandler : IRequestHandler<GetAllHistoricalContextQuery, Result<IEnumerable<HistoricalContextDTO>>>
+    public class GetAllHistoricalContextHandler : IRequestHandler<GetAllHistoricalContextQuery, Result<GetAllHistoricalContextDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,22 +28,29 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<IEnumerable<HistoricalContextDTO>>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllHistoricalContextDTO>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
         {
-            var historicalContextItems = await _repositoryWrapper
+            PaginationResponse<DAL.Entities.Timeline.HistoricalContext> paginationResponse = _repositoryWrapper
                 .HistoricalContextRepository
-                .GetAllAsync();
+                .GetAllPaginated(
+                    request.page,
+                    request.pageSize,
+                    descendingSortKeySelector: context => context.Title);
 
-            if (historicalContextItems is null)
+            if (paginationResponse is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
             }
 
-            var historicalContexts = historicalContextItems.OrderBy(context => context.Title);
+            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new GetAllHistoricalContextDTO
+            {
+                TotalAmount = paginationResponse.TotalItems,
+                HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginationResponse.Entities)
+            };
 
-            return Result.Ok(_mapper.Map<IEnumerable<HistoricalContextDTO>>(historicalContexts));
+            return Task.FromResult(Result.Ok(getAllHistoricalContextDTO));
         }
     }
 }

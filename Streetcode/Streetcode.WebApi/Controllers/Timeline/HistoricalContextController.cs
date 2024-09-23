@@ -14,9 +14,9 @@ namespace Streetcode.WebApi.Controllers.Timeline
     public class HistoricalContextController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery()));
+            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]

@@ -13,12 +13,11 @@ public class AudioTests
 {
     private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockValidationLocalizer;
     private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockNamesLocalizer;
-    //private readonly BaseAudioValidator audioValidator;
 
     private const string testRequiredError = "Field is required";
     private const string testMaxLengthError = "Value must be less than {0} characters long";
     private const string testMustBeOneOfError = "Value must be one of: {0}";
-    
+
     public AudioTests()
     {
         this.mockValidationLocalizer = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
@@ -172,15 +171,6 @@ public class AudioTests
 
     private void SetupLocalizers(int maxLength = 0, string oneOfArgument = "")
     {
-        /*this.mockNamesLocalizer.Setup(x => x["Title"])
-            .Returns(new LocalizedString("Title", nameof(AudioFileBaseCreateDTO.Title)));
-        this.mockNamesLocalizer.Setup(x => x["BaseFormat"])
-            .Returns(new LocalizedString("BaseFormat", nameof(AudioFileBaseCreateDTO.BaseFormat)));
-        this.mockNamesLocalizer.Setup(x => x["MimeType"])
-            .Returns(new LocalizedString("MimeType", nameof(AudioFileBaseCreateDTO.MimeType)));
-        this.mockNamesLocalizer.Setup(x => x["Extension"])
-            .Returns(new LocalizedString("Extension", nameof(AudioFileBaseCreateDTO.Extension)));
-*/
         this.mockValidationLocalizer.Setup(x => x["IsRequired", It.IsAny<object[]>()])
             .Returns(new LocalizedString("IsRequired", testRequiredError));
         this.mockValidationLocalizer.Setup(x => x["MaxLength", It.IsAny<object[]>()])

@@ -15,9 +15,9 @@ namespace Streetcode.WebApi.Controllers.AdditionalContent;
 public class TagController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllTagsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllTagsQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

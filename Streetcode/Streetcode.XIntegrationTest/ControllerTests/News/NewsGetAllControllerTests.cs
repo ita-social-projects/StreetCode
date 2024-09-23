@@ -29,7 +29,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.client.GetAllAsync(1, 10);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<NewsDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllNewsResponseDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -39,20 +39,20 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
         public async Task GetAll_PageNumberTooBig_ReturnsEmptyCollection()
         {
             var response = await this.client.GetAllAsync(999, 10);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<NewsDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllNewsResponseDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
-            Assert.Empty(returnedValue);
+            Assert.Empty(returnedValue.News);
         }
 
         [Fact]
         public async Task GetAll_PageSizeIsZero_ReturnsEmptyCollection()
         {
             var response = await this.client.GetAllAsync(1, 0);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<NewsDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllNewsResponseDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
-            Assert.Empty(returnedValue);
+            Assert.Empty(returnedValue.News);
         }
     }
 }

@@ -54,7 +54,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         var response = await this.client.GetAllAsync();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<GetAllPositionsDTO>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
@@ -65,7 +65,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         var response = await this.client.GetAllWithTeamMembers();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<GetAllPositionsDTO>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);

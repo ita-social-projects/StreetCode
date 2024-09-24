@@ -5,22 +5,43 @@ namespace Streetcode.XUnitTest.Mocks;
 
 public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSharedResource>
 {
-    private readonly Dictionary<string, string> errorMessages;
+    private readonly Dictionary<int, List<string>> groupedErrors;
     private readonly List<LocalizedString> strings;
 
     public MockFailedToValidateLocalizer()
     {
-        this.errorMessages = new Dictionary<string, string>()
+        this.groupedErrors = new Dictionary<int, List<string>>();
+        this.groupedErrors.Add(0, new List<string>()
         {
-            { "IsRequired", "{0} is required." },
-            { "MaxLength", "Length of {0} must be less than {1} characters long" },
-            { "MustBeOneOf", "Value of {0} must be one of: {1}" },
-        };
-        this.strings = new List<LocalizedString>();
-        foreach (var pair in this.errorMessages)
+            "LogoMustMatchUrl",
+            "EmailAddressFormat",
+            "TransliterationUrlFormat",
+            "InvalidNewsUrl",
+            "DateStringFormat",
+        });
+
+        this.groupedErrors.Add(1, new List<string>()
         {
-            this.strings.Add(new LocalizedString(pair.Key, pair.Value));
-        }
+            "CannotBeEmpty",
+            "ValidUrl",
+            "IsRequired",
+            "Invalid",
+            "MustBeUnique",
+            "ImageDoesntExist",
+            "InvalidPrecision",
+            "MustContainExactlyOneAlt1",
+            "MustContainAtMostOneAlt0",
+            "MustContainAtMostOneAlt2",
+        });
+
+        this.groupedErrors.Add(2, new List<string>()
+        {
+            "CannotBeEmptyWithCondition",
+            "ValidUrl_UrlDisplayed",
+            "GreaterThan",
+            "MustBeOneOf",
+            "MaxLength",
+        });
     }
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
@@ -28,7 +49,53 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
         return this.strings;
     }
 
-    public LocalizedString this[string name] => new (name, this.errorMessages[name]);
+    public LocalizedString this[string name]
+    {
+        get
+        {
+            var isContains = this.groupedErrors[0].Contains(name);
+            if (isContains)
+            {
+                return new LocalizedString(name, $"Error '{name}'");
+            }
 
-    public LocalizedString this[string name, params object[] arguments] => new (name, string.Format(this.errorMessages[name], arguments));
+            throw new ArgumentException("This error excepts only 1 argument");
+        }
+    }
+
+    public LocalizedString this[string name, params object[] arguments]
+    {
+        get
+        {
+            var argumentsCount = arguments.Length;
+            if (argumentsCount > 0)
+            {
+                var isContains = this.groupedErrors[argumentsCount].Contains(name);
+                if (isContains)
+                {
+                    return this.GetErrorMessage(name, arguments);
+                }
+            }
+
+            throw new ArgumentException($"Cannot find error message '{name}' that excepts {argumentsCount} arguments");
+        }
+    }
+
+    private LocalizedString GetErrorMessage(string error, params object[] arguments)
+    {
+        string errorMessage = $"Error '{error}'";
+        switch (arguments.Length)
+        {
+            case 1:
+                errorMessage += ". Arguments: {0}";
+                break;
+            case 2:
+                errorMessage += ". Arguments: {0}, {1}";
+                break;
+            default:
+                throw new ArgumentException("Not supported number of arguments");
+        }
+
+        return new LocalizedString(error, string.Format(errorMessage, arguments));
+    }
 }

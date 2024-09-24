@@ -4,4 +4,5 @@ using Streetcode.BLL.DTO.Partners;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAll;
 
-public record GetAllPartnersQuery(ushort? page = null, ushort? pageSize = null): IRequest<Result<GetAllPartnersResponseDTO>>;
+public record GetAllPartnersQuery(ushort? page = null, ushort? pageSize = null)
+    : IRequest<Result<GetAllPartnersResponseDTO>>;

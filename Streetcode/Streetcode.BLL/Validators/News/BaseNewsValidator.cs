@@ -37,7 +37,7 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
         RuleFor(x => x.URL)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["TargetUrl"]])
             .MaximumLength(UrlMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TargetUrl"], UrlMaxLength])
-            .Matches("^[a-zA-Z0-9-]*$").WithMessage(x => localizer["InvalidNewsUrl"]);
+            .Matches(@"^[a-z0-9-]*$").WithMessage(x => localizer["InvalidNewsUrl"]);
     }
 
     private async Task<bool> BeExistingImageId(int imageId, CancellationToken cancellationToken)

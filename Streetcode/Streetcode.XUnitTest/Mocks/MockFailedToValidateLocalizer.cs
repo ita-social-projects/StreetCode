@@ -42,6 +42,12 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
             "MustBeOneOf",
             "MaxLength",
         });
+
+        this.groupedErrors.Add(3, new List<string>()
+        {
+            "LengthMustBeInRange",
+            "MustBeBetween",
+        });
     }
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
@@ -91,6 +97,9 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
                 break;
             case 2:
                 errorMessage += ". Arguments: {0}, {1}";
+                break;
+            case 3:
+                errorMessage += ". Arguments: {0}, {1}, {2}";
                 break;
             default:
                 throw new ArgumentException("Not supported number of arguments");

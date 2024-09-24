@@ -1,7 +1,12 @@
-﻿using FluentValidation.TestHelper;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using FluentValidation.TestHelper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.MediatR.Media.Audio.Create;
+using Streetcode.BLL.MediatR.Media.Audio.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Media.Audio;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
@@ -156,6 +161,49 @@ public class AudioTests
         // Assert
         result.ShouldHaveValidationErrorFor(audio => audio.Extension)
             .WithErrorMessage(string.Format(testMustBeOneOfError, BaseAudioValidator.Mp3Extension));
+    }
+
+    [Fact]
+    public void CreateAudioValidator_ShouldCallBaseValidator()
+    {
+        // Arrange
+        this.SetupLocalizers();
+        var baseValidator = new Mock<BaseAudioValidator>(this.mockValidationLocalizer.Object, this.mockNamesLocalizer.Object);
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
+            .Returns(new ValidationResult());
+        var createValidator = new CreateAudioValidator(baseValidator.Object);
+        var createCommand = new CreateAudioCommand(this.GetValidAudioFile());
+
+        // Act
+        var result = createValidator.TestValidate(createCommand);
+
+        // Assert
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
+    }
+
+    [Fact]
+    public void UpdateAudioValidator_ShouldCallBaseValidator()
+    {
+        // Arrange
+        this.SetupLocalizers();
+        var baseValidator = new Mock<BaseAudioValidator>(this.mockValidationLocalizer.Object, this.mockNamesLocalizer.Object);
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
+            .Returns(new ValidationResult());
+        var updateValidator = new UpdateAudioValidator(baseValidator.Object);
+        var updateCommand = new UpdateAudioCommand(new AudioFileBaseUpdateDTO()
+        {
+            Id = 1,
+            Title = "New Title",
+            BaseFormat = "dkdpkdmy2734hdnf",
+            MimeType = "audio/mpeg",
+            Extension = "mp3",
+        });
+
+        // Act
+        var result = updateValidator.TestValidate(updateCommand);
+
+        // Assert
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
     }
 
     private AudioFileBaseCreateDTO GetValidAudioFile()

@@ -5,4 +5,5 @@ using Streetcode.DAL.Entities.Payment;
 
 namespace Streetcode.BLL.MediatR.Payment;
 
-public record CreateInvoiceCommand(PaymentDTO Payment): IRequest<Result<InvoiceInfo>>;
+public record CreateInvoiceCommand(PaymentDTO Payment)
+    : IRequest<Result<InvoiceInfo>>;

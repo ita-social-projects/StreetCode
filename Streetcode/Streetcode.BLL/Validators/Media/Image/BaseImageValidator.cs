@@ -8,12 +8,12 @@ namespace Streetcode.BLL.Validators.Media.Image;
 
 public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
 {
-    private const int MaxTitleLength = 100;
-    private const int MaxAltLength = 300;
-    private const int MaxMimeTypeLength = 10;
+    public const int MaxTitleLength = 100;
+    public const int MaxAltLength = 300;
+    public const int MaxMimeTypeLength = 10;
 
-    private readonly List<string> _extensions = new() { "png", "jpeg", "jpg", "webp" };
-    private readonly List<string> _mimeTypes = new() { "image/jpeg", "image/png", "image/webp" };
+    public readonly List<string> Extensions = new() { "png", "jpeg", "jpg", "webp" };
+    public readonly List<string> MimeTypes = new() { "image/jpeg", "image/png", "image/webp" };
     public BaseImageValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
@@ -31,9 +31,11 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
             .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["MimeType"]])
             .MaximumLength(MaxMimeTypeLength)
             .WithMessage(localizer["MaxLength", fieldLocalizer["MimeType"], MaxMimeTypeLength])
-            .Must(x => _mimeTypes.Contains(x.ToLower())).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(_mimeTypes)]);
+            .Must(x => MimeTypes.Contains(x.ToLower())).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(MimeTypes)]);
 
-        RuleFor(dto => dto.Extension).Must(x => _extensions.Contains(x.ToLower()))
-            .WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], ValidationExtentions.ConcatWithComma(_extensions)]);
+        RuleFor(dto => dto.Extension)
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Extension"]])
+            .Must(x => Extensions.Contains(x.ToLower()))
+            .WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], ValidationExtentions.ConcatWithComma(Extensions)]);
     }
 }

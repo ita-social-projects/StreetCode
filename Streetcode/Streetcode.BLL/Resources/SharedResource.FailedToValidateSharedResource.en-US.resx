@@ -18,12 +18,6 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="TitleRequired" xml:space="preserve">
-        <value>Title is a required field</value>
-    </data>
-    <data name="TitleMaxLength" xml:space="preserve">
-        <value>Maximum length is {0}</value>
-    </data>
     <data name="CannotBeEmpty" xml:space="preserve">
         <value>Field '{0}' cannot be empty</value>
     </data>

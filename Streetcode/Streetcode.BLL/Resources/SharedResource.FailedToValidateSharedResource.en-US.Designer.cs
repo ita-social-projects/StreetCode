@@ -45,18 +45,6 @@ namespace Streetcode.BLL.Resources {
             }
         }
         
-        internal static string TitleRequired {
-            get {
-                return ResourceManager.GetString("TitleRequired", resourceCulture);
-            }
-        }
-        
-        internal static string TitleMaxLength {
-            get {
-                return ResourceManager.GetString("TitleMaxLength", resourceCulture);
-            }
-        }
-        
         internal static string CannotBeEmpty {
             get {
                 return ResourceManager.GetString("CannotBeEmpty", resourceCulture);

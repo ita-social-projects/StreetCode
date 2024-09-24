@@ -18,12 +18,6 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="TitleRequired" xml:space="preserve">
-        <value>Заголовок це обовʼязкове поле</value>
-    </data>
-    <data name="TitleMaxLength" xml:space="preserve">
-        <value>Максимальна довжина {0}</value>
-    </data>
     <data name="CannotBeEmpty" xml:space="preserve">
         <value>Поле '{0}' не може бути пусте</value>
     </data>

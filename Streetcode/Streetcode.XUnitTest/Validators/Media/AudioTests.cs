@@ -10,31 +10,27 @@ using Streetcode.BLL.MediatR.Media.Audio.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Media.Audio;
 using Streetcode.BLL.Validators.Streetcode.Subtitles;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Validators.Media;
 
 public class AudioTests
 {
-    private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockValidationLocalizer;
-    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockNamesLocalizer;
-
-    private const string testRequiredError = "Field is required";
-    private const string testMaxLengthError = "Value must be less than {0} characters long";
-    private const string testMustBeOneOfError = "Value must be one of: {0}";
+    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
 
     public AudioTests()
     {
-        this.mockValidationLocalizer = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-        this.mockNamesLocalizer = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
     }
 
     [Fact]
     public void ShouldReturnSuccesResult_WhenAudioIsValid()
     {
         // Arange
-        this.SetupLocalizers();
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
 
         // Act
@@ -48,8 +44,8 @@ public class AudioTests
     public void ShouldReturnError_WhenTitleIsEmpty()
     {
         // Arange
-        this.SetupLocalizers();
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Title"]];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.Title = string.Empty;
 
@@ -57,16 +53,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.Title)
-            .WithErrorMessage(testRequiredError);
+        result.ShouldHaveValidationErrorFor(x => x.Title)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenExtensionIsEmpty()
     {
         // Arange
-        this.SetupLocalizers();
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Extension"]];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.Extension = string.Empty;
 
@@ -74,16 +70,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.Extension)
-            .WithErrorMessage(testRequiredError);
+        result.ShouldHaveValidationErrorFor(x => x.Extension)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenMimeTypeIsEmpty()
     {
         // Arange
-        this.SetupLocalizers();
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["MimeType"]];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.MimeType = string.Empty;
 
@@ -91,16 +87,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.MimeType)
-            .WithErrorMessage(testRequiredError);
+        result.ShouldHaveValidationErrorFor(x => x.MimeType)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenBaseFormatIsEmpty()
     {
         // Arange
-        this.SetupLocalizers();
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["BaseFormat"]];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.BaseFormat = string.Empty;
 
@@ -108,16 +104,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.BaseFormat)
-            .WithErrorMessage(testRequiredError);
+        result.ShouldHaveValidationErrorFor(x => x.BaseFormat)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenTitleLengthIsOutOfRange()
     {
         // Arange
-        this.SetupLocalizers(BaseAudioValidator.MaxTitleLength);
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BaseAudioValidator.MaxTitleLength];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.Title = new string('a', BaseAudioValidator.MaxTitleLength + 1);
 
@@ -125,16 +121,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.Title)
-            .WithErrorMessage(string.Format(testMaxLengthError, BaseAudioValidator.MaxTitleLength));
+        result.ShouldHaveValidationErrorFor(x => x.Title)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenMimeTypeLengthIsOutOfRange()
     {
         // Arange
-        this.SetupLocalizers(BaseAudioValidator.MaxMimeTypeLength);
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["MimeType"], BaseAudioValidator.MaxMimeTypeLength];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.MimeType = new string('a', BaseAudioValidator.MaxMimeTypeLength + 1);
 
@@ -142,16 +138,16 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.MimeType)
-            .WithErrorMessage(string.Format(testMaxLengthError, BaseAudioValidator.MaxMimeTypeLength));
+        result.ShouldHaveValidationErrorFor(x => x.MimeType)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void ShouldReturnError_WhenExtensionIsNotMp3()
     {
         // Arange
-        this.SetupLocalizers(0, BaseAudioValidator.Mp3Extension);
-        var validator = new BaseAudioValidator(mockValidationLocalizer.Object, mockNamesLocalizer.Object);
+        var expectedError = this.mockValidationLocalizer["MustBeOneOf", this.mockNamesLocalizer["Extension"], $"'{BaseAudioValidator.Mp3Extension}'"];
+        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var audio = this.GetValidAudioFile();
         audio.Extension = "jpeg";
 
@@ -159,23 +155,23 @@ public class AudioTests
         var result = validator.TestValidate(audio);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(audio => audio.Extension)
-            .WithErrorMessage(string.Format(testMustBeOneOfError, BaseAudioValidator.Mp3Extension));
+        result.ShouldHaveValidationErrorFor(x => x.Extension)
+            .WithErrorMessage(expectedError);
     }
 
     [Fact]
     public void CreateAudioValidator_ShouldCallBaseValidator()
     {
         // Arrange
-        this.SetupLocalizers();
-        var baseValidator = new Mock<BaseAudioValidator>(this.mockValidationLocalizer.Object, this.mockNamesLocalizer.Object);
+        var baseValidator =
+            new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var createValidator = new CreateAudioValidator(baseValidator.Object);
         var createCommand = new CreateAudioCommand(this.GetValidAudioFile());
 
         // Act
-        var result = createValidator.TestValidate(createCommand);
+        createValidator.TestValidate(createCommand);
 
         // Assert
         baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
@@ -185,8 +181,8 @@ public class AudioTests
     public void UpdateAudioValidator_ShouldCallBaseValidator()
     {
         // Arrange
-        this.SetupLocalizers();
-        var baseValidator = new Mock<BaseAudioValidator>(this.mockValidationLocalizer.Object, this.mockNamesLocalizer.Object);
+        var baseValidator =
+            new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateAudioValidator(baseValidator.Object);
@@ -200,7 +196,7 @@ public class AudioTests
         });
 
         // Act
-        var result = updateValidator.TestValidate(updateCommand);
+        updateValidator.TestValidate(updateCommand);
 
         // Assert
         baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
@@ -215,15 +211,5 @@ public class AudioTests
             Extension = "mp3",
             MimeType = "audio/wav",
         };
-    }
-
-    private void SetupLocalizers(int maxLength = 0, string oneOfArgument = "")
-    {
-        this.mockValidationLocalizer.Setup(x => x["IsRequired", It.IsAny<object[]>()])
-            .Returns(new LocalizedString("IsRequired", testRequiredError));
-        this.mockValidationLocalizer.Setup(x => x["MaxLength", It.IsAny<object[]>()])
-            .Returns(new LocalizedString("MaxLength", string.Format(testMaxLengthError, maxLength)));
-        this.mockValidationLocalizer.Setup(x => x["MustBeOneOf", It.IsAny<object[]>()])
-            .Returns(new LocalizedString("MustBeOneOf", string.Format(testMustBeOneOfError, oneOfArgument)));
     }
 }

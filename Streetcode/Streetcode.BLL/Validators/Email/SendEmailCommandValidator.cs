@@ -8,9 +8,9 @@ namespace Streetcode.BLL.Validators.Email;
 
 public class SendEmailCommandValidator : AbstractValidator<SendEmailCommand>
 {
-    private const int ContentMaxLength = 500;
-    private const int ContentMinLength = 1;
-    private const int EmailMaxLength = 50;
+    public const int ContentMaxLength = 500;
+    public const int ContentMinLength = 1;
+    public const int EmailMaxLength = 50;
     public SendEmailCommandValidator(
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
         IStringLocalizer<FailedToValidateSharedResource> localizer)

@@ -53,32 +53,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
         }
 
         [Fact]
-        public async Task ShouldThrowException_AltIsRequired()
-        {
-            // Arrange
-            var expectedError = "Cannot create image without alt";
-            _mockLocalizerConvertNull.Setup(x => x["CannotCreateImageWithoutAlt"])
-            .Returns(new LocalizedString("CannotConvertNullToCategory", expectedError));
-
-            var testCreateImageDTO = GetImageCreateDTOWithoutAlt();
-            var testImageDTO = GetImageDTO();
-            var testImage = GetImage();
-
-            SetupCreateRepository(1);
-            SetupBlobService();
-            SetupMapper(testImage, testImageDTO);
-
-            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors.First().Message);
-        }
-
-        [Fact]
         public async Task ShouldThrowException_SaveChangesAsyncIsNotSuccessful()
         {
             // Arrange

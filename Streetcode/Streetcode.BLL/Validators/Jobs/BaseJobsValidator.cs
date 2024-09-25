@@ -7,9 +7,9 @@ namespace Streetcode.BLL.Validators.Jobs;
 
 public class BaseJobsValidator : AbstractValidator<CreateUpdateJobDto>
 {
-    private const int TitleMaxLength = 50;
-    private const int DescriptionMaxLength = 3000;
-    private const int SalaryMaxLength = 15;
+    public const int TitleMaxLength = 50;
+    public const int DescriptionMaxLength = 3000;
+    public const int SalaryMaxLength = 15;
     public BaseJobsValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(j => j.Title)

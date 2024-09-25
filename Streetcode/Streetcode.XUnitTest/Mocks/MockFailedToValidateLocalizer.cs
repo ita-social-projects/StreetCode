@@ -65,7 +65,7 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
                 return new LocalizedString(name, $"Error '{name}'");
             }
 
-            throw new ArgumentException("This error excepts only 1 argument");
+            throw new ArgumentException($"Cannot find error message '{name}' that accepts no arguments");
         }
     }
 
@@ -83,7 +83,7 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
                 }
             }
 
-            throw new ArgumentException($"Cannot find error message '{name}' that excepts {argumentsCount} arguments");
+            throw new ArgumentException($"Cannot find error message '{name}' that accepts {argumentsCount} arguments");
         }
     }
 

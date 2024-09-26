@@ -291,18 +291,23 @@ pipeline {
            expression { isSuccess == '1' }
         }   
         steps {
+           
             script {
-               
+
+              git branch: 'master', credentialsId: 'test_git_user', url: 'git@github.com:ita-social-projects/Streetcode.git' 
+
                 sh 'echo ${BRANCH_NAME}'
                 sh "git checkout master" 
                 sh 'echo ${BRANCH_NAME}'
-                sh "git merge release/${env.SEM_VERSION}" 
-                sh "git push origin main" 
+                sh 'git merge ${BRANCH_NAME}'
+                sh "git push origin master" 
                   
             }
         }
         post {
+
             success {
+
                 sh 'gh auth status'
                 sh "gh release create v${vers}  --generate-notes --draft"
             }

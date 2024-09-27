@@ -35,9 +35,9 @@ public class NewsTests
     public async void ShouldReturnSuccessResult_WhenNewsIsValid()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var validNews = GetValidNews();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, validNews.ImageId);
 
         // Act
         var result = await validator.ValidateAsync(validNews);
@@ -50,9 +50,9 @@ public class NewsTests
     public async Task ShouldReturnFail_ImageIdIsZero()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var news = GetValidNews();
         news.ImageId = 0;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var expectedError = _mockValidationLocalizer["Invalid", _mockFieldsLocalizer["ImageId"]];
 
@@ -73,9 +73,9 @@ public class NewsTests
     public async Task ShouldReturnFail_UrlIsInvalid(string invalidUrl)
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var news = GetValidNews();
         news.URL = invalidUrl;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var expectedError = _mockValidationLocalizer["InvalidNewsUrl"];
 
@@ -91,8 +91,8 @@ public class NewsTests
     public async Task ShouldReturnFail_NewsWithSameTitleExists()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var news = GetValidNews();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(news.Title);
         var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var createValidator = new CreateNewsValidator(baseValidator.Object, _mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
@@ -111,8 +111,8 @@ public class NewsTests
     public async Task ShouldReturnFail_NewsWithSameTextExists()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var news = GetValidNews();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(news.Text);
         var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var createValidator = new CreateNewsValidator(baseValidator.Object, _mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
@@ -130,9 +130,8 @@ public class NewsTests
     public async Task ShouldReturnFail_WhenImageDoesNotExist()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
-        SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage();
         var news = GetValidNews();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(_mockRepositoryWrapper);
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
 
         var expectedError = _mockValidationLocalizer["ImageDoesntExist", $"{news.ImageId}"];
@@ -149,11 +148,11 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenTitleIsEmpty()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator =
             new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var news = GetValidNews();
         news.Title = string.Empty;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockFieldsLocalizer["Title"]];
 
         // Act
@@ -168,10 +167,10 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenTextIsEmpty()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var news = GetValidNews();
         news.Text = string.Empty;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var expectedErrorMessage = _mockValidationLocalizer["CannotBeEmpty", _mockFieldsLocalizer["Text"]];
 
         // Act
@@ -186,9 +185,9 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenCreationDateIsEmpty()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var news = GetValidNews();
         news.CreationDate = DateTime.MinValue;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var validator = new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
 
         var expectedError = _mockValidationLocalizer["IsRequired", _mockFieldsLocalizer["CreationDate"]];
@@ -205,11 +204,11 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenURLIsEmpty()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator =
             new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var news = GetValidNews();
         news.URL = string.Empty;
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockFieldsLocalizer["TargetUrl"]];
 
         // Act
@@ -224,11 +223,11 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenTitleExceedsMaxLength()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator =
             new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var news = GetValidNews();
         news.Title = new string('a', BaseNewsValidator.TitleMaxLength + 1);
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var expectedError = _mockValidationLocalizer["MaxLength", _mockFieldsLocalizer["Title"], $"{BaseNewsValidator.TitleMaxLength}"];
 
         // Act
@@ -243,11 +242,11 @@ public class NewsTests
     public async Task ShouldReturnValidationError_WhenURLExceedsMaxLength()
     {
         // Arrange
-        SetupMockImageRepositoryGetFirstOrDefaultAsync();
         var validator =
             new BaseNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
         var news = GetValidNews();
         news.URL = new string('a', BaseNewsValidator.UrlMaxLength + 1);
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
         var expectedError =
             _mockValidationLocalizer["MaxLength", _mockFieldsLocalizer["TargetUrl"], BaseNewsValidator.UrlMaxLength];
 
@@ -344,6 +343,13 @@ public class NewsTests
     private void SetupMockImageRepositoryGetFirstOrDefaultAsync()
     {
         _mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Image, bool>>>(),
+                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = 1 });
+    }
+    public static void SetupMockImageRepositoryGetFirstOrDefaultAsync2(Mock<IRepositoryWrapper> mockRepositoryWrapper)
+    {
+        mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Image, bool>>>(),
                 It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync(new Image { Id = 1 });

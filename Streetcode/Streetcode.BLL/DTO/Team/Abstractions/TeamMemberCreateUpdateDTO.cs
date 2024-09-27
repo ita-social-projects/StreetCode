@@ -8,5 +8,5 @@ public abstract class TeamMemberCreateUpdateDTO
     public string? Description { get; set; }
     public bool? IsMain { get; set; }
     public int? ImageId { get; set; }
-    public List<PositionDTO>? Positions { get; set; }
+    public List<PositionDTO>? Positions { get; set; } = new List<PositionDTO>();
 }

@@ -22,6 +22,6 @@ public class BaseFactValidator : AbstractValidator<FactUpdateCreateDto>
 
         RuleFor(dto => dto.ImageDescription)
             .MaximumLength(ImageDescriptionMaxLength)
-            .WithMessage(localizer["MaxLength", fieldLocalizer["FactImageDescription"], ContentMaxLength]);
+            .WithMessage(localizer["MaxLength", fieldLocalizer["FactImageDescription"], ImageDescriptionMaxLength]);
     }
 }

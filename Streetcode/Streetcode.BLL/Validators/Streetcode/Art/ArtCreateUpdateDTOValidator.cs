@@ -7,8 +7,8 @@ namespace Streetcode.BLL.Validators.Streetcode.Art;
 
 public class ArtCreateUpdateDTOValidator : AbstractValidator<ArtCreateUpdateDTO>
 {
-    private const int MaxTitleLength = 150;
-    private const int MaxDescriptionLength = 400;
+    public const int MaxTitleLength = 150;
+    public const int MaxDescriptionLength = 400;
     public ArtCreateUpdateDTOValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Description)

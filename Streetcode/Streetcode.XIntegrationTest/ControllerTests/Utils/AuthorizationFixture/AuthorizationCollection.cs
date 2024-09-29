@@ -2,7 +2,6 @@
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
-
     [CollectionDefinition("Authorization")]
     public class AuthorizationCollection : ICollectionFixture<TokenStorage>
     {

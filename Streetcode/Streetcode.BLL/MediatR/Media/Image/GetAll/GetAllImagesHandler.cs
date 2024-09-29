@@ -32,7 +32,7 @@ public class GetAllImagesHandler : IRequestHandler<GetAllImagesQuery, Result<IEn
     {
         var images = await _repositoryWrapper.ImageRepository.GetAllAsync();
 
-        if (images is null)
+        if (!images.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyImage"].Value;
             _logger.LogError(request, errorMsg);

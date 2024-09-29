@@ -1,43 +1,44 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Persistence;
-using System.Text;
 
 namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
 {
     public class BlobStorageFixture : IntegrationTestBase
     {
-        public readonly BlobService blobService;
         private readonly IOptions<BlobEnvironmentVariables> environmentVariables;
-        public readonly string blobPath;
-        private readonly string blobKey;
-        public StreetcodeDbContext TestDbContext { get; private set; }
 
         public BlobStorageFixture()
         {
-            environmentVariables = Options.Create(new BlobEnvironmentVariables
+            this.environmentVariables = Options.Create(new BlobEnvironmentVariables
             {
-                BlobStoreKey = Configuration.GetValue<string>("Blob:BlobStoreKey"),
-                BlobStorePath = Configuration.GetValue<string>("Blob:BlobStorePath")
+                BlobStoreKey = this.Configuration.GetValue<string>("Blob:BlobStoreKey") !,
+                BlobStorePath = this.Configuration.GetValue<string>("Blob:BlobStorePath") !,
             });
-            blobPath = environmentVariables.Value.BlobStorePath;
-            blobKey = environmentVariables.Value.BlobStoreKey;
+            this.BlobPath = this.environmentVariables.Value.BlobStorePath;
 
-            blobService = new BlobService(environmentVariables); // add repo
-            Directory.CreateDirectory(blobPath);
+            this.BlobService = new BlobService(this.environmentVariables); // add repo
+            Directory.CreateDirectory(this.BlobPath);
         }
+
+        public BlobService BlobService { get; }
+
+        public string BlobPath { get; private set; }
+
+        public StreetcodeDbContext TestDbContext { get; private set; } = null!;
 
         public Image SeedImage(string givenBlobName)
         {
             string testDataImagePath = "../../../ServiceTests/BlobServiceTests/Utils/testData.json";
             string imageJson = File.ReadAllText(testDataImagePath, Encoding.UTF8);
-            Image imgfromJson = JsonConvert.DeserializeObject<Image>(imageJson);
+            Image imgfromJson = JsonConvert.DeserializeObject<Image>(imageJson) !;
             imgfromJson.BlobName = givenBlobName;
-            SaveFileIfNotExist(imgfromJson.Base64, imgfromJson.BlobName, imgfromJson.MimeType.Split('/')[1]);
+            this.SaveFileIfNotExist(imgfromJson.Base64!, imgfromJson.BlobName, imgfromJson.MimeType!.Split('/')[1]);
             return imgfromJson;
         }
 
@@ -45,11 +46,11 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
         {
             string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
             string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
-            List<Audio> audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+            List<Audio> audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson) !;
             if (audiosfromJson != null && audiosfromJson.Count > 1)
             {
                 audiosfromJson[0].BlobName = givenBlobName;
-                this.SaveFileIfNotExist(audiosfromJson[0].Base64, audiosfromJson[0].BlobName, audiosfromJson[0].MimeType.Split('/')[1]);
+                this.SaveFileIfNotExist(audiosfromJson[0].Base64!, audiosfromJson[0].BlobName!, audiosfromJson[0].MimeType!.Split('/')[1]);
                 return audiosfromJson[0];
             }
 
@@ -62,33 +63,33 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils
             string initialDataAudioPath = "../../../../Streetcode.DAL/InitialData/audios.json";
             string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
             string audiosJson = File.ReadAllText(initialDataAudioPath, Encoding.UTF8);
-            var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
-            var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+            var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson) !;
+            var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson) !;
 
             foreach (var img in imgfromJson)
             {
-                string[] fullName = img.BlobName.Split('.');
-                SaveFileIfNotExist(img.Base64, fullName[0], fullName[1]);
+                string[] fullName = img.BlobName!.Split('.');
+                this.SaveFileIfNotExist(img.Base64!, fullName[0], fullName[1]);
             }
 
             foreach (var audio in audiosfromJson)
             {
-                string[] fullName = audio.BlobName.Split('.');
-                SaveFileIfNotExist(audio.Base64, fullName[0], fullName[1]);
+                string[] fullName = audio.BlobName!.Split('.');
+                this.SaveFileIfNotExist(audio.Base64!, fullName[0], fullName[1]);
             }
 
-            TestDbContext.Images.AddRange(imgfromJson);
-            TestDbContext.Audios.AddRange(audiosfromJson);
+            this.TestDbContext.Images.AddRange(imgfromJson);
+            this.TestDbContext.Audios.AddRange(audiosfromJson);
 
-            await TestDbContext.SaveChangesAsync();
+            await this.TestDbContext.SaveChangesAsync();
         }
 
         private void SaveFileIfNotExist(string base64, string blobName, string extension)
         {
-            string filePath = Path.Combine(blobPath, blobName);
+            string filePath = Path.Combine(this.BlobPath, blobName);
             if (!File.Exists(filePath))
             {
-                blobService.SaveFileInStorageBase64(base64, blobName, extension);
+                this.BlobService.SaveFileInStorageBase64(base64, blobName, extension);
             }
         }
     }

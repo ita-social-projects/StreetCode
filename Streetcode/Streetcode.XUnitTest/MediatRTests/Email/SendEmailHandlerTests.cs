@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Net;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Moq.Protected;
@@ -8,8 +10,6 @@ using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Email;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
-using System.Net;
-using System.Net.Http.Json;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Email
@@ -71,7 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             // assert
             Assert.False(result.IsSuccess);
-            Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             // assert
             Assert.False(result.IsSuccess);
-            Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -118,7 +118,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             // assert
             Assert.False(result.IsSuccess);
-            Assert.Equal(expectedErrorMessage, result.Errors.First().Message);
+            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
+        }
+
+        private static ReCaptchaResponseDto GetReCaptchaResponseDTO(bool success)
+        {
+            return new ReCaptchaResponseDto()
+            {
+                Success = success,
+            };
+        }
+
+        private static EmailDTO GetEmailDTO()
+        {
+            return new EmailDTO()
+            {
+                Content = "Test Content",
+                From = "testemail@gmail.com",
+                Token = "Token",
+            };
         }
 
         private void SetupMockHttpMessageHandlerReturnsOK(ReCaptchaResponseDto reCaptchaResponseDto)
@@ -153,24 +171,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         {
             var localizedString = new LocalizedString(key, key);
             this.mockStringLocalizer.Setup(_ => _[key]).Returns(localizedString);
-        }
-
-        private static ReCaptchaResponseDto GetReCaptchaResponseDTO(bool success)
-        {
-            return new ReCaptchaResponseDto()
-            {
-                Success = success,
-            };
-        }
-
-        private static EmailDTO GetEmailDTO()
-        {
-            return new EmailDTO()
-            {
-                Content = "Test Content",
-                From = "testemail@gmail.com",
-                Token = "Token",
-            };
         }
     }
 }

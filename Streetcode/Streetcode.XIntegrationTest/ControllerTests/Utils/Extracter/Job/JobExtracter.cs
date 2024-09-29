@@ -1,7 +1,6 @@
-﻿
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job
+﻿namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job
 {
-    public class JobExtracter
+    public static class JobExtracter
     {
         public static DAL.Entities.Jobs.Job Extract(int jobId)
         {

@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.XIntegrationTest.Constants.ControllerTests
 {
+    [SuppressMessage(
+        "StyleCop.CSharp.NamingRules",
+        "SA1310:Field names should not contain underscore",
+        Justification = "Underscores in constants make them more readable")]
     internal static class AuthConstants
     {
         public const string TEST_USER_LOGIN_PASSWORD = "User_Login_Password_Q123#";

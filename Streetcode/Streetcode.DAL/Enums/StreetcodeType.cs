@@ -1,6 +1,6 @@
 namespace Streetcode.DAL.Enums
 {
-  public enum StreetcodeType
+    public enum StreetcodeType
   {
     Event,
     Person,

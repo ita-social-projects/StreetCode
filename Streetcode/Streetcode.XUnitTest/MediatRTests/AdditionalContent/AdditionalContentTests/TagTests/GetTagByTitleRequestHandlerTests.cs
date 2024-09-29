@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -9,87 +10,89 @@ using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetTagByTitle;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
+
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetTagByTitleRequestHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private static string title = "test_title";
 
-        public GetTagByTitleRequestHandlerTests()
-        {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
-
-        private static string _title = "test_title";
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly Tag tag = new Tag
         {
             Id = 1,
-            Title = _title
+            Title = title,
         };
+
         private readonly TagDTO tagDTO = new TagDTO
         {
             Id = 1,
-            Title = _title
+            Title = title,
         };
 
-        async Task SetupRepository(Tag tag)
+        public GetTagByTitleRequestHandlerTests()
         {
-            _mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Tag, bool>>>(),
-                It.IsAny<Func<IQueryable<Tag>,
-                IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(tag);
-        }
-        async Task SetupMapper(TagDTO tagDTO)
-        {
-            _mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
-                .Returns(tagDTO);
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_Matching_Element()
         {
-            //Arrange
-            await SetupRepository(tag);
-            await SetupMapper(tagDTO);
+            // Arrange
+            this.SetupRepository(this.tag);
+            this.SetupMapper(this.tagDTO);
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
-            //Act
-            var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new GetTagByTitleQuery(title), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.IsType<TagDTO>(result.Value),
-                () => Assert.Equal(result.Value.Title, _title));
+                () => Assert.Equal(result.Value.Title, title));
         }
 
         [Fact]
         public async Task Handler_Returns_NoMatching_Element()
         {
-            //Arrange
-            await SetupRepository(new Tag());
-            await SetupMapper(new TagDTO());
+            // Arrange
+            this.SetupRepository(new Tag());
+            this.SetupMapper(new TagDTO());
 
-            var handler = new GetTagByTitleHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetTagByTitleHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
-            //Act
-            var result = await handler.Handle(new GetTagByTitleQuery(_title), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new GetTagByTitleQuery(title), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.IsType<TagDTO>(result.Value),
                 () => Assert.Null(result.Value.Title));
+        }
+
+        private void SetupRepository(Tag tag)
+        {
+            this.mockRepo.Setup(repo => repo.TagRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Tag, bool>>>(),
+                It.IsAny<Func<IQueryable<Tag>,
+                IIncludableQueryable<Tag, object>>>()))
+                .ReturnsAsync(tag);
+        }
+
+        private void SetupMapper(TagDTO tagDTO)
+        {
+            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
+                .Returns(tagDTO);
         }
     }
 }

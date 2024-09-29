@@ -7,7 +7,8 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.SaveFileTest
 {
     public class SaveFileInStorageBase64Tests : BlobServiceTestBase
     {
-        public SaveFileInStorageBase64Tests() : base(new BlobStorageFixture(), "saved-image-base64")
+        public SaveFileInStorageBase64Tests()
+            : base(new BlobStorageFixture(), "saved-image-base64")
         {
         }
 
@@ -17,20 +18,20 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.SaveFileTest
         {
             // Arrange
             string jsonContents = File.ReadAllText(testDataFilePath);
-            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
+            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents) !;
 
-            string fileName = _seededFileName;
-            string extension = jsonData.MimeType.Split('/')[1];
-            string base64 = jsonData.Base64;
+            string fileName = this.SeededFileName;
+            string extension = jsonData.MimeType!.Split('/')[1];
+            string base64 = jsonData.Base64!;
 
             // Act
-            _fixture.blobService.SaveFileInStorageBase64(base64, fileName, extension);
+            this.Fixture.BlobService.SaveFileInStorageBase64(base64, fileName, extension);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.True(File.Exists(_filePath));
-                Assert.Equal($"{fileName}.{extension}", Path.GetFileName(_filePath));
+                Assert.True(File.Exists(this.FilePath));
+                Assert.Equal($"{fileName}.{extension}", Path.GetFileName(this.FilePath));
             });
         }
 
@@ -39,10 +40,10 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.SaveFileTest
         public void ShouldThrowException_NotValidBase64(string base64, string fileName, string extension)
         {
             // Act
-            void action() => _fixture.blobService.SaveFileInStorageBase64(base64, fileName, extension);
+            void Action() => this.Fixture.BlobService.SaveFileInStorageBase64(base64, fileName, extension);
 
             // Assert
-            Assert.Throws<FormatException>(action);
+            Assert.Throws<FormatException>(Action);
         }
     }
 }

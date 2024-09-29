@@ -1,0 +1,7 @@
+﻿{
+  "name": "TestName",
+  "description": "TestDescription",
+  "isVisibleEverywhere": true,
+  "isMain": false,
+  "imageId": 1
+}

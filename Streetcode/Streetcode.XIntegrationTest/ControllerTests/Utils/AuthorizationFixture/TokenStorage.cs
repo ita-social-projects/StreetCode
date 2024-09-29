@@ -11,49 +11,56 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class TokenStorage : IDisposable
     {
-        private readonly StreetcodeDbContext _streetcodeDbContext;
-        private readonly IConfiguration _configuration;
-        private readonly ITokenService _tokenService;
-        private readonly Dictionary<string, User> _users;
+        private readonly StreetcodeDbContext streetcodeDbContext;
+        private readonly IConfiguration configuration;
+        private readonly ITokenService tokenService;
+        private readonly Dictionary<string, User> users;
+
+        private bool disposed = false;
 
         public TokenStorage()
         {
-            this._users = new Dictionary<string, User>
+            this.users = new Dictionary<string, User>
             {
                 ["Admin"] = TEST_USER_ADMIN,
                 ["User"] = TEST_USER_USER,
             };
 
-            this._streetcodeDbContext = GetDbContext();
-            this._configuration = GetConfiguration();
+            this.streetcodeDbContext = this.GetDbContext();
+            this.configuration = GetConfiguration();
 
-            this._tokenService = new TokenService(this._configuration, this._streetcodeDbContext);
+            this.tokenService = new TokenService(this.configuration, this.streetcodeDbContext);
 
             this.ObtainTokensAsync().GetAwaiter().GetResult();
         }
 
+        public string AdminAccessToken { get; private set; } = null!;
+
+        public string UserAccessToken { get; private set; } = null!;
+
+        public string AdminRefreshToken { get; private set; } = null!;
+
+        public string UserRefreshToken { get; private set; } = null!;
+
         public void Dispose()
         {
-            this._streetcodeDbContext.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public string AdminAccessToken { get; private set; }
-
-        public string UserAccessToken { get; private set; }
-
-        public string AdminRefreshToken { get; private set; }
-
-        public string UserRefreshToken { get; private set; }
-
-        private StreetcodeDbContext GetDbContext()
+        protected virtual void Dispose(bool disposing)
         {
-            var sqlConnectionString = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.IntegrationTests.json")
-                .Build()
-                .GetConnectionString("DefaultConnection");
-            var optionBuilder = new DbContextOptionsBuilder<StreetcodeDbContext>();
-            optionBuilder.UseSqlServer(sqlConnectionString);
-            return new StreetcodeDbContext(optionBuilder.Options);
+            if (this.disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                this.streetcodeDbContext.Dispose();
+            }
+
+            this.disposed = true;
         }
 
         private static IConfiguration GetConfiguration()
@@ -67,12 +74,23 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return configBuilder.Build();
         }
 
+        private StreetcodeDbContext GetDbContext()
+        {
+            var sqlConnectionString = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.IntegrationTests.json")
+                .Build()
+                .GetConnectionString("DefaultConnection");
+            var optionBuilder = new DbContextOptionsBuilder<StreetcodeDbContext>();
+            optionBuilder.UseSqlServer(sqlConnectionString);
+            return new StreetcodeDbContext(optionBuilder.Options);
+        }
+
         private async Task ObtainTokensAsync()
         {
-            this.AdminAccessToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["Admin"])).RawData;
-            this.UserAccessToken = (await this._tokenService.GenerateAccessTokenAsync(this._users["User"])).RawData;
-            this.AdminRefreshToken = this._tokenService.SetNewRefreshTokenForUser(this._users["Admin"]);
-            this.UserRefreshToken = this._tokenService.SetNewRefreshTokenForUser(this._users["User"]);
+            this.AdminAccessToken = (await this.tokenService.GenerateAccessTokenAsync(this.users["Admin"])).RawData;
+            this.UserAccessToken = (await this.tokenService.GenerateAccessTokenAsync(this.users["User"])).RawData;
+            this.AdminRefreshToken = this.tokenService.SetNewRefreshTokenForUser(this.users["Admin"]);
+            this.UserRefreshToken = this.tokenService.SetNewRefreshTokenForUser(this.users["User"]);
         }
     }
 }

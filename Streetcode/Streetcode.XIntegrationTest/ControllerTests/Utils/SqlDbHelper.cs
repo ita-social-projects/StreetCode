@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.EntityFrameworkCore;
-using Polly;
+﻿using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class SqlDbHelper
     {
-        private StreetcodeDbContext dbContext;
+        private readonly StreetcodeDbContext dbContext;
 
         public SqlDbHelper(DbContextOptions<StreetcodeDbContext> options)
         {
@@ -32,7 +30,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             var idProp = typeof(T).GetProperty("Id");
             if (this.dbContext.Set<T>()
                 .AsEnumerable()
-                .FirstOrDefault(predicate: s => (int)idProp?.GetValue(s)! == id) == null)
+                .FirstOrDefault(predicate: s => (int)idProp?.GetValue(s) ! == id) == null)
             {
                 return false;
             }
@@ -40,27 +38,25 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             return true;
         }
 
-        public T GetExistItemId<T>(int id)
+        public T? GetExistItemId<T>(int id)
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
             return this.dbContext.Set<T>()
                 .AsEnumerable()
-                .FirstOrDefault(s => ((int)idProp?.GetValue(s)!) == id);
+                .FirstOrDefault(s => ((int)idProp?.GetValue(s) !) == id);
         }
 
         public T AddNewItem<T>(T newItem)
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            string? value = idProp?.GetValue(newItem) as string;
-            if (!string.IsNullOrEmpty(value))
+            if (idProp != null)
             {
-                int n;
-                if (int.TryParse(value, out n))
+                string? value = idProp.GetValue(newItem) as string;
+                if (!string.IsNullOrEmpty(value) && int.TryParse(value, out _))
                 {
-                    idProp?.SetValue(newItem, 0);
-                    return this.dbContext.Set<T>().Add(newItem).Entity;
+                    idProp.SetValue(newItem, 0);
                 }
             }
 
@@ -70,11 +66,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         public void AddItemWithCustomId<T>(T newItem)
             where T : class, new()
         {
-            this.dbContext.Database.OpenConnection();
             try
             {
-                string tableSchema = this.dbContext.Model.FindEntityType(typeof(T)).GetSchema();
-                string tableName = this.dbContext.Model.FindEntityType(typeof(T)).GetTableName();
+                this.dbContext.Database.OpenConnection();
+
+                string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema() !;
+                string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName() !;
 
                 string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
                 string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
@@ -90,7 +87,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             }
         }
 
-        public T GetExistItem<T>(Func<T, bool>? predicate = default)
+        public T? GetExistItem<T>(Func<T, bool>? predicate = default)
             where T : class, new()
         {
             if (predicate != null)

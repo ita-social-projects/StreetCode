@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
 {
@@ -11,7 +10,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
             string jsonFilePath = @$"../../../TestData/{typeName}.json";
             using StreamReader reader = new (jsonFilePath);
             string fileJson = reader.ReadToEnd();
-            T entity = JsonConvert.DeserializeObject<T>(fileJson);
+            T entity = JsonConvert.DeserializeObject<T>(fileJson) !;
             return entity;
         }
     }

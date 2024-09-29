@@ -5,40 +5,46 @@ namespace Streetcode.DAL.Entities.Instagram
     public class InstagramPost
     {
         /// <summary>
-        /// The Media's caption text. Not returnable for Media in albums.
+        /// Gets or sets the Media's caption text.
         /// </summary>
+        /// <value> The Media's caption text. Not returnable for Media in albums. </value>
         [JsonPropertyName("caption")]
-        public string Caption { get; set; }
+        public string? Caption { get; set; }
 
         /// <summary>
-        /// The Media's ID.
+        /// Gets or sets the Media's ID.
         /// </summary>
+        /// <value> The Media's ID. </value>
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
         /// <summary>
-        /// The Media's type. Can be IMAGE, VIDEO, or CAROUSEL_ALBUM.
+        /// Gets or sets the Media's type.
         /// </summary>
+        /// <value> The Media's type. Can be IMAGE, VIDEO, or CAROUSEL_ALBUM. </value>
         [JsonPropertyName("media_type")]
-        public string MediaType { get; set; }
+        public string MediaType { get; set; } = null!;
 
         /// <summary>
-        /// The Media's URL.
+        /// Gets or sets the Media's URL.
         /// </summary>
+        /// <value> The Media's URL. </value>
         [JsonPropertyName("media_url")]
-        public string MediaUrl { get; set; }
+        public string MediaUrl { get; set; } = null!;
 
         /// <summary>
-        /// The Media's permanent URL.
+        /// Gets or sets the Media's permanent URL.
         /// </summary>
+        /// <value> The Media's permanent URL. </value>
         [JsonPropertyName("permalink")]
-        public string Permalink { get; set; }
+        public string Permalink { get; set; } = null!;
 
         /// <summary>
-        /// The Media's thumbnail image URL. Only available on VIDEO Media.
+        /// Gets or sets the Media's thumbnail image URL.
         /// </summary>
+        /// <value> The Media's thumbnail image URL. Only available on VIDEO Media. </value>
         [JsonPropertyName("thumbnail_url")]
-        public string ThumbnailUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
 
         [JsonPropertyName("is_pinned")]
         public bool IsPinned { get; set; }

@@ -5,9 +5,10 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
 {
     public class DeleteFileInStorageTest : BlobServiceTestBase
     {
-        public DeleteFileInStorageTest() : base(new BlobStorageFixture(), "delete-test")
+        public DeleteFileInStorageTest()
+            : base(new BlobStorageFixture(), "delete-test")
         {
-            _fixture.SeedImage(_seededFileName);
+            this.Fixture.SeedImage(this.SeededFileName);
         }
 
         [Theory]
@@ -15,24 +16,24 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
         public void ShouldDeleteFileFromStorage_ExistingFile(string extension)
         {
             // Arrange
-            string fileName = $"{_seededFileName}.{extension}";
+            string fileName = $"{this.SeededFileName}.{extension}";
 
             // Act
-            _fixture.blobService.DeleteFileInStorage(fileName);
+            this.Fixture.BlobService.DeleteFileInStorage(fileName);
 
             // Assert
-            Assert.False(File.Exists(_filePath));
+            Assert.False(File.Exists(this.FilePath));
         }
 
-        //[Theory]
-        //[InlineData("invalid|file")]
-        //public void ShouldThrowException_EmptyFileName(string fileName)
-        //{
-        //    // Act
-        //    void action() => _fixture.blobService.DeleteFileInStorage(fileName);
+        [Theory]
+        [InlineData("invalid|file")]
+        public void ShouldThrowException_EmptyFileName(string fileName)
+        {
+            // Act
+            void Action() => this.Fixture.BlobService.DeleteFileInStorage(fileName);
 
-        //    // Assert
-        //    Assert.Throws<IOException>(action);
-        //}
+            // Assert
+            Assert.Throws<IOException>(Action);
+        }
     }
 }

@@ -37,7 +37,7 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl.Include(sc => sc.Image) !);
 
-        if (srcCategories is null)
+        if (!srcCategories.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnySourceCategoryWithTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

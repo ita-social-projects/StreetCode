@@ -15,92 +15,93 @@ namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class GetAllPartnersTest
 {
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetAllPartnersTest()
     {
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {
-        //Arrange
-        _mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
+        // Arrange
+        this.mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
             null,
             It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnerList());
 
-        _mockMapper
+        this.mockMapper
             .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<PartnerDTO>>(result.ValueOrDefault)
-        );
+            () => Assert.IsType<List<PartnerDTO>>(result.ValueOrDefault));
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
-        //Arrange
-        _mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
+        // Arrange
+        this.mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
             null,
             It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnerList());
 
-        _mockMapper
+        this.mockMapper
             .Setup(x => x
             .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.Equal(GetPartnerList().Count(), result.Value.Count())
-        );
+            () => Assert.Equal(GetPartnerList().Count(), result.Value.Count()));
     }
 
     [Fact]
     public async Task ShouldThrowExeption_IdNotExist()
     {
-        //Arrange
+        // Arrange
         var expectedError = "Cannot find any partners";
-        _mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPartners"])
+        this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPartners"])
             .Returns(new LocalizedString("CannotFindAnyPartners", expectedError));
 
-        _mockRepository.Setup(x => x.PartnersRepository.GetAllAsync(
-            null,
-            It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
+        this.mockRepository
+            .Setup(x => x.PartnersRepository
+                .GetAllAsync(
+                    null,
+                    It.IsAny<Func<IQueryable<Partner>,
+                    IIncludableQueryable<Partner, object>>>()))
             .ReturnsAsync(GetPartnersListWithNotExistingId());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
 
-        //Assert
-        Assert.Equal(expectedError, result.Errors.First().Message);
+        // Assert
+        Assert.Equal(expectedError, result.Errors[0].Message);
 
-        _mockMapper.Verify(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()), Times.Never);
+        this.mockMapper.Verify(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()), Times.Never);
     }
 
     private static IEnumerable<Partner> GetPartnerList()
@@ -109,21 +110,20 @@ public class GetAllPartnersTest
         {
             new Partner
             {
-                Id = 1
+                Id = 1,
             },
-
             new Partner
             {
-                Id = 2
-            }
+                Id = 2,
+            },
         };
 
         return partners;
     }
 
-    private static List<Partner>? GetPartnersListWithNotExistingId()
+    private static List<Partner> GetPartnersListWithNotExistingId()
     {
-        return null;
+        return new List<Partner>();
     }
 
     private static List<PartnerDTO> GetListPartnerDTO()
@@ -132,13 +132,12 @@ public class GetAllPartnersTest
         {
             new PartnerDTO
             {
-                Id = 1
+                Id = 1,
             },
-
             new PartnerDTO
             {
                 Id = 2,
-            }
+            },
         };
 
         return partnersDTO;

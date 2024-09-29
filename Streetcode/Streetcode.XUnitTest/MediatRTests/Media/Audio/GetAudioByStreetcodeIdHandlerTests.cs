@@ -1,52 +1,54 @@
-﻿using Xunit;
-using Moq;
+﻿using System.Linq.Expressions;
 using AutoMapper;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Microsoft.EntityFrameworkCore.Query;
-using System.Linq.Expressions;
-using Model = Streetcode.DAL.Entities.Media.Audio;
-using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.BLL.DTO.Media.Audio;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Media;
 using Microsoft.Extensions.Localization;
+using Moq;
+using Streetcode.BLL.DTO.Media.Audio;
+using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Xunit;
+using Model = Streetcode.DAL.Entities.Media.Audio;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
-  public class GetAudioByStreetcodeIdHandlerTests
+    public class GetAudioByStreetcodeIdHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _repository;
-        private readonly Mock<IMapper> _mapper;
-        private readonly Mock<IBlobService> _blobService;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> repository;
+        private readonly Mock<IMapper> mapper;
+        private readonly Mock<IBlobService> blobService;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         public GetAudioByStreetcodeIdHandlerTests()
         {
-            _repository = new Mock<IRepositoryWrapper>();
-            _mapper = new Mock<IMapper>();
-            _blobService = new Mock<IBlobService>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.repository = new Mock<IRepositoryWrapper>();
+            this.mapper = new Mock<IMapper>();
+            this.blobService = new Mock<IBlobService>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
+
         [Theory]
         [InlineData(1)]
         public async Task Handle_ExistingId_ReturnsSuccess(int id)
         {
-            // arrange
-            var testAudio = new Model() {  };
-            var testAudioDTO = new AudioDTO {  };
+            // Arrange
+            var testAudio = new Model() { };
+            var testAudioDTO = new AudioDTO { };
 
-            RepositorySetup(testAudio);
-            MapperSetup(testAudioDTO);
+            this.RepositorySetup(testAudio);
+            this.MapperSetup(testAudioDTO);
 
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
-            // act
+            var handler = new GetAudioByStreetcodeIdQueryHandler(this.repository.Object, this.mapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
-            // assert
+
+            // Assert
             Assert.NotNull(result.Value);
         }
 
@@ -54,25 +56,28 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         [InlineData(-2)]
         public async Task Handle_NotExistingId_ReturnsError(int id)
         {
-            StreetcodeContent streetcode = null;
-            var testAudioDTO = new AudioDTO {  };
+            StreetcodeContent? streetcode = null;
+            var testAudioDTO = new AudioDTO { };
 
-            RepositoryResultFailed();
-            MapperSetup(testAudioDTO);
+            this.RepositoryResultFailed();
+            this.MapperSetup(testAudioDTO);
 
             var errorMessage = "Localized error message for the test.";
             var localizedString = new LocalizedString("CannotFindAnAudioWithTheCorrespondingStreetcodeId", errorMessage);
-            _mockLocalizer.Setup(l => l["CannotFindAnAudioWithTheCorrespondingStreetcodeId", id]).Returns(localizedString);
+            this.mockLocalizer.Setup(l => l["CannotFindAnAudioWithTheCorrespondingStreetcodeId", id]).Returns(localizedString);
 
-            _repository.Setup(repo => repo.StreetcodeRepository
-                    .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+            this.repository.Setup(repo => repo.StreetcodeRepository
+                .GetFirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                     It.IsAny<Func<IQueryable<StreetcodeContent>,
                     IIncludableQueryable<StreetcodeContent, StreetcodeContent>>?>()))
-             .ReturnsAsync(streetcode);
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
-            // act
+                .ReturnsAsync(streetcode);
+            var handler = new GetAudioByStreetcodeIdQueryHandler(this.repository.Object, this.mapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
-            // assert
+
+            // Assert
             Assert.False(result.IsSuccess);
         }
 
@@ -80,35 +85,38 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         [InlineData(1)]
         public async Task Handle_ReturnsCorrectType(int id)
         {
-            // arrange
+            // Arrange
             var testAudio = new Model() { };
-            var testAudioDTO = new AudioDTO {  };
+            var testAudioDTO = new AudioDTO { };
 
-            RepositorySetup(testAudio);
-            MapperSetup(testAudioDTO);
+            this.RepositorySetup(testAudio);
+            this.MapperSetup(testAudioDTO);
 
-            var handler = new GetAudioByStreetcodeIdQueryHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
-            // act
+            var handler = new GetAudioByStreetcodeIdQueryHandler(this.repository.Object, this.mapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetAudioByStreetcodeIdQuery(id), CancellationToken.None);
-            // assert
+
+            // Assert
             Assert.True(result.IsSuccess);
             Assert.IsType<AudioDTO>(result.ValueOrDefault);
         }
 
-        private void RepositorySetup( Model audio)
+        private void RepositorySetup(Model audio)
         {
-            _repository.Setup(repo => repo.AudioRepository
+            this.repository.Setup(repo => repo.AudioRepository
                 .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), It.IsAny<Func<IQueryable<Model>, IIncludableQueryable<Model, Model>>?>()))
                 .ReturnsAsync(audio);
-            _repository.Setup(repo => repo.StreetcodeRepository
-                .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>, 
+            this.repository.Setup(repo => repo.StreetcodeRepository
+                .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>?>()))
-                .ReturnsAsync(new StreetcodeContent() { Audio = audio});
+                .ReturnsAsync(new StreetcodeContent() { Audio = audio });
         }
 
-        private void RepositoryResultFailed() {
-            StreetcodeContent streetcode = null;
-            _repository.Setup(repo => repo.StreetcodeRepository
+        private void RepositoryResultFailed()
+        {
+            StreetcodeContent? streetcode = null;
+            this.repository.Setup(repo => repo.StreetcodeRepository
                 .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(streetcode);
@@ -116,9 +124,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
         private void MapperSetup(AudioDTO audioDTO)
         {
-            _mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<Model>()))
+            this.mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<Model>()))
                 .Returns(audioDTO);
-            _mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<DAL.Entities.Media.Audio>()))
+            this.mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<DAL.Entities.Media.Audio>()))
                 .Returns(audioDTO);
         }
     }

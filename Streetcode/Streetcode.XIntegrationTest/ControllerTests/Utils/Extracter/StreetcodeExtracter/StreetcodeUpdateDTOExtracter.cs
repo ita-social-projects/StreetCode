@@ -1,4 +1,5 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using System.Diagnostics.CodeAnalysis;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
@@ -17,13 +18,17 @@ using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter
 {
-    public class StreetcodeUpdateDTOExtracter
+    [SuppressMessage(
+        "Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "DTOs are named this way throughout the project")]
+    public static class StreetcodeUpdateDTOExtracter
     {
         public static StreetcodeUpdateDTO Extract(int id, int index, string transliterationUrl)
         {
             StreetcodeContent testStreetcode = StreetcodeContentExtracter.Extract(id, index, transliterationUrl);
 
-            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl);
+            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl!);
         }
 
         public static void Remove(StreetcodeUpdateDTO entity)

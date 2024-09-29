@@ -4,7 +4,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag
 {
-    public class TagClient: StreetcodeRelatedBaseClient
+    public class TagClient : StreetcodeRelatedBaseClient
     {
         public TagClient(HttpClient client, string secondPartUrl = "")
             : base(client, secondPartUrl)
@@ -30,6 +30,5 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Tag
         {
             return await this.SendCommand($"/Delete/{id}", Method.Delete, new UpdateTagDTO(), authToken);
         }
-
     }
 }

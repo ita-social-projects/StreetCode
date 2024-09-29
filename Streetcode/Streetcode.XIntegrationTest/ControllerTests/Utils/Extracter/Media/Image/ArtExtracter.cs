@@ -1,12 +1,10 @@
 ﻿using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
-using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Image
 {
-    public class ArtExtracter
+    public static class ArtExtracter
     {
         public static Art Extract(int artId)
         {
@@ -34,6 +32,23 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Imag
             BaseExtracter.Extract<StreetcodeArt>(
                 streetcodeArt,
                 strArt => strArt.ArtId == artId && strArt.StreetcodeId == streetcodeId,
+                hasIdentity: false);
+        }
+
+        public static void AddStreetcodeArtWithStreetcodeArtSlide(int streetcodeId, int artId, int streetcodeArtSlideId)
+        {
+            StreetcodeArt streetcodeArt = new StreetcodeArt()
+            {
+                StreetcodeId = streetcodeId,
+                ArtId = artId,
+                StreetcodeArtSlideId = streetcodeArtSlideId,
+            };
+            BaseExtracter.Extract<StreetcodeArt>(
+                streetcodeArt,
+                strArt =>
+                    strArt.ArtId == artId
+                    && strArt.StreetcodeId == streetcodeId
+                    && strArt.StreetcodeArtSlideId == streetcodeArtSlideId,
                 hasIdentity: false);
         }
     }

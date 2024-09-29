@@ -1,12 +1,12 @@
-﻿using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Authentication;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authentication;
-using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.BLL.DTO.Authentication.Login;
-using Streetcode.DAL.Enums;
-using Streetcode.DAL.Entities.Users;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
-using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+﻿using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
+using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Authentication;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authentication;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 {
@@ -16,13 +16,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
     [Collection("Authorization")]
     public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private User _testUser;
-        private string _testPassword;
+        private readonly User testUser;
+        private readonly string testPassword;
 
         public AuthControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Auth", tokenStorage)
         {
-            (this._testUser, this._testPassword) = UserExtracter.Extract(
+            (this.testUser, this.testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
                 userName: Guid.NewGuid().ToString(),
                 password: this.GenerateTestPassword(),
@@ -30,20 +30,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
                 nameof(UserRole.Admin));
         }
 
-        public override void Dispose()
-        {
-            UserExtracter.Remove(this._testUser);
-        }
-
         [Fact]
         [ExtractRegisterRequest]
         public async Task Register_ReturnsSuccessStatusCode()
         {
             // Arrange.
-            var registerRequest = ExtractRegisterRequest.RegisterRequest;
+            var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
 
             // Act.
-            var response = await this.client.Register(registerRequest);
+            var response = await this.Client.Register(registerRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -54,11 +49,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task Register_InvalidInputData_Returns404BadRequest()
         {
             // Arrange.
-            var registerRequest = ExtractRegisterRequest.RegisterRequest;
+            var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
             registerRequest.Email = string.Empty;
 
             // Act.
-            var response = await this.client.Register(registerRequest);
+            var response = await this.Client.Register(registerRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -69,11 +64,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task Register_WithGivenEmailAlreadyInDatabase_Returns404BadRequest()
         {
             // Arrange.
-            var registerRequest = ExtractRegisterRequest.RegisterRequest;
-            registerRequest.Email = this._testUser.Email;
+            var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
+            registerRequest.Email = this.testUser.Email!;
 
             // Act.
-            var response = await this.client.Register(registerRequest);
+            var response = await this.Client.Register(registerRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -84,11 +79,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task Register_WithGivenUsernameAlreadyInDatabase_Returns404BadRequest()
         {
             // Arrange.
-            var registerRequest = ExtractRegisterRequest.RegisterRequest;
-            registerRequest.UserName = this._testUser.UserName;
+            var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
+            registerRequest.UserName = this.testUser.UserName!;
 
             // Act.
-            var response = await this.client.Register(registerRequest);
+            var response = await this.Client.Register(registerRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -101,7 +96,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             LoginRequestDTO loginRequest = this.GetLoginRequestDTO();
 
             // Act.
-            var response = await this.client.Login(loginRequest);
+            var response = await this.Client.Login(loginRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -115,7 +110,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             loginRequest.Login = string.Empty;
 
             // Act.
-            var response = await this.client.Login(loginRequest);
+            var response = await this.Client.Login(loginRequest);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -127,12 +122,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                AccessToken = this._tokenStorage.UserAccessToken,
-                RefreshToken = this._tokenStorage.UserRefreshToken,
+                AccessToken = this.TokenStorage.UserAccessToken,
+                RefreshToken = this.TokenStorage.UserRefreshToken,
             };
 
             // Act.
-            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
+            var response = await this.Client.RefreshToken(refreshTokenRequestDTO);
 
             // Assert.
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -148,7 +143,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             };
 
             // Act.
-            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
+            var response = await this.Client.RefreshToken(refreshTokenRequestDTO);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -160,23 +155,33 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
             {
-                AccessToken = _tokenStorage.UserAccessToken,
+                AccessToken = this.TokenStorage.UserAccessToken,
                 RefreshToken = "invalid_token",
             };
 
             // Act.
-            var response = await this.client.RefreshToken(refreshTokenRequestDTO);
+            var response = await this.Client.RefreshToken(refreshTokenRequestDTO);
 
             // Assert.
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                UserExtracter.Remove(this.testUser);
+            }
+
+            base.Dispose(disposing);
         }
 
         private LoginRequestDTO GetLoginRequestDTO()
         {
             return new LoginRequestDTO()
             {
-                Login = this._testUser.Email,
-                Password = this._testPassword,
+                Login = this.testUser.Email!,
+                Password = this.testPassword,
                 CaptchaToken = "test_captcha_token",
             };
         }

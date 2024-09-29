@@ -1,10 +1,5 @@
 ﻿using RestSharp;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images
 {

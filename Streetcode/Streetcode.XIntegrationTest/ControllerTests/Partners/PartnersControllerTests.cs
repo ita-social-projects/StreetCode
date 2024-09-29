@@ -1,43 +1,38 @@
 ﻿using Streetcode.BLL.DTO.Partners;
 using Streetcode.DAL.Entities.Partners;
-using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
-using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Partners
 {
     public class PartnersControllerTests : BaseControllerTests<PartnersClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private StreetcodeContent _testStreetcodeContent;
-        private Partner _testPartner;
+        private readonly StreetcodeContent testStreetcodeContent;
+        private readonly Partner testPartner;
 
         public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Partners")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
-            this._testPartner = PartnerExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            PartnerExtracter.Remove(this._testPartner);
+            this.testPartner = PartnerExtracter.Extract(uniqueId);
         }
 
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await this.client.GetAllAsync();
+            var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -47,8 +42,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Partner expectedPartner = this._testPartner;
-            var response = await this.client.GetByIdAsync(expectedPartner.Id);
+            Partner expectedPartner = this.testPartner;
+            var response = await this.Client.GetByIdAsync(expectedPartner.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -59,15 +54,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
                 () => Assert.Equal(expectedPartner.Description, returnedValue.Description),
                 () => Assert.Equal(expectedPartner.LogoId, returnedValue.LogoId),
                 () => Assert.Equal(expectedPartner.IsKeyPartner, returnedValue.IsKeyPartner),
-                () => Assert.Equal(expectedPartner.TargetUrl, returnedValue.TargetUrl.Href),
-                () => Assert.Equal(expectedPartner.UrlTitle, returnedValue.TargetUrl.Title));
+                () => Assert.Equal(expectedPartner.TargetUrl, returnedValue.TargetUrl?.Href),
+                () => Assert.Equal(expectedPartner.UrlTitle, returnedValue.TargetUrl?.Title));
         }
 
         [Fact]
         public async Task PartnersControllerTests_GetByIdIncorrectReturnBadRequest()
         {
             int id = -100;
-            var response = await this.client.GetByIdAsync(id);
+            var response = await this.Client.GetByIdAsync(id);
 
             Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
             Assert.False(response.IsSuccessStatusCode);
@@ -76,9 +71,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = this._testStreetcodeContent.Id;
+            int streetcodeId = this.testStreetcodeContent.Id;
 
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -89,11 +84,22 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                           () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                           () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                PartnerExtracter.Remove(this.testPartner);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

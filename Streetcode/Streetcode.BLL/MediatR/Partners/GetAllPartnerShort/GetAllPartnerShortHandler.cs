@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
         {
             var partners = await _repositoryWrapper.PartnersRepository.GetAllAsync();
 
-            if (partners is null)
+            if (!partners.Any())
             {
                 string? errorMsg = _stringLocalizer?["CannotFindAnyPartners"].Value;
                 _logger.LogError(request, errorMsg);

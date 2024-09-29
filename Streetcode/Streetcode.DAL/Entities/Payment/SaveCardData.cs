@@ -8,6 +8,6 @@ namespace Streetcode.DAL.Entities.Payment
         public bool SaveCard { get; set; }
 
         [JsonProperty("walletId")]
-        public string WalletId { get; set; }
+        public string? WalletId { get; set; }
     }
 }

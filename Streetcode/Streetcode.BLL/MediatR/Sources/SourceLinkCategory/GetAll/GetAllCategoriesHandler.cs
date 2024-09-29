@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         {
             var allCategories = await _repositoryWrapper.SourceCategoryRepository.GetAllAsync(
                 include: cat => cat.Include(img => img.Image) !);
-            if (allCategories == null)
+            if (!allCategories.Any())
             {
                 string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);

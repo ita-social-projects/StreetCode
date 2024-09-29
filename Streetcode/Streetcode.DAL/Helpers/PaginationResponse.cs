@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Streetcode.DAL.Helpers
+﻿namespace Streetcode.DAL.Helpers
 {
     public class PaginationResponse<T>
     {

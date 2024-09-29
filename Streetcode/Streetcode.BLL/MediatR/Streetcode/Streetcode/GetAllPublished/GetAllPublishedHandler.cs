@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published);
 
-            if (streetcodes == null)
+            if (!streetcodes.Any())
             {
                 // Logger
                 return Result.Fail("No streetcodes exist now");

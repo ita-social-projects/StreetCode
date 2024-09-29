@@ -1,44 +1,39 @@
 ﻿using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
 using Xunit;
-using Streetcode.XIntegrationTest.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
     public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private Audio _testAudio;
-        private StreetcodeContent _testStreetcodeContent;
+        private readonly Audio testAudio;
+        private readonly StreetcodeContent testStreetcodeContent;
 
         public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/Audio")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testAudio = AudioExtracter.Extract(uniqueId);
-            this._testStreetcodeContent = StreetcodeContentExtracter
+            this.testAudio = AudioExtracter.Extract(uniqueId);
+            this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
                     uniqueId,
                     Guid.NewGuid().ToString(),
-                    audio: this._testAudio);
-        }
-
-        public override void Dispose()
-        {
-            StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
-            AudioExtracter.Remove(this._testAudio);
+                    audio: this.testAudio);
         }
 
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
-            var response = await this.client.GetAllAsync();
+            var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<AudioDTO>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
@@ -48,21 +43,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
-            Audio expected = this._testAudio;
-            var response = await this.client.GetByIdAsync(expected.Id);
+            Audio expected = this.testAudio;
+            var response = await this.Client.GetByIdAsync(expected.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-            Assert.Equal(expected.Id, returnedValue?.Id);
+            Assert.Equal(expected.Id, returnedValue.Id);
         }
 
         [Fact]
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int id = -100;
-            var response = await this.client.GetByIdAsync(id);
+            var response = await this.Client.GetByIdAsync(id);
 
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
@@ -72,9 +67,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
         {
-            int streetcodeId = this._testStreetcodeContent.Id;
-            int audioId = this._testAudio.Id;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            int streetcodeId = this.testStreetcodeContent.Id;
+            int audioId = this.testAudio.Id;
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -85,11 +80,22 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
         {
             int streetcodeId = -100;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                AudioExtracter.Remove(this.testAudio);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

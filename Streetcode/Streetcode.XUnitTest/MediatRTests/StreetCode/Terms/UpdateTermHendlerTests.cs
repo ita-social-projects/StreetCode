@@ -12,124 +12,122 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
-	public class UpdateTermHendlerTests
-	{
-		private readonly Mock<IRepositoryWrapper> _mockRepository;
-		private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
+    public class UpdateTermHendlerTests
+    {
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerCannotConvertNull;
 
         public UpdateTermHendlerTests()
-		{
-			_mockRepository = new();
-			_mockMapper = new();
-			_mockLogger = new Mock<ILoggerService>();
-			_mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
-			_mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-		}
+        {
+            this.mockRepository = new ();
+            this.mockMapper = new ();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            this.mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+        }
 
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccessfully_WhenUpdated(int returnNuber)
+        {
+            // Arrange
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_WhenUpdated(int returnNuber)
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            .Returns(GetTerm());
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-			.Returns(GetTerm());
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            // Act
+            var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
 
-			//Act
-			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsSuccess),
+                () => Assert.IsType<Unit>(result.Value));
+        }
 
-			//Assert
-			Assert.Multiple(
-				() => Assert.True(result.IsSuccess),
-				() => Assert.IsType<Unit>(result.Value)
-			);
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldThrowExeption_TryMapNullRequest(int returnNuber)
+        {
+            // Arrange
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId() !));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-		}
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+                .Returns(GetTermWithNotExistId() !);
 
-
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldThrowExeption_TryMapNullRequest(int returnNuber)
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId()!));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
-
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTermWithNotExistId()!);
-
-			var expectedError = "Cannot convert null to Term";
-            _mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+            var expectedError = "Cannot convert null to Term";
+            this.mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
                 .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
 
-            var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-			//Act
-			var result = await handler.Handle(new UpdateTermCommand(GetTermDTOWithNotExistId()!), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new UpdateTermCommand(GetTermDTOWithNotExistId() !), CancellationToken.None);
 
-			//Assert
-			Assert.Multiple(
-				() => Assert.False(result.IsSuccess),
-				() => Assert.Equal(expectedError, result.Errors.First().Message)
-			);
-		}
+            // Assert
+            Assert.Multiple(
+                () => Assert.False(result.IsSuccess),
+                () => Assert.Equal(expectedError, result.Errors[0].Message));
+        }
 
-		[Theory]
-		[InlineData(-1)]
-		public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int returnNuber)
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+        [Theory]
+        [InlineData(-1)]
+        public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful(int returnNuber)
+        {
+            // Arrange
+            this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTerm());
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+                .Returns(GetTerm());
 
-			var expectedError = "Failed to update a term";
-            _mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateTerm"])
+            var expectedError = "Failed to update a term";
+            this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateTerm"])
                .Returns(new LocalizedString("FailedToUpdateTerm", expectedError));
-            var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-			//Act
-			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
 
-			//Assert
-			Assert.Multiple(
-				() => Assert.True(result.IsFailed),
-				() => Assert.Equal(expectedError, result.Errors.First().Message)
-			); ;
-		}
+            // Assert
+            Assert.Multiple(
+                () => Assert.True(result.IsFailed),
+                () => Assert.Equal(expectedError, result.Errors[0].Message));
+        }
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNuber)
-		{
-			//Arrange
-			_mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-			_mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccessfully_TypeIsCorrect(int returnNuber)
+        {
+            // Arrange
+            this.mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-			_mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
-				.Returns(GetTerm());
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+                .Returns(GetTerm());
 
-			var handler = new UpdateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerCannotConvertNull.Object);
+            var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-			//Act
-			var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new UpdateTermCommand(GetTermDTO()), CancellationToken.None);
 
-			//Assert
-			Assert.IsType<Unit>(result.Value);
-		}
-		private static Term GetTerm() => new();
-		private static TermDTO GetTermDTO() => new();
-		private static Term? GetTermWithNotExistId() => null;
-		private static TermDTO? GetTermDTOWithNotExistId() => null;
-	}
+            // Assert
+            Assert.IsType<Unit>(result.Value);
+        }
+
+        private static Term GetTerm() => new ();
+
+        private static TermDTO GetTermDTO() => new ();
+
+        private static Term? GetTermWithNotExistId() => null;
+
+        private static TermDTO? GetTermDTOWithNotExistId() => null;
+    }
 }

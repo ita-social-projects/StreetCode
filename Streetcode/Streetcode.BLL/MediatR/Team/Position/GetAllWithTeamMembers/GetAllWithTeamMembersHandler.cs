@@ -29,9 +29,9 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
                 .PositionRepository
                 .GetAllAsync(include: x => x.Include(x => x.TeamMembers));
 
-            var positionsWithMembers = positions.Where(x => x.TeamMembers.Any());
+            var positionsWithMembers = positions.Where(x => x.TeamMembers?.Count > 0);
 
-            if (positionsWithMembers is null)
+            if (!positionsWithMembers.Any())
             {
                 const string errorMsg = $"Cannot find any positions";
                 _logger.LogError(request, errorMsg);

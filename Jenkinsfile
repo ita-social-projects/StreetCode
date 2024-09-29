@@ -38,6 +38,9 @@ pipeline {
                 echo "JOB_NAME..............${env.JOB_NAME}"
                 echo "NODE_NAME.............${env.NODE_NAME}"
                 echo "WORKSPACE.............${env.WORKSPACE}"
+                echo "CHANGE_ID.............${env.CHANGE_ID}"
+                echo "CHANGE_BRANCH.........${env.CHANGE_BRANCH}"
+                echo "CHANGE_TARGET.........${env.CHANGE_TARGET}"
             }
         }
         stage('Setup dependencies') {
@@ -95,13 +98,45 @@ pipeline {
                 SONAR = credentials('sonar_token')
             }
             steps {
-                      sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                      sh '''    echo "Sonar scan"
-                                dotnet sonarscanner begin /k:"ita-social-projects_StreetCode" /o:"ita-social-projects" /d:sonar.token=$SONAR /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
-                                dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
-                                dotnet sonarscanner end /d:sonar.token=$SONAR
-                        '''
+                sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
+                script {
+                    withEnv([
+                        "PR_KEY=${env.CHANGE_ID}",
+                        "PR_BRANCH=${env.CHANGE_BRANCH}",
+                        "PR_BASE=${env.CHANGE_TARGET}",
+                    ]) {
+                        if (env.PR_KEY != "null") {                        
+                            sh  ''' echo "Sonar scan"
+                                    dotnet sonarscanner begin \
+                                    /k:"ita-social-projects_StreetCode" \
+                                    /o:"ita-social-projects" \
+                                    /d:sonar.token=$SONAR \
+                                    /d:sonar.host.url="https://sonarcloud.io" \
+                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+                                    /d:sonar.pullrequest.key=$PR_KEY \
+                                    /d:sonar.pullrequest.branch=$PR_BRANCH \
+                                    /d:sonar.pullrequest.base=$PR_BASE
+
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet sonarscanner end /d:sonar.token=$SONAR
+                            '''
+                        } else {
+                            sh  ''' echo "Sonar scan"
+                                    dotnet sonarscanner begin \
+                                    /k:"ita-social-projects_StreetCode" \
+                                    /o:"ita-social-projects" \
+                                    /d:sonar.token=$SONAR \
+                                    /d:sonar.host.url="https://sonarcloud.io" \
+                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet sonarscanner end /d:sonar.token=$SONAR
+                            '''
+                        }
+                    }
+                }
             }
         }
         stage('Build image') {

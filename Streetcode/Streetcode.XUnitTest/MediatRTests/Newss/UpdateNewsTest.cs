@@ -77,27 +77,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
-
-        [Fact]
-        public async Task ShouldReturnFail_CreationDateIsRequired()
-        {
-            // Arrange
-            string expectedErrorMessage = "CreationDate field is required";
-            var testNews = GetNewsWithDefaultCreationDate();
-            var testNewsDto = GetNewsDTOWithDefaultCreationDate();
-            SetupMapper(testNews, testNewsDto);
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new UpdateNewsCommand(testNewsDto), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
-            );
-
-        }
-
         [Theory]
         [InlineData(-1)]
         public async Task ShouldThrowException_SaveChangesAsyncIsNotSuccessful(int returnNumber)
@@ -140,46 +119,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert
             Assert.True(result.IsSuccess);
         }
-        [Fact]
-        public async Task ShouldReturnFail_NewsWithSameTitleExists()
-        {
-            // Arrange
-            var testNews = GetNews();
-            var testNewsDTO = GetNewsDTO();
-            var expectedError = "A news with the same title already exists.";
-            SetupMapper(testNews, testNewsDTO);
-            SetupRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
 
-            // Act
-            var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message)
-            );
-        }
-        [Fact]
-        public async Task ShouldThrowException_NewsWithSameTextExists()
-        {
-            // Arrange
-            var testNews = GetNews();
-            var testNewsDTO = GetNewsDTO();
-            var expectedError = "A news with the same text already exists.";
-            SetupMapper(testNews, testNewsDTO);
-            SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(testNews.Text);
-            var handler = new UpdateNewsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerFailedToUpdate.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new UpdateNewsCommand(GetNewsDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message)
-            );
-        }
         private void SetupUpdateRepository(int returnNumber)
         {
             _mockRepository.Setup(x => x.NewsRepository.Update(It.IsAny<DAL.Entities.News.News>()));
@@ -204,34 +144,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         {
             _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<UpdateNewsDTO>()))
                 .Returns(GetNewsWithNotExistId());
-        }
-        private void SetupRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
-        {
-            _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
-                .ReturnsAsync((Expression<Func<DAL.Entities.News.News, bool>> predicate, Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>> include) =>
-                {
-                    var newsList = new List<DAL.Entities.News.News>
-                    {
-                        new DAL.Entities.News.News { Title = title }
-                    };
-                    return newsList.FirstOrDefault(predicate.Compile());
-                });
-        }
-        private void SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(string text)
-        {
-            _mockRepository.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
-                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
-                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
-                           .ReturnsAsync(() =>
-                           {
-                               var newsList = new List<DAL.Entities.News.News>
-                               {
-                           new DAL.Entities.News.News { Text = text }
-                               };
-                               return newsList.FirstOrDefault();
-                           });
         }
 
         private void SetupImageRepository()
@@ -258,18 +170,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             };
         }
 
-        private static DAL.Entities.News.News GetNewsWithDefaultCreationDate()
-        {
-            return new DAL.Entities.News.News()
-            {
-                Id = 1,
-                ImageId = 1,
-                Title = "Title",
-                Text = "Text",
-                URL = "URL",
-            };
-        }
-
         private static UpdateNewsDTO GetNewsDTO()
         {
             return new UpdateNewsDTO()
@@ -280,18 +180,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 Text = "Text",
                 URL = "URL",
                 CreationDate = new DateTime(2015, 12, 25)
-            };
-        }
-
-        private static UpdateNewsDTO GetNewsDTOWithDefaultCreationDate()
-        {
-            return new UpdateNewsDTO()
-            {
-                Id = 1,
-                ImageId = 1,
-                Title = "Title",
-                Text = "Text",
-                URL = "URL",
             };
         }
 

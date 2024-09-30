@@ -33,29 +33,10 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
 
         public async Task<Result<CreateSourceLinkCategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var existingTitleCategory = await _repositoryWrapper.SourceCategoryRepository
-                        .GetFirstOrDefaultAsync(a => a.Title == request.Category.Title);
-            if(existingTitleCategory is not null)
-            {
-                string errorMsg = $"Title: {request.Category.Title} already exists";
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var category = _mapper.Map<DAL.Entities.Sources.SourceLinkCategory>(request.Category);
             if (category is null)
             {
                 string errorMsg = _stringLocalizerCannot["CannotConvertNullToCategory"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            var existingImage = await _repositoryWrapper.ImageRepository
-                .GetFirstOrDefaultAsync(a => a.Id == request.Category.ImageId);
-
-            if (existingImage is null)
-            {
-                string errorMsg = $"Cannot find an image with corresponding id: {request.Category.ImageId}";
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

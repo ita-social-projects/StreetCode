@@ -8,9 +8,9 @@ namespace Streetcode.BLL.Validators.Streetcode.ImageDetails;
 
 public class ImageDetailsValidator : AbstractValidator<ImageDetailsDto>
 {
-    private const int TitleMaxLength = 100;
-    private const int AltMaxLength = 200;
-    private IRepositoryWrapper _repositoryWrapper;
+    public const int TitleMaxLength = 100;
+    public const int AltMaxLength = 200;
+    private readonly IRepositoryWrapper _repositoryWrapper;
     public ImageDetailsValidator(
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,

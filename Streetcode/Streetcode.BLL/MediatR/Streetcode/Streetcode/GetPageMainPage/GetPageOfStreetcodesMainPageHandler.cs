@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
                 descendingSortKeySelector: sc => sc.CreatedAt)
-                .Entities;
+                .Entities.ToList();
 
             if (streetcodes is not null && streetcodes.Any())
             {

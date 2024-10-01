@@ -8,8 +8,8 @@ namespace Streetcode.BLL.Validators.Streetcode.TimelineItem;
 
 public class TimelineItemValidator : AbstractValidator<TimelineItemCreateUpdateDTO>
 {
-    private const int TitleMaxLength = 100;
-    private const int DescriptionMaxLength = 600;
+    public const int TitleMaxLength = 100;
+    public const int DescriptionMaxLength = 600;
     public TimelineItemValidator(
         HistoricalContextValidator historicalContextValidator,
         IStringLocalizer<FailedToValidateSharedResource> localizer,

@@ -7,7 +7,7 @@ namespace Streetcode.BLL.Validators.Streetcode.TimelineItem;
 
 public class HistoricalContextValidator : AbstractValidator<HistoricalContextCreateUpdateDTO>
 {
-    private const int TitleMaxLength = 50;
+    public const int TitleMaxLength = 50;
     public HistoricalContextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)

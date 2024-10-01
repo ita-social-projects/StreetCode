@@ -340,21 +340,6 @@ public class NewsTests
         };
     }
 
-    private void SetupMockImageRepositoryGetFirstOrDefaultAsync()
-    {
-        _mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Image, bool>>>(),
-                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-            .ReturnsAsync(new Image { Id = 1 });
-    }
-    public static void SetupMockImageRepositoryGetFirstOrDefaultAsync2(Mock<IRepositoryWrapper> mockRepositoryWrapper)
-    {
-        mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Image, bool>>>(),
-                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-            .ReturnsAsync(new Image { Id = 1 });
-    }
-
     private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
     {
         _mockRepositoryWrapper.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
@@ -385,14 +370,6 @@ public class NewsTests
 
                 return newsList.FirstOrDefault();
             });
-    }
-
-    private void SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage()
-    {
-        _mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Image, bool>>>(),
-                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-            .ReturnsAsync((Image)null!);
     }
 
     private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title, int existingId)

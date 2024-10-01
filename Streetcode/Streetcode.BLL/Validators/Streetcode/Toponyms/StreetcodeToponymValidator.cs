@@ -8,11 +8,10 @@ namespace Streetcode.BLL.Validators.Streetcode.Toponyms;
 
 public class StreetcodeToponymValidator : AbstractValidator<StreetcodeToponymCreateUpdateDTO>
 {
-    private const int StreetNameMaxLength = 150;
+    public const int StreetNameMaxLength = 150;
     public StreetcodeToponymValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.StreetName)
-            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["StreetName"]])
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["StreetName"]])
             .MaximumLength(StreetNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["StreetName"], StreetNameMaxLength]);
         RuleFor(dto => dto.ModelState)

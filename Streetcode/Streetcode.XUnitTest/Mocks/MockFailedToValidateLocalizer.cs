@@ -18,6 +18,7 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
             "TransliterationUrlFormat",
             "InvalidNewsUrl",
             "DateStringFormat",
+            "EventStreetcodeCannotHasFirstName",
         });
 
         this.groupedErrors.Add(1, new List<string>()

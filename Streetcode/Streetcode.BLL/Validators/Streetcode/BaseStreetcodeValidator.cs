@@ -26,7 +26,6 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int IndexMinValue = 1;
 
     public BaseStreetcodeValidator(
-        IRepositoryWrapper repositoryWrapper,
         StreetcodeToponymValidator streetcodeToponymValidator,
         TimelineItemValidator timelineItemValidator,
         ImageDetailsValidator imageDetailsValidator,
@@ -65,12 +64,17 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         RuleFor(dto => dto.DateString)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])
             .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength])
-            .Matches(@"^[А-Яа-яЁёЇїІіЄєҐґ0-9\s\(\)\-]+$") // Cyrillic letters, digits, parentheses, hyphen
+            .Matches(@"^[А-Яа-яЁёЇїІіЄєҐґ0-9\s\(\)\-\–]+$") // Cyrillic letters, digits, parentheses, hyphen
             .WithMessage(localizer["DateStringFormat"]);
 
         RuleFor(dto => dto.StreetcodeType)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["StreetcodeType"]])
             .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["StreetcodeType"]]);
+
+        RuleFor(dto => dto)
+            .Must(dto => string.IsNullOrEmpty(dto.FirstName) && string.IsNullOrEmpty(dto.LastName))
+            .When(dto => dto.StreetcodeType == StreetcodeType.Event)
+            .WithMessage(localizer["EventStreetcodeCannotHasFirstName"]);
 
         RuleFor(dto => dto.Status)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Status"]])

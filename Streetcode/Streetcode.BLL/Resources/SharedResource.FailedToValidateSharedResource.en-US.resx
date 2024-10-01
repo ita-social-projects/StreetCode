@@ -84,4 +84,7 @@
     <data name="MustContainAtMostOneAlt2" xml:space="preserve">
         <value>Field '{0}' may contain at most one image for links.</value>
     </data>
+    <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
+        <value>The streetcode of type 'Event' cannot has 'First name' and 'Last name'</value>
+    </data>
 </root>

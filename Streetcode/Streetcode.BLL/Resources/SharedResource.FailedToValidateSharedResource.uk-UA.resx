@@ -84,4 +84,7 @@
     <data name="MustContainAtMostOneAlt2" xml:space="preserve">
         <value>Поле '{0}' може містити щонайбільше одне зображення для звʼязків.</value>
     </data>
+    <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
+        <value>Стріткод типу 'Подія' не може мати поля 'Ім'я' та 'Прізвище' </value>
+    </data>
 </root>

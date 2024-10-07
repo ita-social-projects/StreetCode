@@ -201,4 +201,7 @@
     <data name="Id" xml:space="preserve">
         <value>Ідентифікатор</value>
     </data>
+    <data name="HistoricalContexts" xml:space="preserve">
+        <value>Історичні контексти</value>
+    </data>
 </root>

@@ -31,6 +31,8 @@ public class TimelineItemValidator : AbstractValidator<TimelineItemCreateUpdateD
 
         RuleFor(dto => dto.ModelState)
             .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["ModelState"]]);
+        RuleFor(dto => dto.HistoricalContexts)
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["HistoricalContexts"]]);
         RuleForEach(dto => dto.HistoricalContexts)
             .SetValidator(historicalContextValidator);
     }

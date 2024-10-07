@@ -8,8 +8,8 @@ namespace Streetcode.BLL.Validators.Streetcode.Text;
 public class BaseTextValidator : AbstractValidator<BaseTextDTO>
 {
     public const int TitleMaxLength = 50;
-    public const int TextMaxLength = 20000;
-    public const int AdditionalTextMaxLength = 200;
+    public const int TextMaxLength = 35000;
+    public const int AdditionalTextMaxLength = 400;
     public BaseTextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)

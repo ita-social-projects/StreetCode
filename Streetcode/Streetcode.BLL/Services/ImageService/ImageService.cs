@@ -1,16 +1,14 @@
 ﻿using Repositories.Interfaces;
-using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Interfaces.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Newss;
+using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Team;
-using Streetcode.DAL.Repositories.Interfaces.Partners;
-using Streetcode.DAL.Repositories.Realizations.Partners;
 
 namespace Streetcode.BLL.Services.ImageService;
 

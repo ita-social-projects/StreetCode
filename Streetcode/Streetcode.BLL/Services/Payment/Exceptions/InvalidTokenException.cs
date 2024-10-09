@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Streetcode.BLL.Services.Payment.Exceptions
+﻿namespace Streetcode.BLL.Services.Payment.Exceptions
 {
     /// <summary>
     /// Represents error caused by invalid AccessToken value.

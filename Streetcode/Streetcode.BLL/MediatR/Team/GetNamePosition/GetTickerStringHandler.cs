@@ -2,10 +2,8 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetNamePosition;
-using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 public class GetTickerStringHandler : IRequestHandler<GetTickerStringQuery, Result<string>>

@@ -2,11 +2,11 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Enums;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog

@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
@@ -10,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 {
-	public class GetTeamByRoleIdHandler : IRequestHandler<GetTeamByRoleIdQuery, Result<IEnumerable<TeamMemberDTO>>>
+    public class GetTeamByRoleIdHandler : IRequestHandler<GetTeamByRoleIdQuery, Result<IEnumerable<TeamMemberDTO>>>
 	{
 		private readonly IMapper _mapper;
 		private readonly IRepositoryWrapper _repositoryWrapper;

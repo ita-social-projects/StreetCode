@@ -1,7 +1,4 @@
 ﻿using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.DAL.Entities.Media.Images;
 
 namespace Streetcode.BLL.DTO.Team
 {

@@ -1,6 +1,4 @@
-﻿using Streetcode.BLL.DTO.Media.Images;
-
-namespace Streetcode.BLL.DTO.Team
+﻿namespace Streetcode.BLL.DTO.Team
 {
     public class TeamMemberCreateDTO
     {

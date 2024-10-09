@@ -1,15 +1,21 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
-using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Media.Create;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media.Images;
@@ -17,15 +23,6 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
-using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.DTO.Media.Create;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 

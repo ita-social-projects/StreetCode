@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Users
 {

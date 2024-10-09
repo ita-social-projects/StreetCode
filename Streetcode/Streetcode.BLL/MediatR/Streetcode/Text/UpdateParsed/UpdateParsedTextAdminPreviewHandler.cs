@@ -1,7 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Text;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetParsed
 {

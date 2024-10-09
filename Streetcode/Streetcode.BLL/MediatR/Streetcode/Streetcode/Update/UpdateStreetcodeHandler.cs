@@ -11,19 +11,16 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
-using Streetcode.BLL.Interfaces.Cache;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
-using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {

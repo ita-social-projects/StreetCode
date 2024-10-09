@@ -12,13 +12,11 @@ namespace Streetcode.BLL.MediatR.Payment
         private const int _hryvnyaCurrencyCode = 980;
         private const int _currencyMultiplier = 100;
         private readonly IPaymentService _paymentService;
-        private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CreateInvoiceHandler> _stringlocalization;
 
-        public CreateInvoiceHandler(IPaymentService paymentService, ILoggerService logger, IStringLocalizer<CreateInvoiceHandler> stringLocalizer)
+        public CreateInvoiceHandler(IPaymentService paymentService, IStringLocalizer<CreateInvoiceHandler> stringLocalizer)
         {
             _paymentService = paymentService;
-            _logger = logger;
             _stringlocalization = stringLocalizer;
         }
 

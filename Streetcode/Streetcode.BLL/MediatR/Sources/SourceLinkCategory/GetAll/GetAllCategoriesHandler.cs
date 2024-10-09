@@ -38,6 +38,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
+            allCategories = allCategories.OrderBy(category => category.Title);
             var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);
 
             foreach (var dto in dtos)

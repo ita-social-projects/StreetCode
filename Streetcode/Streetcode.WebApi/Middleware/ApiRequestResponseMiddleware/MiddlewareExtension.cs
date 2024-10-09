@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace Streetcode.BLL.Middleware
+﻿namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 {
     public static class MiddlewareExtension
     {

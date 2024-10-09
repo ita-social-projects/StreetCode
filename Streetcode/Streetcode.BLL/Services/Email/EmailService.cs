@@ -36,8 +36,9 @@ namespace Streetcode.BLL.Services.Email
             {
               HtmlBody =
                 "<h2 style='color:black;'>" +
-               $"Від: {message.From} <br>" +
-               $"Текст: {message.Content}" +
+                $"Звідки: {message.Source} <br>" +
+                $"Від: {message.From} <br>" +
+                $"Текст: {message.Content}" +
                 "</h2>"
             };
 

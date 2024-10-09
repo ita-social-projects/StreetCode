@@ -1,4 +1,5 @@
-﻿using Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Repositories.Interfaces;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
@@ -50,11 +51,10 @@ public class ImageService : IImageService
             .Select(art => art.ImageId)
             .ToList();
 
-        var imagesFromNews = _newsRepository
+        var imagesFromNews = await _newsRepository
             .FindAll()
-            .Where(news => news.ImageId.HasValue)
-            .Select(news => news.ImageId!.Value)
-            .ToList();
+            .Select(news => news.ImageId)
+            .ToListAsync();
 
         var imagesFromSourceCategory = _sourceCategoryRepository
             .FindAll()

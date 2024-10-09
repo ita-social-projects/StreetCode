@@ -1,4 +1,4 @@
-﻿namespace Streetcode.BLL.Middleware
+﻿namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 {
     public class RequestResponseMiddlewareOptions
     {

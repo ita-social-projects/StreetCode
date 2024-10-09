@@ -46,7 +46,12 @@ namespace Streetcode.BLL.MediatR.Email
                 return Result.Fail(new Error("Invalid captcha"));
             }
 
-            var message = new Message(new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodedev@gmail.com" }, request.Email.From, "FeedBack", request.Email.Content);
+            var message = new Message(
+                new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodedev@gmail.com" },
+                request.Email.From,
+                request.Email.Source,
+                "FeedBack",
+                request.Email.Content);
             bool isResultSuccess = await _emailService.SendEmailAsync(message);
 
             if (isResultSuccess)

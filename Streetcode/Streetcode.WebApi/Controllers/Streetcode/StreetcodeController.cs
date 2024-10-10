@@ -25,96 +25,112 @@ using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
 using Microsoft.AspNetCore.Authorization;
+using Streetcode.BLL.DTO.Streetcode.CatalogItem;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllStreetcodesResponseDTO))]
     public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
     public async Task<IActionResult> GetAllPublished()
     {
         return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
     public async Task<IActionResult> GetAllShort()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery()));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDTO>))]
     public async Task<IActionResult> GetAllMainPage()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesMainPageQuery()));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDTO>))]
     public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize)
     {
         return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDTO))]
     public async Task<IActionResult> GetShortById(int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id)));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFilterResultDTO>))]
     public async Task<IActionResult> GetByFilter([FromQuery] StreetcodeFilterRequestDTO request)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByFilterQuery(request)));
     }
 
     [HttpGet("{index:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
     }
 
     [HttpGet("{url}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     public async Task<IActionResult> ExistWithUrl([FromRoute] string url)
     {
         return HandleResult(await Mediator.Send(new StreetcodeWithUrlExistQuery(url)));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CatalogItem>))]
     public async Task<IActionResult> GetAllCatalog([FromQuery] int page, [FromQuery] int count)
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesCatalogQuery(page, count)));
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     public async Task<IActionResult> GetCount([FromQuery] bool? onlyPublished)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery(onlyPublished ?? false)));
     }
 
     [HttpGet("{url}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetByTransliterationUrl([FromRoute] string url)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url)));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
     }
 
     [HttpGet("{qrid:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     public async Task<IActionResult> GetByQrId([FromRoute] int qrid)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeUrlByQrIdQuery(qrid)));
     }
 
     [HttpGet("{index}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetByIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index)));
@@ -122,6 +138,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
@@ -131,6 +148,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpPut("{id:int}/{status}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PatchStage(
@@ -142,6 +160,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> SoftDelete([FromRoute] int id)
@@ -151,6 +170,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
@@ -160,6 +180,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)

@@ -16,18 +16,21 @@ public class FactController : BaseApiController
 {
     [HttpGet]
     [CompressResponse]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllFactsQuery()));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FactDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetFactByIdQuery(id)));
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetFactByStreetcodeIdQuery(streetcodeId)));
@@ -35,6 +38,7 @@ public class FactController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] FactCreateDTO fact)
@@ -44,6 +48,7 @@ public class FactController : BaseApiController
 
     [HttpPut("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] FactDto fact)
@@ -54,6 +59,7 @@ public class FactController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)

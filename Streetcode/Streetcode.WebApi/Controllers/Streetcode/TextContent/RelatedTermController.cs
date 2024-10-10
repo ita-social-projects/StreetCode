@@ -12,6 +12,7 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
     public class RelatedTermController : BaseApiController
     {
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedTermDTO>))]
         public async Task<IActionResult> GetByTermId([FromRoute] int id)
         {
             return HandleResult(await Mediator.Send(new GetAllRelatedTermsByTermIdQuery(id)));
@@ -19,6 +20,7 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RelatedTermDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody] RelatedTermCreateDTO relatedTerm)
@@ -28,6 +30,7 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update([FromRoute] int id, [FromBody] RelatedTermDTO relatedTerm)
@@ -37,6 +40,7 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpDelete("{word}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RelatedTermDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete([FromRoute] string word)

@@ -36,7 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new CreateTagHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             //Act
-            var result = await handler.Handle(new CreateTagQuery(new CreateTagDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTagCommand(new CreateTagDTO()), CancellationToken.None);
 
             //Assert
             Assert.Multiple(

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Entity = Streetcode.DAL.Entities.Analytics.StatisticRecord;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 {

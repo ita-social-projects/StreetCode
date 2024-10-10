@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.DAL.Entities.Instagram;
@@ -33,12 +34,12 @@ namespace Streetcode.BLL.Services.Instagram
             var jsonOptions = new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                IgnoreNullValues = true
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
 
             var postResponse = JsonSerializer.Deserialize<InstagramPostResponse>(jsonResponse, jsonOptions);
 
-            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse.Data);
+            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse!.Data);
 
             return posts;
         }

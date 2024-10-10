@@ -32,7 +32,7 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
                 predicate: ti => ti.Id == request.Id,
                 include: ti => ti
                     .Include(til => til.HistoricalContextTimelines)
-                        .ThenInclude(x => x.HistoricalContext)!);
+                        .ThenInclude(x => x.HistoricalContext) !);
 
         if (timelineItem is null)
         {

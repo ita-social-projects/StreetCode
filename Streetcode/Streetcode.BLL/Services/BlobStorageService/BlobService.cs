@@ -2,7 +2,6 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Services.BlobStorageService;
 
@@ -11,18 +10,18 @@ public class BlobService : IBlobService
     private readonly BlobEnvironmentVariables _envirovment;
     private readonly string _keyCrypt;
     private readonly string _blobPath;
-    private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public BlobService(IOptions<BlobEnvironmentVariables> environment, IRepositoryWrapper? repositoryWrapper = null)
+    public BlobService(IOptions<BlobEnvironmentVariables> environment)
     {
         _envirovment = environment.Value;
         _keyCrypt = _envirovment.BlobStoreKey;
         _blobPath = _envirovment.BlobStorePath;
-        _repositoryWrapper = repositoryWrapper;
     }
 
-    public MemoryStream FindFileInStorageAsMemoryStream(string name)
+    public MemoryStream FindFileInStorageAsMemoryStream(string? name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         string[] splitedName = name.Split('.');
 
         byte[] decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
@@ -66,17 +65,21 @@ public class BlobService : IBlobService
         EncryptFile(imageBytes, extension, name);
     }
 
-    public void DeleteFileInStorage(string name)
+    public void DeleteFileInStorage(string? name)
     {
+        ArgumentNullException.ThrowIfNull(name);
+
         File.Delete($"{_blobPath}{name}");
     }
 
     public string UpdateFileInStorage(
-        string previousBlobName,
+        string? previousBlobName,
         string base64Format,
         string newBlobName,
         string extension)
     {
+        ArgumentNullException.ThrowIfNull(previousBlobName);
+
         DeleteFileInStorage(previousBlobName);
 
         string hashBlobStorageName = SaveFileInStorage(
@@ -109,7 +112,7 @@ public class BlobService : IBlobService
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
         byte[] iv = new byte[16];
-        using (var rng = new RNGCryptoServiceProvider())
+        using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(iv);
         }

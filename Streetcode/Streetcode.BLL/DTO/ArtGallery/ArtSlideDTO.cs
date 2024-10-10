@@ -9,5 +9,5 @@ public class ArtSlideDTO
     public int? StreetcodeId { get; set; }
     public StreetcodeArtSlideTemplate Template { get; set; }
     public ModelState ModelState { get; set; }
-    public IEnumerable<ArtForArtSlideDTO> StreetcodeArts { get; set; }
+    public IEnumerable<ArtForArtSlideDTO> StreetcodeArts { get; set; } = new List<ArtForArtSlideDTO>();
 }

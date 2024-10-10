@@ -14,14 +14,14 @@ namespace Streetcode.BLL.MediatR.Media.Art.StreetcodeArtSlide.GetAllCountByStree
             _repositoryWrapper = repositoryWrapper;
         }
 
-        public async Task<Result<int>> Handle(GetAllCountByStreetcodeIdQuerry request, CancellationToken cancellationToken)
+        public Task<Result<int>> Handle(GetAllCountByStreetcodeIdQuerry request, CancellationToken cancellationToken)
         {
             var slidesCount = _repositoryWrapper.StreetcodeArtSlideRepository
                 .FindAll(
                     predicate: sArtSlide => sArtSlide.StreetcodeId == request.StreetcodeId)
                 .Count();
 
-            return Result.Ok(slidesCount);
+            return Task.FromResult(Result.Ok(slidesCount));
         }
     }
 }

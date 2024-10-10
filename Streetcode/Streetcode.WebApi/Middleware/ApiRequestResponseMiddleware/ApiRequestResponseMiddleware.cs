@@ -106,13 +106,13 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 
                 return jsonObject.ToString();
             }
-            catch (JsonReaderException jsonEx)
+            catch (JsonReaderException)
             {
                 return "Response body is in gzip format";
             }
             catch (Exception ex)
             {
-                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}.{MethodBase.GetCurrentMethod().Name}. Tried to parse body: {body}. Exception: {ex}");
+                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod() !.DeclaringType!.Name}.{MethodBase.GetCurrentMethod() !.Name}. Tried to parse body: {body}. Exception: {ex}");
                 return string.Empty;
             }
         }

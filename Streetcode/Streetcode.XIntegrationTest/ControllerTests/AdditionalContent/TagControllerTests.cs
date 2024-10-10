@@ -2,7 +2,6 @@ using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using TagEntity = Streetcode.DAL.Entities.AdditionalContent.Tag;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
@@ -22,10 +21,8 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Update;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
-using AutoMapper.Execution;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Delete;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
@@ -37,7 +34,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         private TagEntity _testUpdateTag;
         private StreetcodeContent _testStreetcodeContent;
 
-        
         public TagControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
             : base(factory, "/api/Tag", tokenStorage)
         {
@@ -50,7 +46,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
                     uniqueId,
                     Guid.NewGuid().ToString());
         }
-        
+
         public override void Dispose()
         {
             StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
@@ -207,8 +203,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(default, default)).ReturnsAsync((TagEntity)null);
             repositoryMock.Setup(r => r.CreateAsync(default)).ReturnsAsync(this._testCreateTag);
             repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository).Returns(repositoryMock.Object);
-            repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Returns(null);
-            repositoryWrapperMock.Setup(wrapper => wrapper.SaveChanges()).Throws(default(Exception));
+            repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
+            repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
 
             var mapperMock = new Mock<IMapper>();
             var loggerMock = new Mock<ILoggerService>();
@@ -384,7 +380,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTag.TagForTest;
-            tagUpdateDTO.Id = this._testCreateTag.Id;
+            tagUpdateDTO.Id = this._testCreateTag.Id - 1;
             tagUpdateDTO.Title = this._testUpdateTag.Title;
 
             // Act

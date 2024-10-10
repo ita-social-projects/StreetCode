@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.DAL.Entities.Jobs;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
 {
 	internal class GetAllJobsHandler
-		: IRequestHandler<GetAllJobsQuery, Result<IEnumerable<JobDto>>>
+		: IRequestHandler<GetAllJobsQuery, Result<GetAllJobsDTO>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly IMapper _mapper;
@@ -22,18 +26,28 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 			_logger = logger;
 		}
 
-		public async Task<Result<IEnumerable<JobDto>>> Handle(GetAllJobsQuery request, CancellationToken cancellationToken)
+		public Task<Result<GetAllJobsDTO>> Handle(GetAllJobsQuery request, CancellationToken cancellationToken)
 		{
 			try
 			{
-				var jobs = await _repositoryWrapper.JobRepository.GetAllAsync();
-				var jobsDto = _mapper.Map<IEnumerable<JobDto>>(jobs);
-				return Result.Ok(jobsDto);
+				PaginationResponse<Job> paginationResponse = _repositoryWrapper
+					.JobRepository
+					.GetAllPaginated(
+						request.page,
+						request.pageSize);
+
+				GetAllJobsDTO getAllJobsDTO = new GetAllJobsDTO()
+				{
+					TotalAmount = paginationResponse.TotalItems,
+					Jobs = _mapper.Map<IEnumerable<JobDto>>(paginationResponse.Entities),
+				};
+
+				return Task.FromResult(Result.Ok(getAllJobsDTO));
 			}
 			catch(Exception ex)
 			{
 				_logger.LogError(request, ex.Message);
-				return Result.Fail(ex.Message);
+				return Task.FromResult(Result.Fail<GetAllJobsDTO>(ex.Message));
 			}
 		}
 	}

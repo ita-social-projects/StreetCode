@@ -20,15 +20,26 @@ namespace Streetcode.DAL.Helpers
 
         public IEnumerable<T> Entities { get; set; }
 
-        public static PaginationResponse<T> Create(IQueryable<T> source, ushort pageNumber, ushort pageSize)
+        public static PaginationResponse<T> Create(IQueryable<T> source, ushort? pageNumber = null, ushort? pageSize = null)
         {
             ushort count = (ushort)(source?.Count() ?? 0);
-            var items = source?
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .AsEnumerable() ?? Enumerable.Empty<T>();
 
-            return new PaginationResponse<T>(items, count, pageNumber, pageSize);
+            if (pageNumber is null && pageSize is null)
+            {
+                return new PaginationResponse<T>(source?.AsEnumerable() ?? Enumerable.Empty<T>(), count, 1, count);
+            }
+
+            if (pageNumber == 0)
+            {
+                return new PaginationResponse<T>(Enumerable.Empty<T>(), count, 0, 0);
+            }
+
+            var items = source?
+                .Skip((pageNumber!.Value - 1) * pageSize!.Value)
+                .Take(pageSize!.Value)
+                .AsEnumerable() ?? Enumerable.Empty<T>();
+
+            return new PaginationResponse<T>(items, count, pageNumber!.Value, pageSize!.Value);
         }
     }
 }

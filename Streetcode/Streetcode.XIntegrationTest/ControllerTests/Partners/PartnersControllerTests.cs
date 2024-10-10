@@ -38,7 +38,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllPartnersResponseDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

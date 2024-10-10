@@ -6,11 +6,15 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Team;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetAll
 {
-    public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<IEnumerable<TeamMemberDTO>>>
+    public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllTeamDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,20 +29,29 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<IEnumerable<TeamMemberDTO>>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
         {
-            var team = await _repositoryWrapper
+            PaginationResponse<TeamMember> paginationResponse = _repositoryWrapper
                 .TeamRepository
-                .GetAllAsync(include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks));
+                .GetAllPaginated(
+                    request.page,
+                    request.pageSize,
+                    include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks));
 
-            if (team is null)
+            if (paginationResponse is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeam"].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                return Task.FromResult(Result.Fail<GetAllTeamDTO>(new Error(errorMsg)));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<TeamMemberDTO>>(team));
+            GetAllTeamDTO getAllTeamDTO = new GetAllTeamDTO()
+            {
+                TotalAmount = paginationResponse.TotalItems,
+                TeamMembers = _mapper.Map<IEnumerable<TeamMemberDTO>>(paginationResponse.Entities),
+            };
+
+            return Task.FromResult(Result.Ok(getAllTeamDTO));
         }
     }
 }

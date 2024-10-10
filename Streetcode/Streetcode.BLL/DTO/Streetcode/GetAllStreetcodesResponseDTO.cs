@@ -2,6 +2,6 @@
 
 public class GetAllStreetcodesResponseDTO
 {
-    public int Pages { get; set; }
+    public int TotalAmount { get; set; }
     public IEnumerable<StreetcodeDTO> Streetcodes { get; set; }
 }

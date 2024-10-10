@@ -48,28 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert.
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Equal(pageSize, result.Value.Count()));
-        }
-
-        [Fact]
-        public async Task ShouldApplyPaginationHeaderWithCorrectData_CorrectPage()
-        {
-            // Arrange.
-            ushort pageSize = 2;
-            ushort pageNumber = 1;
-            ushort totalItems = GetPaginationResponse(pageNumber, pageSize).TotalItems;
-            string expectedPaginationHeader = this.GetPaginationHeaderInJSON(pageSize, pageNumber, totalItems);
-
-            var httpHeaders = GetEmptyHTTPHeaders();
-            this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(pageSize), httpHeaders);
-
-            // Act.
-            var result = await this._handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
-
-            // Assert.
-            Assert.Multiple(
-                () => Assert.True(httpHeaders.Keys.Contains("x-pagination")),
-                () => Assert.Equal(expectedPaginationHeader, httpHeaders["x-pagination"]));
+                () => Assert.Equal(pageSize, result.Value.News.Count()));
         }
 
         [Fact]
@@ -87,7 +66,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert.
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Empty(result.Value));
+                () => Assert.Empty(result.Value.News));
         }
 
         [Fact]
@@ -105,7 +84,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             // Assert.
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Empty(result.Value));
+                () => Assert.Empty(result.Value.News));
         }
 
         private void SetupMockRepositoryGetAllPaginatedAsync(ushort pageNumber, ushort pageSize)

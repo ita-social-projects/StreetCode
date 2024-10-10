@@ -9,11 +9,13 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 {
-    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<IEnumerable<SourceLinkCategoryDTO>>>
+    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<GetAllCategoriesResponseDTO>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,26 +31,36 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<IEnumerable<SourceLinkCategoryDTO>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
+        public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
         {
-            var allCategories = await _repositoryWrapper.SourceCategoryRepository.GetAllAsync(
-                include: cat => cat.Include(img => img.Image) !);
-            if (allCategories == null)
+            PaginationResponse<DAL.Entities.Sources.SourceLinkCategory> paginationResponse = _repositoryWrapper.SourceCategoryRepository
+                .GetAllPaginated(
+                    request.page,
+                    request.pageSize,
+                    include: cat => cat.Include(img => img.Image) !,
+                    descendingSortKeySelector: cat => cat.Title);
+
+            if (paginationResponse == null)
             {
                 string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                return Task.FromResult(Result.Fail<GetAllCategoriesResponseDTO>(new Error(errorMsg)));
             }
 
-            allCategories = allCategories.OrderBy(category => category.Title);
-            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);
+            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(paginationResponse.Entities);
 
             foreach (var dto in dtos)
             {
                 dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
             }
 
-            return Result.Ok(dtos);
+            GetAllCategoriesResponseDTO getAllCategoriesResponseDTO = new GetAllCategoriesResponseDTO
+            {
+                TotalAmount = paginationResponse.TotalItems,
+                Categories = dtos,
+            };
+
+            return Task.FromResult(Result.Ok(getAllCategoriesResponseDTO));
         }
     }
 }

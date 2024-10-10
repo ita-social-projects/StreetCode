@@ -3,10 +3,8 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Partners.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -34,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Team.GetById
                 .GetSingleOrDefaultAsync(
                     predicate: p => p.Id == request.Id,
                     include: x => x.Include(x => x.TeamMemberLinks)
-                    .Include(x => x.Positions));
+                    .Include(x => x.Positions!));
 
             if (team is null)
             {

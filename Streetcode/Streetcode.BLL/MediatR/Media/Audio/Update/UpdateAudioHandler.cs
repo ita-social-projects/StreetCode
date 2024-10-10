@@ -40,14 +40,14 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
     {
         if (request.Audio.Extension.IsNullOrEmpty())
         {
-            string? errorMsg = _stringLocalizerFailedToUpdate?["ExtensionIsRequired"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["ExtensionIsRequired"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
         if (request.Audio.Title.IsNullOrEmpty())
         {
-            string? errorMsg = _stringLocalizerFailedToUpdate?["TitleIsRequired"].Value;
+            string errorMsg = _stringLocalizerFailedToUpdate["TitleIsRequired"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

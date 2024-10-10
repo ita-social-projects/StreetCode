@@ -1,10 +1,10 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Media.Audio.Delete;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -12,6 +12,8 @@ namespace Streetcode.BLL.MediatR.Media.Image.Delete;
 
 public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Unit>>
 {
+    private const int ForeignKeyViolation = 547;
+
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
@@ -48,18 +50,29 @@ public class DeleteImageHandler : IRequestHandler<DeleteImageCommand, Result<Uni
 
         _repositoryWrapper.ImageRepository.Delete(image);
 
-        var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-
-        if (resultIsSuccess)
+        try
         {
-            _blobService.DeleteFileInStorage(image.BlobName);
-        }
+            var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        if(resultIsSuccess)
-        {
-            return Result.Ok(Unit.Value);
+            if (resultIsSuccess)
+            {
+                _blobService.DeleteFileInStorage(image.BlobName);
+                return Result.Ok(Unit.Value);
+            }
+            else
+            {
+                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
         }
-        else
+        catch (DbUpdateException ex) when (ex.InnerException is SqlException { Number: ForeignKeyViolation })
+        {
+            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+        catch (Exception ex)
         {
             string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteImage"].Value;
             _logger.LogError(request, errorMsg);

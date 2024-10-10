@@ -2,7 +2,6 @@ using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
-using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
 

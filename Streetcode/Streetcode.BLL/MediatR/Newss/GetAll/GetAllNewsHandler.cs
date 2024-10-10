@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.AspNetCore.Http;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
@@ -30,14 +30,14 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<News> paginationResponseNews = _repositoryWrapper
                 .NewsRepository
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    include: newsCollection => newsCollection.Include(news => news.Image),
+                    include: newsCollection => newsCollection.Include(news => news.Image!),
                     descendingSortKeySelector: news => news.CreationDate);
 
             var newsDTOs = MapToNewsDTOs(paginationResponseNews.Entities);
@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 paginationResponseNews.TotalPages,
                 paginationResponseNews.TotalItems);
 
-            return Result.Ok(newsDTOs);
+            return Task.FromResult(Result.Ok(newsDTOs));
         }
 
         private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)

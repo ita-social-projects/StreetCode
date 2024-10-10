@@ -173,6 +173,23 @@ public class CreateStreetcodeValidatorTests
     }
 
     [Fact]
+    public async Task ShouldReturnError_WhenImageIdsIsEmpty()
+    {
+        // Arrange
+        this.SetupRepositoryWrapperReturnsNull();
+        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Images"]];
+        var command = this.GetValidCreateStreetcodeCommand();
+        command.Streetcode.ImagesIds = new List<int>();
+
+        // Act
+        var result = await this.validator.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ImagesIds)
+            .WithErrorMessage(expectedError);
+    }
+
+    [Fact]
     public async Task ShouldCallBaseValidator_WhenValidated()
     {
         // Arrange
@@ -290,6 +307,10 @@ public class CreateStreetcodeValidatorTests
             TimelineItems = new List<TimelineItemCreateUpdateDTO>()
             {
                 new (),
+            },
+            ImagesIds = new List<int>()
+            {
+                8,
             },
             ImagesDetails = new List<ImageDetailsDto>()
             {

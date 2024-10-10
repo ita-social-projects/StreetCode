@@ -22,7 +22,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
         private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _mockStringLocalizerFailedToValidate;
         private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _mockStringLocalizerFieldNames;
         private readonly Mock<IMapper> _mockMapper;
-        
+
         public CreateStreetcodeHandlerTests()
         {
             _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
@@ -53,68 +53,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
         }
 
         [Fact]
-        public async Task AddImagesDetails_NullImageDetails_ThrowsHttpRequestException()
-        {
-            // Arrange
-            IEnumerable<ImageDetailsDto>? imageDetails = null;
-            var handler = new CreateStreetcodeHandler(_mockMapper.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
-                                                      _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object, _mockStringLocalizerFailedToValidate.Object, _mockStringLocalizerFieldNames.Object);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
-        }
-
-        [Fact]
-        public async Task AddImagesDetails_EmptyImageDetails_ThrowsHttpRequestException()
-        {
-            // Arrange
-            IEnumerable<ImageDetailsDto> imageDetails = new List<ImageDetailsDto>();
-            var handler = new CreateStreetcodeHandler(_mockMapper.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object, _mockStringLocalizerFailedToValidate.Object, _mockStringLocalizerFieldNames.Object);
-
-
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
-        }
-
-        [Fact]
-        public async Task AddImagesDetails_NullAltInImageDetails_ThrowsHttpRequestException()
-        {
-            // Arrange
-            var imageDetails = new List<ImageDetailsDto>
-            {
-                new ImageDetailsDto { Alt = "Alt1" },
-                new ImageDetailsDto { Alt = null }
-            };
-            var handler = new CreateStreetcodeHandler(_mockMapper.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object, _mockStringLocalizerFailedToValidate.Object, _mockStringLocalizerFieldNames.Object);
-
-
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
-        }
-
-        [Fact]
-        public async Task AddImagesDetails_EmptyAltInImageDetails_ThrowsHttpRequestException()
-        {
-            // Arrange
-            var imageDetails = new List<ImageDetailsDto>
-            {
-                new ImageDetailsDto { Alt = "Alt1" },
-                new ImageDetailsDto { Alt = string.Empty }
-            };
-            var handler = new CreateStreetcodeHandler(_mockMapper.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object, _mockStringLocalizerFailedToCreate.Object, _mockStringLocalizerFailedToValidate.Object, _mockStringLocalizerFieldNames.Object);
-
-
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
-        }
-
-        [Fact]
         public async Task AddImagesDetails_ValidImageDetails_DoesNotThrowException()
         {
             // Arrange
@@ -137,45 +75,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             Func<Task> action = async () => await handler.AddImagesDetails(imageDetails);
             await action.Should().NotThrowAsync<HttpRequestException>();
         }
-        [Fact]
-        public async Task AddImagesAsync_NullImagesIds_ThrowsHttpRequestException()
-        {
-            // Arrange
-            StreetcodeContent streetcode = new StreetcodeContent();
-            IEnumerable<int> imagesIds = null;
-            SetupMockStreetcodeImageCreate();
-            var handler = new CreateStreetcodeHandler(
-                _mockMapper.Object,
-                _mockRepositoryWrapper.Object,
-                _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object,
-                _mockStringLocalizerFailedToCreate.Object,
-                _mockStringLocalizerFailedToValidate.Object,
-                _mockStringLocalizerFieldNames.Object);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesAsync(streetcode, imagesIds));
-        }
-
-        [Fact]
-        public async Task AddImagesAsync_EmptyImagesIds_ThrowsHttpRequestException()
-        {
-            // Arrange
-            StreetcodeContent streetcode = new StreetcodeContent();
-            IEnumerable<int> imagesIds = new List<int>();
-            SetupMockStreetcodeImageCreate();
-            var handler = new CreateStreetcodeHandler(
-                _mockMapper.Object,
-                _mockRepositoryWrapper.Object,
-                _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object,
-                _mockStringLocalizerFailedToCreate.Object,
-                _mockStringLocalizerFailedToValidate.Object,
-                _mockStringLocalizerFieldNames.Object);
-
-            // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesAsync(streetcode, imagesIds));
-        }
 
         [Fact]
         public async Task AddImagesAsync_ValidImagesIds_DoesNotThrowException()
@@ -197,35 +96,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesAsync(streetcode, imagesIds);
             await action.Should().NotThrowAsync<HttpRequestException>();
-        }
-        
-        [Theory]
-        [InlineData(-5)]
-        [InlineData(10000000)]
-        public async Task Handle_IndexIsOutOfBounds_ReturnsFailure(int index)
-        {
-            // Arrange
-            StreetcodeCreateDTO streetcode = new StreetcodeCreateDTO() { Index = index };
-            SetupMockStreetcodeCreate();
-            var command = new CreateStreetcodeCommand(streetcode);
-            var handler = new CreateStreetcodeHandler(
-                _mockMapper.Object,
-                _mockRepositoryWrapper.Object,
-                _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object,
-                _mockStringLocalizerFailedToCreate.Object,
-                _mockStringLocalizerFailedToValidate.Object,
-                _mockStringLocalizerFieldNames.Object);
-
-            // Act
-            var result = await handler.Handle(command, default);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(
-                    $"The 'index' must be in range from {CreateStreetcodeHandler.StreetcodeIndexMinValue} to {CreateStreetcodeHandler.StreetcodeIndexMaxValue}.",
-                    result.Errors.Single().Message));
         }
     }
 }

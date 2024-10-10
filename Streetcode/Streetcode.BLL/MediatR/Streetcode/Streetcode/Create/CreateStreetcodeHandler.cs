@@ -67,13 +67,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
-                if (streetcode.Index < StreetcodeIndexMinValue || streetcode.Index > StreetcodeIndexMaxValue)
-                {
-                    string errorMessage = $"The 'index' must be in range from {StreetcodeIndexMinValue} to {StreetcodeIndexMaxValue}.";
-                    _logger.LogError(request, errorMessage);
-                    return Result.Fail(new Error(errorMessage));
-                }
-
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -87,22 +80,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
-
-                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent))
-                {
-                    string errorMsg = "The 'title' key for the text is empty or missing.";
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
-
-                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
-                     && request.Streetcode.Videos != null
-                     && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
-                {
-                    string errorMsg = "The 'title' key for the video is empty or missing.";
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
 
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
@@ -168,29 +145,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     public async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
     {
-        if (imageDetails.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
-        }
-
-        foreach (var detail in imageDetails)
-        {
-            if (string.IsNullOrEmpty(detail.Alt))
-            {
-                throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
-            }
-        }
-
         await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     public async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
     {
-        if (imagesIds.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("There is no valid imagesIds value", null, System.Net.HttpStatusCode.BadRequest);
-        }
-
         await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
         {
             ImageId = imageId,

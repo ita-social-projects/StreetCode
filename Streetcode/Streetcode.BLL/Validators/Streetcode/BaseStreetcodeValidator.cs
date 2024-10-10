@@ -86,6 +86,9 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         RuleForEach(dto => dto.TimelineItems)
             .SetValidator(timelineItemValidator);
 
+        RuleFor(dto => dto.ImagesDetails)
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["ImagesDetails"]]);
+
         RuleForEach(dto => dto.ImagesDetails)
             .SetValidator(imageDetailsValidator);
 

@@ -204,4 +204,10 @@
     <data name="HistoricalContexts" xml:space="preserve">
         <value>Історичні контексти</value>
     </data>
+    <data name="ImagesDetails" xml:space="preserve">
+        <value>Деталі картинок</value>
+    </data>
+    <data name="Images" xml:space="preserve">
+        <value>Картинки</value>
+    </data>
 </root>

@@ -204,4 +204,10 @@
     <data name="HistoricalContexts" xml:space="preserve">
         <value>Historical Contexts</value>
     </data>
+    <data name="ImagesDetails" xml:space="preserve">
+        <value>Images details</value>
+    </data>
+    <data name="Images" xml:space="preserve">
+        <value>Images</value>
+    </data>
 </root>

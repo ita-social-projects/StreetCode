@@ -87,25 +87,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     var deleteTransactionLinks = _repositoryWrapper.TransactLinksRepository.FindAll(t => t.StreetcodeId == streetcodeToUpdate.Id);
                     _repositoryWrapper.TransactLinksRepository.DeleteRange(deleteTransactionLinks);
 
-                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent) && request.Streetcode.Text.ModelState != ModelState.Deleted)
-                    {
-                        string errorMsg = "The 'title' key for the text is empty or missing.";
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail(new Error(errorMsg));
-                    }
-
                     if (request.Streetcode.Text != null)
                     {
                         await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
-                        && request.Streetcode.Videos != null
-                        && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
-                    {
-                        string errorMsg = "The 'title' key for the video is empty or missing.";
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail(new Error(errorMsg));
                     }
 
                     streetcodeToUpdate.Arts = new List<Art>();

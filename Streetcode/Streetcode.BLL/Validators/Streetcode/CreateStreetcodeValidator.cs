@@ -47,6 +47,9 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
         RuleFor(c => c.Streetcode.Text!)
             .SetValidator(baseTextValidator);
 
+        RuleFor(x => x.Streetcode.ImagesIds)
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Images"]]);
+
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);
         RuleForEach(c => c.Streetcode.Facts).SetValidator(baseFactValidator);

@@ -1,10 +1,9 @@
 ﻿using FluentResults;
-using Microsoft.EntityFrameworkCore;
 using MediatR;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
 

@@ -9,9 +9,9 @@ namespace Streetcode.BLL.DTO.Analytics.Update
         public int Id { get; set; }
         public int QrId { get; set; }
         public int Count { get; set; }
-        public string Address { get; set; }
+        public string Address { get; set; } = null!;
         public int StreetcodeId { get; set; }
-        public StreetcodeCoordinateUpdateDTO StreetcodeCoordinate { get; set; }
+        public StreetcodeCoordinateUpdateDTO StreetcodeCoordinate { get; set; } = null!;
         public ModelState ModelState { get; set; }
     }
 }

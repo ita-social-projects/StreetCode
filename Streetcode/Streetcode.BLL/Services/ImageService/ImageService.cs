@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
-using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Interfaces.Image;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Newss;
+using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Team;
-using Streetcode.DAL.Repositories.Interfaces.Partners;
 
 namespace Streetcode.BLL.Services.ImageService;
 
@@ -64,7 +64,7 @@ public class ImageService : IImageService
         var imagesFromFacts = _factRepository
             .FindAll()
             .Where(fact => fact.ImageId.HasValue)
-            .Select(fact => fact.ImageId.Value)
+            .Select(fact => fact.ImageId!.Value)
             .ToList();
 
         var imageFormStreetcodeImage = _streetcodeImageRepository
@@ -98,7 +98,7 @@ public class ImageService : IImageService
 
         foreach (var image in unreferencedImages)
         {
-            _loggerService.LogInformation(image.BlobName);
+            _loggerService.LogInformation(image.BlobName!);
         }
 
         if (unreferencedImages.Any())

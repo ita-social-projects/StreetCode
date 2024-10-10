@@ -16,7 +16,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<NoSharedResource>? _stringLocalizerNo;
+        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
         private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizer;
 
         public CreateStatisticRecordHandler(
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (statRecord == null)
             {
-                string errorMsg = _stringLocalizerNo?["NoMappedRecord"].Value;
+                string errorMsg = _stringLocalizerNo["NoMappedRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -48,7 +48,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (createdRecord == null)
             {
-                string errorMsg = _stringLocalizer?["NoCreatedRecord"].Value;
+                string errorMsg = _stringLocalizer["NoCreatedRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -57,7 +57,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (!resultIsSuccess)
             {
-                string? errorMsg = _stringLocalizer?["CannotSaveCreatedRecord"].Value;
+                string errorMsg = _stringLocalizer["CannotSaveCreatedRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -66,7 +66,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create
 
             if (mappedCreatedRecord == null)
             {
-                string? errorMsg = _stringLocalizer?["NoMappedCreatedRecord"].Value;
+                string errorMsg = _stringLocalizer["NoMappedCreatedRecord"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

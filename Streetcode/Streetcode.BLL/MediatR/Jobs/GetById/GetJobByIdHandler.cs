@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using NLog;
 using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;

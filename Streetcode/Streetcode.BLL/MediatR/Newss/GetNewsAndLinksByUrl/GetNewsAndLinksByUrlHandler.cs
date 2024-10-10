@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Entities.News;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
@@ -34,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
                 predicate: sc => sc.URL == url,
                 include: scl => scl
-                    .Include(sc => sc.Image)));
+                    .Include(sc => sc.Image!)));
 
             if (newsDTO is null)
             {
@@ -50,8 +49,8 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             var news = (await _repositoryWrapper.NewsRepository.GetAllAsync()).ToList();
             var newsIndex = news.FindIndex(x => x.Id == newsDTO.Id);
-            string prevNewsLink = null;
-            string nextNewsLink = null;
+            string? prevNewsLink = null;
+            string? nextNewsLink = null;
 
             if(newsIndex != 0)
             {
@@ -88,8 +87,8 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             var newsDTOWithUrls = new NewsDTOWithURLs();
             newsDTOWithUrls.RandomNews = randomNewsTitleAndLink;
             newsDTOWithUrls.News = newsDTO;
-            newsDTOWithUrls.NextNewsUrl = nextNewsLink;
-            newsDTOWithUrls.PrevNewsUrl = prevNewsLink;
+            newsDTOWithUrls.NextNewsUrl = nextNewsLink!;
+            newsDTOWithUrls.PrevNewsUrl = prevNewsLink!;
 
             if (newsDTOWithUrls is null)
             {
@@ -97,7 +96,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                 _logger.LogError(request, errorMsg);
             }
 
-            return Result.Ok(newsDTOWithUrls);
+            return Result.Ok(newsDTOWithUrls!);
         }
     }
 }

@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 var links = await _repositoryWrapper.TeamLinkRepository
                    .GetAllAsync(predicate: l => l.TeamMemberId == team.Id);
 
-                var newLinkIds = team.TeamMemberLinks.Select(l => l.Id).ToList();
+                var newLinkIds = team.TeamMemberLinks?.Select(l => l.Id).ToList() ?? new();
 
                 foreach (var link in links)
                 {
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
                     }
                 }
 
-                team.Positions.Clear();
+                team.Positions?.Clear();
                 _repositoryWrapper.TeamRepository.Update(team);
                 _repositoryWrapper.SaveChanges();
 

@@ -1,18 +1,13 @@
 using System.Globalization;
 using System.Threading.RateLimiting;
-using System.IO.Compression;
 using AspNetCoreRateLimit;
 using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.ResponseCompression;
-using Streetcode.BLL.Middleware;
-using Streetcode.BLL.Services.Hangfire;
-using Streetcode.WebApi.Extensions;
 using Streetcode.WebApi.Middleware;
+using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

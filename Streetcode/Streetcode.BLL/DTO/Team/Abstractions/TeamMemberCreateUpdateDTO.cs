@@ -1,10 +1,8 @@
-﻿using Streetcode.BLL.DTO.Media.Images;
-
-namespace Streetcode.BLL.DTO.Team;
+﻿namespace Streetcode.BLL.DTO.Team.Abstractions;
 
 public abstract class TeamMemberCreateUpdateDTO
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public bool? IsMain { get; set; }
     public int? ImageId { get; set; }

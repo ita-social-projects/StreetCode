@@ -7,7 +7,7 @@ namespace Streetcode.BLL.DTO.Toponyms
     {
         public int StreetcodeId { get; set; }
         public int ToponymId { get; set; }
-        public string StreetName { get; set; }
+        public string StreetName { get; set; } = null!;
         public ModelState ModelState { get; set; } = ModelState.Updated;
     }
 }

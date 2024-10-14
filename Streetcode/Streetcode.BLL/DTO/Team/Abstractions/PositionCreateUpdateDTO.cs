@@ -1,6 +1,6 @@
-﻿namespace Streetcode.BLL.DTO.Team;
+﻿namespace Streetcode.BLL.DTO.Team.Abstractions;
 
 public abstract class PositionCreateUpdateDTO
 {
-    public string Position { get; set; }
+    public string Position { get; set; } = null!;
 }

@@ -1,11 +1,10 @@
-﻿using Streetcode.BLL.DTO.Partners;
-using Streetcode.DAL.Enums;
+﻿using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.DTO.Team;
+namespace Streetcode.BLL.DTO.Team.Abstractions;
 
 public abstract class TeamMemberLinkCreateUpdateDTO
 {
     public LogoType? LogoType { get; set; }
-    public string TargetUrl { get; set; }
+    public string TargetUrl { get; set; } = null!;
     public int TeamMemberId { get; set; }
 }

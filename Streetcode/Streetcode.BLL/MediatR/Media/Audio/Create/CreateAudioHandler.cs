@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
@@ -58,7 +57,7 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
         }
         else
         {
-            string? errorMsg = _stringLocalizer?["FailedToCreateAudio"].Value;
+            string errorMsg = _stringLocalizer["FailedToCreateAudio"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

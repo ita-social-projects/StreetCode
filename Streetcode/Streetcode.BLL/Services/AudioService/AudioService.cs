@@ -25,7 +25,7 @@ public class AudioService : IAudioService
             var referencedAudioIds = _repositoryWrapper.StreetcodeRepository
                 .FindAll()
                 .Where(streetcode => streetcode.AudioId.HasValue)
-                .Select(streetcode => streetcode.AudioId.Value);
+                .Select(streetcode => streetcode.AudioId!.Value);
 
             var unreferencedAudios = _repositoryWrapper.AudioRepository
                 .FindAll(audio => !referencedAudioIds.Contains(audio.Id))
@@ -49,7 +49,7 @@ public class AudioService : IAudioService
         }
         catch (Exception e)
         {
-            _loggerService.LogError(null, e.Message);
+            _loggerService.LogError(e, e.Message);
             throw;
         }
     }

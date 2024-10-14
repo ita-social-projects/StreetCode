@@ -2,7 +2,7 @@
 
 public abstract class BaseTextDTO
 {
-    public string Title { get; set; }
-    public string TextContent { get; set; }
+    public string Title { get; set; } = null!;
+    public string TextContent { get; set; } = null!;
     public string? AdditionalText { get; set; }
 }

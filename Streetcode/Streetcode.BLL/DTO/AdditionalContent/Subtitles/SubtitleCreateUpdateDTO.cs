@@ -2,5 +2,5 @@
 
 public abstract class SubtitleCreateUpdateDTO
 {
-    public string SubtitleText { get; set; }
+    public string SubtitleText { get; set; } = null!;
 }

@@ -32,14 +32,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails));
+                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails!));
 
             if (streetcodes != null)
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 var random = new Random();

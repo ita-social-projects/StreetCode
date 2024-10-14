@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
-using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.DAL.Enums;
+using Streetcode.DAL.Entities.Streetcode.Types;
 
 namespace Streetcode.BLL.Mapping.Streetcode.Catalog;
 

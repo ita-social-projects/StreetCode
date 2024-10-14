@@ -2,10 +2,8 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using NLog.Targets;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;

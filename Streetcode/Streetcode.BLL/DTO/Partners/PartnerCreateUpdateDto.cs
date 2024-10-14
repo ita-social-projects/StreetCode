@@ -8,7 +8,7 @@ public abstract class PartnerCreateUpdateDto
 {
     public bool IsKeyPartner { get; set; }
     public bool IsVisibleEverywhere { get; set; }
-    public string Title { get; set; }
+    public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public string? TargetUrl { get; set; }
     public int LogoId { get; set; }

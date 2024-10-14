@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Sources;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Sources.SourceLink.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Sources;
 
-namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
+namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create
 {
     public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<CreateSourceLinkCategoryDTO>>
     {
@@ -15,19 +16,16 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
-        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
 
         public CreateCategoryHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             ILoggerService logger,
-            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed,
             IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
-            _stringLocalizerFailed = stringLocalizerFailed;
             _stringLocalizerCannot = stringLocalizerCannot;
         }
 
@@ -41,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var returned = _repositoryWrapper.SourceCategoryRepository.Create(category);
+            _ = _repositoryWrapper.SourceCategoryRepository.Create(category);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             var returnCategory = _mapper.Map<CreateSourceLinkCategoryDTO>(category);
             if (resultIsSuccess)

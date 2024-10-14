@@ -1,6 +1,4 @@
 using AutoMapper;
-using Streetcode.BLL.DTO.Streetcode.Create;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Streetcode.BLL.DTO.Media.Images;
+﻿using Streetcode.BLL.DTO.Team.Abstractions;
 
 namespace Streetcode.BLL.DTO.Team
 {

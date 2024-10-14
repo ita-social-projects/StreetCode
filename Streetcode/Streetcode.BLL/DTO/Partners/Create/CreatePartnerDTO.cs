@@ -1,5 +1,3 @@
-using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
 using Streetcode.BLL.DTO.Streetcode;
 

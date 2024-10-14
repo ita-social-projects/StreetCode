@@ -1,4 +1,6 @@
-﻿namespace Streetcode.BLL.DTO.Team
+﻿using Streetcode.BLL.DTO.Team.Abstractions;
+
+namespace Streetcode.BLL.DTO.Team
 {
     public class UpdateTeamMemberDTO : TeamMemberCreateUpdateDTO
     {

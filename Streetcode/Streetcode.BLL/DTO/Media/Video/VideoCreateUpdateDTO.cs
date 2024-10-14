@@ -3,5 +3,5 @@
 public abstract class VideoCreateUpdateDTO
 {
     public string? Description { get; set; }
-    public string? Url { get; set; }
+    public string Url { get; set; } = null!;
 }

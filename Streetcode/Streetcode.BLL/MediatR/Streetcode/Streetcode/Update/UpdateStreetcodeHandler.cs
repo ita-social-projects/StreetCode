@@ -12,20 +12,20 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -57,6 +57,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
             _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
             _stringLocalizerFieldNames = stringLocalizerFieldNames;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _cacheService = cacheService;
         }
 
@@ -168,7 +169,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                        ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -187,7 +188,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                          ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -303,7 +304,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
-            StreetcodeArtSlide toCreateSlide = null;
+            StreetcodeArtSlide? toCreateSlide = null;
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
 
@@ -416,7 +417,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return newStreetcodeArts;
         }
 
-        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide? toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
         {
             if (artSlideDto.ModelState == ModelState.Created)
             {

@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 {
-  public class GetStreetcodeByTransliterationUrlHandler : IRequestHandler<GetStreetcodeByTransliterationUrlQuery, Result<StreetcodeDTO>>
+    public class GetStreetcodeByTransliterationUrlHandler : IRequestHandler<GetStreetcodeByTransliterationUrlQuery, Result<StreetcodeDTO>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
             var tagIndexed = await _repository.StreetcodeTagIndexRepository
                                             .GetAllAsync(
                                                 t => t.StreetcodeId == streetcode.Id,
-                                                include: q => q.Include(ti => ti.Tag));
+                                                include: q => q.Include(ti => ti.Tag!));
 
             var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);
             streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);

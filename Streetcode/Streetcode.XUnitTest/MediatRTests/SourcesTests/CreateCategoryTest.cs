@@ -15,6 +15,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
 using MediatR;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create;
 using Streetcode.BLL.MediatR.Team.Create;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
@@ -24,7 +25,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private Mock<IRepositoryWrapper> _mockRepository;
         private Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public CreateCategoryTests()
@@ -33,7 +33,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper = new();
             _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
         }
 
         [Fact]
@@ -48,7 +47,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _mockLogger.Object,
-                _mockLocalizerFailedToCreate.Object,
                 _mockLocalizerConvertNull.Object);
 
             _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
@@ -88,7 +86,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 _mockRepository.Object,
                 _mockMapper.Object,
                 _mockLogger.Object,
-                _mockLocalizerFailedToCreate.Object,
                 _mockLocalizerConvertNull.Object);
 
             _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(

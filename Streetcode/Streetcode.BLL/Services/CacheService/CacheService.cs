@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Streetcode.BLL.Interfaces.Cache;
@@ -18,7 +12,7 @@ namespace Streetcode.BLL.Services.CacheService
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ConcurrentDictionary<object, SemaphoreSlim> _locks = new ConcurrentDictionary<object, SemaphoreSlim>();
 
-        public CacheService(IMemoryCache cache, IServiceScopeFactory serviceScopeFactory )
+        public CacheService(IMemoryCache cache, IServiceScopeFactory serviceScopeFactory)
         {
             _cache = cache;
             _serviceScopeFactory = serviceScopeFactory;
@@ -30,10 +24,10 @@ namespace Streetcode.BLL.Services.CacheService
             {
                 var logger = scope.ServiceProvider.GetRequiredService<ILoggerService>();
                 logger.LogInformation(key + "GetOrSetAsync function start!");
-                if (_cache.TryGetValue(key, out T cachedItem))
+                if (_cache.TryGetValue(key, out T? cachedItem))
                 {
                     logger.LogInformation(key + "TryGetValue function true");
-                    return cachedItem;
+                    return cachedItem!;
                 }
 
                 logger.LogInformation(key + "TryGetValue function false");
@@ -46,7 +40,7 @@ namespace Streetcode.BLL.Services.CacheService
                     if (_cache.TryGetValue(key, out cachedItem))
                     {
                         logger.LogInformation(key + "TryGetValue function true");
-                        return cachedItem;
+                        return cachedItem!;
                     }
 
                     logger.LogInformation(key + "TryGetValue function false");

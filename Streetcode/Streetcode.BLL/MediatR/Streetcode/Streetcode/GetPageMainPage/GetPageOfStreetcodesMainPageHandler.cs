@@ -7,7 +7,6 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Util;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -30,30 +29,30 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
+        public Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
                 request.page,
                 request.pageSize,
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails),
+                include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails!),
                 descendingSortKeySelector: sc => sc.CreatedAt)
-                .Entities;
+                .Entities.ToList();
 
             if (streetcodes is not null && streetcodes.Any())
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes)));
+                return Task.FromResult(Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes))));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
+            return Task.FromResult(Result.Fail<IEnumerable<StreetcodeMainPageDTO>>(errorMsg));
         }
 
         private static List<StreetcodeContent> ShuffleStreetcodes(IEnumerable<StreetcodeContent> streetcodes)

@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Streetcode.BLL.Middleware
+namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 {
     public class ApiRequestResponseMiddleware
     {
@@ -50,9 +48,9 @@ namespace Streetcode.BLL.Middleware
             await next(context);
 
             var response = await GetResponseAsTextAsync(context.Response);
-            var filteredResponse = GetFilteredBody(response);
             await responseBody.CopyToAsync(originalBodyStream);
-            return filteredResponse;
+
+            return response;
         }
 
         private async Task<string> GetRequestAsTextAsync(HttpRequest request)
@@ -109,13 +107,13 @@ namespace Streetcode.BLL.Middleware
 
                 return jsonObject.ToString();
             }
-            catch (JsonReaderException jsonEx)
+            catch (JsonReaderException)
             {
                 return "Response body is in gzip format";
             }
             catch (Exception ex)
             {
-                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod().DeclaringType.Name}.{MethodBase.GetCurrentMethod().Name}. Tried to parse body: {body}. Exception: {ex}");
+                _loggerService.LogError($"Unexpected error occured in {MethodBase.GetCurrentMethod() !.DeclaringType!.Name}.{MethodBase.GetCurrentMethod() !.Name}. Tried to parse body: {body}. Exception: {ex}");
                 return string.Empty;
             }
         }

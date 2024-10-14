@@ -26,8 +26,8 @@ namespace Streetcode.BLL.Services.Payment
             var (code, body) = await PostAsync(Api.Merchant.Invoice.Create, invoice);
             return code switch
             {
-                200 => JsonToObject<InvoiceInfo>(body),
-                400 => throw new InvalidRequestParameterException(JsonToObject<Error>(body)),
+                200 => JsonToObject<InvoiceInfo>(body) !,
+                400 => throw new InvalidRequestParameterException(JsonToObject<Error>(body) !),
                 403 => throw new InvalidTokenException(),
                 _ => throw new NotSupportedException()
             };
@@ -43,7 +43,7 @@ namespace Streetcode.BLL.Services.Payment
                     Body: await response.Content.ReadAsStringAsync());
         }
 
-        private T JsonToObject<T>(string body)
+        private T? JsonToObject<T>(string body)
         {
             return JsonConvert.DeserializeObject<T>(body);
         }

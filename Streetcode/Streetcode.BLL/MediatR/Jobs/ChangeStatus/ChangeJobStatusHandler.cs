@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.ChangeStatus
 {
-	public class ChangeJobStatusHandler :
+    public class ChangeJobStatusHandler :
 		IRequestHandler<ChangeJobStatusCommand, Result<int>>
 	{
 		private readonly IMapper _mapper;

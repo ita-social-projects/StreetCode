@@ -2,5 +2,5 @@
 
 public class ImageFileBaseCreateDTO : FileBaseCreateDTO
 {
-    public string? Alt { get; set; }
+    public string Alt { get; set; } = null!;
 }

@@ -2,11 +2,11 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Enums;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
@@ -31,14 +31,14 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
-                include: src => src.Include(item => item.Images).ThenInclude(x => x.ImageDetails));
+                include: src => src.Include(item => item.Images).ThenInclude(x => x.ImageDetails!));
 
             if (streetcodes.Any())
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)
                 {
-                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                    streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
                 var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);

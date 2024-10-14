@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.Interfaces.Logging;

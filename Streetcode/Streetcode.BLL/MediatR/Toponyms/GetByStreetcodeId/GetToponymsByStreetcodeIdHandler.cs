@@ -2,7 +2,6 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Interfaces.Logging;
@@ -33,7 +32,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
             .GetAllAsync(
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl
-                    .Include(sc => sc.Coordinate));
+                    .Include(sc => sc.Coordinate!));
         toponyms.DistinctBy(x => x.StreetName);
         if (!toponyms.Any())
         {

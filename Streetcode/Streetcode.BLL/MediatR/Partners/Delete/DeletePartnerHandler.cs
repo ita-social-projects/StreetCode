@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
             var partner = await _repositoryWrapper.PartnersRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (partner == null)
             {
-                string? errorMsg = _stringLocalizerNo?["NoPartnerWithSuchId"].Value;
+                string errorMsg = _stringLocalizerNo["NoPartnerWithSuchId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

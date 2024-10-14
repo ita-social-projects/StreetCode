@@ -2,13 +2,12 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Jobs;
-using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
 {
-	internal class GetAllJobsHandler
+    internal class GetAllJobsHandler
 		: IRequestHandler<GetAllJobsQuery, Result<IEnumerable<JobDto>>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;

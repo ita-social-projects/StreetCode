@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -38,6 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockMapping(testNews);
             this.SetupMockRepositoryCreate(testNews);
             this.SetupMockRepositorySaveChangesReturns(1);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
@@ -92,6 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             string expectedErrorMessage = "Url Is Invalid";
             var testNews = GetNews(1);
             this.SetupMockMapping(testNews);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
             // Act
@@ -110,6 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             string expectedErrorMessage = "CreationDate field is required";
             var testNews = GetNewsWithDefaultCreationDate();
             this.SetupMockMapping(testNews);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
             // Act
@@ -129,6 +133,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockMapping(testNews);
             this.SetupMockRepositoryCreate(testNews);
             this.SetupMockRepositorySaveChangesReturns(1);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
@@ -149,6 +154,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockMapping(testNews);
             this.SetupMockRepositoryCreate(testNews);
             this.SetupMockRepositorySaveChangesException(expectedError);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
@@ -167,6 +173,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var expectedError = "A news with the same title already exists.";
             this.SetupMockMapping(testNews);
             this.SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
             // Act
@@ -186,6 +193,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var expectedError = "A news with the same text already exists.";
             this.SetupMockMapping(testNews);
             this.SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(testNews.Text);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
             var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
 
             // Act
@@ -194,7 +202,43 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors[0].Message));
+                () => Assert.Equal(expectedError, result.Errors.First().Message));
+        }
+
+        [Fact]
+        public async Task ShouldReturnFail_WhenImageDoesNotExist()
+        {
+            // Arrange
+            var testNewsCreateDTO = GetNewsCreateDTO();
+            var testNews = GetNews(testNewsCreateDTO.ImageId, testNewsCreateDTO.URL);
+
+            this.SetupMockMapping(testNews);
+            this.SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage();
+
+            var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+
+            // Act
+            var result = await handler.Handle(new CreateNewsCommand(testNewsCreateDTO), CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsFailed);
+            Assert.Equal("Image with provided ImageId does not exist", result.Errors.First().Message);
+        }
+
+        private void SetupMockImageRepositoryGetFirstOrDefaultAsync()
+        {
+            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Image, bool>>>(),
+                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+                .ReturnsAsync(new Image { Id = 1 });
+        }
+
+        private void SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage()
+        {
+            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Image, bool>>>(),
+                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+                .ReturnsAsync((Image)null!);
         }
 
         private static DAL.Entities.News.News GetNews(int imageId = 0, string url = "/test")

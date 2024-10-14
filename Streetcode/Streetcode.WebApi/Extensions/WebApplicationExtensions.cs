@@ -10,8 +10,8 @@ public static class WebApplicationExtensions
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
         try
         {
-            var streetcodeContext = app.Services.GetRequiredService<StreetcodeDbContext>();
-
+            using IServiceScope localScope = app.Services.CreateScope();
+            var streetcodeContext = localScope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
             var pendingMigrations = await streetcodeContext.Database.GetPendingMigrationsAsync();
 
             if (pendingMigrations.Any())

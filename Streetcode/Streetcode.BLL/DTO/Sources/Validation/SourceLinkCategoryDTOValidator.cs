@@ -1,7 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Sources;
-using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.DTO.Sources.Validation
 {

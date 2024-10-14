@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             var request = new GetAllStreetcodesRequestDTO();
 
-            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object);
 
             // Act
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
             .Returns(testDTOList);
 
-            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object, this.mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object);
 
             var request = new GetAllStreetcodesRequestDTO();
 
@@ -161,7 +161,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .Setup(x => x.StreetcodeRepository)
                 .Returns(streetcodeRepositoryMock.Object);
 
-            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object, this.mockLogger.Object);
+            var handler = new GetAllStreetcodesHandler(repositoryWrapperMock.Object, mapperMock.Object);
 
             return (handler, repositoryWrapperMock);
         }

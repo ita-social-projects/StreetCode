@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
         {
             var team = await _repositoryWrapper
                 .TeamRepository
-                .GetAllAsync(include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks));
+                .GetAllAsync(include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks!));
 
             if (!team.Any())
             {

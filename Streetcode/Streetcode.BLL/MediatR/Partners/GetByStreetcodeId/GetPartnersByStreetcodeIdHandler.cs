@@ -2,7 +2,6 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
@@ -33,7 +32,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -45,7 +44,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (!partners.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

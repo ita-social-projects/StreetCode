@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                     this.mockStringLocalizerFailedToCreate.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails));
+            await Assert.ThrowsAsync<HttpRequestException>(() => handler.AddImagesDetails(imageDetails!));
         }
 
         [Fact]

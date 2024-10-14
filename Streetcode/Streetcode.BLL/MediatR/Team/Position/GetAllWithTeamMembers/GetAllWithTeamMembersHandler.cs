@@ -2,10 +2,8 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Team.GetAll;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetAll
@@ -27,9 +25,9 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
         {
             var positions = await _repositoryWrapper
                 .PositionRepository
-                .GetAllAsync(include: x => x.Include(x => x.TeamMembers));
+                .GetAllAsync(include: x => x.Include(x => x.TeamMembers!));
 
-            var positionsWithMembers = positions.Where(x => x.TeamMembers?.Count > 0);
+            var positionsWithMembers = positions.Where(x => x.TeamMembers!.Any());
 
             if (!positionsWithMembers.Any())
             {

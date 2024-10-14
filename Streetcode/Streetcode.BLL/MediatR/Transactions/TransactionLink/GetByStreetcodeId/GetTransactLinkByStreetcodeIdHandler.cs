@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Rewrite;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.ResultVariations;
@@ -13,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Transactions.TransactionLink.GetByStreetcodeId;
 
-public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactLinkByStreetcodeIdQuery, Result<TransactLinkDTO?>>
+public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactLinkByStreetcodeIdQuery, Result<TransactLinkDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +25,7 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<TransactLinkDTO?>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var transactLink = await _repositoryWrapper.TransactLinksRepository
             .GetFirstOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
@@ -45,8 +42,8 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
             }
         }
 
-        NullResult<TransactLinkDTO?> result = new NullResult<TransactLinkDTO?>();
-        result.WithValue(_mapper.Map<TransactLinkDTO?>(transactLink));
+        NullResult<TransactLinkDTO> result = new NullResult<TransactLinkDTO>();
+        result.WithValue(_mapper.Map<TransactLinkDTO>(transactLink));
         return result;
     }
 }

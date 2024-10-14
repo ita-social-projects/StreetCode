@@ -44,7 +44,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 Index = index,
                 TransliterationUrl = transliterationUrl,
                 Title = "Test_Title",
-                DateString = "Test_Data",
+                DateString = "Test_Date",
                 Tags = new List<StreetcodeTagUpdateDTO>(),
                 Facts = new List<FactUpdateDto>(),
                 Audios = new List<AudioUpdateDTO>(),

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Streetcode.BLL.MediatR.Streetcode.Text.Create
+﻿namespace Streetcode.BLL.MediatR.Streetcode.Text.Create
 {
     internal class CreateTextHandler
     {

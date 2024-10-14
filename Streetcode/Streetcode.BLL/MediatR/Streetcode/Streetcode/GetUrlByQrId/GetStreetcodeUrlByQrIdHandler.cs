@@ -1,8 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(streetcode.TransliterationUrl);
+            return Result.Ok(streetcode.TransliterationUrl!);
         }
     }
 }

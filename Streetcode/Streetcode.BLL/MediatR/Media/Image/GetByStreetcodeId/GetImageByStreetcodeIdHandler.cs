@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -44,7 +43,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
                 var images = (await _repositoryWrapper.ImageRepository
                     .GetAllAsync(
                     f => f.Streetcodes.Any(s => s.Id == request.StreetcodeId),
-                    include: q => q.Include(img => img.ImageDetails))).OrderBy(img => img.ImageDetails?.Alt);
+                    include: q => q.Include(img => img.ImageDetails!))).OrderBy(img => img.ImageDetails?.Alt);
 
                 if (images is null || request.StreetcodeId < 1)
                 {

@@ -1,17 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Json;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Users;
-using Microsoft.Extensions.Configuration;
-using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
-using Streetcode.BLL.Services.Authentication;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
 {

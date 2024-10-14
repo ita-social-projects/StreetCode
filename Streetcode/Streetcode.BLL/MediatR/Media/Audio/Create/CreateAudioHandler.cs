@@ -37,14 +37,14 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
     {
         if (request.Audio.Extension.IsNullOrEmpty())
         {
-            string? errorMsg = _stringLocalizer?["ExtensionIsRequired"].Value;
+            string errorMsg = _stringLocalizer["ExtensionIsRequired"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
         if (request.Audio.Title.IsNullOrEmpty())
         {
-            string? errorMsg = _stringLocalizer?["TitleIsRequired"].Value;
+            string errorMsg = _stringLocalizer["TitleIsRequired"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -72,7 +72,7 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
         }
         else
         {
-            string? errorMsg = _stringLocalizer?["FailedToCreateAudio"].Value;
+            string errorMsg = _stringLocalizer["FailedToCreateAudio"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

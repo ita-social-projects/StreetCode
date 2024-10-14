@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.AspNetCore.Http;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    include: newsCollection => newsCollection.Include(news => news.Image),
+                    include: newsCollection => newsCollection.Include(news => news.Image!),
                     descendingSortKeySelector: news => news.CreationDate);
 
             var newsDTOs = MapToNewsDTOs(paginationResponse.Entities);

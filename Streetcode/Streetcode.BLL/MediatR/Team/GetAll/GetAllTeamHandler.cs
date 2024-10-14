@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks));
+                    include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks!));
 
             if (paginationResponse is null)
             {

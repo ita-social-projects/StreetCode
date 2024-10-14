@@ -2,12 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
@@ -44,7 +42,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
         if (paginationResponse is null)
         {
-            string? errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
+            string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMsg);
             return Task.FromResult(Result.Fail<GetAllPartnersResponseDTO>(new Error(errorMsg)));
         }

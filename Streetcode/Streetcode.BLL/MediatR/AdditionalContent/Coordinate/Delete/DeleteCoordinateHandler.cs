@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;

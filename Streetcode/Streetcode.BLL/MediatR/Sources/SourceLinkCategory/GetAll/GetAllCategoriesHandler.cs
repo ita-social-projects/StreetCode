@@ -3,11 +3,9 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
@@ -38,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                     request.page,
                     request.pageSize,
                     include: cat => cat.Include(img => img.Image) !,
-                    descendingSortKeySelector: cat => cat.Title);
+                    descendingSortKeySelector: cat => cat.Title!);
 
             if (paginationResponse == null)
             {

@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    descendingSortKeySelector: context => context.Title);
+                    descendingSortKeySelector: context => context.Title!);
 
             if (paginationResponse is null)
             {

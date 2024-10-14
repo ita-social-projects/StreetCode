@@ -6,7 +6,7 @@ namespace Streetcode.BLL.DTO.Sources
     {
         [Required]
         [MaxLength(15000)]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [Required]
         public int SourceLinkCategoryId { get; set; }

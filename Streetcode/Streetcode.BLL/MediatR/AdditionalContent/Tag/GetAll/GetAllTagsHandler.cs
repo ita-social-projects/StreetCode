@@ -3,14 +3,13 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
-using Streetcode.BLL.DTO.AdditionalContent.Tag;
-using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 
@@ -40,7 +39,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
 
         if (paginationResponse is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTags"].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
             return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg)));
         }

@@ -26,7 +26,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
         }
 
         [Theory]
-        [InlineData("invalid|file")]
+        [InlineData("")]
         public void ShouldThrowException_EmptyFileName(string fileName)
         {
             // Act

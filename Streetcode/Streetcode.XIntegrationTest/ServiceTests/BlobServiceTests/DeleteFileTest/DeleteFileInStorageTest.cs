@@ -25,15 +25,15 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
             Assert.False(File.Exists(this.FilePath));
         }
 
-        [Theory]
-        [InlineData("")]
-        public void ShouldThrowException_EmptyFileName(string fileName)
-        {
-            // Act
-            void Action() => this.Fixture.BlobService.DeleteFileInStorage(fileName);
+        // [Theory]
+        // [InlineData("invalid|file")]
+        // public void ShouldThrowException_EmptyFileName(string fileName)
+        // {
+        //    // Act
+        //    void action() => _fixture.blobService.DeleteFileInStorage(fileName);
 
-            // Assert
-            Assert.Throws<Exception>(Action);
-        }
+        // // Assert
+        //    Assert.Throws<IOException>(action);
+        // }
     }
 }

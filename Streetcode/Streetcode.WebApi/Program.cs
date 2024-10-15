@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Streetcode.BLL.Middleware;
 using Streetcode.WebApi.Hangfire;
 using Streetcode.WebApi.Middleware;
+using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

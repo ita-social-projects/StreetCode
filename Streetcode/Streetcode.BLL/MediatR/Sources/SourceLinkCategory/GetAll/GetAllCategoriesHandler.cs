@@ -3,11 +3,9 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -40,6 +38,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
+            allCategories = allCategories.OrderBy(category => category.Title);
             var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(allCategories);
 
             foreach (var dto in dtos)

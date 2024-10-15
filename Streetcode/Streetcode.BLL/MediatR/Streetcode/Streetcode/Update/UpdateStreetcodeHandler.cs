@@ -11,19 +11,16 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
-using Streetcode.BLL.Interfaces.Cache;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
-using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -47,6 +44,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _cacheService = cacheService;
         }
 
@@ -129,7 +127,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
         }
 
-        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto>? imageDetails)
+        private async Task UpdateFactsDescription(IEnumerable<ImageDetailsDto> imageDetails)
         {
             if (imageDetails == null)
             {
@@ -171,7 +169,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                        ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -190,7 +188,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                          ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -306,7 +304,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
-            StreetcodeArtSlide toCreateSlide = null;
+            StreetcodeArtSlide? toCreateSlide = null;
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
 
@@ -342,11 +340,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await _repositoryWrapper.SaveChangesAsync();
         }
 
-        private async Task UpdateEntitiesAsync<T, U>(IEnumerable<U> updates, IRepositoryBase<T> repository)
+        private async Task UpdateEntitiesAsync<T, TUpdate>(IEnumerable<TUpdate> updates, IRepositoryBase<T> repository)
             where T : class
-            where U : IModelState
+            where TUpdate : IModelState
         {
-            var (toUpdate, toCreate, toDelete) = CategorizeItems<U>(updates);
+            var (toUpdate, toCreate, toDelete) = CategorizeItems<TUpdate>(updates);
 
             await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
             repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
@@ -401,7 +399,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return newStreetcodeArts;
         }
 
-        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide? toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
         {
             if (artSlideDto.ModelState == ModelState.Created)
             {

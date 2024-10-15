@@ -18,7 +18,7 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             _logger = logger;
         }
 
-        public async Task<Result<RefreshTokenResponceDTO>> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
+        public Task<Result<RefreshTokenResponceDTO>> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
         {
             JwtSecurityToken? token = null;
             try
@@ -28,18 +28,18 @@ namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
             catch (Exception ex) when (ex.Message == TokenService.InvalidRefreshTokenErrorMessage)
             {
                 _logger.LogError(request, ex.Message);
-                return Result.Fail("Unauthorized");
+                return Task.FromResult(Result.Fail<RefreshTokenResponceDTO>("Unauthorized"));
             }
             catch (Exception ex)
             {
                 _logger.LogError(request, ex.Message);
-                return Result.Fail(ex.Message);
+                return Task.FromResult(Result.Fail<RefreshTokenResponceDTO>(ex.Message));
             }
 
-            return new RefreshTokenResponceDTO()
+            return Task.FromResult(Result.Ok(new RefreshTokenResponceDTO()
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
-            };
+            }));
         }
     }
 }

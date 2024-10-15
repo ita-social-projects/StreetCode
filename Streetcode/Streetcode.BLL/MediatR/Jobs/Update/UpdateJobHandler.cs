@@ -2,14 +2,13 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Jobs;
-using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.Update
 {
-	public class UpdateJobHandler : IRequestHandler<UpdateJobCommand, Result<JobDto>>
+    public class UpdateJobHandler : IRequestHandler<UpdateJobCommand, Result<JobDto>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly IMapper _mapper;

@@ -7,7 +7,6 @@ public class CreateHistoricalContextValidator : AbstractValidator<CreateHistoric
 {
     public CreateHistoricalContextValidator(BaseHistoricalContextValidator historicalContextValidator)
     {
-        RuleFor(c => c.HistoricalContext)
-            .SetValidator(historicalContextValidator);
+        RuleFor(c => c.HistoricalContext).SetValidator(historicalContextValidator);
     }
 }

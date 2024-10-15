@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Streetcode.BLL.DTO.Jobs;
 
-[ValidateNever]
 public abstract class CreateUpdateJobDto
 {
     [Required(AllowEmptyStrings = false)]

@@ -7,7 +7,6 @@ public class UpdateAudioValidator : AbstractValidator<UpdateAudioCommand>
 {
     public UpdateAudioValidator(BaseAudioValidator baseAudioValidator)
     {
-        RuleFor(c => c.Audio)
-            .SetValidator(baseAudioValidator);
+        RuleFor(c => c.Audio).SetValidator(baseAudioValidator);
     }
 }

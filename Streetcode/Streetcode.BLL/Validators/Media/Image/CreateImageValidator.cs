@@ -7,7 +7,6 @@ public class CreateImageValidator : AbstractValidator<CreateImageCommand>
 {
     public CreateImageValidator(BaseImageValidator baseImageValidator)
     {
-        RuleFor(c => c.Image)
-            .SetValidator(baseImageValidator);
+        RuleFor(c => c.Image).SetValidator(baseImageValidator);
     }
 }

@@ -7,7 +7,6 @@ public class CreateAudioValidator : AbstractValidator<CreateAudioCommand>
 {
     public CreateAudioValidator(BaseAudioValidator baseAudioValidator)
     {
-        RuleFor(c => c.Audio)
-            .SetValidator(baseAudioValidator);
+        RuleFor(c => c.Audio).SetValidator(baseAudioValidator);
     }
 }

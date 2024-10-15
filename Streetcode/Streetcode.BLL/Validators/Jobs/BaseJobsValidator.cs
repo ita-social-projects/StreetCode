@@ -14,9 +14,9 @@ public class BaseJobsValidator : AbstractValidator<CreateUpdateJobDto>
     {
         RuleFor(j => j.Title)
             .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Title"]])
-            .MaximumLength(50).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
+            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
         RuleFor(j => j.Description)
-            .MaximumLength(3000).WithMessage(localizer["MaxLength", fieldLocalizer["Description"], DescriptionMaxLength]);
+            .MaximumLength(DescriptionMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Description"], DescriptionMaxLength]);
         RuleFor(j => j.Salary)
             .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Salary"]])
             .MaximumLength(SalaryMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Salary"], SalaryMaxLength]);

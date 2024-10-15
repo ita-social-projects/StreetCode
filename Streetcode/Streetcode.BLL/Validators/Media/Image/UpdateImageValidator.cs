@@ -7,7 +7,6 @@ public class UpdateImageValidator : AbstractValidator<UpdateImageCommand>
 {
     public UpdateImageValidator(BaseImageValidator baseImageValidator)
     {
-        RuleFor(c => c.Image)
-            .SetValidator(baseImageValidator);
+        RuleFor(c => c.Image).SetValidator(baseImageValidator);
     }
 }

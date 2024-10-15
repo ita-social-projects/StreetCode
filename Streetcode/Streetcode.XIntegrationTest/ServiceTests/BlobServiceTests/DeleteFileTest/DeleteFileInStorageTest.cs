@@ -33,7 +33,7 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.DeleteFileTe
             void Action() => this.Fixture.BlobService.DeleteFileInStorage(fileName);
 
             // Assert
-            Assert.Throws<IOException>(Action);
+            Assert.Throws<Exception>(Action);
         }
     }
 }

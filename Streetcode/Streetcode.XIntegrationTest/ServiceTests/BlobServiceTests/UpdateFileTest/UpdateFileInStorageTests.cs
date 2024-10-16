@@ -7,9 +7,10 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.UpdateFileTe
 {
     public class UpdateFileInStorageTests : BlobServiceTestBase
     {
-        public UpdateFileInStorageTests() : base(new BlobStorageFixture(), "update-test")
+        public UpdateFileInStorageTests()
+            : base(new BlobStorageFixture(), "update-test")
         {
-            _fixture.SeedImage(_seededFileName);
+            this.Fixture.SeedImage(this.SeededFileName);
         }
 
         [Theory]
@@ -18,25 +19,24 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.UpdateFileTe
         {
             // Arrange
             string jsonContents = File.ReadAllText(testDataFilePath);
-            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
+            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents) !;
 
-            string extension = jsonData.MimeType.Split('/')[1];
-            string base64 = jsonData.Base64;
-            string previousFullName = $"{_seededFileName}.{extension}";
+            string extension = jsonData.MimeType!.Split('/')[1];
+            string base64 = jsonData.Base64!;
+            string previousFullName = $"{this.SeededFileName}.{extension}";
 
             // Act
-            string hashedResult = _fixture.blobService.UpdateFileInStorage(previousFullName, base64, newBlobName, extension);
+            string hashedResult = this.Fixture.BlobService.UpdateFileInStorage(previousFullName, base64, newBlobName, extension);
             string hashedFullName = $"{hashedResult}.{extension}";
 
-            _filePath = Path.Combine(_fixture.blobPath, $"{hashedFullName}");
+            this.FilePath = Path.Combine(this.Fixture.BlobPath, $"{hashedFullName}");
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.False(File.Exists($"{_fixture.blobPath}{previousFullName}"));
-                Assert.True(File.Exists($"{_fixture.blobPath}{hashedFullName}"));
+                Assert.False(File.Exists($"{this.Fixture.BlobPath}{previousFullName}"));
+                Assert.True(File.Exists($"{this.Fixture.BlobPath}{hashedFullName}"));
             });
         }
-
     }
 }

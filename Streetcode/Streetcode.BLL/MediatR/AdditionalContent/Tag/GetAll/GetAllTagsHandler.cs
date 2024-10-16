@@ -27,7 +27,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
     public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
         var tags = await _repositoryWrapper.TagRepository.GetAllAsync();
-        if (tags is null)
+        if (!tags.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);

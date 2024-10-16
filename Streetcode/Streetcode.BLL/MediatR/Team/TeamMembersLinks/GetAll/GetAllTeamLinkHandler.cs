@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.GetAll
                 .TeamLinkRepository
                 .GetAllAsync();
 
-            if (teamLinks is null)
+            if (!teamLinks.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeamLinks"].Value;
                 _logger.LogError(request, errorMsg);

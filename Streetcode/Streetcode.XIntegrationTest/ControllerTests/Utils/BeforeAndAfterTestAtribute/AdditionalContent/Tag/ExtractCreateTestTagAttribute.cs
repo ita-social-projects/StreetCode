@@ -1,14 +1,14 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Tag;
+﻿using System.Reflection;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
-using System.Reflection;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.AdditionalContent.Tag
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ExtractCreateTestTag : BeforeAfterTestAttribute
+    public class ExtractCreateTestTagAttribute : BeforeAfterTestAttribute
     {
-        public static CreateTagDTO TagForTest;
+        public static CreateTagDTO TagForTest { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {

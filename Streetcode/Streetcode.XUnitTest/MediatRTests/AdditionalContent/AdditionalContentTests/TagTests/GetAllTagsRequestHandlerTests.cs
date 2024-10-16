@@ -1,108 +1,112 @@
-﻿using Xunit;
-using Moq;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
+using Moq;
+using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
-using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
-using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
+using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 {
     public class GetAllTagsRequestHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-
-        public GetAllTagsRequestHandlerTests()
-        {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer  = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly List<Tag> tags = new List<Tag>()
         {
             new Tag
             {
                 Id = 1,
-                Title = "some title 1"
+                Title = "some title 1",
             },
             new Tag
             {
                 Id = 2,
-                Title = "some title 2"
-            }
+                Title = "some title 2",
+            },
         };
+
         private readonly List<TagDTO> tagDTOs = new List<TagDTO>()
         {
             new TagDTO
             {
                 Id = 1,
-                Title = "some title 1"
+                Title = "some title 1",
             },
             new TagDTO
             {
                 Id = 2,
-                Title = "some title 2"
-            }
+                Title = "some title 2",
+            },
         };
 
-        async Task SetupRepository(List<Tag> returnList)
+        public GetAllTagsRequestHandlerTests()
         {
-            _mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Tag, bool>>>(),
-                It.IsAny<Func<IQueryable<Tag>,
-                IIncludableQueryable<Tag, object>>>()))
-                .ReturnsAsync(returnList);
-        }
-        async Task SetupMapper(List<TagDTO> returnList)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(returnList);
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_NotEmpty_List()
         {
-            //Arrange
-            await SetupRepository(tags);
-            await SetupMapper(tagDTOs);
+            // Arrange
+            this.SetupRepository(this.tags);
+            this.SetupMapper(this.tagDTOs);
 
-            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
-            //Act
+            // Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.IsType<List<TagDTO>>(result.Value),
-                () => Assert.True(result.Value.Count() == tags.Count));
+                () => Assert.True(result.Value.Count() == this.tags.Count));
         }
 
         [Fact]
-        public async Task Handler_Returns_Empty_List()
+        public async Task Handler_Returns_Error()
         {
-            //Arrange
-            await SetupRepository(new List<Tag>());
-            await SetupMapper(new List<TagDTO>());
+            // Arrange
+            this.SetupRepository(new List<Tag>());
+            this.SetupMapper(new List<TagDTO>());
 
-            var handler = new GetAllTagsHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+            var expectedError = $"Cannot find any tags";
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTags"])
+                .Returns(new LocalizedString("CannotFindAnyTags", expectedError));
 
-            //Act
+            var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
             var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
 
-            //Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value),
-                () => Assert.Empty(result.Value));
+            // Assert
+            Assert.Equal(expectedError, result.Errors.Single().Message);
+        }
+
+        private void SetupRepository(List<Tag> returnList)
+        {
+            this.mockRepo.Setup(repo => repo.TagRepository.GetAllAsync(
+                It.IsAny<Expression<Func<Tag, bool>>>(),
+                It.IsAny<Func<IQueryable<Tag>,
+                IIncludableQueryable<Tag, object>>>()))
+                .ReturnsAsync(returnList);
+        }
+
+        private void SetupMapper(List<TagDTO> returnList)
+        {
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
+                .Returns(returnList);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
+﻿using System.Reflection;
+using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
@@ -17,16 +18,15 @@ using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
-using System.Reflection;
 using Xunit.Sdk;
 using static Streetcode.XIntegrationTest.Constants.ControllerTests.StreetcodeConstants;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    class ExtractCreateTestStreetcode : BeforeAfterTestAttribute
+    public class ExtractCreateTestStreetcodeAttribute : BeforeAfterTestAttribute
     {
-        public static StreetcodeCreateDTO StreetcodeForTest;
+        public static StreetcodeCreateDTO StreetcodeForTest { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {

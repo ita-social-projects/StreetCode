@@ -1,7 +1,7 @@
 ﻿using Streetcode.BLL.Factories.Streetcode;
-using Xunit;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Entities.Streetcode.Types;
+using Streetcode.DAL.Enums;
+using Xunit;
 
 namespace Streetcode.XUnitTest.Factories.Streetcode;
 

@@ -27,7 +27,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
                     predicate: st => st.StreetcodeCoordinate.StreetcodeId == request.streetcodeId,
                     include: st => st.Include(st => st.StreetcodeCoordinate));
 
-            if (statisticRecords == null)
+            if (!statisticRecords.Any())
             {
                 const string errorMsg = "Cannot find any statistic for this streetcode";
                 _logger.LogError(request, errorMsg);
@@ -36,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
 
             var statisticRecordsDTOs = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
 
-            if (statisticRecordsDTOs == null)
+            if (!statisticRecordsDTOs.Any())
             {
                 const string errorMsg = "Mapper is null";
                 _logger.LogError(request, errorMsg);

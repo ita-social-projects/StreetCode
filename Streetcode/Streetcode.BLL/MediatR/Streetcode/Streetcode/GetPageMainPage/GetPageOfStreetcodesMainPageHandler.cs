@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                 descendingSortKeySelector: sc => sc.CreatedAt)
                 .Entities.ToList();
 
-            if (streetcodes is not null && streetcodes.Any())
+            if (streetcodes.Any())
             {
                 const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
                 foreach (var streetcode in streetcodes)

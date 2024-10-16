@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
         {
             var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
 
-            if (terms is null)
+            if (!terms.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTerm"].Value;
                 _logger.LogError(request, errorMsg);

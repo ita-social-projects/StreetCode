@@ -1,4 +1,18 @@
-﻿using Streetcode.BLL.DTO.Partners;
+﻿using System.Collections;
+using System.Globalization;
+using System.Net;
+using System.Reflection;
+using System.Resources;
+using FluentResults;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.DTO.Shared;
+using Streetcode.BLL.Resources;
+using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.DAL.Entities.Streetcode;
@@ -8,17 +22,24 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Partner;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 using Streetcode.XIntegrationTest.Base;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
+using Xunit.Abstractions;
 
+using Resources = Streetcode.BLL;
 namespace Streetcode.XIntegrationTest.ControllerTests.Partners
 {
+    [Collection("Authorization")]
     public class PartnersControllerTests : BaseControllerTests<PartnersClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private StreetcodeContent _testStreetcodeContent;
+        private readonly TokenStorage _tokenStorage;
         private Partner _testPartner;
 
-        public PartnersControllerTests(CustomWebApplicationFactory<Program> factory)
+        public PartnersControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage, ITestOutputHelper output)
             : base(factory, "/api/Partners")
         {
+            this._tokenStorage = tokenStorage;
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this._testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
@@ -32,6 +53,28 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         {
             StreetcodeContentExtracter.Remove(this._testStreetcodeContent);
             PartnerExtracter.Remove(this._testPartner);
+        }
+
+        [Fact]
+        public async Task СreatePartner_ReturnBadRequest_WhenValidationFailed()
+        {
+            var expectedError = "Поле 'Назва' не може бути пусте";
+            int imageId = UniqueNumberGenerator.GenerateInt();
+            var image = ImageExtracter.Extract(imageId);
+            var partner = new CreatePartnerDTO()
+            {
+                Title = string.Empty,
+                Description = "Test",
+                LogoId = imageId,
+            };
+
+            var response = await this.client.CreateAsync(partner, _tokenStorage.AdminAccessToken);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<List<ErrorDto>>(response.Content);
+
+            Assert.True(response.StatusCode.Equals(HttpStatusCode.BadRequest));
+            Assert.NotNull(returnedValue);
+            Assert.Contains(returnedValue, e => e.Message.Equals(expectedError));
+            BaseExtracter.RemoveById<Image>(imageId);
         }
 
         [Fact]

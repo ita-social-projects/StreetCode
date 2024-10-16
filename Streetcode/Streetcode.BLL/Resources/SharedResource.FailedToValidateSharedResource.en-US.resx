@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CannotBeEmpty" xml:space="preserve">
+        <value>Field '{0}' cannot be empty</value>
+    </data>
+    <data name="ValidUrl" xml:space="preserve">
+        <value>Field '{0}' must be valid url</value>
+    </data>
+    <data name="CannotBeEmptyWithCondition" xml:space="preserve">
+        <value>Field '{0}' cannot be empty if field '{1}' is provided</value>
+    </data>
+    <data name="IsRequired" xml:space="preserve">
+        <value>Field '{0}' is required</value>
+    </data>
+    <data name="Invalid" xml:space="preserve">
+        <value>Field '{0}' is invalid</value>
+    </data>
+    <data name="LogoMustMatchUrl" xml:space="preserve">
+        <value>Logo must match corresponding url</value>
+    </data>
+    <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
+        <value>Field '{0}' ({1}) must be valid url</value>
+    </data>
+    <data name="GreaterThan" xml:space="preserve">
+        <value>'{0}' must be greater than {1}</value>
+    </data>
+    <data name="MaxLength" xml:space="preserve">
+        <value>Maximum length of field '{0}' is {1}</value>
+    </data>
+    <data name="MustBeOneOf" xml:space="preserve">
+        <value>Field '{0}' accepts only following values: {1}</value>
+    </data>
+    <data name="LengthMustBeInRange" xml:space="preserve">
+        <value>The length of the field '{0}' must be from {1} to {2}</value>
+    </data>
+    <data name="EmailAddressFormat" xml:space="preserve">
+        <value>The email address must be in the correct format</value>
+    </data>
+    <data name="TransliterationUrlFormat" xml:space="preserve">
+        <value>Transliteration url must consists of small latin characters, numbers and hyphen</value>
+    </data>
+    <data name="MustBeBetween" xml:space="preserve">
+        <value>Field '{0}' must be between {1} and {2}</value>
+    </data>
+    <data name="MustBeUnique" xml:space="preserve">
+        <value>Field '{0}' must be unique</value>
+    </data>
+    <data name="ImageDoesntExist" xml:space="preserve">
+        <value>Image with id {0} doesnt exist</value>
+    </data>
+    <data name="InvalidNewsUrl" xml:space="preserve">
+        <value>Field 'Url' accepts only small latin alphabet letters, hyphen and numbers.</value>
+    </data>
+    <data name="InvalidPrecision" xml:space="preserve">
+        <value>Field '{0}' has invalid precision</value>
+    </data>
+    <data name="DateStringFormat" xml:space="preserve">
+        <value>Field 'Date String' accepts only cyrillic letters, numbers, dashes (–) and parentheses.</value>
+    </data>
+    <data name="MustContainExactlyOneAlt1" xml:space="preserve">
+        <value>Field '{0}' must contain exactly one black and white image.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt0" xml:space="preserve">
+        <value>Field '{0}' may contain at most one colored image.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt2" xml:space="preserve">
+        <value>Field '{0}' may contain at most one image for links.</value>
+    </data>
+    <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
+        <value>The streetcode of type 'Event' cannot has 'First name' and 'Last name'</value>
+    </data>
+</root>

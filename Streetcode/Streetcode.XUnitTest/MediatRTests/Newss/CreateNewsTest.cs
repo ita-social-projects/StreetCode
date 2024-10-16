@@ -71,61 +71,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
         }
 
         [Fact]
-        public async Task ShouldReturnFail_ImageIdIsZero()
-        {
-            // Arrange
-            string expectedErrorMessage = "Invalid ImageId Value";
-            var testNews = GetNews();
-            SetupMockMapping(testNews);
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message));
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_UrlIsInvalid()
-        {
-            // Arrange
-            string expectedErrorMessage = "Url Is Invalid";
-            var testNews = GetNews(1);
-            SetupMockMapping(testNews);
-            SetupMockImageRepositoryGetFirstOrDefaultAsync();
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message));
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_CreationDateIsRequired()
-        {
-            // Arrange
-            string expectedErrorMessage = "CreationDate field is required";
-            var testNews = GetNewsWithDefaultCreationDate();
-            SetupMockMapping(testNews);
-            SetupMockImageRepositoryGetFirstOrDefaultAsync();
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(new NewsCreateDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message));
-        }
-
-        [Fact]
         public async Task ShouldReturnSuccessfully_WhenNewsAdded()
         {
             // Arrange
@@ -165,66 +110,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             Assert.Equal(expectedError, result.Errors.First().Message);
         }
 
-        [Fact]
-        public async Task ShouldReturnFail_NewsWithSameTitleExists()
-        {
-            // Arrange
-            var testNews = GetNews(1, "test");
-            var expectedError = "A news with the same title already exists.";
-            SetupMockMapping(testNews);
-            SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(testNews.Title);
-            SetupMockImageRepositoryGetFirstOrDefaultAsync();
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message));
-        }
-
-        [Fact]
-        public async Task ShouldThrowException_NewsWithSameTextExists()
-        {
-            // Arrange
-            var testNews = GetNews(1, "test");
-            var expectedError = "A news with the same text already exists.";
-            SetupMockMapping(testNews);
-            SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(testNews.Text);
-            SetupMockImageRepositoryGetFirstOrDefaultAsync();
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors.First().Message));
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_WhenImageDoesNotExist()
-        {
-            // Arrange
-            var testNewsCreateDTO = GetNewsCreateDTO();
-            var testNews = GetNews(testNewsCreateDTO.ImageId, testNewsCreateDTO.URL);
-
-            SetupMockMapping(testNews);
-            SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage();
-
-            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateNewsCommand(testNewsCreateDTO), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal("Image with provided ImageId does not exist", result.Errors.First().Message);
-        }
-
         private void SetupMockMapping(News testNews)
         {
             _mockMapper.Setup(x => x.Map<News>(It.IsAny<NewsCreateDTO>()))
@@ -254,38 +139,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
             _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
         }
 
-        private void SetupMockRepositoryGetFirstOrDefaultAsyncWithExistingTitle(string title)
-        {
-            _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<News, bool>>>(),
-                It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>>()))
-                           .ReturnsAsync(() =>
-                           {
-                               var newsList = new List<News>
-                               {
-                                    new () { Title = title },
-                               };
-
-                               return newsList.FirstOrDefault();
-                           });
-        }
-
-        private void SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingText(string text)
-        {
-            _mockRepository.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
-                It.IsAny<Expression<Func<News, bool>>>(),
-                It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>>()))
-                           .ReturnsAsync(() =>
-                           {
-                               var newsList = new List<News>
-                               {
-                                    new () { Text = text },
-                               };
-
-                               return newsList.FirstOrDefault();
-                           });
-        }
-
         private void SetupMockRepositorySaveChangesReturns(int number)
         {
             _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
@@ -297,14 +150,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                     It.IsAny<Expression<Func<Image, bool>>>(),
                     It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image { Id = 1 });
-        }
-
-        private void SetupMockImageRepositoryGetFirstOrDefaultAsyncNonExistentImage()
-        {
-            _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Image, bool>>>(),
-                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-                .ReturnsAsync((Image)null!);
         }
 
         private static News GetNews(int imageId = 0, string url = "/test")
@@ -329,17 +174,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Newss
                 Text = "test",
                 URL = "test",
                 CreationDate = new DateTime(2015, 12, 25)
-            };
-        }
-
-        private static News GetNewsWithDefaultCreationDate()
-        {
-            return new News()
-            {
-                ImageId = 1,
-                Title = "Title",
-                Text = "test",
-                URL = "test"
             };
         }
 

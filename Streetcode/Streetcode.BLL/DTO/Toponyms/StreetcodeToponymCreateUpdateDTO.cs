@@ -3,7 +3,7 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Toponyms
 {
-    public class StreetcodeToponymUpdateDTO : IModelState
+    public class StreetcodeToponymCreateUpdateDTO : IModelState
     {
         public int StreetcodeId { get; set; }
         public int ToponymId { get; set; }

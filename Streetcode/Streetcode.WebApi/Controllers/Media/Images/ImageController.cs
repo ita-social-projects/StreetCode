@@ -8,7 +8,6 @@ using Streetcode.BLL.MediatR.Media.Image.Create;
 using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
 using Streetcode.DAL.Enums;
-using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;

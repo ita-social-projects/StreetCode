@@ -12,15 +12,15 @@ namespace Streetcode.WebApi.Controllers.Authentication
     public class AuthController : BaseApiController
     {
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDto)
         {
-            return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
+            return HandleResult(await Mediator.Send(new LoginQuery(loginDto)));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDto)
         {
-            return HandleResult(await Mediator.Send(new RegisterQuery(registerDTO)));
+            return HandleResult(await Mediator.Send(new RegisterQuery(registerDto)));
         }
 
         [HttpPost]

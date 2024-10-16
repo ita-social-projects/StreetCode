@@ -3,8 +3,8 @@ using Hangfire;
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Moq;
-using Streetcode.BLL.Services.Hangfire;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Hangfire;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Hangfire;
@@ -35,7 +35,7 @@ public class HangfireAuthorizationFilterTests
             this._userRole = userRole;
         }
 
-        public override ClaimsPrincipal GetUser(DashboardContext context)
+        protected override ClaimsPrincipal GetUser(DashboardContext context)
         {
             return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, _userRole) }));
         }

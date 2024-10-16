@@ -1,6 +1,9 @@
-﻿using Streetcode.DAL.Enums;
+using System.Diagnostics.CodeAnalysis;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.Streetcode;
+
 namespace Streetcode.WebApi.Utils;
 
 public class SoftDeletingUtils
@@ -12,6 +15,8 @@ public class SoftDeletingUtils
         _repositoryWrapper = repository;
     }
 
+    // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
     public async Task DeleteStreetcodeWithStageDeleted(int daysLife)
     {
         var streetcodes = await _repositoryWrapper.StreetcodeRepository
@@ -20,7 +25,7 @@ public class SoftDeletingUtils
             include: s => s.Include(x => x.Observers)
                            .Include(x => x.Targets));
 
-        if (streetcodes is null || streetcodes.Count() == 0)
+        if (!streetcodes.Any())
         {
             return;
         }

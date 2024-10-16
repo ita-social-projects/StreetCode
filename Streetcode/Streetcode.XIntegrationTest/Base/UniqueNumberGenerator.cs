@@ -16,7 +16,7 @@
 
         public static int GenerateIntFromGuidInRange()
         {
-            lock (_lock)
+            lock (@lock)
             {
                 byte[] byteArray = Guid.NewGuid().ToByteArray();
 

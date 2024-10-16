@@ -3,13 +3,14 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.Mocks;
 
-public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSharedResource>
+public class MockFailedToValidateLocalizer : IStringLocalizer<FailedToValidateSharedResource>
 {
     private readonly Dictionary<int, List<string>> groupedErrors;
     private readonly List<LocalizedString> strings;
 
     public MockFailedToValidateLocalizer()
     {
+        this.strings = new List<LocalizedString>();
         this.groupedErrors = new Dictionary<int, List<string>>();
         this.groupedErrors.Add(0, new List<string>()
         {
@@ -51,11 +52,6 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
         });
     }
 
-    public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
-    {
-        return this.strings;
-    }
-
     public LocalizedString this[string name]
     {
         get
@@ -86,6 +82,11 @@ public class MockFailedToValidateLocalizer: IStringLocalizer<FailedToValidateSha
 
             throw new ArgumentException($"Cannot find error message '{name}' that accepts {argumentsCount} arguments");
         }
+    }
+
+    public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
+    {
+        return this.strings;
     }
 
     private LocalizedString GetErrorMessage(string error, params object[] arguments)

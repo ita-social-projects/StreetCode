@@ -21,6 +21,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> mockLocalizerAnErrorOccurred;
         private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
+        private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockStringLocalizerFailedToValidate;
+        private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockStringLocalizerFieldNames;
         private readonly Mock<ICacheService> mockCache;
 
         public UpdateStreetcodeHandlerTests()
@@ -30,6 +32,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerAnErrorOccurred = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
             this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+            this.mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+            this.mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
             this.mockCache = new Mock<ICacheService>();
             this.mockCache
                 .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDTO>>>>>(), It.IsAny<TimeSpan>()))
@@ -51,8 +55,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.RepositorySetup(testStreetcode, testSaveChangesSuccess);
             this.MapperSetup(testStreetcode);
 
-            this.mockLocalizerAnErrorOccurred.Setup(x => x["AnErrorOccurredWhileUpdatin"])
-                .Returns(new LocalizedString("AnErrorOccurredWhileUpdatin", expectedErrorMessage));
+            this.mockLocalizerAnErrorOccurred.Setup(x => x["AnErrorOccurredWhileUpdating", It.IsAny<object[]>()])
+                .Returns(new LocalizedString("AnErrorOccurredWhileUpdating", expectedErrorMessage));
 
             var handler =
                 new UpdateStreetcodeHandler(
@@ -61,6 +65,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                     this.mockLogger.Object,
                     this.mockLocalizerAnErrorOccurred.Object,
                     this.mockLocalizerFailedToUpdate.Object,
+                    this.mockStringLocalizerFailedToValidate.Object,
+                    this.mockStringLocalizerFieldNames.Object,
                     this.mockCache.Object);
 
             // Act

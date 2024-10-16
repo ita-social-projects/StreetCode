@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
@@ -33,28 +34,11 @@ namespace Streetcode.BLL.MediatR.Team.Create
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
         {
             var teamMember = _mapper.Map<TeamMember>(request.teamMember);
-            if (teamMember.ImageId == 0)
-            {
-                string errormsg = "Invalid ImageId Value";
-                _logger.LogError(request, errormsg);
-                return Result.Fail(errormsg);
-            }
-
             try
             {
                 teamMember.Positions!.Clear();
 
                 var newLogoTypes = request.teamMember.TeamMemberLinks.Select(links => links.LogoType).ToList();
-
-                foreach (var logoType in newLogoTypes)
-                {
-                    if (!Enum.IsDefined(typeof(LogoTypeDTO), logoType))
-                    {
-                        string errorMsg = _stringLocalizerCannot["CannotCreateTeamMemberLinkWithInvalidLogoType"].Value;
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail(errorMsg);
-                    }
-                }
 
                 teamMember = await _repository.TeamRepository.CreateAsync(teamMember);
                 _repository.SaveChanges();

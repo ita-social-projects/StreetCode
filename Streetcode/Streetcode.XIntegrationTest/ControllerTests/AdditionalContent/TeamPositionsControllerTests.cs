@@ -266,7 +266,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPosition.PositionForTest;
-        positionCreateDto.Id = this._testCreatePosition.Id;
+        positionCreateDto.Id = this._testCreatePosition.Id - 1;
         positionCreateDto.Position = this._testUpdatePosition.Position;
 
         // Act

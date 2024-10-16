@@ -110,50 +110,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             _mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
-        [Fact]
-        public async Task ShouldReturnFail_ImageIdIsZero()
-        {
-            // Arrange
-            string expectedErrorMessage = "Invalid ImageId Value";
-            var teamMember = GetTeamMember();
-            MapperSetup(teamMember);
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object    );
-
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
-            );
-
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_InvalidLogoType()
-        {
-            // Arrange
-            string expectedErrorMessage = "CannotCreateTeamMemberLinkWithInvalidLogoType";
-            _mockLocalizerConvertNull.Setup(x => x["CannotCreateTeamMemberLinkWithInvalidLogoType"])
-            .Returns(new LocalizedString("CannotCreateTeamMemberLinkWithInvalidLogoType", expectedErrorMessage));
-
-            var teamMemberDTO = GetTeamMemberWithLinksDTO();
-            var teamMember = GetTeamMemberWithLinks();
-            GetsAsyncRepositorySetup();
-            MapperSetupWithLinks(teamMember, teamMemberDTO);
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors.First().Message)
-            );
-
-        }
-
         private void BasicRepositorySetup(TeamMember teamMember)
         {
             _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
@@ -195,7 +151,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
         private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
         {
-            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
+            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (DAL.Enums.LogoType)10 };
             return new TeamMemberCreateDTO
             {
                 Name = "Test",

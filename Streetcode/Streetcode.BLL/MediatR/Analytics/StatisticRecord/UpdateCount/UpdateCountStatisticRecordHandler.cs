@@ -10,20 +10,17 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 {
     public class UpdateCountStatisticRecordHandler : IRequestHandler<UpdateCountStatisticRecordCommand, Result<Unit>>
     {
-        private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<CannotSaveSharedResource> _stringLocalizerCannotSave;
 
         public UpdateCountStatisticRecordHandler(
-            IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<CannotSaveSharedResource> stringLocalizerCannotSave,
             IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
-            _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerCannotSave = stringLocalizerCannotSave;
@@ -39,6 +36,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
+
                 return Result.Fail(new Error(errorMsg));
             }
 
@@ -52,6 +50,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
             {
                 string errorMsg = _stringLocalizerCannotSave["CannotSaveTheData"].Value;
                 _logger.LogError(request, errorMsg);
+
                 return Result.Fail(new Error(errorMsg));
             }
 

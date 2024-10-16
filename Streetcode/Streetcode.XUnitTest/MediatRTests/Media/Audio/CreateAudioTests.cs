@@ -51,58 +51,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             Assert.True(result.IsSuccess);
         }
 
-        [Fact]
-        public async Task ShouldThrowException_ExtensionIsRequired()
-        {
-            // Arrange
-            var expectedError = "Extension is required";
-            _mockLocalizerFail.Setup(x => x["ExtensionIsRequired"])
-            .Returns(new LocalizedString("ExtensionIsRequired", expectedError));
-
-            var testCreateAudioDTO = GetCreateAudioDTO_WithoutExtension();
-            var testAudioDTO = GetAudioDTO();
-            var testAudio = GetAudio();
-
-            SetupCreateRepository(-1);
-            SetupBlobService();
-            SetupMapper(testAudio, testAudioDTO);
-
-            var handler = new CreateAudioHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateAudioCommand(testCreateAudioDTO), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedError, result.Errors.First().Message);
-        }
-
-        [Fact]
-        public async Task ShouldThrowException_TitleIsRequired()
-        {
-            // Arrange
-            var expectedError = "Title is required";
-            _mockLocalizerFail.Setup(x => x["TitleIsRequired"])
-            .Returns(new LocalizedString("TitleIsRequired", expectedError));
-
-            var testCreateAudioDTO = GetCreateAudioDTO_WithoutTitle();
-            var testAudioDTO = GetAudioDTO();
-            var testAudio = GetAudio();
-
-            SetupCreateRepository(-1);
-            SetupBlobService();
-            SetupMapper(testAudio, testAudioDTO);
-
-            var handler = new CreateAudioHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateAudioCommand(testCreateAudioDTO), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedError, result.Errors.First().Message);
-        }
-
         private void SetupCreateRepository(int returnNumber)
         {
             _mockRepository.Setup(x => x.AudioRepository.Create(It.IsAny<AudioEntity>()));

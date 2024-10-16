@@ -505,6 +505,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasMaxLength(25000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -514,8 +515,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -771,6 +772,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Teaser")
+                        .IsRequired()
                         .HasMaxLength(650)
                         .HasColumnType("nvarchar(650)");
 

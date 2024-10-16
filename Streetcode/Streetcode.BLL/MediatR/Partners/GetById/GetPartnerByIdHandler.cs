@@ -15,7 +15,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource>? _stringLocalizer;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
     public GetPartnerByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
     {
@@ -36,7 +36,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
 
         if (partner is null)
         {
-            string errorMsg = _stringLocalizer?["CannotFindAnyPartnerWithCorrespondingId", request.Id].Value;
+            string errorMsg = _stringLocalizer["CannotFindAnyPartnerWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -19,7 +19,7 @@ public class TimelineItemProfile : Profile
                 .Select(x => new HistoricalContextDTO
                 {
                     Id = x.HistoricalContextId,
-                    Title = x.HistoricalContext.Title
+                    Title = x.HistoricalContext!.Title!
                 }).ToList()));
     }
 }

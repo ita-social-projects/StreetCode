@@ -24,19 +24,13 @@ namespace Streetcode.BLL.MediatR.Team.Update
         public async Task<Result<UpdateTeamMemberDTO>> Handle(UpdateTeamQuery request, CancellationToken cancellationToken)
         {
             var team = _mapper.Map<TeamMember>(request.TeamMember);
-            if (team.ImageId == 0)
-            {
-                string errormsg = "Invalid ImageId Value";
-                _logger.LogError(request, errormsg);
-                return Result.Fail(errormsg);
-            }
 
             try
             {
                 var links = await _repositoryWrapper.TeamLinkRepository
                    .GetAllAsync(predicate: l => l.TeamMemberId == team.Id);
 
-                var newLinkIds = team.TeamMemberLinks.Select(l => l.Id).ToList();
+                var newLinkIds = team.TeamMemberLinks?.Select(l => l.Id).ToList() ?? new();
 
                 foreach (var link in links)
                 {
@@ -46,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Team.Update
                     }
                 }
 
-                team.Positions.Clear();
+                team.Positions?.Clear();
                 _repositoryWrapper.TeamRepository.Update(team);
                 _repositoryWrapper.SaveChanges();
 

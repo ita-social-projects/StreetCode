@@ -1,7 +1,6 @@
 using AutoMapper;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.DTO.Timeline.Update;
-using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Timeline;
 
 namespace Streetcode.BLL.Mapping.Timeline;

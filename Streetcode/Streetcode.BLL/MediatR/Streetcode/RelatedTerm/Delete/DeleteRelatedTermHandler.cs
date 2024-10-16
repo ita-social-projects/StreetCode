@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 
         public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
         {
-            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word.ToLower().Equals(request.word.ToLower()));
+            var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word!.ToLower().Equals(request.word.ToLower()));
 
             if (relatedTerm is null)
             {

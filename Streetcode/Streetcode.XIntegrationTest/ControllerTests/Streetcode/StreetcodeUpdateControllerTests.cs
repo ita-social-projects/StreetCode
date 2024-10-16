@@ -22,9 +22,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             : base(factory, "/api/Streetcode", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
+            int uniqueIndex = UniqueNumberGenerator.GenerateIntFromGuidInRange();
             _testStreetcodeUpdateDTO = StreetcodeUpdateDTOExtracter.Extract(
                 uniqueId,
-                uniqueId,
+                uniqueIndex,
                 Guid.NewGuid().ToString());
         }
 
@@ -47,7 +48,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public async Task Update_ChangesTitleAndTransliterationUrl()
         {
             StreetcodeUpdateDTO updateStreetCodeDTO = _testStreetcodeUpdateDTO;
-            await client.UpdateAsync(updateStreetCodeDTO, _tokenStorage.AdminAccessToken);
+            var response = await client.UpdateAsync(updateStreetCodeDTO, _tokenStorage.AdminAccessToken);
 
             var responseGetByIdUpdated = await client.GetByIdAsync(updateStreetCodeDTO.Id);
             var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);

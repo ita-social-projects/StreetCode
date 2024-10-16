@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Streetcode.BLL.DTO.Team.Abstractions;
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class PositionCreateDTO
+    public class PositionCreateDTO : PositionCreateUpdateDTO
     {
-        public string Position { get; set; }
     }
 }

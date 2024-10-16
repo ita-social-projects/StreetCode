@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
 {
-   public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
+    public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
           Result<IEnumerable<StreetcodeShortDTO>>>
     {
         private readonly IMapper _mapper;

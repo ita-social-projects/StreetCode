@@ -1,10 +1,9 @@
-﻿using Streetcode.DAL.Entities.Team;
+﻿using Streetcode.BLL.DTO.Team.Abstractions;
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class PositionDTO
+    public class PositionDTO : PositionCreateUpdateDTO
     {
         public int Id { get; set; }
-        public string Position { get; set; }
     }
 }

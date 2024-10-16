@@ -232,7 +232,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -315,8 +315,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .HasMaxLength(3000)
+                        .HasColumnType("nvarchar(3000)");
 
                     b.Property<string>("Salary")
                         .IsRequired()
@@ -500,11 +500,12 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ImageId")
+                    b.Property<int>("ImageId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasMaxLength(25000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -514,14 +515,13 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("URL")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId")
-                        .IsUnique()
-                        .HasFilter("[ImageId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("URL")
                         .IsUnique();
@@ -627,8 +627,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -773,6 +772,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Teaser")
+                        .IsRequired()
                         .HasMaxLength(650)
                         .HasColumnType("nvarchar(650)");
 
@@ -1481,7 +1481,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Image")
                         .WithOne("News")
-                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId");
+                        .HasForeignKey("Streetcode.DAL.Entities.News.News", "ImageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Image");
                 });

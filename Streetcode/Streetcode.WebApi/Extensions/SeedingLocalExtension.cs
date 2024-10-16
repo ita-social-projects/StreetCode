@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reflection.Metadata;
+using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Streetcode.BLL.Services.BlobStorageService;
@@ -34,7 +35,7 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var repo = new RepositoryWrapper(dbContext);
-                var blobService = new BlobService(blobOptions, repo);
+                var blobService = new BlobService(blobOptions);
                 string initialDataImagePath = "../../../TestData/InitialData/images.json";
                 string initialDataAudioPath = "../../../TestData/InitialData/audios.json";
                 if (!dbContext.Images.Any())
@@ -310,7 +311,7 @@ namespace Streetcode.WebApi.Extensions
 
                 if (!dbContext.Roles.Any())
                 {
-                    await RoleAndUserConfiguration.AddUsersAndRoles(app.Services);
+                    await RoleAndUserConfiguration.AddUsersAndRoles(scope.ServiceProvider);
                 }
 
                 if (!dbContext.News.Any())

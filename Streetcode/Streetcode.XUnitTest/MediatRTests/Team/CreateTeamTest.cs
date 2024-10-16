@@ -117,47 +117,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
-        [Fact]
-        public async Task ShouldReturnFail_ImageIdIsZero()
-        {
-            // Arrange
-            string expectedErrorMessage = "Invalid ImageId Value";
-            var teamMember = GetTeamMember();
-            this.MapperSetup(teamMember);
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors[0].Message));
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_InvalidLogoType()
-        {
-            // Arrange
-            string expectedErrorMessage = "CannotCreateTeamMemberLinkWithInvalidLogoType";
-            this.mockLocalizerConvertNull.Setup(x => x["CannotCreateTeamMemberLinkWithInvalidLogoType"])
-            .Returns(new LocalizedString("CannotCreateTeamMemberLinkWithInvalidLogoType", expectedErrorMessage));
-
-            var teamMemberDTO = this.GetTeamMemberWithLinksDTO();
-            var teamMember = this.GetTeamMemberWithLinks();
-            this.GetsAsyncRepositorySetup();
-            this.MapperSetupWithLinks(teamMember, teamMemberDTO);
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors[0].Message));
-        }
-
         private static TeamMember GetTeamMember(int imageId = 0)
         {
             return new TeamMember
@@ -203,15 +162,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
         }
 
-        private void MapperSetupWithLinks(TeamMember member, TeamMemberCreateDTO dto)
-        {
-            this.mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
-                .Returns(member);
-
-            this.mockMapper.Setup(mapper => mapper.Map<TeamMemberCreateDTO>(It.IsAny<object>()))
-                .Returns(dto);
-        }
-
         private void MapperSetup(TeamMember member)
         {
             this.mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
@@ -219,35 +169,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             this.mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
                 .Returns(new TeamMemberDTO());
-        }
-
-        private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
-        {
-            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (BLL.DTO.Partners.LogoTypeDTO)10 };
-            return new TeamMemberCreateDTO
-            {
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                ImageId = 1,
-                TeamMemberLinks = new List<TeamMemberLinkCreateDTO> { teamMemberLink },
-                Positions = new List<PositionDTO>(),
-            };
-        }
-
-        private TeamMember GetTeamMemberWithLinks()
-        {
-            var teamMemberLink = new TeamMemberLink { LogoType = (DAL.Enums.LogoType)10 };
-            return new TeamMember
-            {
-                Id = 1,
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                ImageId = 1,
-                TeamMemberLinks = new List<TeamMemberLink> { teamMemberLink },
-                Positions = new List<Positions>(),
-            };
         }
     }
 }

@@ -54,86 +54,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             Assert.True(result.IsSuccess);
         }
 
-        [Fact]
-        public async Task ShouldThrowException_ExtensionIsRequired()
-        {
-            // Arrange
-            var expectedError = "Extension is required";
-            this.mockLocalizerConvertNull.Setup(x => x["ExtensionIsRequired"])
-            .Returns(new LocalizedString("ExtensionIsRequired", expectedError));
-
-            var testUpdateAudioDTO = GetUpdateAudioDTO_WithoutExtension();
-            var testAudioDTO = GetAudioDTO();
-            var testAudio = GetAudio();
-
-            this.SetupUpdateRepository(-1, testAudio);
-            this.SetupBlobService();
-            this.SetupMapper(testAudio, testAudioDTO);
-
-            var handler = new UpdateAudioHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object, this.mockLocalizerFail.Object);
-
-            // Act
-            var result = await handler.Handle(new UpdateAudioCommand(testUpdateAudioDTO), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
-        [Fact]
-        public async Task ShouldThrowException_TitleIsRequired()
-        {
-            // Arrange
-            var expectedError = "Title is required";
-            this.mockLocalizerConvertNull.Setup(x => x["TitleIsRequired"])
-            .Returns(new LocalizedString("TitleIsRequired", expectedError));
-
-            var testCreateAudioDTO = GetUpdateAudioDTO_WithoutTitle();
-            var testAudioDTO = GetAudioDTO();
-            var testAudio = GetAudio();
-
-            this.SetupUpdateRepository(-1, testAudio);
-            this.SetupBlobService();
-            this.SetupMapper(testAudio, testAudioDTO);
-
-            var handler = new UpdateAudioHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object, this.mockLocalizerFail.Object);
-
-            // Act
-            var result = await handler.Handle(new UpdateAudioCommand(testCreateAudioDTO), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
         private static AudioFileBaseUpdateDTO GetUpdateAudioDTO()
         {
             return new AudioFileBaseUpdateDTO()
             {
                 Id = 1,
                 Title = "Title",
-                MimeType = "string",
-                BaseFormat = "ab34",
-                Extension = "string",
-            };
-        }
-
-        private static AudioFileBaseUpdateDTO GetUpdateAudioDTO_WithoutExtension()
-        {
-            return new AudioFileBaseUpdateDTO()
-            {
-                Id = 1,
-                Title = "Title",
-                MimeType = "string",
-                BaseFormat = "ab34",
-            };
-        }
-
-        private static AudioFileBaseUpdateDTO GetUpdateAudioDTO_WithoutTitle()
-        {
-            return new AudioFileBaseUpdateDTO()
-            {
-                Id = 1,
                 MimeType = "string",
                 BaseFormat = "ab34",
                 Extension = "string",

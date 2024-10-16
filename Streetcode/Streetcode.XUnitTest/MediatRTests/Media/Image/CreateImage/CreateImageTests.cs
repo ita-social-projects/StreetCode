@@ -52,32 +52,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
         }
 
         [Fact]
-        public async Task ShouldThrowException_AltIsRequired()
-        {
-            // Arrange
-            var expectedError = "Cannot create image without alt";
-            this.mockLocalizerConvertNull.Setup(x => x["CannotCreateImageWithoutAlt"])
-            .Returns(new LocalizedString("CannotConvertNullToCategory", expectedError));
-
-            var testCreateImageDTO = GetImageCreateDTOWithoutAlt();
-            var testImageDTO = GetImageDTO();
-            var testImage = GetImage();
-
-            this.SetupCreateRepository(1);
-            this.SetupBlobService();
-            this.SetupMapper(testImage, testImageDTO);
-
-            var handler = new CreateImageHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
-
-            // Act
-            var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
-        [Fact]
         public async Task ShouldThrowException_SaveChangesAsyncIsNotSuccessful()
         {
             // Arrange
@@ -136,17 +110,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
                 BaseFormat = "ab34",
                 Extension = "string",
                 Alt = "String",
-            };
-        }
-
-        private static ImageFileBaseCreateDTO GetImageCreateDTOWithoutAlt()
-        {
-            return new ImageFileBaseCreateDTO()
-            {
-                Title = "Title",
-                MimeType = "string",
-                BaseFormat = "ab34",
-                Extension = "string",
             };
         }
 

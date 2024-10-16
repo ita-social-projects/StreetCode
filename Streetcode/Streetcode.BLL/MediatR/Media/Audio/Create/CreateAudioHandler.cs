@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
@@ -35,20 +34,6 @@ public class CreateAudioHandler : IRequestHandler<CreateAudioCommand, Result<Aud
 
     public async Task<Result<AudioDTO>> Handle(CreateAudioCommand request, CancellationToken cancellationToken)
     {
-        if (request.Audio.Extension.IsNullOrEmpty())
-        {
-            string errorMsg = _stringLocalizer["ExtensionIsRequired"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
-
-        if (request.Audio.Title.IsNullOrEmpty())
-        {
-            string errorMsg = _stringLocalizer["TitleIsRequired"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
-
         string hashBlobStorageName = _blobService.SaveFileInStorage(
             request.Audio.BaseFormat,
             request.Audio.Title,

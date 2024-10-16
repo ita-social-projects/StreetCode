@@ -23,9 +23,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             : base(factory, "/api/Streetcode", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
+            int uniqueIndex = UniqueNumberGenerator.GenerateIntFromGuidInRange();
             this.testStreetcodeUpdateDTO = StreetcodeUpdateDTOExtracter.Extract(
                 uniqueId,
-                uniqueId,
+                uniqueIndex,
                 Guid.NewGuid().ToString());
         }
 

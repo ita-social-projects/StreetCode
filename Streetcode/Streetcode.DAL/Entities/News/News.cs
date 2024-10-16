@@ -16,9 +16,10 @@ namespace Streetcode.DAL.Entities.News
         [MaxLength(150)]
         public string Title { get; set; } = null!;
         [Required]
+        [MaxLength(25000)]
         public string Text { get; set; } = null!;
         [Required]
-        [MaxLength(100)]
+        [MaxLength(200)]
         public string URL { get; set; } = null!;
         public int ImageId { get; set; }
         public Image Image { get; set; } = null!;

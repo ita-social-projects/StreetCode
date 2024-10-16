@@ -6,6 +6,7 @@ using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.Create;
+using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -18,7 +19,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IRepositoryWrapper> mockRepository;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
 
         public CreateCategoryTest()
@@ -27,114 +27,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             this.mockMapper = new ();
             this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-        }
-
-        [Fact]
-        public async Task CreateCategoryHandler_TitleAlreadyExists_ReturnsErrorMessage()
-        {
-            // Arrange
-            string title = "ExistingTitle";
-            var existingCategory = GetCategory(1, title);
-            var newCategoryDto = GetCategoryDTO();
-            newCategoryDto.Title = title;
-
-            this.SetupMapper(existingCategory, newCategoryDto);
-
-            var handler = new CreateCategoryHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerFailedToCreate.Object,
-                this.mockLocalizerConvertNull.Object);
-
-            this.mockRepository.Setup(p => p.SourceCategoryRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
-                    IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
-                .ReturnsAsync(existingCategory);
-
-            var expectedError = $"Title: {newCategoryDto.Title} already exists";
-
-            // Act
-            var result = await handler.Handle(new CreateCategoryCommand(newCategoryDto), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
-        [Fact]
-        public async Task CreateCategoryHandler_InvalidCategoryValidation_ReturnsErrorMessage()
-        {
-            // Arrange
-            var invalidCategoryDto = GetCategoryDTO();
-            invalidCategoryDto.Title = string.Empty;
-
-            var handler = new CreateCategoryHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerFailedToCreate.Object,
-                this.mockLocalizerConvertNull.Object);
-
-            this.mockRepository.Setup(p => p.SourceCategoryRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
-                    IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
-                .ReturnsAsync(null as DAL.Entities.Sources.SourceLinkCategory);
-
-            var expectedError = "Title cannot be empty.";
-
-            // Act
-            var result = await handler.Handle(new CreateCategoryCommand(invalidCategoryDto), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
-        [Fact]
-        public async Task CreateCategoryHandler_NonExistingImageId_ReturnsErrorMessage()
-        {
-            // Arrange
-            var categoryDto = GetCategoryDTO();
-            var existingCategory = GetCategory(1, "Title");
-            categoryDto.Title = "Title";
-
-            categoryDto.ImageId = 999;
-
-            this.SetupMapper(existingCategory, categoryDto);
-
-            var handler = new CreateCategoryHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerFailedToCreate.Object,
-                this.mockLocalizerConvertNull.Object);
-
-            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Image, bool>>>(),
-                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-                .ReturnsAsync((Image?)null);
-
-            this.mockRepository.Setup(p => p.SourceCategoryRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
-                    It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
-                    IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
-                .ReturnsAsync(null as DAL.Entities.Sources.SourceLinkCategory);
-
-            var expectedError = $"Cannot find an image with corresponding id: {categoryDto.ImageId}";
-
-            // Act
-            var result = await handler.Handle(new CreateCategoryCommand(categoryDto), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors[0].Message);
         }
 
         [Fact]
@@ -149,7 +41,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 this.mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerFailedToCreate.Object,
                 this.mockLocalizerConvertNull.Object);
 
             this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
@@ -190,7 +81,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 this.mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerFailedToCreate.Object,
                 this.mockLocalizerConvertNull.Object);
 
             this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(

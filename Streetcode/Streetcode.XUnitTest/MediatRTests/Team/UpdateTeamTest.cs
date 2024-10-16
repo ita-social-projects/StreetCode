@@ -160,25 +160,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
-        [Fact]
-        public async Task ShouldReturnFail_ImageIdIsZero()
-        {
-            // Arrange
-            string expectedErrorMessage = "Invalid ImageId Value";
-            var teamMember = this.GetTeamMember();
-            var updateQuery = new UpdateTeamQuery(this.GetTeamMemberDTO());
-            this.MapperSetup(teamMember, updateQuery.TeamMember);
-            var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
-
-            // Act
-            var result = await handler.Handle(updateQuery, CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedErrorMessage, result.Errors[0].Message));
-        }
-
         private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
         {
             this.mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))

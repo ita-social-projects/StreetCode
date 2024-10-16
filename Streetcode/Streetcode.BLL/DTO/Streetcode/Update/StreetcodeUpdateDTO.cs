@@ -18,37 +18,20 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
-    public class StreetcodeUpdateDTO
+    public class StreetcodeUpdateDTO : StreetcodeCreateUpdateDTO
     {
         public int Id { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public int Index { get; set; }
-        public string? Teaser { get; set; }
-        public string DateString { get; set; } = null!;
-        public string? Alias { get; set; }
-        public StreetcodeStatus Status { get; set; }
-        public StreetcodeType StreetcodeType { get; set; }
-        public string Title { get; set; } = null!;
-        public string TransliterationUrl { get; set; } = null!;
-        public DateTime EventStartOrPersonBirthDate { get; set; }
-        public DateTime? EventEndOrPersonDeathDate { get; set; }
         public TextUpdateDTO? Text { get; set; }
         public TransactionLinkUpdateDTO? TransactionLink { get; set; }
-        public IEnumerable<StreetcodeToponymUpdateDTO> Toponyms { get; set; } = new List<StreetcodeToponymUpdateDTO>();
-        public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = new List<SubtitleUpdateDTO>();
-        public IEnumerable<FactUpdateDto> Facts { get; set; } = new List<FactUpdateDto>();
-        public IEnumerable<VideoUpdateDTO> Videos { get; set; } = new List<VideoUpdateDTO>();
-        public IEnumerable<AudioUpdateDTO> Audios { get; set; } = new List<AudioUpdateDTO>();
-        public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; } = new List<RelatedFigureUpdateDTO>();
-        public IEnumerable<PartnersUpdateDTO> Partners { get; set; } = new List<PartnersUpdateDTO>();
-        public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; } = new List<TimelineItemCreateUpdateDTO>();
-        public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; } = new List<StreetcodeArtSlideCreateUpdateDTO>();
-        public IEnumerable<ArtCreateUpdateDTO> Arts { get; set; } = new List<ArtCreateUpdateDTO>();
-        public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; } = new List<StreetcodeTagUpdateDTO>();
-        public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; } = new List<StatisticRecordUpdateDTO>();
-        public IEnumerable<ImageUpdateDTO> Images { get; set; } = new List<ImageUpdateDTO>();
-        public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; } = new List<StreetcodeCategoryContentUpdateDTO>();
-        public IEnumerable<ImageDetailsDto> ImagesDetails { get; set; } = new List<ImageDetailsDto>();
+        public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = null!;
+        public IEnumerable<StreetcodeFactUpdateDTO> Facts { get; set; }
+        public IEnumerable<VideoUpdateDTO>? Videos { get; set; }
+        public IEnumerable<AudioUpdateDTO> Audios { get; set; } = null!;
+        public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; } = null!;
+        public IEnumerable<PartnersUpdateDTO> Partners { get; set; } = null!;
+        public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; } = null!;
+        public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
+        public IEnumerable<ImageUpdateDTO> Images { get; set; } = null!;
+        public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
     }
 }

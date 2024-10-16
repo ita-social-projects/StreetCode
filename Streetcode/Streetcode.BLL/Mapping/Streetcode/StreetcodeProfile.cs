@@ -1,10 +1,12 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Enums;
+using StringToDateTimeConverter = Streetcode.BLL.Mapping.Converters.StringToDateTimeConverter;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
 
@@ -23,16 +25,16 @@ public class StreetcodeProfile : Profile
                 .MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
 
         CreateMap<StreetcodeCreateDTO, StreetcodeContent>()
-            .ForMember(x => x.Arts, conf => conf.Ignore())
-            .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
-            .ForMember(x => x.Tags, conf => conf.Ignore())
-            .ForMember(x => x.Partners, conf => conf.Ignore())
-            .ForMember(x => x.Toponyms, conf => conf.Ignore())
-            .ForMember(x => x.TimelineItems, conf => conf.Ignore())
-            .ForMember(x => x.Images, conf => conf.Ignore())
-            .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
-            .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
-            .ReverseMap();
+                .ForMember(x => x.Arts, conf => conf.Ignore())
+                .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
+                .ForMember(x => x.Tags, conf => conf.Ignore())
+                .ForMember(x => x.Partners, conf => conf.Ignore())
+                .ForMember(x => x.Toponyms, conf => conf.Ignore())
+                .ForMember(x => x.TimelineItems, conf => conf.Ignore())
+                .ForMember(x => x.Images, conf => conf.Ignore())
+                .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
+                .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
+                .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
             .ForMember(x => x.Text, conf => conf.Ignore())

@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Shared;
 using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
@@ -35,6 +36,6 @@ public class BaseApiController : ControllerBase
             return Unauthorized();
         }
 
-        return BadRequest(result.Reasons);
+        return BadRequest(result.Errors.Select(x => new ErrorDto() { Message = x.Message }));
     }
 }

@@ -14,18 +14,21 @@ namespace Streetcode.WebApi.Controllers.Timeline
     public class HistoricalContextController : BaseApiController
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<HistoricalContextDTO>))]
         public async Task<IActionResult> GetAll()
         {
             return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery()));
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetHistoricalContextByIdQuery(id)));
         }
 
         [HttpGet("{title}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         public async Task<IActionResult> GetByTitle(string title)
         {
             return HandleResult(await Mediator.Send(new GetHistoricalContextByTitleQuery(title)));
@@ -33,6 +36,7 @@ namespace Streetcode.WebApi.Controllers.Timeline
 
         [HttpPut]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update([FromBody]HistoricalContextDTO contextDto)
@@ -42,6 +46,7 @@ namespace Streetcode.WebApi.Controllers.Timeline
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete(int id)
@@ -51,6 +56,7 @@ namespace Streetcode.WebApi.Controllers.Timeline
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HistoricalContextDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody]HistoricalContextDTO contextDto)

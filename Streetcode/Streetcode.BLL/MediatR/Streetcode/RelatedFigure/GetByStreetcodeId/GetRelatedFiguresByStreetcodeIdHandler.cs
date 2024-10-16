@@ -33,7 +33,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
-          predicate: sc => relatedFigureIds != null && relatedFigureIds.Any(id => id == sc.Id) && sc.Status == DAL.Enums.StreetcodeStatus.Published,
+          predicate: sc => relatedFigureIds.Any(id => id == sc.Id) && sc.Status == DAL.Enums.StreetcodeStatus.Published,
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
@@ -56,7 +56,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
     }
 
-    private IQueryable<int>? GetRelatedFigureIdsByStreetcodeId(int streetcodeId)
+    private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int streetcodeId)
     {
         try
         {
@@ -70,7 +70,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         }
         catch (ArgumentNullException)
         {
-            return null;
+            return Enumerable.Empty<int>().AsQueryable();
         }
     }
 }

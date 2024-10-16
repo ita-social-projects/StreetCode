@@ -1,15 +1,21 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
-using Streetcode.BLL.DTO.Media.Video;
+using Streetcode.BLL.DTO.Media.Create;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media.Images;
@@ -17,15 +23,6 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.ArtGallery.ArtSlide;
-using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.DTO.Media.Create;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -33,7 +30,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 {
     public const int StreetcodeIndexMaxValue = 9999;
     public const int StreetcodeIndexMinValue = 1;
-    private static IMapper _mapper;
+    private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
@@ -160,7 +157,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         return streetcodeArts;
     }
 
-    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto>? imageDetails)
+    public async Task AddImagesDetails(IEnumerable<ImageDetailsDto> imageDetails)
     {
         if (imageDetails.IsNullOrEmpty())
         {
@@ -192,7 +189,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }));
     }
 
-    private async Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    private Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
     {
         foreach (FactUpdateCreateDto fact in facts)
         {
@@ -205,6 +202,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 });
             }
         }
+
+        return Task.CompletedTask;
     }
 
     private void AddTransactionLink(StreetcodeContent streetcode, string? url)
@@ -226,8 +225,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         foreach (var statisticRecord in statisticRecords)
         {
             var newStatistic = _mapper.Map<StatisticRecord>(statisticRecord);
-            newStatistic.StreetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(
-              x => x.Latitude == newStatistic.StreetcodeCoordinate.Latitude && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+            var streetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(x =>
+                x.Latitude == newStatistic.StreetcodeCoordinate.Latitude
+                && x.Longtitude == newStatistic.StreetcodeCoordinate.Longtitude);
+
+            newStatistic.StreetcodeCoordinate = streetcodeCoordinate ?? throw new InvalidOperationException();
             statisticRecordsToCreate.Add(newStatistic);
         }
 
@@ -341,7 +343,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                .Select(x => new HistoricalContextTimeline
                {
                    HistoricalContextId = x.Id == 0
-                       ? newContextsDb.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                       ? newContextsDb.First(h => h.Title!.Equals(x.Title)).Id
                        : x.Id
                })
                .ToList();

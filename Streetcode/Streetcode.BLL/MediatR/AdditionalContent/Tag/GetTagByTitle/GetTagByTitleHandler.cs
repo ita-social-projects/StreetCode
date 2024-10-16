@@ -35,7 +35,7 @@ public class GetTagByTitleHandler : IRequestHandler<GetTagByTitleQuery, Result<T
 
         if (tag is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTagByTheTitle", request.Title].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTagByTheTitle", request.Title].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

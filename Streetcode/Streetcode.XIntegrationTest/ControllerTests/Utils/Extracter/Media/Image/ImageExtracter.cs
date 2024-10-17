@@ -1,13 +1,9 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
+﻿using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.Utils;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image
 {
-    public class ImageExtracter
+    public static class ImageExtracter
     {
         public static DAL.Entities.Media.Images.Image Extract(int imageId)
         {
@@ -16,14 +12,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtra
             testImage.Id = imageId;
             testImage.BlobName += $".{testImage.MimeType?.Split('/')[1]}";
 
-            return BaseExtracter.Extract<DAL.Entities.Media.Images.Image>(testImage, image => image.Id == imageId);
+            return BaseExtracter.Extract(testImage, image => image.Id == imageId);
         }
 
         public static void Remove(DAL.Entities.Media.Images.Image entity)
         {
             var blobFixture = new BlobStorageFixture();
-            blobFixture.blobService.DeleteFileInStorage(entity.BlobName);
             BaseExtracter.RemoveByPredicate<DAL.Entities.Media.Images.Image>(image => image.Id == entity.Id);
+            blobFixture.BlobService.DeleteFileInStorage(entity.BlobName!);
         }
 
         public static void AddStreetcodeImage(int streetcodeId, int imageId)

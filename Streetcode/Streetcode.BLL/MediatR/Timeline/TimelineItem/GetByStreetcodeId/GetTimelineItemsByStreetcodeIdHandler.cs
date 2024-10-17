@@ -34,7 +34,7 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
                     .Include(til => til.HistoricalContextTimelines)
                         .ThenInclude(x => x.HistoricalContext) !);
 
-        if (timelineItems is null)
+        if (!timelineItems.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTimelineItemByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

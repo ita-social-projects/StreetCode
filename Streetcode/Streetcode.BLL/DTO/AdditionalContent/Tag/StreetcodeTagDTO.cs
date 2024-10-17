@@ -1,9 +1,8 @@
 namespace Streetcode.BLL.DTO.AdditionalContent.Tag
 {
-    public class StreetcodeTagDTO
+    public class StreetcodeTagDTO : CreateUpdateTagDTO
     {
         public int Id { get; set; }
-        public string Title { get; set; } = null!;
         public bool IsVisible { get; set; }
         public int Index { get; set; }
     }

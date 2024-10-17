@@ -120,7 +120,7 @@
   <data name="AnErrorOccurredWhileCreating" xml:space="preserve">
     <value>Під час створення стріткоду сталася помилка. Повідомлення: {0}</value>
   </data>
-  <data name="AnErrorOccurredWhileUpdatin" xml:space="preserve">
-    <value>Під час оновлення стріткоду сталася помилка</value>
+  <data name="AnErrorOccurredWhileUpdating" xml:space="preserve">
+    <value>Під час оновлення стріткоду сталася помилка. Повідомлення: {0}</value>
   </data>
 </root>

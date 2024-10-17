@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -13,59 +14,38 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Partners;
 
 public class GetAllPartnersTest
 {
-    private Mock<IRepositoryWrapper> _mockRepository;
-    private Mock<IMapper> _mockMapper;
-    private readonly Mock<ILoggerService> _mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> mockRepository;
+    private readonly Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
     public GetAllPartnersTest()
     {
-        _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockMapper = new Mock<IMapper>();
-        _mockLogger = new Mock<ILoggerService>();
-        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-    }
-
-    private void SetupPaginatedRepository(IEnumerable<Partner> returnList)
-    {
-        _mockRepository.Setup(repo => repo.PartnersRepository.GetAllPaginated(
-            It.IsAny<ushort?>(),
-            It.IsAny<ushort?>(),
-            It.IsAny<Expression<Func<Partner, Partner>>?>(),
-            It.IsAny<Expression<Func<Partner, bool>>?>(),
-            It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>?>(),
-            It.IsAny<Expression<Func<Partner, object>>?>(),
-            It.IsAny<Expression<Func<Partner, object>>?>()))
-        .Returns(PaginationResponse<Partner>.Create(returnList.AsQueryable()));
-    }
-
-    private void SetupMapper(IEnumerable<PartnerDTO> returnList)
-    {
-        _mockMapper
-            .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
-            .Returns(returnList);
+        this.mockRepository = new Mock<IRepositoryWrapper>();
+        this.mockMapper = new Mock<IMapper>();
+        this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_CorrectType()
     {
-        //Arrange
+        // Arrange
         this.SetupPaginatedRepository(GetPartnerList());
         this.SetupMapper(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners)
@@ -75,16 +55,16 @@ public class GetAllPartnersTest
     [Fact]
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
-        //Arrange
-        SetupPaginatedRepository(GetPartnerList());
-        SetupMapper(GetListPartnerDTO());
+        // Arrange
+        this.SetupPaginatedRepository(GetPartnerList());
+        this.SetupMapper(GetListPartnerDTO());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
             () => Assert.Equal(GetPartnerList().Count(), result.Value.Partners.Count())
@@ -94,17 +74,17 @@ public class GetAllPartnersTest
     [Fact]
     public async Task Handler_Returns_Correct_PageSize()
     {
-        //Arrange
+        // Arrange
         ushort pageSize = 3;
-        SetupPaginatedRepository(GetPartnerList().Take(pageSize));
-        SetupMapper(GetListPartnerDTO().Take(pageSize).ToList());
+        this.SetupPaginatedRepository(GetPartnerList().Take(pageSize));
+        this.SetupMapper(GetListPartnerDTO().Take(pageSize).ToList());
 
-        var handler = new GetAllPartnersHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+        var handler = new GetAllPartnersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-        //Act
+        // Act
         var result = await handler.Handle(new GetAllPartnersQuery(page: 1, pageSize: pageSize), CancellationToken.None);
 
-        //Assert
+        // Assert
         Assert.Multiple(
             () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners),
             () => Assert.Equal(pageSize, result.Value.Partners.Count()));
@@ -166,5 +146,25 @@ public class GetAllPartnersTest
     };
 
         return partnersDTO;
+    }
+
+    private void SetupPaginatedRepository(IEnumerable<Partner> returnList)
+    {
+        this.mockRepository.Setup(repo => repo.PartnersRepository.GetAllPaginated(
+            It.IsAny<ushort?>(),
+            It.IsAny<ushort?>(),
+            It.IsAny<Expression<Func<Partner, Partner>>?>(),
+            It.IsAny<Expression<Func<Partner, bool>>?>(),
+            It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>?>(),
+            It.IsAny<Expression<Func<Partner, object>>?>(),
+            It.IsAny<Expression<Func<Partner, object>>?>()))
+        .Returns(PaginationResponse<Partner>.Create(returnList.AsQueryable()));
+    }
+
+    private void SetupMapper(IEnumerable<PartnerDTO> returnList)
+    {
+        this.mockMapper
+            .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Returns(returnList);
     }
 }

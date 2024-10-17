@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="CannotBeEmpty" xml:space="preserve">
+        <value>Поле '{0}' не може бути пусте</value>
+    </data>
+    <data name="MaxLength" xml:space="preserve">
+        <value>Максимальна довжина поля '{0}' - {1}</value>
+    </data>
+    <data name="ValidUrl" xml:space="preserve">
+        <value>Поле '{0}' повинно бути дійсною URL адресою </value>
+    </data>
+    <data name="CannotBeEmptyWithCondition" xml:space="preserve">
+        <value>Поле '{0}' не може бути пусте, якщо введено поле '{1}'</value>
+    </data>
+    <data name="IsRequired" xml:space="preserve">
+        <value>'{0}' обов'язкове поле</value>
+    </data>
+    <data name="Invalid" xml:space="preserve">
+        <value>Поле '{0}' має недійсне значення</value>
+    </data>
+    <data name="LogoMustMatchUrl" xml:space="preserve">
+        <value>Логотип має відповідати посиланню</value>
+    </data>
+    <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
+        <value>Поле '{0}' ({1}) повинно бути дійсною URL адресою </value>
+    </data>
+    <data name="GreaterThan" xml:space="preserve">
+        <value>'{0}' має бути більше ніж {1}</value>
+    </data>
+    <data name="MustBeOneOf" xml:space="preserve">
+        <value>Поле '{0}' приймає тільки наступні значення: {1}</value>
+    </data>
+    <data name="EmailAddressFormat" xml:space="preserve">
+        <value>Адреса електронної пошти повинна бути в правильному форматі</value>
+    </data>
+    <data name="TransliterationUrlFormat" xml:space="preserve">
+        <value>Транслітероване посилання має містити тільки маленькі латинські літери, цифри та дефіс</value>
+    </data>
+    <data name="MustBeBetween" xml:space="preserve">
+        <value>Поле '{0}' має бути між {1} і {2}</value>
+    </data>
+    <data name="MustBeUnique" xml:space="preserve">
+        <value>Поле '{0}' має бути унікальним</value>
+    </data>
+    <data name="ImageDoesntExist" xml:space="preserve">
+        <value>Картинка з ідентифікатором {0} не існує</value>
+    </data>
+    <data name="InvalidNewsUrl" xml:space="preserve">
+        <value>Поле 'Посилання' може приймати тільки малі латинські літери, дефіс та цифри</value>
+    </data>
+    <data name="InvalidPrecision" xml:space="preserve">
+        <value>Поле '{0}' має неправильну точність</value>
+    </data>
+    <data name="LengthMustBeInRange" xml:space="preserve">
+        <value>Довжина поля '{0}' має бути від {1} до {2}</value>
+    </data>
+    <data name="DateStringFormat" xml:space="preserve">
+        <value>Поле 'Рядок дати' приймає лише кириличні літери, цифри, тире (–) і круглі дужки.</value>
+    </data>
+    <data name="MustContainExactlyOneAlt1" xml:space="preserve">
+        <value>Поле '{0}' має містити рівно одне чорно-біле зображення.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt0" xml:space="preserve">
+        <value>Поле '{0}' може містити щонайбільше одне кольорове зображення.</value>
+    </data>
+    <data name="MustContainAtMostOneAlt2" xml:space="preserve">
+        <value>Поле '{0}' може містити щонайбільше одне зображення для звʼязків.</value>
+    </data>
+    <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
+        <value>Стріткод типу 'Подія' не може мати поля 'Ім'я' та 'Прізвище' </value>
+    </data>
+</root>

@@ -35,7 +35,7 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
         var coordinates = await _repositoryWrapper.StreetcodeCoordinateRepository
             .GetAllAsync(c => c.StreetcodeId == request.StreetcodeId);
 
-        if (coordinates is null)
+        if (!coordinates.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindCoordinatesByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

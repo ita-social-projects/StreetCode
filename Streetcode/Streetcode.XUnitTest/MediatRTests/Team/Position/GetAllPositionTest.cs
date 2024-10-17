@@ -1,55 +1,48 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Partners.GetAll;
 using Streetcode.BLL.MediatR.Team.Position.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 {
     public class GetAllPositionTest
     {
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetAllPositionTest()
         {
-            _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepositoryWrapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
         {
-            //Arrange
-            SetupMapper(GetListPositionDTO());
-            SetupPaginatedRepository(GetPositionsList());
+            // Arrange
+            this.SetupMapper(GetListPositionDTO());
+            this.SetupPaginatedRepository(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-            //Act
+            // Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault.Positions)
@@ -59,16 +52,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         [Fact]
         public async Task ShouldReturnSuccessfully_WhenCountMatch()
         {
-            //Arrange
-            SetupMapper(GetListPositionDTO());
-            SetupPaginatedRepository(GetPositionsList());
+            // Arrange
+            this.SetupMapper(GetListPositionDTO());
+            this.SetupPaginatedRepository(GetPositionsList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-            //Act
+            // Act
             var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.Equal(GetPositionsList().Count(), result.Value.Positions.Count())
@@ -78,39 +71,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         [Fact]
         public async Task Handler_Returns_Correct_PageSize()
         {
-            //Arrange
+            // Arrange
             ushort pageSize = 3;
-            SetupPaginatedRepository(GetPositionsList().Take(pageSize));
-            SetupMapper(GetListPositionDTO().Take(pageSize).ToList());
+            this.SetupPaginatedRepository(GetPositionsList().Take(pageSize));
+            this.SetupMapper(GetListPositionDTO().Take(pageSize).ToList());
 
-            var handler = new GetAllPositionsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-            //Act
+            // Act
             var result = await handler.Handle(new GetAllPositionsQuery(page: 1, pageSize: pageSize), CancellationToken.None);
 
-            //Assert
+            // Assert
             Assert.Multiple(
                 () => Assert.IsType<List<PositionDTO>>(result.Value.Positions),
                 () => Assert.Equal(pageSize, result.Value.Positions.Count()));
-        }
-
-        private void SetupMapper(IEnumerable<PositionDTO> positionDTOs)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
-                .Returns(positionDTOs);
-        }
-
-        private void SetupPaginatedRepository(IEnumerable<Positions> returnList)
-        {
-            _mockRepository.Setup(repo => repo.PositionRepository.GetAllPaginated(
-                It.IsAny<ushort?>(),
-                It.IsAny<ushort?>(),
-                It.IsAny<Expression<Func<Positions, Positions>>?>(),
-                It.IsAny<Expression<Func<Positions, bool>>?>(),
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>?>(),
-                It.IsAny<Expression<Func<Positions, object>>?>(),
-                It.IsAny<Expression<Func<Positions, object>>?>()))
-            .Returns(PaginationResponse<Positions>.Create(returnList.AsQueryable()));
         }
 
         private static IEnumerable<Positions> GetPositionsList()
@@ -169,6 +143,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             };
 
             return positionDTOs;
+        }
+
+        private void SetupMapper(IEnumerable<PositionDTO> positionDTOs)
+        {
+            this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+                .Returns(positionDTOs);
+        }
+
+        private void SetupPaginatedRepository(IEnumerable<Positions> returnList)
+        {
+            this.mockRepository.Setup(repo => repo.PositionRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<Positions, Positions>>?>(),
+                It.IsAny<Expression<Func<Positions, bool>>?>(),
+                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>?>(),
+                It.IsAny<Expression<Func<Positions, object>>?>(),
+                It.IsAny<Expression<Func<Positions, object>>?>()))
+            .Returns(PaginationResponse<Positions>.Create(returnList.AsQueryable()));
         }
     }
 }

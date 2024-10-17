@@ -14,7 +14,7 @@ public class Toponym
 
     [Required]
     [MaxLength(100)]
-    public string Oblast { get; set; }
+    public string Oblast { get; set; } = null!;
 
     [MaxLength(150)]
     public string? AdminRegionOld { get; set; }
@@ -30,12 +30,12 @@ public class Toponym
 
     [Required]
     [MaxLength(150)]
-    public string StreetName { get; set; }
+    public string StreetName { get; set; } = null!;
 
     [MaxLength(50)]
     public string? StreetType { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();
 
-    public ToponymCoordinate Coordinate { get; set; }
+    public ToponymCoordinate? Coordinate { get; set; }
 }

@@ -49,7 +49,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     {
         var response = await this.Client.GetAllAsync();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<HistoricalContextDTO>>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<GetAllHistoricalContextDTO>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);

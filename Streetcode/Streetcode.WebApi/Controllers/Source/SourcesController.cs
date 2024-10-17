@@ -22,10 +22,10 @@ public class SourcesController : BaseApiController
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SourceLinkCategoryDTO>))]
-    public async Task<IActionResult> GetAllCategories()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllCategoriesResponseDTO))]
+    public async Task<IActionResult> GetAllCategories([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery()));
+        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

@@ -6,10 +6,14 @@ using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 
-public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumerable<TagDTO>>>
+public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllTagsResponseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,17 +28,28 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<IEnumer
         _stringLocalizerCannotFind = CannotFindSharedResource;
     }
 
-    public async Task<Result<IEnumerable<TagDTO>>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
+    public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
-        var tags = await _repositoryWrapper.TagRepository.GetAllAsync();
-        if (!tags.Any())
+        PaginationResponse<DAL.Entities.AdditionalContent.Tag> paginationResponse = _repositoryWrapper
+            .TagRepository
+            .GetAllPaginated(
+                request.page,
+                request.pageSize,
+                descendingSortKeySelector: tag => tag.Title);
+
+        if (paginationResponse is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg)));
         }
 
-        var sorted_tags = tags.OrderBy(tag => tag.Title);
-        return Result.Ok(_mapper.Map<IEnumerable<TagDTO>>(sorted_tags));
+        GetAllTagsResponseDTO getAllTagsResponseDTO = new GetAllTagsResponseDTO
+        {
+            TotalAmount = paginationResponse.TotalItems,
+            Tags = _mapper.Map<IEnumerable<TagDTO>>(paginationResponse.Entities),
+        };
+
+        return Task.FromResult(Result.Ok(getAllTagsResponseDTO));
     }
 }

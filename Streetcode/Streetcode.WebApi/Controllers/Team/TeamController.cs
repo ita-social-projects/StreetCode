@@ -15,10 +15,10 @@ namespace Streetcode.WebApi.Controllers.Team
     public class TeamController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamMemberDTO>))]
-        public async Task<IActionResult> GetAll()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTeamDTO))]
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllTeamQuery()));
+            return HandleResult(await Mediator.Send(new GetAllTeamQuery(page, pageSize)));
         }
 
         [HttpGet]

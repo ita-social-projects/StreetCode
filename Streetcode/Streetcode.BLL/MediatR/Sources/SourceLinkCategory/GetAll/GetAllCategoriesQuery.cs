@@ -4,5 +4,6 @@ using Streetcode.BLL.DTO.Sources;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 {
-    public record GetAllCategoriesQuery : IRequest<Result<IEnumerable<SourceLinkCategoryDTO>>>;
+    public record GetAllCategoriesQuery(ushort? page, ushort? pageSize)
+        : IRequest<Result<GetAllCategoriesResponseDTO>>;
 }

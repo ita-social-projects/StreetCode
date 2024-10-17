@@ -15,10 +15,10 @@ namespace Streetcode.WebApi.Controllers.AdditionalContent;
 public class TagController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDTO>))]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDTO))]
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllTagsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllTagsQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

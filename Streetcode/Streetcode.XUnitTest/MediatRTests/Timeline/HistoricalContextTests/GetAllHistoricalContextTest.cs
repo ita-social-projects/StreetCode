@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -31,10 +32,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         }
 
         [Fact]
-        public async Task ShouldReturnSuccessfully_CorectType()
+        public async Task ShouldReturnSuccessfully_CorrectType()
         {
             // Arrange
-            (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
+            this.SetupPaginatedRepository(GetListHistoricalContext());
+            this.SetupMapper(GetListHistoricalContextDTO());
             var hendler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
@@ -43,14 +45,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<HistoricalContextDTO>>(result.ValueOrDefault));
+                () => Assert.IsType<List<HistoricalContextDTO>>(result.ValueOrDefault.HistoricalContexts));
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_CountMatch()
         {
             // Arrange
-            (this.mockMapper, this.mockRepository) = GetMapperAndRepo(this.mockMapper, this.mockRepository);
+            this.SetupPaginatedRepository(GetListHistoricalContext());
+            this.SetupMapper(GetListHistoricalContextDTO());
+
             var hendler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
@@ -59,83 +63,74 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Equal(GetListHistoricalContext().Count(), result.Value.Count()));
-        }
+                () => Assert.Equal(GetListHistoricalContext().Count(), result.Value.HistoricalContexts.Count()));
+            }
 
         [Fact]
-        public async Task ShouldThrowException_WhenNotFound()
+        public async Task Handler_Returns_Correct_PageSize()
         {
             // Arrange
-            this.mockRepository.Setup(x => x.HistoricalContextRepository
-                .GetAllAsync(
-                    It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
-                    It.IsAny<Func<IQueryable<HistoricalContext>,
-                    IIncludableQueryable<HistoricalContext, object>>>()))
-                .ReturnsAsync(GetEmptyListHistoricalContext());
-
-            this.mockMapper
-                .Setup(x => x
-                .Map<IEnumerable<HistoricalContextDTO>>(It.IsAny<IEnumerable<HistoricalContext>>()))
-                .Returns(GetEmptyListHistoricalContextDTO());
-
-            var expectedError = "Cannot find any historical contexts";
-            this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyHistoricalContexts"])
-               .Returns(new LocalizedString("CannotFindAnyHistoricalContexts", expectedError));
+            ushort pageSize = 3;
+            this.SetupPaginatedRepository(GetListHistoricalContext().Take(pageSize));
+            this.SetupMapper(GetListHistoricalContextDTO().Take(pageSize).ToList());
 
             var handler = new GetAllHistoricalContextHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllHistoricalContextQuery(page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
-                () => Assert.False(result.IsSuccess),
-                () => Assert.Equal(expectedError, result.Errors[0].Message));
-        }
-
-        private static (Mock<IMapper>, Mock<IRepositoryWrapper>) GetMapperAndRepo(
-            Mock<IMapper> mockMapper,
-            Mock<IRepositoryWrapper> mockRepo)
-        {
-            mockRepo.Setup(x => x.HistoricalContextRepository
-                .GetAllAsync(
-                    It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
-                    It.IsAny<Func<IQueryable<HistoricalContext>,
-                        IIncludableQueryable<HistoricalContext, object>>>()))
-                .ReturnsAsync(GetListHistoricalContext());
-
-            mockMapper
-                .Setup(x => x
-                .Map<IEnumerable<HistoricalContextDTO>>(It.IsAny<IEnumerable<HistoricalContext>>()))
-                .Returns(GetListHistoricalContextDTO());
-
-            return (mockMapper, mockRepo);
+                () => Assert.IsType<List<HistoricalContextDTO>>(result.Value.HistoricalContexts),
+                () => Assert.Equal(pageSize, result.Value.HistoricalContexts.Count()));
         }
 
         private static IQueryable<HistoricalContext> GetListHistoricalContext()
         {
-            var historicalContexts = new List<HistoricalContext>()
+            var historicalContexts = new List<HistoricalContext>
             {
                 new HistoricalContext { Id = 1, Title = "HistoricalContext1" },
                 new HistoricalContext { Id = 2, Title = "HistoricalContext2" },
                 new HistoricalContext { Id = 3, Title = "HistoricalContext3" },
+                new HistoricalContext { Id = 4, Title = "HistoricalContext4" },
+                new HistoricalContext { Id = 5, Title = "HistoricalContext5" },
             };
+
             return historicalContexts.AsQueryable();
         }
 
         private static IEnumerable<HistoricalContextDTO> GetListHistoricalContextDTO()
         {
-            var historicalContextsDTO = new List<HistoricalContextDTO>()
+            var historicalContextsDTO = new List<HistoricalContextDTO>
             {
                 new HistoricalContextDTO { Id = 1, Title = "HistoricalContext1" },
                 new HistoricalContextDTO { Id = 2, Title = "HistoricalContext2" },
                 new HistoricalContextDTO { Id = 3, Title = "HistoricalContext3" },
+                new HistoricalContextDTO { Id = 4, Title = "HistoricalContext4" },
+                new HistoricalContextDTO { Id = 5, Title = "HistoricalContext5" },
             };
+
             return historicalContextsDTO;
         }
 
-        private static List<HistoricalContext> GetEmptyListHistoricalContext() => new List<HistoricalContext>();
+        private void SetupPaginatedRepository(IEnumerable<HistoricalContext> returnList)
+        {
+            this.mockRepository.Setup(repo => repo.HistoricalContextRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<HistoricalContext, HistoricalContext>>?>(),
+                It.IsAny<Expression<Func<HistoricalContext, bool>>?>(),
+                It.IsAny<Func<IQueryable<HistoricalContext>, IIncludableQueryable<HistoricalContext, object>>?>(),
+                It.IsAny<Expression<Func<HistoricalContext, object>>?>(),
+                It.IsAny<Expression<Func<HistoricalContext, object>>?>()))
+            .Returns(PaginationResponse<HistoricalContext>.Create(returnList.AsQueryable()));
+        }
 
-        private static List<HistoricalContextDTO> GetEmptyListHistoricalContextDTO() => new List<HistoricalContextDTO>();
+        private void SetupMapper(IEnumerable<HistoricalContextDTO> returnList)
+        {
+            this.mockMapper
+                .Setup(x => x.Map<IEnumerable<HistoricalContextDTO>>(It.IsAny<IEnumerable<HistoricalContext>>()))
+                .Returns(returnList);
+        }
     }
 }

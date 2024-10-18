@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 			}
 
 			var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x =>
-				EF.Functions.Collate(x.Title, "SQL_Latin1_General_CP1_CS_AS") == request.tag.Title);
+				request.tag.Title == EF.Functions.Collate(x.Title, "SQL_Latin1_General_CP1_CS_AS"));
 
 			if (exists is not null && exists.Id != request.tag.Id)
 			{

@@ -93,9 +93,8 @@ public class CreatePartnerTest
 
         this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
             .ReturnsAsync(testPartner);
-
-        this.mockRepository.Setup(x => x.SaveChanges())
-            .Throws(new Exception(expectedError));
+        this.mockRepository.Setup(x => x.SaveChangesAsync())
+            .ThrowsAsync(new Exception(expectedError));
 
         var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
 

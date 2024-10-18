@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
@@ -43,7 +44,8 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 				return Result.Fail(exMessage);
 			}
 
-			var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => request.tag.Title == t.Title);
+			var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x =>
+				request.tag.Title == EF.Functions.Collate(x.Title, "SQL_Latin1_General_CP1_CS_AS"));
 
 			if (exists is not null && exists.Id != request.tag.Id)
 			{

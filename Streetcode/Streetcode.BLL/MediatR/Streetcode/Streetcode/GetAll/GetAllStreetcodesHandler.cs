@@ -42,13 +42,18 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 
-        int pagesAmount = ApplyPagination(ref streetcodes, filterRequest.Amount, filterRequest.Page);
+        if (filterRequest.Amount is not null && filterRequest.Page is not null)
+        {
+            ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);
+        }
+
+        var totalAmount = streetcodes.Count();
 
         var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
 
         var response = new GetAllStreetcodesResponseDTO
         {
-            Pages = pagesAmount,
+            TotalAmount = totalAmount,
             Streetcodes = streetcodeDtos
         };
 
@@ -108,17 +113,13 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         };
     }
 
-    private int ApplyPagination(
+    private void ApplyPagination(
         ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)
     {
-        var totalPages = (int)Math.Ceiling(streetcodes.Count() / (double)amount);
-
         streetcodes = streetcodes
             .Skip((page - 1) * amount)
             .Take(amount);
-
-        return totalPages;
     }
 }

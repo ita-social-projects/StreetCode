@@ -52,39 +52,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TagDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTagsResponseDTO>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
-        }
-
-        [Fact]
-        public async Task GetAll_ReturnBadRequest()
-        {
-            var repositoryMock = new Mock<ITagRepository>();
-            repositoryMock
-                .Setup(repo => repo
-                    .GetAllAsync(default, default))
-                .ReturnsAsync(new List<TagEntity>());
-
-            var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-            repositoryWrapperMock.SetupGet(wrapper => wrapper.TagRepository)
-                .Returns(repositoryMock.Object);
-
-            var mapperMock = new Mock<IMapper>();
-            var stringLocalizerMock = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-            stringLocalizerMock.Setup(x => x["CannotFindAnyTags"]).Returns(new LocalizedString("CannotFindAnyTags", "Error message"));
-            var loggerMock = new Mock<ILoggerService>();
-
-            var handler = new GetAllTagsHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object, stringLocalizerMock.Object);
-
-            var query = new GetAllTagsQuery();
-            var cancellationToken = CancellationToken.None;
-
-            var result = await handler.Handle(query, cancellationToken);
-
-            // Assert
-            Assert.False(result.IsSuccess);
         }
 
         [Fact]

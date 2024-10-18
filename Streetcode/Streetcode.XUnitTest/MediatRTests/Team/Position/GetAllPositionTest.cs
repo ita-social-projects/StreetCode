@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
@@ -6,7 +7,9 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.GetAll;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Team;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -31,8 +34,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
         public async Task ShouldReturnSuccessfully_WhenTypeIsCorrect()
         {
             // Arrange
-            this.SetupMapMethod(GetListPositionDTO());
-            this.SetupGetAllAsyncMethod(GetPositionsList());
+            this.SetupMapper(GetListPositionDTO());
+            this.SetupPaginatedRepository(GetPositionsList());
 
             var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
@@ -42,15 +45,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault));
+                () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault.Positions)
+            );
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_WhenCountMatch()
         {
             // Arrange
-            this.SetupMapMethod(GetListPositionDTO());
-            this.SetupGetAllAsyncMethod(GetPositionsList());
+            this.SetupMapper(GetListPositionDTO());
+            this.SetupPaginatedRepository(GetPositionsList());
 
             var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
@@ -60,33 +64,32 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Equal(GetPositionsList().Count(), result.Value.Count()));
+                () => Assert.Equal(GetPositionsList().Count(), result.Value.Positions.Count())
+            );
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_WhenIdNotExist()
+        public async Task Handler_Returns_Correct_PageSize()
         {
             // Arrange
-            const string expectedError = "Cannot find any positions";
-            this.mockLocalizerCannotFind.Setup(x => x["CannotFindAnyPositions"])
-               .Returns(new LocalizedString("CannotFindAnyPositions", expectedError));
-
-            this.SetupGetAllAsyncMethod(GetPositionsListWithNotExistingId());
+            ushort pageSize = 3;
+            this.SetupPaginatedRepository(GetPositionsList().Take(pageSize));
+            this.SetupMapper(GetListPositionDTO().Take(pageSize).ToList());
 
             var handler = new GetAllPositionsHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllPositionsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllPositionsQuery(page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
-            Assert.Equal(expectedError, result.Errors[0].Message);
-
-            this.mockMapper.Verify(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()), Times.Never);
+            Assert.Multiple(
+                () => Assert.IsType<List<PositionDTO>>(result.Value.Positions),
+                () => Assert.Equal(pageSize, result.Value.Positions.Count()));
         }
 
         private static IEnumerable<Positions> GetPositionsList()
         {
-            var partners = new List<Positions>
+            var positions = new List<Positions>
             {
                 new Positions
                 {
@@ -96,18 +99,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
                 {
                     Id = 2,
                 },
+                new Positions
+                {
+                    Id = 3,
+                },
+                new Positions
+                {
+                    Id = 4,
+                },
+                new Positions
+                {
+                    Id = 5,
+                },
             };
-            return partners;
-        }
 
-        private static List<Positions> GetPositionsListWithNotExistingId()
-        {
-            return new List<Positions>();
+            return positions;
         }
 
         private static List<PositionDTO> GetListPositionDTO()
         {
-            var positionDTO = new List<PositionDTO>
+            var positionDTOs = new List<PositionDTO>
             {
                 new PositionDTO
                 {
@@ -117,22 +128,40 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
                 {
                     Id = 2,
                 },
+                new PositionDTO
+                {
+                    Id = 3,
+                },
+                new PositionDTO
+                {
+                    Id = 4,
+                },
+                new PositionDTO
+                {
+                    Id = 5,
+                },
             };
-            return positionDTO;
+
+            return positionDTOs;
         }
 
-        private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
+        private void SetupMapper(IEnumerable<PositionDTO> positionDTOs)
         {
             this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
                 .Returns(positionDTOs);
         }
 
-        private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
+        private void SetupPaginatedRepository(IEnumerable<Positions> returnList)
         {
-            this.mockRepository.Setup(x => x.PositionRepository.GetAllAsync(
-                null,
-                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>>()))
-                .ReturnsAsync(positions);
+            this.mockRepository.Setup(repo => repo.PositionRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<Positions, Positions>>?>(),
+                It.IsAny<Expression<Func<Positions, bool>>?>(),
+                It.IsAny<Func<IQueryable<Positions>, IIncludableQueryable<Positions, object>>?>(),
+                It.IsAny<Expression<Func<Positions, object>>?>(),
+                It.IsAny<Expression<Func<Positions, object>>?>()))
+            .Returns(PaginationResponse<Positions>.Create(returnList.AsQueryable()));
         }
     }
 }

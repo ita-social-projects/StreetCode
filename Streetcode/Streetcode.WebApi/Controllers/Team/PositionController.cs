@@ -17,10 +17,10 @@ namespace Streetcode.WebApi.Controllers.Team
     public class PositionController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PositionDTO>))]
-        public async Task<IActionResult> GetAll()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPositionsDTO))]
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllPositionsQuery()));
+            return HandleResult(await Mediator.Send(new GetAllPositionsQuery(page, pageSize)));
         }
 
         [HttpGet]

@@ -20,10 +20,10 @@ namespace Streetcode.WebApi.Controllers.Partners;
 public class PartnersController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDTO>))]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPartnersResponseDTO))]
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllPartnersQuery()));
+        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize)));
     }
 
     [HttpGet]

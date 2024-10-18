@@ -32,6 +32,8 @@ namespace Streetcode.BLL.MediatR.Partners.Create
                 newPartner.Streetcodes.Clear();
                 newPartner = await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner);
 
+                await _repositoryWrapper.SaveChangesAsync();
+
                 var streetcodeIds = request.newPartner.Streetcodes.Select(s => s.Id).ToList();
                 var existingStreetcodes = await _repositoryWrapper.StreetcodeRepository
                     .GetAllAsync(s => streetcodeIds.Contains(s.Id));

@@ -35,6 +35,7 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
             catch (Exception exception)
             {
                 _loggerService.LogError($"{requestTemplate}An unhandled exception was thrown by the application: {exception}");
+                throw;
             }
         }
 

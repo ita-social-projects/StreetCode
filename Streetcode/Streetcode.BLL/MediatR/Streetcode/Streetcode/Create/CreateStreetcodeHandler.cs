@@ -35,19 +35,25 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
     private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
+    private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
+    private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
 
     public CreateStreetcodeHandler(
         IMapper mapper,
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
+        IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
+        IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
         _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
         _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
+        _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
+        _stringLocalizerFieldNames = stringLocalizerFieldNames;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -58,13 +64,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
-                if (streetcode.Index < StreetcodeIndexMinValue || streetcode.Index > StreetcodeIndexMaxValue)
-                {
-                    string errorMessage = $"The 'index' must be in range from {StreetcodeIndexMinValue} to {StreetcodeIndexMaxValue}.";
-                    _logger.LogError(request, errorMessage);
-                    return Result.Fail(new Error(errorMessage));
-                }
-
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
@@ -78,22 +77,6 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
                 AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
-
-                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent))
-                {
-                    string errorMsg = "The 'title' key for the text is empty or missing.";
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
-
-                if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
-                     && request.Streetcode.Videos != null
-                     && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
-                {
-                    string errorMsg = "The 'title' key for the video is empty or missing.";
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
 
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
@@ -159,29 +142,11 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     public async Task AddImagesDetails(IEnumerable<ImageDetailsDto> imageDetails)
     {
-        if (imageDetails.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
-        }
-
-        foreach (var detail in imageDetails)
-        {
-            if (string.IsNullOrEmpty(detail.Alt))
-            {
-                throw new HttpRequestException("There is no valid imagesDetails value", null, System.Net.HttpStatusCode.BadRequest);
-            }
-        }
-
         await _repositoryWrapper.ImageDetailsRepository.CreateRangeAsync(_mapper.Map<IEnumerable<ImageDetails>>(imageDetails));
     }
 
     public async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
     {
-        if (imagesIds.IsNullOrEmpty())
-        {
-            throw new HttpRequestException("There is no valid imagesIds value", null, System.Net.HttpStatusCode.BadRequest);
-        }
-
         await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
         {
             ImageId = imageId,
@@ -257,6 +222,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
             if (tags[i].Id <= 0)
             {
+                var exists = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => tags[i].Title == t.Title);
+                if (exists is not null)
+                {
+                    throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
+                }
+
                 var newTag = _mapper.Map<Tag>(tags[i]);
                 newTag.Id = 0;
                 newTagIndex.Tag = newTag;
@@ -365,7 +336,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);
     }
 
-    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
+    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
     {
         var toponymsName = toponyms.Select(x => x.StreetName);
         streetcode.Toponyms.AddRange(await _repositoryWrapper.ToponymRepository.GetAllAsync(x => toponymsName.Contains(x.StreetName)));

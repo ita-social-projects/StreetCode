@@ -28,7 +28,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
     {
         var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync();
 
-        if (subtitles is null)
+        if (!subtitles.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnySubtitles"].Value;
 

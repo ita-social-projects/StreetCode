@@ -5,9 +5,10 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
 {
     public class FindFileInStorageAsMemoryStreamTests : BlobServiceTestBase
     {
-        public FindFileInStorageAsMemoryStreamTests() : base(new BlobStorageFixture(), "find-as-memory-stream-test")
+        public FindFileInStorageAsMemoryStreamTests()
+            : base(new BlobStorageFixture(), "find-as-memory-stream-test")
         {
-            _fixture.SeedImage(_seededFileName);
+            this.Fixture.SeedImage(this.SeededFileName);
         }
 
         [Theory]
@@ -15,8 +16,8 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
         public void ShouldReturnValidMemoryStream_FileExists(string extension)
         {
             // Act
-            string validFileName = $"{_seededFileName}.{extension}";
-            MemoryStream memoryStream = _fixture.blobService.FindFileInStorageAsMemoryStream(validFileName);
+            string validFileName = $"{this.SeededFileName}.{extension}";
+            MemoryStream memoryStream = this.Fixture.BlobService.FindFileInStorageAsMemoryStream(validFileName);
 
             // Assert
             Assert.Multiple(() =>
@@ -31,15 +32,15 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
         public void ShouldReturnError_NoSuchFile(string nonExistingFileName)
         {
             // Arrange
-            MemoryStream memoryStream = null;
+            MemoryStream? memoryStream = null;
 
             // Act
-            void action() => memoryStream = _fixture.blobService.FindFileInStorageAsMemoryStream(nonExistingFileName);
+            void Action() => memoryStream = this.Fixture.BlobService.FindFileInStorageAsMemoryStream(nonExistingFileName);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.Throws<FileNotFoundException>(action);
+                Assert.Throws<FileNotFoundException>(Action);
                 Assert.Null(memoryStream);
             });
         }
@@ -49,15 +50,15 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
         public void ShouldThrowException_WhenInvalidFileName(string notValidFileName)
         {
             // Arrange
-            MemoryStream memoryStream = null;
+            MemoryStream? memoryStream = null;
 
             // Act
-            void action() => memoryStream = _fixture.blobService.FindFileInStorageAsMemoryStream(notValidFileName);
+            void Action() => memoryStream = this.Fixture.BlobService.FindFileInStorageAsMemoryStream(notValidFileName);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.Throws<IndexOutOfRangeException>(action);
+                Assert.Throws<IndexOutOfRangeException>(Action);
                 Assert.Null(memoryStream);
             });
         }

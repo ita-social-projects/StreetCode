@@ -18,29 +18,6 @@ public class HangfireAuthorizationFilterTests
             new object[] { string.Empty },
         };
 
-    private class MockDashboardContext : DashboardContext
-    {
-        public MockDashboardContext([NotNull] JobStorage storage, [NotNull] DashboardOptions options)
-            : base(storage, options)
-        {
-        }
-    }
-
-    public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
-    {
-        private readonly string _userRole;
-
-        public MockHangfireDashboardAuthorizationFilter(string userRole)
-        {
-            this._userRole = userRole;
-        }
-
-        public override ClaimsPrincipal GetUser(DashboardContext context)
-        {
-            return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, _userRole) }));
-        }
-    }
-
     [Fact]
     public void IsAdmin_UserIsAdmin_ReturnsTrue()
     {
@@ -97,5 +74,28 @@ public class HangfireAuthorizationFilterTests
 
         // Assert
         Assert.False(result);
+    }
+
+    public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
+    {
+        private readonly string userRole;
+
+        public MockHangfireDashboardAuthorizationFilter(string userRole)
+        {
+            this.userRole = userRole;
+        }
+
+        public override ClaimsPrincipal GetUser(DashboardContext context)
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, this.userRole) }));
+        }
+    }
+
+    private class MockDashboardContext : DashboardContext
+    {
+        public MockDashboardContext([NotNull] JobStorage storage, [NotNull] DashboardOptions options)
+            : base(storage, options)
+        {
+        }
     }
 }

@@ -1,35 +1,31 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using System.Net;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Additional;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
-using System.Net;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
     public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private Subtitle _testSubtitle;
+        private readonly Subtitle testSubtitle;
 
         public SubtitleControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Subtitle")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this._testSubtitle = SubtitleExtracter.Extract(uniqueId);
-        }
-
-        public override void Dispose()
-        {
-            SubtitleExtracter.Remove(this._testSubtitle);
+            this.testSubtitle = SubtitleExtracter.Extract(uniqueId);
         }
 
         [Fact]
         public async Task GetAll_ReturnSuccess()
         {
-            var response = await this.client.GetAllAsync();
+            var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -38,9 +34,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetById_ReturnSuccessContent()
         {
-            Subtitle expectedSubtitle = this._testSubtitle;
+            Subtitle expectedSubtitle = this.testSubtitle;
 
-            var response = await this.client.GetByIdAsync(expectedSubtitle.Id);
+            var response = await this.Client.GetByIdAsync(expectedSubtitle.Id);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
 
@@ -55,7 +51,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             int incorrectId = -100;
-            var response = await this.client.GetByIdAsync(incorrectId);
+            var response = await this.Client.GetByIdAsync(incorrectId);
 
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
@@ -65,14 +61,24 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         [Fact]
         public async Task GetByStreetcodeId_ReturnSuccess()
         {
-            int streetcodeId = this._testSubtitle.StreetcodeId;
-            var response = await this.client.GetByStreetcodeId(streetcodeId);
+            int streetcodeId = this.testSubtitle.StreetcodeId;
+            var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
 
             Assert.True(response.IsSuccessful);
             Assert.NotNull(returnedValue);
             Assert.Equal(streetcodeId, returnedValue.StreetcodeId);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                SubtitleExtracter.Remove(this.testSubtitle);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

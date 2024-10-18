@@ -32,8 +32,9 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
 
         if (transactLink is null)
         {
-            if (await _repositoryWrapper.StreetcodeRepository
-                .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
+            var streetcode = await _repositoryWrapper.StreetcodeRepository
+                .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId);
+            if (streetcode == null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
                 _logger.LogError(request, errorMsg);

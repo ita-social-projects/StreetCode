@@ -184,7 +184,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
                 mockStringLocalizerFailedToValidate.Object,
                 mockStringLocalizerFieldNames.Object);
 
-            var query = new CreateTagCommand(tagCreateDTO);
+            var query = new CreateTagQuery(tagCreateDTO);
             var cancellationToken = CancellationToken.None;
 
             var result = await handler.Handle(query, cancellationToken);

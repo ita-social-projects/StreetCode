@@ -30,9 +30,9 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 .FindAll(
                     predicate: sArtSlide => sArtSlide.StreetcodeId == request.StreetcodeId,
                     include: sArtSlide => sArtSlide
-                        .Include(sArtSlide => sArtSlide.StreetcodeArts)
+                        .Include(sArtSlide => sArtSlide.StreetcodeArts!)
                         .ThenInclude(sArt => sArt.Art)
-                        .ThenInclude(art => art.Image) !)
+                        .ThenInclude(art => art!.Image) !)
                 .Skip((request.FromSlideN - 1) * request.AmoutOfSlides)
                 .Take(request.AmoutOfSlides);
 
@@ -50,11 +50,9 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             {
                 foreach (var artDto in slideDto.StreetcodeArts)
                 {
-                    var image = artDto?.Art?.Image;
-
-                    if (image != null && image.BlobName != null)
+                    if (artDto.Art.Image != null && artDto.Art.Image.BlobName != null)
                     {
-                        artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName);
+                        artDto.Art.Image.Base64 = _blobService.FindFileInStorageAsBase64(artDto.Art.Image.BlobName);
                     }
                 }
             }

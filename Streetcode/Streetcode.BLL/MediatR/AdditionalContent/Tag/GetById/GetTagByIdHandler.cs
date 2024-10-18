@@ -3,9 +3,8 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent;
-using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
-using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
@@ -31,7 +30,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
 
         if (tag is null)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindTagWithCorrespondingId", request.Id].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindTagWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

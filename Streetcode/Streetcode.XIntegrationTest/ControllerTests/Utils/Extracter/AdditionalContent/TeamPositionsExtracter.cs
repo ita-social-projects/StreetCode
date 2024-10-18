@@ -2,7 +2,7 @@
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 
-public class TeamPositionsExtracter
+public static class TeamPositionsExtracter
 {
     public static Positions Extract(int positionId)
     {
@@ -16,5 +16,18 @@ public class TeamPositionsExtracter
     public static void Remove(Positions entity)
     {
         BaseExtracter.RemoveByPredicate<Positions>(position => position.Id == entity.Id);
+    }
+
+    public static void AddTeamMemberPositions(int teamMemberId, int positionsId)
+    {
+        TeamMemberPositions teamMemberPositions = new TeamMemberPositions()
+        {
+            TeamMemberId = teamMemberId,
+            PositionsId = positionsId,
+        };
+        BaseExtracter.Extract(
+            teamMemberPositions,
+            strArt => strArt.TeamMemberId == teamMemberId && strArt.PositionsId == positionsId,
+            false);
     }
 }

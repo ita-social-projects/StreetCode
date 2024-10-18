@@ -2,11 +2,9 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -32,11 +30,11 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
             .GetAllAsync(
                 t => t.StreetcodeId == request.StreetcodeId,
-                include: q => q.Include(t => t.Tag));
+                include: q => q.Include(t => t.Tag!));
 
-        if (tagIndexed is null || request.StreetcodeId < 1)
+        if (!tagIndexed.Any() || request.StreetcodeId < 1)
         {
-            string errorMsg = _stringLocalizerCannotFind?["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

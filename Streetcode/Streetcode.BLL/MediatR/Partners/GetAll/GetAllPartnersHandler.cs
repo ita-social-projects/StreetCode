@@ -2,17 +2,19 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Entities.News;
+using Streetcode.DAL.Helpers;
+using Streetcode.DAL.Entities.Partners;
+using Streetcode.BLL.DTO.News;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAll;
 
-public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result<IEnumerable<PartnerDTO>>>
+public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result<GetAllPartnersResponseDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -27,22 +29,30 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
         _stringLocalizeCannotFind = stringLocalizeCannotFind;
     }
 
-    public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
+    public Task<Result<GetAllPartnersResponseDTO>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
-        var partners = await _repositoryWrapper
-            .PartnersRepository
-            .GetAllAsync(
-                include: p => p
-                    .Include(pl => pl.PartnerSourceLinks)
-                    .Include(p => p.Streetcodes));
+        PaginationResponse<Partner> paginationResponse = _repositoryWrapper
+                .PartnersRepository
+                .GetAllPaginated(
+                    request.page,
+                    request.pageSize,
+                    include: partnersCollection => partnersCollection
+                        .Include(pl => pl.PartnerSourceLinks)
+                        .Include(p => p.Streetcodes));
 
-        if (partners is null)
+        if (paginationResponse is null)
         {
-            string? errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
+            string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            return Task.FromResult(Result.Fail<GetAllPartnersResponseDTO>(new Error(errorMsg)));
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<PartnerDTO>>(partners));
+        GetAllPartnersResponseDTO getAllPartnersResponseDTO = new GetAllPartnersResponseDTO()
+        {
+            TotalAmount = paginationResponse.TotalItems,
+            Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginationResponse.Entities),
+        };
+
+        return Task.FromResult(Result.Ok(getAllPartnersResponseDTO));
     }
 }

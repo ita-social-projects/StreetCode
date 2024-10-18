@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
@@ -30,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
         {
             var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
 
-            if (terms is null)
+            if (!terms.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTerm"].Value;
                 _logger.LogError(request, errorMsg);

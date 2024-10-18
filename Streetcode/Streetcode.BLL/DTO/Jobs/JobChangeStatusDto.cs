@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Streetcode.BLL.DTO.Jobs
+﻿namespace Streetcode.BLL.DTO.Jobs
 {
-	public class JobChangeStatusDto
+    public class JobChangeStatusDto
 	{
 		public int Id { get; set; }
 		public bool Status { get; set; }

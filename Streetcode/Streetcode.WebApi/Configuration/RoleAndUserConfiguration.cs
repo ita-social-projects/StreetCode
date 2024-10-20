@@ -71,7 +71,7 @@ namespace Streetcode.WebApi.Configuration
             using IServiceScope localScope = serviceProvider.CreateScope();
             UserManager<User> userManager = localScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-            User? user = await userManager!.FindByEmailAsync(email);
+            User? user = await userManager.FindByEmailAsync(email);
 
             if (user is null)
             {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.MediatR.Instagram.GetAll;
+using Streetcode.DAL.Entities.Instagram;
 
 namespace Streetcode.WebApi.Controllers.Instagram;
     public class InstagramController : BaseApiController

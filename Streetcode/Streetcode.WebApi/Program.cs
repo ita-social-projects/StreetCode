@@ -5,7 +5,6 @@ using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
-using Streetcode.BLL.Middleware;
 using Streetcode.WebApi.Hangfire;
 using Streetcode.WebApi.Middleware;
 using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;

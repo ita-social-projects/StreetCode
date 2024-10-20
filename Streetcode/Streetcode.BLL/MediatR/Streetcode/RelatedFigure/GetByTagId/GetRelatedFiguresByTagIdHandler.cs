@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published &&
-                  sc.Tags.Select(t => t.Id).Any(tag => tag == request.tagId),
+                  sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId),
                 include: scl => scl
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));
@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
             if (!streetcodes.Any())
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.tagId].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.TagId].Value;
                 _logger.LogError(request, errorMsg);
 
                 return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);

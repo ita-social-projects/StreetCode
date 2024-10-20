@@ -2,7 +2,6 @@ using System.Diagnostics.CodeAnalysis;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.WebApi.Utils;
 

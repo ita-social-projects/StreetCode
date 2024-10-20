@@ -3,8 +3,8 @@ using Hangfire;
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Moq;
-using Streetcode.BLL.Services.Hangfire;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Hangfire;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Hangfire;
@@ -22,7 +22,7 @@ public class HangfireAuthorizationFilterTests
     public void IsAdmin_UserIsAdmin_ReturnsTrue()
     {
         // Arrange
-        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, nameof(UserRole.Admin).ToString()) }));
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, nameof(UserRole.Admin)) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
@@ -37,7 +37,7 @@ public class HangfireAuthorizationFilterTests
     public void IsAdmin_UserIsNotAdmin_ReturnsFalse(string role)
     {
         // Arrange
-        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }));
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, role) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
@@ -85,9 +85,9 @@ public class HangfireAuthorizationFilterTests
             this.userRole = userRole;
         }
 
-        public override ClaimsPrincipal GetUser(DashboardContext context)
+        protected override ClaimsPrincipal GetUser(DashboardContext context)
         {
-            return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, this.userRole) }));
+            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, this.userRole) }));
         }
     }
 

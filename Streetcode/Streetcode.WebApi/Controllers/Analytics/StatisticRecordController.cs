@@ -47,10 +47,9 @@ namespace Streetcode.WebApi.Controllers.Analytics
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-
-        public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDTO)
+        public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDto)
         {
-            return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDTO)));
+            return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDto)));
         }
 
         [HttpPut("{id:int}")]
@@ -58,7 +57,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-
         public async Task<IActionResult> Update(int id)
         {
             return HandleResult(await Mediator.Send(new UpdateCountStatisticRecordCommand(id)));
@@ -69,7 +67,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-
         public async Task<IActionResult> Delete(int id)
         {
             return HandleResult(await Mediator.Send(new DeleteStatisticRecordCommand(id)));

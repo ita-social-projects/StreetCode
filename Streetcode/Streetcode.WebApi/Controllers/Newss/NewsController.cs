@@ -67,9 +67,9 @@ namespace Streetcode.WebApi.Controllers.Newss
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateNewsDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Update(UpdateNewsDTO newsDTO)
+        public async Task<IActionResult> Update(UpdateNewsDTO newsDto)
         {
-            return HandleResult(await Mediator.Send(new UpdateNewsCommand(newsDTO)));
+            return HandleResult(await Mediator.Send(new UpdateNewsCommand(newsDto)));
         }
     }
 }

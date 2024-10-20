@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.DTO.Partners.Create;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.Delete;
@@ -12,7 +11,6 @@ using Streetcode.BLL.MediatR.Partners.GetByIsKeyPartner;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.BLL.MediatR.Partners.Update;
-using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Partners;

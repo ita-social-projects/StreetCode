@@ -4,14 +4,14 @@ using AspNetCoreRateLimit;
 using Hangfire;
 using Streetcode.WebApi.Extensions;
 using Microsoft.AspNetCore.Localization;
-using Streetcode.BLL.Services.Hangfire;
 using Microsoft.AspNetCore.HttpOverrides;
+using Streetcode.WebApi.Hangfire;
 using Streetcode.WebApi.Middleware;
 using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureApplication();
+builder.Host.ConfigureApplication(builder);
 
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
 builder.Services.AddApplicationServices(builder.Configuration);
@@ -33,7 +33,7 @@ builder.Services.AddRateLimiter(options =>
 {
     options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
         partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
-        factory: partition => new FixedWindowRateLimiterOptions
+        factory: _ => new FixedWindowRateLimiterOptions
         {
             AutoReplenishment = true,
             PermitLimit = 3,

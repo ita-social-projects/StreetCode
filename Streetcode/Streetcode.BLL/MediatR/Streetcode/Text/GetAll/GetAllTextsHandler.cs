@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.AdditionalContent.Coordinates;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
@@ -30,7 +28,7 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
     {
         var texts = await _repositoryWrapper.TextRepository.GetAllAsync();
 
-        if (texts is null)
+        if (!texts.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyText"].Value;
             _logger.LogError(request, errorMsg);

@@ -2,14 +2,15 @@
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Image
 {
-    public class StreetcodeArtSlideExtracter
+    public static class StreetcodeArtSlideExtracter
     {
         public static DAL.Entities.Streetcode.StreetcodeArtSlide Extract(int id)
         {
             DAL.Entities.Streetcode.StreetcodeArtSlide testStreetcodeArtSlide = TestDataProvider.GetTestData<DAL.Entities.Streetcode.StreetcodeArtSlide>();
             testStreetcodeArtSlide.Id = id;
 
-            return BaseExtracter.Extract<DAL.Entities.Streetcode.StreetcodeArtSlide>(testStreetcodeArtSlide,
+            return BaseExtracter.Extract(
+                testStreetcodeArtSlide,
                 streetcodeArtSlide => streetcodeArtSlide.Id == id);
         }
 
@@ -24,9 +25,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Imag
             {
                 StreetcodeId = streetcodeId,
                 Template = (StreetcodeArtSlideTemplate)template,
-                Index = index
+                Index = index,
             };
-            BaseExtracter.Extract<DAL.Entities.Streetcode.StreetcodeArtSlide>(
+            BaseExtracter.Extract(
                 streetcodeArtSlide,
                 strArtSlide => strArtSlide.StreetcodeId == streetcodeId,
                 hasIdentity: false);

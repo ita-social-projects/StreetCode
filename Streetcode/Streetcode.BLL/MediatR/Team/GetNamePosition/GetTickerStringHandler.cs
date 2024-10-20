@@ -2,10 +2,8 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetNamePosition;
-using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 public class GetTickerStringHandler : IRequestHandler<GetTickerStringQuery, Result<string>>
@@ -21,13 +19,13 @@ public class GetTickerStringHandler : IRequestHandler<GetTickerStringQuery, Resu
 
     public async Task<Result<string>> Handle(GetTickerStringQuery request, CancellationToken cancellationToken)
     {
-        var positions = await _repository.PositionRepository.GetAllAsync(include: p => p.Include(src => src.TeamMembers));
+        var positions = await _repository.PositionRepository.GetAllAsync(include: p => p.Include(src => src.TeamMembers!));
         string a = string.Empty;
         StringBuilder memberString = new StringBuilder();
 
         foreach (var position in positions)
         {
-            if (position.TeamMembers.Count > 0)
+            if (position.TeamMembers is not null && position.TeamMembers.Count > 0)
             {
                 memberString.Append(position.Position);
                 memberString.Append(": ");

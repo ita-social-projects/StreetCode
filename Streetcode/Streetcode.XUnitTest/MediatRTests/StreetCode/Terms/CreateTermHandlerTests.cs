@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using FluentResults;
-using MediatR;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
@@ -13,76 +11,79 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 {
-	public class CreateTermHandlerTests
-	{
-		private readonly Mock<IRepositoryWrapper> _mockRepository;
-		private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerCannotConvertNull;
+    public class CreateTermHandlerTests
+    {
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> mockLocalizerCannotCreate;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerCannotConvertNull;
 
-        public CreateTermHandlerTests() 
-		{
-			_mockMapper = new();
-			_mockRepository = new();
-            _mockLogger = new Mock<ILoggerService>();
-			_mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-		}
+        public CreateTermHandlerTests()
+        {
+            this.mockMapper = new ();
+            this.mockRepository = new ();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+        }
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNumber) 
-		{
-        // Arrange
-        var createdTerm = GetTerm();
-        _mockRepository.Setup(x => x.TermRepository.Create(It.IsAny<Term>())).Returns(createdTerm);
-        _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldReturnSuccessfully_WhenTermAdded(int returnNumber)
+        {
+            // Arrange
+            var createdTerm = GetTerm();
+            this.mockRepository.Setup(x => x.TermRepository.Create(It.IsAny<Term>())).Returns(createdTerm);
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>())).Returns(createdTerm);
-        _mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>())).Returns(createdTerm);
+            this.mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
 
-        var handler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
+            var handler = new CreateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-        // Act
-        var result = await handler.Handle(new CreateTermCommand(GetTermCreateDTO()), CancellationToken.None);
+            // Act
+            var result = await handler.Handle(new CreateTermCommand(GetTermCreateDTO()), CancellationToken.None);
 
-  //Assert
-        Assert.True(result.IsSuccess);
-    }
+            // Assert
+            Assert.True(result.IsSuccess);
+        }
 
-		[Theory]
-		[InlineData(1)]
-		public async Task ShouldThrowException_WhenTryToAddNull(int returnNumber) 
-		{
-        //Arrange
-        _mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
-        _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+        [Theory]
+        [InlineData(1)]
+        public async Task ShouldThrowException_WhenTryToAddNull(int returnNumber)
+        {
+            // Arrange
+            this.mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
+            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-        _mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>()))
-          .Returns(GetNotExistingTerm()!);
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>()))
+              .Returns(GetNotExistingTerm() !);
 
-        var expectedError = "Cannot convert null to Term";
-            _mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
+            var expectedError = "Cannot convert null to Term";
+            this.mockLocalizerCannotConvertNull.Setup(x => x["CannotConvertNullToTerm"])
                 .Returns(new LocalizedString("CannotConvertNullToTerm", expectedError));
-        var hendler = new CreateTermHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerCannotConvertNull.Object);
+            var hendler = new CreateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerCannotConvertNull.Object);
 
-        //Act
-        var result = await hendler.Handle(new CreateTermCommand(GetNotExistingTermDTO()!), CancellationToken.None);
+            // Act
+            var result = await hendler.Handle(new CreateTermCommand(GetNotExistingTermDTO() !), CancellationToken.None);
 
-        //Assert
-        Assert.Multiple(
-          ()=>Assert.Equal(expectedError, result.Errors.First().Message),
-          ()=>Assert.False(result.IsSuccess)
-          );
-		}
+            // Assert
+            Assert.Multiple(
+              () => Assert.Equal(expectedError, result.Errors[0].Message),
+              () => Assert.False(result.IsSuccess));
+        }
 
-		private static Term GetTerm() => new();
-		private static TermCreateDTO GetTermCreateDTO() => new();
-        private static TermDTO GetTermDTO() => new();
+        private static Term GetTerm() => new ();
+
+        private static TermCreateDTO GetTermCreateDTO() => new ();
+
+        private static TermDTO GetTermDTO() => new ();
+
         private static Term? GetNotExistingTerm() => null;
-		private static TermCreateDTO? GetNotExistingTermDTO() => null;
-	}
+
+        private static TermCreateDTO? GetNotExistingTermDTO() => null;
+    }
 }

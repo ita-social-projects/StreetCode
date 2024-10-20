@@ -16,7 +16,7 @@ public class Response
     [Required]
     [MaxLength(50)]
     [EmailAddress]
-    public string Email { get; set; }
+    public string Email { get; set; } = null!;
     [MaxLength(1000)]
     public string? Description { get; set; }
 }

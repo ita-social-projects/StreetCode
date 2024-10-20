@@ -98,4 +98,27 @@ public class HangfireAuthorizationFilterTests
         // Assert
         Assert.False(result);
     }
+
+    public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
+    {
+        private readonly string userRole;
+
+        public MockHangfireDashboardAuthorizationFilter(string userRole)
+        {
+            this.userRole = userRole;
+        }
+
+        public override ClaimsPrincipal GetUser(DashboardContext context)
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, this.userRole) }));
+        }
+    }
+
+    private class MockDashboardContext : DashboardContext
+    {
+        public MockDashboardContext([NotNull] JobStorage storage, [NotNull] DashboardOptions options)
+            : base(storage, options)
+        {
+        }
+    }
 }

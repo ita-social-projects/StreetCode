@@ -4,6 +4,7 @@
 		<TargetFramework>net7.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<NoWarn>SA1200,SA1135,SA1600,SA1633</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -46,6 +47,10 @@
 		<ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
 		<ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
 		<ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Validators\Analytics\" />
 	</ItemGroup>
 
 </Project>

@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
@@ -31,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.GetAll
                 .TeamLinkRepository
                 .GetAllAsync();
 
-            if (teamLinks is null)
+            if (!teamLinks.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeamLinks"].Value;
                 _logger.LogError(request, errorMsg);

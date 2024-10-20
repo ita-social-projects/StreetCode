@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
@@ -29,7 +28,7 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
     {
         var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
 
-        if (facts is null)
+        if (!facts.Any())
         {
             string errorMsg = _stringLocalizeCannotFind["CannotFindAnyFact"].Value;
             _logger.LogError(request, errorMsg);

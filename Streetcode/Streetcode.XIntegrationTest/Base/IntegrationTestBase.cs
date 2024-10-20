@@ -5,8 +5,6 @@ namespace Streetcode.XIntegrationTest
 {
     public class IntegrationTestBase
     {
-        protected IConfigurationRoot Configuration { get; }
-
         public IntegrationTestBase()
         {
             Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "IntegrationTests");
@@ -17,5 +15,7 @@ namespace Streetcode.XIntegrationTest
 
             this.Configuration = configBuilder.Build();
         }
+
+        protected IConfigurationRoot Configuration { get; }
     }
 }

@@ -6,5 +6,5 @@ public class PartnerSourceLinkDTO
 {
     public int Id { get; set; }
     public LogoTypeDTO LogoType { get; set; }
-    public UrlDTO TargetUrl { get; set; }
+    public UrlDTO TargetUrl { get; set; } = null!;
 }

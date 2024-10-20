@@ -25,12 +25,12 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
             try
             {
                 /* read comment at Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update line 29 */
-                var context = _mapper.Map<DAL.Entities.Timeline.HistoricalContext>(request.context);
-                var checkIfContextExists = await _repositoryWrapper.HistoricalContextRepository.GetFirstOrDefaultAsync(j => j.Title == request.context.Title);
+                var context = _mapper.Map<DAL.Entities.Timeline.HistoricalContext>(request.HistoricalContext);
+                var checkIfContextExists = await _repositoryWrapper.HistoricalContextRepository.GetFirstOrDefaultAsync(j => j.Title == request.HistoricalContext.Title);
 
                 if (checkIfContextExists is not null)
                 {
-                    string exceptionMessege = $"Context with title '{request.context.Title}' is already exists.";
+                    string exceptionMessege = $"Context with title '{request.HistoricalContext.Title}' is already exists.";
                     _logger.LogError(request, exceptionMessege);
                     return Result.Fail(exceptionMessege);
                 }

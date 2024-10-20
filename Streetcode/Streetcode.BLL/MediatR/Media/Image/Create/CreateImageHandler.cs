@@ -37,13 +37,6 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
-        if (request.Image.Alt is null)
-        {
-            string errorMsg = _stringLocalizerCannot["CannotCreateImageWithoutAlt"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
-        }
-
         string hashBlobStorageName = _blobService.SaveFileInStorage(
             request.Image.BaseFormat,
             request.Image.Title,
@@ -66,7 +59,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         }
         else
         {
-            string? errorMsg = _stringLocalizer?["FailedToCreateAnImage"].Value;
+            string errorMsg = _stringLocalizer["FailedToCreateAnImage"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
-using Streetcode.BLL.DTO.Media;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetAll;
 
@@ -32,7 +31,7 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
     {
         var audios = await _repositoryWrapper.AudioRepository.GetAllAsync();
 
-        if (audios is null)
+        if (!audios.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyAudios"].Value;
             _logger.LogError(request, errorMsg);

@@ -15,24 +15,28 @@ namespace Streetcode.WebApi.Controllers.Newss
     public class NewsController : BaseApiController
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
             return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id)));
         }
 
         [HttpGet("{url}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
         public async Task<IActionResult> GetByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url)));
         }
 
         [HttpGet("{url}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTOWithURLs))]
         public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
@@ -40,6 +44,7 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(NewsDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create([FromBody] NewsCreateDTO partner)
@@ -49,6 +54,7 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete(int id)
@@ -58,6 +64,7 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPut]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateNewsDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update(UpdateNewsDTO newsDto)

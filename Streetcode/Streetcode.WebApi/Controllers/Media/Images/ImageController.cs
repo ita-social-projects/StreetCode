@@ -15,18 +15,21 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class ImageController : BaseApiController
 {
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllImagesQuery()));
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
        return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
@@ -34,6 +37,7 @@ public class ImageController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDTO))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
@@ -43,6 +47,7 @@ public class ImageController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDTO))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDTO image)
@@ -52,6 +57,7 @@ public class ImageController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete([FromRoute] int id)
@@ -60,6 +66,7 @@ public class ImageController : BaseApiController
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MemoryStream))]
     public async Task<IActionResult> GetBaseImage([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetBaseImageQuery(id)));

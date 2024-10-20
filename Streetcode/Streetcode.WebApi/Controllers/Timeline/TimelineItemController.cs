@@ -9,12 +9,14 @@ namespace Streetcode.WebApi.Controllers.Timeline;
 public class TimelineItemController : BaseApiController
 {
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimelineItemDTO>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllTimelineItemsQuery()));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TimelineItemDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetTimelineItemByIdQuery(id)));
@@ -22,6 +24,7 @@ public class TimelineItemController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [CompressResponse]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimelineItemDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId)));

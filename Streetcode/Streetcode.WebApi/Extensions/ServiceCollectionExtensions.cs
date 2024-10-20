@@ -1,4 +1,5 @@
 using System.Text;
+using FluentValidation;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,6 +33,11 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.MediatR.Newss.Create;
+using Streetcode.BLL.MediatR.Newss.Update;
+using Streetcode.BLL.PipelineBehaviour;
+using Streetcode.BLL.Validators.SourceLinkCategory;
+using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
@@ -49,7 +55,11 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
         services.AddScoped<ILoggerService, LoggerService>();
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
 
+        services.AddTransient<IValidator<CreateNewsCommand>, CreateNewsValidator>();
+        services.AddTransient<IValidator<UpdateNewsCommand>, UpdateNewsValidator>();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
@@ -137,7 +147,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
-        services.AddControllers();
+        services.AddControllers(opt => opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
     }
 
     public static void AddSwaggerServices(this IServiceCollection services)

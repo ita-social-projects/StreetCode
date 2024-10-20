@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Create;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Delete;
@@ -14,24 +15,28 @@ namespace Streetcode.WebApi.Controllers.AdditionalContent;
 public class TagController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDTO))]
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllTagsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllTagsQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetTagByIdQuery(id)));
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetTagByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{title}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     public async Task<IActionResult> GetTagByTitle([FromRoute] string title)
     {
         return HandleResult(await Mediator.Send(new GetTagByTitleQuery(title)));
@@ -39,6 +44,7 @@ public class TagController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Create([FromBody] CreateTagDTO tagTitle)
@@ -48,6 +54,7 @@ public class TagController : BaseApiController
 
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete(int id)
@@ -57,6 +64,7 @@ public class TagController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Update([FromBody] UpdateTagDTO tagDto)

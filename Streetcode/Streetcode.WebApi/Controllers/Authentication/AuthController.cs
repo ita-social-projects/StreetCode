@@ -12,18 +12,21 @@ namespace Streetcode.WebApi.Controllers.Authentication
     public class AuthController : BaseApiController
     {
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
         {
-            return HandleResult(await Mediator.Send(new LoginQuery(loginDto)));
+            return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDto)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RegisterResponseDTO))]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDTO)
         {
-            return HandleResult(await Mediator.Send(new RegisterQuery(registerDto)));
+            return HandleResult(await Mediator.Send(new RegisterQuery(registerDTO)));
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefreshTokenResponceDTO))]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO token)
         {
             return HandleResult(await Mediator.Send(new RefreshTokenQuery(token)));

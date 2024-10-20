@@ -15,24 +15,28 @@ namespace Streetcode.WebApi.Controllers.Analytics
     public class StatisticRecordController : BaseApiController
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
         public async Task<IActionResult> GetAll()
         {
             return HandleResult(await Mediator.Send(new GetAllStatisticRecordsQuery()));
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordDTO))]
         public async Task<IActionResult> GetByQrId(int id)
         {
             return HandleResult(await Mediator.Send(new GetStatisticRecordByQrIdQuery(id)));
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ExistByQrId(int id)
         {
             return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id)));
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
         public async Task<IActionResult> GetAllByStreetcodeId(int id)
         {
             return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
@@ -40,6 +44,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDTO))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDto)
@@ -49,6 +54,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Update(int id)
@@ -58,6 +64,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete(int id)

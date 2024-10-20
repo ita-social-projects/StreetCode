@@ -17,7 +17,6 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
-using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.WebApi.Extensions
@@ -32,10 +31,9 @@ namespace Streetcode.WebApi.Extensions
             var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
             var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
             string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath") !;
-            var repo = new RepositoryWrapper(dbContext);
-            var blobService = new BlobService(blobOptions, repo);
-            const string initialDataImagePath = "../Streetcode.DAL/InitialData/images.json";
-            const string initialDataAudioPath = "../Streetcode.DAL/InitialData/audios.json";
+            var blobService = new BlobService(blobOptions);
+            const string initialDataImagePath = "../../../TestData/InitialData/images.json";
+            const string initialDataAudioPath = "../../../TestData/InitialData/audios.json";
             if (!dbContext.Images.Any())
             {
                 string imageJson = await File.ReadAllTextAsync(initialDataImagePath, Encoding.UTF8);
@@ -318,7 +316,7 @@ namespace Streetcode.WebApi.Extensions
 
             if (!dbContext.Roles.Any())
             {
-                await RoleAndUserConfiguration.AddUsersAndRoles(app.Services);
+                await RoleAndUserConfiguration.AddUsersAndRoles(scope.ServiceProvider);
             }
 
             if (!dbContext.News.Any())

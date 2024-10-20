@@ -2,10 +2,10 @@
 {
     public class CorsSettings
     {
-        public string[] AllowedOrigins { get; set; }
-        public string[] AllowedHeaders { get; set; }
-        public string[] AllowedMethods { get; set; }
-        public string[] ExposedHeaders { get; set; }
+        public string[] AllowedOrigins { get; set; } = null!;
+        public string[] AllowedHeaders { get; set; } = null!;
+        public string[] AllowedMethods { get; set; } = null!;
+        public string[] ExposedHeaders { get; set; } = null!;
         public int PreflightMaxAge { get; set; }
     }
 }

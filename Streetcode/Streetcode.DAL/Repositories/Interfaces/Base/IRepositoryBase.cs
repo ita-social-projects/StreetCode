@@ -1,9 +1,7 @@
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.DAL.Helpers;
-using Streetcode.DAL.Persistence;
 
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -28,6 +26,8 @@ public interface IRepositoryBase<T>
 
     void DeleteRange(IEnumerable<T> items);
 
+    void Attach(T entity);
+
     EntityEntry<T> Entry(T entity);
 
     public Task ExecuteSqlRaw(string query);
@@ -37,8 +37,8 @@ public interface IRepositoryBase<T>
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default);
 
     public PaginationResponse<T> GetAllPaginated(
-        ushort pageNumber = default,
-        ushort pageSize = default,
+        ushort? pageNumber = null,
+        ushort? pageSize = null,
         Expression<Func<T, T>>? selector = default,
         Expression<Func<T, bool>>? predicate = default,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = default,

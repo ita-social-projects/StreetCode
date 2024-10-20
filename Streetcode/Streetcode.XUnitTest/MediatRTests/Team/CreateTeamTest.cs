@@ -1,32 +1,32 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Org.BouncyCastle.Crypto;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
+
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Team
 {
     public class CreateTeamTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepository;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
+        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
 
         public CreateTeamTest()
         {
-            _mockMapper = new Mock<IMapper>();
-            _mockRepository = new Mock<IRepositoryWrapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockRepository = new Mock<IRepositoryWrapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -34,13 +34,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var teamMember = GetTeamMember(1);
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup();
+            this.MapperSetup(teamMember);
+            this.BasicRepositorySetup(teamMember);
+            this.GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
+
             // Assert
             Assert.True(result.IsSuccess);
         }
@@ -52,16 +54,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             const string exceptionMessage = "Failed to create a team member";
 
             var teamMember = GetTeamMember(1);
-            MapperSetup(teamMember);
-            GetsAsyncRepositorySetup();
-            _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
-            _mockRepository.Setup(repo => repo.SaveChanges()).Throws(new Exception(exceptionMessage));
+            this.MapperSetup(teamMember);
+            this.GetsAsyncRepositorySetup();
+            this.mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
+            this.mockRepository.Setup(repo => repo.SaveChanges()).Throws(new Exception(exceptionMessage));
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
+
             // Assert
-            Assert.Equal(exceptionMessage, result.Errors.First().Message);
+            Assert.Equal(exceptionMessage, result.Errors[0].Message);
         }
 
         [Fact]
@@ -69,13 +73,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var teamMember = GetTeamMember(1);
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup();
+            this.MapperSetup(teamMember);
+            this.BasicRepositorySetup(teamMember);
+            this.GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
+
             // Assert
             Assert.IsType<TeamMemberDTO>(result.Value);
         }
@@ -89,93 +95,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var newPositions = new List<PositionDTO> { newPosition };
             var teamMember = GetTeamMember(1);
             var teamMemberDTO = GetTeamMemberDTO(newPositions);
-            
-            MapperSetup(teamMember);
-            BasicRepositorySetup(teamMember);
-            GetsAsyncRepositorySetup();
-            _mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
-            _mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>()))
+
+            this.MapperSetup(teamMember);
+            this.BasicRepositorySetup(teamMember);
+            this.GetsAsyncRepositorySetup();
+            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
+            this.mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>()))
                 .Returns(new Positions());
 
-            var handler = new CreateTeamHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+
             // Act
             var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
+
             // Assert
             Assert.Multiple(
                 () => Assert.True(result.IsSuccess),
-                () => Assert.Equal(0, result.Value.Id)
-            );
+                () => Assert.Equal(0, result.Value.Id));
 
-            _mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
-            _mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
-        }
-
-        private void BasicRepositorySetup(TeamMember teamMember)
-        {
-            _mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
-
-            _mockRepository.Setup(repo => repo.SaveChanges());
-        }
-
-        private void GetsAsyncRepositorySetup(List<TeamMemberLink>? link=null, List<TeamMemberPositions>? memberPos = null)
-        {
-            var linkList = link ?? new List<TeamMemberLink>();
-            var posList = memberPos ?? new List<TeamMemberPositions>();
-
-            _mockRepository.Setup(repo => repo.TeamLinkRepository
-               .GetAllAsync(It.IsAny<Expression<Func<TeamMemberLink, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberLink>,
-               IIncludableQueryable<TeamMemberLink, object>>>())).ReturnsAsync(linkList);
-
-            _mockRepository.Setup(repo => repo.TeamPositionRepository
-                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
-                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
-        }
-
-        private void MapperSetupWithLinks(TeamMember member, TeamMemberCreateDTO dto)
-        {
-            _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
-                .Returns(member);
-
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberCreateDTO>(It.IsAny<object>()))
-                .Returns(dto);
-        }
-
-        private void MapperSetup(TeamMember member)
-        {
-            _mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
-                .Returns(member);
-
-            _mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
-                .Returns(new TeamMemberDTO());
-        }
-
-        private TeamMemberCreateDTO GetTeamMemberWithLinksDTO()
-        {
-            var teamMemberLink = new TeamMemberLinkCreateDTO { LogoType = (DAL.Enums.LogoType)10 };
-            return new TeamMemberCreateDTO
-            {
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                ImageId = 1,
-                TeamMemberLinks = new List<TeamMemberLinkCreateDTO> { teamMemberLink },
-                Positions = new List<PositionDTO>()
-            };
-        }
-
-        private TeamMember GetTeamMemberWithLinks()
-        {
-            var teamMemberLink = new TeamMemberLink { LogoType = (DAL.Enums.LogoType)10 };
-            return new TeamMember
-            {
-                Id = 1,
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                ImageId = 1,
-                TeamMemberLinks = new List<TeamMemberLink> { teamMemberLink },
-                Positions = new List<Positions>()
-            };
+            this.mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
+            this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
         private static TeamMember GetTeamMember(int imageId = 0)
@@ -187,23 +126,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 Name = "Test",
                 Description = "Test",
                 IsMain = true,
-                Positions = new List<Positions>()
-            };
-        }
-
-        private static TeamMemberLink GetTeamMemberLink(int id)
-        {
-            return new TeamMemberLink
-            {
-                Id = id
-            };
-        }
-
-        private static TeamMemberPositions GetTeamMemberPositions(int positionsId)
-        {
-            return new TeamMemberPositions
-            {
-                PositionsId = positionsId
+                Positions = new List<Positions>(),
             };
         }
 
@@ -215,8 +138,37 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 Name = "Test",
                 Description = "Test",
                 IsMain = true,
-                Positions = newPositions
+                Positions = newPositions,
             };
+        }
+
+        private void BasicRepositorySetup(TeamMember teamMember)
+        {
+            this.mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
+
+            this.mockRepository.Setup(repo => repo.SaveChanges());
+        }
+
+        private void GetsAsyncRepositorySetup(List<TeamMemberLink>? link = null)
+        {
+            var linkList = link ?? new List<TeamMemberLink>();
+
+            this.mockRepository.Setup(repo => repo.TeamLinkRepository
+               .GetAllAsync(It.IsAny<Expression<Func<TeamMemberLink, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberLink>,
+               IIncludableQueryable<TeamMemberLink, object>>>())).ReturnsAsync(linkList);
+
+            this.mockRepository.Setup(repo => repo.TeamPositionRepository
+                .GetAllAsync(It.IsAny<Expression<Func<TeamMemberPositions, bool>>>(), It.IsAny<Func<IQueryable<TeamMemberPositions>,
+                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(new List<TeamMemberPositions>());
+        }
+
+        private void MapperSetup(TeamMember member)
+        {
+            this.mockMapper.Setup(mapper => mapper.Map<TeamMember>(It.IsAny<object>()))
+                .Returns(member);
+
+            this.mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
+                .Returns(new TeamMemberDTO());
         }
     }
 }

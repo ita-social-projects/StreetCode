@@ -14,10 +14,10 @@ namespace Streetcode.WebApi.Controllers.Timeline
     public class HistoricalContextController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<HistoricalContextDTO>))]
-        public async Task<IActionResult> GetAll()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllHistoricalContextDTO))]
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery()));
+            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]

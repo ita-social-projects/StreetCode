@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
-using Streetcode.BLL.DTO.Partners.Create;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.Delete;
@@ -12,7 +11,6 @@ using Streetcode.BLL.MediatR.Partners.GetByIsKeyPartner;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.BLL.MediatR.Partners.Update;
-using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Partners;
@@ -20,10 +18,10 @@ namespace Streetcode.WebApi.Controllers.Partners;
 public class PartnersController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDTO>))]
-    public async Task<IActionResult> GetAll()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPartnersResponseDTO))]
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllPartnersQuery()));
+        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize)));
     }
 
     [HttpGet]

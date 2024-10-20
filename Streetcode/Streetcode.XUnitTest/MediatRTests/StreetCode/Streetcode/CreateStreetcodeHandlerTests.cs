@@ -8,48 +8,29 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.DTO.Streetcode.Create;
 using Xunit;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
 {
     public class CreateStreetcodeHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
-        private readonly Mock<ILoggerService> _mockLoggerService;
-        private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> _mockStringLocalizerAnErrorOccurred;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockStringLocalizerFailedToCreate;
-        private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _mockStringLocalizerFailedToValidate;
-        private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _mockStringLocalizerFieldNames;
-        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> mockRepositoryWrapper;
+        private readonly Mock<ILoggerService> mockLoggerService;
+        private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> mockStringLocalizerAnErrorOccurred;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockStringLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockStringLocalizerFailedToValidate;
+        private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockStringLocalizerFieldNames;
+        private readonly Mock<IMapper> mockMapper;
 
         public CreateStreetcodeHandlerTests()
         {
-            _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-            _mockLoggerService = new Mock<ILoggerService>();
-            _mockMapper = new Mock<IMapper>();
-            _mockStringLocalizerAnErrorOccurred = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            _mockStringLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            _mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-            _mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-        }
-
-        private void SetupMockStreetcodeCreate()
-        {
-            _mockRepositoryWrapper.Setup(repo => repo.StreetcodeRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeContent>>()))
-                .Returns(Task.CompletedTask);
-        }
-
-        private void SetupMockStreetcodeImageCreate()
-        {
-            _mockRepositoryWrapper.Setup(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()))
-                .Returns(Task.CompletedTask);
-        }
-
-        private void SetupMockStreetcodeImageDetailsCreate()
-        {
-            _mockRepositoryWrapper.Setup(repo => repo.ImageDetailsRepository.CreateRangeAsync(It.IsAny<IEnumerable<ImageDetails>>()))
-                .Returns(Task.CompletedTask);
+            this.mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
+            this.mockLoggerService = new Mock<ILoggerService>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockStringLocalizerAnErrorOccurred = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
+            this.mockStringLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            this.mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+            this.mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
         }
 
         [Fact]
@@ -59,17 +40,17 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             var imageDetails = new List<ImageDetailsDto>
             {
                 new ImageDetailsDto { Alt = "Alt1" },
-                new ImageDetailsDto { Alt = "Alt2" }
+                new ImageDetailsDto { Alt = "Alt2" },
             };
-            SetupMockStreetcodeImageDetailsCreate();
+            this.SetupMockStreetcodeImageDetailsCreate();
             var handler = new CreateStreetcodeHandler(
-                _mockMapper.Object,
-                _mockRepositoryWrapper.Object,
-                _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object,
-                _mockStringLocalizerFailedToCreate.Object,
-                _mockStringLocalizerFailedToValidate.Object,
-                _mockStringLocalizerFieldNames.Object);
+                this.mockMapper.Object,
+                this.mockRepositoryWrapper.Object,
+                this.mockLoggerService.Object,
+                this.mockStringLocalizerAnErrorOccurred.Object,
+                this.mockStringLocalizerFailedToCreate.Object,
+                this.mockStringLocalizerFailedToValidate.Object,
+                this.mockStringLocalizerFieldNames.Object);
 
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesDetails(imageDetails);
@@ -82,20 +63,32 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             // Arrange
             StreetcodeContent streetcode = new StreetcodeContent();
             IEnumerable<int> imagesIds = new List<int> { 1, 2, 3 };
-            SetupMockStreetcodeImageCreate();
+            this.SetupMockStreetcodeImageCreate();
 
             var handler = new CreateStreetcodeHandler(
-                _mockMapper.Object,
-                _mockRepositoryWrapper.Object,
-                _mockLoggerService.Object,
-                _mockStringLocalizerAnErrorOccurred.Object,
-                _mockStringLocalizerFailedToCreate.Object,
-                _mockStringLocalizerFailedToValidate.Object,
-                _mockStringLocalizerFieldNames.Object);
+                this.mockMapper.Object,
+                this.mockRepositoryWrapper.Object,
+                this.mockLoggerService.Object,
+                this.mockStringLocalizerAnErrorOccurred.Object,
+                this.mockStringLocalizerFailedToCreate.Object,
+                this.mockStringLocalizerFailedToValidate.Object,
+                this.mockStringLocalizerFieldNames.Object);
 
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesAsync(streetcode, imagesIds);
             await action.Should().NotThrowAsync<HttpRequestException>();
+        }
+
+        private void SetupMockStreetcodeImageCreate()
+        {
+            this.mockRepositoryWrapper.Setup(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()))
+                .Returns(Task.CompletedTask);
+        }
+
+        private void SetupMockStreetcodeImageDetailsCreate()
+        {
+            this.mockRepositoryWrapper.Setup(repo => repo.ImageDetailsRepository.CreateRangeAsync(It.IsAny<IEnumerable<ImageDetails>>()))
+                .Returns(Task.CompletedTask);
         }
     }
 }

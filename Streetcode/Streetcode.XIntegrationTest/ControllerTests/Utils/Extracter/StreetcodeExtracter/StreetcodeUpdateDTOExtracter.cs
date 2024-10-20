@@ -1,4 +1,5 @@
-﻿using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
+﻿using System.Diagnostics.CodeAnalysis;
+using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Analytics.Update;
 using Streetcode.BLL.DTO.Media.Art;
@@ -21,20 +22,24 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter
 {
-    public class StreetcodeUpdateDTOExtracter
+    [SuppressMessage(
+        "Minor Code Smell",
+        "S101:Types should be named in PascalCase",
+        Justification = "DTOs are named this way throughout the project")]
+    public static class StreetcodeUpdateDTOExtracter
     {
-        private static SqlDbHelper _dbHelper;
+        private static SqlDbHelper dbHelper;
 
         static StreetcodeUpdateDTOExtracter()
         {
-            _dbHelper = BaseControllerTests.GetSqlDbHelper();
+            dbHelper = BaseControllerTests.GetSqlDbHelper();
         }
 
         public static StreetcodeUpdateDTO Extract(int id, int index, string transliterationUrl)
         {
             StreetcodeContent testStreetcode = StreetcodeContentExtracter.Extract(id, index, transliterationUrl);
             Image testImage = ImageExtracter.Extract(id);
-            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl, testImage);
+            return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl!, testImage);
         }
 
         public static void Remove(StreetcodeUpdateDTO entity)
@@ -43,11 +48,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
 
             foreach (var image in entity.Images)
             {
-                var imageBlob = _dbHelper.GetExistItemId<Image>(image.Id);
-                ImageExtracter.Remove(imageBlob);
+                var imageBlob = dbHelper.GetExistItemId<Image>(image.Id);
+                ImageExtracter.Remove(imageBlob!);
             }
 
-            foreach (var imageDetails in entity.ImagesDetails)
+            foreach (var imageDetails in entity.ImagesDetails!)
             {
                 BaseExtracter.RemoveById<ImageDetails>(imageDetails.Id);
             }

@@ -33,7 +33,14 @@ namespace Streetcode.WebApi.Configuration
 
             // Create hashed password.
             var password = new PasswordHasher<User>();
-            var hashed = password.HashPassword(initialAdmin, Environment.GetEnvironmentVariable("ADMIN_PASSWORD"));
+            var passwordEnvVariable = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+
+            if (passwordEnvVariable is null)
+            {
+                throw new ArgumentNullException(nameof(passwordEnvVariable), "Password in environment variables is not set and equals null.");
+            }
+
+            var hashed = password.HashPassword(initialAdmin, passwordEnvVariable);
             initialAdmin.PasswordHash = hashed;
 
             // Add initial admin.
@@ -64,7 +71,7 @@ namespace Streetcode.WebApi.Configuration
             using IServiceScope localScope = serviceProvider.CreateScope();
             UserManager<User> userManager = localScope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-            User? user = await userManager!.FindByEmailAsync(email);
+            User? user = await userManager.FindByEmailAsync(email);
 
             if (user is null)
             {

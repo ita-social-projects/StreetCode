@@ -32,6 +32,14 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
+
+        if (!relatedFigureIds.Any())
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
           predicate: sc => relatedFigureIds.Any(id => id == sc.Id) && sc.Status == DAL.Enums.StreetcodeStatus.Published,
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)

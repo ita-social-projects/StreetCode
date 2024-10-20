@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Jobs;
-using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Jobs.ChangeStatus;
 using Streetcode.BLL.MediatR.Jobs.Create;
 using Streetcode.BLL.MediatR.Jobs.Delete;
@@ -9,9 +8,6 @@ using Streetcode.BLL.MediatR.Jobs.GetActiveJobs;
 using Streetcode.BLL.MediatR.Jobs.GetAll;
 using Streetcode.BLL.MediatR.Jobs.GetById;
 using Streetcode.BLL.MediatR.Jobs.Update;
-using Streetcode.BLL.MediatR.Newss.Create;
-using Streetcode.BLL.MediatR.Newss.Delete;
-using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Jobs
@@ -19,10 +15,10 @@ namespace Streetcode.WebApi.Controllers.Jobs
 	public class JobController : BaseApiController
 	{
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<JobDto>))]
-		public async Task<IActionResult> GetAll()
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllJobsDTO))]
+		public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
 		{
-			return HandleResult(await Mediator.Send(new GetAllJobsQuery()));
+			return HandleResult(await Mediator.Send(new GetAllJobsQuery(page, pageSize)));
 		}
 
 		[HttpGet]

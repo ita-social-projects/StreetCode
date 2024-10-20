@@ -13,19 +13,21 @@ public static class WebApplicationExtensions
             using IServiceScope localScope = app.Services.CreateScope();
             var streetcodeContext = localScope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
             var pendingMigrations = await streetcodeContext.Database.GetPendingMigrationsAsync();
+            var migrations = pendingMigrations.ToList();
 
-            if (pendingMigrations.Any())
+            if (migrations.Any())
             {
-                logger.LogInformation("Pending migrations: {PendingMigrations}", string.Join(", ", pendingMigrations));
+                logger.LogInformation("Pending migrations: {PendingMigrations}", string.Join(", ", migrations));
                 var appliedMigrationsBefore = await streetcodeContext.Database.GetAppliedMigrationsAsync();
                 await streetcodeContext.Database.MigrateAsync();
                 logger.LogInformation("Migrations applied successfully.");
                 var appliedMigrationsAfter = await streetcodeContext.Database.GetAppliedMigrationsAsync();
                 var newlyAppliedMigrations = appliedMigrationsAfter.Except(appliedMigrationsBefore);
+                var appliedMigrations = newlyAppliedMigrations.ToList();
 
-                if (newlyAppliedMigrations.Any())
+                if (appliedMigrations.Any())
                 {
-                    logger.LogInformation("Newly applied migrations: {NewlyAppliedMigrations}", string.Join(", ", newlyAppliedMigrations));
+                    logger.LogInformation("Newly applied migrations: {NewlyAppliedMigrations}", string.Join(", ", appliedMigrations));
                 }
                 else
                 {

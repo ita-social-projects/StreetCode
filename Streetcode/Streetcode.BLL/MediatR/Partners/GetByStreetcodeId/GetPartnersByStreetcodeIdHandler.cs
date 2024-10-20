@@ -42,7 +42,7 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
                 predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id) || p.IsVisibleEverywhere,
                 include: p => p.Include(pl => pl.PartnerSourceLinks));
 
-        if (partners is null)
+        if (!partners.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

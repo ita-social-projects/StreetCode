@@ -3,8 +3,8 @@ using Hangfire;
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Moq;
-using Streetcode.BLL.Services.Hangfire;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Hangfire;
 using Xunit;
 
 namespace Streetcode.XUnitTest.Hangfire;
@@ -18,34 +18,11 @@ public class HangfireAuthorizationFilterTests
             new object[] { string.Empty },
         };
 
-    private class MockDashboardContext : DashboardContext
-    {
-        public MockDashboardContext([NotNull] JobStorage storage, [NotNull] DashboardOptions options)
-            : base(storage, options)
-        {
-        }
-    }
-
-    public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
-    {
-        private readonly string _userRole;
-
-        public MockHangfireDashboardAuthorizationFilter(string userRole)
-        {
-            this._userRole = userRole;
-        }
-
-        public override ClaimsPrincipal GetUser(DashboardContext context)
-        {
-            return new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, _userRole) }));
-        }
-    }
-
     [Fact]
     public void IsAdmin_UserIsAdmin_ReturnsTrue()
     {
         // Arrange
-        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, nameof(UserRole.Admin).ToString()) }));
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, nameof(UserRole.Admin)) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
@@ -60,7 +37,7 @@ public class HangfireAuthorizationFilterTests
     public void IsAdmin_UserIsNotAdmin_ReturnsFalse(string role)
     {
         // Arrange
-        var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }));
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, role) }));
         var filter = new HangfireDashboardAuthorizationFilter();
 
         // Act
@@ -97,5 +74,28 @@ public class HangfireAuthorizationFilterTests
 
         // Assert
         Assert.False(result);
+    }
+
+    public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
+    {
+        private readonly string userRole;
+
+        public MockHangfireDashboardAuthorizationFilter(string userRole)
+        {
+            this.userRole = userRole;
+        }
+
+        protected override ClaimsPrincipal GetUser(DashboardContext context)
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, this.userRole) }));
+        }
+    }
+
+    private class MockDashboardContext : DashboardContext
+    {
+        public MockDashboardContext([NotNull] JobStorage storage, [NotNull] DashboardOptions options)
+            : base(storage, options)
+        {
+        }
     }
 }

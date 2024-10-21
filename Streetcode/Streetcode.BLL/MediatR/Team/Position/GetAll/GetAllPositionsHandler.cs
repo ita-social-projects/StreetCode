@@ -34,7 +34,8 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
                 .PositionRepository
                 .GetAllPaginated(
                     request.page,
-                    request.pageSize);
+                    request.pageSize,
+                    ascendingSortKeySelector: position => position.Position!);
 
             if (paginationResponse is null)
             {

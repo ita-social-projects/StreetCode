@@ -1,4 +1,5 @@
-﻿using DbUp;
+﻿using System.Reflection;
+using DbUp;
 using Microsoft.Extensions.Configuration;
 
 public class Program
@@ -8,15 +9,12 @@ public class Program
         string rootDirectory = GetRootFolderPath();
         string pathToSqlScripts = Path.Combine(
             rootDirectory,
-            "Streetcode",
-            "Streetcode.DAL",
-            "Persistence",
             "ScriptsMigration");
 
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(rootDirectory, "Streetcode", "DbUpdate"))
+            .SetBasePath(rootDirectory)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")
@@ -24,6 +22,7 @@ public class Program
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+        Console.WriteLine($"Connection string: {connectionString}");
         var upgrader =
             DeployChanges.To
                 .SqlDatabase(connectionString)
@@ -52,14 +51,14 @@ public class Program
 
     private static string GetRootFolderPath()
     {
-        // By root folder we mean folder, that contains .gitignore file.
-        string currentDirectoryPath = Directory.GetCurrentDirectory();
-        var directory = new DirectoryInfo(currentDirectoryPath);
-        while (directory is not null && !directory.GetFiles(".gitignore").Any())
+        string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+        if (codeBase == null)
         {
-            directory = directory.Parent;
+            throw new NullReferenceException("Cannot find root folder");
         }
 
-        return directory?.FullName ?? throw new NullReferenceException("Cannot find root folder");
+        UriBuilder uri = new UriBuilder(codeBase);
+        string path = Uri.UnescapeDataString(uri.Path);
+        return Path.GetDirectoryName(path) !;
     }
 }

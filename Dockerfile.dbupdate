@@ -7,7 +7,7 @@ COPY ./Streetcode/DbUpdate/*.cs ./DbUpdate/
 COPY ./Streetcode/DbUpdate/appsettings.json ./DbUpdate/
 COPY ./Streetcode/DbUpdate/appsettings.Local.json ./DbUpdate/
 COPY ./Streetcode ./Streetcode/
-COPY ./Streetcode/Streetcode.DAL/Persistence/ScriptsMigration ./DbUpdate/ScriptsMigration/
+COPY ./Streetcode/Streetcode.DAL/Persistence/ScriptsMigration ./Streetcode.DAL/Persistence/ScriptsMigration/
 
 RUN dotnet restore ./DbUpdate/DbUpdate.csproj
 

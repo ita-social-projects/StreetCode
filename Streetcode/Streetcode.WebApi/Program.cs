@@ -76,20 +76,18 @@ else
     app.UseHsts();
 }
 
-await app.ApplyMigrations();
-
-app.AddCleanAudiosJob();
-app.AddCleanImagesJob();
+// app.AddCleanAudiosJob();
+// app.AddCleanImagesJob();
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard("/hangfire", new DashboardOptions
+/*app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
-});
+});*/
 
 app.UseIpRateLimiting();
 app.UseRateLimiter();

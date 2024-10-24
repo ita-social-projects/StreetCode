@@ -16,7 +16,7 @@ public class Program
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(rootDirectory, "Streetcode", "Streetcode.WebApi"))
+            .SetBasePath(Path.Combine(rootDirectory, "Streetcode", "DbUpdate"))
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")

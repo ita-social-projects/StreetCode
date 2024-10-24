@@ -97,12 +97,12 @@ public static class ServiceCollectionExtensions
             .AddEntityFrameworkStores<StreetcodeDbContext>()
             .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !);
 
-        services.AddHangfire(config =>
+        /*services.AddHangfire(config =>
         {
             config.UseSqlServerStorage(connectionString);
-        });
+        });*/
 
-        services.AddHangfireServer();
+        // services.AddHangfireServer();
 
         services.AddAuthentication(options =>
         {

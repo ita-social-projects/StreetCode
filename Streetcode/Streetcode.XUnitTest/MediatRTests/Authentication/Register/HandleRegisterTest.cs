@@ -2,9 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Register;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -24,6 +26,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         private readonly Mock<IRepositoryWrapper> mockRepositoryWrapper;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<UserManager<User>> mockUserManager;
+        private readonly Mock<IStringLocalizer<UserSharedResource>> mockLocalizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleRegisterTest"/> class.
@@ -36,6 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             var store = new Mock<IUserStore<User>>();
             this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            this.mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
         }
 
         [Fact]
@@ -283,7 +287,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 this.mockRepositoryWrapper.Object,
                 this.mockLogger.Object,
                 this.mockMapper.Object,
-                this.mockUserManager.Object);
+                this.mockUserManager.Object,
+                this.mockLocalizer.Object);
         }
     }
 }

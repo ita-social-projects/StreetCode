@@ -20,6 +20,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
 
         public CreateCategoryTest()
         {
@@ -27,6 +28,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             this.mockMapper = new ();
             this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
         }
 
         [Fact]
@@ -41,7 +43,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 this.mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerConvertNull.Object);
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerFailedToCreate.Object);
 
             this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Image, bool>>>(),
@@ -81,7 +84,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 this.mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerConvertNull.Object);
+                this.mockLocalizerConvertNull.Object,
+                this.mockLocalizerFailedToCreate.Object);
 
             this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Image, bool>>>(),

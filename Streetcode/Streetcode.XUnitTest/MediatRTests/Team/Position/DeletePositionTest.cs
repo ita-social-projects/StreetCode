@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -12,11 +14,13 @@ public class DeletePositionTest
 {
     private readonly Mock<IRepositoryWrapper> mockRepository;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     public DeletePositionTest()
     {
         this.mockRepository = new Mock<IRepositoryWrapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -27,7 +31,7 @@ public class DeletePositionTest
         this.SetupMockRepositoryGetFirstOrDefault(testPositions);
         this.SetupMockRepositorySaveChangesReturns(1);
 
-        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object);
+        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new DeleteTeamPositionCommand(testPositions.Id), CancellationToken.None);
@@ -51,7 +55,7 @@ public class DeletePositionTest
         var expectedError = $"No position found by entered Id - {testPositions.Id}";
         this.SetupMockRepositoryGetFirstOrDefault(null);
 
-        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object);
+        var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new DeleteTeamPositionCommand(testPositions.Id), CancellationToken.None);

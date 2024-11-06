@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete
@@ -9,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-        public DeleteHistoricalContextHandler(IRepositoryWrapper repository, ILoggerService logger)
+        public DeleteHistoricalContextHandler(IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
         {
             _repositoryWrapper = repository;
             _logger = logger;
+            _stringLocalizer = stringLocalizer;
         }
 
         public async Task<Result<int>> Handle(DeleteHistoricalContextCommand request, CancellationToken cancellationToken)
@@ -22,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete
                 await _repositoryWrapper.HistoricalContextRepository.GetFirstOrDefaultAsync(x => x.Id == request.contextId);
             if (contextToDelete is null)
             {
-                string exMessage = $"No context found by entered Id - {request.contextId}";
+                string exMessage = _stringLocalizer["CannotFindHistoricalContextWithCorrespondingId", request.contextId];
                 _logger.LogError(request, exMessage);
                 return Result.Fail(exMessage);
             }

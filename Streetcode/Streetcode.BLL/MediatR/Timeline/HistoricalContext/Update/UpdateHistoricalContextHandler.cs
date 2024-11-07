@@ -31,6 +31,8 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
             _mapper = mapper;
             _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
+            _stringLocalizerValidation = stringLocalizerValidation;
+            _stringLocalizerFieldNames = stringLocalizerFieldNames;
         }
 
         public async Task<Result<HistoricalContextDTO>> Handle(

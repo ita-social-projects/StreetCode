@@ -29,6 +29,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
             this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            this.mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateCategory"]).Returns(new LocalizedString("FailedToCreateCategory", "FailedToCreateCategory"));
         }
 
         [Fact]
@@ -58,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                     IIncludableQueryable<DAL.Entities.Sources.SourceLinkCategory, object>>>()))
                 .ReturnsAsync(null as DAL.Entities.Sources.SourceLinkCategory);
 
-            var expectedError = "Failed to create category";
+            var expectedError = "FailedToCreateCategory";
 
             // Act
             var result = await handler.Handle(new CreateCategoryCommand(categoryDto), CancellationToken.None);

@@ -52,7 +52,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         {
             // Arrange
             var testContexts = DeleteContext();
-            var expectedError = $"No context found by entered Id - {testContexts.Id}";
+            var expectedError = "CannotFindHistoricalContextWithCorrespondingId";
+            this.mockLocalizer.Setup(x => x[expectedError, It.IsAny<object[]>()]).Returns(
+                new LocalizedString(expectedError, expectedError));
             this.SetupMockRepositoryGetFirstOrDefault(null);
 
             var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);

@@ -21,6 +21,7 @@ public class DeletePositionTest
         this.mockRepository = new Mock<IRepositoryWrapper>();
         this.mockLogger = new Mock<ILoggerService>();
         this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        this.mockLocalizer.Setup(x => x["CannotFindPositionWithCorrespondingId", It.IsAny<object[]>()]).Returns(new LocalizedString("CannotFindPositionWithCorrespondingId", "CannotFindPositionWithCorrespondingId"));
     }
 
     [Fact]
@@ -52,7 +53,7 @@ public class DeletePositionTest
     {
         // Arrange
         var testPositions = DeletePositions();
-        var expectedError = $"No position found by entered Id - {testPositions.Id}";
+        var expectedError = "CannotFindPositionWithCorrespondingId";
         this.SetupMockRepositoryGetFirstOrDefault(null);
 
         var handler = new DeleteTeamPositionHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);

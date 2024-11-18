@@ -28,7 +28,7 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
     {
         var facts = await _repositoryWrapper.FactRepository.GetAllAsync();
 
-        if (!facts.Any())
+        if (facts is null)
         {
             string errorMsg = _stringLocalizeCannotFind["CannotFindAnyFact"].Value;
             _logger.LogError(request, errorMsg);

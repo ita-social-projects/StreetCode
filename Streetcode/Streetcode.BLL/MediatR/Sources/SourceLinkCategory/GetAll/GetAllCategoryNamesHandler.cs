@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         {
             var allCategories = await _repositoryWrapper.SourceCategoryRepository.GetAllAsync();
 
-            if (!allCategories.Any())
+            if (allCategories is null)
             {
                 string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);

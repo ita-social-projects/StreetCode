@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 
             var positionsWithMembers = positions.Where(x => x.TeamMembers!.Any());
 
-            if (!positionsWithMembers.Any())
+            if (positionsWithMembers is null)
             {
                 const string errorMsg = $"Cannot find any positions";
                 _logger.LogError(request, errorMsg);

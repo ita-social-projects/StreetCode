@@ -73,7 +73,7 @@ public class CreateInvoiceCommandValidatorTests
     public void ShouldReturnError_WhenAmountIsLessThanZero()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["GreaterThan", this.mockNamesLocalizer["RedirectUrl"], 0];
+        var expectedError = this.mockValidationLocalizer["GreaterThan", this.mockNamesLocalizer["Amount"], 0];
         var command = this.GetValidCreateInvoiceCommand();
         command.Payment.Amount = -100;
 

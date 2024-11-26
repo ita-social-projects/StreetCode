@@ -210,4 +210,7 @@
     <data name="Images" xml:space="preserve">
         <value>Images</value>
     </data>
+    <data name="Amount" xml:space="preserve">
+        <value>Amount</value>
+    </data>
 </root>

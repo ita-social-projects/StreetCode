@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.MockRepositoryAndMapper(new List<ImageEntity.Image>() { }, new List<ImageDTO>() { });
+            this.MockRepositoryAndMapper(null, new List<ImageDTO>() { });
             var expectedError = $"Cannot find any image";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyImage"])
                 .Returns(new LocalizedString("CannotFindAnyImage", expectedError));

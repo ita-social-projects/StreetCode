@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             var statisticRecords = await _repositoryWrapper.StatisticRecordRepository
                 .GetAllAsync(include: sr => sr.Include(sr => sr.StreetcodeCoordinate));
 
-            if(!statisticRecords.Any())
+            if(statisticRecords is null)
             {
                 string errorMsg = _stringLocalizerCannotGet["CannotGetRecords"].Value;
                 _logger.LogError(request, errorMsg);
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
             var mappedEntities = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
 
-            if(!mappedEntities.Any())
+            if(mappedEntities is null)
             {
                 string errorMsg = _stringLocalizerCannotMap["CannotMapRecords"].Value;
                 _logger.LogError(request, errorMsg);

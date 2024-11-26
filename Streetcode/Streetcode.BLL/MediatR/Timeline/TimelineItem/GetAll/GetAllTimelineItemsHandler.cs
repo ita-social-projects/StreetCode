@@ -33,7 +33,7 @@ public class GetAllTimelineItemsHandler : IRequestHandler<GetAllTimelineItemsQue
                   .Include(til => til.HistoricalContextTimelines)
                     .ThenInclude(x => x.HistoricalContext) !);
 
-        if (!timelineItems.Any())
+        if (timelineItems is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTimelineItem"].Value;
             _logger.LogError(request, errorMsg);

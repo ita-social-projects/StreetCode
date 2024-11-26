@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.SetupMocks(new List<TeamMember>(), new List<TeamMemberDTO>());
+            this.SetupMocks(null, new List<TeamMemberDTO>());
             var handler = new GetAllMainTeamHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockStringLocalizerCannotFind.Object);
             var expectedError = "Cannot find any team";
             this.mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])

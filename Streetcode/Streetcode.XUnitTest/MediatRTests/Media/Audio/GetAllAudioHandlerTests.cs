@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             string expectedErrorMessage = "Cannot find any audios";
-            this.RepositorySetup(null, new List<Model>());
+            this.RepositorySetup(null, null);
             this.MapperSetup(new List<AudioDTO>());
             this.BlobSetup(null);
 

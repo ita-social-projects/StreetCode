@@ -31,7 +31,7 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
     {
         var audios = await _repositoryWrapper.AudioRepository.GetAllAsync();
 
-        if (!audios.Any())
+        if (audios is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyAudios"].Value;
             _logger.LogError(request, errorMsg);

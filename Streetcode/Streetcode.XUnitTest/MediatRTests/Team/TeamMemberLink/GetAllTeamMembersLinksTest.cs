@@ -101,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 
         private static List<TeamMemberLink> GetTeamMemberLinksListWithNotExistingId()
         {
-            return new List<TeamMemberLink>();
+            return null;
         }
 
         private static List<TeamMemberLinkDTO> GetListTeamMemberLinkDTO()

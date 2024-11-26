@@ -128,12 +128,12 @@ public class GetAllFactsTest
 
     private static List<Fact> GetListFactsWithNotExistingId()
     {
-        return new List<Fact>();
+        return null;
     }
 
     private static List<FactDto> GetListFactsDTOWithNotExistingId()
     {
-        return new List<FactDto>();
+        return null;
     }
 
     private static List<FactDto> GetListFactDTO()

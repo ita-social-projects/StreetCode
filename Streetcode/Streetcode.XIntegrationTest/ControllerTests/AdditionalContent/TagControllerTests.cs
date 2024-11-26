@@ -369,6 +369,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
             var mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
             var mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+            var mockStringLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
             repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<TagEntity, bool>>>(), default))
             .ReturnsAsync((Expression<Func<TagEntity, bool>> expr, IIncludableQueryable<TagEntity, bool> include) =>
             {
@@ -389,7 +390,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
                 mapperMock.Object,
                 loggerMock.Object,
                 mockStringLocalizerFailedToValidate.Object,
-                mockStringLocalizerFieldNames.Object);
+                mockStringLocalizerFieldNames.Object,
+                mockStringLocalizerCannotFind.Object);
 
             var query = new UpdateTagCommand(tagUpdateDTO);
             var cancellationToken = CancellationToken.None;

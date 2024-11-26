@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetByTitle;
@@ -12,12 +14,14 @@ public class GetByTitleTeamPositionHandler : IRequestHandler<GetByTitleTeamPosit
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
     private readonly ILoggerService _loggerService;
+    private readonly IStringLocalizer<CannotFindSharedResource> _localizer;
 
-    public GetByTitleTeamPositionHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService loggerService)
+    public GetByTitleTeamPositionHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService loggerService, IStringLocalizer<CannotFindSharedResource> localizer)
     {
         _mapper = mapper;
         _repository = repository;
         _loggerService = loggerService;
+        _localizer = localizer;
     }
 
     public async Task<Result<PositionDTO>> Handle(GetByTitleTeamPositionQuery request, CancellationToken cancellationToken)
@@ -26,7 +30,7 @@ public class GetByTitleTeamPositionHandler : IRequestHandler<GetByTitleTeamPosit
 
         if (position is null)
         {
-            string exceptionMessege = $"No position found by title - {request.position}";
+            string exceptionMessege = _localizer["CannotFindPositionWithCorrespondingTitle", request.position];
             _loggerService.LogError(request, exceptionMessege);
             return Result.Fail(exceptionMessege);
         }

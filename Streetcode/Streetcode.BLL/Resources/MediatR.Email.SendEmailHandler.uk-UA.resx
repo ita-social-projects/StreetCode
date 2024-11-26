@@ -120,4 +120,10 @@
   <data name="FailedToSendEmailMessage" xml:space="preserve">
     <value>Не вдалося надіслати повідомлення електронної пошти</value>
   </data>
+  <data name="InvalidCaptcha" xml:space="preserve">
+    <value>Неправильна капча  </value>
+  </data>
+  <data name="RecaptchaRequestFailed" xml:space="preserve">
+    <value>Невдалося відправити запит до ReCaptcha </value>
+  </data>
 </root>

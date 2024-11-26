@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetByTitle;
@@ -12,12 +14,14 @@ public class GetHistoricalContextByTitleHandler : IRequestHandler<GetHistoricalC
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
     private readonly ILoggerService _loggerService;
+    private readonly IStringLocalizer<CannotFindSharedResource> _localizer;
 
-    public GetHistoricalContextByTitleHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService loggerService)
+    public GetHistoricalContextByTitleHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService loggerService, IStringLocalizer<CannotFindSharedResource> localizer)
     {
         _mapper = mapper;
         _repository = repository;
         _loggerService = loggerService;
+        _localizer = localizer;
     }
 
     public async Task<Result<HistoricalContextDTO>> Handle(GetHistoricalContextByTitleQuery request, CancellationToken cancellationToken)
@@ -26,7 +30,7 @@ public class GetHistoricalContextByTitleHandler : IRequestHandler<GetHistoricalC
 
         if (context is null)
         {
-            string exceptionMessege = $"No context found by title - {request.title}";
+            string exceptionMessege = _localizer["CannotFindHistoricalContextWithTitle", request.title];
             _loggerService.LogError(request, exceptionMessege);
             return Result.Fail(exceptionMessege);
         }

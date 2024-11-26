@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.GetById;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -18,6 +20,7 @@ public class GetByIdPositionTest
     private readonly Mock<IRepositoryWrapper> mockRepo;
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     private readonly Positions position = new Positions()
     {
@@ -36,6 +39,7 @@ public class GetByIdPositionTest
         this.mockRepo = new Mock<IRepositoryWrapper>();
         this.mockMapper = new Mock<IMapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -45,7 +49,7 @@ public class GetByIdPositionTest
         this.SetupRepository(this.position);
         this.SetupMapper(this.positionDto);
 
-        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
+        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetByIdTeamPositionQuery(id), CancellationToken.None);
@@ -63,7 +67,7 @@ public class GetByIdPositionTest
         this.SetupRepository(new Positions());
         this.SetupMapper(new PositionDTO());
 
-        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
+        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetByIdTeamPositionQuery(id), CancellationToken.None);

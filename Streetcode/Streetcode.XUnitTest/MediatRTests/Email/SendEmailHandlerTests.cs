@@ -29,6 +29,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             this.mockStringLocalizer = new Mock<IStringLocalizer<SendEmailHandler>>();
             this.mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             this.mockConfiguration = new Mock<IConfiguration>();
+
+            this.mockStringLocalizer.Setup(x => x["RecaptchaRequestFailed"]).Returns(new LocalizedString("RecaptchaRequestFailed", "RecaptchaRequestFailed"));
+            this.mockStringLocalizer.Setup(x => x["InvalidCaptcha"]).Returns(new LocalizedString("InvalidCaptcha", "InvalidCaptcha"));
         }
 
         [Fact]
@@ -57,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         {
             // arrange
             var emailDto = GetEmailDTO();
-            var expectedErrorMessage = "ReCaptcha request failed";
+            var expectedErrorMessage = "RecaptchaRequestFailed";
 
             this.SetupMockHttpMessageHandlerReturnsFail();
             this.SetupMockEmailServiceReturnsOK();
@@ -80,7 +83,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             // arrange
             var reCaptchaResponseDto = GetReCaptchaResponseDTO(false);
             var emailDto = GetEmailDTO();
-            var expectedErrorMessage = "Invalid captcha";
+            var expectedErrorMessage = "InvalidCaptcha";
 
             this.SetupMockHttpMessageHandlerReturnsOK(reCaptchaResponseDto);
             this.SetupMockEmailServiceReturnsOK();

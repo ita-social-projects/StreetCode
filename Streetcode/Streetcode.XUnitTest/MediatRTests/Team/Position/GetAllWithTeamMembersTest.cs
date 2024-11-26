@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -15,12 +17,14 @@ public class GetAllWithTeamMembersTest
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<IRepositoryWrapper> mockRepository;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     public GetAllWithTeamMembersTest()
     {
         this.mockMapper = new Mock<IMapper>();
         this.mockRepository = new Mock<IRepositoryWrapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -30,7 +34,7 @@ public class GetAllWithTeamMembersTest
         this.SetupMapMethod(GetListPositionDTO());
         this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);
@@ -48,7 +52,7 @@ public class GetAllWithTeamMembersTest
         this.SetupMapMethod(GetListPositionDTO());
         this.SetupGetAllAsyncMethod(GetPositionsList());
 
-        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new GetAllWithTeamMembersHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetAllWithTeamMembersQuery(), CancellationToken.None);

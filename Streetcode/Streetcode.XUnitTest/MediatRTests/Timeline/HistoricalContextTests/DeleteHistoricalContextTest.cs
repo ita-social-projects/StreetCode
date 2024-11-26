@@ -1,7 +1,9 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -12,11 +14,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
     {
         private readonly Mock<IRepositoryWrapper> mockRepository;
         private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         public DeleteHistoricalContextTest()
         {
             this.mockRepository = new Mock<IRepositoryWrapper>();
             this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -27,7 +31,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             this.SetupMockRepositoryGetFirstOrDefault(testContexts);
             this.SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object);
+            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new DeleteHistoricalContextCommand(testContexts.Id), CancellationToken.None);
@@ -48,10 +52,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         {
             // Arrange
             var testContexts = DeleteContext();
-            var expectedError = $"No context found by entered Id - {testContexts.Id}";
+            var expectedError = "CannotFindHistoricalContextWithCorrespondingId";
+            this.mockLocalizer.Setup(x => x[expectedError, It.IsAny<object[]>()]).Returns(
+                new LocalizedString(expectedError, expectedError));
             this.SetupMockRepositoryGetFirstOrDefault(null);
 
-            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object);
+            var handler = new DeleteHistoricalContextHandler(this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new DeleteHistoricalContextCommand(testContexts.Id), CancellationToken.None);

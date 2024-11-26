@@ -16,17 +16,20 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
 
         public CreateCategoryHandler(
             IRepositoryWrapper repositoryWrapper,
             IMapper mapper,
             ILoggerService logger,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot,
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
             _logger = logger;
             _stringLocalizerCannot = stringLocalizerCannot;
+            _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
         }
 
         public async Task<Result<CreateSourceLinkCategoryDTO>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
@@ -48,7 +51,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create
             }
             else
             {
-                string errorMsg = "Failed to create category";
+                string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateCategory"];
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

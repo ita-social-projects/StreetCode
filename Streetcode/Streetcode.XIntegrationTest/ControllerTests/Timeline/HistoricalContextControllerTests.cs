@@ -2,11 +2,13 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -269,6 +271,9 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         var repositoryMock = new Mock<IHistoricalContextRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+        var mockLocalizerValidation = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+        var mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
             .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>
             {
@@ -284,7 +289,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         mapperMock.Setup(m => m.Map<HistoricalContext>(default)).Returns(this.testUpdateContext);
         var loggerMock = new Mock<ILoggerService>();
 
-        var handler = new UpdateHistoricalContextHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
+        var handler = new UpdateHistoricalContextHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object, mockLocalizerValidation.Object, mockLocalizerFieldNames.Object);
 
         var query = new UpdateHistoricalContextCommand(historicalContextCreateDto);
         var cancellationToken = CancellationToken.None;
@@ -355,6 +360,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         var repositoryMock = new Mock<IHistoricalContextRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
             .ReturnsAsync(this.testUpdateContext);
         repositoryMock.Setup(r => r.Delete(default!));
@@ -365,7 +371,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         var loggerMock = new Mock<ILoggerService>();
 
-        var handler = new DeleteHistoricalContextHandler(repositoryWrapperMock.Object, loggerMock.Object);
+        var handler = new DeleteHistoricalContextHandler(repositoryWrapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object);
 
         var query = new DeleteHistoricalContextCommand(id);
         var cancellationToken = CancellationToken.None;

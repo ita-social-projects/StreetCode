@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -16,12 +18,14 @@ public class UpdatePositionTest
     private readonly Mock<IRepositoryWrapper> mockRepo;
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     public UpdatePositionTest()
     {
         this.mockRepo = new Mock<IRepositoryWrapper>();
         this.mockMapper = new Mock<IMapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -41,7 +45,7 @@ public class UpdatePositionTest
         this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
         this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
 
-        var handler = new UpdateTeamPositionHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new UpdateTeamPositionHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new UpdateTeamPositionCommand(new PositionDTO()), CancellationToken.None);

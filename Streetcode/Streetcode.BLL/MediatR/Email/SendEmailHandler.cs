@@ -33,8 +33,9 @@ namespace Streetcode.BLL.MediatR.Email
 
             if (!reCaptchaResponse.IsSuccessStatusCode)
             {
-                _logger.LogError(request, "ReCaptcha request failed");
-                return Result.Fail(new Error("ReCaptcha request failed"));
+                string errorMessage = _stringLocalizer["RecaptchaRequestFailed"];
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(new Error(errorMessage));
             }
 
             var reCaptchaResponseResult = await reCaptchaResponse.Content.ReadFromJsonAsync<ReCaptchaResponseDto>(cancellationToken: cancellationToken);
@@ -42,8 +43,9 @@ namespace Streetcode.BLL.MediatR.Email
             reCaptchaResponseResult ??= new();
             if (!reCaptchaResponseResult.Success)
             {
-                _logger.LogError(request, "Invalid captcha");
-                return Result.Fail(new Error("Invalid captcha"));
+                string errorMessage = _stringLocalizer["InvalidCaptcha"];
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(new Error(errorMessage));
             }
 
             var message = new Message(

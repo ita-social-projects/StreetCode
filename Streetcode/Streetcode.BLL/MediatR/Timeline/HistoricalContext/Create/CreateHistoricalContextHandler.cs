@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
@@ -12,12 +14,16 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerValidation;
+        private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
 
-        public CreateHistoricalContextHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        public CreateHistoricalContextHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<FailedToValidateSharedResource> stringLocalizerValidation, IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerValidation = stringLocalizerValidation;
+            _stringLocalizerFieldNames = stringLocalizerFieldNames;
         }
 
         public async Task<Result<HistoricalContextDTO>> Handle(CreateHistoricalContextCommand request, CancellationToken cancellationToken)
@@ -30,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
 
                 if (checkIfContextExists is not null)
                 {
-                    string exceptionMessege = $"Context with title '{request.HistoricalContext.Title}' is already exists.";
+                    string exceptionMessege = _stringLocalizerValidation["MustBeUnique", _stringLocalizerFieldNames["Historical context title"]];
                     _logger.LogError(request, exceptionMessege);
                     return Result.Fail(exceptionMessege);
                 }

@@ -17,16 +17,19 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 		private readonly ILoggerService _logger;
 		private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
 		private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
+		private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 		public UpdateTagHandler(
 			IRepositoryWrapper repository,
 			IMapper mapper,
 			ILoggerService logger,
 			IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
-			IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
+			IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
+			IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
 		{
 			_repositoryWrapper = repository;
 			_mapper = mapper;
 			_logger = logger;
+			_stringLocalizerCannotFind = stringLocalizerCannotFind;
 			_stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
 			_stringLocalizerFieldNames = stringLocalizerFieldNames;
 		}
@@ -37,7 +40,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 				await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x => x.Id == request.tag.Id);
 			if (existedTag is null)
 			{
-				string exMessage = $"No tag found by entered Id - {request.tag.Id}";
+				string exMessage = _stringLocalizerCannotFind["CannotFindTagWithCorrespondingId", request.tag.Id];
 				_logger.LogError(request, exMessage);
 
 				return Result.Fail(exMessage);

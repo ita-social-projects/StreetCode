@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.Delete;
@@ -9,11 +11,13 @@ public class DeleteTeamPositionHandler : IRequestHandler<DeleteTeamPositionComma
 {
     private readonly IRepositoryWrapper _repository;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-    public DeleteTeamPositionHandler(IRepositoryWrapper repository, ILoggerService logger)
+    public DeleteTeamPositionHandler(IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
     {
         _repository = repository;
         _logger = logger;
+        _stringLocalizer = stringLocalizer;
     }
 
     public async Task<Result<int>> Handle(DeleteTeamPositionCommand request, CancellationToken cancellationToken)
@@ -23,7 +27,7 @@ public class DeleteTeamPositionHandler : IRequestHandler<DeleteTeamPositionComma
 
         if (positionToDelete is null)
         {
-            string exMessage = $"No position found by entered Id - {request.positionId}";
+            string exMessage = _stringLocalizer["CannotFindPositionWithCorrespondingId", request.positionId];
             _logger.LogError(request, exMessage);
             return Result.Fail(exMessage);
         }

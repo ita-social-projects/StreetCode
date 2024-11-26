@@ -306,4 +306,22 @@
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Cannot find a video with corresponding id: {0}</value>
   </data>
+  <data name="CannotFindRecordWithStreetcodeId" xml:space="preserve">
+    <value>Cannot find record for streetcode with id {0}</value>
+  </data>
+  <data name="CannotFindJobWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find a job with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindPositionWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find a position with id {0}</value>
+  </data>
+  <data name="CannotFindPositionWithCorrespondingTitle" xml:space="preserve">
+    <value>Cannot find a position with title '{0}'</value>
+  </data>
+  <data name="CannotFindHistoricalContextWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find historical context with id {0}</value>
+  </data>
+  <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
+    <value>Cannot find historical context with title '{0}'</value>
+  </data>
 </root>

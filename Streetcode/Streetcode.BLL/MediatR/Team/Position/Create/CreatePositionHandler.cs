@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,6 +15,8 @@ namespace Streetcode.BLL.MediatR.Team.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
+        private readonly IStringLocalizer<FailedToValidateSharedResource> _failedToValidateSharedResource;
+        private readonly IStringLocalizer<FieldNamesSharedResource> _fieldNamesSharedResource;
 
         public CreatePositionHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger)
         {
@@ -30,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Team.Create
 
                 if (checkIfContextExists is not null)
                 {
-                    string exceptionMessege = $"Team position with title '{request.position.Position}' is already exists.";
+                    string exceptionMessege = _failedToValidateSharedResource["MustBeUnique", _fieldNamesSharedResource["Position"]];
                     _logger.LogError(request, exceptionMessege);
                     return Result.Fail(exceptionMessege);
                 }

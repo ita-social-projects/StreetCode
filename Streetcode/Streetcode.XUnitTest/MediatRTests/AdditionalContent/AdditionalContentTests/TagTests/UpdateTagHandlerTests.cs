@@ -21,6 +21,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockStringLocalizerFailedToValidate;
         private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockStringLocalizerFieldNames;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockStringLocalizerCannotFind;
 
         public UpdateTagHandlerTests()
         {
@@ -29,6 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.mockLogger = new Mock<ILoggerService>();
             this.mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
             this.mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+            this.mockStringLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -52,7 +54,8 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 this.mockMapper.Object,
                 this.mockLogger.Object,
                 this.mockStringLocalizerFailedToValidate.Object,
-                this.mockStringLocalizerFieldNames.Object);
+                this.mockStringLocalizerFieldNames.Object,
+                this.mockStringLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new UpdateTagCommand(new UpdateTagDTO()), CancellationToken.None);

@@ -5,6 +5,7 @@ using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Feedback;
+using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
@@ -14,6 +15,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
@@ -350,6 +352,33 @@ namespace Streetcode.WebApi.Extensions
                 await dbContext.SaveChangesAsync();
             }
 
+            if (!dbContext.Job.Any())
+            {
+                dbContext.Job.AddRange(
+                    new Job
+                    {
+                        Title = "Job 1",
+                        Status = true,
+                        Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et cursus dui. Nunc egestas nibh ac felis gravida, et hendrerit metus fringilla. Quisque ornare scelerisque consequat. Praesent vel magna nisl. Ut rhoncus magna lacus, a tempus leo venenatis ac. Vestibulum ac facilisis neque, et semper orci. Etiam rhoncus aliquam leo, vitae finibus dui gravida sit amet. Fusce ornare, ipsum viverra eleifend mattis, enim lacus auctor nunc, facilisis tempor ligula augue nec purus. Maecenas euismod aliquam dignissim. In non ultrices velit, at molestie massa. Suspendisse sem tellus, convallis id magna ac, interdum tristique ipsum. Phasellus nec mauris ut enim consectetur gravida.",
+                        Salary = "1000"
+                    },
+                    new Job
+                    {
+                        Title = "Job 2",
+                        Status = true,
+                        Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et cursus dui. Nunc egestas nibh ac felis gravida, et hendrerit metus fringilla. Quisque ornare scelerisque consequat. Praesent vel magna nisl. Ut rhoncus magna lacus, a tempus leo venenatis ac. Vestibulum ac facilisis neque, et semper orci. Etiam rhoncus aliquam leo, vitae finibus dui gravida sit amet. Fusce ornare, ipsum viverra eleifend mattis, enim lacus auctor nunc, facilisis tempor ligula augue nec purus. Maecenas euismod aliquam dignissim. In non ultrices velit, at molestie massa. Suspendisse sem tellus, convallis id magna ac, interdum tristique ipsum. Phasellus nec mauris ut enim consectetur gravida.",
+                        Salary = "2000"
+                    },
+                    new Job
+                    {
+                        Title = "Job 3",
+                        Status = true,
+                        Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc et cursus dui. Nunc egestas nibh ac felis gravida, et hendrerit metus fringilla. Quisque ornare scelerisque consequat. Praesent vel magna nisl. Ut rhoncus magna lacus, a tempus leo venenatis ac. Vestibulum ac facilisis neque, et semper orci. Etiam rhoncus aliquam leo, vitae finibus dui gravida sit amet. Fusce ornare, ipsum viverra eleifend mattis, enim lacus auctor nunc, facilisis tempor ligula augue nec purus. Maecenas euismod aliquam dignissim. In non ultrices velit, at molestie massa. Suspendisse sem tellus, convallis id magna ac, interdum tristique ipsum. Phasellus nec mauris ut enim consectetur gravida.",
+                        Salary = "3000"
+                    });
+                await dbContext.SaveChangesAsync();
+            }
+
             if (!dbContext.Streetcodes.Any())
             {
                 dbContext.Streetcodes.AddRange(
@@ -390,7 +419,7 @@ namespace Streetcode.WebApi.Extensions
                         Title = "Роман Ратушний (Сенека)",
                         Alias = "Сенека",
                         AudioId = 2,
-                        Status = StreetcodeStatus.Published
+                        Status = StreetcodeStatus.Published,
                     });
 
                 await dbContext.SaveChangesAsync();

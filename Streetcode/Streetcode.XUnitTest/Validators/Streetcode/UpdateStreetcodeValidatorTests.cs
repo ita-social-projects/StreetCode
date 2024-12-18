@@ -150,6 +150,23 @@ public class UpdateStreetcodeValidatorTests
     }
 
     [Fact]
+    public async Task ShouldReturnError_WhenTransactionUrlIsNull()
+    {
+        // Arange
+        this.SetupRepositoryWrapperReturnsNull();
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["TransactionLinkUrl"]];
+        var command = this.GetValidCreateStreetcodeCommand();
+        command.Streetcode.TransactionLink!.Url = null;
+
+        // Act
+        var result = await validator.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.TransactionLink!.Url)
+            .WithErrorMessage(expectedError);
+    }
+
+    [Fact]
     public async Task ShouldReturnError_WhenExistsVideosWithoutTitle()
     {
         // Arrange

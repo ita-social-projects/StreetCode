@@ -1,5 +1,3 @@
-using Streetcode.BLL.DTO.AdditionalContent;
-
 namespace Streetcode.BLL.DTO.Transactions;
 
 public class TransactLinkDTO

@@ -29,10 +29,10 @@ public class GetTimelineItemByIdHandler : IRequestHandler<GetTimelineItemByIdQue
     {
         var timelineItem = await _repositoryWrapper.TimelineRepository
             .GetFirstOrDefaultAsync(
-                predicate: ti => true,
+                predicate: ti => ti.Id == request.Id,
                 include: ti => ti
                     .Include(til => til.HistoricalContextTimelines)
-                        .ThenInclude(x => x.HistoricalContext)!);
+                        .ThenInclude(x => x.HistoricalContext) !);
 
         if (timelineItem is null)
         {

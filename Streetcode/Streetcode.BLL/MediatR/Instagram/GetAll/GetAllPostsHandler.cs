@@ -9,12 +9,10 @@ namespace Streetcode.BLL.MediatR.Instagram.GetAll
     public class GetAllPostsHandler : IRequestHandler<GetAllPostsQuery, Result<IEnumerable<InstagramPost>>>
     {
         private readonly IInstagramService _instagramService;
-        private readonly ILoggerService _logger;
 
-        public GetAllPostsHandler(IInstagramService instagramService, ILoggerService logger)
+        public GetAllPostsHandler(IInstagramService instagramService)
         {
             _instagramService = instagramService;
-            _logger = logger;
         }
 
         public async Task<Result<IEnumerable<InstagramPost>>> Handle(GetAllPostsQuery request, CancellationToken cancellationToken)

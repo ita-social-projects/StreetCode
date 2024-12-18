@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.Interfaces.Logging;
@@ -38,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             var statisticRecords = await _repositoryWrapper.StatisticRecordRepository
                 .GetAllAsync(include: sr => sr.Include(sr => sr.StreetcodeCoordinate));
 
-            if(statisticRecords == null)
+            if(!statisticRecords.Any())
             {
                 string errorMsg = _stringLocalizerCannotGet["CannotGetRecords"].Value;
                 _logger.LogError(request, errorMsg);
@@ -47,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
             var mappedEntities = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
 
-            if(mappedEntities == null)
+            if(!mappedEntities.Any())
             {
                 string errorMsg = _stringLocalizerCannotMap["CannotMapRecords"].Value;
                 _logger.LogError(request, errorMsg);

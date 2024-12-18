@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Shared;
 using Streetcode.BLL.MediatR.ResultVariations;
 
 namespace Streetcode.WebApi.Controllers;
@@ -10,10 +11,6 @@ namespace Streetcode.WebApi.Controllers;
 public class BaseApiController : ControllerBase
 {
     private IMediator? _mediator;
-
-    public BaseApiController()
-    {
-    }
 
     protected IMediator Mediator => _mediator ??=
         HttpContext.RequestServices.GetService<IMediator>() !;
@@ -35,6 +32,6 @@ public class BaseApiController : ControllerBase
             return Unauthorized();
         }
 
-        return BadRequest(result.Reasons);
+        return BadRequest(result.Errors.Select(x => new ErrorDto() { Message = x.Message }));
     }
 }

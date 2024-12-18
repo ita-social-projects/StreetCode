@@ -1,26 +1,21 @@
 ﻿using System.IO.Compression;
-using System.Runtime;
-using Microsoft.Extensions.Configuration;
 using Serilog;
-using Streetcode.BLL.Middleware;
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.ResponseCompression;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Services.Payment;
+using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
 
 namespace Streetcode.WebApi.Extensions;
 
 public static class ConfigureHostBuilderExtensions
 {
-    public static void ConfigureApplication(this ConfigureHostBuilder host)
+    public static void ConfigureApplication(this ConfigureHostBuilder host, WebApplicationBuilder builder)
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
-        host.ConfigureAppConfiguration((_, config) =>
-        {
-            config.ConfigureCustom(environment);
-        });
+        builder.Configuration.ConfigureCustom(environment);
     }
 
     public static void ConfigureBlob(this IServiceCollection services, WebApplicationBuilder builder)
@@ -42,7 +37,7 @@ public static class ConfigureHostBuilderExtensions
     {
         var filterExpression = builder.Configuration["Serilog:Filter:ByExcluding"];
 
-        builder.Host.UseSerilog((ctx, services, loggerConfiguration) =>
+        builder.Host.UseSerilog((_, _, loggerConfiguration) =>
         {
             loggerConfiguration.ReadFrom.Configuration(builder.Configuration);
 

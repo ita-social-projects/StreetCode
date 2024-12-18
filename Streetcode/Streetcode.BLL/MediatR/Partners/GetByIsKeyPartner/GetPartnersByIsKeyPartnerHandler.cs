@@ -35,9 +35,9 @@ public class GetPartnersByIsKeyPartnerHandler : IRequestHandler<GetPartnersByIsK
                     .Include(pl => pl.PartnerSourceLinks)
                     .Include(p => p.Streetcodes));
 
-        if (partners is null)
+        if (!partners.Any())
         {
-            string? errorMessage = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
+            string errorMessage = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMessage);
             return Result.Fail(new Error(errorMessage));
         }

@@ -1,5 +1,5 @@
 using System.Text;
-using System.Net.Security;
+using FluentValidation;
 using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -33,17 +33,17 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.MediatR.Newss.Create;
+using Streetcode.BLL.MediatR.Newss.Update;
+using Streetcode.BLL.PipelineBehaviour;
+using Streetcode.BLL.Validators.SourceLinkCategory;
+using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.WebApi.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddRepositoryServices(this IServiceCollection services)
-    {
-        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-    }
-
     public static void AddCustomServices(this IServiceCollection services)
     {
         services.AddRepositoryServices();
@@ -55,7 +55,11 @@ public static class ServiceCollectionExtensions
         services.AddAutoMapper(currentAssemblies);
         services.AddMediatR(currentAssemblies);
         services.AddScoped<ILoggerService, LoggerService>();
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddValidatorsFromAssemblyContaining<CreateCategoryValidator>();
 
+        services.AddTransient<IValidator<CreateNewsCommand>, CreateNewsValidator>();
+        services.AddTransient<IValidator<UpdateNewsCommand>, UpdateNewsValidator>();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
@@ -72,6 +76,12 @@ public static class ServiceCollectionExtensions
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+
+        if (emailConfig is null)
+        {
+            throw new Exception("Email configuration is missing in the appsettings.");
+        }
+
         services.AddSingleton(emailConfig);
 
         services.AddDbContext<StreetcodeDbContext>(options =>
@@ -85,7 +95,7 @@ public static class ServiceCollectionExtensions
 
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<StreetcodeDbContext>()
-            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"]);
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !);
 
         services.AddHangfire(config =>
         {
@@ -111,12 +121,12 @@ public static class ServiceCollectionExtensions
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"] !)),
                         ClockSkew = TimeSpan.Zero
                     };
                 });
 
-        var corsSettings = SettingsExtracter.GetCorsSettings(configuration);
+        var corsSettings = SettingsExtractor.GetCorsSettings(configuration);
         services.AddCors(opt =>
         {
             opt.AddDefaultPolicy(policy =>
@@ -137,7 +147,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
-        services.AddControllers();
+        services.AddControllers(opt => opt.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
     }
 
     public static void AddSwaggerServices(this IServiceCollection services)
@@ -172,5 +182,10 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
+    }
+
+    private static void AddRepositoryServices(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
     }
 }

@@ -1,13 +1,12 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Partners;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Partners;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 {
@@ -43,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
                     predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id),
                     include: p => p.Include(pl => pl.PartnerSourceLinks));
 
-            if (partners is null)
+            if (!partners.Any())
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
                 _logger.LogError(request, errorMsg);

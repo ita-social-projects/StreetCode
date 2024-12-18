@@ -7,9 +7,10 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
 {
     public class FindFileInStorageAsBase64Tests : BlobServiceTestBase
     {
-        public FindFileInStorageAsBase64Tests() : base(new BlobStorageFixture(), "find-as-base64-test")
+        public FindFileInStorageAsBase64Tests()
+            : base(new BlobStorageFixture(), "find-as-base64-test")
         {
-            _fixture.SeedImage(_seededFileName);
+            this.Fixture.SeedImage(this.SeededFileName);
         }
 
         [Theory]
@@ -17,13 +18,13 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
         public void ShouldReturnValidBase64_FileExists(string extension, string testDataFilePath)
         {
             // Arrange
-            string validFileName = $"{_seededFileName}.{extension}";
+            string validFileName = $"{this.SeededFileName}.{extension}";
             string jsonContents = File.ReadAllText(testDataFilePath);
-            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents);
-            string expectedBase64 = jsonData.Base64;
+            Image jsonData = JsonConvert.DeserializeObject<Image>(jsonContents) !;
+            string expectedBase64 = jsonData.Base64!;
 
             // Act
-            string result = _fixture.blobService.FindFileInStorageAsBase64(validFileName);
+            string result = this.Fixture.BlobService.FindFileInStorageAsBase64(validFileName);
 
             // Assert
             Assert.Multiple(() =>
@@ -41,12 +42,12 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
             string result = string.Empty;
 
             // Act
-            void action() => result = _fixture.blobService.FindFileInStorageAsBase64(nonExistingFileName);
+            void Action() => result = this.Fixture.BlobService.FindFileInStorageAsBase64(nonExistingFileName);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.Throws<FileNotFoundException>(action);
+                Assert.Throws<FileNotFoundException>(Action);
                 Assert.Empty(result);
             });
         }
@@ -59,12 +60,12 @@ namespace Streetcode.XIntegrationTest.ServiceTests.BlobServiceTests.FindFileTest
             string result = string.Empty;
 
             // Act
-            void action() => result = _fixture.blobService.FindFileInStorageAsBase64(notValidFileName);
+            void Action() => result = this.Fixture.BlobService.FindFileInStorageAsBase64(notValidFileName);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.Throws<IndexOutOfRangeException>(action);
+                Assert.Throws<IndexOutOfRangeException>(Action);
                 Assert.Empty(result);
             });
         }

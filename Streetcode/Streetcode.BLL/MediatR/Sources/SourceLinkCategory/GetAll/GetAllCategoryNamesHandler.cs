@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.Logging;
@@ -29,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
         {
             var allCategories = await _repositoryWrapper.SourceCategoryRepository.GetAllAsync();
 
-            if (allCategories == null)
+            if (!allCategories.Any())
             {
                 string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);

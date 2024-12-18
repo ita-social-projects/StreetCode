@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
         public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
-            if (streetcodes != null)
+            if (streetcodes.Any())
             {
                 return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
             }

@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Create;
@@ -11,19 +12,20 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update.Interfaces;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Factories.Streetcode;
+using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -34,19 +36,28 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
+        private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
+        private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
         private readonly ICacheService _cacheService;
+
         public UpdateStreetcodeHandler(
             IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
             IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
+            IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
             ICacheService cacheService)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
+            _stringLocalizerFieldNames = stringLocalizerFieldNames;
+            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _cacheService = cacheService;
         }
 
@@ -64,7 +75,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.RelatedFigures, _repositoryWrapper.RelatedFigureRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
-                    await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
+
+                    // await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
+                    await UpdateTags(request.Streetcode.Tags);
                     await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
@@ -75,25 +88,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     var deleteTransactionLinks = _repositoryWrapper.TransactLinksRepository.FindAll(t => t.StreetcodeId == streetcodeToUpdate.Id);
                     _repositoryWrapper.TransactLinksRepository.DeleteRange(deleteTransactionLinks);
 
-                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title) && !string.IsNullOrWhiteSpace(request.Streetcode.Text?.TextContent) && request.Streetcode.Text.ModelState != ModelState.Deleted)
-                    {
-                        string errorMsg = "The 'title' key for the text is empty or missing.";
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail(new Error(errorMsg));
-                    }
-
                     if (request.Streetcode.Text != null)
                     {
                         await UpdateEntitiesAsync(new List<TextUpdateDTO> { request.Streetcode.Text }, _repositoryWrapper.TextRepository);
-                    }
-
-                    if (string.IsNullOrWhiteSpace(request.Streetcode.Text?.Title)
-                        && request.Streetcode.Videos != null
-                        && !string.IsNullOrWhiteSpace(request.Streetcode.Videos.FirstOrDefault()?.Url))
-                    {
-                        string errorMsg = "The 'title' key for the video is empty or missing.";
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail(new Error(errorMsg));
                     }
 
                     streetcodeToUpdate.Arts = new List<Art>();
@@ -120,9 +117,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                         return Result.Fail(new Error(errorMsg));
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatin"].Value;
+                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdating", ex.Message].Value;
+
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));
                 }
@@ -171,7 +169,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                 {
                     TimelineId = timelineItem.Id,
                     HistoricalContextId = x.Id == 0
-                        ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                        ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                         : x.Id
                 })
                 .ToList();
@@ -190,7 +188,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                   .Select(x => new HistoricalContextTimeline
                   {
                       HistoricalContextId = x.Id == 0
-                          ? createdContext.FirstOrDefault(h => h.Title.Equals(x.Title)).Id
+                          ? createdContext.First(h => h.Title!.Equals(x.Title)).Id
                           : x.Id
                   })
                  .ToList();
@@ -203,7 +201,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.TimelineRepository.DeleteRange(_mapper.Map<List<TimelineItem>>(toDelete));
         }
 
-        private async Task UpdateStreetcodeToponymAsync(StreetcodeContent streetcodeContent, IEnumerable<StreetcodeToponymUpdateDTO> toponyms)
+        private async Task UpdateStreetcodeToponymAsync(StreetcodeContent streetcodeContent, IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
         {
             var (_, toCreate, toDelete) = CategorizeItems(toponyms);
 
@@ -306,7 +304,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.ArtRepository.UpdateRange(toUpdateArts);
             await _repositoryWrapper.SaveChangesAsync();
 
-            StreetcodeArtSlide toCreateSlide = null;
+            StreetcodeArtSlide? toCreateSlide = null;
             var toDeleteSlides = new List<StreetcodeArtSlide>();
             var toUpdateSlides = new List<StreetcodeArtSlide>();
 
@@ -351,6 +349,24 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await repository.CreateRangeAsync(_mapper.Map<IEnumerable<T>>(toCreate));
             repository.DeleteRange(_mapper.Map<IEnumerable<T>>(toDelete));
             repository.UpdateRange(_mapper.Map<IEnumerable<T>>(toUpdate));
+        }
+
+        private async Task UpdateTags(IEnumerable<StreetcodeTagUpdateDTO> tags)
+        {
+            var (toUpdate, toCreate, toDelete) = CategorizeItems(tags);
+
+            foreach (var newTag in toCreate)
+            {
+                var existingTag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(t => t.Title == newTag.Title);
+                if (existingTag is not null && existingTag.Id != newTag.Id)
+                {
+                    throw new HttpRequestException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Tag"]], null, System.Net.HttpStatusCode.BadRequest);
+                }
+            }
+
+            await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toCreate));
+            _repositoryWrapper.StreetcodeTagIndexRepository.DeleteRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toDelete));
+            _repositoryWrapper.StreetcodeTagIndexRepository.UpdateRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toUpdate));
         }
 
         private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)
@@ -401,7 +417,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             return newStreetcodeArts;
         }
 
-        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
+        private void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide? toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
         {
             if (artSlideDto.ModelState == ModelState.Created)
             {

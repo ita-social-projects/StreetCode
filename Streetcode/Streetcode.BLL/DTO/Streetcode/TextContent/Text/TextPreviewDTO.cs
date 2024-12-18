@@ -2,6 +2,6 @@
 {
     public class TextPreviewDTO
     {
-        public string TextContent { get; set; }
+        public string TextContent { get; set; } = null!;
     }
 }

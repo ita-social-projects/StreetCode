@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
@@ -29,9 +28,9 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
         {
             var partners = await _repositoryWrapper.PartnersRepository.GetAllAsync();
 
-            if (partners is null)
+            if (!partners.Any())
             {
-                string? errorMsg = _stringLocalizer?["CannotFindAnyPartners"].Value;
+                string errorMsg = _stringLocalizer["CannotFindAnyPartners"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

@@ -13,16 +13,14 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService _logger;
 
-    public GetAllStreetcodesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetAllStreetcodesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _logger = logger;
     }
 
-    public async Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
+    public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
         var filterRequest = query.request;
 
@@ -44,24 +42,29 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 
-        int pagesAmount = ApplyPagination(ref streetcodes, filterRequest.Amount, filterRequest.Page);
+        var totalAmount = streetcodes.Count();
+
+        if (filterRequest.Amount is not null && filterRequest.Page is not null)
+        {
+            ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);
+        }
 
         var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
 
         var response = new GetAllStreetcodesResponseDTO
         {
-            Pages = pagesAmount,
+            TotalAmount = totalAmount,
             Streetcodes = streetcodeDtos
         };
 
-        return Result.Ok(response);
+        return Task.FromResult(Result.Ok(response));
     }
 
     private void FindStreetcodesWithMatchTitle(
         ref IQueryable<StreetcodeContent> streetcodes,
         string title)
     {
-        streetcodes = streetcodes.Where(s => s.Title
+        streetcodes = streetcodes.Where(s => s.Title!
             .ToLower()
             .Contains(title
             .ToLower()) || s.Index
@@ -110,17 +113,13 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         };
     }
 
-    private int ApplyPagination(
+    private void ApplyPagination(
         ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)
     {
-        var totalPages = (int)Math.Ceiling(streetcodes.Count() / (double)amount);
-
         streetcodes = streetcodes
             .Skip((page - 1) * amount)
             .Take(amount);
-
-        return totalPages;
     }
 }

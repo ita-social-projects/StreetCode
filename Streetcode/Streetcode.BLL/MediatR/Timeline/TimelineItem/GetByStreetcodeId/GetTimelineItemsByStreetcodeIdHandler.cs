@@ -2,7 +2,6 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
@@ -33,9 +32,9 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
                 predicate: f => f.StreetcodeId == request.StreetcodeId,
                 include: ti => ti
                     .Include(til => til.HistoricalContextTimelines)
-                        .ThenInclude(x => x.HistoricalContext)!);
+                        .ThenInclude(x => x.HistoricalContext) !);
 
-        if (timelineItems is null)
+        if (!timelineItems.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTimelineItemByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

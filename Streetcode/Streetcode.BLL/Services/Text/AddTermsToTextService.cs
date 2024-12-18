@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -10,9 +9,9 @@ namespace Streetcode.BLL.Services.Text
     public class AddTermsToTextService : ITextService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private List<int> _buffer;
-
         private readonly StringBuilder _text = new StringBuilder();
+
+        private List<int> _buffer;
 
         public AddTermsToTextService(IRepositoryWrapper repositoryWrapper)
         {
@@ -55,7 +54,7 @@ namespace Streetcode.BLL.Services.Text
 
                 var term = await _repositoryWrapper.TermRepository
                     .GetFirstOrDefaultAsync(
-                        t => t.Title.ToLower().Equals(resultedWord.ToLower()));
+                        t => t.Title!.ToLower().Equals(resultedWord.ToLower()));
 
                 if (term == null)
                 {
@@ -69,7 +68,7 @@ namespace Streetcode.BLL.Services.Text
                 {
                     if (!CheckInBuffer(term.Id))
                     {
-                        resultedWord = MarkTermWithDescription(resultedWord, term.Description);
+                        resultedWord = MarkTermWithDescription(resultedWord, term.Description!);
                         AddToBuffer(term.Id);
                     }
                 }
@@ -93,8 +92,8 @@ namespace Streetcode.BLL.Services.Text
         {
             var relatedTerm = await _repositoryWrapper.RelatedTermRepository
                 .GetFirstOrDefaultAsync(
-                rt => rt.Word.ToLower().Equals(clearedWord.ToLower()),
-                rt => rt.Include(rt => rt.Term));
+                    rt => rt.Word!.ToLower().Equals(clearedWord.ToLower()),
+                    rt => rt.Include(rt => rt.Term!));
 
             if (relatedTerm == null || relatedTerm.Term == null || CheckInBuffer(relatedTerm.TermId))
             {
@@ -103,7 +102,7 @@ namespace Streetcode.BLL.Services.Text
 
             AddToBuffer(relatedTerm.TermId);
 
-            return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description);
+            return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description!);
         }
 
         private (string _clearedWord, string _extras) CleanWord(string word)

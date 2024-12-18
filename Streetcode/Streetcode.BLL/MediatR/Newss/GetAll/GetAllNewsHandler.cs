@@ -1,17 +1,17 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.AspNetCore.Http;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
-using Microsoft.EntityFrameworkCore;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
-    public class GetAllNewsHandler : IRequestHandler<GetAllNewsQuery, Result<IEnumerable<NewsDTO>>>
+    public class GetAllNewsHandler : IRequestHandler<GetAllNewsQuery, Result<GetAllNewsResponseDTO>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
@@ -30,24 +30,25 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Result<IEnumerable<NewsDTO>>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            PaginationResponse<News> paginationResponseNews = _repositoryWrapper
+            PaginationResponse<News> paginationResponse = _repositoryWrapper
                 .NewsRepository
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
-                    include: newsCollection => newsCollection.Include(news => news.Image),
+                    include: newsCollection => newsCollection.Include(news => news.Image!),
                     descendingSortKeySelector: news => news.CreationDate);
 
-            var newsDTOs = MapToNewsDTOs(paginationResponseNews.Entities);
-            AddPaginationHeader(
-                paginationResponseNews.PageSize,
-                paginationResponseNews.CurrentPage,
-                paginationResponseNews.TotalPages,
-                paginationResponseNews.TotalItems);
+            var newsDTOs = MapToNewsDTOs(paginationResponse.Entities);
 
-            return Result.Ok(newsDTOs);
+            GetAllNewsResponseDTO getAllNewsResponseDTO = new GetAllNewsResponseDTO()
+            {
+                TotalAmount = paginationResponse.TotalItems,
+                News = newsDTOs,
+            };
+
+            return Task.FromResult(Result.Ok(getAllNewsResponseDTO));
         }
 
         private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)

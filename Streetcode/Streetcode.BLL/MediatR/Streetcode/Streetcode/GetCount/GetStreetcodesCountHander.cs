@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
                 streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
             }
 
-            if (streetcodes != null)
+            if (streetcodes.Any())
             {
                 return Result.Ok(streetcodes.Count());
             }

@@ -1,7 +1,6 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
@@ -29,7 +28,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();
 
-        if (transactLinks is null)
+        if (!transactLinks.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value;
             _logger.LogError(request, errorMsg);

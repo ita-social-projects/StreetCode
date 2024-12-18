@@ -1,19 +1,18 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Enums;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 
-public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelatedFigureByStreetcodeIdQuery, Result<IEnumerable<RelatedFigureDTO>>>
+public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelatedFigureByStreetcodeIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,11 +27,13 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
+    public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
-        if (relatedFigureIds is null)
+        if (!relatedFigureIds.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
@@ -44,11 +45,12 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
-        if (relatedFigures is null)
+        if (!relatedFigures.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+
+            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
         }
 
         foreach(StreetcodeContent streetcode in relatedFigures)
@@ -59,24 +61,24 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             }
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
+        return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
     }
 
-    private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int StreetcodeId)
+    private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int streetcodeId)
     {
         try
         {
             var observerIds = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.TargetId == StreetcodeId).Select(o => o.ObserverId);
+            .FindAll(f => f.TargetId == streetcodeId).Select(o => o.ObserverId);
 
             var targetIds = _repositoryWrapper.RelatedFigureRepository
-                .FindAll(f => f.ObserverId == StreetcodeId).Select(t => t.TargetId);
+                .FindAll(f => f.ObserverId == streetcodeId).Select(t => t.TargetId);
 
             return observerIds.Union(targetIds).Distinct();
         }
         catch (ArgumentNullException)
         {
-            return null;
+            return Enumerable.Empty<int>().AsQueryable();
         }
     }
 }

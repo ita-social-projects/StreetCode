@@ -208,6 +208,8 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
+        var incorrectPositionId = -10;
+        positionCreateDto.Id = incorrectPositionId;
 
         // Act
         var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);

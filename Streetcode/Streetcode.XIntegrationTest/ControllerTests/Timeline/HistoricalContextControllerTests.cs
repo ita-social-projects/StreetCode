@@ -190,6 +190,8 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     {
         // Arrange
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
+        var invalidHistoricalContextId = -10;
+        historicalContextCreateDto.Id = invalidHistoricalContextId;
 
         // Act
         var response = await this.Client.UpdateAsync(historicalContextCreateDto, this.TokenStorage.AdminAccessToken);

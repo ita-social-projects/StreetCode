@@ -288,6 +288,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             // Arrange
             var tagUpdateDTO = ExtractUpdateTestTagAttribute.TagForTest;
+            var incorrectTagId = -10;
+            tagUpdateDTO.Id = incorrectTagId;
 
             // Act
             var response = await this.Client.UpdateAsync(tagUpdateDTO, this.TokenStorage.AdminAccessToken);

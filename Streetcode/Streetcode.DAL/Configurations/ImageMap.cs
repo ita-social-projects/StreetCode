@@ -28,7 +28,7 @@ public class ImageMap : IEntityTypeConfiguration<Image>
         builder.HasMany(d => d.Facts)
             .WithOne(p => p.Image)
             .HasForeignKey(d => d.ImageId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade);  
 
         builder.HasMany(i => i.SourceLinkCategories)
             .WithOne(s => s.Image)
@@ -38,6 +38,6 @@ public class ImageMap : IEntityTypeConfiguration<Image>
         builder.HasOne(d => d.News)
             .WithOne(p => p.Image)
             .HasForeignKey<News>(d => d.ImageId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.ClientCascade);
     }
 }

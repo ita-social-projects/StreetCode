@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
+    [Collection("Art")]
     public class ArtControllerTests : BaseControllerTests<ArtClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Art testArt;

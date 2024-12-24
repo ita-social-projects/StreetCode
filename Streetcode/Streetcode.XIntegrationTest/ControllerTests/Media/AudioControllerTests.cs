@@ -12,6 +12,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
+    [Collection("Audio")]
     public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Audio testAudio;

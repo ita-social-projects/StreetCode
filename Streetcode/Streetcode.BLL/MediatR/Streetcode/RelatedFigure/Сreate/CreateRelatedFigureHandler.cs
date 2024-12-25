@@ -54,7 +54,7 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
 
         if (existingRelation is not null)
         {
-            string errorMsg = _stringLocalizerFailed["FailedToCreateRelation"].Value;
+            string errorMsg = _stringLocalizerFailed["TheStreetcodesAreAlreadyLinked"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

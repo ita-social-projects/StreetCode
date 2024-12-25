@@ -48,6 +48,17 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
             return Result.Fail(new Error(errorMsg));
         }
 
+        var existingRelation = await _repositoryWrapper.RelatedFigureRepository.GetFirstOrDefaultAsync(rel =>
+            (rel.ObserverId == request.ObserverId && rel.TargetId == request.TargetId) ||
+            (rel.ObserverId == request.TargetId && rel.TargetId == request.ObserverId));
+
+        if (existingRelation is not null)
+        {
+            string errorMsg = _stringLocalizerFailed["FailedToCreateRelation"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var relation = new DAL.Entities.Streetcode.RelatedFigure
         {
             ObserverId = observerEntity.Id,

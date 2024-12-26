@@ -58,7 +58,8 @@ namespace Streetcode.WebApi.Controllers.Authentication
             return Ok("Logout successful. Refresh token invalidated.");
         }
 
-        [HttpPost("google-login")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
         public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
         {
             var result = await Mediator.Send(new LoginGoogleQuery(idToken));

@@ -204,7 +204,6 @@
       <DependentUpon>SharedResource.NoSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Remove="ByteArrayFormatter.cs" />
-    <Compile Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs" />
 
     <Compile Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -229,7 +228,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToCreateSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResource.FailedToValidateSharedResource.en-US.Designer.cs</LastGenOutput>

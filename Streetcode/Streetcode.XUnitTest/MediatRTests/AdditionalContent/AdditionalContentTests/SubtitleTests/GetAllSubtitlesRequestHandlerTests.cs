@@ -78,7 +78,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         public async Task Handler_Returns_Error()
         {
             // Arrange
-            this.SetupRepository(new List<Subtitle>());
+            this.SetupRepository(null);
             this.SetupMapper(new List<SubtitleDTO>());
 
             var expectedError = $"Cannot find any subtitles";

@@ -28,7 +28,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();
 
-        if (!transactLinks.Any())
+        if (transactLinks is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value;
             _logger.LogError(request, errorMsg);

@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
                     predicate: st => st.StreetcodeCoordinate.StreetcodeId == request.streetcodeId,
                     include: st => st.Include(st => st.StreetcodeCoordinate));
 
-            if (!statisticRecords.Any())
+            if (statisticRecords is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithStreetcodeId", request.streetcodeId];
                 _logger.LogError(request, errorMsg);
@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
 
             var statisticRecordsDTOs = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
 
-            if (!statisticRecordsDTOs.Any())
+            if (statisticRecordsDTOs is null)
             {
                 string errorMsg = _stringLocalizerCannotMap["CannotMapRecord"];
                 _logger.LogError(request, errorMsg);

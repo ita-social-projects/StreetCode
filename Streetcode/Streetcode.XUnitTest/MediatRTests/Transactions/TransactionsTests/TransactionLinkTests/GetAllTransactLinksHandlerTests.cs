@@ -87,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         public async Task Error()
         {
             // Arrange
-            this.SetupRepository(new List<TransactionLink>());
+            this.SetupRepository(null);
             this.SetupMapper(new List<TransactLinkDTO>());
 
             var expectedError = $"Cannot find any transaction link";

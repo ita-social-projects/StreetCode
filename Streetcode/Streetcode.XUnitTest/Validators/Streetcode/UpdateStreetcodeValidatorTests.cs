@@ -136,16 +136,13 @@ public class UpdateStreetcodeValidatorTests
         this.SetupRepositoryWrapperReturnsNull();
         var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["TransactionLinkUrl"]];
         var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.TransactionLink = new TransactionLinkUpdateDTO()
-        {
-            Url = invalidUrl,
-        };
+        command.Streetcode.Url = invalidUrl;
 
         // Act
         var result = await this.validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.TransactionLink!.Url)
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.Url)
             .WithErrorMessage(expectedError);
     }
 
@@ -156,13 +153,13 @@ public class UpdateStreetcodeValidatorTests
         this.SetupRepositoryWrapperReturnsNull();
         var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["TransactionLinkUrl"]];
         var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.TransactionLink!.Url = null;
+        command.Streetcode.Url = null;
 
         // Act
         var result = await validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.TransactionLink!.Url)
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.Url)
             .WithErrorMessage(expectedError);
     }
 
@@ -322,10 +319,7 @@ public class UpdateStreetcodeValidatorTests
             {
                 new (),
             },
-            TransactionLink = new TransactionLinkUpdateDTO()
-            {
-                Url = "http://streetcode.com.ua/taras-shevchenko",
-            },
+            Url = "http://streetcode.com.ua/taras-shevchenko",
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
             {
                 new (),

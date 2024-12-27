@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Entity = Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm;
@@ -43,7 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                         It.IsAny<Expression<Func<Entity, bool>>>(),
                         It.IsAny<Func<IQueryable<Entity>,
                         IIncludableQueryable<Entity, object>>>()))
-                .ReturnsAsync(new List<Entity>());
+                .ReturnsAsync(GetEntityListWithNotExistingId());
 
             var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
             var expectedError = "Cannot get words by term id";
@@ -74,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                 .ReturnsAsync(relatedTerms);
             this.mockMapper
                 .Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
-                .Returns(new List<RelatedTermDTO>());
+                .Returns(GetRelatedTermDTOListWithNotExistingId());
 
             var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
             var expectedError = "Cannot create DTOs for related words!";
@@ -152,6 +153,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
              () => Assert.Equal(relatedTermDTOs[0].Id, result.Value.First().Id),
              () => Assert.Equal(relatedTermDTOs[0].TermId, result.Value.First().TermId),
              () => Assert.Equal(relatedTermDTOs[0].Word, result.Value.First().Word));
+        }
+
+        private static List<Entity> GetEntityListWithNotExistingId()
+        {
+            return null;
+        }
+
+        private static List<RelatedTermDTO> GetRelatedTermDTOListWithNotExistingId()
+        {
+            return null;
         }
 
         private static Entity CreateNewEntity(int id, string word, int termId)

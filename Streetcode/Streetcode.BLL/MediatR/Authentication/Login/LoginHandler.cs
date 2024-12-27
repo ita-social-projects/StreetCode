@@ -3,10 +3,12 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
@@ -17,6 +19,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         private readonly ITokenService _tokenService;
         private readonly ILoggerService _logger;
         private readonly UserManager<User> _userManager;
+        private readonly IStringLocalizer<UserSharedResource> _localizer;
         private readonly ICaptchaService _captchaService;
 
         public LoginHandler(
@@ -24,13 +27,15 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
             ITokenService tokenService,
             ILoggerService logger,
             UserManager<User> userManager,
-            ICaptchaService captchaService)
+            ICaptchaService captchaService,
+            IStringLocalizer<UserSharedResource> localizer)
         {
             _mapper = mapper;
             _tokenService = tokenService;
             _logger = logger;
             _userManager = userManager;
             _captchaService = captchaService;
+            _localizer = localizer;
         }
 
         public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -71,8 +76,8 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 }
 
                 string errorMessage = isUserNull ?
-                    "User with such Email and Username in not found" :
-                    "Password is incorrect";
+                    _localizer["UserWithSuchEmailNotFound"] :
+                    _localizer["IncorrectPassword"];
                 _logger.LogError(request, errorMessage);
                 return Result.Fail(errorMessage);
             }

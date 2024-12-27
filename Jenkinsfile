@@ -245,6 +245,7 @@ pipeline {
             }
       }
     }
+    /*
    stage('Deploy prod') {
          agent { 
            label 'production' 
@@ -285,6 +286,7 @@ pipeline {
             }
         }
     }
+*/
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -312,6 +314,7 @@ pipeline {
             }
         }
     }
+    /*
     stage('Rollback Prod') {  
         agent { 
            label 'production' 
@@ -337,6 +340,7 @@ pipeline {
                 }
             }    
         }
+    */
     }
 post { 
     always { 

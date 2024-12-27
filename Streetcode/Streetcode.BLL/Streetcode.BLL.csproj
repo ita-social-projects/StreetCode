@@ -78,15 +78,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.UserSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.Users.Login.LoginHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.UserSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.UserSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.Users.Login.LoginHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.UserSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Services.Users.TokenService.en-UK.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -204,7 +204,6 @@
       <DependentUpon>SharedResource.NoSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Remove="ByteArrayFormatter.cs" />
-    <Compile Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs" />
 
     <Compile Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -229,7 +228,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToCreateSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResource.FailedToValidateSharedResource.en-US.Designer.cs</LastGenOutput>
@@ -273,11 +275,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.UserSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Users.Login.LoginHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.UserSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>

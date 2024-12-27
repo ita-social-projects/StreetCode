@@ -2,8 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -16,13 +18,15 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly UserManager<User> _userManager;
+        private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-        public RegisterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager)
+        public RegisterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager, IStringLocalizer<UserSharedResource> localizer)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
+            _localizer = localizer;
         }
 
         public async Task<Result<RegisterResponseDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
@@ -57,7 +61,10 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
             if (userFromDbDyEmail is not null)
             {
                 bool isNotUniqueByEmail = userFromDbDyEmail.Email == user.Email;
-                return Result.Fail($"User with such {(isNotUniqueByEmail ? "Email" : "UserName")} already exists in database");
+                string errorMessage = isNotUniqueByEmail
+                    ? _localizer["UserWithSuchEmailExists"]
+                    : _localizer["UserWithSuchUsernameExists"];
+                return Result.Fail(errorMessage);
             }
 
             return Result.Ok();
@@ -74,7 +81,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
                 }
                 else
                 {
-                    string errorMessage = result.Errors.FirstOrDefault()?.Description ?? "Error from UserManager while creating user";
+                    string errorMessage = result.Errors.FirstOrDefault()?.Description ?? _localizer["UserManagerError"];
                     _logger.LogError(request, errorMessage);
                     return Result.Fail(errorMessage);
                 }

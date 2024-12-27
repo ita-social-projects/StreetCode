@@ -67,7 +67,7 @@
         <value>Розширення</value>
     </data>
     <data name="Alt" xml:space="preserve">
-        <value>Альтернативний текст</value>
+        <value>Alt</value>
     </data>
     <data name="BaseFormat" xml:space="preserve">
         <value>Файл у форматі base64</value>
@@ -209,5 +209,8 @@
     </data>
     <data name="Images" xml:space="preserve">
         <value>Картинки</value>
+    </data>
+    <data name="Amount" xml:space="preserve">
+        <value>Сума</value>
     </data>
 </root>

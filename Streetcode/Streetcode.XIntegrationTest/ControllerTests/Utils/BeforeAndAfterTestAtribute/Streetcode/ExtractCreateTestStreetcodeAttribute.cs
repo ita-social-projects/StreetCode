@@ -58,7 +58,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 Subtitles = new List<SubtitleCreateDTO>(),
                 Facts = new List<StreetcodeFactCreateDTO>(),
                 Videos = new List<VideoCreateDTO>(),
-                Partners = new List<PartnerShortDTO>(),
+                Partners = new List<int>(),
                 Arts = new List<ArtCreateUpdateDTO>(),
                 StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
                 StatisticRecords = new List<StatisticRecordDTO>(),

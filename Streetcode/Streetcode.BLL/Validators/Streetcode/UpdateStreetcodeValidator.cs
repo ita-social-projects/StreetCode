@@ -35,11 +35,11 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
         RuleFor(c => c.Streetcode)
             .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
-        RuleFor(c => c.Streetcode!.Url)
+        RuleFor(c => c.Streetcode!.ARBlockUrl)
             .MustBeValidUrl()
             .WithMessage(localizer["ValidUrl", fieldLocalizer["TransactionLinkUrl"]]);
 
-        RuleFor(c => c.Streetcode.Url)
+        RuleFor(c => c.Streetcode.ARBlockUrl)
             .NotNull()
             .WithMessage(localizer["IsRequired", fieldLocalizer["TransactionLinkUrl"]]);
 

@@ -136,13 +136,13 @@ public class UpdateStreetcodeValidatorTests
         this.SetupRepositoryWrapperReturnsNull();
         var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["TransactionLinkUrl"]];
         var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.Url = invalidUrl;
+        command.Streetcode.ARBlockUrl = invalidUrl;
 
         // Act
         var result = await this.validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.Url)
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ARBlockUrl)
             .WithErrorMessage(expectedError);
     }
 
@@ -153,13 +153,13 @@ public class UpdateStreetcodeValidatorTests
         this.SetupRepositoryWrapperReturnsNull();
         var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["TransactionLinkUrl"]];
         var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.Url = null;
+        command.Streetcode.ARBlockUrl = null;
 
         // Act
         var result = await validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.Url)
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ARBlockUrl)
             .WithErrorMessage(expectedError);
     }
 
@@ -319,7 +319,7 @@ public class UpdateStreetcodeValidatorTests
             {
                 new (),
             },
-            Url = "http://streetcode.com.ua/taras-shevchenko",
+            ARBlockUrl = "http://streetcode.com.ua/taras-shevchenko",
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
             {
                 new (),

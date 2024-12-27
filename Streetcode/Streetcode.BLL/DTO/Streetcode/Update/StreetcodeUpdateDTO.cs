@@ -22,7 +22,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
     {
         public int Id { get; set; }
         public TextUpdateDTO? Text { get; set; }
-        public string? Url { get; set; }
+        public string? ARBlockUrl { get; set; }
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = null!;
         public IEnumerable<StreetcodeFactUpdateDTO> Facts { get; set; }
         public IEnumerable<VideoUpdateDTO>? Videos { get; set; }

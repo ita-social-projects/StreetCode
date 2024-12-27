@@ -32,6 +32,7 @@ using Streetcode.BLL.Validators.Streetcode.Text;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Streetcode.Toponyms;
 using Streetcode.BLL.Validators.Streetcode.Video;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -190,6 +191,32 @@ public class CreateStreetcodeValidatorTests
     }
 
     [Fact]
+    public async Task ShouldReturnValidationError_WhenImageDoesntExist()
+    {
+        // Arrange
+        this.SetupRepositoryWrapperReturnsNull();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(repositoryWrapper);
+        var command = GetValidCreateStreetcodeCommand();
+        var invalidImageIds = new List<int>() {10, 20};
+        command.Streetcode.ImagesIds = invalidImageIds;
+
+
+        // Act
+        var result = await validator.TestValidateAsync(command);
+
+        // Assert
+        var imageIds = command.Streetcode.ImagesIds.ToList(); 
+        for (int i = 0; i < imageIds.Count; i++)
+        {
+            var imageId = imageIds[i];
+            var expectedError = mockValidationLocalizer["ImageDoesntExist", imageId];
+
+            result.ShouldHaveValidationErrorFor($"Streetcode.ImagesIds[{i}]")
+                .WithErrorMessage(expectedError);
+        }
+    }
+
+    [Fact]
     public async Task ShouldCallBaseValidator_WhenValidated()
     {
         // Arrange
@@ -230,6 +257,11 @@ public class CreateStreetcodeValidatorTests
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
             .ReturnsAsync(null as StreetcodeContent);
+
+        this.repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Image, bool>>>(),
+                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = 8 });
     }
 
     private void SetupRepositoryWrapper(int id)
@@ -241,6 +273,11 @@ public class CreateStreetcodeValidatorTests
             {
                 Id = id,
             });
+
+        this.repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Image, bool>>>(),
+                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = id });
     }
 
     private void SetupValidatorMocks()

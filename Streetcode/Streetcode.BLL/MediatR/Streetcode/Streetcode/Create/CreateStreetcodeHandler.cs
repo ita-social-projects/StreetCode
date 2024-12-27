@@ -325,12 +325,12 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.TimelineItems.AddRange(newTimelines);
     }
 
-    private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<PartnerShortDTO> partners)
+    private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<int> partners)
     {
-        var partnersToCreate = partners.Select(partner => new StreetcodePartner
+        var partnersToCreate = partners.Select(partnerId => new StreetcodePartner
         {
             StreetcodeId = streetcode.Id,
-            PartnerId = partner.Id
+            PartnerId = partnerId
         })
           .ToList();
         await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);

@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
 using ImgDetails = Streetcode.DAL.Entities.Media.Images.ImageDetails;
@@ -22,6 +22,7 @@ public class ImageDetailsValidatorTests
     {
         this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+
         this.mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
         this.imageDetailsValidator = new ImageDetailsValidator(this.mockValidationLocalizer, this.mockNamesLocalizer, this.mockRepositoryWrapper.Object);
     }
@@ -90,12 +91,35 @@ public class ImageDetailsValidatorTests
             .WithErrorMessage(expectedError);
     }
 
+    [Fact]
+    public async Task ShouldReturnValidationError_WhenImageDoesntExist()
+    {
+        // Arrange
+        this.SetupRepositoryWrapper(1);
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(mockRepositoryWrapper);
+        var imageDetails = GetImageDetails(2);
+        imageDetails.ImageId = 10;
+        var expectedError = mockValidationLocalizer["ImageDoesntExist", imageDetails.ImageId];
+
+        // Act
+        var result = await imageDetailsValidator.TestValidateAsync(imageDetails);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.ImageId)
+            .WithErrorMessage(expectedError);
+    }
+
     private void SetupRepositoryWrapper(int id)
     {
         this.mockRepositoryWrapper.Setup(x => x.ImageDetailsRepository.GetFirstOrDefaultAsync(
             It.IsAny<Expression<Func<ImgDetails, bool>>>(),
             It.IsAny<Func<IQueryable<ImgDetails>, IIncludableQueryable<ImgDetails, object>>>()))
             .ReturnsAsync(new ImgDetails { Id = id });
+        
+        this.mockRepositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+            It.IsAny<Expression<Func<Image, bool>>>(),
+            It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = id });
     }
 
     private ImageDetailsDto GetImageDetails(int id)

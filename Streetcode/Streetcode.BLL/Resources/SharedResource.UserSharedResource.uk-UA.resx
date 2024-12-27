@@ -118,6 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UserNotFound" xml:space="preserve">
-    <value>User not found</value>
+    <value>Користувача не знайдено</value>
+  </data>
+  <data name="IncorrectPassword" xml:space="preserve">
+    <value>Неправильний пароль</value>
+  </data>
+  <data name="UserWithSuchEmailNotFound" xml:space="preserve">
+    <value>Користувача з такою поштою та іменем не знайдено</value>
+  </data>
+  <data name="UserWithSuchEmailExists" xml:space="preserve">
+    <value>Користувач з такою поштою вже зареєстрований</value>
+  </data>
+  <data name="UserWithSuchUsernameExists" xml:space="preserve">
+    <value>Користувач з таким іменем вже зареєстрований</value>
+  </data>
+  <data name="UserManagerError" xml:space="preserve">
+    <value>Помилка в User Manager</value>
   </data>
 </root>

@@ -2,7 +2,9 @@ using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util;
 using Streetcode.BLL.Validators.Common;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Validators.Media.Image;
 
@@ -21,8 +23,12 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
             .MaximumLength(MaxTitleLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], MaxTitleLength]);
 
         RuleFor(dto => dto.Alt)
-            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Alt"]])
-            .MaximumLength(MaxAltLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alt"], MaxAltLength]);
+            .Must(value => Enum.TryParse<ImageAssigment>(value, out var parsedValue) &&
+                           parsedValue >= EnumExtensions.Min<ImageAssigment>() &&
+                           parsedValue <= EnumExtensions.Max<ImageAssigment>())
+            .WithMessage(localizer["MustBeBetween", fieldLocalizer["Alt"], (int)EnumExtensions.Min<ImageAssigment>(), (int)EnumExtensions.Max<ImageAssigment>()])
+            .MaximumLength(MaxAltLength)
+            .WithMessage(localizer["MaxLength", fieldLocalizer["Alt"], MaxAltLength]);
 
         RuleFor(dto => dto.BaseFormat)
             .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["BaseFormat"]]);

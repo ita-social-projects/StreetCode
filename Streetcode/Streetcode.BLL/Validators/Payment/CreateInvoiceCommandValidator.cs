@@ -25,6 +25,6 @@ public class CreateInvoiceCommandValidator : AbstractValidator<CreateInvoiceComm
             .MustBeValidUrl(VideoHosts).WithMessage(x => localizer["ValidUrl", fieldLocalizer["RedirectUrl"]]);
 
         RuleFor(c => c.Payment.Amount)
-            .GreaterThan(AmountGreaterThan).WithMessage(x => localizer["GreaterThan", fieldLocalizer["RedirectUrl"], AmountGreaterThan]);
+            .GreaterThan(AmountGreaterThan).WithMessage(x => localizer["GreaterThan", fieldLocalizer["Amount"], AmountGreaterThan]);
     }
 }

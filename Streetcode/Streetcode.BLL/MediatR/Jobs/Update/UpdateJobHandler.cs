@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,11 +15,13 @@ namespace Streetcode.BLL.MediatR.Jobs.Update
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly IMapper _mapper;
 		private readonly ILoggerService _logger;
-		public UpdateJobHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger)
+		private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
+		public UpdateJobHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
 		{
 			_repositoryWrapper = repository;
 			_mapper = mapper;
 			_logger = logger;
+			_stringLocalizer = stringLocalizer;
 		}
 
 		public async Task<Result<JobDto>> Handle(UpdateJobCommand request, CancellationToken cancellationToken)
@@ -26,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Jobs.Update
 				await _repositoryWrapper.JobRepository.GetFirstOrDefaultAsync(x => x.Id == request.job.Id);
 			if (existedJob is null)
 			{
-				string exMessage = $"No job found by entered Id - {request.job.Id}";
+				string exMessage = _stringLocalizer["CannotFindJobWithCorrespondingId", request.job.Id];
 				_logger.LogError(request, exMessage);
 				return Result.Fail(exMessage);
 			}

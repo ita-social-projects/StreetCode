@@ -23,7 +23,7 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public IEnumerable<StreetcodeFactCreateDTO> Facts { get; set; } = null!;
         public IEnumerable<VideoCreateDTO>? Videos { get; set; } = null!; // video is only one
         public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
-        public IEnumerable<PartnerShortDTO> Partners { get; set; } = null!;
+        public IEnumerable<int> Partners { get; set; } = null!;
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; } = null!;
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; } = null!;
         public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; } = null!;

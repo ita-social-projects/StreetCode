@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,12 +15,14 @@ public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionComma
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-    public UpdateTeamPositionHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger)
+    public UpdateTeamPositionHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> localizer)
     {
         _repository = repository;
         _mapper = mapper;
         _logger = logger;
+        _stringLocalizer = localizer;
     }
 
     public async Task<Result<PositionDTO>> Handle(UpdateTeamPositionCommand request, CancellationToken cancellationToken)
@@ -27,7 +31,7 @@ public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionComma
 
         if (position is null)
         {
-            string exMessage = $"No position found by entered Id - {request.positionDto.Id}";
+            string exMessage = _stringLocalizer["CannotFindPositionWithCorrespondingId", request.positionDto.Id];
             _logger.LogError(request, exMessage);
             return Result.Fail(exMessage);
         }

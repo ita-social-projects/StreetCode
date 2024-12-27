@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.Delete
@@ -9,11 +11,13 @@ namespace Streetcode.BLL.MediatR.Jobs.Delete
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly ILoggerService _logger;
+		private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-		public DeleteJobHandler(IRepositoryWrapper repository, ILoggerService logger)
+		public DeleteJobHandler(IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
 		{
 			_repositoryWrapper = repository;
 			_logger = logger;
+			_stringLocalizer = stringLocalizer;
 		}
 
 		public async Task<Result<int>> Handle(DeleteJobCommand request, CancellationToken cancellationToken)
@@ -22,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Jobs.Delete
 				await _repositoryWrapper.JobRepository.GetFirstOrDefaultAsync(x => x.Id == request.id);
 			if (jobToDelete is null)
 			{
-				string exMessage = $"No job found by entered Id - {request.id}";
+				string exMessage = _stringLocalizer["CannotFindJobWithCorrespondingId", request.id];
 				_logger.LogError(request, exMessage);
 				return Result.Fail(exMessage);
 			}

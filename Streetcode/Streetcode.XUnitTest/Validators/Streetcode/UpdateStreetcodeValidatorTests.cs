@@ -134,7 +134,7 @@ public class UpdateStreetcodeValidatorTests
     {
         // Arrange
         this.SetupRepositoryWrapperReturnsNull();
-        var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["TransactionLinkUrl"]];
+        var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["ARBlockURL"]];
         var command = this.GetValidCreateStreetcodeCommand();
         command.Streetcode.ARBlockUrl = invalidUrl;
 
@@ -151,7 +151,7 @@ public class UpdateStreetcodeValidatorTests
     {
         // Arange
         this.SetupRepositoryWrapperReturnsNull();
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["TransactionLinkUrl"]];
+        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["ARBlockURL"]];
         var command = this.GetValidCreateStreetcodeCommand();
         command.Streetcode.ARBlockUrl = null;
 

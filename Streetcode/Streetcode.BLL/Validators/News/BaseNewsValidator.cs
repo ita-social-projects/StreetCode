@@ -10,6 +10,7 @@ namespace Streetcode.BLL.Validators.News;
 public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
 {
     public const int TitleMaxLength = 100;
+    public const int TextMaxLength = 15000;
     public const int UrlMaxLength = 200;
     private const int ImageIdMinValue = 0;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,9 +26,11 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
                 .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(x => x.Text)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Text"]]);
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Text"]])
+            .MaximumLength(TextMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Text"], TextMaxLength]);
 
         RuleFor(x => x.ImageId)
+                .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["ImageId"]])
                 .GreaterThan(ImageIdMinValue).WithMessage(x => localizer["Invalid", fieldLocalizer["ImageId"]])
                 .MustAsync(BeExistingImageId).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
 

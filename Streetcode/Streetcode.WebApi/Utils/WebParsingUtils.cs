@@ -166,9 +166,9 @@ public class WebParsingUtils
         var alreadyParsedRowsToWrite = allLinesFromDataCsv.Distinct().ToList();
 
         var remainsToParse = forParsingRows.Except(alreadyParsedRows)
-            .Select(x => x.Split(';').ToList()).ToList()
-            .Take(20) // TODO take it of if you want to start global parse
-            .ToList();
+            .Select(x => x.Split(';').ToList()).ToList();
+            /*.Take(20) // TODO take it of if you want to start global parse
+            .ToList();*/
 
         var toBeDeleted = alreadyParsedRows.Except(forParsingRows).ToList();
 
@@ -283,12 +283,12 @@ public class WebParsingUtils
             using var client = new HttpClient();
 
             // Add user-agent and referer headers to request
-            client.DefaultRequestHeaders.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-            client.DefaultRequestHeaders.Add("Referer", "https://www.microsoft.com");
+            client.DefaultRequestHeaders.Add("User-Agent", "HistoryCode");
 
             // Send GET request to Nominatim API and retrieve JSON data
+            var encodedAddress = Uri.EscapeDataString(address);
             var jsonData = await retryPolicy.WrapAsync(circuitBreakerPolicy).ExecuteAsync(async () =>
-                await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={address}, Україна&format=json&limit=1&addressdetails=1"));
+                await client.GetByteArrayAsync($"https://nominatim.openstreetmap.org/search?q={encodedAddress}, Україна&format=json&limit=1&addressdetails=1"));
 
             return ParseJsonToCoordinateTuple(Encoding.UTF8.GetString(jsonData));
         }

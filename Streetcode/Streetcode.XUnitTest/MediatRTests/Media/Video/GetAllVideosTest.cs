@@ -145,11 +145,11 @@ public class GetAllVideosTest
 
     private static List<Video> GetVideosWithNotExistingId()
     {
-        return new List<Video>();
+        return null;
     }
 
     private static List<VideoDTO> GetVideosDTOWithNotExistingId()
     {
-        return new List<VideoDTO>();
+        return null;
     }
 }

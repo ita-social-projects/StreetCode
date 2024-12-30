@@ -306,4 +306,19 @@
   <data name="CannotFindVideoWithCorrespondingId" xml:space="preserve">
     <value>Не вдалося знайти відео з відповідним ідентифікатором: {0}</value>
   </data>
+  <data name="CannotFindRecordWithStreetcodeId" xml:space="preserve">
+    <value>Не вдалось знайти запис для стріткоду з ідентифікатором {0}</value>
+  </data>
+  <data name="CannotFindPositionWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти позицію з ідентифікатором {0}</value>
+  </data>
+  <data name="CannotFindPositionWithCorrespondingTitle" xml:space="preserve">
+    <value>Не вдалося знайти позицію з назвою '{0}'</value>
+  </data>
+  <data name="CannotFindHistoricalContextWithCorrespondingId" xml:space="preserve">
+    <value>Не вдалося знайти історичний контекст з ідентифікатором {0}</value>
+  </data>
+  <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
+    <value>Не вдалося знайти історичний контекст з назвою '{0}'</value>
+  </data>
 </root>

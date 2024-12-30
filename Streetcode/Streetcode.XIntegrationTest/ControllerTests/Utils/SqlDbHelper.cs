@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
+using System.Collections.Concurrent;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class SqlDbHelper
     {
         private readonly StreetcodeDbContext dbContext;
+        private readonly object _lock = new object();
+        private static readonly ConcurrentDictionary<Type, object> _entityLocks = new ConcurrentDictionary<Type, object>();
 
         public SqlDbHelper(DbContextOptions<StreetcodeDbContext> options)
         {
@@ -60,30 +63,45 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 }
             }
 
-            return this.dbContext.Set<T>().Add(newItem).Entity;
+            lock (_entityLocks.GetOrAdd(typeof(T), new object()))
+            {
+                return this.dbContext.Set<T>().Add(newItem).Entity;
+            }
         }
 
         public void AddItemWithCustomId<T>(T newItem)
             where T : class, new()
         {
-            try
+            var entityLock = _entityLocks.GetOrAdd(typeof(T), new object());
+
+            lock (entityLock)
             {
-                this.dbContext.Database.OpenConnection();
+                try
+                {
+                    this.dbContext.Database.OpenConnection();
 
-                string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema() !;
-                string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName() !;
+                    string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema()!;
+                    string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName()!;
 
-                string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
-                string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
+                    string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
+                    string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
 
-                this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
-                this.dbContext.Add(newItem);
-                this.dbContext.SaveChanges();
-                this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
-            }
-            finally
-            {
-                this.dbContext.Database.CloseConnection();
+                    this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    
+                    var trackedEntity = this.dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == newItem);
+                    if (trackedEntity != null)
+                    {
+                        trackedEntity.State = EntityState.Detached;
+                    }
+
+                    this.dbContext.Add(newItem);
+                    this.dbContext.SaveChanges();
+                    this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
+                }
+                finally
+                {
+                    this.dbContext.Database.CloseConnection();
+                }
             }
         }
 
@@ -123,9 +141,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         public T DeleteItem<T>(T item)
             where T : class, new()
         {
-            return this.dbContext.Set<T>().Remove(item).Entity;
+            lock (_entityLocks.GetOrAdd(typeof(T), new object()))
+            {
+                return this.dbContext.Set<T>().Remove(item).Entity;
+            }
         }
 
-        public void SaveChanges() => this.dbContext.SaveChanges();
+        public void SaveChanges()
+        {
+            lock (_lock)
+            {
+                this.dbContext.SaveChanges();
+            }
+        }
     }
 }

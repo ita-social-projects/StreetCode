@@ -53,5 +53,8 @@
 	<ProjectReference Include="..\Streetcode.BLL\Streetcode.BLL.csproj" />
 	<ProjectReference Include="..\Streetcode.DAL\Streetcode.DAL.csproj" />
 	<ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
+	<None Update="xunit.runner.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
 </Project>

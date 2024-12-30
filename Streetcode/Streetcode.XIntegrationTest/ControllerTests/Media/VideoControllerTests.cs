@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
+    [Collection("Video")]
     public class VideoControllerTests : BaseControllerTests<VideoClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Video testVideo;

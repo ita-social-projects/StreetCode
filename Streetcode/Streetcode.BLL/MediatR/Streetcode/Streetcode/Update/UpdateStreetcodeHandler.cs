@@ -83,6 +83,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     UpdateAudio(request.Streetcode.Audios, streetcodeToUpdate);
                     await UpdateArtGallery(streetcodeToUpdate, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                     await UpdateImagesAsync(request.Streetcode.Images);
+                    UpdateTransactionLink(streetcodeToUpdate, request.Streetcode.ARBlockUrl);
 
                     await UpdateFactsDescription(request.Streetcode.ImagesDetails);
                     var deleteTransactionLinks = _repositoryWrapper.TransactLinksRepository.FindAll(t => t.StreetcodeId == streetcodeToUpdate.Id);
@@ -236,6 +237,18 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             _repositoryWrapper.ImageRepository.DeleteRange(_mapper.Map<IEnumerable<Image>>(toDelete));
             await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(_mapper.Map<IEnumerable<StreetcodeImage>>(toCreate));
+        }
+
+        private void UpdateTransactionLink(StreetcodeContent streetcode, string? url)
+        {
+            if (url is null)
+            {
+                streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
+                {
+                    Url = "",
+                    UrlTitle = "",
+                };
+            }
         }
 
         private void UpdateAudio(IEnumerable<AudioUpdateDTO> audios, StreetcodeContent streetcode)

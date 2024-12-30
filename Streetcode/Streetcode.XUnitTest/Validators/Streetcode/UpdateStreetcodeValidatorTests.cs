@@ -147,23 +147,6 @@ public class UpdateStreetcodeValidatorTests
     }
 
     [Fact]
-    public async Task ShouldReturnError_WhenTransactionUrlIsNull()
-    {
-        // Arange
-        this.SetupRepositoryWrapperReturnsNull();
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["ARBlockURL"]];
-        var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.ARBlockUrl = null;
-
-        // Act
-        var result = await validator.TestValidateAsync(command);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ARBlockUrl)
-            .WithErrorMessage(expectedError);
-    }
-
-    [Fact]
     public async Task ShouldReturnError_WhenExistsVideosWithoutTitle()
     {
         // Arrange

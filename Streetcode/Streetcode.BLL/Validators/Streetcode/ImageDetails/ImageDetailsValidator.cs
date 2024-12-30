@@ -27,6 +27,7 @@ public class ImageDetailsValidator : AbstractValidator<ImageDetailsDto>
 
         RuleFor(dto => dto)
             .MustAsync(BeUniqueImageIdInImageDetails).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
+
         RuleFor(dto => dto.ImageId)
             .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token)).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
     }

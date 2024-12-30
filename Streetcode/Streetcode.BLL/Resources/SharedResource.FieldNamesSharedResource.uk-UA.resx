@@ -178,7 +178,7 @@
         <value>Посилання для блоку AR</value>
     </data>
     <data name="TransactionLinkUrl" xml:space="preserve">
-        <value>Посилання для QR-коду</value>
+        <value>Посилання для QR-код</value>
     </data>
     <data name="Text" xml:space="preserve">
         <value>Текст</value>

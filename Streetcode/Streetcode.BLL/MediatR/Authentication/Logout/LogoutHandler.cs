@@ -2,21 +2,22 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Authentication.Logout;
 
 public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
 {
-    private readonly StreetcodeDbContext _dbContext;
+    private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public LogoutHandler(StreetcodeDbContext dbContext)
+    public LogoutHandler(IRepositoryWrapper repositoryWrapper)
     {
-        _dbContext = dbContext;
+        _repositoryWrapper = repositoryWrapper;
     }
 
     public async Task<Result> Handle(LogoutCommand request, CancellationToken cancellationToken)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Id == request.UserId);
 
         if (user == null)
         {
@@ -26,9 +27,17 @@ public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
         user.RefreshToken = null;
         user.RefreshTokenExpiry = null;
 
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        _repositoryWrapper.UserRepository.Update(user);
+        var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        return Result.Ok();
+        if (resultIsSuccess)
+        {
+            return Result.Ok();
+        }
+        else
+        {
+            string errorMsg = "Failed to logout";
+            return Result.Fail(new Error(errorMsg));
+        }
     }
 }

@@ -35,9 +35,9 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
         if (!relatedFigureIds.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of related figures";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
         }
 
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
@@ -50,7 +50,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
 
-            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
+            return Result.Fail(new Error(errorMsg));
         }
 
         foreach(StreetcodeContent streetcode in relatedFigures)

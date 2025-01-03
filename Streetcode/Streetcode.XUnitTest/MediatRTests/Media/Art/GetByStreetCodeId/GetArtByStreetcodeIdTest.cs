@@ -4,6 +4,7 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -52,6 +53,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         [Theory]
         [InlineData(1)]
 
+        public async Task Handle_ReturnsEmptyArray(int streetcodeId)
+        {
+            // Arrange
+            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
+            var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
+            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.IsType<Result<IEnumerable<ArtDTO>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<ArtDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
+        }
+
+        [Theory]
+        [InlineData(1)]
+
         public async Task Handle_ReturnsType(int streetcodeId)
         {
             // Arrange
@@ -67,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
         [Theory]
         [InlineData(-1)]
-        public async Task Handle_WithNonExistentId_ReturnsError(int streetcodeId)
+        public async Task Handle_HistorycodeWithNonExistentId_ReturnsError(int streetcodeId)
         {
             // Arrange
             this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
@@ -136,7 +156,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                     return new LocalizedString(key, $"Cannot find any art with corresponding streetcode id: {streetcodeId}");
                 }
 
-                return new LocalizedString(key, "Cannot find an art with unknown streetcodeId");
+                return new LocalizedString(key, "Cannot find any art with corresponding streetcode id");
             });
         }
     }

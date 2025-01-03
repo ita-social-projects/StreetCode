@@ -36,9 +36,9 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
 
         if (!timelineItems.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTimelineItemByTheStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of timeline items";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<TimelineItemDTO>());
         }
 
         return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems));

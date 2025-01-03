@@ -3,7 +3,6 @@
     "Streetcode_Local": {
       "commandName": "Project",
       "launchBrowser": false,
-      "ADMIN_PASSWORD": "Admin@1234",
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5000;https://localhost:5001"
     },

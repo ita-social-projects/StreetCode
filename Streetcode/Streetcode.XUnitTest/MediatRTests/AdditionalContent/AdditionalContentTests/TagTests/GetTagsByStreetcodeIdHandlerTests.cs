@@ -1,8 +1,10 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
@@ -17,6 +19,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
     public class GetTagsByStreetcodeIdHandlerTests
     {
         private const int streetcode_id = 1;
+        private const int incorrect_streetcode_id = -1;
         private readonly Mock<IRepositoryWrapper> mockRepo;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> mockLogger;
@@ -101,20 +104,35 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         }
 
         [Fact]
-        public async Task Handler_Returns_Error()
+        public async Task Handler_Returns_Empty_List()
         {
             // Arrange
             this.SetupRepository(new List<StreetcodeTagIndex>());
-            this.SetupMapper(new List<StreetcodeTagDTO>());
-
-            var expectedError = $"Cannot find any tag by the streetcode id: {streetcode_id}";
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", streetcode_id])
-                .Returns(new LocalizedString("CannotFindAnyTagByTheStreetcodeId", expectedError));
 
             var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetTagByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.IsType<Result<IEnumerable<StreetcodeTagDTO>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<StreetcodeTagDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
+        }
+
+        [Fact]
+        public async Task Handler_Returns_Error()
+        {
+            // Arrange
+            var expectedError = $"Historycode id cannot be less than 1: {incorrect_streetcode_id}";
+            this.mockLocalizer.Setup(localizer => localizer["HistorycodeIdCannotBeLessThan1", incorrect_streetcode_id])
+                .Returns(new LocalizedString("HistorycodeIdCannotBeLessThan1", expectedError));
+
+            var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+
+            // Act
+            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(incorrect_streetcode_id), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);

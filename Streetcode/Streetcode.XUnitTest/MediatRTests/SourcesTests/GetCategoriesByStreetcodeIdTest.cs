@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
@@ -58,13 +60,13 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.IsType<List<SourceLinkCategoryDTO>>(result.ValueOrDefault));
+                () => Assert.NotEmpty(result.Value),
+                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDTO>>(result.ValueOrDefault));
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnNull_NotExistingId(int id)
+        public async Task ShouldReturnEmptyArray_NotExistingId(int id)
         {
             // Arrange
             this.mockRepository.Setup(x => x.SourceCategoryRepository
@@ -74,8 +76,6 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(this.GetSourceLinkCategoriesNotExists());
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
-                .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
                 this.mockRepository.Object,
@@ -84,22 +84,14 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 this.mockLogger.Object,
                 this.mockLocalizerCannotFind.Object);
 
-            var expectedError = $"Cant find any source category with the streetcode id {id}";
-            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
-            {
-                if (args != null && args.Length > 0 && args[0] is int id)
-                {
-                    return new LocalizedString(key, $"Cant find any source category with the streetcode id {id}");
-                }
-
-                return new LocalizedString(key, "Cannot find any source category with unknown id");
-            });
-
             // Act
             var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.Equal(expectedError, result.Errors[0].Message);
+            Assert.Multiple(
+                () => Assert.IsType<Result<IEnumerable<SourceLinkCategoryDTO>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
 
         private static List<SourceLinkCategory> GetSourceLinkCategories()

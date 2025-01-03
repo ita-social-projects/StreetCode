@@ -11,7 +11,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
-  public class GetArtsByStreetcodeIdHandler : IRequestHandler<GetArtsByStreetcodeIdQuery, Result<IEnumerable<ArtDTO>>>
+    public class GetArtsByStreetcodeIdHandler : IRequestHandler<GetArtsByStreetcodeIdQuery, Result<IEnumerable<ArtDTO>>>
     {
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
@@ -35,17 +35,24 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            if (request.StreetcodeId < 1)
+            {
+                string errorMsg = _stringLocalizerCannotFind["HistorycodeIdCannotBeLessThan1", request.StreetcodeId].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
             var arts = await _repositoryWrapper.ArtRepository
                 .GetAllAsync(
                 predicate: art => art.StreetcodeArts.Any(sArt => sArt.StreetcodeArtSlide!.StreetcodeId == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.Image) !);
 
-            if (!arts.Any() || request.StreetcodeId < 1)
+            if (!arts.Any())
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                string message = "Returning empty enumerable of arts";
+                _logger.LogInformation(message);
+                return Result.Ok(Enumerable.Empty<ArtDTO>());
             }
 
             var imageIds = arts.Where(a => a.Image != null).Select(a => a.Image!.Id);
@@ -59,7 +66,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 }
             }
 
-            return Result.Ok(artsDto);
+            return Result.Ok(_mapper.Map<IEnumerable<ArtDTO>>(artsDto));
         }
     }
 }

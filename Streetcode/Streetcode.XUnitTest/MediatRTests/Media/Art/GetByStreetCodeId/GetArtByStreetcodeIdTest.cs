@@ -92,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             // Arrange
             this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
             var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-            var expectedError = $"Historycode id cannot be less than 1: {streetcodeId}";
+            var expectedError = $"Cannot find any art with corresponding streetcode id: {streetcodeId}";
 
             // Act
             var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -153,10 +153,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             {
                 if (args != null && args.Length > 0 && args[0] is int streetcodeId)
                 {
-                    return new LocalizedString(key, $"Historycode id cannot be less than 1: {streetcodeId}");
+                    return new LocalizedString(key, $"Cannot find any art with corresponding streetcode id: {streetcodeId}");
                 }
 
-                return new LocalizedString(key, "Historycode id cannot be less than 1");
+                return new LocalizedString(key, "Cannot find any art with corresponding streetcode id");
             });
         }
     }

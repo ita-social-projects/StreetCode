@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
         {
             if (request.StreetcodeId < 1)
             {
-                string errorMsg = _stringLocalizerCannotFind["HistorycodeIdCannotBeLessThan1", request.StreetcodeId].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtByTheStreetcodeId", request.StreetcodeId].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

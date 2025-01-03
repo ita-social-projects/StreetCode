@@ -125,10 +125,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         public async Task Handler_Returns_Error()
         {
             // Arrange
-             var expectedError = $"Cannot find any tag by the streetcode id: {streetcode_id}";
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", streetcode_id])
+            var expectedError = $"Cannot find any tag by the streetcode id: {incorrect_streetcode_id}";
+            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", incorrect_streetcode_id])
                 .Returns(new LocalizedString("CannotFindAnyTagByTheStreetcodeId", expectedError));
-            
+
             var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act

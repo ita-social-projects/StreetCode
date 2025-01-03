@@ -112,7 +112,7 @@ public class GetParnerByStreetcodeIdTest
         {
             if (args != null && args.Length > 0 && args[0] is int)
             {
-                return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
+                return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}");
             }
 
             return new LocalizedString(key, "Cannot find any partners with unknown Id");

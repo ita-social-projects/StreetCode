@@ -31,7 +31,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
     {
         if (request.StreetcodeId < 1)
         {
-            string errorMsg = _stringLocalizerCannotFind["HistorycodeIdCannotBeLessThan1", request.StreetcodeId].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

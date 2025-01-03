@@ -47,7 +47,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
         if (!relatedFigures.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistorycodesCorrespondingToRelatedFiguresIds", request.StreetcodeId].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);
 
             return Result.Fail(new Error(errorMsg));

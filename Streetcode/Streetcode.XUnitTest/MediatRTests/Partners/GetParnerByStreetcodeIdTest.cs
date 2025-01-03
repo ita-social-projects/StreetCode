@@ -107,15 +107,15 @@ public class GetParnerByStreetcodeIdTest
     {
         // Arrange
         var testStreetcodeContent = GetStreetcodeList()[0];
-        var expectedError = $"Cannot find any historycodes with corresponding historycode id: {testStreetcodeContent.Id}";
+        var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
         this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
         {
             if (args != null && args.Length > 0 && args[0] is int)
             {
-                return new LocalizedString(key, $"Cannot find any historycodes with corresponding historycode id: {testStreetcodeContent.Id}");
+                return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
             }
 
-            return new LocalizedString(key, "Cannot find any historycodes with unknown id");
+            return new LocalizedString(key, "Cannot find any partners with unknown Id");
         });
         this.mockRepository.Setup(x => x.StreetcodeRepository
         .GetSingleOrDefaultAsync(

@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.GetByTitle;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -17,6 +19,7 @@ public class GetByTitlePositionTest
     private readonly Mock<IRepositoryWrapper> mockRepo;
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
     private readonly Positions context = new Positions
     {
@@ -35,6 +38,7 @@ public class GetByTitlePositionTest
         this.mockRepo = new Mock<IRepositoryWrapper>();
         this.mockMapper = new Mock<IMapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
@@ -44,7 +48,7 @@ public class GetByTitlePositionTest
         this.SetupRepository(this.context);
         this.SetupMapper(this.contextDto);
 
-        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
+        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetByTitleTeamPositionQuery(title), CancellationToken.None);
@@ -62,7 +66,7 @@ public class GetByTitlePositionTest
         this.SetupRepository(new Positions());
         this.SetupMapper(new PositionDTO());
 
-        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
+        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetByTitleTeamPositionQuery(title), CancellationToken.None);

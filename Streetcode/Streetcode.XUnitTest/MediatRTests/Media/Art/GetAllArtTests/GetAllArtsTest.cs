@@ -48,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.MockRepositoryAndMapper(new List<Art>() { }, new List<ArtDTO>() { });
+            this.MockRepositoryAndMapper(null, null);
             var expectedError = $"Cannot find any arts";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyArts"])
                 .Returns(new LocalizedString("CannotFindAnyArts", expectedError));

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using FluentValidation.Validators;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Common;
 
@@ -77,5 +77,12 @@ public static class ValidationExtentions
         var result = values[0];
         result += string.Concat(values.Skip(1).Select(e => $", {e}"));
         return result;
+    }
+
+    public static async Task<bool> HasExistingImage(IRepositoryWrapper repositoryWrapper, int imageId, CancellationToken token)
+    {
+        var image = await repositoryWrapper.ImageRepository
+            .GetFirstOrDefaultAsync(a => a.Id == imageId);
+        return image != null;
     }
 }

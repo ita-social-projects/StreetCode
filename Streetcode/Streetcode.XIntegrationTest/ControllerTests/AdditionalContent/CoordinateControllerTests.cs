@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
+    [Collection("Authorization")]
     public class CoordinateControllerTests : BaseControllerTests<CoordinateClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly StreetcodeContent testStreetcodeContent;

@@ -38,6 +38,6 @@ public class ImageMap : IEntityTypeConfiguration<Image>
         builder.HasOne(d => d.News)
             .WithOne(p => p.Image)
             .HasForeignKey<News>(d => d.ImageId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.ClientCascade);
     }
 }

@@ -34,14 +34,16 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
                 include: scl => scl
                     .Include(sc => sc.Coordinate!));
         toponyms.DistinctBy(x => x.StreetName);
+
         if (!toponyms.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyToponymByTheStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of toponyms";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<ToponymDTO>());
         }
 
         var toponymDto = toponyms.GroupBy(x => x.StreetName).Select(group => group.First()).Select(x => _mapper.Map<ToponymDTO>(x));
+
         return Result.Ok(toponymDto);
     }
 }

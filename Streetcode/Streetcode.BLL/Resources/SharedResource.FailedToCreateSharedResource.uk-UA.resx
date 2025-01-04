@@ -147,4 +147,13 @@
   <data name="FailedToCreateTerm" xml:space="preserve">
     <value>Не вдалося створити термін</value>
   </data>
+  <data name="TheStreetcodesAreAlreadyLinked" xml:space="preserve">
+    <value>Стріткоди вже пов'язані</value>
+  </data>
+  <data name="FailedToMapCreatedTerm" xml:space="preserve">
+    <value>Не вдалося зіставити створений термін</value>
+  </data>
+  <data name="FailedToMapCreatedTeamLink" xml:space="preserve">
+    <value>Не вдалося зіставити створене посилання команди</value>
+  </data>
 </root>

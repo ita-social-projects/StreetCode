@@ -38,9 +38,9 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
 
         if (!srcCategories.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnySourceCategoryWithTheStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of categories";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<SourceLinkCategoryDTO>());
         }
 
         var mappedSrcCategories = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(srcCategories);

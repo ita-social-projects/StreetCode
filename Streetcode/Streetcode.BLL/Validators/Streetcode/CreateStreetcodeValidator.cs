@@ -48,7 +48,12 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
             .SetValidator(baseTextValidator);
 
         RuleFor(x => x.Streetcode.ImagesIds)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Images"]]);
+            .NotEmpty()
+            .WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Images"]]);
+
+        RuleForEach(x => x.Streetcode.ImagesIds)
+            .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))
+            .WithMessage((dto, imgId) => localizer["ImageDoesntExist", imgId]);
 
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
         RuleForEach(c => c.Streetcode.Subtitles).SetValidator(baseSubtitleValidator);

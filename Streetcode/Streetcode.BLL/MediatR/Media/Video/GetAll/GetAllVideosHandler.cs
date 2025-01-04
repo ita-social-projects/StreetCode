@@ -28,7 +28,7 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
     {
         var videos = await _repositoryWrapper.VideoRepository.GetAllAsync();
 
-        if (!videos.Any())
+        if (videos is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyVideos"].Value;
             _logger.LogError(request, errorMsg);

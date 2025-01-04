@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 {
+    [Collection("Authorization")]
     public class SubtitleControllerTests : BaseControllerTests<SubtitleClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Subtitle testSubtitle;

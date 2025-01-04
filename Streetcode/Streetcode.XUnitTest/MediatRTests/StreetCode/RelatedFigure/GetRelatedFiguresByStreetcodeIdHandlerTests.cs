@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
@@ -110,7 +112,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
         public async Task Handle_NonExisting_ReturnsGetAllNull(int id)
         {
             // Arrange
-            var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>();
+            var testRelatedFigureEmptyList = new List<Entities.RelatedFigure>()
+            {
+                new Entities.RelatedFigure(),
+            };
             var testRelatedDTO = new RelatedFigureDTO() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
             this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
@@ -137,23 +142,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 
         [Theory]
         [InlineData(2)]
-        public async Task Handle_NonExisting_ReturnsFindAllNull(int id)
+        public async Task Handle_NonExisting_ReturnsFindAllEmptyArray(int id)
         {
             // Arrange
-            string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
-            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
-            {
-                if (args != null && args.Length > 0 && args[0] is int id)
-                {
-                    return new LocalizedString(key, $"Cannot find any related figures by a streetcode id: {id}");
-                }
-
-                return new LocalizedString(key, "Cannot find any related figures with unknown id");
-            });
-            var testRelatedDTO = new RelatedFigureDTO() { Id = id };
-
             this.RepositorySetup(Enumerable.Empty<Entities.RelatedFigure>().AsQueryable(), new List<StreetcodeContent>());
-            this.MapperSetup(testRelatedDTO);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
@@ -161,7 +153,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
+            Assert.Multiple(
+                () => Assert.IsType<Result<IEnumerable<RelatedFigureDTO>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<RelatedFigureDTO>>(result.Value),
+                () => Assert.Empty(result.Value));
         }
 
         [Fact]
@@ -205,10 +200,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             this.repository.Setup(x => x.RelatedFigureRepository
                 .FindAll(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>?>(), null))
                 .Returns(relatedFigures);
-
-            this.repository.Setup(x => x.StreetcodeRepository
-                .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
-                .ReturnsAsync(streetcodeContents);
 
             this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),

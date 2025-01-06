@@ -16,6 +16,7 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
+using Streetcode.DAL.Repositories.Interfaces.Users.Expertise;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Jobs;
@@ -31,6 +32,7 @@ using Streetcode.DAL.Repositories.Realizations.Timeline;
 using Streetcode.DAL.Repositories.Realizations.Toponyms;
 using Streetcode.DAL.Repositories.Realizations.Transactions;
 using Streetcode.DAL.Repositories.Realizations.Users;
+using Streetcode.DAL.Repositories.Realizations.Users.Expertise;
 
 namespace Streetcode.DAL.Repositories.Realizations.Base;
 
@@ -111,6 +113,9 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IStreetcodeImageRepository? _streetcodeImageRepository;
 
     private IJobRepository? _jobRepository;
+
+    private IExpertiseRepository? _expertiseRepository;
+    private IUserExpertiseRepository? _userExpertiseRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -584,6 +589,30 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _jobRepository;
+        }
+    }
+
+    public IExpertiseRepository ExpertiseRepository {
+        get
+        {
+            if (_expertiseRepository is null)
+            {
+                _expertiseRepository = new ExpertiseRepository(_streetcodeDbContext);
+            }
+
+            return _expertiseRepository;
+        }
+    }
+
+    public IUserExpertiseRepository UserExpertiseRepository {
+        get
+        {
+            if (_userExpertiseRepository is null)
+            {
+                _userExpertiseRepository = new UserExpertiseRepository(_streetcodeDbContext);
+            }
+
+            return _userExpertiseRepository;
         }
     }
 

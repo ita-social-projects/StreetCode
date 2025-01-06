@@ -592,7 +592,8 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IExpertiseRepository ExpertiseRepository {
+    public IExpertiseRepository ExpertiseRepository
+    {
         get
         {
             if (_expertiseRepository is null)
@@ -604,7 +605,8 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IUserExpertiseRepository UserExpertiseRepository {
+    public IUserExpertiseRepository UserExpertiseRepository
+    {
         get
         {
             if (_userExpertiseRepository is null)

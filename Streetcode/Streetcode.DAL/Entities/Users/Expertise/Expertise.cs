@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.DAL.Entities.Users.Expertise;
 
+[Table("expertise", Schema = "users")]
 public class Expertise
 {
     [Key]
@@ -10,7 +11,8 @@ public class Expertise
     public int Id { get; set; }
 
     [Required]
-    public string Name { get; set; }
+    [MaxLength(50)]
+    public string? Name { get; set; }
 
     public List<User>? Users { get; set; } = new();
 }

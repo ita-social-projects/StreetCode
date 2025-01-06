@@ -5,5 +5,4 @@ namespace Streetcode.DAL.Repositories.Interfaces.Users.Expertise;
 
 public interface IUserExpertiseRepository : IRepositoryBase<UserExpertise>
 {
-    
 }

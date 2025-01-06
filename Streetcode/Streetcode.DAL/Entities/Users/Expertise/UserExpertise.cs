@@ -8,7 +8,7 @@ public class UserExpertise
     public int ExpertiseId { get; set; }
 
     [Required]
-    public int UserId { get; set; }
+    public string UserId { get; set; }
 
     public Expertise? Expertise { get; set; }
 

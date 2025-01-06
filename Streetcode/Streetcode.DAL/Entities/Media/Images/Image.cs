@@ -26,7 +26,7 @@ public class Image
     [Required]
     [MaxLength(10)]
     public string? MimeType { get; set; }
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
 
     public ImageDetails? ImageDetails { get; set; }
 

@@ -62,30 +62,23 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                 nextNewsLink = news[newsIndex + 1].URL;
             }
 
-            var randomNewsTitleAndLink = new RandomNewsDTO();
+            RandomNewsDTO? randomNewsDTO = null;
+            if (news.Count > 1)
+            {
+                Random rnd = new();
+                var randomIndex = rnd.Next(news.Count);
+                while (randomIndex == newsIndex)
+                {
+                    randomIndex = rnd.Next(news.Count);
+                }
 
-            var arrCount = news.Count;
-            if (arrCount > 3)
-            {
-                if (newsIndex + 1 == arrCount - 1 || newsIndex == arrCount - 1)
-                {
-                    randomNewsTitleAndLink.RandomNewsUrl = news[newsIndex - 2].URL;
-                    randomNewsTitleAndLink.Title = news[newsIndex - 2].Title;
-                }
-                else
-                {
-                    randomNewsTitleAndLink.RandomNewsUrl = news[arrCount - 1].URL;
-                    randomNewsTitleAndLink.Title = news[arrCount - 1].Title;
-                }
-            }
-            else
-            {
-                randomNewsTitleAndLink.RandomNewsUrl = news[newsIndex].URL;
-                randomNewsTitleAndLink.Title = news[newsIndex].Title;
+                randomNewsDTO = new RandomNewsDTO();
+                randomNewsDTO.Title = news[randomIndex].Title;
+                randomNewsDTO.RandomNewsUrl = news[randomIndex].URL;
             }
 
             var newsDTOWithUrls = new NewsDTOWithURLs();
-            newsDTOWithUrls.RandomNews = randomNewsTitleAndLink;
+            newsDTOWithUrls.RandomNews = randomNewsDTO;
             newsDTOWithUrls.News = newsDTO;
             newsDTOWithUrls.NextNewsUrl = nextNewsLink!;
             newsDTOWithUrls.PrevNewsUrl = prevNewsLink!;

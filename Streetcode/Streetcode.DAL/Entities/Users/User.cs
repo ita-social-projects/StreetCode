@@ -15,6 +15,7 @@ namespace Streetcode.DAL.Entities.Users
         public string? RefreshToken { get; set; }
         public string? AboutYourself { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
+        public int? AvatarId { get; set; }
         public Image? Avatar { get; set; }
         public List<Expertise.Expertise> Expertises { get; set; } = new ();
     }

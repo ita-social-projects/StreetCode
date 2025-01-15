@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
@@ -16,6 +17,7 @@ using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Factories.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media.Images;
@@ -37,6 +39,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
     private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
     private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
+    private IHttpContextAccessor _httpContextAccessor;
 
     public CreateStreetcodeHandler(
         IMapper mapper,
@@ -45,7 +48,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
         IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
         IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
-        IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames)
+        IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
+        IHttpContextAccessor httpContextAccessor)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
@@ -54,6 +58,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
         _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
         _stringLocalizerFieldNames = stringLocalizerFieldNames;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result<int>> Handle(CreateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -65,6 +70,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
+                streetcode.CreatedBy = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);

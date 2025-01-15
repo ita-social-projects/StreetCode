@@ -26,6 +26,8 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Microsoft.AspNetCore.Http;
+using Streetcode.BLL.Util.Helpers;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 {
@@ -39,6 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
         private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
         private readonly ICacheService _cacheService;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public UpdateStreetcodeHandler(
             IMapper mapper,
@@ -48,7 +51,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
             IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate,
             IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
@@ -59,6 +63,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _stringLocalizerFieldNames = stringLocalizerFieldNames;
             _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _cacheService = cacheService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Result<int>> Handle(UpdateStreetcodeCommand request, CancellationToken cancellationToken)
@@ -103,6 +108,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     discriminatorProperty.CurrentValue = StreetcodeTypeDiscriminators.GetStreetcodeType(request.Streetcode.StreetcodeType);
                     discriminatorProperty.IsModified = true;
                     streetcodeToUpdate.UpdatedAt = DateTime.UtcNow;
+                    streetcodeToUpdate.CreatedBy = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
                     if (isResultSuccess)

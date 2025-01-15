@@ -12,8 +12,53 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public UpdateNewsValidator(BaseNewsValidator baseNewsValidator)
+    public UpdateNewsValidator(
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IRepositoryWrapper repositoryWrapper,
+        BaseNewsValidator baseNewsValidator)
     {
+        _repositoryWrapper = repositoryWrapper;
         RuleFor(n => n.news).SetValidator(baseNewsValidator);
+        RuleFor(c => c.news)
+            .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]])
+            .MustAsync(BeUniqueText).WithMessage(localizer["MustBeUnique", fieldLocalizer["Text"]])
+            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]]);
+    }
+
+    private async Task<bool> BeUniqueTitle(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    {
+        var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Title == dto.Title);
+
+        if (existingNewsByTitle is not null)
+        {
+            return existingNewsByTitle.Id == dto.Id;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> BeUniqueText(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    {
+        var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.Text == dto.Text);
+
+        if (existingNewsByText is not null)
+        {
+            return existingNewsByText.Id == dto.Id;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> BeUniqueUrl(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    {
+        var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.URL == dto.URL);
+
+        if (existingNewsByUrl is not null)
+        {
+            return existingNewsByUrl.Id == dto.Id;
+        }
+
+        return existingNewsByUrl is null;
     }
 }

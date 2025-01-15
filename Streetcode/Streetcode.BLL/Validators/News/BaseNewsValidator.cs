@@ -23,16 +23,19 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
 
         RuleFor(x => x.Title)
                 .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["Title"]])
-                .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
+                .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength])
+                .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]]);
 
         RuleFor(x => x.Text)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Text"]])
-            .MaximumLength(TextMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Text"], TextMaxLength]);
+            .MaximumLength(TextMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Text"], TextMaxLength])
+            .MustAsync(BeUniqueText).WithMessage(localizer["MustBeUnique", fieldLocalizer["Text"]]);
 
         RuleFor(x => x.ImageId)
                 .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["ImageId"]])
                 .GreaterThan(ImageIdMinValue).WithMessage(x => localizer["Invalid", fieldLocalizer["ImageId"]])
-                .MustAsync(BeExistingImageId).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
+                .MustAsync(BeExistingImageId).WithMessage(x => localizer["ImageDoesntExist", x.ImageId])
+                .MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
 
         RuleFor(x => x.CreationDate)
                 .NotEmpty().WithMessage(x => localizer["IsRequired", fieldLocalizer["CreationDate"]]);
@@ -40,7 +43,36 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
         RuleFor(x => x.URL)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["TargetUrl"]])
             .MaximumLength(UrlMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TargetUrl"], UrlMaxLength])
-            .Matches(@"^[a-z0-9-]*$").WithMessage(x => localizer["InvalidNewsUrl"]);
+            .Matches(@"^[a-z0-9-]*$").WithMessage(x => localizer["InvalidNewsUrl"])
+            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]]);
+    }
+
+    private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)
+    {
+        var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Title == title);
+
+        return existingNewsByTitle is null;
+    }
+
+    private async Task<bool> BeUniqueText(string text, CancellationToken cancellationToken)
+    {
+        var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.Text == text);
+
+        return existingNewsByText is null;
+    }
+
+    private async Task<bool> BeUniqueUrl(string url, CancellationToken cancellationToken)
+    {
+        var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.URL == url);
+
+        return existingNewsByUrl is null;
+    }
+
+    private async Task<bool> BeUniqueImageId(int imageId, CancellationToken cancellationToken)
+    {
+        var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.ImageId == imageId);
+
+        return existingNewsByUrl is null;
     }
 
     private async Task<bool> BeExistingImageId(int imageId, CancellationToken cancellationToken)

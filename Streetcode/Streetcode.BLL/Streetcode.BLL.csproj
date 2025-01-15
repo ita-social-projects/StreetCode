@@ -46,6 +46,7 @@
     <Folder Include="Exceptions\" />
     <Folder Include="DTO\Instagram\" />
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
+    <Folder Include="Util\Helpers\" />
   </ItemGroup>
 
   <ItemGroup>

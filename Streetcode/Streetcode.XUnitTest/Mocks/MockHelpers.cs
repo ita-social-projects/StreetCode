@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -16,6 +17,15 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<Image, bool>>>(),
                 It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync(new Image { Id = imageId });
+    }
+
+    public static void SetupMockNewsRepositoryGetFirstOrDefaultAsync(Mock<IRepositoryWrapper> mockRepositoryWrapper)
+    {
+        // Returns an Image with Id = 1
+        mockRepositoryWrapper.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<News, bool>>>(),
+                It.IsAny<Func<IQueryable<News>, IIncludableQueryable<News, object>>>()))
+            .ReturnsAsync(new News());
     }
 
     public static void SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(Mock<IRepositoryWrapper> mockRepositoryWrapper)

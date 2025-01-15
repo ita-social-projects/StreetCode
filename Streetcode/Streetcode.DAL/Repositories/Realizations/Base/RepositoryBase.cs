@@ -26,7 +26,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T>
     }
 
     public T Create(T entity)
-    {
+   {
         return _dbContext.Set<T>().Add(entity).Entity;
     }
 

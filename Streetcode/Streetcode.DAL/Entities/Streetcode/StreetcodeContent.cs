@@ -54,6 +54,9 @@ public class StreetcodeContent
 
     public DateTime UpdatedAt { get; set; }
 
+    [MaxLength(50)]
+    public string? CreatedBy { get; set; } = null!;
+
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
 

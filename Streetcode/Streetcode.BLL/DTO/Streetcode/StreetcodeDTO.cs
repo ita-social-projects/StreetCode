@@ -17,6 +17,7 @@ public class StreetcodeDTO
     public int ViewCount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public string? CreatedBy { get; set; }
     public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = new List<StreetcodeTagDTO>();
     public string Teaser { get; set; } = null!;
     public StreetcodeType StreetcodeType { get; set; }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
@@ -21,6 +22,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
         private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockStringLocalizerFailedToValidate;
         private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockStringLocalizerFieldNames;
         private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
 
         public CreateStreetcodeHandlerTests()
         {
@@ -31,6 +33,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
             this.mockStringLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
             this.mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
             this.mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+            this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
         }
 
         [Fact]
@@ -50,7 +53,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                 this.mockStringLocalizerAnErrorOccurred.Object,
                 this.mockStringLocalizerFailedToCreate.Object,
                 this.mockStringLocalizerFailedToValidate.Object,
-                this.mockStringLocalizerFieldNames.Object);
+                this.mockStringLocalizerFieldNames.Object,
+                this.mockHttpContextAccessor.Object);
 
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesDetails(imageDetails);
@@ -72,7 +76,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create.Tests
                 this.mockStringLocalizerAnErrorOccurred.Object,
                 this.mockStringLocalizerFailedToCreate.Object,
                 this.mockStringLocalizerFailedToValidate.Object,
-                this.mockStringLocalizerFieldNames.Object);
+                this.mockStringLocalizerFieldNames.Object,
+                this.mockHttpContextAccessor.Object);
 
             // Act & Assert
             Func<Task> action = async () => await handler.AddImagesAsync(streetcode, imagesIds);

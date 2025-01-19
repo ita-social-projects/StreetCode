@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.AdditionalContent.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email.Messages;
 
 namespace Streetcode.BLL.MediatR.Email
 {
@@ -48,7 +49,7 @@ namespace Streetcode.BLL.MediatR.Email
                 return Result.Fail(new Error(errorMessage));
             }
 
-            var message = new Message(
+            var message = new FeedbackMessage(
                 new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodedev@gmail.com" },
                 request.Email.From,
                 request.Email.Source,

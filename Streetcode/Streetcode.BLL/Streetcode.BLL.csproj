@@ -226,6 +226,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResource.FieldNamesSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Remove="Resources\SharedResource.AlreadyExist.uk-UA.Designer.cs" />
+    <Compile Update="Resources\SharedResource.AlreadyExistSharedResource.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.AlreadyExistSharedResource.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.AlreadyExistSharedResource.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.AlreadyExistSharedResource.uk-UA.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -248,6 +259,15 @@
     <EmbeddedResource Update="Resources\SharedResource.FieldNamesSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FieldNamesSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Remove="Resources\SharedResource.AlreadyExist.uk-UA.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.AlreadyExistSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.AlreadyExistSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.AlreadyExistSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.AlreadyExistSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

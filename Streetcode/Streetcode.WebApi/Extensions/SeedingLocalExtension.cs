@@ -115,7 +115,7 @@ namespace Streetcode.WebApi.Extensions
                         new Expertise
                         {
                             Title = "Журналіст",
-                        }, 
+                        },
                         new Expertise
                         {
                             Title = "Культурний експерт",
@@ -147,8 +147,7 @@ namespace Streetcode.WebApi.Extensions
                         new Expertise
                         {
                             Title = "Інше",
-                        }
-                    );
+                        });
                     await dbContext.SaveChangesAsync();
                 }
 

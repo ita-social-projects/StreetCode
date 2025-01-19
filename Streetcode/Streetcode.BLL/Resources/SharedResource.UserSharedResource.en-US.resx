@@ -135,4 +135,10 @@
   <data name="UserManagerError" xml:space="preserve">
     <value>Error in User Manager</value>
   </data>
+  <data name="UserWithSuchUsernameNotExists" xml:space="preserve">
+    <value>User with such Username not exists</value>
+  </data>
+  <data name="EmailNotMatch" xml:space="preserve">
+    <value>Email not match</value>
+  </data>
 </root>

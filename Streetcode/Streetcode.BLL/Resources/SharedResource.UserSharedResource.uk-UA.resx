@@ -135,4 +135,10 @@
   <data name="UserManagerError" xml:space="preserve">
     <value>Помилка в User Manager</value>
   </data>
+  <data name="UserWithSuchUsernameNotExists" xml:space="preserve">
+    <value>Користувач з таким іменем не знайдено</value>
+  </data>
+  <data name="EmailNotMatch" xml:space="preserve">
+    <value>Пошта не співпадає</value>
+  </data>
 </root>

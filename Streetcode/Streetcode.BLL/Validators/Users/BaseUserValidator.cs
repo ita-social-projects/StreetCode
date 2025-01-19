@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Validators.Common;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Users;
 
@@ -13,9 +15,14 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
     public const int MinLengthSurname = 2;
     public const int MaxLengthSurname = 128;
     public const int MaxExpertiesesCount = 3;
+    private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public BaseUserValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
+    public BaseUserValidator(
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IRepositoryWrapper repositoryWrapper)
     {
+        _repositoryWrapper = repositoryWrapper;
         RuleFor(dto => dto.Expertises)
             .Must(e => e.Count <= MaxExpertiesesCount).WithMessage(localizer["MustContainAtMostThreeExpertises", fieldLocalizer["Expertises"]]);
 
@@ -33,5 +40,10 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Surname"]])
             .MinimumLength(MinLengthSurname).WithMessage(localizer["MinLength", fieldLocalizer["Surname"], MinLengthSurname])
             .MaximumLength(MaxLengthSurname).WithMessage(localizer["MaxLength", fieldLocalizer["Surname"], MaxLengthSurname]);
+
+        RuleFor(x => x.AvatarId)
+            .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))
+            .When(x => x.AvatarId is not null)
+            .WithMessage((dto, imgId) => localizer["ImageDoesntExist", imgId]);
     }
 }

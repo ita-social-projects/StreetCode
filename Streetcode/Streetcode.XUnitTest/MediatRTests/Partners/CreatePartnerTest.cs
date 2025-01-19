@@ -1,9 +1,11 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.Create;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -17,12 +19,19 @@ public class CreatePartnerTest
     private readonly Mock<IRepositoryWrapper> mockRepository;
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<ILoggerService> mockLogger;
+    private readonly Mock<IStringLocalizer<NoSharedResource>> mockLocalizerNoShared;
+    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockLocalizerFieldNames;
+    private readonly Mock<IStringLocalizer<AlreadyExistSharedResource>> mockLocalizerAlreadyExist;
+
 
     public CreatePartnerTest()
     {
         this.mockRepository = new Mock<IRepositoryWrapper>();
         this.mockMapper = new Mock<IMapper>();
         this.mockLogger = new Mock<ILoggerService>();
+        this.mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
+        this.mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+        this.mockLocalizerAlreadyExist = new Mock<IStringLocalizer<AlreadyExistSharedResource>>();
     }
 
     [Fact]
@@ -43,7 +52,7 @@ public class CreatePartnerTest
         this.mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
-        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object, this.mockLocalizerFieldNames.Object, this.mockLocalizerAlreadyExist.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);
@@ -70,7 +79,7 @@ public class CreatePartnerTest
         this.mockRepository.Setup(x => x.SaveChanges())
             .Returns(1);
 
-        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object, this.mockLocalizerFieldNames.Object, this.mockLocalizerAlreadyExist.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);
@@ -96,7 +105,7 @@ public class CreatePartnerTest
         this.mockRepository.Setup(x => x.SaveChangesAsync())
             .ThrowsAsync(new Exception(expectedError));
 
-        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
+        var handler = new CreatePartnerHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerNoShared.Object, this.mockLocalizerFieldNames.Object, this.mockLocalizerAlreadyExist.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDTO()), CancellationToken.None);

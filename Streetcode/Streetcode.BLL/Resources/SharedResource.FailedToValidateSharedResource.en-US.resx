@@ -133,7 +133,7 @@
     <value>Field '{0}' is invalid</value>
   </data>
   <data name="LogoMustMatchUrl" xml:space="preserve">
-    <value>Logo must match corresponding url</value>
+    <value>The link does not match the selected social network</value>
   </data>
   <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
     <value>Field '{0}' ({1}) must be valid url</value>

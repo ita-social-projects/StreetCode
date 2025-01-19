@@ -133,7 +133,7 @@
     <value>Поле '{0}' має недійсне значення</value>
   </data>
   <data name="LogoMustMatchUrl" xml:space="preserve">
-    <value>Логотип має відповідати посиланню</value>
+    <value>Посилання не співпадає з обраною соціальною мережою</value>
   </data>
   <data name="ValidUrl_UrlDisplayed" xml:space="preserve">
     <value>Поле '{0}' ({1}) повинно бути дійсною URL адресою </value>

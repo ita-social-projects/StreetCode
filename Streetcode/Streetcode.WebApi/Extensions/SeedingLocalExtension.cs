@@ -17,6 +17,7 @@ using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Entities.Users.Expertise;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Realizations.Base;
@@ -36,8 +37,8 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var blobService = new BlobService(blobOptions);
-                string initialDataImagePath = "C:\\Users\\rosny\\source\\repos\\StreetCode\\Streetcode\\Streetcode.XIntegrationTest\\TestData\\InitialData\\images.json";
-                string initialDataAudioPath = "C:\\Users\\rosny\\source\\repos\\StreetCode\\Streetcode\\Streetcode.XIntegrationTest\\TestData\\InitialData\\audios.json";
+                const string initialDataImagePath = "../../../TestData/InitialData/images.json";
+                const string initialDataAudioPath = "../../../TestData/InitialData/audios.json";
                 if (!dbContext.Images.Any())
                 {
                     string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
@@ -86,6 +87,69 @@ namespace Streetcode.WebApi.Extensions
                         });
                         await dbContext.SaveChangesAsync();
                     }
+                }
+
+                if (!dbContext.Expertises.Any())
+                {
+                    dbContext.Expertises.AddRange(
+                        new Expertise
+                        {
+                            Title = "Студент",
+                        },
+                        new Expertise
+                        {
+                            Title = "Школяр",
+                        },
+                        new Expertise
+                        {
+                            Title = "Вчитель",
+                        },
+                        new Expertise
+                        {
+                            Title = "Турист",
+                        },
+                        new Expertise
+                        {
+                            Title = "Місцевий житель",
+                        },
+                        new Expertise
+                        {
+                            Title = "Журналіст",
+                        }, 
+                        new Expertise
+                        {
+                            Title = "Культурний експерт",
+                        },
+                        new Expertise
+                        {
+                            Title = "Митець",
+                        },
+                        new Expertise
+                        {
+                            Title = "Гід",
+                        },
+                        new Expertise
+                        {
+                            Title = "Історик",
+                        },
+                        new Expertise
+                        {
+                            Title = "Дослідник",
+                        },
+                        new Expertise
+                        {
+                            Title = "Архітектор",
+                        },
+                        new Expertise
+                        {
+                            Title = "Активіст",
+                        },
+                        new Expertise
+                        {
+                            Title = "Інше",
+                        }
+                    );
+                    await dbContext.SaveChangesAsync();
                 }
 
                 if (!dbContext.Audios.Any())

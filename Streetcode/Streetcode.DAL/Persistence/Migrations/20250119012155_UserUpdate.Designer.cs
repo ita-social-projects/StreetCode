@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20250106091139_Expertise")]
-    partial class Expertise
+    [Migration("20250119012155_UserUpdate")]
+    partial class UserUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1186,7 +1186,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -1217,7 +1217,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AboutYourself")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -1244,8 +1245,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -1275,8 +1276,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");

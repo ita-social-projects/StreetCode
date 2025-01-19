@@ -5,7 +5,7 @@
 namespace Streetcode.DAL.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Expertise : Migration
+    public partial class UserUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,10 +18,31 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.EnsureSchema(
                 name: "users");
 
+            migrationBuilder.AlterColumn<string>(
+                name: "Surname",
+                table: "AspNetUsers",
+                type: "nvarchar(128)",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "AspNetUsers",
+                type: "nvarchar(128)",
+                maxLength: 128,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(50)",
+                oldMaxLength: 50);
+
             migrationBuilder.AddColumn<string>(
                 name: "AboutYourself",
                 table: "AspNetUsers",
-                type: "nvarchar(max)",
+                type: "nvarchar(500)",
+                maxLength: 500,
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(
@@ -37,7 +58,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -133,6 +154,26 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "AvatarId",
                 table: "AspNetUsers");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Surname",
+                table: "AspNetUsers",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(128)",
+                oldMaxLength: 128);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Name",
+                table: "AspNetUsers",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(128)",
+                oldMaxLength: 128);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_news_images_ImageId",

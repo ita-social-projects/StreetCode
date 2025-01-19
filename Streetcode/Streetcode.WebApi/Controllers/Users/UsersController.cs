@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
-using System.Security.Claims;
 using Streetcode.BLL.DTO.Users;
+using Streetcode.BLL.DTO.Users.Password;
 using Streetcode.BLL.MediatR.Users.Delete;
+using Streetcode.BLL.MediatR.Users.ForgotPassword;
 using Streetcode.BLL.MediatR.Users.GetByName;
 using Streetcode.BLL.MediatR.Users.Update;
 using Streetcode.BLL.MediatR.Users.GetByUserName;
+using Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
 
 namespace Streetcode.WebApi.Controllers.Users
 {
@@ -18,14 +19,7 @@ namespace Streetcode.WebApi.Controllers.Users
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByUserId()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User is not authenticated.");
-            }
-
-            return HandleResult(await Mediator.Send(new GetByUserIdQuery(userId)));
+            return HandleResult(await Mediator.Send(new GetByUserIdQuery()));
         }
 
         [HttpGet("{userName}")]
@@ -35,37 +29,34 @@ namespace Streetcode.WebApi.Controllers.Users
             return HandleResult(await Mediator.Send(new GetByUserNameQuery(userName)));
         }
 
-
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Update(UpdateUserDTO user)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User is not authenticated.");
-            }
-
             return HandleResult(await Mediator.Send(new UpdateUserCommand(user)));
         }
 
-        [HttpDelete]
+        [HttpDelete("{email}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Delete(DeleteUserDTO deleteUserDto)
+        public async Task<IActionResult> Delete([FromRoute] string email)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            return HandleResult(await Mediator.Send(new DeleteUserCommand(email)));
+        }
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User is not authenticated.");
-            }
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO forgotPasswordDto)
+        {
+            return HandleResult(await Mediator.Send(new ForgotPasswordCommand(forgotPasswordDto)));
+        }
 
-            deleteUserDto.UserId = userId;
-
-            return HandleResult(await Mediator.Send(new DeleteUserCommand(deleteUserDto)));
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateForgotPassword(UpdateForgotPasswordDTO updateForgotPasswordDto)
+        {
+            return HandleResult(await Mediator.Send(new UpdateForgotPasswordCommand(updateForgotPasswordDto)));
         }
     }
 }

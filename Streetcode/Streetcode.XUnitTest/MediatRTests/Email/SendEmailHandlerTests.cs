@@ -9,7 +9,7 @@ using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Email;
-using Streetcode.DAL.Entities.AdditionalContent.Email;
+using Streetcode.DAL.Entities.AdditionalContent.Email.Messages.Base;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Email

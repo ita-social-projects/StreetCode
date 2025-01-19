@@ -1,216 +1,324 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="Title" xml:space="preserve">
-        <value>Назва</value>
-    </data>
-    <data name="Description" xml:space="preserve">
-        <value>Опис</value>
-    </data>
-    <data name="TargetUrl" xml:space="preserve">
-        <value>Посилання</value>
-    </data>
-    <data name="UrlTitle" xml:space="preserve">
-        <value>Назва посилання</value>
-    </data>
-    <data name="LogoType" xml:space="preserve">
-        <value>Логотип</value>
-    </data>
-    <data name="SourceLinkUrl" xml:space="preserve">
-        <value>Посилання на соціальну мережу</value>
-    </data>
-    <data name="RedirectUrl" xml:space="preserve">
-        <value>Посилання переадресації</value>
-    </data>
-    <data name="Name" xml:space="preserve">
-        <value>Ім'я</value>
-    </data>
-    <data name="Position" xml:space="preserve">
-        <value>Вакансія</value>
-    </data>
-    <data name="ImageId" xml:space="preserve">
-        <value>Ідентифікатор картинки</value>
-    </data>
-    <data name="IsMain" xml:space="preserve">
-        <value>Ключовий член команди</value>
-    </data>
-    <data name="LogoId" xml:space="preserve">
-        <value>Ідентифікатор логотипа</value>
-    </data>
-    <data name="IsKeyPartner" xml:space="preserve">
-        <value>Ключовий партнер</value>
-    </data>
-    <data name="IsVisibleEverywhere" xml:space="preserve">
-        <value>Видимий для всіх</value>
-    </data>
-    <data name="MimeType" xml:space="preserve">
-        <value>Mime тип</value>
-    </data>
-    <data name="Extension" xml:space="preserve">
-        <value>Розширення</value>
-    </data>
-    <data name="Alt" xml:space="preserve">
-        <value>Alt</value>
-    </data>
-    <data name="BaseFormat" xml:space="preserve">
-        <value>Файл у форматі base64</value>
-    </data>
-    <data name="Content" xml:space="preserve">
-        <value>Вміст</value>
-    </data>
-    <data name="CaptchaToken" xml:space="preserve">
-        <value>Капча токен</value>
-    </data>
-    <data name="Salary" xml:space="preserve">
-        <value>Зарплата</value>
-    </data>
-    <data name="Email" xml:space="preserve">
-        <value>Адреса електронної пошти</value>
-    </data>
-    <data name="ModelState" xml:space="preserve">
-        <value>Стан моделі</value>
-    </data>
-    <data name="ArtDescription" xml:space="preserve">
-        <value>Опис арта</value>
-    </data>
-    <data name="ArtTitle" xml:space="preserve">
-        <value>Назва арта</value>
-    </data>
-    <data name="CategoryContent" xml:space="preserve">
-        <value>Вміст категорії</value>
-    </data>
-    <data name="FactTitle" xml:space="preserve">
-        <value>Назва факту</value>
-    </data>
-    <data name="FactContent" xml:space="preserve">
-        <value>Вміст факту</value>
-    </data>
-    <data name="FactImageDescription" xml:space="preserve">
-        <value>Опис картинки факту</value>
-    </data>
-    <data name="ImageTitle" xml:space="preserve">
-        <value>Назва картинки</value>
-    </data>
-    <data name="SubtitleText" xml:space="preserve">
-        <value>Текст бігучого рядка </value>
-    </data>
-    <data name="StreetcodeArts" xml:space="preserve">
-        <value>Арти</value>
-    </data>
-    <data name="Template" xml:space="preserve">
-        <value>Шаблон</value>
-    </data>
-    <data name="TextTitle" xml:space="preserve">
-        <value>Назва тексту</value>
-    </data>
-    <data name="TextContent" xml:space="preserve">
-        <value>Вміст тексту </value>
-    </data>
-    <data name="AdditionalText" xml:space="preserve">
-        <value>Додатковий текст</value>
-    </data>
-    <data name="HistoricalContextTitle" xml:space="preserve">
-        <value>Назва історичного контексту</value>
-    </data>
-    <data name="StreetName" xml:space="preserve">
-        <value>Назва вулиці</value>
-    </data>
-    <data name="TimelineItemTitle" xml:space="preserve">
-        <value>Назва елементу хронології</value>
-    </data>
-    <data name="TimelineItemDescription" xml:space="preserve">
-        <value>Опис елементу хронології</value>
-    </data>
-    <data name="TimelineItemDate" xml:space="preserve">
-        <value>Дата елемента хронології</value>
-    </data>
-    <data name="DateFormat" xml:space="preserve">
-        <value>Формат дати</value>
-    </data>
-    <data name="Video" xml:space="preserve">
-        <value>Посилання на відео</value>
-    </data>
-    <data name="FirstName" xml:space="preserve">
-        <value>Ім'я</value>
-    </data>
-    <data name="LastName" xml:space="preserve">
-        <value>Прізвище</value>
-    </data>
-    <data name="Teaser" xml:space="preserve">
-        <value>Тизер</value>
-    </data>
-    <data name="Alias" xml:space="preserve">
-        <value>Псевдонім</value>
-    </data>
-    <data name="TransliterationUrl" xml:space="preserve">
-        <value>Транслітероване посилання</value>
-    </data>
-    <data name="Index" xml:space="preserve">
-        <value>Індекс</value>
-    </data>
-    <data name="DateString" xml:space="preserve">
-        <value>Рядок дати</value>
-    </data>
-    <data name="StreetcodeType" xml:space="preserve">
-        <value>Тип стріткоду</value>
-    </data>
-    <data name="Status" xml:space="preserve">
-        <value>Статус</value>
-    </data>
-    <data name="ARBlockURL" xml:space="preserve">
-        <value>Посилання для блоку AR</value>
-    </data>
-    <data name="TransactionLinkUrl" xml:space="preserve">
-        <value>Посилання для QR-код</value>
-    </data>
-    <data name="Text" xml:space="preserve">
-        <value>Текст</value>
-    </data>
-    <data name="CreationDate" xml:space="preserve">
-        <value>Дата створення</value>
-    </data>
-    <data name="Address" xml:space="preserve">
-        <value>Адреса</value>
-    </data>
-    <data name="Latitude" xml:space="preserve">
-        <value>Широта</value>
-    </data>
-    <data name="Longtitude" xml:space="preserve">
-        <value>Довгота</value>
-    </data>
-    <data name="Tag" xml:space="preserve">
-        <value>Тег</value>
-    </data>
-    <data name="Id" xml:space="preserve">
-        <value>Ідентифікатор</value>
-    </data>
-    <data name="HistoricalContexts" xml:space="preserve">
-        <value>Історичні контексти</value>
-    </data>
-    <data name="ImagesDetails" xml:space="preserve">
-        <value>Деталі картинок</value>
-    </data>
-    <data name="Images" xml:space="preserve">
-        <value>Картинки</value>
-    </data>
-    <data name="Amount" xml:space="preserve">
-        <value>Сума</value>
-    </data>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Title" xml:space="preserve">
+    <value>Назва</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="TargetUrl" xml:space="preserve">
+    <value>Посилання</value>
+  </data>
+  <data name="UrlTitle" xml:space="preserve">
+    <value>Назва посилання</value>
+  </data>
+  <data name="LogoType" xml:space="preserve">
+    <value>Логотип</value>
+  </data>
+  <data name="SourceLinkUrl" xml:space="preserve">
+    <value>Посилання на соціальну мережу</value>
+  </data>
+  <data name="RedirectUrl" xml:space="preserve">
+    <value>Посилання переадресації</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Ім'я</value>
+  </data>
+  <data name="Position" xml:space="preserve">
+    <value>Вакансія</value>
+  </data>
+  <data name="ImageId" xml:space="preserve">
+    <value>Ідентифікатор картинки</value>
+  </data>
+  <data name="IsMain" xml:space="preserve">
+    <value>Ключовий член команди</value>
+  </data>
+  <data name="LogoId" xml:space="preserve">
+    <value>Ідентифікатор логотипа</value>
+  </data>
+  <data name="IsKeyPartner" xml:space="preserve">
+    <value>Ключовий партнер</value>
+  </data>
+  <data name="IsVisibleEverywhere" xml:space="preserve">
+    <value>Видимий для всіх</value>
+  </data>
+  <data name="MimeType" xml:space="preserve">
+    <value>Mime тип</value>
+  </data>
+  <data name="Extension" xml:space="preserve">
+    <value>Розширення</value>
+  </data>
+  <data name="Alt" xml:space="preserve">
+    <value>Alt</value>
+  </data>
+  <data name="BaseFormat" xml:space="preserve">
+    <value>Файл у форматі base64</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Вміст</value>
+  </data>
+  <data name="CaptchaToken" xml:space="preserve">
+    <value>Капча токен</value>
+  </data>
+  <data name="Salary" xml:space="preserve">
+    <value>Зарплата</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Адреса електронної пошти</value>
+  </data>
+  <data name="ModelState" xml:space="preserve">
+    <value>Стан моделі</value>
+  </data>
+  <data name="ArtDescription" xml:space="preserve">
+    <value>Опис арта</value>
+  </data>
+  <data name="ArtTitle" xml:space="preserve">
+    <value>Назва арта</value>
+  </data>
+  <data name="CategoryContent" xml:space="preserve">
+    <value>Вміст категорії</value>
+  </data>
+  <data name="FactTitle" xml:space="preserve">
+    <value>Назва факту</value>
+  </data>
+  <data name="FactContent" xml:space="preserve">
+    <value>Вміст факту</value>
+  </data>
+  <data name="FactImageDescription" xml:space="preserve">
+    <value>Опис картинки факту</value>
+  </data>
+  <data name="ImageTitle" xml:space="preserve">
+    <value>Назва картинки</value>
+  </data>
+  <data name="SubtitleText" xml:space="preserve">
+    <value>Текст бігучого рядка </value>
+  </data>
+  <data name="StreetcodeArts" xml:space="preserve">
+    <value>Арти</value>
+  </data>
+  <data name="Template" xml:space="preserve">
+    <value>Шаблон</value>
+  </data>
+  <data name="TextTitle" xml:space="preserve">
+    <value>Назва тексту</value>
+  </data>
+  <data name="TextContent" xml:space="preserve">
+    <value>Вміст тексту </value>
+  </data>
+  <data name="AdditionalText" xml:space="preserve">
+    <value>Додатковий текст</value>
+  </data>
+  <data name="HistoricalContextTitle" xml:space="preserve">
+    <value>Назва історичного контексту</value>
+  </data>
+  <data name="StreetName" xml:space="preserve">
+    <value>Назва вулиці</value>
+  </data>
+  <data name="TimelineItemTitle" xml:space="preserve">
+    <value>Назва елементу хронології</value>
+  </data>
+  <data name="TimelineItemDescription" xml:space="preserve">
+    <value>Опис елементу хронології</value>
+  </data>
+  <data name="TimelineItemDate" xml:space="preserve">
+    <value>Дата елемента хронології</value>
+  </data>
+  <data name="DateFormat" xml:space="preserve">
+    <value>Формат дати</value>
+  </data>
+  <data name="Video" xml:space="preserve">
+    <value>Посилання на відео</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Ім'я</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Прізвище</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Псевдонім</value>
+  </data>
+  <data name="Teaser" xml:space="preserve">
+    <value>Тизер</value>
+  </data>
+  <data name="TransliterationUrl" xml:space="preserve">
+    <value>Транслітероване посилання</value>
+  </data>
+  <data name="Index" xml:space="preserve">
+    <value>Індекс</value>
+  </data>
+  <data name="DateString" xml:space="preserve">
+    <value>Рядок дати</value>
+  </data>
+  <data name="StreetcodeType" xml:space="preserve">
+    <value>Тип стріткоду</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="ARBlockURL" xml:space="preserve">
+    <value>Посилання для блоку AR</value>
+  </data>
+  <data name="TransactionLinkUrl" xml:space="preserve">
+    <value>Посилання для QR-код</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Дата створення</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адреса</value>
+  </data>
+  <data name="Latitude" xml:space="preserve">
+    <value>Широта</value>
+  </data>
+  <data name="Longtitude" xml:space="preserve">
+    <value>Довгота</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Тег</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Ідентифікатор</value>
+  </data>
+  <data name="HistoricalContexts" xml:space="preserve">
+    <value>Історичні контексти</value>
+  </data>
+  <data name="ImagesDetails" xml:space="preserve">
+    <value>Деталі картинок</value>
+  </data>
+  <data name="Images" xml:space="preserve">
+    <value>Картинки</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Сума</value>
+  </data>
+  <data name="AboutYourself" xml:space="preserve">
+    <value>Опис про себе</value>
+  </data>
+  <data name="Expertises" xml:space="preserve">
+    <value>Досвіди</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Прізвище</value>
+  </data>
 </root>

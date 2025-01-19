@@ -70,7 +70,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
-                streetcode.CreatedBy = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
+                streetcode.UserId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
                 _repositoryWrapper.StreetcodeRepository.Create(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);

@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20250115080900_CreatedByFieldStreetcode")]
-    partial class CreatedByFieldStreetcode
+    [Migration("20250119181308_StreetcodeUserRelationship")]
+    partial class StreetcodeUserRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -753,10 +753,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<string>("CreatedBy")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("DateString")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -798,6 +794,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("ViewCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -814,6 +813,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1625,7 +1626,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasForeignKey("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "AudioId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
+                        .WithMany("StreetcodeContent")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Audio");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
@@ -1894,6 +1901,11 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
                     b.Navigation("Coordinate");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
+                {
+                    b.Navigation("StreetcodeContent");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>

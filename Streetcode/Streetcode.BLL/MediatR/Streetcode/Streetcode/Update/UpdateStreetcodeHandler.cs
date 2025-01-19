@@ -108,7 +108,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     discriminatorProperty.CurrentValue = StreetcodeTypeDiscriminators.GetStreetcodeType(request.Streetcode.StreetcodeType);
                     discriminatorProperty.IsModified = true;
                     streetcodeToUpdate.UpdatedAt = DateTime.UtcNow;
-                    streetcodeToUpdate.CreatedBy = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
+                    streetcodeToUpdate.UserId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
                     if (isResultSuccess)

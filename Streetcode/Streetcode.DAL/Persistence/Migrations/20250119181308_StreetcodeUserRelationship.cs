@@ -5,7 +5,7 @@
 namespace Streetcode.DAL.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedByFieldStreetcode : Migration
+    public partial class StreetcodeUserRelationship : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,12 +16,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                 table: "news");
 
             migrationBuilder.AddColumn<string>(
-                name: "CreatedBy",
+                name: "UserId",
                 schema: "streetcode",
                 table: "streetcodes",
-                type: "nvarchar(50)",
-                maxLength: 50,
+                type: "nvarchar(450)",
                 nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_streetcodes_UserId",
+                schema: "streetcode",
+                table: "streetcodes",
+                column: "UserId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_news_images_ImageId",
@@ -31,6 +36,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                 principalSchema: "media",
                 principalTable: "images",
                 principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_streetcodes_AspNetUsers_UserId",
+                schema: "streetcode",
+                table: "streetcodes",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id");
+
+
+            migrationBuilder.Sql(@"
+                DECLARE @FirstUserId NVARCHAR(450);
+                SELECT TOP 1 @FirstUserId = Id FROM [dbo].[AspNetUsers];
+
+                UPDATE [streetcode].[streetcodes]
+                SET [UserId] = @FirstUserId
+                WHERE [UserId] IS NULL;
+            ");
         }
 
         /// <inheritdoc />
@@ -41,8 +64,18 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "news",
                 table: "news");
 
+            migrationBuilder.DropForeignKey(
+                name: "FK_streetcodes_AspNetUsers_UserId",
+                schema: "streetcode",
+                table: "streetcodes");
+
+            migrationBuilder.DropIndex(
+                name: "IX_streetcodes_UserId",
+                schema: "streetcode",
+                table: "streetcodes");
+
             migrationBuilder.DropColumn(
-                name: "CreatedBy",
+                name: "UserId",
                 schema: "streetcode",
                 table: "streetcodes");
 
@@ -55,6 +88,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                 principalTable: "images",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.Sql(@"
+                UPDATE [streetcode].[streetcodes]
+                SET [UserId] = NULL;
+            ");
         }
     }
 }

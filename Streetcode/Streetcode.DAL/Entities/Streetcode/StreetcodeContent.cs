@@ -12,6 +12,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Entities.Streetcode;
@@ -54,8 +55,7 @@ public class StreetcodeContent
 
     public DateTime UpdatedAt { get; set; }
 
-    [MaxLength(50)]
-    public string? CreatedBy { get; set; } = null!;
+    public string UserId { get; set; }
 
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
@@ -63,6 +63,7 @@ public class StreetcodeContent
     public DateTime? EventEndOrPersonDeathDate { get; set; }
 
     public int? AudioId { get; set; }
+    public User? User { get; set; }
 
     public Text? Text { get; set; }
 

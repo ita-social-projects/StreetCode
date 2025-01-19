@@ -17,16 +17,16 @@ namespace Streetcode.WebApi.Controllers.Users
         [HttpGet]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUserId()
+        public async Task<IActionResult> GetByUserName()
         {
-            return HandleResult(await Mediator.Send(new GetByUserIdQuery()));
+            return HandleResult(await Mediator.Send(new GetByUserName()));
         }
 
         [HttpGet("{userName}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUserName([FromRoute] string userName)
+        public async Task<IActionResult> GetOtherUserByUserName([FromRoute] string userName)
         {
-            return HandleResult(await Mediator.Send(new GetByUserNameQuery(userName)));
+            return HandleResult(await Mediator.Send(new GetOtherUserByUserNameQuery(userName)));
         }
 
         [HttpPut]

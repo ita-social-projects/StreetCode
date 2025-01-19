@@ -7,12 +7,15 @@ namespace Streetcode.DAL.Entities.Users
     public class User : IdentityUser
     {
         [Required]
-        [MaxLength(50)]
+        [MinLength(2)]
+        [MaxLength(128)]
         public string Name { get; set; } = null!;
         [Required]
-        [MaxLength(50)]
+        [MinLength(2)]
+        [MaxLength(128)]
         public string Surname { get; set; } = null!;
         public string? RefreshToken { get; set; }
+        [MaxLength(500)]
         public string? AboutYourself { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
         public int? AvatarId { get; set; }

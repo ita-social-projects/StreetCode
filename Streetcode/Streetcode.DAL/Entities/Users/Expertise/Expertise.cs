@@ -12,7 +12,7 @@ public class Expertise
 
     [Required]
     [MaxLength(50)]
-    public string? Name { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     public List<User>? Users { get; set; } = new();
 }

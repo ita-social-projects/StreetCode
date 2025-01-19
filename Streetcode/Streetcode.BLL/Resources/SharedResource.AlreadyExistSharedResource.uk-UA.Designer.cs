@@ -60,11 +60,11 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Зв&apos;язок з полем &apos;{0}&apos;  вже існує.
+        ///   Looks up a localized string similar to Партнер з полем &apos;{0}&apos; та його значенням  &apos;{1}&apos; вже існує.
         /// </summary>
-        internal static string ConnectionAlreadyExist {
+        internal static string PartnerWithFieldAlreadyExist {
             get {
-                return ResourceManager.GetString("ConnectionAlreadyExist", resourceCulture);
+                return ResourceManager.GetString("PartnerWithFieldAlreadyExist", resourceCulture);
             }
         }
     }

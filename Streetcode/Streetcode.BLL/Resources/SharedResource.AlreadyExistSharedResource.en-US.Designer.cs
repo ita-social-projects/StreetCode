@@ -60,11 +60,11 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The connection with field &apos;{0}&apos;  already exists.
+        ///   Looks up a localized string similar to Partner with field &apos;{0}&apos; and its value &apos;{1}&apos; already exists.
         /// </summary>
-        internal static string ConnectionAlreadyExist {
+        internal static string PartnerWithFieldAlreadyExist {
             get {
-                return ResourceManager.GetString("ConnectionAlreadyExist", resourceCulture);
+                return ResourceManager.GetString("PartnerWithFieldAlreadyExist", resourceCulture);
             }
         }
     }

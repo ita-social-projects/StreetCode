@@ -18,7 +18,7 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="ConnectionAlreadyExist" xml:space="preserve">
-        <value>Зв'язок з полем '{0}'  вже існує</value>
+    <data name="PartnerWithFieldAlreadyExist" xml:space="preserve">
+        <value>Партнер з полем '{0}' та його значенням  '{1}' вже існує</value>
     </data>
 </root>

@@ -49,7 +49,6 @@
     <Folder Include="DTO\Instagram\" />
     <Folder Include="MediatR\Expertises\GetAll\" />
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
-    <Folder Include="MediatR\Users\GetByUserName\" />
     <Folder Include="MediatR\Users\UpdateForgotPassword\" />
     <Folder Include="Util\Helpers\" />
   </ItemGroup>

@@ -6,5 +6,4 @@ namespace Streetcode.BLL.MediatR.Users.Update;
 
 public record UpdateUserCommand(UpdateUserDTO UserDto) : IRequest<Result<UserDTO>>
 {
-    
 }

@@ -1,5 +1,4 @@
 ﻿using Streetcode.BLL.DTO.Users.Expertise;
-using System.ComponentModel.DataAnnotations;
 
 namespace Streetcode.BLL.DTO.Users;
 
@@ -12,5 +11,5 @@ public abstract class BaseUserDTO
     public int? AvatarId { get; set; } = null!;
     public List<ExpertiseDTO> Expertises { get; set; } = new();
 
-    public string PhoneNumber { get; set; } = null!;
+    public string Role { get; set; } = null!;
 }

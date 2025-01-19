@@ -4,7 +4,6 @@ using Streetcode.BLL.DTO.Users;
 
 namespace Streetcode.BLL.MediatR.Users.GetByName;
 
-public record GetByUserIdQuery(string UserId) : IRequest<Result<UserDTO>>
+public record GetByUserName() : IRequest<Result<UserDTO>>
 {
-    
 }

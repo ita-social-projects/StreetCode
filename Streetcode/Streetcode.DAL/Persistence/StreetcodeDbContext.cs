@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Entities.Event;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Entities.Media;
@@ -71,6 +72,7 @@ public class StreetcodeDbContext : IdentityDbContext<User>
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
     public DbSet<Job> Job { get; set; }
+    public DbSet<Event> Events { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

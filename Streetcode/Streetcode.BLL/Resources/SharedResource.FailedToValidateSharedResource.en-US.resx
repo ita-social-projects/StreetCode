@@ -186,4 +186,7 @@
   <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
     <value>The streetcode of type 'Event' cannot has 'First name' and 'Last name'</value>
   </data>
+  <data name="ImageSizeExceeded" xml:space="preserve">
+    <value>The image size can't exceed {0} MB</value>
+  </data>
 </root>

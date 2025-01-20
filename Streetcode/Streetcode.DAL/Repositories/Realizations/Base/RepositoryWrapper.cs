@@ -16,6 +16,7 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
+using Streetcode.DAL.Repositories.Interfaces.Users.Favourites;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Jobs;
@@ -112,9 +113,24 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IJobRepository? _jobRepository;
 
+    private IFavouritesRepository? _favouritesRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
+    }
+
+    public IFavouritesRepository FavouritesRepository
+    {
+        get
+        {
+            if (_favouritesRepository == null)
+            {
+                _favouritesRepository = new FavouritesRepository(_streetcodeDbContext);
+            }
+
+            return _favouritesRepository;
+        }
     }
 
     public INewsRepository NewsRepository

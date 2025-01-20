@@ -1,31 +1,36 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
-using Streetcode.DAL.Enums;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
-using Streetcode.BLL.DTO.Streetcode.Create;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter;
 using Streetcode.BLL.DTO.AdditionalContent.Filter;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
+using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.DTO.Streetcode.CatalogItem;
+using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Delete;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteFromFavourites;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteSoft;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllFavourites;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
-using Microsoft.AspNetCore.Authorization;
-using Streetcode.BLL.DTO.Streetcode.CatalogItem;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateToFavourites;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -102,6 +107,40 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFavouriteDTO>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetAllFavourites([FromQuery] StreetcodeType? type)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        return HandleResult(await Mediator.Send(new GetAllStreetcodeFavouritesQuery(userId, type)));
+    }
+
+    [HttpGet("{streetcodeId:int}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeFavouriteDTO))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetFavouriteById([FromRoute] int streetcodeId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        return HandleResult(await Mediator.Send(new GetFavouriteByIdQuery(streetcodeId, userId)));
+    }
+
+    [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     public async Task<IActionResult> GetCount([FromQuery] bool? onlyPublished)
     {
@@ -158,6 +197,24 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new UpdateStatusStreetcodeByIdCommand(id, status)));
     }
 
+    [HttpPost("{streetcodeId:int}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> CreateFavourite(
+            [FromRoute] int streetcodeId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        return HandleResult(await Mediator.Send(new CreateFavouriteStreetcodeCommand(streetcodeId, userId)));
+    }
+
     [HttpDelete("{id:int}")]
     [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -176,6 +233,23 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new DeleteStreetcodeCommand(id)));
+    }
+
+    [HttpDelete("{streetcodeId:int}")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteFromFavourites([FromRoute] int streetcodeId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        return HandleResult(await Mediator.Send(new DeleteStreetcodeFromFavouritesCommand(streetcodeId, userId)));
     }
 
     [HttpPut]

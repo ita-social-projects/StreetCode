@@ -14,6 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
+using Streetcode.DAL.Repositories.Interfaces.Users.Favourites;
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryWrapper
@@ -55,6 +56,7 @@ public interface IRepositoryWrapper
     IStreetcodeToponymRepository StreetcodeToponymRepository { get; }
     IStreetcodeImageRepository StreetcodeImageRepository { get; }
     IJobRepository JobRepository { get; }
+    IFavouritesRepository FavouritesRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

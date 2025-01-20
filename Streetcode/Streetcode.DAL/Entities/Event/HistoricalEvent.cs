@@ -9,7 +9,7 @@ namespace Streetcode.DAL.Entities.Event
 {
     public class HistoricalEvent : Event
     {
-        public int TimelineItemId { get; set; }
+        public int? TimelineItemId { get; set; }
         public TimelineItem? TimelineItem { get; set; }
     }
 }

@@ -123,6 +123,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The image size can&apos;t exceed {0} MB.
+        /// </summary>
+        internal static string ImageSizeExceeded {
+            get {
+                return ResourceManager.GetString("ImageSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; is invalid.
         /// </summary>
         internal static string Invalid {
@@ -168,7 +177,7 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logo must match corresponding url.
+        ///   Looks up a localized string similar to The link does not match the selected social network.
         /// </summary>
         internal static string LogoMustMatchUrl {
             get {

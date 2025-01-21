@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Util;
+using Streetcode.BLL.Util.Extensions;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.DAL.Enums;
 

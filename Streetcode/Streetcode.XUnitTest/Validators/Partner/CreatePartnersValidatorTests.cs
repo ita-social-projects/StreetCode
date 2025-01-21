@@ -40,7 +40,7 @@ public class CreatePartnersValidatorTests
     {
         // Arrange
         var query = new CreatePartnerQuery(new CreatePartnerDTO());
-        var createValidator = new CreatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, mockNamesLocalizer, mockValidationLocalizer);
+        var createValidator = new CreatePartnerValidator(this.mockBasePartnerValidator.Object, mockValidationLocalizer, mockNamesLocalizer, _mockRepositoryWrapper.Object);
         MockHelpers.SetupMockPartnersRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, query.newPartner.LogoId);
 
         // Act

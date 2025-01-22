@@ -1,4 +1,4 @@
-﻿namespace Streetcode.BLL.Util
+﻿namespace Streetcode.BLL.Util.Extensions
 {
     internal static class IQueryableExtensions
     {

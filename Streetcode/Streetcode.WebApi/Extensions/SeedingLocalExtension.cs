@@ -402,6 +402,7 @@ namespace Streetcode.WebApi.Extensions
                         Title = "Тарас Шевченко",
                         Alias = "Кобзар",
                         AudioId = 1,
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
                         Status = StreetcodeStatus.Published
                     },
                     new PersonStreetcode
@@ -419,6 +420,7 @@ namespace Streetcode.WebApi.Extensions
                         Title = "Роман Ратушний (Сенека)",
                         Alias = "Сенека",
                         AudioId = 2,
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
                         Status = StreetcodeStatus.Published,
                     });
 

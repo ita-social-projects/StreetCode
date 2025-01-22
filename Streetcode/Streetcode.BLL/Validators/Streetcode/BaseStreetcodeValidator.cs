@@ -24,6 +24,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int TransliterationUrlMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
+    public const int NewLineLenght = 65;
 
     public BaseStreetcodeValidator(
         StreetcodeToponymValidator streetcodeToponymValidator,
@@ -45,7 +46,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.Teaser)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Teaser"]])
-            .MaximumLength(TeaserMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Teaser"], TeaserMaxLength]);
+            .Must(AdjustedLengthIsValid).WithMessage(localizer["MaxLength", fieldLocalizer["Teaser"], TeaserMaxLength]);
 
         RuleFor(dto => dto.Title)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
@@ -112,5 +113,23 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleForEach(dto => dto.Arts)
             .SetValidator(artCreateUpdateDtoValidator);
+    }
+
+    private int CountNewLines(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return 0;
+        }
+
+        return text.Count(c => c == '\n');
+    }
+
+    private bool AdjustedLengthIsValid(string teaser)
+    {
+        int newLineCount = CountNewLines(teaser);
+
+        int adjustedLength = teaser.Length - newLineCount + (newLineCount * NewLineLenght);
+        return adjustedLength <= TeaserMaxLength;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
@@ -19,6 +20,7 @@ namespace Streetcode.WebApi.Configuration
             // Populate initial admin with information.
             var initialAdmin = new User
             {
+                Id = Guid.Parse("FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B").ToString(),
                 Name = "admin",
                 Surname = "admin",
                 Email = AdminEmail,
@@ -42,6 +44,8 @@ namespace Streetcode.WebApi.Configuration
 
             var hashed = password.HashPassword(initialAdmin, passwordEnvVariable);
             initialAdmin.PasswordHash = hashed;
+
+            context.Entry(initialAdmin).State = EntityState.Added;
 
             // Add initial admin.
             await context.Users.AddAsync(initialAdmin);

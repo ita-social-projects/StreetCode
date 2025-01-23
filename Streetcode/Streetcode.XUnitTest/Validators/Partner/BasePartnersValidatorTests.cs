@@ -5,9 +5,11 @@ using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
 using Streetcode.BLL.DTO.Streetcode;
+using Streetcode.BLL.Validators.News;
 using Streetcode.BLL.Validators.Partners;
 using Streetcode.BLL.Validators.Partners.SourceLinks;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
@@ -19,40 +21,44 @@ public class BasePartnersValidatorTests
     private readonly MockFieldNamesLocalizer mockNamesLocalizer;
     private readonly Mock<PartnerSourceLinkValidator> mockPartnerSourceLinkValidator;
     private readonly BasePartnersValidator validator;
+    private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
 
     public BasePartnersValidatorTests()
     {
+        _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
         this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
         this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
             .Returns(new ValidationResult());
-        this.validator = new BasePartnersValidator(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer);
+        this.validator = new BasePartnersValidator(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, _mockRepositoryWrapper.Object);
     }
 
     [Fact]
-    public void ShouldReturnSuccessResult_WhenPartnerIsValid()
+    public async void ShouldReturnSuccessResult_WhenPartnerIsValid()
     {
         // Arrange
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
 
         // Act
-        var result = this.validator.Validate(partner);
+        var result = await this.validator.ValidateAsync(partner);
 
         // Assert
         Assert.True(result.IsValid);
     }
 
     [Fact]
-    public void ShouldreturnError_WhenTitleIsEmpty()
+    public async void ShouldreturnError_WhenTitleIsEmpty()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Title"]];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.Title = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
@@ -60,15 +66,32 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenTitleLengthIsMoreThan100()
+    public async Task ShouldReturnFail_WhenImageDoesNotExist()
+    {
+        // Arrange
+        var expectedError = this.mockValidationLocalizer["ImageDoesntExist", this.mockNamesLocalizer["LogoId"]];
+        var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(_mockRepositoryWrapper);
+
+        // Act
+        var result = await this.validator.TestValidateAsync(partner);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.LogoId)
+            .WithErrorMessage(expectedError);
+    }
+
+    [Fact]
+    public async void ShouldReturnError_WhenTitleLengthIsMoreThan100()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BasePartnersValidator.TitleMaxLength];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.Title = new string('t', BasePartnersValidator.TitleMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
@@ -76,15 +99,16 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenDescriptionLengthIsMoreThan450()
+    public async void ShouldReturnError_WhenDescriptionLengthIsMoreThan450()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Description"], BasePartnersValidator.DescriptionMaxLength];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.Description = new string('d', BasePartnersValidator.DescriptionMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Description)
@@ -92,15 +116,16 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenUrlTitleLengthIsMoreThan100()
+    public async void ShouldReturnError_WhenUrlTitleLengthIsMoreThan100()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["UrlTitle"], BasePartnersValidator.UrlTitleMaxLength];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.UrlTitle = new string('u', BasePartnersValidator.UrlTitleMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.UrlTitle)
@@ -108,15 +133,16 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenTargetUrlLengthIsMoreThan200()
+    public async void ShouldReturnError_WhenTargetUrlLengthIsMoreThan200()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["TargetUrl"], BasePartnersValidator.UrlMaxLength];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.TargetUrl = new string('u', BasePartnersValidator.UrlMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -124,15 +150,16 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenUrlIsMissing()
+    public async void ShouldReturnError_WhenUrlIsMissing()
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["CannotBeEmptyWithCondition", this.mockNamesLocalizer["TargetUrl"], this.mockNamesLocalizer["UrlTitle"]];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.TargetUrl = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -140,15 +167,16 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnSuccessResult_WhenUrlAndUrlTitleIsMissing()
+    public async void ShouldReturnSuccessResult_WhenUrlAndUrlTitleIsMissing()
     {
         // Arrange
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.TargetUrl = string.Empty;
         partner.UrlTitle = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveAnyValidationError();
@@ -160,15 +188,16 @@ public class BasePartnersValidatorTests
     [InlineData("ftp://test.com")]
     [InlineData("http:////test.com")]
     [InlineData("http://test..com")]
-    public void ShouldReturnSuccessResult_WhenUrlIsIncorrect(string invalidUrl)
+    public async void ShouldReturnSuccessResult_WhenUrlIsIncorrect(string invalidUrl)
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["TargetUrl"]];
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
         partner.TargetUrl = invalidUrl;
 
         // Act
-        var result = this.validator.TestValidate(partner);
+        var result = await this.validator.TestValidateAsync(partner);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -176,16 +205,17 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public void ShouldCallPartnerSourceLinkValidator()
+    public async void ShouldCallPartnerSourceLinkValidator()
     {
         // Arrange
         var partner = this.GetValidPartner();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, partner.LogoId);
 
         // Act
-        this.validator.Validate(partner);
+        await this.validator.ValidateAsync(partner);
 
         // Assert
-        this.mockPartnerSourceLinkValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()), Times.Once);
+        this.mockPartnerSourceLinkValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>(), CancellationToken.None), Times.Once);
     }
 
     private PartnerCreateUpdateDto GetValidPartner()

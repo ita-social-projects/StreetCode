@@ -98,6 +98,13 @@ public static class ServiceCollectionExtensions
             .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !)
             .AddDefaultTokenProviders();
 
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'";
+        });
+
         services.AddHangfire(config =>
         {
             config.UseSqlServerStorage(connectionString);

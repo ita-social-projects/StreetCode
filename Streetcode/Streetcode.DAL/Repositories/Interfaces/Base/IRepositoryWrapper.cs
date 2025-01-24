@@ -2,6 +2,7 @@ using System.Transactions;
 using Repositories.Interfaces;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
+using Streetcode.DAL.Repositories.Interfaces.Event;
 using Streetcode.DAL.Repositories.Interfaces.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.News;
@@ -55,6 +56,7 @@ public interface IRepositoryWrapper
     IStreetcodeToponymRepository StreetcodeToponymRepository { get; }
     IStreetcodeImageRepository StreetcodeImageRepository { get; }
     IJobRepository JobRepository { get; }
+    IEventRepository EventRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

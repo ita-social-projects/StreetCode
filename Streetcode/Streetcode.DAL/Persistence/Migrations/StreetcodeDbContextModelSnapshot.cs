@@ -1359,7 +1359,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Event.Event");
 
-                    b.Property<int>("TimelineItemId")
+                    b.Property<int?>("TimelineItemId")
                         .HasColumnType("int");
 
                     b.HasIndex("TimelineItemId");
@@ -1887,8 +1887,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", "TimelineItem")
                         .WithMany()
                         .HasForeignKey("TimelineItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("TimelineItem");
                 });

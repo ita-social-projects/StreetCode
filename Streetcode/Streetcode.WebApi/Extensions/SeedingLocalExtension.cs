@@ -1,9 +1,11 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Options;
+using Mono.TextTemplating;
 using Newtonsoft.Json;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
+using Streetcode.DAL.Entities.Event;
 using Streetcode.DAL.Entities.Feedback;
 using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Entities.Media;
@@ -122,6 +124,44 @@ namespace Streetcode.WebApi.Extensions
                         Name = "Danyil",
                         Description = "Nice project",
                         Email = "dt210204@gmail.com"
+                    });
+
+                await dbContext.SaveChangesAsync();
+            }
+
+            if (!dbContext.Events.Any())
+            {
+                dbContext.Events.AddRange(
+                    new CustomEvent
+                    {
+                        Title = "Лекція з історії",
+                        Description = "Запрошуємо вас на лекцію, присвячену ключовим подіям в історії України та їхньому впливу на світовий контекст. Ви дізнаєтеся, як українська культура, економіка та політика формували глобальні процеси. Лекція буде цікавою як для любителів історії, так і для тих, хто прагне глибше зрозуміти роль України у світовій історії.",
+                        Date = new DateTime(2025, 2, 10),
+                        Location = "Київ, культурний центр \"Світло\", вул. Незалежності, 10",
+                        Organizer = "Історичний клуб \"Пізнай минуле\"",
+                        DateString = "18:00 – 20:00",
+                    },
+                    new HistoricalEvent
+                    {
+                        Title = "День народження Лесі Українки",
+                        Date = new DateTime(1871, 2, 25)
+                    },
+                    new HistoricalEvent
+                    {
+                        Title = "День народження Тараса Шевченка",
+                        Date = new DateTime(1814, 3, 9),
+                    },
+                    new CustomEvent
+                    {
+                        Title = "Конкурс читців Шевченка",
+                        Date = new DateTime(2025, 3, 9),
+                    },
+                    new HistoricalEvent
+                    {
+                        Title = "Підрозділ Протасового",
+                        Description = "Свій Протасів та свій Київ з початком повномасштабного вторгнення Росії Роман Ратушний добровольцем захищає у лавах Збройних сил України в підрозділі «Протасового Яру». Спершу була Київщина, потім — Сумщина, де він брав участь у деокупації населених пунктів області, зокрема Тростянця.",
+                        Date = new DateTime(2022, 2, 24),
+                        TimelineItemId = 19
                     });
 
                 await dbContext.SaveChangesAsync();

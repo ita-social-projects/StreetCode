@@ -20,9 +20,9 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public async Task<bool> SendEmailAsync(Message message)
+    public async Task<bool> SendEmailAsync(MessageData messageData)
     {
-        return await SendAsync(message.ToMimeMessage(_emailConfig));
+        return await SendAsync(messageData.ToMimeMessage(_emailConfig));
     }
 
     private async Task<bool> SendAsync(MimeMessage mailMessage)

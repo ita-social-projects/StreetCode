@@ -39,7 +39,7 @@ public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, Result<Unit>
     {
         try
         {
-            var user = await _userManager.FindByNameAsync(HttpContextHelper.GetCurrentUserName(_httpContextAccessor));
+            var user = await _userManager.FindByEmailAsync(HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor));
 
             if (user is null)
             {

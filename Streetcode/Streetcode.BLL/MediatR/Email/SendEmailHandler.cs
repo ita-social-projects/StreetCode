@@ -49,7 +49,7 @@ namespace Streetcode.BLL.MediatR.Email
                 return Result.Fail(new Error(errorMessage));
             }
 
-            var message = new FeedbackMessage(
+            var message = new FeedbackMessageData(
                 new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodedev@gmail.com" },
                 request.Email.From,
                 request.Email.Source,

@@ -9,6 +9,15 @@ namespace Streetcode.DAL.Entities.Users
         [Required]
         [MinLength(2)]
         [MaxLength(128)]
+        public new string UserName
+        {
+            get => base.UserName ?? string.Empty;
+            set => base.UserName = value ?? throw new ArgumentNullException(nameof(UserName), "Username cannot be null");
+        }
+
+        [Required]
+        [MinLength(2)]
+        [MaxLength(128)]
         public string Name { get; set; } = null!;
         [Required]
         [MinLength(2)]

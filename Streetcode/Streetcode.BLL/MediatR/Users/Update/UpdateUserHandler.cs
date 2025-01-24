@@ -40,10 +40,10 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
     {
         try
         {
-            var username = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
+            var currentUserEmail = HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor);
             var user = await _userManager.Users
                 .Include(u => u.Expertises)
-                .SingleOrDefaultAsync(u => u.UserName == username);
+                .SingleOrDefaultAsync(u => u.Email == currentUserEmail);
 
             if (user is null)
             {
@@ -56,6 +56,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
 
             user.Expertises.AddRange(toAddExpertises);
 
+            user.UserName = request.UserDto.UserName;
             user.Name = request.UserDto.Name;
             user.Surname = request.UserDto.Surname;
             user.AvatarId = request.UserDto.AvatarId;

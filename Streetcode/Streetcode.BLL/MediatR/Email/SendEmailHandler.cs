@@ -4,10 +4,10 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.AdditionalContent.Email;
-using Streetcode.DAL.Entities.AdditionalContent.Email.Messages;
+using Streetcode.BLL.Models.Email.Messages;
 
 namespace Streetcode.BLL.MediatR.Email
 {
@@ -18,14 +18,16 @@ namespace Streetcode.BLL.MediatR.Email
         private readonly IStringLocalizer<SendEmailHandler> _stringLocalizer;
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
 
-        public SendEmailHandler(IEmailService emailService, ILoggerService logger, IStringLocalizer<SendEmailHandler> stringLocalizer, HttpClient httpClient, IConfiguration configuration)
+        public SendEmailHandler(IEmailService emailService, ILoggerService logger, IStringLocalizer<SendEmailHandler> stringLocalizer, HttpClient httpClient, IConfiguration configuration, IMessageDataAbstractFactory messageDataAbstractFactory)
         {
             _emailService = emailService;
             _logger = logger;
             _stringLocalizer = stringLocalizer;
             _httpClient = httpClient;
             _configuration = configuration;
+            _messageDataAbstractFactory = messageDataAbstractFactory;
         }
 
         public async Task<Result<Unit>> Handle(SendEmailCommand request, CancellationToken cancellationToken)
@@ -49,12 +51,11 @@ namespace Streetcode.BLL.MediatR.Email
                 return Result.Fail(new Error(errorMessage));
             }
 
-            var message = new FeedbackMessage(
-                new string[] { _configuration["EmailConfiguration:To"] ?? "stagestreetcodedev@gmail.com" },
+            var message = _messageDataAbstractFactory.CreateFeedbackMessageData(
                 request.Email.From,
                 request.Email.Source,
-                "FeedBack",
                 request.Email.Content);
+
             bool isResultSuccess = await _emailService.SendEmailAsync(message);
 
             if (isResultSuccess)

@@ -4,8 +4,8 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Entities.AdditionalContent.Email;
-using Streetcode.DAL.Entities.AdditionalContent.Email.Messages.Base;
+using Streetcode.BLL.Models.Email;
+using Streetcode.BLL.Models.Email.Messages.Base;
 
 namespace Streetcode.BLL.Services.Email;
 
@@ -20,9 +20,9 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public async Task<bool> SendEmailAsync(Message message)
+    public async Task<bool> SendEmailAsync(MessageData messageData)
     {
-        return await SendAsync(message.ToMimeMessage(_emailConfig));
+        return await SendAsync(messageData.ToMimeMessage());
     }
 
     private async Task<bool> SendAsync(MimeMessage mailMessage)

@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.GetByName;
 
-public class GetByUserNameHandler : IRequestHandler<GetByUserName, Result<UserDTO>>
+public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<UserDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -33,9 +33,9 @@ public class GetByUserNameHandler : IRequestHandler<GetByUserName, Result<UserDT
         _localizer = localizer;
     }
 
-    public async Task<Result<UserDTO>> Handle(GetByUserName request, CancellationToken cancellationToken)
+    public async Task<Result<UserDTO>> Handle(GetByUserNameQuery request, CancellationToken cancellationToken)
     {
-        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == HttpContextHelper.GetCurrentUserName(_httpContextAccessor), include: qu => qu.Include(x => x.Expertises));
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Email == HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor), include: qu => qu.Include(x => x.Expertises));
 
         if (user is null)
         {

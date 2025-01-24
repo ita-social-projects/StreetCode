@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20250119012155_UserUpdate")]
+    [Migration("20250124043754_UserUpdate")]
     partial class UserUpdate
     {
         /// <inheritdoc />
@@ -1283,6 +1283,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 

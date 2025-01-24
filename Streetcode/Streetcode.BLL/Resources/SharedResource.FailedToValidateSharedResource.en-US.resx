@@ -198,4 +198,7 @@
   <data name="SurnameFormat" xml:space="preserve">
     <value>Surname must consist of Cyrillic or Latin characters (both uppercase and lowercase) and can only include hyphens (-) and apostrophes (').</value>
   </data>
+  <data name="UserNameFormat" xml:space="preserve">
+    <value>Surname must consist of Latin characters (lowercase) and can only include hyphens (-), apostrophes (') and underscores(_).</value>
+  </data>
 </root>

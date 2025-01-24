@@ -14,6 +14,8 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
     public const int MaxLengthName = 128;
     public const int MinLengthSurname = 2;
     public const int MaxLengthSurname = 128;
+    public const int MinLengthUserName = 2;
+    public const int MaxLengthUserName = 128;
     public const int MaxExpertiesesCount = 3;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
@@ -28,6 +30,12 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
 
         RuleFor(dto => dto.AboutYourself)
             .MaximumLength(MaxLengthAboutYourself).WithMessage(localizer["MaxLength", fieldLocalizer["AboutYourself"], MaxLengthAboutYourself]);
+
+        RuleFor(dto => dto.UserName)
+            .Matches(@"^[a-z0-9'-_]+$").WithMessage(localizer["NameFormat", fieldLocalizer["UserName"], MinLengthSurname])
+            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["UserName"]])
+            .MinimumLength(MinLengthName).WithMessage(localizer["MinLength", fieldLocalizer["UserName"], MinLengthUserName])
+            .MaximumLength(MaxLengthName).WithMessage(localizer["MaxLength", fieldLocalizer["UserName"], MaxLengthUserName]);
 
         RuleFor(dto => dto.Name)
             .Matches(@"^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'-]+$").WithMessage(localizer["NameFormat", fieldLocalizer["Name"], MinLengthSurname])

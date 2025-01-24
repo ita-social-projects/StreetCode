@@ -5,6 +5,7 @@ using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.DTO.Users.Password;
 using Streetcode.BLL.MediatR.Users.Delete;
 using Streetcode.BLL.MediatR.Users.ForgotPassword;
+using Streetcode.BLL.MediatR.Users.GetAllUserName;
 using Streetcode.BLL.MediatR.Users.GetByName;
 using Streetcode.BLL.MediatR.Users.Update;
 using Streetcode.BLL.MediatR.Users.GetByUserName;
@@ -19,7 +20,15 @@ namespace Streetcode.WebApi.Controllers.Users
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByUserName()
         {
-            return HandleResult(await Mediator.Send(new GetByUserName()));
+            return HandleResult(await Mediator.Send(new GetByUserNameQuery()));
+        }
+
+        [HttpGet("{userName}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ExistWithUserName([FromRoute] string userName)
+        {
+            return HandleResult(await Mediator.Send(new ExistWithUserNameQuery(userName)));
         }
 
         [HttpGet("{userName}")]
@@ -52,9 +61,9 @@ namespace Streetcode.WebApi.Controllers.Users
             return HandleResult(await Mediator.Send(new ForgotPasswordCommand(forgotPasswordDto)));
         }
 
-        [HttpPost]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateForgotPassword(UpdateForgotPasswordDTO updateForgotPasswordDto)
+        public async Task<IActionResult> UpdateForgotPassword([FromBody] UpdateForgotPasswordDTO updateForgotPasswordDto)
         {
             return HandleResult(await Mediator.Send(new UpdateForgotPasswordCommand(updateForgotPasswordDto)));
         }

@@ -19,6 +19,18 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "users");
 
             migrationBuilder.AlterColumn<string>(
+                name: "UserName",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256,
+                oldNullable: true);
+
+            migrationBuilder.AlterColumn<string>(
                 name: "Surname",
                 table: "AspNetUsers",
                 type: "nvarchar(128)",
@@ -154,6 +166,16 @@ namespace Streetcode.DAL.Persistence.Migrations
             migrationBuilder.DropColumn(
                 name: "AvatarId",
                 table: "AspNetUsers");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "UserName",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                maxLength: 256,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(256)",
+                oldMaxLength: 256);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Surname",

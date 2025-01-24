@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <Folder Include="DTO\Users\Expertise\" />
+    <Folder Include="Factories\MessageDataFactory\Concretes\" />
     <Folder Include="Mapping\Payment\" />
     <Folder Include="Mapping\Users\Expertises\" />
     <Folder Include="MediatR\AdditionalContent\Tag\" />

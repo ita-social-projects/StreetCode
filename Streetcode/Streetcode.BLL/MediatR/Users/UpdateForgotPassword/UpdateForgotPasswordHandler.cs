@@ -28,27 +28,45 @@ public class UpdateForgotPasswordHandler : IRequestHandler<UpdateForgotPasswordC
 
     public async Task<Result<Unit>> Handle(UpdateForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByNameAsync(request.UpdateForgotPasswordDto.Username);
-
-        if (user is null)
+        try
         {
-            string errorMessage = _localizer["UserWithSuchUsernameNotExists"];
-            _logger.LogError(request, errorMessage);
-            return Result.Fail(errorMessage);
+            if (string.IsNullOrEmpty(request.UpdateForgotPasswordDto.Token) || string.IsNullOrEmpty(request.UpdateForgotPasswordDto.Username))
+            {
+                string errorMessage = _localizer["UserWithSuchUsernameNotExists"];
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(errorMessage);
+            }
+
+            var decodedUserName = Uri.UnescapeDataString(request.UpdateForgotPasswordDto.Username);
+            var decodedToken = Uri.UnescapeDataString(request.UpdateForgotPasswordDto.Token);
+
+            var user = await _userManager.FindByNameAsync(decodedUserName);
+
+            if (user is null)
+            {
+                string errorMessage = _localizer["UserWithSuchUsernameNotExists"];
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(errorMessage);
+            }
+
+            var result = await _userManager.ResetPasswordAsync(
+                user,
+                decodedToken,
+                request.UpdateForgotPasswordDto.Password);
+
+            if (result.Succeeded)
+            {
+                return Result.Ok(Unit.Value);
+            }
+
+            var errorMessages = result.Errors.Select(e => e.Description).ToList();
+            _logger.LogError(request, string.Join(" ", errorMessages));
+            return Result.Fail(errorMessages);
         }
-
-        var result = await _userManager.ResetPasswordAsync(
-            user,
-            request.UpdateForgotPasswordDto.Token,
-            request.UpdateForgotPasswordDto.Password);
-
-        if (result.Succeeded)
+        catch (Exception ex)
         {
-            return Result.Ok(Unit.Value);
+            _logger.LogError(request, ex.Message);
+            return Result.Fail(ex.Message);
         }
-
-        var errorMessages = result.Errors.Select(e => e.Description).ToList();
-        _logger.LogError(request, string.Join(" ", errorMessages));
-        return Result.Fail(errorMessages);
     }
 }

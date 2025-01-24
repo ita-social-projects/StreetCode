@@ -6,10 +6,11 @@ using Moq;
 using Moq.Protected;
 using Streetcode.BLL.DTO.Email;
 using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Email;
-using Streetcode.DAL.Entities.AdditionalContent.Email.Messages.Base;
+using Streetcode.BLL.Models.Email.Messages.Base;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Email
@@ -21,6 +22,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         private readonly Mock<IStringLocalizer<SendEmailHandler>> mockStringLocalizer;
         private readonly Mock<HttpMessageHandler> mockHttpMessageHandler;
         private readonly Mock<IConfiguration> mockConfiguration;
+        private readonly Mock<IMessageDataAbstractFactory> mockMessageDataAbstractFactory;
 
         public SendEmailHandlerTests()
         {
@@ -29,7 +31,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             this.mockStringLocalizer = new Mock<IStringLocalizer<SendEmailHandler>>();
             this.mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             this.mockConfiguration = new Mock<IConfiguration>();
-
+            this.mockMessageDataAbstractFactory = new Mock<IMessageDataAbstractFactory>();
             this.mockStringLocalizer.Setup(x => x["RecaptchaRequestFailed"]).Returns(new LocalizedString("RecaptchaRequestFailed", "RecaptchaRequestFailed"));
             this.mockStringLocalizer.Setup(x => x["InvalidCaptcha"]).Returns(new LocalizedString("InvalidCaptcha", "InvalidCaptcha"));
         }
@@ -46,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             var client = new HttpClient(this.mockHttpMessageHandler.Object);
 
-            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object);
+            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object, this.mockMessageDataAbstractFactory.Object);
 
             // act
             var result = await handler.Handle(new SendEmailCommand(emailDto), CancellationToken.None);
@@ -67,7 +69,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             var client = new HttpClient(this.mockHttpMessageHandler.Object);
 
-            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object);
+            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object, this.mockMessageDataAbstractFactory.Object);
 
             // act
             var result = await handler.Handle(new SendEmailCommand(emailDto), CancellationToken.None);
@@ -90,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             var client = new HttpClient(this.mockHttpMessageHandler.Object);
 
-            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object);
+            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object, this.mockMessageDataAbstractFactory.Object);
 
             // act
             var result = await handler.Handle(new SendEmailCommand(emailDto), CancellationToken.None);
@@ -114,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
 
             var client = new HttpClient(this.mockHttpMessageHandler.Object);
 
-            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object);
+            var handler = new SendEmailHandler(this.mockEmailService.Object, this.mockLogger.Object, this.mockStringLocalizer.Object, client, this.mockConfiguration.Object, this.mockMessageDataAbstractFactory.Object);
 
             // act
             var result = await handler.Handle(new SendEmailCommand(emailDto), CancellationToken.None);

@@ -4,12 +4,13 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Email;
+using Streetcode.BLL.Models.Email.Messages;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
-using Streetcode.DAL.Entities.AdditionalContent.Email.Messages;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -23,14 +24,16 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
     private readonly UserManager<User> _userManager;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
 
-    public ForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IEmailService forgotPasswordEmailService, IStringLocalizer<UserSharedResource> localizer, IHttpContextAccessor httpContextAccessor)
+    public ForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IEmailService forgotPasswordEmailService, IStringLocalizer<UserSharedResource> localizer, IHttpContextAccessor httpContextAccessor, IMessageDataAbstractFactory messageDataAbstractFactory)
     {
         _logger = logger;
         _userManager = userManager;
         _emailService = forgotPasswordEmailService;
         _localizer = localizer;
         _httpContextAccessor = httpContextAccessor;
+        _messageDataAbstractFactory = messageDataAbstractFactory;
     }
 
     public async Task<Result<Unit>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
@@ -51,7 +54,7 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
             var endcodedToken = Uri.EscapeDataString(token);
             var encodedUserName = Uri.EscapeDataString(user.UserName);
 
-            var message = new ForgotPasswordMessageData(
+            var message = _messageDataAbstractFactory.CreateForgotPasswordMessageData(
                 new string[] { request.ForgotPasswordDto.Email },
                 endcodedToken,
                 user.UserName,

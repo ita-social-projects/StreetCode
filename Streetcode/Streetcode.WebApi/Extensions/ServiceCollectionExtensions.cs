@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
-using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.AudioService;
@@ -31,9 +30,12 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Factories.MessageDataFactory.Concretes;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Update;
+using Streetcode.BLL.Models.Email;
 using Streetcode.BLL.PipelineBehaviour;
 using Streetcode.BLL.Validators.SourceLinkCategory;
 using Streetcode.BLL.Validators.News;
@@ -70,6 +72,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddScoped<ITextService, AddTermsToTextService>();
+
+        services.AddScoped<IMessageDataAbstractFactory, MessageDataConcreteFactory>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

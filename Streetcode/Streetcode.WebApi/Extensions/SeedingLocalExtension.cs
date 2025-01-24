@@ -465,9 +465,9 @@ namespace Streetcode.WebApi.Extensions
                     await dbContext.SaveChangesAsync();
                 }
 
-            if (!dbContext.Streetcodes.Any())
-            {
-                dbContext.Streetcodes.AddRange(
+                if (!dbContext.Streetcodes.Any())
+                {
+                    dbContext.Streetcodes.AddRange(
                     new PersonStreetcode
                     {
                         Index = 1,

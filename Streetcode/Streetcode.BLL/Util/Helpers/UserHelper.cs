@@ -16,8 +16,9 @@ public static class UserHelper
 
     private static string RemoveNonAlphaNumericFromEmail(string email)
     {
+        var beforeAtSymbol = email.Split("@")[0];
         var sb = new StringBuilder();
-        foreach (var character in email)
+        foreach (var character in beforeAtSymbol)
         {
             if (char.IsLetterOrDigit(character))
             {

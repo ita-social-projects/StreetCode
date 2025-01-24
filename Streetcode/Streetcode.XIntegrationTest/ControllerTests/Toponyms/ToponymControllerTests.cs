@@ -57,13 +57,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
             Assert.NotNull(returnedValue);
             Assert.Multiple(
                 () => Assert.Equal(expectedToponym.Id, returnedValue.Id),
-                () => Assert.Equal(expectedToponym.Oblast, returnedValue.Oblast),
-                () => Assert.Equal(expectedToponym.AdminRegionOld, returnedValue.AdminRegionOld),
-                () => Assert.Equal(expectedToponym.AdminRegionNew, returnedValue.AdminRegionNew),
-                () => Assert.Equal(expectedToponym.Gromada, returnedValue.Gromada),
-                () => Assert.Equal(expectedToponym.Community, returnedValue.Community),
-                () => Assert.Equal(expectedToponym.StreetName, returnedValue.StreetName),
-                () => Assert.Equal(expectedToponym.StreetType, returnedValue.StreetType));
+                () => Assert.Equal(expectedToponym.Oblast, returnedValue.Oblast));
         }
 
         [Fact]

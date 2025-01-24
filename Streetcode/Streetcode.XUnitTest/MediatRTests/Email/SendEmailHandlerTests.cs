@@ -159,14 +159,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         private void SetupMockEmailServiceReturnsOK()
         {
             this.mockEmailService
-                .Setup<Task<bool>>(service => service.SendEmailAsync(It.IsAny<Message>()))
+                .Setup<Task<bool>>(service => service.SendEmailAsync(It.IsAny<MessageData>()))
                 .Returns(Task.FromResult(true));
         }
 
         private void SetupMockEmailServiceReturnsFalse()
         {
             this.mockEmailService
-                .Setup<Task<bool>>(service => service.SendEmailAsync(It.IsAny<Message>()))
+                .Setup<Task<bool>>(service => service.SendEmailAsync(It.IsAny<MessageData>()))
                 .Returns(Task.FromResult(false));
         }
 

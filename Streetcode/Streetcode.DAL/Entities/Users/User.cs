@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.DAL.Entities.Users
 {
@@ -30,5 +31,6 @@ namespace Streetcode.DAL.Entities.Users
         public int? AvatarId { get; set; }
         public Image? Avatar { get; set; }
         public List<Expertise.Expertise> Expertises { get; set; } = new ();
+        public List<StreetcodeContent>? StreetcodeContent { get; set; } = new();
     }
 }

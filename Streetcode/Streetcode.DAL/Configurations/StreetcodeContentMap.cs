@@ -130,5 +130,11 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .WithOne(t => t.Streetcode)
                 .HasForeignKey(t => t.StreetcodeId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+                .HasOne(s => s.User)
+                .WithMany(u => u.StreetcodeContent)
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
     }
 }

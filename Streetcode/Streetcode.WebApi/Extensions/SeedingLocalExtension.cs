@@ -465,48 +465,50 @@ namespace Streetcode.WebApi.Extensions
                     await dbContext.SaveChangesAsync();
                 }
 
-                if (!dbContext.Streetcodes.Any())
-                {
-                    dbContext.Streetcodes.AddRange(
-                        new PersonStreetcode
-                        {
-                            Index = 1,
-                            TransliterationUrl = "taras-shevchenko",
-                            Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія," +
-                                     " Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, " +
-                                     "Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. " +
-                                     "Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. " +
-                                     "Академік Імператорської академії мистецтв",
-                            ViewCount = 0,
-                            CreatedAt = DateTime.Now,
-                            DateString = "9 березня 1814 – 10 березня 1861",
-                            EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
-                            EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
-                            FirstName = "Тарас",
-                            Rank = "Григорович",
-                            LastName = "Шевченко",
-                            Title = "Тарас Шевченко",
-                            Alias = "Кобзар",
-                            AudioId = 1,
-                            Status = StreetcodeStatus.Published
-                        },
-                        new PersonStreetcode
-                        {
-                            Index = 2,
-                            TransliterationUrl = "roman-ratushnyi",
-                            Teaser = "Роман був з тих, кому не байдуже. Небайдуже до свого Протасового Яру та своєї України. Талановитий, щедрий, запальний. З нового покоління українців, народжених за незалежності, мета яких — краща Україна. Інтелектуал, активіст, громадський діяч. Бунтар проти несправедливості: корупції, свавілля. Невтомний як у боротьбі з незаконною забудовою, так і в захисті рідної країни від ворога. Учасник Помаранчевої революції 2004 року та Революції гідності 2013–2014-го. Воїн, який заради України пожертвував власним життям.",
-                            ViewCount = 1,
-                            CreatedAt = DateTime.Now,
-                            DateString = "5 липня 1997 – 9 червня 2022",
-                            EventStartOrPersonBirthDate = new DateTime(1997, 7, 5),
-                            EventEndOrPersonDeathDate = new DateTime(2022, 6, 9),
-                            FirstName = "Роман",
-                            LastName = "Ратушний",
-                            Title = "Роман Ратушний (Сенека)",
-                            Alias = "Сенека",
-                            AudioId = 2,
-                            Status = StreetcodeStatus.Published,
-                        });
+            if (!dbContext.Streetcodes.Any())
+            {
+                dbContext.Streetcodes.AddRange(
+                    new PersonStreetcode
+                    {
+                        Index = 1,
+                        TransliterationUrl = "taras-shevchenko",
+                        Teaser = "Тара́с Григо́рович Шевче́нко (25 лютого (9 березня) 1814, с. Моринці, Київська губернія," +
+                                 " Російська імперія (нині Звенигородський район, Черкаська область, Україна) — 26 лютого (10 березня) 1861, " +
+                                 "Санкт-Петербург, Російська імперія) — український поет, прозаїк, мислитель, живописець, гравер, етнограф, громадський діяч. " +
+                                 "Національний герой і символ України. Діяч українського національного руху, член Кирило-Мефодіївського братства. " +
+                                 "Академік Імператорської академії мистецтв",
+                        ViewCount = 0,
+                        CreatedAt = DateTime.Now,
+                        DateString = "9 березня 1814 – 10 березня 1861",
+                        EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
+                        EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
+                        FirstName = "Тарас",
+                        Rank = "Григорович",
+                        LastName = "Шевченко",
+                        Title = "Тарас Шевченко",
+                        Alias = "Кобзар",
+                        AudioId = 1,
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
+                        Status = StreetcodeStatus.Published
+                    },
+                    new PersonStreetcode
+                    {
+                        Index = 2,
+                        TransliterationUrl = "roman-ratushnyi",
+                        Teaser = "Роман був з тих, кому не байдуже. Небайдуже до свого Протасового Яру та своєї України. Талановитий, щедрий, запальний. З нового покоління українців, народжених за незалежності, мета яких — краща Україна. Інтелектуал, активіст, громадський діяч. Бунтар проти несправедливості: корупції, свавілля. Невтомний як у боротьбі з незаконною забудовою, так і в захисті рідної країни від ворога. Учасник Помаранчевої революції 2004 року та Революції гідності 2013–2014-го. Воїн, який заради України пожертвував власним життям.",
+                        ViewCount = 1,
+                        CreatedAt = DateTime.Now,
+                        DateString = "5 липня 1997 – 9 червня 2022",
+                        EventStartOrPersonBirthDate = new DateTime(1997, 7, 5),
+                        EventEndOrPersonDeathDate = new DateTime(2022, 6, 9),
+                        FirstName = "Роман",
+                        LastName = "Ратушний",
+                        Title = "Роман Ратушний (Сенека)",
+                        Alias = "Сенека",
+                        AudioId = 2,
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
+                        Status = StreetcodeStatus.Published,
+                    });
 
                     await dbContext.SaveChangesAsync();
 

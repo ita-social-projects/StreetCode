@@ -201,4 +201,7 @@
   <data name="UserNameFormat" xml:space="preserve">
     <value>Нікнейм повинен складатися лише з літер латиниці (малих) та може містити лише символи дефіс (-), апостроф (') та підкреслення(_).</value>
   </data>
+  <data name="ImageSizeExceeded" xml:space="preserve">
+    <value>Розмір картинки не може перевищувати {0} MB</value>
+  </data>
 </root>

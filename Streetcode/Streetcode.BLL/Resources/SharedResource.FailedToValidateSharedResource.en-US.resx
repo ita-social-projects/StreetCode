@@ -201,4 +201,7 @@
   <data name="UserNameFormat" xml:space="preserve">
     <value>Surname must consist of Latin characters (lowercase) and can only include hyphens (-), apostrophes (') and underscores(_).</value>
   </data>
+  <data name="ImageSizeExceeded" xml:space="preserve">
+    <value>The image size can't exceed {0} MB</value>
+  </data>
 </root>

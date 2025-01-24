@@ -52,6 +52,7 @@
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
     <Folder Include="MediatR\Users\UpdateForgotPassword\" />
     <Folder Include="Util\Helpers\" />
+    <Folder Include="Util\MappingResolvers\" />
   </ItemGroup>
 
   <ItemGroup>

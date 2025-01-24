@@ -4,6 +4,7 @@ using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Partners.SourceLinks;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Partners;
 
@@ -13,11 +14,14 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
     public const int DescriptionMaxLength = 450;
     public const int UrlMaxLength = 200;
     public const int UrlTitleMaxLength = 100;
+    private readonly IRepositoryWrapper _repositoryWrapper;
     public BasePartnersValidator(
         PartnerSourceLinkValidator partnerSourceLinkValidator,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
-        IStringLocalizer<FailedToValidateSharedResource> localizer)
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IRepositoryWrapper repositoryWrapper)
     {
+        _repositoryWrapper = repositoryWrapper;
         RuleFor(dto => dto.Title)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["Title"]])
             .MaximumLength(TitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
@@ -41,5 +45,9 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
             .MaximumLength(UrlTitleMaxLength).WithMessage(x => localizer["MaxLength", fieldLocalizer["UrlTitle"], UrlTitleMaxLength]);
 
         RuleForEach(dto => dto.PartnerSourceLinks).SetValidator(partnerSourceLinkValidator);
+
+        RuleFor(dto => dto.LogoId)
+            .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))
+            .WithMessage(x => localizer["ImageDoesntExist", fieldLocalizer["LogoId"]]);
     }
 }

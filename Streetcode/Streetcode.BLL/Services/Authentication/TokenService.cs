@@ -140,6 +140,7 @@ namespace Streetcode.BLL.Services.Authentication
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+                    new Claim(ClaimTypes.GivenName, user.Name),
                     new Claim(ClaimTypes.Surname, user.Surname),
                     new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
                     new Claim(ClaimTypes.Role, userRoleName),

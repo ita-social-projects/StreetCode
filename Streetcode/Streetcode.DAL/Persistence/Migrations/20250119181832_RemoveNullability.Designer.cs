@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,11 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250119181832_RemoveNullability")]
+    partial class RemoveNullability
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1181,52 +1184,12 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("transaction_links", "transactions");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Users.Expertise.Expertise", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("expertise", "users");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Users.Expertise.UserExpertise", b =>
-                {
-                    b.Property<int>("ExpertiseId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ExpertiseId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("user_expertise", "users");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AboutYourself")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AvatarId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -1248,8 +1211,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -1279,22 +1242,17 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AvatarId")
-                        .IsUnique()
-                        .HasFilter("[AvatarId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1821,35 +1779,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
                 });
 
-            modelBuilder.Entity("Streetcode.DAL.Entities.Users.Expertise.UserExpertise", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Users.Expertise.Expertise", "Expertise")
-                        .WithMany()
-                        .HasForeignKey("ExpertiseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Expertise");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Media.Images.Image", "Avatar")
-                        .WithOne("User")
-                        .HasForeignKey("Streetcode.DAL.Entities.Users.User", "AvatarId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Avatar");
-                });
-
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>
                 {
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
@@ -1902,8 +1831,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("SourceLinkCategories");
 
                     b.Navigation("TeamMember");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Partners.Partner", b =>

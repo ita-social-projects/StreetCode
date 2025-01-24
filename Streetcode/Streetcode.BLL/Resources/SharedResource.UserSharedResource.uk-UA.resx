@@ -124,7 +124,7 @@
     <value>Неправильний пароль</value>
   </data>
   <data name="UserWithSuchEmailNotFound" xml:space="preserve">
-    <value>Користувача з такою поштою та іменем не знайдено</value>
+    <value>Користувача з такою поштою не знайдено</value>
   </data>
   <data name="UserWithSuchEmailExists" xml:space="preserve">
     <value>Користувач з такою поштою вже зареєстрований</value>
@@ -140,5 +140,8 @@
   </data>
   <data name="EmailNotMatch" xml:space="preserve">
     <value>Пошта не співпадає</value>
+  </data>
+  <data name="UserNameOrTokenIsEmpty" xml:space="preserve">
+    <value>Ім'я користувача або токен пустий</value>
   </data>
 </root>

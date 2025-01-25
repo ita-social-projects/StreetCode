@@ -9,12 +9,6 @@ namespace Streetcode.BLL.Validators.Payment;
 public class CreateInvoiceCommandValidator : AbstractValidator<CreateInvoiceCommand>
 {
     private const int AmountGreaterThan = 0;
-    private static readonly List<string> VideoHosts = new()
-    {
-       "stage.streetcode.com.ua",
-       "streetcode.com.ua",
-       "localhost"
-    };
 
     public CreateInvoiceCommandValidator(
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
@@ -22,7 +16,7 @@ public class CreateInvoiceCommandValidator : AbstractValidator<CreateInvoiceComm
     {
         RuleFor(c => c.Payment.RedirectUrl)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["RedirectUrl"]])
-            .MustBeValidUrl(VideoHosts).WithMessage(x => localizer["ValidUrl", fieldLocalizer["RedirectUrl"]]);
+            .MustBeValidUrl().WithMessage(x => localizer["ValidUrl", fieldLocalizer["RedirectUrl"]]);
 
         RuleFor(c => c.Payment.Amount)
             .GreaterThan(AmountGreaterThan).WithMessage(x => localizer["GreaterThan", fieldLocalizer["Amount"], AmountGreaterThan]);

@@ -56,11 +56,7 @@ public class CreatePartnerTest
         var handler = new CreatePartnerHandler(
             this.mockRepository.Object,
             this.mockMapper.Object,
-            this.mockLogger.Object,
-            this.mockLocalizerNoShared.Object,
-            this.mockLocalizerFieldNames.Object,
-            this.mockLocalizerAlreadyExist.Object,
-            this.mockLocalizerFailedToCreate.Object);
+            this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);
@@ -90,11 +86,7 @@ public class CreatePartnerTest
         var handler = new CreatePartnerHandler(
             this.mockRepository.Object,
             this.mockMapper.Object,
-            this.mockLogger.Object,
-            this.mockLocalizerNoShared.Object,
-            this.mockLocalizerFieldNames.Object,
-            this.mockLocalizerAlreadyExist.Object,
-            this.mockLocalizerFailedToCreate.Object);
+            this.mockLogger.Object);
 
         // Act
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);
@@ -102,108 +94,6 @@ public class CreatePartnerTest
         // Assert
         Assert.True(result.IsSuccess);
     }
-
-    [Fact]
-    public async Task ShouldFail_WhenPartnerWithLogoIdAlreadyExists()
-    {
-        // Arrange
-        var testPartner = GetPartner();
-        var duplicateLogoId = testPartner.LogoId;
-        var createPartnerDto = GetCreatePartnerDto();
-        createPartnerDto.LogoId = duplicateLogoId;
-
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
-            .Returns(new Partner { LogoId = duplicateLogoId });
-
-        this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
-            .ReturnsAsync(testPartner);
-
-        this.mockLocalizerFieldNames.Setup(x => x["LogoId"])
-            .Returns(new LocalizedString("LogoId", "Logo Id"));
-
-        this.mockLocalizerAlreadyExist.Setup(x => x["PartnerWithFieldAlreadyExist", It.IsAny<object[]>()])
-            .Returns((string key, object[] args) =>
-                new LocalizedString(key, $"Partner with field '{args[0]}' and its value '{args[1]}' already exists"));
-
-        var handler = new CreatePartnerHandler(
-            this.mockRepository.Object,
-            this.mockMapper.Object,
-            this.mockLogger.Object,
-            this.mockLocalizerNoShared.Object,
-            this.mockLocalizerFieldNames.Object,
-            this.mockLocalizerAlreadyExist.Object,
-            this.mockLocalizerFailedToCreate.Object);
-
-        // Act
-        var result = await handler.Handle(new CreatePartnerQuery(createPartnerDto), CancellationToken.None);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Single(result.Errors);
-        Assert.Equal($"Partner with field 'Logo Id' and its value '{GetPartnerDto().LogoId}' already exists", result.Errors[0].Message);
-
-        this.mockRepository.Verify(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null), Times.Once);
-        this.mockRepository.Verify(x => x.PartnersRepository.CreateAsync(It.IsAny<Partner>()), Times.Never);
-        this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Never);
-    }
-
-
-    [Fact]
-    public async Task ShouldFail_WhenStreetcodesContainNonExistentIds()
-    {
-        var createPartnerDto = GetCreatePartnerDtoWithStreetcodes();
-
-        createPartnerDto.Streetcodes = new List<StreetcodeShortDTO>
-        {
-            new () { Id = 1 },
-            new () { Id = 2 },
-            new () { Id = 3 },
-        };
-
-        var existingStreetcodes = new List<StreetcodeContent>
-        {
-            new () { Id = 1, Title = "Streetcode 1" },
-            new () { Id = 2, Title = "Streetcode 2" },
-        };
-
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
-            .Returns(new Partner());
-
-        this.mockRepository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))
-            .ReturnsAsync(existingStreetcodes);
-
-        this.mockRepository.Setup(x =>
-                x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
-            .ReturnsAsync((Partner)null);
-
-        this.mockLocalizerNoShared.Setup(x => x["NoExistingStreetcodeWithId", It.IsAny<object[]>()])
-            .Returns((string key, object[] args) =>
-                new LocalizedString(key, $"No existing streetcode with ID(s): {args[0]}"));
-
-        var handler = new CreatePartnerHandler(
-            this.mockRepository.Object,
-            this.mockMapper.Object,
-            this.mockLogger.Object,
-            this.mockLocalizerNoShared.Object,
-            this.mockLocalizerFieldNames.Object,
-            this.mockLocalizerAlreadyExist.Object,
-            this.mockLocalizerFailedToCreate.Object);
-
-        // Act
-        var result = await handler.Handle(new CreatePartnerQuery(createPartnerDto), CancellationToken.None);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Single(result.Errors);
-        Assert.Equal("No existing streetcode with ID(s): 3", result.Errors[0].Message);
-
-        this.mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Once);
-        this.mockRepository.Verify(x => x.PartnersRepository.CreateAsync(It.IsAny<Partner>()), Times.Never);
-        this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Never);
-    }
-
 
     private static Partner GetPartner()
     {

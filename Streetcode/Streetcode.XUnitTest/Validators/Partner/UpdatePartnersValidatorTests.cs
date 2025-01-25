@@ -4,7 +4,6 @@ using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
 using Streetcode.BLL.DTO.Partners.Update;
-using Streetcode.BLL.MediatR.Partners.Create;
 using Streetcode.BLL.MediatR.Partners.Update;
 using Streetcode.BLL.Validators.Partners;
 using Streetcode.BLL.Validators.Partners.SourceLinks;
@@ -21,6 +20,7 @@ public class UpdatePartnersValidatorTests
     private readonly Mock<PartnerSourceLinkValidator> mockPartnerSourceLinkValidator;
     private readonly Mock<BasePartnersValidator> mockBasePartnerValidator;
     private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
+    private readonly MockNoSharedResourceLocalizer _mockNoSharedResourceLocalizer;
 
     public UpdatePartnersValidatorTests()
     {
@@ -28,7 +28,8 @@ public class UpdatePartnersValidatorTests
         this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
-        this.mockBasePartnerValidator = new Mock<BasePartnersValidator>(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, _mockRepositoryWrapper.Object);
+        _mockNoSharedResourceLocalizer = new MockNoSharedResourceLocalizer();
+        this.mockBasePartnerValidator = new Mock<BasePartnersValidator>(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, this._mockNoSharedResourceLocalizer, this._mockRepositoryWrapper.Object);
 
         this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
             .Returns(new ValidationResult());

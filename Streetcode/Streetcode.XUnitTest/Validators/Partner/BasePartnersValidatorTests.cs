@@ -235,7 +235,7 @@ public class BasePartnersValidatorTests
     }
 
     [Fact]
-    public async void ShouldReturnError_WhenStreetcodesDoesnotExistg()
+    public async void ShouldReturnError_WhenStreetcodesDoesNotExist()
     {
         // Arrange
         var partner = this.GetValidPartner();

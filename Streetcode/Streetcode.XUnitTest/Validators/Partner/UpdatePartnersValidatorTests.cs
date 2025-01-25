@@ -1,5 +1,7 @@
-﻿using FluentValidation;
+﻿using System.Linq.Expressions;
+using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation.TestHelper;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
@@ -21,6 +23,7 @@ public class UpdatePartnersValidatorTests
     private readonly Mock<BasePartnersValidator> mockBasePartnerValidator;
     private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
     private readonly MockNoSharedResourceLocalizer _mockNoSharedResourceLocalizer;
+    private readonly MockAlreadyExistLocalizer _mockAlreadyExistLocalizer;
 
     public UpdatePartnersValidatorTests()
     {
@@ -29,6 +32,7 @@ public class UpdatePartnersValidatorTests
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
         _mockNoSharedResourceLocalizer = new MockNoSharedResourceLocalizer();
+        _mockAlreadyExistLocalizer = new MockAlreadyExistLocalizer();
         this.mockBasePartnerValidator = new Mock<BasePartnersValidator>(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, this._mockNoSharedResourceLocalizer, this._mockRepositoryWrapper.Object);
 
         this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
@@ -42,7 +46,7 @@ public class UpdatePartnersValidatorTests
     {
         // Arrange
         var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
-        var updateValidator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, mockNamesLocalizer, mockValidationLocalizer);
+        var updateValidator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
         MockHelpers.SetupMockPartnersRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, query.Partner.LogoId);
 
         // Act
@@ -50,5 +54,63 @@ public class UpdatePartnersValidatorTests
 
         // Assert
         this.mockBasePartnerValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>(), CancellationToken.None), Times.Once);
+    }
+
+    [Fact]
+    public async Task BeUniqueImageId_ShouldReturnError_WhenPartnerWithTheSameLogoIdExist()
+    {
+        // Arrange
+        var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
+        query.Partner.LogoId = 2;
+        query.Partner.Id = 1;
+        var expectedError = _mockAlreadyExistLocalizer["PartnerWithFieldAlreadyExist", mockNamesLocalizer["LogoId"], query.Partner.LogoId];
+        _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
+            .ReturnsAsync(new DAL.Entities.Partners.Partner() { LogoId = 2 });
+
+        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+
+        // Assert
+        var result = await validator.TestValidateAsync(query);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Partner)
+            .WithErrorMessage(expectedError);
+    }
+
+    [Fact]
+    public async Task BeUniqueImageId_ShouldReturnSuccess_WhenPartnerWithTheSameLogoIdDoesNotExist()
+    {
+        // Arrange
+        var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
+        query.Partner.LogoId = 2;
+        _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
+            .ReturnsAsync(new DAL.Entities.Partners.Partner());
+
+        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+
+        // Assert
+        var result = await validator.TestValidateAsync(query);
+
+        // Assert
+        Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task BeUniqueImageId_ShouldReturnSuccess_WhenPartnerWithTheSameLogoIdIsTheSamePartner()
+    {
+        // Arrange
+        var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
+        query.Partner.Id = 2;
+        query.Partner.LogoId = 2;
+        _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
+            .ReturnsAsync(new DAL.Entities.Partners.Partner() { Id = 2, LogoId = 2 });
+
+        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+
+        // Assert
+        var result = await validator.TestValidateAsync(query);
+
+        // Assert
+        Assert.True(result.IsValid);
     }
 }

@@ -2,8 +2,10 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -15,7 +17,10 @@ namespace Streetcode.BLL.MediatR.Partners.Create
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
 
-        public CreatePartnerHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+        public CreatePartnerHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            ILoggerService logger)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -27,11 +32,10 @@ namespace Streetcode.BLL.MediatR.Partners.Create
         public async Task<Result<PartnerDTO>> Handle(CreatePartnerQuery request, CancellationToken cancellationToken)
         {
             var newPartner = _mapper.Map<Partner>(request.newPartner);
+            newPartner.Streetcodes.Clear();
             try
             {
-                newPartner.Streetcodes.Clear();
                 newPartner = await _repositoryWrapper.PartnersRepository.CreateAsync(newPartner);
-
                 await _repositoryWrapper.SaveChangesAsync();
 
                 var streetcodeIds = request.newPartner.Streetcodes.Select(s => s.Id).ToList();

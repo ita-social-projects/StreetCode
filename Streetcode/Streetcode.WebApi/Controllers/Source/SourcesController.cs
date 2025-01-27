@@ -9,6 +9,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll;
 using Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentByStreetcodeId;
 using Microsoft.AspNetCore.Authorization;
+using Streetcode.WebApi.Filters;
 
 namespace Streetcode.WebApi.Controllers.Source;
 
@@ -36,6 +37,7 @@ public class SourcesController : BaseApiController
     }
 
     [HttpGet("{categoryId:int}&{streetcodeId:int}")]
+    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeCategoryContentDTO))]
     public async Task<IActionResult> GetCategoryContentByStreetcodeId([FromRoute] int streetcodeId, [FromRoute] int categoryId)
     {
@@ -43,6 +45,7 @@ public class SourcesController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SourceLinkCategoryDTO>))]
     public async Task<IActionResult> GetCategoriesByStreetcodeId([FromRoute] int streetcodeId)
     {

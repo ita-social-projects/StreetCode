@@ -4,6 +4,7 @@ using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetAll;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetById;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
 using Streetcode.WebApi.Attributes;
+using Streetcode.WebApi.Filters;
 
 namespace Streetcode.WebApi.Controllers.Timeline;
 
@@ -25,6 +26,7 @@ public class TimelineItemController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [CompressResponse]
+    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimelineItemDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

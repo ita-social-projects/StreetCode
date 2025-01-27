@@ -2,9 +2,11 @@
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Art.StreetcodeArtSlide.GetAllCountByStreetcodeId;
+using Streetcode.WebApi.Filters;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
+[TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
 public class StreetcodeArtSlideController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]

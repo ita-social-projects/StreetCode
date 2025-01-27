@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
+using Streetcode.WebApi.Filters;
 
 namespace Streetcode.WebApi.Controllers.Streetcode.TextContent;
 
@@ -30,6 +31,7 @@ public class FactController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

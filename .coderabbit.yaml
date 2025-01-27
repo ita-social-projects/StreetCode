@@ -1,5 +1,5 @@
 language: en-US
-tone_instructions: "Refine the tone of reviews to be professional, constructive, and actionable. Provide clear, specific feedback with practical suggestions for improvement. Recognize and commend positive elements to encourage collaboration and motivation. Avoid overly critical or vague language; instead, use examples to illustrate points and promote learning through constructive dialogue."
+tone_instructions: "Refine reviews to be professional, constructive, and actionable. Provide clear feedback with practical suggestions. Encourage collaboration. Avoid vague or overly critical language; use examples to illustrate points and promote learning."
 early_access: false
 enable_free_tier: true
 reviews:

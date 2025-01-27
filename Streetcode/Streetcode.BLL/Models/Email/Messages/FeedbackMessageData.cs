@@ -1,4 +1,5 @@
 ﻿using MimeKit;
+using Streetcode.BLL.Constants.MessageData;
 using Streetcode.BLL.Models.Email.Messages.Base;
 
 namespace Streetcode.BLL.Models.Email.Messages;
@@ -14,7 +15,7 @@ public class FeedbackMessageData : MessageData
         var emailMessage = new MimeMessage();
         emailMessage.From.Add(new MailboxAddress("", From));
         emailMessage.To.AddRange(To.Select(x => new MailboxAddress(string.Empty, x)));
-        emailMessage.Subject = "Відгук";
+        emailMessage.Subject = MessageDataConstants.FeedbackMessageTitle;
 
         var bodyBuilder = new BodyBuilder
         {

@@ -20,7 +20,7 @@ public class MessageDataConcreteFactory : IMessageDataAbstractFactory
     {
         return new FeedbackMessageData
         {
-            To = new string[] { _configuration.To ?? "stagestreetcodedev@gmail.com" },
+            To = new string[] { _configuration.To },
             Source = source,
             Content = content,
             From = from

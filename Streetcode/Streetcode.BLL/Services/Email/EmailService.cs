@@ -40,7 +40,7 @@ public class EmailService : IEmailService
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex.Message);
+                _logger.LogError(mailMessage, ex.Message);
                 return false;
             }
             finally

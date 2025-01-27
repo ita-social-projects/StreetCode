@@ -1,4 +1,5 @@
 ﻿using MimeKit;
+using Streetcode.BLL.Constants.MessageData;
 using Streetcode.BLL.Models.Email.Messages.Base;
 
 namespace Streetcode.BLL.Models.Email.Messages;
@@ -15,7 +16,7 @@ public class ForgotPasswordMessageData : MessageData
         var emailMessage = new MimeMessage();
         emailMessage.From.Add(new MailboxAddress("", From));
         emailMessage.To.AddRange(To.Select(x => new MailboxAddress(string.Empty, x)));
-        emailMessage.Subject = "HistoryCode забули пароль";
+        emailMessage.Subject = MessageDataConstants.ForgotPasswordTitle;
 
         var bodyBuilder = new BodyBuilder
         {

@@ -1,0 +1,116 @@
+language: en-US
+tone_instructions: "Refine reviews to be professional, constructive, and actionable. Provide clear feedback with practical suggestions and specific code examples. Use code blocks for multi-line suggestions and inline code for brief references. Link to relevant documentation when introducing patterns or best practices. Encourage collaboration and learning through detailed explanations. Avoid vague or overly critical language."
+early_access: false
+enable_free_tier: true
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  auto_title_placeholder: "@coderabbitai"
+  auto_title_instructions: ""
+  review_status: true
+  commit_status: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: true
+  poem: true
+  path_filters:
+    # Build outputs and dependencies
+    - "!**/bin/**"
+    - "!**/obj/**"
+    - "!**/build/**"
+    - "!**/packages/**"
+
+    # Version control and configuration
+    - "!**/.git/**"
+    - "!**/Docker/**"
+
+    # Generated files
+    - "!**/Migrations/**"
+    - "!**/ScriptsMigration/**"
+    - "!**/*.Designer.cs"
+
+    # Project-specific data and test files
+    - "!**/Streetcode/Streetcode.DAL/InitialData/**"
+    - "!**/Streetcode/Streetcode.DAL/Persistence/ScriptsMigration/**"
+    - "!**/Streetcode/Streetcode.DAL/houses.csv"
+    - "!**/Streetcode/Streetcode.XIntegrationTest/TestData/**"
+    - "!**/Streetcode/DbUpdate/**"
+  path_instructions:
+    - path: /**/*.cs
+      instructions: >-
+        For all C# files:
+        - Ensure adherence to C# conventions: PascalCase for classes and methods, camelCase for variables.
+        - Validate that methods are concise and follow single-responsibility principles.
+        - Use appropriate access modifiers (private, protected, internal, public) to enforce encapsulation.
+        - Avoid unused namespaces.
+        - Use async/await correctly for library code.
+        - Follow SOLID principles and ensure maintainability.
+        - Check for proper exception handling and meaningful error messages.
+        - Avoid magic numbers and use constants or enums where appropriate.
+        - Ensure thread-safety for shared/static members.
+    - path: /Streetcode/Streetcode.BLL/**/*.cs
+      instructions: >-
+        naming:PascalCase; variables:camelCase; constants:UPPER_SNAKE_CASE;
+        principles:{single_responsibility,small_methods,no_duplication};
+        async:{naming,proper_usage};
+        db:{performance_queries,avoid_raw_sql};
+        di:constructor_injection;
+        practices:{avoid_static_methods,prefer_interfaces,minimize_public,exceptions_for_errors};
+        Ensure services and business logic are isolated, reusable, and testable.
+    - path: /Streetcode/Streetcode.DAL/**/*.cs
+      instructions: >-
+        Ensure:
+        - Proper repository patterns are implemented.
+        - Use of Entity Framework Core best practices.
+        - Avoid raw SQL unless absolutely necessary.
+        - Async database queries are used where applicable.
+        - Avoid tight coupling between database models and business logic.
+        Follow principles such as single responsibility, DRY, and SOLID.
+    - path: /Streetcode/Streetcode.WebApi/**/*.cs
+      instructions: >-
+        Review API controllers for proper structure and adherence to REST principles:
+        - Ensure endpoints use appropriate HTTP methods (GET, POST, PUT, DELETE).
+        - Validate incoming request data.
+        - Proper use of DTOs for request/response models.
+        - Minimal logic in controllers; delegate to services.
+        - Include proper error handling and return standardized error responses.
+        Ensure controllers follow dependency injection principles.
+    - path: /Streetcode/Streetcode.XUnitTest/**/*.cs
+      instructions: >-
+        Review unit tests for correctness and adherence to xUnit standards:
+        - Use Arrange-Act-Assert structure in tests.
+        - Ensure tests cover edge cases and provide sufficient code coverage.
+        - Mock external dependencies using Moq or similar libraries.
+        - Avoid accessing the database or external systems in unit tests.
+        Validate that tests are independent and descriptive.
+    - path: /Streetcode/Streetcode.XIntegrationTest/**/*.cs
+      instructions: >-
+        Review integration tests for correctness:
+        - Ensure they test the interaction between multiple components.
+        - Use a clean, isolated test database or in-memory options.
+        - Avoid dependencies on external APIs or systems.
+        - Validate expected outcomes across all integrated parts.
+  abort_on_close: true
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: true
+    base_branches: ["master", "^release\/.*", "^feature\/.*", "^hotfix\/.*"]
+chat:
+  auto_reply: true
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto

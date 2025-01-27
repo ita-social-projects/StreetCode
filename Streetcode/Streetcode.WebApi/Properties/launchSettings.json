@@ -4,7 +4,6 @@
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "ADMIN_PASSWORD": "Admin@1234",
         "STREETCODE_ENVIRONMENT": "Local",
         "ASPNETCORE_ENVIRONMENT": "Local"
       },
@@ -17,7 +16,6 @@
       "launchBrowser": false,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ADMIN_PASSWORD": "Admin@1234",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
@@ -27,7 +25,6 @@
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
-        "ADMIN_PASSWORD": "Admin@1234",
         "STREETCODE_ENVIRONMENT": "IntegrationTests"
       }
     },

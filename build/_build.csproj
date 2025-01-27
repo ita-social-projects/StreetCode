@@ -8,7 +8,6 @@
     <NukeRootDirectory>..</NukeRootDirectory>
     <NukeScriptDirectory>..\Streetcode</NukeScriptDirectory>
     <NukeTelemetryVersion>1</NukeTelemetryVersion>
-    <UserSecretsId>71f85fa3-42be-406c-be22-c20b8149ccd6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

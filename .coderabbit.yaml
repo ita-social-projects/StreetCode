@@ -1,5 +1,5 @@
 language: en-US
-tone_instructions: "Refine reviews to be professional, constructive, and actionable. Provide clear feedback with practical suggestions. Encourage collaboration. Avoid vague or overly critical language; use examples to illustrate points and promote learning."
+tone_instructions: "Refine reviews to be professional, constructive, and actionable. Provide clear feedback with practical suggestions and specific code examples. Use code blocks for multi-line suggestions and inline code for brief references. Link to relevant documentation when introducing patterns or best practices. Encourage collaboration and learning through detailed explanations. Avoid vague or overly critical language."
 early_access: false
 enable_free_tier: true
 reviews:

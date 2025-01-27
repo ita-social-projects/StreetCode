@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Event;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Jobs;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 

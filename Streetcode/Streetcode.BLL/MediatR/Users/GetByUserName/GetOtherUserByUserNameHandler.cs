@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Users.GetByName;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
@@ -36,7 +35,7 @@ public class GetOtherUserByUserNameHandler : IRequestHandler<GetOtherUserByUserN
 
     public async Task<Result<UserProfileDTO>> Handle(GetOtherUserByUserNameQuery request, CancellationToken cancellationToken)
     {
-        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == HttpContextHelper.GetCurrentUserName(_httpContextAccessor), include: qu => qu.Include(x => x.Expertises));
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == request.UserName, include: qu => qu.Include(x => x.Expertises));
 
         if (user is null)
         {

@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;

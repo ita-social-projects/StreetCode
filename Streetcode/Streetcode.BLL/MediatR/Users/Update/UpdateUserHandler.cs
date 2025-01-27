@@ -20,17 +20,15 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly UserManager<User> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-    public UpdateUserHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IStringLocalizer<UserSharedResource> localizer)
+    public UpdateUserHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IStringLocalizer<UserSharedResource> localizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
         _localizer = localizer;
@@ -52,7 +50,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
                 return Result.Fail(errorMessage);
             }
 
-            var toAddExpertises = await UpdateManyToManyRelationship(request, user);
+            var toAddExpertises = await UpdateManyToManyUsersExpertises(request, user);
 
             user.Expertises.AddRange(toAddExpertises);
 
@@ -85,7 +83,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
         }
     }
 
-    private async Task<IEnumerable<Expertise>> UpdateManyToManyRelationship(UpdateUserCommand request, User user)
+    private async Task<IEnumerable<Expertise>> UpdateManyToManyUsersExpertises(UpdateUserCommand request, User user)
     {
         var requestedExpertiseIds = request.UserDto.Expertises.Select(e => e.Id).ToList();
 

@@ -8,7 +8,6 @@ using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Email;
-using Streetcode.BLL.Models.Email.Messages;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
@@ -26,7 +25,7 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
 
-    public ForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IEmailService forgotPasswordEmailService, IStringLocalizer<UserSharedResource> localizer, IHttpContextAccessor httpContextAccessor, IMessageDataAbstractFactory messageDataAbstractFactory)
+    public ForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IEmailService forgotPasswordEmailService, IStringLocalizer<UserSharedResource> localizer, IHttpContextAccessor httpContextAccessor, IMessageDataAbstractFactory messageDataAbstractFactory, IStringLocalizer<SendEmailHandler> stringLocalizerEmailHandler)
     {
         _logger = logger;
         _userManager = userManager;
@@ -34,6 +33,7 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
         _localizer = localizer;
         _httpContextAccessor = httpContextAccessor;
         _messageDataAbstractFactory = messageDataAbstractFactory;
+        _stringLocalizerEmailHandler = stringLocalizerEmailHandler;
     }
 
     public async Task<Result<Unit>> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)

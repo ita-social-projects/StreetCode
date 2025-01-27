@@ -14,16 +14,15 @@ namespace Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
 
 public class UpdateForgotPasswordHandler : IRequestHandler<UpdateForgotPasswordCommand, Result<Unit>>
 {
-    private readonly IMapper _mapper;
     private readonly ILoggerService _logger;
     private readonly UserManager<User> _userManager;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-    public UpdateForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager)
+    public UpdateForgotPasswordHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IStringLocalizer<UserSharedResource> localizer)
     {
-        _mapper = mapper;
         _logger = logger;
         _userManager = userManager;
+        _localizer = localizer;
     }
 
     public async Task<Result<Unit>> Handle(UpdateForgotPasswordCommand request, CancellationToken cancellationToken)

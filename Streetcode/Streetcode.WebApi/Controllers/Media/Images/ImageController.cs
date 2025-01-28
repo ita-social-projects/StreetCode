@@ -9,7 +9,7 @@ using Streetcode.BLL.MediatR.Media.Image.Delete;
 using Streetcode.BLL.MediatR.Media.Image.Update;
 using Streetcode.DAL.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -23,7 +23,7 @@ public class ImageController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

@@ -6,14 +6,14 @@ using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class RelatedFigureController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
-    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

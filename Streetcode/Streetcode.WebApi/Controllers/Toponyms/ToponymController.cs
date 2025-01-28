@@ -3,7 +3,7 @@ using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.MediatR.Toponyms.GetAll;
 using Streetcode.BLL.MediatR.Toponyms.GetById;
 using Streetcode.BLL.MediatR.Toponyms.GetByStreetcodeId;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Toponyms;
 
@@ -24,7 +24,7 @@ public class ToponymController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ToponymDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

@@ -2,10 +2,10 @@
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
-[TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+[ValidateStreetcodeExistence]
 public class StreetcodeArtController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]

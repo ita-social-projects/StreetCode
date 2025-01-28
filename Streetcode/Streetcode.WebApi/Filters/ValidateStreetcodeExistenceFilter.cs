@@ -7,20 +7,20 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.WebApi.Filters
 {
-    public class ValidateStreetcodeExistenceAttribute : ActionFilterAttribute
+    public class ValidateStreetcodeExistenceFilter : IAsyncActionFilter
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public ValidateStreetcodeExistenceAttribute(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public ValidateStreetcodeExistenceFilter(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (context.ActionArguments.TryGetValue("streetcodeId", out var streetcodeIdObj) && streetcodeIdObj is int streetcodeId)
             {

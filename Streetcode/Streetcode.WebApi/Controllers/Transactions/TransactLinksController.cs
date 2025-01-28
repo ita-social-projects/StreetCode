@@ -3,7 +3,7 @@ using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetByStreetcodeId;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Transactions;
 
@@ -17,7 +17,7 @@ public class TransactLinksController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TransactLinkDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

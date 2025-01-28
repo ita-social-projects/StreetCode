@@ -9,7 +9,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Analytics
 {
@@ -37,7 +37,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
         }
 
         [HttpGet("{streetcodeId:int}")]
-        [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+        [ValidateStreetcodeExistence]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
         public async Task<IActionResult> GetAllByStreetcodeId(int streetcodeId)
         {

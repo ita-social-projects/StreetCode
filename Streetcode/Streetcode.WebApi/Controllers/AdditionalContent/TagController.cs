@@ -9,7 +9,7 @@ using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.Update;
 using Streetcode.DAL.Enums;
-using Streetcode.WebApi.Filters;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 
@@ -30,7 +30,7 @@ public class TagController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [TypeFilter(typeof(ValidateStreetcodeExistenceAttribute))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

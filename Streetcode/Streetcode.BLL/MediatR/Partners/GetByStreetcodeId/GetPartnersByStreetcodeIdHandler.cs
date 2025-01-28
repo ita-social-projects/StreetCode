@@ -44,11 +44,11 @@ public class GetPartnersByStreetcodeIdHandler : IRequestHandler<GetPartnersByStr
 
         if (!partners.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of partners";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<PartnerDTO>());
         }
 
-        return Result.Ok(value: _mapper.Map<IEnumerable<PartnerDTO>>(partners));
+        return Result.Ok(_mapper.Map<IEnumerable<PartnerDTO>>(partners));
     }
 }

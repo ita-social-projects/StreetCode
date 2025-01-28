@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.News
         public static void Remove(DAL.Entities.News.News entity)
         {
             BaseExtracter.RemoveByPredicate<DAL.Entities.News.News>(news => news.Id == entity.Id);
-            BaseExtracter.RemoveById<Image>(entity.Id);
+            BaseExtracter.RemoveById<Image>(entity.ImageId);
         }
     }
 }

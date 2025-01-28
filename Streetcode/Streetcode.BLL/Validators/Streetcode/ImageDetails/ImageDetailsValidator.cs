@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Validators.Common;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode.ImageDetails;
@@ -26,6 +27,9 @@ public class ImageDetailsValidator : AbstractValidator<ImageDetailsDto>
 
         RuleFor(dto => dto)
             .MustAsync(BeUniqueImageIdInImageDetails).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
+
+        RuleFor(dto => dto.ImageId)
+            .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token)).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
     }
 
     private async Task<bool> BeUniqueImageIdInImageDetails(ImageDetailsDto imageDetails, CancellationToken cancellationToken)

@@ -2,9 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Register;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -24,6 +26,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         private readonly Mock<IRepositoryWrapper> mockRepositoryWrapper;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<UserManager<User>> mockUserManager;
+        private readonly Mock<IStringLocalizer<UserSharedResource>> mockLocalizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleRegisterTest"/> class.
@@ -36,6 +39,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             var store = new Mock<IUserStore<User>>();
             this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            this.mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
+
+            this.mockLocalizer.Setup(x => x["UserWithSuchEmailExists"]).Returns(new LocalizedString("UserWithSuchEmailExists", "UserWithSuchEmailExists"));
+            this.mockLocalizer.Setup(x => x["UserWithSuchUsernameExists"]).Returns(new LocalizedString("UserWithSuchUsernameExists", "UserWithSuchUsernameExists"));
+            this.mockLocalizer.Setup(x => x["UserManagerError"]).Returns(new LocalizedString("UserManagerError", "UserManagerError"));
         }
 
         [Fact]
@@ -80,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         public async Task ShouldReturnFailWithCorrectMessage_UserWithGivenEmailIsAlreadyInDatabase()
         {
             // Arrange.
-            string expectedErrorMessage = "User with such Email already exists in database";
+            string expectedErrorMessage = "UserWithSuchEmailExists";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
             this.SetupMockMapper(isEmailExists: true);
             var handler = this.GetRegisterHandler();
@@ -97,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         public async Task ShouldReturnFailWithCorrectMessage_UserWithGivenUserNameIsAlreadyInDatabase()
         {
             // Arrange.
-            string expectedErrorMessage = "User with such UserName already exists in database";
+            string expectedErrorMessage = "UserWithSuchUsernameExists";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
             this.SetupMockMapper();
             var handler = this.GetRegisterHandler();
@@ -114,7 +122,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         public async Task ShouldReturnFailWithCorrectMessage_CreateUserFails()
         {
             // Arrange.
-            string expectedErrorMessage = "Error from UserManager while creating user";
+            string expectedErrorMessage = "UserManagerError";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
             this.SetupMockUserManagerCreate(isSuccess: false);
             var handler = this.GetRegisterHandler();
@@ -283,7 +291,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 this.mockRepositoryWrapper.Object,
                 this.mockLogger.Object,
                 this.mockMapper.Object,
-                this.mockUserManager.Object);
+                this.mockUserManager.Object,
+                this.mockLocalizer.Object);
         }
     }
 }

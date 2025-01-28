@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
                 predicate: rt => rt.TermId == request.id,
                 include: rt => rt.Include(rt => rt.Term!));
 
-            if (!relatedTerms.Any())
+            if (relatedTerms is null)
             {
                 string errorMsg = _stringLocalizerCannotGet["CannotGetWordsByTermId"].Value;
                 _logger.LogError(request, errorMsg);
@@ -48,7 +48,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
 
             var relatedTermsDTO = _mapper.Map<IEnumerable<RelatedTermDTO>>(relatedTerms);
 
-            if (!relatedTermsDTO.Any())
+            if (relatedTermsDTO is null)
             {
                 string errorMsg = _stringLocalizerCannotCreate["CannotCreateDTOsForRelatedWords"].Value;
                 _logger.LogError(request, errorMsg);

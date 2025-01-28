@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Streetcode.WebApi.Hangfire;
 using Streetcode.WebApi.Middleware;
 using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
+using Streetcode.WebApi.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +92,14 @@ app.UseAuthorization();
 
 app.UseIpRateLimiting();
 app.UseRateLimiter();
+
+BackgroundJob.Schedule<WebParsingUtils>(
+    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+RecurringJob.AddOrUpdate<WebParsingUtils>(
+    "ParseZipFileFromWebAsync",
+    wp => wp.ParseZipFileFromWebAsync(),
+    Cron.Monthly);
+
 app.MapControllers();
 app.UseMiddleware<CustomResponseCompressionMiddleware>();
 

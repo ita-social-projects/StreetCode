@@ -2,12 +2,14 @@
 using AutoMapper;
 using FluentResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Login;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Users;
 using Xunit;
@@ -21,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<UserManager<User>> mockUserManager;
         private readonly Mock<ICaptchaService> mockCaptchaService;
-
+        private readonly Mock<IStringLocalizer<UserSharedResource>> mockLocalizer;
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleLoginTest"/> class.
         /// </summary>
@@ -34,6 +36,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
 
             var store = new Mock<IUserStore<User>>();
             this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            this.mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
         }
 
         [Fact]
@@ -212,7 +215,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
                 this.mockTokenService.Object,
                 this.mockLogger.Object,
                 this.mockUserManager.Object,
-                this.mockCaptchaService.Object);
+                this.mockCaptchaService.Object,
+                this.mockLocalizer.Object);
         }
     }
 }

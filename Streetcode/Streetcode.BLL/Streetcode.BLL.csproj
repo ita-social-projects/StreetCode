@@ -13,6 +13,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentResults" Version="3.15.1" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
@@ -24,7 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="2.5.1" />
     <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.30.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NLog" Version="5.1.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog" Version="2.12.0" />
@@ -78,15 +79,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.en-US.Designer.cs">
+    <Compile Update="Resources\SharedResource.UserSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.Users.Login.LoginHandler.en-US.resx</DependentUpon>
+      <DependentUpon>SharedResource.UserSharedResource.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs">
+    <Compile Update="Resources\SharedResource.UserSharedResource.uk-UA.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>MediatR.Users.Login.LoginHandler.uk-UA.resx</DependentUpon>
+      <DependentUpon>SharedResource.UserSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Services.Users.TokenService.en-UK.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -204,7 +205,6 @@
       <DependentUpon>SharedResource.NoSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
     <Compile Remove="ByteArrayFormatter.cs" />
-    <Compile Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.Designer.cs" />
 
     <Compile Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -229,7 +229,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.FailedToCreateSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.FailedToCreateSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\SharedResource.FailedToValidateSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SharedResource.FailedToValidateSharedResource.en-US.Designer.cs</LastGenOutput>
@@ -273,11 +276,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Streetcode.RelatedTerm.Create.CreateRelatedTermHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.en-US.resx">
+    <EmbeddedResource Update="Resources\SharedResource.UserSharedResource.en-US.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Users.Login.LoginHandler.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\MediatR.Users.Login.LoginHandler.uk-UA.resx">
+    <EmbeddedResource Update="Resources\SharedResource.UserSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MediatR.Users.Login.LoginHandler.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>

@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
@@ -89,7 +91,7 @@ public class GetFactByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
-    public async Task ShouldThrowError_IdNotExist(int streetCodeId)
+    public async Task ShouldReturnSuccessfully_IdNotExist(int streetCodeId)
     {
         // Arrange
         this.mockRepository.Setup(x => x.FactRepository
@@ -99,22 +101,6 @@ public class GetFactByStreetcodeIdTest
                 IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(GetListFactsWithNotExistingStreetcodeId() !);
 
-        this.mockMapper
-            .Setup(x => x
-            .Map<IEnumerable<FactDto>>(It.IsAny<IEnumerable<Fact>>()))
-            .Returns(GetListFactsDTOWithNotExistingId() !);
-
-        var expectedError = $"Cannot find any fact by the streetcode id: {streetCodeId}";
-        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
-        {
-            if (args != null && args.Length > 0 && args[0] is int streetCodeId)
-            {
-                return new LocalizedString(key, $"Cannot find any fact by the streetcode id: {streetCodeId}");
-            }
-
-            return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
-        });
-
         var handler = new GetFactByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
         // Act
@@ -122,8 +108,9 @@ public class GetFactByStreetcodeIdTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors[0].Message));
+                () => Assert.IsType<Result<IEnumerable<FactDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<FactDto>>(result.Value),
+                () => Assert.Empty(result.Value));
     }
 
     private static IQueryable<Fact> GetListFacts()
@@ -147,14 +134,9 @@ public class GetFactByStreetcodeIdTest
         return facts.AsQueryable();
     }
 
-    private static List<Fact>? GetListFactsWithNotExistingStreetcodeId()
+    private static List<Fact> GetListFactsWithNotExistingStreetcodeId()
     {
-        return null;
-    }
-
-    private static List<FactDto>? GetListFactsDTOWithNotExistingId()
-    {
-        return null;
+        return new List<Fact>();
     }
 
     private static List<FactDto> GetListFactDTO()

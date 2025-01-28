@@ -123,6 +123,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Розмір картинки не може перевищувати {0} MB.
+        /// </summary>
+        internal static string ImageSizeExceeded {
+            get {
+                return ResourceManager.GetString("ImageSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має недійсне значення.
         /// </summary>
         internal static string Invalid {
@@ -168,7 +177,7 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Логотип має відповідати посиланню.
+        ///   Looks up a localized string similar to Посилання не співпадає з обраною соціальною мережою.
         /// </summary>
         internal static string LogoMustMatchUrl {
             get {

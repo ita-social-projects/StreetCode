@@ -34,6 +34,7 @@ public class MockFailedToValidateLocalizer : IStringLocalizer<FailedToValidateSh
             "MustContainExactlyOneAlt1",
             "MustContainAtMostOneAlt0",
             "MustContainAtMostOneAlt2",
+            "ImageSizeExceeded",
         });
 
         this.groupedErrors.Add(2, new List<string>()

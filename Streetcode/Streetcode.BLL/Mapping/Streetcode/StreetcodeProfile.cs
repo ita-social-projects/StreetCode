@@ -47,6 +47,7 @@ public class StreetcodeProfile : Profile
             .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
             .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
             .ForMember(x => x.Facts, conf => conf.Ignore())
+            .ForPath(x => x.TransactionLink!.Url, conf => conf.MapFrom(x => x.ARBlockUrl))
               .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, PersonStreetcode>()

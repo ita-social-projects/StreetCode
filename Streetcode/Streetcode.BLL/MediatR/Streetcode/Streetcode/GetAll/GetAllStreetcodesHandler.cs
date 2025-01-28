@@ -42,12 +42,12 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
         }
 
+        var totalAmount = streetcodes.Count();
+
         if (filterRequest.Amount is not null && filterRequest.Page is not null)
         {
             ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);
         }
-
-        var totalAmount = streetcodes.Count();
 
         var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
 

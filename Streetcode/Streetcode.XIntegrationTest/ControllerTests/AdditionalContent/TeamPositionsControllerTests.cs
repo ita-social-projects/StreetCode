@@ -2,11 +2,13 @@
 using System.Net;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.Position.Delete;
 using Streetcode.BLL.MediatR.Team.Position.Update;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Team;
@@ -208,6 +210,8 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         // Arrange
         var positionCreateDto = ExtractUpdateTestPositionAttribute.PositionForTest;
+        var incorrectPositionId = -10;
+        positionCreateDto.Id = incorrectPositionId;
 
         // Act
         var response = await this.Client.UpdateAsync(positionCreateDto, this.TokenStorage.AdminAccessToken);
@@ -287,6 +291,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         var repositoryMock = new Mock<IPositionRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+        var mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
             .ReturnsAsync((Expression<Func<Positions, bool>> expr, IIncludableQueryable<Positions, bool> include) =>
             {
@@ -302,7 +307,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         mapperMock.Setup(m => m.Map<Positions>(default)).Returns(this.testUpdatePosition);
         var loggerMock = new Mock<ILoggerService>();
 
-        var handler = new UpdateTeamPositionHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object);
+        var handler = new UpdateTeamPositionHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object, mockLocalizer.Object);
 
         var query = new UpdateTeamPositionCommand(positionCreateDto);
         var cancellationToken = CancellationToken.None;
@@ -373,6 +378,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         var repositoryMock = new Mock<IPositionRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+        var mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
             .ReturnsAsync(this.testUpdatePosition);
         repositoryMock.Setup(r => r.Delete(default!));
@@ -383,7 +389,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
 
         var loggerMock = new Mock<ILoggerService>();
 
-        var handler = new DeleteTeamPositionHandler(repositoryWrapperMock.Object, loggerMock.Object);
+        var handler = new DeleteTeamPositionHandler(repositoryWrapperMock.Object, loggerMock.Object, mockLocalizer.Object);
 
         var query = new DeleteTeamPositionCommand(id);
         var cancellationToken = CancellationToken.None;

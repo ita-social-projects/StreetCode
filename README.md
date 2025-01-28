@@ -51,14 +51,7 @@ Front-end part: https://github.com/ita-social-projects/StreetCode_Client
 ### Environment
 environmental variables
 ```properties
-spring.datasource.url=${DATASOURCE_URL}
-spring.datasource.username=${DATASOURCE_USER}
-spring.datasource.password=${DATASOURCE_PASSWORD}
-spring.mail.username=${EMAIL_ADDRESS}
-spring.mail.password=${EMAIL_PASSWORD}
-cloud.name=${CLOUD_NAME}
-api.key=${API_KEY}
-api.secret=${API_SECRET}
+ADMIN_PASSWORD
 ```
 
 ### Clone
@@ -79,14 +72,35 @@ git@github.com:ita-social-projects/StreetCode.git
       Server={local_server_name};Database=StreetcodeDb;User Id={username};Password={password};MultipleActiveResultSets=true;TrustServerCertificate=true;
      ```
 
-  **2. Add database seeding**
-   - Go to `Program.cs` in **StreetCode.WebApi** project and add following code:
+  **2. Set environment variables**
+  - You can set environment variable before seeding the database in `Program.cs` in **StreetCode.WebApi** project (replace `{password}` with your password):
+
+     ```csharp
+     Environment.SetEnvironmentVariable("ADMIN_PASSWORD", "{password}");
+     ```
+
+  - Or by specifying in `launchSettings.json` file like:
+
+      ```csharp
+      {
+        "profiles": {
+          "Streetcode_Local": {
+            "environmentVariables": {
+              "ADMIN_PASSWORD": "password",
+            }
+          }
+        }
+      }
+      ```
+
+  **3. Add database seeding**
+   - Go to `Program.cs` in **StreetCode.WebApi** project and add the following code :
 
      ```csharp
      await app.SeedDataAsync(); 
      ```
      
-  **3. Create and seed local database**  
+  **4. Create and seed local database**  
    * Run project and make sure that database was created and filled with data
 
 ### How to run local 
@@ -110,11 +124,29 @@ git@github.com:ita-social-projects/StreetCode.git
 12. Change password to the default system one - **"Admin@1234"**. Don't forget to confirm it afterwards
 13. On the left-hand side select **"Status"** page, and set **"Login"** radio-button to **"Enabled"**
 14. Click "Ok"
+15. Right click on **"localhost"** server on the left-hand side of the UI and click **"Restart"**
 
 Now you can connect to your localhost instance with login (sa) and password (Admin@1234)!
 
-**_NOTE:_** Here's the full walkthrough: https://www.youtube.com/watch?v=ANFnDqe4JBk&t=211s.
+### Troubleshooting
 
+- If you encounter an unhandled `Microsoft.Data.SqlClient.SqlException: 'A connection was successfully established with the server, but then an error occurred during the login process. (provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)'` while seeding the DB check if you have the `TrustServerCertificate=true;` parameter in your connection string and add it if you don't.
+
+- If you encounter an unhandled `System.IO.DirectoryNotFoundException` while seeding the DB try to specify relative paths in `SeedingLocalExtension.cs` to `images.json` and `audios.json` in DAL or Streetcode.XIntegrationTest projects like:
+
+  ```text
+  ../Streetcode.DAL/InitialData/images.json
+  ../Streetcode.DAL/InitialData/audios.json
+  ```
+
+  or
+
+  ```text
+  ../Streetcode.XIntegrationTest/TestData/InitialData/images.json
+  ../Streetcode.XIntegrationTest/TestData/InitialData/audios.json
+  ```
+
+  If exception is still present specify the absolute paths.
 
 ### How to run Docker
 

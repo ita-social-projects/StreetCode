@@ -28,7 +28,7 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
     {
         var texts = await _repositoryWrapper.TextRepository.GetAllAsync();
 
-        if (!texts.Any())
+        if (texts is null)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyText"].Value;
             _logger.LogError(request, errorMsg);

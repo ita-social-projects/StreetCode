@@ -153,4 +153,7 @@
   <data name="FailedToMapCreatedTerm" xml:space="preserve">
     <value>Failed to map created term</value>
   </data>
+  <data name="TheStreetcodesAreAlreadyLinked" xml:space="preserve">
+    <value>The streetcodes are already linked</value>
+  </data>
 </root>

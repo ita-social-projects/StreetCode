@@ -15,29 +15,29 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests;
 
 public class UpdateHistoricalContextTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepo;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockLocalizerValidation;
-    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockLocalizerFieldNames;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _mockLocalizerValidation;
+    private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _mockLocalizerFieldNames;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
     public UpdateHistoricalContextTest()
     {
-        this.mockRepo = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizerValidation = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-        this.mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerValidation = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+        _mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
     {
         // Arrange
-        this.mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(new HistoricalContext()));
-        this.mockRepo.Setup(repo =>
+        _mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(new HistoricalContext()));
+        _mockRepo.Setup(repo =>
                 repo.HistoricalContextRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
             .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>
             {
@@ -46,10 +46,10 @@ public class UpdateHistoricalContextTest
                 return member.Member.Name == "Id" ? new HistoricalContext() : null;
             });
 
-        this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        this.mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
+        _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+        _mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
 
-        var handler = new UpdateHistoricalContextHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object, this.mockLocalizerValidation.Object, this.mockLocalizerFieldNames.Object);
+        var handler = new UpdateHistoricalContextHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object, _mockLocalizerValidation.Object, _mockLocalizerFieldNames.Object);
 
         // Act
         var result = await handler.Handle(new UpdateHistoricalContextCommand(new HistoricalContextDTO()), CancellationToken.None);

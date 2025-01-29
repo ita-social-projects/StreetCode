@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
-using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -44,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
             }
 
-            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new GetAllHistoricalContextDTO
+            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new ()
             {
                 TotalAmount = paginationResponse.TotalItems,
                 HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginationResponse.Entities)

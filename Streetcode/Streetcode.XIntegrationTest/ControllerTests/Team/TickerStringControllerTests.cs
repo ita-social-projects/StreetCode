@@ -21,8 +21,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             : base(factory, "api/TickerString")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            _testTeamMemberImage = ImageExtracter.Extract(1);
-            _testTeamMember = TeamMemberExtracter.Extract(uniqueId);
+            _testTeamMemberImage = ImageExtracter.Extract(uniqueId);
+            _testTeamMember = TeamMemberExtracter.Extract(uniqueId, _testTeamMemberImage.Id);
             _testPosition = TeamPositionsExtracter.Extract(uniqueId);
         }
 

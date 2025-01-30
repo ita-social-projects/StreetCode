@@ -87,11 +87,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             var partners = new List<TeamMemberLink>
             {
-                new TeamMemberLink
+                new ()
                 {
                     Id = 1,
                 },
-                new TeamMemberLink
+                new ()
                 {
                     Id = 2,
                 },
@@ -99,7 +99,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             return partners;
         }
 
-        private static List<TeamMemberLink> GetTeamMemberLinksListWithNotExistingId()
+        private static List<TeamMemberLink>? GetTeamMemberLinksListWithNotExistingId()
         {
             return null;
         }
@@ -108,11 +108,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         {
             var partnersDTO = new List<TeamMemberLinkDTO>
             {
-                new TeamMemberLinkDTO
+                new ()
                 {
                     Id = 1,
                 },
-                new TeamMemberLinkDTO
+                new ()
                 {
                     Id = 2,
                 },
@@ -126,12 +126,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
                 .Returns(teamMemberLinksDTO);
         }
 
-        private void SetupMapMethod(IEnumerable<TeamMemberLink> teamMemberLinks)
+        private void SetupMapMethod(IEnumerable<TeamMemberLink>? teamMemberLinks)
         {
             this.mockRepository.Setup(x => x.TeamLinkRepository.GetAllAsync(
                 null,
                 It.IsAny<Func<IQueryable<TeamMemberLink>, IIncludableQueryable<TeamMemberLink, object>>>()))
-                .ReturnsAsync(teamMemberLinks);
+                .ReturnsAsync(teamMemberLinks!);
         }
 
         private void SetupGetAllAsyncMethod(IEnumerable<TeamMemberLink> teamMemberLinks)

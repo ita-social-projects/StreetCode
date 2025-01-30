@@ -71,7 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_WhenSaveChangesIsNotSuccessful()
+        public async Task ShouldThrowException_WhenSaveChangesIsNotSuccessful()
         {
             string expectedErrorMessage = "Failed to create a team";
             this.mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateTeam"])
@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_WhenCreateNotSuccessful()
+        public async Task ShouldThrowException_WhenCreateNotSuccessful()
         {
             string expectedErrorMessage = "Cannot create team link";
             this.mockLocalizerCannotCreate.Setup(x => x["CannotCreateTeamLink"])
@@ -123,7 +123,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_WhenMapNotSuccessful()
+        public async Task ShouldThrowException_WhenMapNotSuccessful()
         {
             string expectedErrorMessage = "Cannot convert null to team link";
             this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToTeamLink"])
@@ -168,8 +168,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 
         private void SetupCreateMethod(TeamMemberLink teamMemberLink)
         {
-            this.mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == teamMemberLink.Id)))
-                .Returns(teamMemberLink);
+            this.mockRepository.Setup(x => x.TeamLinkRepository.CreateAsync(It.Is<TeamMemberLink>(y => y.Id == teamMemberLink.Id)))
+                .ReturnsAsync(teamMemberLink);
         }
 
         private void SetupSaveChangesMethod()

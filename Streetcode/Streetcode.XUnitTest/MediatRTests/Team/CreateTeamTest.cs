@@ -19,14 +19,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         private readonly Mock<IRepositoryWrapper> mockRepository;
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailed;
 
         public CreateTeamTest()
         {
             this.mockMapper = new Mock<IMapper>();
             this.mockRepository = new Mock<IRepositoryWrapper>();
             this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            this.mockLocalizerFailed = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
         }
 
         [Fact]
@@ -38,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.BasicRepositorySetup(teamMember);
             this.GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
@@ -48,24 +48,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         }
 
         [Fact]
-        public async Task ShouldThrowExeption_SaveChangesIsNotSuccessful()
+        public async Task ShouldThrowException_SaveChangesIsNotSuccessful()
         {
             // Arrange
-            const string exceptionMessage = "Failed to create a team member";
+            const string exceptionMessage = "Failed to create a team";
 
             var teamMember = GetTeamMember(1);
             this.MapperSetup(teamMember);
+            this.SetupLocalizer(exceptionMessage);
             this.GetsAsyncRepositorySetup();
             this.mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
-            this.mockRepository.Setup(repo => repo.SaveChanges()).Throws(new Exception(exceptionMessage));
+            this.mockRepository.Setup(repo => repo.SaveChangesAsync()).Throws(new Exception(exceptionMessage));
 
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
 
             // Assert
-            Assert.Equal(exceptionMessage, result.Errors[0].Message);
+            Assert.Equal(exceptionMessage, result.Errors.Single().Message);
         }
 
         [Fact]
@@ -77,7 +78,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.BasicRepositorySetup(teamMember);
             this.GetsAsyncRepositorySetup();
 
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamQuery(new TeamMemberCreateDTO()), CancellationToken.None);
@@ -99,11 +100,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.MapperSetup(teamMember);
             this.BasicRepositorySetup(teamMember);
             this.GetsAsyncRepositorySetup();
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
-            this.mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>()))
-                .Returns(new Positions());
+            this.mockRepository.Setup(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()));
+            this.mockRepository.Setup(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>()))
+                .ReturnsAsync(new Positions());
 
-            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamQuery(teamMemberDTO), CancellationToken.None);
@@ -113,8 +114,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 () => Assert.True(result.IsSuccess),
                 () => Assert.Equal(0, result.Value.Id));
 
-            this.mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
-            this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
+            this.mockRepository.Verify(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>()), Times.Once);
+            this.mockRepository.Verify(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
         private static TeamMember GetTeamMember(int imageId = 0)
@@ -146,7 +147,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             this.mockRepository.Setup(repo => repo.TeamRepository.CreateAsync(teamMember)).ReturnsAsync(teamMember);
 
-            this.mockRepository.Setup(repo => repo.SaveChanges());
+            this.mockRepository.Setup(repo => repo.SaveChangesAsync());
         }
 
         private void GetsAsyncRepositorySetup(List<TeamMemberLink>? link = null)
@@ -169,6 +170,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             this.mockMapper.Setup(mapper => mapper.Map<TeamMemberDTO>(It.IsAny<object>()))
                 .Returns(new TeamMemberDTO());
+        }
+
+        private void SetupLocalizer(string expectedError)
+        {
+            mockLocalizerFailed.Setup(localizer => localizer["FailedToCreateTeam"])
+                .Returns(new LocalizedString("FailedToCreateTeam", expectedError));
         }
     }
 }

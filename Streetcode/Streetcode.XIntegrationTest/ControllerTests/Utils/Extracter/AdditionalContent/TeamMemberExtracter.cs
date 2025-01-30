@@ -4,11 +4,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Additional
 {
     public static class TeamMemberExtracter
     {
-        public static TeamMember Extract(int teamMemberId)
+        public static TeamMember Extract(int teamMemberId, int imageId)
         {
             TeamMember testTeamMember = TestDataProvider.GetTestData<TeamMember>();
 
             testTeamMember.Id = teamMemberId;
+            testTeamMember.ImageId = imageId;
 
             return BaseExtracter.Extract<TeamMember>(testTeamMember, teamMember => teamMember.Id == teamMemberId);
         }

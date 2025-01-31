@@ -44,8 +44,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
 
         public static void Remove(StreetcodeUpdateDTO entity)
         {
-            BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
-
             foreach (var image in entity.Images)
             {
                 var imageBlob = dbHelper.GetExistItemId<Image>(image.Id);
@@ -56,6 +54,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
             {
                 BaseExtracter.RemoveById<ImageDetails>(imageDetails.Id);
             }
+
+            BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
         }
 
         private static StreetcodeUpdateDTO GetTestStreetcodeUpdateDTO(int id, int index, string transliterationUrl, Image testImage)

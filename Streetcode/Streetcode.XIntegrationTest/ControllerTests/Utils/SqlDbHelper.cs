@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
 using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
@@ -86,7 +87,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                     string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
                     string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
 
-                    this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    if (TableHasIdentityColumn(typeof(T)))
+                    {
+                        this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    }
                     
                     var trackedEntity = this.dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == newItem);
                     if (trackedEntity != null)
@@ -96,7 +100,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
                     this.dbContext.Add(newItem);
                     this.dbContext.SaveChanges();
-                    this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
+
+                    if (TableHasIdentityColumn(typeof(T)))
+                    {
+                        this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    }
                 }
                 finally
                 {
@@ -104,6 +112,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 }
             }
         }
+
+        private bool TableHasIdentityColumn(Type entityType)
+        {
+            var entityTypeMeta = this.dbContext.Model.FindEntityType(entityType);
+            if (entityTypeMeta == null) return false;
+
+            return entityTypeMeta.GetProperties().Any(p => p.ValueGenerated == ValueGenerated.OnAdd);
+        }
+
 
         public T? GetExistItem<T>(Func<T, bool>? predicate = default)
             where T : class, new()

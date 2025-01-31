@@ -49,22 +49,14 @@ public abstract class BaseMockStringLocalizer<TResource> : IStringLocalizer<TRes
 
     private LocalizedString GetErrorMessage(string error, params object[] arguments)
     {
-        string errorMessage = $"Error '{error}'";
-        switch (arguments.Length)
+        if (arguments.Length == 0)
         {
-            case 1:
-                errorMessage += ". Arguments: {0}";
-                break;
-            case 2:
-                errorMessage += ". Arguments: {0}, {1}";
-                break;
-            case 3:
-                errorMessage += ". Arguments: {0}, {1}, {2}";
-                break;
-            default:
-                throw new ArgumentException("Not supported number of arguments");
+            return new LocalizedString(error, $"Error '{error}'");
         }
 
-        return new LocalizedString(error, string.Format(errorMessage, arguments));
+        string formattedArguments = string.Join(", ", arguments);
+        string errorMessage = $"Error '{error}'. Arguments: {formattedArguments}";
+
+        return new LocalizedString(error, errorMessage);
     }
 }

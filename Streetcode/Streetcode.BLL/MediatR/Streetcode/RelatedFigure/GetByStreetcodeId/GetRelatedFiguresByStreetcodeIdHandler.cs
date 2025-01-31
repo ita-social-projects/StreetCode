@@ -45,12 +45,11 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
-        if (!relatedFigures.Any())
+        if (!relatedFigureIds.Any())
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of related figures";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
         }
 
         foreach(StreetcodeContent streetcode in relatedFigures)

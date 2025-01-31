@@ -29,9 +29,9 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeWithCorrespondingCategoryId", request.Id].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
-            throw new ArgumentNullException(errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
 
         streetcode.Status = DAL.Enums.StreetcodeStatus.Deleted;

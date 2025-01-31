@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
         // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
-        public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
@@ -39,21 +39,20 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));
 
+            if (!streetcodes.Any())
+            {
+                string message = "Returning empty enumerable of related figures";
+                _logger.LogInformation(message);
+                return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
+            }
+
             const int blackAndWhiteImageAssignmentKey = (int)ImageAssigment.Blackandwhite;
             foreach (var streetcode in streetcodes)
             {
                 streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(blackAndWhiteImageAssignmentKey.ToString())).ToList();
             }
 
-            if (!streetcodes.Any())
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.TagId].Value;
-                _logger.LogError(request, errorMsg);
-
-                return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
-            }
-
-            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
+            return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
         }
     }
 }

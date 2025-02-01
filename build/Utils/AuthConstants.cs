@@ -40,7 +40,9 @@ namespace Utils
             Name = "User_User",
             Surname = "User_User",
             Email = "user@user.com",
+            NormalizedEmail = "USER@USER.COM",
             UserName = "User_User_T",
+            NormalizedUserName = "USER_USER_T",
             RefreshToken = "User_User_Refresh_Token",
             RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };

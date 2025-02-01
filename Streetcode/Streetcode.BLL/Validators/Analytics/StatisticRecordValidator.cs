@@ -8,7 +8,12 @@ namespace Streetcode.BLL.Validators.Analytics;
 
 public class StatisticRecordValidator : AbstractValidator<CreateStatisticRecordCommand>
 {
-    private const int AddressMaxLength = 150;
+    public const int AddressMaxLength = 150;
+    public const int LatitudePrecision = 18;
+    public const int LatitudeScale = 4;
+    public const int LongtitudePrecision = 18;
+    public const int LongtitudeScale = 4;
+
     public StatisticRecordValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(st => st.StatisticRecordDTO.Address)
@@ -16,11 +21,11 @@ public class StatisticRecordValidator : AbstractValidator<CreateStatisticRecordC
             .MaximumLength(AddressMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Address"], AddressMaxLength]);
 
         RuleFor(st => st.StatisticRecordDTO.StreetcodeCoordinate.Latitude)
-            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Latitude"]])
-            .PrecisionScale(18, 4, true).WithMessage(localizer["InvalidPrecision", fieldLocalizer["Latitude"]]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Latitude"]])
+            .PrecisionScale(LatitudePrecision, LatitudeScale, true).WithMessage(localizer["InvalidPrecision", fieldLocalizer["Latitude"]]);
 
         RuleFor(st => st.StatisticRecordDTO.StreetcodeCoordinate.Longtitude)
-            .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Longtitude"]])
-            .PrecisionScale(18, 4, true).WithMessage(localizer["InvalidPrecision", fieldLocalizer["Longtitude"]]);
+            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Longtitude"]])
+            .PrecisionScale(LongtitudePrecision, LongtitudeScale, true).WithMessage(localizer["InvalidPrecision", fieldLocalizer["Longtitude"]]);
     }
 }

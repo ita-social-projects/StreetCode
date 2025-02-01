@@ -25,7 +25,14 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
 
-    public ForgotPasswordHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IEmailService forgotPasswordEmailService, IStringLocalizer<UserSharedResource> localizer, IHttpContextAccessor httpContextAccessor, IMessageDataAbstractFactory messageDataAbstractFactory, IStringLocalizer<SendEmailHandler> stringLocalizerEmailHandler)
+    public ForgotPasswordHandler(
+        ILoggerService logger,
+        UserManager<User> userManager,
+        IEmailService forgotPasswordEmailService,
+        IStringLocalizer<UserSharedResource> localizer,
+        IHttpContextAccessor httpContextAccessor,
+        IMessageDataAbstractFactory messageDataAbstractFactory,
+        IStringLocalizer<SendEmailHandler> stringLocalizerEmailHandler)
     {
         _logger = logger;
         _userManager = userManager;
@@ -57,8 +64,8 @@ public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, Resu
             var message = _messageDataAbstractFactory.CreateForgotPasswordMessageData(
                 new string[] { request.ForgotPasswordDto.Email },
                 endcodedToken,
-                user.UserName,
-                currentDomain);
+                encodedUserName,
+                currentDomain!);
 
             var isSuccess = await _emailService.SendEmailAsync(message);
 

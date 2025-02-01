@@ -20,16 +20,19 @@ public class GetOtherUserByUserNameHandler : IRequestHandler<GetOtherUserByUserN
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
     private readonly UserManager<User> _userManager;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-    public GetOtherUserByUserNameHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IStringLocalizer<UserSharedResource> localizer)
+    public GetOtherUserByUserNameHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        UserManager<User> userManager,
+        IStringLocalizer<UserSharedResource> localizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
         _userManager = userManager;
-        _httpContextAccessor = httpContextAccessor;
         _localizer = localizer;
     }
 
@@ -45,7 +48,7 @@ public class GetOtherUserByUserNameHandler : IRequestHandler<GetOtherUserByUserN
         }
 
         var userDto = _mapper.Map<UserProfileDTO>(user);
-        userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+        userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() !;
 
         return Result.Ok(userDto);
     }

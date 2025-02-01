@@ -23,7 +23,13 @@ public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<U
     private readonly UserManager<User> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetByUserNameHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IStringLocalizer<UserSharedResource> localizer)
+    public GetByUserNameHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        UserManager<User> userManager,
+        IHttpContextAccessor httpContextAccessor,
+        IStringLocalizer<UserSharedResource> localizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
@@ -45,7 +51,7 @@ public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<U
         }
 
         var userDto = _mapper.Map<UserDTO>(user);
-        userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+        userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() !;
 
         return Result.Ok(userDto);
     }

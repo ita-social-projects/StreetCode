@@ -2,7 +2,7 @@
 using MediatR;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Users.GetAllUserName;
+namespace Streetcode.BLL.MediatR.Users.ExistWithUserName;
 
 public class ExistWithUserNameHandler : IRequestHandler<ExistWithUserNameQuery, Result<bool>>
 {

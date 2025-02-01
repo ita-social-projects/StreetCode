@@ -5,7 +5,6 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
 

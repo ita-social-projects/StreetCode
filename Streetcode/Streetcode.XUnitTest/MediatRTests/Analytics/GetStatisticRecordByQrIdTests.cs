@@ -40,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnRecord_WhenRecordExists()
+        public async Task Handle_RecordExists_ShouldReturnRecord()
         {
             // Arrange
             var qrId = 1;
@@ -71,7 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFail_WhenRecordNotFound()
+        public async Task Handle_RecordNotFound_ShouldReturnFail()
         {
             // Arrange
             var qrId = -1;
@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFail_WhenMappingFails()
+        public async Task Handle_MappingFails_ShouldReturnFail()
         {
             // Arrange
             var qrId = 1;

@@ -12,9 +12,9 @@ public class UserClient : BaseClient
     {
     }
 
-    public async Task<RestResponse> GetByUserName(string authToken = "")
+    public async Task<RestResponse> GetByEmail(string authToken = "")
     {
-        return await SendQuery("/GetByUserName", authToken);
+        return await SendQuery("/GetByEmail", authToken);
     }
 
     public async Task<RestResponse> ExistWithUserName(string userName, string authToken = "")

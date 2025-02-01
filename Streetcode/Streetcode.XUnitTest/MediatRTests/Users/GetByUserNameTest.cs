@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Users.GetByName;
+using Streetcode.BLL.MediatR.Users.GetByEmail;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
@@ -23,7 +23,7 @@ public class GetByUserNameTest
     private readonly Mock<IMapper> _mapperMock;
     private readonly MockUserSharedResourceLocalizer _localizerMock;
     private readonly Mock<ILoggerService> _loggerMock;
-    private readonly GetByUserNameHandler _handler;
+    private readonly GetByEmailHandler _handler;
 
     public GetByUserNameTest()
     {
@@ -49,7 +49,7 @@ public class GetByUserNameTest
 
         _httpContextAccessorMock.Setup(_ => _.HttpContext).Returns(context);
 
-        _handler = new GetByUserNameHandler(
+        _handler = new GetByEmailHandler(
             _mapperMock.Object,
             _repositoryWrapperMock.Object,
             _loggerMock.Object,
@@ -84,7 +84,7 @@ public class GetByUserNameTest
         _userManagerMock.Setup(um => um.GetRolesAsync(user)).ReturnsAsync(new List<string> { "Admin" });
 
         // Act
-        var result = await _handler.Handle(new GetByUserNameQuery(), cancellationToken);
+        var result = await _handler.Handle(new GetByEmailQuery(), cancellationToken);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -105,7 +105,7 @@ public class GetByUserNameTest
             .ReturnsAsync((User)null!);
 
         // Act
-        var result = await _handler.Handle(new GetByUserNameQuery(), cancellationToken);
+        var result = await _handler.Handle(new GetByEmailQuery(), cancellationToken);
 
         // Assert
         Assert.False(result.IsSuccess);

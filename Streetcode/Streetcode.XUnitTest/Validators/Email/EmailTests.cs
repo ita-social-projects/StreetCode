@@ -21,7 +21,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnSuccessResult_WhenEmailIsValid()
+    public void Validate_EmailIsValid_ShouldReturnSuccessResult()
     {
         // Arrange
         var email = GetValidEmailDto();
@@ -34,7 +34,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenFromIsEmpty()
+    public void Validate_FromIsEmpty_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Email"]];
@@ -50,7 +50,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenFromLengthIsOutOfRange()
+    public void Validate_FromLengthIsOutOfRange_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Email"], SendEmailCommandValidator.EmailMaxLength];
@@ -66,7 +66,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenEmailFormatIsInvalid()
+    public void Validate_EmailFormatIsInvalid_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["EmailAddressFormat"];
@@ -82,7 +82,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenTokenIsEmpty()
+    public void Validate_TokenIsEmpty_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["CaptchaToken"]];
@@ -98,7 +98,7 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenContentLengthIsOutOfRange()
+    public void Validate_ContentLengthIsOutOfRange_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["LengthMustBeInRange", mockNamesLocalizer["Content"], SendEmailCommandValidator.ContentMinLength, SendEmailCommandValidator.ContentMaxLength];

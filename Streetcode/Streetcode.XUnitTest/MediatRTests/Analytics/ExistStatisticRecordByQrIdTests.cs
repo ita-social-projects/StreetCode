@@ -21,7 +21,7 @@ public class ExistStatisticRecordByQrIdTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnTrue_WhenRecordExists()
+    public async Task Handle_RecordExists_ShouldReturnTrue()
     {
         // Arrange
         var qrId = 1;
@@ -50,7 +50,7 @@ public class ExistStatisticRecordByQrIdTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFalse_WhenRecordDoesNotExist()
+    public async Task Handle_RecordDoesNotExist_ShouldReturnFalse()
     {
         // Arrange
         var qrId = -1;

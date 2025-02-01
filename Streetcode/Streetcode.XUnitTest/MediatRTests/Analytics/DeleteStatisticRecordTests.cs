@@ -35,7 +35,7 @@ public class DeleteStatisticRecordTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnSuccess_WhenRecordIsDeletedSuccessfully()
+    public async Task Handle_RecordIsDeletedSuccessfully_ShouldReturnSuccess()
     {
         // Arrange
         var qrId = 1;
@@ -64,7 +64,7 @@ public class DeleteStatisticRecordTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenRecordIsNotFound()
+    public async Task Handle_RecordIsNotFound_ShouldReturnError()
     {
         // Arrange
         var qrId = -1;
@@ -89,7 +89,7 @@ public class DeleteStatisticRecordTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnError_WhenDeleteFails()
+    public async Task Handle_DeleteFails_ShouldReturnError()
     {
         // Arrange
         var qrId = 1;

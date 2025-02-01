@@ -32,7 +32,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task Update_ReturnSuccessStatusCode()
+    public async Task Update_ValidId_ReturnsSuccessStatusCode()
     {
         // Arrange
         var validId = _statisticRecord.QrId;
@@ -45,7 +45,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task IncorrectId_Update_ReturnSuccessStatusCode()
+    public async Task Update_InvalidId_ReturnsBadRequest()
     {
         // Arrange
         var invalidId = -9999;
@@ -58,7 +58,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task GetAll_ReturnSuccessStatusCode()
+    public async Task GetAll_ValidRequest_ReturnsSuccessStatusCode()
     {
         // Act
         var response = await Client.GetAll();
@@ -70,7 +70,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task GetByQrId_ReturnSuccessStatusCode()
+    public async Task GetByQrId_ValidQrId_ReturnsSuccessStatusCode()
     {
         // Arrange
         var validQrId = _statisticRecord.QrId;
@@ -85,7 +85,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task GetByQrId_ReturnBadRequest()
+    public async Task GetByQrId_InvalidQrId_ReturnsBadRequest()
     {
         // Arrange
         var validQrId = -9999;
@@ -100,7 +100,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task ExistByQrId_ReturnSuccessStatusCode()
+    public async Task ExistByQrId_ValidQrId_ReturnsSuccessStatusCode()
     {
         // Arrange
         var validQrId = _statisticRecord.QrId;
@@ -115,7 +115,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task ExistByQrId_ReturnBadRequest()
+    public async Task ExistByQrId_InvalidQrId_ReturnsBadRequest()
     {
         // Arrange
         var validQrId = -9999;
@@ -130,7 +130,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task GetAllByStreetcodeId_ReturnSuccessStatusCode()
+    public async Task GetAllByStreetcodeId_ValidStreetcodeId_ReturnsSuccessStatusCode()
     {
         // Arrange
         var streetcodeId = _statisticRecord.StreetcodeId;
@@ -145,7 +145,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task GetAllByStreetcodeId_ReturnBadRequest()
+    public async Task GetAllByStreetcodeId_InvalidStreetcodeId_ReturnsBadRequest()
     {
         // Arrange
         var streetcodeId = -9999;
@@ -160,7 +160,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task Delete_ReturnSuccessCode()
+    public async Task Delete_ValidId_ReturnsSuccessStatusCode()
     {
         // Arrange
         var id = _statisticRecord.QrId;
@@ -173,7 +173,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task Delete_ReturnBadRequest()
+    public async Task Delete_InvalidId_ReturnsBadRequest()
     {
         // Arrange
         var id = -9999;

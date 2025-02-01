@@ -33,7 +33,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
         [Fact]
         [ExtractRegisterRequest]
-        public async Task Register_ReturnsSuccessStatusCode()
+        public async Task Register_ValidInput_ReturnsSuccessStatusCode()
         {
             // Arrange.
             var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
@@ -47,7 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
         [Fact]
         [ExtractRegisterRequest]
-        public async Task Register_InvalidInputData_Returns404BadRequest()
+        public async Task Register_InvalidInputData_ReturnsBadRequest()
         {
             // Arrange.
             var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
@@ -62,7 +62,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
         [Fact]
         [ExtractRegisterRequest]
-        public async Task Register_WithGivenEmailAlreadyInDatabase_Returns404BadRequest()
+        public async Task Register_EmailAlreadyExists_ReturnsBadRequest()
         {
             // Arrange.
             var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
@@ -76,7 +76,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        public async Task Login_ReturnsSuccessStatusCode()
+        public async Task Login_ValidInput_ReturnsSuccessStatusCode()
         {
             // Arrange.
             LoginRequestDTO loginRequest = GetLoginRequestDTO();
@@ -89,7 +89,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        public async Task Login_InvalidInputData_Returns404BadRequest()
+        public async Task Login_InvalidInputData_ReturnsBadRequest()
         {
             // Arrange.
             LoginRequestDTO loginRequest = GetLoginRequestDTO();
@@ -103,7 +103,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        public async Task RefreshToken_ReturnsSuccess()
+        public async Task RefreshToken_ValidTokens_ReturnsSuccess()
         {
             // Arrange.
             RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
@@ -163,7 +163,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        public async Task Logout_ValidToken_ReturnsStatusOk()
+        public async Task Logout_ValidToken_ReturnsSuccessStatusCode()
         {
             // Arrange.
             await TokenStorage.GenerateNewTokens(_testUser);

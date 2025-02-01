@@ -12,33 +12,36 @@ using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Users.GetByUserName;
+namespace Streetcode.BLL.MediatR.Users.GetByEmail;
 
-public class GetOtherUserByUserNameHandler : IRequestHandler<GetOtherUserByUserNameQuery, Result<UserProfileDTO>>
+public class GetByEmailHandler : IRequestHandler<GetByEmailQuery, Result<UserDTO>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly UserManager<User> _userManager;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
+    private readonly UserManager<User> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetOtherUserByUserNameHandler(
+    public GetByEmailHandler(
         IMapper mapper,
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         UserManager<User> userManager,
+        IHttpContextAccessor httpContextAccessor,
         IStringLocalizer<UserSharedResource> localizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
         _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
         _localizer = localizer;
     }
 
-    public async Task<Result<UserProfileDTO>> Handle(GetOtherUserByUserNameQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserDTO>> Handle(GetByEmailQuery request, CancellationToken cancellationToken)
     {
-        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == request.UserName, include: qu => qu.Include(x => x.Expertises));
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Email == HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor), include: qu => qu.Include(x => x.Expertises));
 
         if (user is null)
         {
@@ -47,7 +50,7 @@ public class GetOtherUserByUserNameHandler : IRequestHandler<GetOtherUserByUserN
             return Result.Fail(errorMessage);
         }
 
-        var userDto = _mapper.Map<UserProfileDTO>(user);
+        var userDto = _mapper.Map<UserDTO>(user);
         userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() !;
 
         return Result.Ok(userDto);

@@ -21,7 +21,7 @@ public class ExpertiseControllerTests : BaseControllerTests<ExpertiseClient>
     }
 
     [Fact]
-    public async Task GetAll_ReturnSuccessStatusCode()
+    public async Task GetAll_Expertises_ReturnsSuccessStatusCode()
     {
         // Act
         var response = await Client.GetAll();

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Moq;
-using Streetcode.BLL.MediatR.Users.GetAllUserName;
+using Streetcode.BLL.MediatR.Users.ExistWithUserName;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;

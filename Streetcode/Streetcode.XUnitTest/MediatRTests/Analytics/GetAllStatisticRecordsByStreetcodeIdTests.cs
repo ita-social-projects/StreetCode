@@ -38,7 +38,7 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnRecords_WhenRecordsExist()
+    public async Task Handle_RecordsExist_ShouldReturnRecords()
     {
         // Arrange
         int streetcodeId = 1;
@@ -72,7 +72,7 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFail_WhenRecordsNotFound()
+    public async Task Handle_RecordsNotFound_ShouldReturnFail()
     {
         // Arrange
         int streetcodeId = 2;

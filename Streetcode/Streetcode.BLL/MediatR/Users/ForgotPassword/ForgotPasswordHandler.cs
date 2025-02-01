@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +10,6 @@ using Streetcode.BLL.MediatR.Email;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.ForgotPassword;
 

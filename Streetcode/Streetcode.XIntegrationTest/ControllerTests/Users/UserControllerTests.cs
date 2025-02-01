@@ -47,10 +47,10 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task GetAll_ReturnSuccessStatusCode()
+    public async Task GetByEmail_ValidToken_ReturnsSuccessStatusCode()
     {
         // Act
-        var response = await Client.GetByUserName(TokenStorage.UserAccessToken);
+        var response = await Client.GetByEmail(TokenStorage.UserAccessToken);
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<UserDTO>(response.Content);
 
         // Assert
@@ -59,7 +59,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task ExistWithUserName_ReturnSuccessStatusCode()
+    public async Task ExistWithUserName_ValidUserName_ReturnsSuccessStatusCode()
     {
         // Arrange
         var validUserName = _testUser.UserName;
@@ -74,7 +74,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task ExistWithUserName_InvalidToken_ReturnUnauthorized()
+    public async Task ExistWithUserName_InvalidToken_ReturnsUnauthorized()
     {
         // Arrange
         var validUserName = _testUser.UserName;
@@ -103,7 +103,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task GetOtherUserByUserName_ReturnSuccessStatusCode()
+    public async Task GetOtherUserByUserName_ValidUserName_ReturnsSuccessStatusCode()
     {
         // Arrange
         var validUserName = _testUser.UserName;
@@ -118,7 +118,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task InvalidUserName_GetOtherUserByUserName_BadRequest()
+    public async Task GetOtherUserByUserName_InvalidUserName_ReturnsBadRequest()
     {
         // Arrange
         var validUserName = _testUser.UserName;
@@ -134,7 +134,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 
     [Fact]
     [ExtractUpdateTestUser]
-    public async Task Update_ReturnsSuccessStatusCode()
+    public async Task UpdateUser_ValidData_ReturnsSuccessStatusCode()
     {
         // Arrange
         var userToUpdate = ExtractUpdateTestUserAttribute.UserForTest;
@@ -156,7 +156,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 
     [Fact]
     [ExtractUpdateTestUser]
-    public async Task SameUserName_Update_ReturnsBadRequest()
+    public async Task UpdateUser_SameUserName_ReturnsBadRequest()
     {
         // Arrange
         var userToUpdate = ExtractUpdateTestUserAttribute.UserForTest;
@@ -172,7 +172,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task Delete_ReturnsSuccessStatusCode()
+    public async Task DeleteUser_ValidEmail_ReturnsSuccessStatusCode()
     {
         // Arrange
         await TokenStorage.GenerateNewTokens(_testUser);
@@ -186,7 +186,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 
     [Fact]
     [ExtractUpdateTestUser]
-    public async Task InvalidEmail_Delete_ReturnBadRequest()
+    public async Task DeleteUser_InvalidEmail_ReturnsBadRequest()
     {
         // Arrange
         var userToUpdate = ExtractUpdateTestUserAttribute.UserForTest;
@@ -202,7 +202,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task Forgot_ReturnsSuccessStatusCode()
+    public async Task ForgotPassword_ValidEmail_ReturnsSuccessStatusCode()
     {
         // Arrange
         var forgotPassword = new ForgotPasswordDTO
@@ -218,7 +218,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task InvalidEmail_ForgotPassword_ReturnsSuccessStatusCode()
+    public async Task ForgotPassword_InvalidEmail_ReturnsBadRequest()
     {
         // Arrange
         var forgotPassword = new ForgotPasswordDTO
@@ -234,7 +234,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     }
 
     [Fact]
-    public async Task ForgotPasswordUpdate_ReturnsSuccessStatusCode()
+    public async Task UpdateForgotPassword_ValidData_ReturnsSuccessStatusCode()
     {
         // Arrange
         var forgotPassword = new UpdateForgotPasswordDTO

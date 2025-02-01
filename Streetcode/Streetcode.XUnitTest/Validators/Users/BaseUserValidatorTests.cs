@@ -25,7 +25,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnSuccessResult_WhenAllFieldsAreValid()
+    public void Validate_AllFieldsAreValid_ShouldReturnSuccessResult()
     {
         // Arrange
         var user = GetValidUser();
@@ -38,7 +38,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenExpertisesCountIsMoreThan3()
+    public void Validate_ExpertisesCountIsMoreThan3_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MustContainAtMostThreeExpertises", mockNamesLocalizer["Expertises"]];
@@ -58,7 +58,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenAboutYourselfLengthIsMoreThanMaximum()
+    public void Validate_AboutYourselfLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["AboutYourself"], BaseUserValidator.MaxLengthAboutYourself];
@@ -77,7 +77,7 @@ public class BaseUserValidatorTests
     [InlineData("Нікнейм1")]
     [InlineData("NAME")]
     [InlineData("!name")]
-    public void ShouldReturnError_WhenUserNameIsInvalid(string userName)
+    public void Validate_UserNameIsInvalid_ShouldReturnError(string userName)
     {
         // Arrange
         var expectedError = mockValidationLocalizer["UserNameFormat"];
@@ -93,7 +93,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenUserNameIsEmpty()
+    public void Validate_UserNameIsEmpty_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["UserName"]];
@@ -109,7 +109,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenUserNameLengthIsMoreThanMaximum()
+    public void Validate_UserNameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["UserName"], BaseUserValidator.MaxLengthUserName];
@@ -125,7 +125,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenUserNameLengthIsLessThanMinimum()
+    public void Validate_UserNameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["UserName"], BaseUserValidator.MinLengthUserName];
@@ -144,7 +144,7 @@ public class BaseUserValidatorTests
     [InlineData("name1")]
     [InlineData("name_2")]
     [InlineData("!name")]
-    public void ShouldReturnError_WhenNameIsInvalid(string name)
+    public void Validate_NameIsInvalid_ShouldReturnError(string name)
     {
         // Arrange
         var expectedError = mockValidationLocalizer["NameFormat"];
@@ -160,7 +160,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenNameIsEmpty()
+    public void Validate_NameIsEmpty_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Name"]];
@@ -176,7 +176,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenNameLengthIsMoreThanMaximum()
+    public void Validate_NameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Name"], BaseUserValidator.MaxLengthName];
@@ -192,7 +192,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenNameLengthIsLessThanMinimum()
+    public void Validate_NameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["Name"], BaseUserValidator.MinLengthName];
@@ -211,7 +211,7 @@ public class BaseUserValidatorTests
     [InlineData("surname1")]
     [InlineData("surname_2")]
     [InlineData("!surname")]
-    public void ShouldReturnError_WhenSurnameIsInvalid(string surname)
+    public void Validate_SurnameIsInvalid_ShouldReturnError(string surname)
     {
         // Arrange
         var expectedError = mockValidationLocalizer["SurnameFormat"];
@@ -227,7 +227,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenSurnameIsEmpty()
+    public void Validate_SurnameIsEmpty_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Surname"]];
@@ -243,7 +243,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenSurnameLengthIsMoreThanMaximum()
+    public void Validate_SurnameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Surname"], BaseUserValidator.MaxLengthSurname];
@@ -259,7 +259,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenSurnameLengthIsLessThanMinimum()
+    public void Validate_SurnameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["Surname"], BaseUserValidator.MinLengthSurname];
@@ -275,7 +275,7 @@ public class BaseUserValidatorTests
     }
 
     [Fact]
-    public async Task ShouldReturnFail_WhenImageDoesNotExist()
+    public async Task Validate_ImageDoesNotExist_ShouldReturnError()
     {
         // Arrange
         var user = GetValidUser();

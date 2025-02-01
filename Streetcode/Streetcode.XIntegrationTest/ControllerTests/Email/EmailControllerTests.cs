@@ -15,7 +15,7 @@ public class EmailControllerTests : BaseControllerTests<EmailClient>
     }
 
     [Fact]
-    public async Task Send_ReturnsSuccessStatusCode()
+    public async Task Send_ValidData_ReturnsSuccessStatusCode()
     {
         // Arrange
         var emailDto = GetEmailDTO();

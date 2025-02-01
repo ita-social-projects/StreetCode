@@ -32,7 +32,7 @@ public class UpdateUserValidatorTests
     }
 
     [Fact]
-    public async Task ShouldCallBaseValidator_WhenValidated()
+    public async Task Validate_WhenCalled_ShouldCallBaseValidator()
     {
         // Arrange
         var createValidator = new UpdateUserValidator(mockBaseValidator.Object, _mockRepositoryWrapper.Object, mockUserSharedResourceLocalizer);

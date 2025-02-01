@@ -39,7 +39,7 @@ public class GetAllStatisticRecordsTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnOrderedRecords_WhenRecordsExist()
+    public async Task Handle_RecordsExist_ShouldReturnOrderedRecords()
     {
         // Arrange
         var statisticRecords = GetStatisticRecords();
@@ -71,7 +71,7 @@ public class GetAllStatisticRecordsTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFail_WhenRecordsAreNull()
+    public async Task Handle_RecordsAreNull_ShouldReturnFail()
     {
         // Arrange
         _repositoryWrapperMock.Setup(
@@ -95,7 +95,7 @@ public class GetAllStatisticRecordsTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFail_WhenMappingFails()
+    public async Task Handle_MappingFails_ShouldReturnFail()
     {
         // Arrange
         var statisticRecords = GetStatisticRecords();

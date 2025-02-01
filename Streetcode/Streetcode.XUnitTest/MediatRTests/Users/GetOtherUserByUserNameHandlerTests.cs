@@ -6,7 +6,7 @@ using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Users.GetByUserName;
+using Streetcode.BLL.MediatR.Users.GetOtherUserByUserName;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;

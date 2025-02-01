@@ -41,14 +41,7 @@ namespace Streetcode.WebApi.Controllers.Authentication
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Logout()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User is not authenticated.");
-            }
-
-            var result = await Mediator.Send(new LogoutCommand(userId));
+            var result = await Mediator.Send(new LogoutCommand());
 
             if (result.IsFailed)
             {

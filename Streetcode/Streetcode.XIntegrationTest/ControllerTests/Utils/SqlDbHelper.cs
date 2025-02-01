@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Persistence;
-using System.Collections.Concurrent;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class SqlDbHelper
     {
+        private static readonly ConcurrentDictionary<Type, object> _entityLocks = new ConcurrentDictionary<Type, object>();
         private readonly StreetcodeDbContext dbContext;
         private readonly object _lock = new object();
-        private static readonly ConcurrentDictionary<Type, object> _entityLocks = new ConcurrentDictionary<Type, object>();
 
         public SqlDbHelper(DbContextOptions<StreetcodeDbContext> options)
         {
@@ -80,14 +80,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
                 {
                     this.dbContext.Database.OpenConnection();
 
-                    string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema()!;
-                    string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName()!;
+                    string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema() !;
+                    string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName() !;
 
                     string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
                     string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
 
                     this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
-                    
+
                     var trackedEntity = this.dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == newItem);
                     if (trackedEntity != null)
                     {

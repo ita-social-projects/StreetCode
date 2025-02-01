@@ -7,31 +7,31 @@ using Streetcode.DAL.Persistence;
 using Streetcode.WebApi.Extensions;
 using static Streetcode.XIntegrationTest.Constants.ControllerTests.AuthConstants;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture
 {
     public class TokenStorage : IDisposable
     {
-        private readonly StreetcodeDbContext streetcodeDbContext;
-        private readonly IConfiguration configuration;
-        private readonly ITokenService tokenService;
-        private readonly Dictionary<string, User> users;
+        private readonly StreetcodeDbContext _streetcodeDbContext;
+        private readonly IConfiguration _configuration;
+        private readonly ITokenService _tokenService;
+        private readonly Dictionary<string, User> _users;
 
-        private bool disposed = false;
+        private bool disposed;
 
         public TokenStorage()
         {
-            this.users = new Dictionary<string, User>
+            _users = new Dictionary<string, User>
             {
                 ["Admin"] = TEST_USER_ADMIN,
                 ["User"] = TEST_USER_USER,
             };
 
-            this.streetcodeDbContext = this.GetDbContext();
-            this.configuration = GetConfiguration();
+            _streetcodeDbContext = GetDbContext();
+            _configuration = GetConfiguration();
 
-            this.tokenService = new TokenService(this.configuration, this.streetcodeDbContext);
+            _tokenService = new TokenService(_configuration, _streetcodeDbContext);
 
-            this.ObtainTokensAsync().GetAwaiter().GetResult();
+            ObtainTokensAsync().GetAwaiter().GetResult();
         }
 
         public string AdminAccessToken { get; private set; } = null!;
@@ -42,25 +42,29 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         public string UserRefreshToken { get; private set; } = null!;
 
+        public async Task GenerateNewTokens(User user)
+        {
+            UserAccessToken = (await _tokenService.GenerateAccessTokenAsync(user)).RawData;
+            UserRefreshToken = _tokenService.SetNewRefreshTokenForUser(user);
+        }
+
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (this.disposed)
+            if (!disposed)
             {
-                return;
-            }
+                if (disposing)
+                {
+                    _streetcodeDbContext?.Dispose();
+                }
 
-            if (disposing)
-            {
-                this.streetcodeDbContext.Dispose();
+                disposed = true;
             }
-
-            this.disposed = true;
         }
 
         private static IConfiguration GetConfiguration()
@@ -87,10 +91,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
         private async Task ObtainTokensAsync()
         {
-            this.AdminAccessToken = (await this.tokenService.GenerateAccessTokenAsync(this.users["Admin"])).RawData;
-            this.UserAccessToken = (await this.tokenService.GenerateAccessTokenAsync(this.users["User"])).RawData;
-            this.AdminRefreshToken = this.tokenService.SetNewRefreshTokenForUser(this.users["Admin"]);
-            this.UserRefreshToken = this.tokenService.SetNewRefreshTokenForUser(this.users["User"]);
+            AdminAccessToken = (await _tokenService.GenerateAccessTokenAsync(_users["Admin"])).RawData;
+            UserAccessToken = (await _tokenService.GenerateAccessTokenAsync(_users["User"])).RawData;
+            AdminRefreshToken = _tokenService.SetNewRefreshTokenForUser(_users["Admin"]);
+            UserRefreshToken = _tokenService.SetNewRefreshTokenForUser(_users["User"]);
         }
     }
 }

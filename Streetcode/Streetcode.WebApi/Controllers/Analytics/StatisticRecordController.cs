@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Analytics;
-using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll;
@@ -40,16 +39,6 @@ namespace Streetcode.WebApi.Controllers.Analytics
         public async Task<IActionResult> GetAllByStreetcodeId(int id)
         {
             return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
-        }
-
-        [HttpPost]
-        [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDTO))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDto)
-        {
-            return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDto)));
         }
 
         [HttpPut("{id:int}")]

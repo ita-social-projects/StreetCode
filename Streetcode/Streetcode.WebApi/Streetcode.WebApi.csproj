@@ -74,4 +74,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\Users\Expertises\" />
+  </ItemGroup>
+
 </Project>

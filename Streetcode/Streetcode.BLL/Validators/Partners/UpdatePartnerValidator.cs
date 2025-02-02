@@ -14,13 +14,13 @@ public class UpdatePartnerValidator : AbstractValidator<UpdatePartnerQuery>
     public UpdatePartnerValidator(
         BasePartnersValidator basePartnersValidator,
         IRepositoryWrapper repositoryWrapper,
-        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
-        IStringLocalizer<FailedToValidateSharedResource> localizer)
+        IStringLocalizer<AlreadyExistSharedResource> alreadyExistLocalizer,
+        IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
         RuleFor(c => c.Partner).SetValidator(basePartnersValidator);
 
-        RuleFor(c => c.Partner).MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["LogoId"]]);
+        RuleFor(c => c.Partner).MustAsync(BeUniqueImageId).WithMessage(x => alreadyExistLocalizer["PartnerWithFieldAlreadyExist", fieldLocalizer["LogoId"], x.Partner.LogoId]);
     }
 
     private async Task<bool> BeUniqueImageId(UpdatePartnerDTO dto, CancellationToken cancellationToken)

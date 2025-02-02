@@ -23,21 +23,6 @@ namespace Streetcode.DAL.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("EventStreetcodeContent", b =>
-                {
-                    b.Property<int>("EventsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventsId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("EventStreetcodes", (string)null);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -325,6 +310,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator<string>("EventType").HasValue("Event");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventId", "StreetcodeId");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("EventStreetcodes");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>
@@ -1399,21 +1399,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator().HasValue("streetcode-person");
                 });
 
-            modelBuilder.Entity("EventStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Event.Event", null)
-                        .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1512,6 +1497,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeCoordinate");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Event.Event", "Event")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "StreetcodeContent")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("StreetcodeContent");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -1897,6 +1901,11 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("StreetcodeTagIndices");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.Event", b =>
+                {
+                    b.Navigation("EventStreetcodes");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
                 {
                     b.Navigation("Streetcode");
@@ -1944,6 +1953,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Arts");
 
                     b.Navigation("Coordinates");
+
+                    b.Navigation("EventStreetcodes");
 
                     b.Navigation("Facts");
 

@@ -28,6 +28,8 @@ namespace Streetcode.DAL.Entities.Event
         [MaxLength(600)]
         public string? Description { get; set; }
 
-        public List<StreetcodeContent>? Streetcodes { get; set; } = new();
+        [Required]
+        public string EventType { get; set; }
+        public List<EventStreetcodes>? EventStreetcodes { get; set; } = new();
     }
 }

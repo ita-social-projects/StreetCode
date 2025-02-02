@@ -9,7 +9,7 @@ namespace Streetcode.DAL.Enums
     public static class EventTypeDiscriminators
     {
         public static string EventBaseType { get => "Base"; }
-        public static string HistoricalType { get => "Historical"; }
+        public static string HistoricalEventType { get => "Historical"; }
         public static string CustomEventType { get => "Custom"; }
         public static string DiscriminatorName { get => "EventType"; }
 
@@ -17,8 +17,8 @@ namespace Streetcode.DAL.Enums
         {
             switch (eventType)
             {
-                case EventType.Custom: return HistoricalType;
-                case EventType.Historical: return CustomEventType;
+                case EventType.Custom: return CustomEventType;
+                case EventType.Historical: return HistoricalEventType;
                 default: return EventBaseType;
             }
         }

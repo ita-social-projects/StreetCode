@@ -103,5 +103,5 @@ public class StreetcodeContent
     public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
 
     public List<Art>? Arts { get; set; } = new();
-    public List<Event.Event>? Events { get; set; } = new ();
+    public List<EventStreetcodes>? EventStreetcodes { get; set; } = new();
 }

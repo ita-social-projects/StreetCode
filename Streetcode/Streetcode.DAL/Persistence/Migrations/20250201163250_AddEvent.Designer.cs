@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20250120104934_AddEvent")]
+    [Migration("20250201163250_AddEvent")]
     partial class AddEvent
     {
         /// <inheritdoc />
@@ -25,21 +25,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("EventStreetcodeContent", b =>
-                {
-                    b.Property<int>("EventsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StreetcodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("EventsId", "StreetcodesId");
-
-                    b.HasIndex("StreetcodesId");
-
-                    b.ToTable("EventStreetcodes", (string)null);
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -328,6 +313,21 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator<string>("EventType").HasValue("Event");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventId", "StreetcodeId");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("EventStreetcodes");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>
@@ -1362,7 +1362,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Event.Event");
 
-                    b.Property<int>("TimelineItemId")
+                    b.Property<int?>("TimelineItemId")
                         .HasColumnType("int");
 
                     b.HasIndex("TimelineItemId");
@@ -1400,21 +1400,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("streetcodes", "streetcode");
 
                     b.HasDiscriminator().HasValue("streetcode-person");
-                });
-
-            modelBuilder.Entity("EventStreetcodeContent", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Event.Event", null)
-                        .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", null)
-                        .WithMany()
-                        .HasForeignKey("StreetcodesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1515,6 +1500,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeCoordinate");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Event.Event", "Event")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "StreetcodeContent")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("StreetcodeContent");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -1890,8 +1894,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", "TimelineItem")
                         .WithMany()
                         .HasForeignKey("TimelineItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("TimelineItem");
                 });
@@ -1899,6 +1902,11 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
                 {
                     b.Navigation("StreetcodeTagIndices");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.Event", b =>
+                {
+                    b.Navigation("EventStreetcodes");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
@@ -1948,6 +1956,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Arts");
 
                     b.Navigation("Coordinates");
+
+                    b.Navigation("EventStreetcodes");
 
                     b.Navigation("Facts");
 

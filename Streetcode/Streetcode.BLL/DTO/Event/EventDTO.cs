@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Event
 {
@@ -15,5 +16,6 @@ namespace Streetcode.BLL.DTO.Event
         public DateTime Date { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
+        public EventType EventType { get; set; }
     }
 }

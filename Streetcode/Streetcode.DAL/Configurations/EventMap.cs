@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Streetcode.DAL.Entities.Event;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Configurations
 {
@@ -15,14 +16,9 @@ namespace Streetcode.DAL.Configurations
         public void Configure(EntityTypeBuilder<Event> builder)
         {
             builder
-               .HasDiscriminator<string>("EventType")
-               .HasValue<HistoricalEvent>("Historical")
-               .HasValue<CustomEvent>("Custom");
-
-            builder
-                .HasMany(e => e.Streetcodes)
-                .WithMany(sc => sc.Events)
-                .UsingEntity(j => j.ToTable("EventStreetcodes"));
+               .HasDiscriminator<string>(EventTypeDiscriminators.DiscriminatorName)
+               .HasValue<HistoricalEvent>(EventTypeDiscriminators.HistoricalEventType)
+               .HasValue<CustomEvent>(EventTypeDiscriminators.CustomEventType);
         }
     }
 }

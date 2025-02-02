@@ -18,8 +18,6 @@ namespace Streetcode.BLL.Mapping.Event
             CreateMap<HistoricalEvent, HistoricalEventDTO>().ReverseMap();
             CreateMap<CustomEvent, CustomEventDTO>().ReverseMap();
             CreateMap<DAL.Entities.Event.Event, CreateUpdateEventDTO>().ReverseMap();
-            CreateMap<HistoricalEvent, CreateUpdateHistoricalEventDTO>().ReverseMap();
-            CreateMap<CustomEvent, CreateUpdateCustomEventDTO>().ReverseMap();
         }
     }
 }

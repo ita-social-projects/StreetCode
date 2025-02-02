@@ -50,8 +50,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                     return Result.Fail(new Error(captchaErrorMessage));
                 }
 
-                var user = await _userManager.FindByEmailAsync(request.UserLogin.Login) ??
-                await _userManager.FindByNameAsync(request.UserLogin.Login);
+                var user = await _userManager.FindByEmailAsync(request.UserLogin.Login);
                 bool isUserNull = user is null;
 
                 bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);

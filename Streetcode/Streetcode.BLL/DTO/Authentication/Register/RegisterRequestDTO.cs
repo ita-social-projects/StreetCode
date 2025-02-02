@@ -24,16 +24,6 @@ public class RegisterRequestDTO
     public string Email { get; set; } = null!;
 
     [Required]
-    [MaxLength(50, ErrorMessage = "UserName maximum length is 50")]
-    [DefaultValue(AuthConstants.Username)]
-    public string UserName { get; set; } = null!;
-
-    [Display(Name = "Phone Number")]
-    [Phone]
-    [DefaultValue(AuthConstants.PhoneNumber)]
-    public string? PhoneNumber { get; set; }
-
-    [Required]
     [MaxLength(30, ErrorMessage = "Password maximum length is 30")]
     [StrongPassword]
     [DefaultValue(AuthConstants.Password)]

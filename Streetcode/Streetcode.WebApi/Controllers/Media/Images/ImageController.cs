@@ -38,7 +38,6 @@ public class ImageController : BaseApiController
     }
 
     [HttpPost]
-    [Authorize(Roles = nameof(UserRole.Admin))]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDTO))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

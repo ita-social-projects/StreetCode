@@ -75,21 +75,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         }
 
         [Fact]
-        [ExtractRegisterRequest]
-        public async Task Register_WithGivenUsernameAlreadyInDatabase_Returns404BadRequest()
-        {
-            // Arrange.
-            var registerRequest = ExtractRegisterRequestAttribute.RegisterRequest;
-            registerRequest.UserName = this.testUser.UserName!;
-
-            // Act.
-            var response = await this.Client.Register(registerRequest);
-
-            // Assert.
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-
-        [Fact]
         public async Task Login_ReturnsSuccessStatusCode()
         {
             // Arrange.

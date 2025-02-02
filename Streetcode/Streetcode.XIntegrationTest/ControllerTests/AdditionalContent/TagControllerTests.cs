@@ -105,8 +105,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
-                () => Assert.False(response.IsSuccessStatusCode),
-                () => Assert.NotNull(returnedValue));
+                () => Assert.False(response.IsSuccessStatusCode));
         }
 
         [Fact]

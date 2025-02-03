@@ -29,13 +29,6 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
 
     public async Task<Result<IEnumerable<StreetcodeTagDto>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        if (request.StreetcodeId < 1)
-        {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTagByTheStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
-
         var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
             .GetAllAsync(
                 t => t.StreetcodeId == request.StreetcodeId,

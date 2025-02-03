@@ -27,19 +27,9 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
         public async Task<Result<IEnumerable<PartnerDto>>> Handle(GetPartnersToUpdateByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            var streetcode = await _repositoryWrapper.StreetcodeRepository
-                .GetSingleOrDefaultAsync(st => st.Id == request.StreetcodeId);
-
-            if (streetcode is null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var partners = await _repositoryWrapper.PartnersRepository
                 .GetAllAsync(
-                    predicate: p => p.Streetcodes.Any(sc => sc.Id == streetcode.Id),
+                    predicate: p => p.Streetcodes.Any(sc => sc.Id == request.StreetcodeId),
                     include: p => p.Include(pl => pl.PartnerSourceLinks));
 
             if (!partners.Any())

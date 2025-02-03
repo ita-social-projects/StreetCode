@@ -5,6 +5,7 @@ using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Team;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.DAL.Entities.Media.Images;
 
@@ -40,4 +41,5 @@ public class Image
 
     public News.News? News { get; set; }
     public TeamMember? TeamMember { get; set; }
+    public User? User { get; set; }
 }

@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Media.Audio.Update;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media;
 
@@ -21,7 +22,7 @@ public class AudioController : BaseApiController
         return HandleResult(await Mediator.Send(new GetAllAudiosQuery()));
     }
 
-    [HttpGet("{streetcodeId:int}")]
+    [HttpGet("{streetcodeId:int}")][ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDto))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

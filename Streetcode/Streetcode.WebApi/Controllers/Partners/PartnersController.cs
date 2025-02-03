@@ -12,6 +12,7 @@ using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.BLL.MediatR.Partners.Update;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Partners;
 
@@ -46,6 +47,7 @@ public class PartnersController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
@@ -53,6 +55,7 @@ public class PartnersController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDto>))]
     public async Task<IActionResult> GetPartnersToUpdateByStreetcodeId([FromRoute] int streetcodeId)
     {

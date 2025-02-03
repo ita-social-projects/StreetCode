@@ -103,38 +103,6 @@ public class GetParnerByStreetcodeIdTest
     }
 
     [Fact]
-    public async Task ShouldThrowError_IdNotExist()
-    {
-        // Arrange
-        var testStreetcodeContent = GetStreetcodeList()[0];
-        var expectedError = $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}";
-        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
-        {
-            if (args != null && args.Length > 0 && args[0] is int)
-            {
-                return new LocalizedString(key, $"Cannot find a partners by a streetcode id: {testStreetcodeContent.Id}");
-            }
-
-            return new LocalizedString(key, "Cannot find any partners with unknown Id");
-        });
-        this.mockRepository.Setup(x => x.StreetcodeRepository
-        .GetSingleOrDefaultAsync(
-            It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-            null))
-        .ReturnsAsync((StreetcodeContent?)null);
-
-        var handler = new GetPartnersByStreetcodeIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
-
-        // Act
-        var result = await handler.Handle(new GetPartnersByStreetcodeIdQuery(testStreetcodeContent.Id), CancellationToken.None);
-
-        // Assert
-        Assert.Multiple(
-            () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors[0].Message));
-    }
-
-    [Fact]
     public async Task ShouldReturnSuccessfully_EmptyList()
     {
         // Arrange

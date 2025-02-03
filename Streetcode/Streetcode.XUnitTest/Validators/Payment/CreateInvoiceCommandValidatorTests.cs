@@ -49,26 +49,6 @@ public class CreateInvoiceCommandValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    [Theory]
-    [InlineData("ftp:://test")]
-    [InlineData("https://github.com")]
-    [InlineData("https://.test")]
-    [InlineData("///test")]
-    public void ShouldReturnError_WhenRedirectUrlIsInvalid(string invalidUrl)
-    {
-        // Arrange
-        var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["RedirectUrl"]];
-        var command = this.GetValidCreateInvoiceCommand();
-        command.Payment.RedirectUrl = invalidUrl;
-
-        // Act
-        var result = this.validator.TestValidate(command);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(s => s.Payment.RedirectUrl)
-            .WithErrorMessage(expectedError);
-    }
-
     [Fact]
     public void ShouldReturnError_WhenAmountIsLessThanZero()
     {

@@ -10,7 +10,7 @@ public abstract class CreateUpdateNewsDto
     public string Title { get; set; } = null!;
 
     [Required(AllowEmptyStrings = false)]
-    [StringLength(15000, ErrorMessage = "Max Length is 15000")]
+    [StringLength(25000, ErrorMessage = "Max Length is 25000")]
     public string Text { get; set; } = null!;
     [Required]
     public int ImageId { get; set; }

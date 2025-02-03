@@ -26,12 +26,6 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 
     public async Task<Result<IEnumerable<StreetcodeCoordinateDto>>> Handle(GetCoordinatesByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        if ((await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId)) is null)
-        {
-            return Result.Fail(
-                new Error(_stringLocalizerCannotFind["CannotFindCoordinatesByStreetcodeId", request.StreetcodeId].Value));
-        }
-
         var coordinates = await _repositoryWrapper.StreetcodeCoordinateRepository
             .GetAllAsync(c => c.StreetcodeId == request.StreetcodeId);
 

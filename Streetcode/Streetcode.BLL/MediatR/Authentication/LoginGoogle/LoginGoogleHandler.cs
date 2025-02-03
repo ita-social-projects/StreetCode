@@ -9,6 +9,7 @@ using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 
@@ -51,11 +52,13 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
             {
                 user = new User
                 {
-                    UserName = payload.Email,
                     Email = payload.Email,
                     Name = payload.GivenName,
                     Surname = payload.FamilyName
                 };
+
+                var uniqueUserName = UserHelper.EmailToUserNameConverter(user);
+                user.UserName = uniqueUserName;
 
                 var registerResponse = await RegisterUserAsync(request, user, LoginProvider, payload.Subject, LoginProvider);
                 if (registerResponse.IsFailed)

@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.MediatR.Media.Art.GetAll;
 using Streetcode.BLL.MediatR.Media.Art.GetById;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Media.Images;
 
@@ -22,7 +23,7 @@ public class ArtController : BaseApiController
             return HandleResult(await Mediator.Send(new GetArtByIdQuery(id)));
     }
 
-    [HttpGet("{streetcodeId:int}")]
+    [HttpGet("{streetcodeId:int}")][ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDto>))]
     public async Task<IActionResult> GetArtsByStreetcodeId([FromRoute] int streetcodeId)
     {

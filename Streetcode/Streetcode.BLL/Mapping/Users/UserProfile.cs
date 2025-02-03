@@ -9,6 +9,10 @@ namespace Streetcode.BLL.Mapping.Users
         public UserProfile()
         {
             CreateMap<User, UserDto>().ReverseMap();
+
+            CreateMap<User, UserProfileDTO>().ReverseMap();
+
+            CreateMap<User, UpdateUserDTO>().ReverseMap();
         }
     }
 }

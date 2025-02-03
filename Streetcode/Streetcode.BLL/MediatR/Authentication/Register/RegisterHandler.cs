@@ -6,6 +6,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -32,6 +33,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
         public async Task<Result<RegisterResponseDto>> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
             User user = _mapper.Map<User>(request.registerRequestDTO);
+            user.UserName = UserHelper.EmailToUserNameConverter(user);
             string password = request.registerRequestDTO.Password;
 
             var uniqueResult = await IsUserUnique(user);

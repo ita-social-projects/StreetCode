@@ -25,6 +25,7 @@ public class TimelineItemController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [CompressResponse]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TimelineItemDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

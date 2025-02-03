@@ -1,21 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Streetcode.BLL.DTO.Users
+﻿namespace Streetcode.BLL.DTO.Users
 {
-    public class UserDto
+    public class UserDto : BaseUserDTO
     {
-        [Required]
-        [MaxLength(50)]
-        public string Name { get; set; } = null!;
-        [Required]
-        [MaxLength(50)]
-        public string Surname { get; set; } = null!;
-        [Required]
-        [EmailAddress]
+        public string PhoneNumber { get; set; } = null!;
         public string Email { get; set; } = null!;
-        [Required]
-        [MaxLength(20)]
-        public string UserName { get; set; } = null!;
-        public string Role { get; set; } = null!;
     }
 }

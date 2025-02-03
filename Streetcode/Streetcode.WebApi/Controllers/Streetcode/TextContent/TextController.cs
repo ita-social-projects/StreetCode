@@ -28,6 +28,7 @@ public class TextController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [CompressResponse]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TextDto))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

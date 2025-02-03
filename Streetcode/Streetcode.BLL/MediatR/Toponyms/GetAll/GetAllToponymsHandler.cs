@@ -2,7 +2,6 @@
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,13 +12,11 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ILoggerService _logger;
 
-    public GetAllToponymsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger)
+    public GetAllToponymsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _logger = logger;
     }
 
     public Task<Result<GetAllToponymsResponseDTO>> Handle(GetAllToponymsQuery query, CancellationToken cancellationToken)
@@ -34,8 +31,6 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
             FindStreetcodesWithMatchTitle(ref toponyms, filterRequest.Title);
         }
 
-        // int pagesAmount = ApplyPagination(ref toponyms, filterRequest.Amount, filterRequest.Page);
-
         var toponymDtos = _mapper.Map<IEnumerable<ToponymDTO>>(toponyms.AsEnumerable());
 
         var response = new GetAllToponymsResponseDTO
@@ -47,7 +42,7 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
         return Task.FromResult(Result.Ok(response));
     }
 
-    private void FindStreetcodesWithMatchTitle(
+    private static void FindStreetcodesWithMatchTitle(
         ref IQueryable<Toponym> toponyms,
         string title)
     {
@@ -58,18 +53,4 @@ public class GetAllToponymsHandler : IRequestHandler<GetAllToponymsQuery,
             .GroupBy(s => s.StreetName)
             .Select(g => g.First());
     }
-
-    // private int ApplyPagination(
-    //    ref IQueryable<Toponym> toponyms,
-    //    int amount,
-    //    int page)
-    // {
-    //    var totalPages = (int)Math.Ceiling(toponyms.Count() / (double)amount);
-
-    // toponyms = toponyms
-    //        .Skip((page - 1) * amount)
-    //        .Take(amount);
-
-    // return totalPages;
-    // }
 }

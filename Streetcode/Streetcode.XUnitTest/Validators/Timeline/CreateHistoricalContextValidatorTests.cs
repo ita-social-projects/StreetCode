@@ -12,16 +12,16 @@ namespace Streetcode.XUnitTest.Validators.Timeline;
 
 public class CreateHistoricalContextValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockFieldsLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly Mock<BaseHistoricalContextValidator> mockBaseValidator;
+    private readonly MockFieldNamesLocalizer _mockFieldsLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly Mock<BaseHistoricalContextValidator> _mockBaseValidator;
 
     public CreateHistoricalContextValidatorTests()
     {
-        this.mockFieldsLocalizer = new MockFieldNamesLocalizer();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockBaseValidator = new Mock<BaseHistoricalContextValidator>(this.mockValidationLocalizer, this.mockFieldsLocalizer);
-        this.mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()))
+        _mockFieldsLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockBaseValidator = new Mock<BaseHistoricalContextValidator>(_mockValidationLocalizer, _mockFieldsLocalizer);
+        _mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()))
             .Returns(new ValidationResult());
     }
 
@@ -29,7 +29,7 @@ public class CreateHistoricalContextValidatorTests
     public void ShouldCallBaseValidator_WhenValidated()
     {
         // Arrange
-        var createValidator = new CreateHistoricalContextValidator(this.mockBaseValidator.Object);
+        var createValidator = new CreateHistoricalContextValidator(_mockBaseValidator.Object);
         var createCommand = new CreateHistoricalContextCommand(new ()
         {
             Title = "Context",
@@ -40,6 +40,6 @@ public class CreateHistoricalContextValidatorTests
         createValidator.TestValidate(createCommand);
 
         // Assert
-        this.mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()), Times.Once);
+        _mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()), Times.Once);
     }
 }

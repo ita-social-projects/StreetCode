@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Team.TeamMembersLinks.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var createdTeamLink = _repository.TeamLinkRepository.Create(teamMemberLink);
+            var createdTeamLink = await _repository.TeamLinkRepository.CreateAsync(teamMemberLink);
 
             if (createdTeamLink is null)
             {

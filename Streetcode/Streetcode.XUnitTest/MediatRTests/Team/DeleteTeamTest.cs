@@ -48,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 () => Assert.True(result.IsSuccess));
 
             this.mockRepository.Verify(x => x.TeamRepository.Delete(It.Is<TeamMember>(x => x.Id == testTeam.Id)), Times.Once);
-            this.mockRepository.Verify(x => x.SaveChanges(), Times.Once);
+            this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         private void SetupSaveChangesException(string errorMessage)
         {
             this.mockRepository
-                .Setup(x => x.SaveChanges())
+                .Setup(x => x.SaveChangesAsync())
                 .Throws(new Exception(errorMessage));
         }
     }

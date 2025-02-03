@@ -103,7 +103,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             Assert.Equal(expectedError, result.Errors.Single().Message);
         }
 
-        private void SetupRepository(List<TransactionLink> returnList)
+        private void SetupRepository(List<TransactionLink>? returnList)
         {
             this.mockRepo.Setup(repo => repo.TransactLinksRepository.GetAllAsync(
                 It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,

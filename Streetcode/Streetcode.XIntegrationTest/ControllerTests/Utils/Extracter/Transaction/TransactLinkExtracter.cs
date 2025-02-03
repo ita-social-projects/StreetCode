@@ -1,9 +1,6 @@
-﻿using Streetcode.DAL.Entities.Transactions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Transactions;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Transaction
 {
@@ -12,6 +9,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Transactio
         public static TransactionLink Extract(int transactId)
         {
             TransactionLink transactionLink = TestDataProvider.GetTestData<TransactionLink>();
+
+            StreetcodeContent testStreetcodeContent = StreetcodeContentExtracter.Extract(
+                transactId,
+                transactId,
+                Guid.NewGuid().ToString());
+
+            transactionLink.StreetcodeId = testStreetcodeContent.Id;
             transactionLink.Id = transactId;
 
             return BaseExtracter.Extract<TransactionLink>(transactionLink, transact => transact.Id == transactId);

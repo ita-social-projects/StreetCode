@@ -15,7 +15,7 @@ public class Program
 
         var configuration = new ConfigurationBuilder()
             .SetBasePath(rootDirectory)
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")
             .Build();

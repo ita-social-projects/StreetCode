@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.SharedResource;
@@ -32,19 +33,19 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
             .MaximumLength(MaxLengthAboutYourself).WithMessage(localizer["MaxLength", fieldLocalizer["AboutYourself"], MaxLengthAboutYourself]);
 
         RuleFor(dto => dto.UserName)
-            .Matches(@"^[a-z0-9'-_]+$").WithMessage(localizer["NameFormat", fieldLocalizer["UserName"], MinLengthSurname])
+            .Matches(@"^[a-z0-9'\-_]+$").WithMessage(localizer["UserNameFormat"])
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["UserName"]])
             .MinimumLength(MinLengthName).WithMessage(localizer["MinLength", fieldLocalizer["UserName"], MinLengthUserName])
             .MaximumLength(MaxLengthName).WithMessage(localizer["MaxLength", fieldLocalizer["UserName"], MaxLengthUserName]);
 
         RuleFor(dto => dto.Name)
-            .Matches(@"^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'-]+$").WithMessage(localizer["NameFormat", fieldLocalizer["Name"], MinLengthSurname])
+            .Matches(@"^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'-]+$").WithMessage(localizer["NameFormat"])
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Name"]])
             .MinimumLength(MinLengthName).WithMessage(localizer["MinLength", fieldLocalizer["Name"], MinLengthName])
             .MaximumLength(MaxLengthName).WithMessage(localizer["MaxLength", fieldLocalizer["Name"], MaxLengthName]);
 
         RuleFor(dto => dto.Surname)
-            .Matches(@"^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'-]+$").WithMessage(localizer["SurnameFormat", fieldLocalizer["Surname"], MinLengthSurname])
+            .Matches(@"^[a-zA-Zа-яА-ЯґҐєЄіІїЇ'-]+$").WithMessage(localizer["SurnameFormat"])
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Surname"]])
             .MinimumLength(MinLengthSurname).WithMessage(localizer["MinLength", fieldLocalizer["Surname"], MinLengthSurname])
             .MaximumLength(MaxLengthSurname).WithMessage(localizer["MaxLength", fieldLocalizer["Surname"], MaxLengthSurname]);

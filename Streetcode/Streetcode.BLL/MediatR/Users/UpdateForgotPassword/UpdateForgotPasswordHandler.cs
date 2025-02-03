@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Users.ForgotPassword;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Users;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
 
@@ -18,7 +14,10 @@ public class UpdateForgotPasswordHandler : IRequestHandler<UpdateForgotPasswordC
     private readonly UserManager<User> _userManager;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-    public UpdateForgotPasswordHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, UserManager<User> userManager, IStringLocalizer<UserSharedResource> localizer)
+    public UpdateForgotPasswordHandler(
+        ILoggerService logger,
+        UserManager<User> userManager,
+        IStringLocalizer<UserSharedResource> localizer)
     {
         _logger = logger;
         _userManager = userManager;

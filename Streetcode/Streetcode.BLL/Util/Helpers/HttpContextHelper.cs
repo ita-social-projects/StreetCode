@@ -5,19 +5,19 @@ namespace Streetcode.BLL.Util.Helpers;
 
 public static class HttpContextHelper
 {
-    public static string? GetCurrentUserName(IHttpContextAccessor httpContextAccessor)
+    public static string GetCurrentUserName(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Identity?.Name;
+        return httpContextAccessor.HttpContext?.User?.Identity?.Name!;
     }
 
-    public static string? GetCurrentUserId(IHttpContextAccessor httpContextAccessor)
+    public static string GetCurrentUserId(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
     }
 
-    public static string? GetCurrentUserEmail(IHttpContextAccessor httpContextAccessor)
+    public static string GetCurrentUserEmail(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value!;
     }
 
     public static string? GetCurrentDomain(IHttpContextAccessor httpContextAccessor)

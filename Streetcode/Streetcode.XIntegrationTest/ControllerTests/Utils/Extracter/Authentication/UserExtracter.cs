@@ -11,6 +11,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
             User testUser = TestDataProvider.GetTestData<User>();
             testUser.Id = userId;
             testUser.UserName = userName;
+            testUser.NormalizedUserName = userName.ToUpper();
             testUser.PasswordHash = HashPassword(password, testUser);
             BaseExtracter.Extract<User>(testUser, user => user.Id == userId, false);
             if (roleNames.Length == 0)

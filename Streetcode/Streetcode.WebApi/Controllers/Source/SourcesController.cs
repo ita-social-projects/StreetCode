@@ -15,35 +15,35 @@ namespace Streetcode.WebApi.Controllers.Source;
 public class SourcesController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryWithNameDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CategoryWithNameDto>))]
     public async Task<IActionResult> GetAllNames()
     {
         return HandleResult(await Mediator.Send(new GetAllCategoryNamesQuery()));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllCategoriesResponseDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllCategoriesResponseDto))]
     public async Task<IActionResult> GetAllCategories([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
         return HandleResult(await Mediator.Send(new GetAllCategoriesQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SourceLinkCategoryDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SourceLinkCategoryDto))]
     public async Task<IActionResult> GetCategoryById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetCategoryByIdQuery(id)));
     }
 
     [HttpGet("{categoryId:int}&{streetcodeId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeCategoryContentDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeCategoryContentDto))]
     public async Task<IActionResult> GetCategoryContentByStreetcodeId([FromRoute] int streetcodeId, [FromRoute] int categoryId)
     {
         return HandleResult(await Mediator.Send(new GetCategoryContentByStreetcodeIdQuery(streetcodeId, categoryId)));
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SourceLinkCategoryDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SourceLinkCategoryDto>))]
     public async Task<IActionResult> GetCategoriesByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetCategoriesByStreetcodeIdQuery(streetcodeId)));
@@ -51,21 +51,21 @@ public class SourcesController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateSourceLinkCategoryDTO))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateSourceLinkCategoryDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryCreateDTO category)
+    public async Task<IActionResult> CreateCategory([FromBody] SourceLinkCategoryCreateDto category)
     {
         return HandleResult(await Mediator.Send(new CreateCategoryCommand(category)));
     }
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateSourceLinkCategoryDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateSourceLinkCategoryDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
 
-    public async Task<IActionResult> UpdateCategory([FromBody] UpdateSourceLinkCategoryDTO category)
+    public async Task<IActionResult> UpdateCategory([FromBody] UpdateSourceLinkCategoryDto category)
     {
         return HandleResult(await Mediator.Send(new UpdateCategoryCommand(category)));
     }

@@ -89,9 +89,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             };
         }
 
-        private static ImageDTO GetImageDTO()
+        private static ImageDto GetImageDTO()
         {
-            return new ImageDTO()
+            return new ImageDto()
             {
                 Id = 1,
                 BlobName = "fake_blob_name",
@@ -101,9 +101,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             };
         }
 
-        private static ImageFileBaseCreateDTO GetCreateImageDTO()
+        private static ImageFileBaseCreateDto GetCreateImageDTO()
         {
-            return new ImageFileBaseCreateDTO()
+            return new ImageFileBaseCreateDto()
             {
                 Title = "Title",
                 MimeType = "string",
@@ -119,11 +119,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Media.Images.Image testImage, ImageDTO testImageDTO)
+        private void SetupMapper(DAL.Entities.Media.Images.Image testImage, ImageDto testImageDTO)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.Media.Images.Image>(It.IsAny<ImageFileBaseCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.Media.Images.Image>(It.IsAny<ImageFileBaseCreateDto>()))
                 .Returns(testImage);
-            this.mockMapper.Setup(x => x.Map<ImageDTO>(It.IsAny<DAL.Entities.Media.Images.Image>()))
+            this.mockMapper.Setup(x => x.Map<ImageDto>(It.IsAny<DAL.Entities.Media.Images.Image>()))
                 .Returns(testImageDTO);
         }
 

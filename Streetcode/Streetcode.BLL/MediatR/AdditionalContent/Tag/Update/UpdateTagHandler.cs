@@ -10,7 +10,7 @@ using TagEntity = Streetcode.DAL.Entities.AdditionalContent.Tag;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 {
-	public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result<TagDTO>>
+	public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Result<TagDto>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 			_stringLocalizerFieldNames = stringLocalizerFieldNames;
 		}
 
-		public async Task<Result<TagDTO>> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
+		public async Task<Result<TagDto>> Handle(UpdateTagCommand request, CancellationToken cancellationToken)
 		{
 			var existedTag =
 				await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(x => x.Id == request.tag.Id);
@@ -62,7 +62,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.Update
 				_repositoryWrapper.TagRepository.Update(tagToUpdate);
 				await _repositoryWrapper.SaveChangesAsync();
 
-				return Result.Ok(_mapper.Map<TagDTO>(tagToUpdate));
+				return Result.Ok(_mapper.Map<TagDto>(tagToUpdate));
 			}
 			catch(Exception ex)
 			{

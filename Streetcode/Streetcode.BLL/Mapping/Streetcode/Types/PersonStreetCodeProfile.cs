@@ -11,10 +11,10 @@ public class PersonStreetcodeProfile : Profile
 {
     public PersonStreetcodeProfile()
     {
-        CreateMap<PersonStreetcode, PersonStreetcodeDTO>()
-            .IncludeBase<StreetcodeContent, StreetcodeDTO>().ReverseMap();
+        CreateMap<PersonStreetcode, PersonStreetcodeDto>()
+            .IncludeBase<StreetcodeContent, StreetcodeDto>().ReverseMap();
 
-        CreateMap<PersonStreetcode, StreetcodeCreateDTO>()
-            .IncludeBase<StreetcodeContent, StreetcodeCreateDTO>().ReverseMap();
+        CreateMap<PersonStreetcode, StreetcodeCreateDto>()
+            .IncludeBase<StreetcodeContent, StreetcodeCreateDto>().ReverseMap();
     }
 }

@@ -13,6 +13,6 @@ public abstract class PartnerCreateUpdateDto
     public string? TargetUrl { get; set; }
     public int LogoId { get; set; }
     public string? UrlTitle { get; set; }
-    public List<CreatePartnerSourceLinkDTO>? PartnerSourceLinks { get; set; }
-    public List<StreetcodeShortDTO> Streetcodes { get; set; } = new List<StreetcodeShortDTO>();
+    public List<CreatePartnerSourceLinkDto>? PartnerSourceLinks { get; set; }
+    public List<StreetcodeShortDto> Streetcodes { get; set; } = new List<StreetcodeShortDto>();
 }

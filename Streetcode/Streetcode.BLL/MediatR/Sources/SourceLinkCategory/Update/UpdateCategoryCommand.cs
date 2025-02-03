@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.Sources;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 {
-    public record UpdateCategoryCommand(UpdateSourceLinkCategoryDTO Category)
-        : IRequest<Result<UpdateSourceLinkCategoryDTO>>;
+    public record UpdateCategoryCommand(UpdateSourceLinkCategoryDto Category)
+        : IRequest<Result<UpdateSourceLinkCategoryDto>>;
 }

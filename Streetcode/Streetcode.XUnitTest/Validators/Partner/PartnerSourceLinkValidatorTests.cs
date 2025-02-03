@@ -120,9 +120,9 @@ public class PartnerSourceLinkValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private CreatePartnerSourceLinkDTO GetValidSourceLink()
+    private CreatePartnerSourceLinkDto GetValidSourceLink()
     {
-        return new CreatePartnerSourceLinkDTO()
+        return new CreatePartnerSourceLinkDto()
         {
             Id = 1,
             LogoType = LogoType.Facebook,

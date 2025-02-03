@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Sources
 {
-    public class GetAllCategoriesResponseDTO
+    public class GetAllCategoriesResponseDto
     {
         public int TotalAmount { get; set; }
-        public IEnumerable<SourceLinkCategoryDTO> Categories { get; set; } = new List<SourceLinkCategoryDTO>();
+        public IEnumerable<SourceLinkCategoryDto> Categories { get; set; } = new List<SourceLinkCategoryDto>();
     }
 }

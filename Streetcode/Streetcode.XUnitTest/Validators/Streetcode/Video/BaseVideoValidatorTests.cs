@@ -82,9 +82,9 @@ public class BaseVideoValidatorTests
         result.ShouldNotHaveValidationErrorFor(dto => dto.Url);
     }
 
-    public static VideoCreateUpdateDTO GetValidVideo()
+    public static VideoCreateUpdateDto GetValidVideo()
     {
-        return new VideoCreateDTO()
+        return new VideoCreateDto()
         {
             Description = "Description Test",
             Url = "https://www.youtube.com/",

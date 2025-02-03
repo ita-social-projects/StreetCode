@@ -17,12 +17,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
             return await this.SendQuery($"/getArtsByStreetcodeId/{id}", authToken);
         }
 
-        public async Task<RestResponse> UpdateAsync(StreetcodeUpdateDTO updateStreetcodeDTO, string authToken = "")
+        public async Task<RestResponse> UpdateAsync(StreetcodeUpdateDto updateStreetcodeDTO, string authToken = "")
         {
             return await this.SendCommand("/Update", Method.Put, updateStreetcodeDTO, authToken);
         }
 
-        public async Task<RestResponse> CreateAsync(StreetcodeCreateDTO createStreetcodeDTO, string authToken = "")
+        public async Task<RestResponse> CreateAsync(StreetcodeCreateDto createStreetcodeDTO, string authToken = "")
         {
             return await this.SendCommand("/Create", Method.Post, createStreetcodeDTO, authToken);
         }

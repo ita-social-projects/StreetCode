@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<TeamMemberLinkDTO>>(result.ValueOrDefault));
+                () => Assert.IsType<List<TeamMemberLinkDto>>(result.ValueOrDefault));
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
 
-            this.mockMapper.Verify(x => x.Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()), Times.Never);
+            this.mockMapper.Verify(x => x.Map<IEnumerable<TeamMemberLinkDto>>(It.IsAny<IEnumerable<TeamMemberLink>>()), Times.Never);
         }
 
         private static IEnumerable<TeamMemberLink> GetTeamMemberLinksList()
@@ -104,15 +104,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             return null;
         }
 
-        private static List<TeamMemberLinkDTO> GetListTeamMemberLinkDTO()
+        private static List<TeamMemberLinkDto> GetListTeamMemberLinkDTO()
         {
-            var partnersDTO = new List<TeamMemberLinkDTO>
+            var partnersDTO = new List<TeamMemberLinkDto>
             {
-                new TeamMemberLinkDTO
+                new TeamMemberLinkDto
                 {
                     Id = 1,
                 },
-                new TeamMemberLinkDTO
+                new TeamMemberLinkDto
                 {
                     Id = 2,
                 },
@@ -120,9 +120,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             return partnersDTO;
         }
 
-        private void SetupMapMethod(IEnumerable<TeamMemberLinkDTO> teamMemberLinksDTO)
+        private void SetupMapMethod(IEnumerable<TeamMemberLinkDto> teamMemberLinksDTO)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberLinkDTO>>(It.IsAny<IEnumerable<TeamMemberLink>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberLinkDto>>(It.IsAny<IEnumerable<TeamMemberLink>>()))
                 .Returns(teamMemberLinksDTO);
         }
 

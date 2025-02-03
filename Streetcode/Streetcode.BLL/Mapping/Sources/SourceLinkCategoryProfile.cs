@@ -9,14 +9,14 @@ public class SourceLinkCategoryProfile : Profile
 {
     public SourceLinkCategoryProfile()
     {
-        CreateMap<SourceLinkCategory, SourceLinkCategoryDTO>()
+        CreateMap<SourceLinkCategory, SourceLinkCategoryDto>()
             .ForMember(dto => dto.Image, c => c.MapFrom(b => b.Image))
             .ReverseMap();
-        CreateMap<SourceLinkCategory, CategoryWithNameDTO>().ReverseMap();
-        CreateMap<SourceLinkCategory, ImageDTO>()
+        CreateMap<SourceLinkCategory, CategoryWithNameDto>().ReverseMap();
+        CreateMap<SourceLinkCategory, ImageDto>()
             .ForMember(dest => dest.MimeType, opt => opt.MapFrom(src => src.Image!.MimeType))
             .ForMember(dest => dest.BlobName, opt => opt.MapFrom(src => src.Image!.BlobName));
-        CreateMap<SourceLinkCategoryDTO, SourceLinkCategory>()
+        CreateMap<SourceLinkCategoryDto, SourceLinkCategory>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
             .ForMember(dest => dest.Title, opt => opt.MapFrom(dto => dto.Title))
@@ -24,8 +24,8 @@ public class SourceLinkCategoryProfile : Profile
             .ForMember(dest => dest.StreetcodeCategoryContents, opt => opt.Ignore())
             .ForPath(dest => dest.Image!.Streetcodes, c => c.Ignore())
             .ForMember(dest => dest.ImageId, opt => opt.MapFrom(dto => dto.ImageId));
-        CreateMap<CreateSourceLinkCategoryDTO, SourceLinkCategory>().ReverseMap();
-        CreateMap<UpdateSourceLinkCategoryDTO, SourceLinkCategory>().ReverseMap();
-        CreateMap<SourceLinkCategoryCreateDTO, SourceLinkCategory>();
+        CreateMap<CreateSourceLinkCategoryDto, SourceLinkCategory>().ReverseMap();
+        CreateMap<UpdateSourceLinkCategoryDto, SourceLinkCategory>().ReverseMap();
+        CreateMap<SourceLinkCategoryCreateDto, SourceLinkCategory>();
     }
 }

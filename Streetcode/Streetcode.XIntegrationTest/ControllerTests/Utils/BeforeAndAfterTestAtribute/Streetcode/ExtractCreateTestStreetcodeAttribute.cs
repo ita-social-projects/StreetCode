@@ -26,11 +26,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class ExtractCreateTestStreetcodeAttribute : BeforeAfterTestAttribute
     {
-        public static StreetcodeCreateDTO StreetcodeForTest { get; set; } = null!;
+        public static StreetcodeCreateDto StreetcodeForTest { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
-            StreetcodeForTest = new StreetcodeCreateDTO
+            StreetcodeForTest = new StreetcodeCreateDto
             {
                 Index = STREETCODE_CREATE_INDEX,
                 FirstName = "TestFirstName",
@@ -46,27 +46,27 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
                 ViewCount = 1,
                 Teaser = "Test Teaser",
-                Text = new TextCreateDTO
+                Text = new TextCreateDto
                 {
                     Title = "TestTextTitle",
                     TextContent = "TestTextContent",
                     AdditionalText = "TestAdditionalText",
                 },
-                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
+                Toponyms = new List<StreetcodeToponymCreateUpdateDto>(),
                 ImagesIds = new List<int>(),
-                Tags = new List<StreetcodeTagDTO>(),
-                Subtitles = new List<SubtitleCreateDTO>(),
-                Facts = new List<StreetcodeFactCreateDTO>(),
-                Videos = new List<VideoCreateDTO>(),
+                Tags = new List<StreetcodeTagDto>(),
+                Subtitles = new List<SubtitleCreateDto>(),
+                Facts = new List<StreetcodeFactCreateDto>(),
+                Videos = new List<VideoCreateDto>(),
                 Partners = new List<int>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
-                StatisticRecords = new List<StatisticRecordDTO>(),
-                StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
-                Coordinates = new List<StreetcodeCoordinateDTO>(),
+                Arts = new List<ArtCreateUpdateDto>(),
+                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDto>(),
+                StatisticRecords = new List<StatisticRecordDto>(),
+                StreetcodeCategoryContents = new List<CategoryContentCreateDto>(),
+                Coordinates = new List<StreetcodeCoordinateDto>(),
                 ImagesDetails = new List<ImageDetailsDto>(),
-                TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
-                RelatedFigures = new List<RelatedFigureShortDTO>(),
+                TimelineItems = new List<TimelineItemCreateUpdateDto>(),
+                RelatedFigures = new List<RelatedFigureShortDto>(),
             };
         }
 

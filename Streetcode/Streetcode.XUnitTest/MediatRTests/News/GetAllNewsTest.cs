@@ -125,11 +125,11 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             return PaginationResponse<DAL.Entities.News.News>.Create(news.AsQueryable(), pageNumber, pageSize);
         }
 
-        private static IEnumerable<NewsDTO> GetNewsDTOs(ushort count)
+        private static IEnumerable<NewsDto> GetNewsDTOs(ushort count)
         {
             var newsDTO = Enumerable
                 .Range(0, count)
-                .Select((news, index) => new NewsDTO() { Id = index });
+                .Select((news, index) => new NewsDto() { Id = index });
 
             return newsDTO;
         }
@@ -139,10 +139,10 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             return new HeaderDictionary();
         }
 
-        private void SetupMockMapper(IEnumerable<NewsDTO> mapperReturnCollection)
+        private void SetupMockMapper(IEnumerable<NewsDto> mapperReturnCollection)
         {
             this.mockMapper
-                .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
+                .Setup(x => x.Map<IEnumerable<NewsDto>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
                 .Returns(mapperReturnCollection);
         }
 
@@ -156,7 +156,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         private void SetupMockObjects(
             ushort pageNumber,
             ushort pageSize,
-            IEnumerable<NewsDTO> mapperReturnCollection,
+            IEnumerable<NewsDto> mapperReturnCollection,
             IHeaderDictionary headersCollection)
         {
             this.SetupMockMapper(mapperReturnCollection);

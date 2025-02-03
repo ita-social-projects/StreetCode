@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Coordinate.Create;
 
-public record CreateCoordinateCommand(StreetcodeCoordinateDTO StreetcodeCoordinate)
+public record CreateCoordinateCommand(StreetcodeCoordinateDto StreetcodeCoordinate)
     : IRequest<Result<Unit>>;

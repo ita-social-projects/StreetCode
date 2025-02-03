@@ -42,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
                 )).ReturnsAsync(GetExistingToponymList());
 
             this.mockMapper.Setup(x => x
-            .Map<IEnumerable<ToponymDTO>>(It.IsAny<IEnumerable<Toponym>>()))
+            .Map<IEnumerable<ToponymDto>>(It.IsAny<IEnumerable<Toponym>>()))
             .Returns(GetToponymDTOList());
 
             int streetcodeId = 1;
@@ -76,8 +76,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
 
             // Assert
             Assert.Multiple(
-               () => Assert.IsType<Result<IEnumerable<ToponymDTO>>>(result),
-               () => Assert.IsAssignableFrom<IEnumerable<ToponymDTO>>(result.Value),
+               () => Assert.IsType<Result<IEnumerable<ToponymDto>>>(result),
+               () => Assert.IsAssignableFrom<IEnumerable<ToponymDto>>(result.Value),
                () => Assert.Empty(result.Value));
         }
 
@@ -93,9 +93,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             };
         }
 
-        public static List<ToponymDTO> GetToponymDTOList() {
-            return new List<ToponymDTO> {
-                new ToponymDTO
+        public static List<ToponymDto> GetToponymDTOList() {
+            return new List<ToponymDto> {
+                new ToponymDto
                 {
                     Id = 1,
                     Oblast = "Test oblast",

@@ -1,13 +1,13 @@
 ﻿namespace Streetcode.BLL.DTO.News
 {
-    public class NewsDTOWithURLs
+    public class NewsDtoWithUrls
     {
-        public NewsDTO News { get; set; } = new NewsDTO();
+        public NewsDto News { get; set; } = new NewsDto();
 
         public string? PrevNewsUrl { get; set; }
 
         public string? NextNewsUrl { get; set; }
 
-        public RandomNewsDTO? RandomNews { get; set; } = new RandomNewsDTO();
+        public RandomNewsDto? RandomNews { get; set; } = new RandomNewsDto();
     }
 }

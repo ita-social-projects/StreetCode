@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.Delete
 {
-    public class DeletePartnerHandler : IRequestHandler<DeletePartnerQuery, Result<PartnerDTO>>
+    public class DeletePartnerHandler : IRequestHandler<DeletePartnerQuery, Result<PartnerDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<PartnerDTO>> Handle(DeletePartnerQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PartnerDto>> Handle(DeletePartnerQuery request, CancellationToken cancellationToken)
         {
             var partner = await _repositoryWrapper.PartnersRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (partner == null)
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
                 try
                 {
                     _repositoryWrapper.SaveChanges();
-                    return Result.Ok(_mapper.Map<PartnerDTO>(partner));
+                    return Result.Ok(_mapper.Map<PartnerDto>(partner));
                 }
                 catch(Exception ex)
                 {

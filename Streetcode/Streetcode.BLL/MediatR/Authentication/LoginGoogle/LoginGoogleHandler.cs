@@ -14,7 +14,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Authentication.LoginGoogle;
 
-public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<LoginResponseDTO>>
+public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<LoginResponseDto>>
 {
     private const string LoginProvider = "Google";
     private readonly IConfiguration _configuration;
@@ -37,7 +37,7 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
         _userManager = userManager;
     }
 
-    public async Task<Result<LoginResponseDTO>> Handle(LoginGoogleQuery request, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponseDto>> Handle(LoginGoogleQuery request, CancellationToken cancellationToken)
     {
         try
         {
@@ -97,11 +97,11 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
             var jwtToken = await _tokenService.GenerateAccessTokenAsync(user);
             var stringToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
-            var userDTO = _mapper.Map<UserDTO>(user);
+            var userDTO = _mapper.Map<UserDto>(user);
             string? userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
             userDTO.Role = userRole ?? "User";
 
-            var response = new LoginResponseDTO()
+            var response = new LoginResponseDto()
             {
                 User = userDTO,
                 AccessToken = stringToken,

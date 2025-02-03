@@ -16,18 +16,18 @@ public class StreetcodeProfile : Profile
 {
     public StreetcodeProfile()
     {
-        CreateMap<StreetcodeContent, StreetcodeDTO>()
+        CreateMap<StreetcodeContent, StreetcodeDto>()
             .ForMember(x => x.StreetcodeType, conf => conf.MapFrom(s => GetStreetcodeType(s)))
             .ForMember(x => x.CreatedBy, conf => conf.MapFrom<UserNameResolver>())
             .ReverseMap();
-        CreateMap<StreetcodeContent, StreetcodeShortDTO>().ReverseMap();
-        CreateMap<StreetcodeContent, StreetcodeMainPageDTO>()
+        CreateMap<StreetcodeContent, StreetcodeShortDto>().ReverseMap();
+        CreateMap<StreetcodeContent, StreetcodeMainPageDto>()
              .ForPath(dto => dto.Text, conf => conf
                 .MapFrom(e => e.Text!.Title))
              .ForPath(dto => dto.ImageId, conf => conf
                 .MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
 
-        CreateMap<StreetcodeCreateDTO, StreetcodeContent>()
+        CreateMap<StreetcodeCreateDto, StreetcodeContent>()
                 .ForMember(x => x.Arts, conf => conf.Ignore())
                 .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
                 .ForMember(x => x.Tags, conf => conf.Ignore())
@@ -39,7 +39,7 @@ public class StreetcodeProfile : Profile
                 .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
                 .ReverseMap();
 
-        CreateMap<StreetcodeUpdateDTO, StreetcodeContent>()
+        CreateMap<StreetcodeUpdateDto, StreetcodeContent>()
             .ForMember(x => x.Text, conf => conf.Ignore())
             .ForMember(x => x.Tags, conf => conf.Ignore())
             .ForMember(x => x.Partners, conf => conf.Ignore())
@@ -53,12 +53,12 @@ public class StreetcodeProfile : Profile
             .ForPath(x => x.TransactionLink!.Url, conf => conf.MapFrom(x => x.ARBlockUrl))
               .ReverseMap();
 
-        CreateMap<StreetcodeUpdateDTO, PersonStreetcode>()
-            .IncludeBase<StreetcodeUpdateDTO, StreetcodeContent>()
+        CreateMap<StreetcodeUpdateDto, PersonStreetcode>()
+            .IncludeBase<StreetcodeUpdateDto, StreetcodeContent>()
             .ReverseMap();
 
-        CreateMap<StreetcodeUpdateDTO, EventStreetcode>()
-            .IncludeBase<StreetcodeUpdateDTO, StreetcodeContent>()
+        CreateMap<StreetcodeUpdateDto, EventStreetcode>()
+            .IncludeBase<StreetcodeUpdateDto, StreetcodeContent>()
             .ReverseMap();
     }
 

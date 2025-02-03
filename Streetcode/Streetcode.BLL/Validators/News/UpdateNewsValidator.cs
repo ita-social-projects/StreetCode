@@ -27,7 +27,7 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
             .MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
     }
 
-    private async Task<bool> BeUniqueTitle(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueTitle(UpdateNewsDto dto, CancellationToken cancellationToken)
     {
         var existingNewsByTitle = await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(n => n.Title == dto.Title);
 
@@ -39,7 +39,7 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         return true;
     }
 
-    private async Task<bool> BeUniqueText(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueText(UpdateNewsDto dto, CancellationToken cancellationToken)
     {
         var existingNewsByText = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.Text == dto.Text);
 
@@ -51,7 +51,7 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         return true;
     }
 
-    private async Task<bool> BeUniqueUrl(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueUrl(UpdateNewsDto dto, CancellationToken cancellationToken)
     {
         var existingNewsByUrl = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.URL == dto.URL);
 
@@ -63,7 +63,7 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         return existingNewsByUrl is null;
     }
 
-    private async Task<bool> BeUniqueImageId(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueImageId(UpdateNewsDto dto, CancellationToken cancellationToken)
     {
         var existingNewsBuImageId = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.ImageId == dto.ImageId);
 

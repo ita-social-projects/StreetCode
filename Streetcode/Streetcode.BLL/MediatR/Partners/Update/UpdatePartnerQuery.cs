@@ -6,6 +6,6 @@ using Streetcode.BLL.DTO.Partners.Update;
 
 namespace Streetcode.BLL.MediatR.Partners.Update
 {
-  public record UpdatePartnerQuery(UpdatePartnerDTO Partner)
-        : IRequest<Result<PartnerDTO>>;
+  public record UpdatePartnerQuery(UpdatePartnerDto Partner)
+        : IRequest<Result<PartnerDto>>;
 }

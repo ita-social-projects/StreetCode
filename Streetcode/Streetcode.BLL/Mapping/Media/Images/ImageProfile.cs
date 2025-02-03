@@ -9,16 +9,16 @@ public class ImageProfile : Profile
 {
     public ImageProfile()
     {
-        CreateMap<Image, ImageDTO>().ReverseMap();
-        CreateMap<ImageDTOCreateEntity, Image>();
+        CreateMap<Image, ImageDto>().ReverseMap();
+        CreateMap<ImageDtoCreateEntity, Image>();
 
-        CreateMap<ImageFileBaseCreateDTO, Image>();
+        CreateMap<ImageFileBaseCreateDto, Image>();
 
-        CreateMap<ImageFileBaseUpdateDTO, Image>();
+        CreateMap<ImageFileBaseUpdateDto, Image>();
 
-        CreateMap<ImageUpdateDTO, Image>();
+        CreateMap<ImageUpdateDto, Image>();
 
-        CreateMap<ImageUpdateDTO, StreetcodeImage>()
+        CreateMap<ImageUpdateDto, StreetcodeImage>()
             .ForMember(sim => sim.ImageId, opt => opt.MapFrom(siu => siu.Id))
             .ForMember(sim => sim.Image, opt => opt.MapFrom(src => null as Image))
             .ForMember(sim => sim.Streetcode, opt => opt.MapFrom(src => null as StreetcodeContent));

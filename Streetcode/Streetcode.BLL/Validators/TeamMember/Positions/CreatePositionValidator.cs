@@ -23,7 +23,7 @@ public class CreatePositionValidator : AbstractValidator<CreatePositionQuery>
             .WithMessage(localizer["MustBeUnique", fieldLocalizer["Position"]]);
     }
 
-    private async Task<bool> BeUniqueAsync(PositionCreateDTO position, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueAsync(PositionCreateDto position, CancellationToken cancellationToken)
     {
         var existingPosition = await _repositoryWrapper.PositionRepository.GetFirstOrDefaultAsync(j => j.Position == position.Position);
         return existingPosition == null;

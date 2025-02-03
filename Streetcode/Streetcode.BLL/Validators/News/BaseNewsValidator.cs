@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.News;
 
-public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
+public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDto>
 {
     public const int TitleMaxLength = 100;
     public const int TextMaxLength = 15000;

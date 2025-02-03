@@ -16,22 +16,22 @@ namespace Streetcode.WebApi.Controllers.Authentication
     public class AuthController : BaseApiController
     {
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDto))]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDTO)
         {
             return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RegisterResponseDTO))]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerDTO)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RegisterResponseDto))]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerDTO)
         {
             return HandleResult(await Mediator.Send(new RegisterQuery(registerDTO)));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefreshTokenResponceDTO))]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO token)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefreshTokenResponceDto))]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto token)
         {
             return HandleResult(await Mediator.Send(new RefreshTokenQuery(token)));
         }
@@ -59,7 +59,7 @@ namespace Streetcode.WebApi.Controllers.Authentication
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDto))]
         public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
         {
             var result = await Mediator.Send(new LoginGoogleQuery(idToken));

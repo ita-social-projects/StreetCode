@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Streetcode.BLL.DTO.News;
 
-public abstract class CreateUpdateNewsDTO
+public abstract class CreateUpdateNewsDto
 {
     [Required(AllowEmptyStrings = false)]
     [StringLength(100, ErrorMessage = "Max Length is 100")]

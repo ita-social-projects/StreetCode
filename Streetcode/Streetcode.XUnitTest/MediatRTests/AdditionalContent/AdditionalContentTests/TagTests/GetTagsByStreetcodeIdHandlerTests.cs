@@ -59,16 +59,16 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             },
         };
 
-        private readonly List<StreetcodeTagDTO> tagDTOs = new List<StreetcodeTagDTO>()
+        private readonly List<StreetcodeTagDto> tagDTOs = new List<StreetcodeTagDto>()
         {
-            new StreetcodeTagDTO
+            new StreetcodeTagDto
             {
                 Id = 1,
                 Title = "title",
                 IsVisible = true,
                 Index = 1,
             },
-            new StreetcodeTagDTO
+            new StreetcodeTagDto
             {
                 Id = 2,
                 Title = "title",
@@ -99,7 +99,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<StreetcodeTagDTO>>(result.Value),
+                () => Assert.IsType<List<StreetcodeTagDto>>(result.Value),
                 () => Assert.NotEmpty(result.Value));
         }
 
@@ -116,8 +116,8 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<StreetcodeTagDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<StreetcodeTagDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<StreetcodeTagDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<StreetcodeTagDto>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
 
@@ -147,9 +147,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 .ReturnsAsync(returnList);
         }
 
-        private void SetupMapper(List<StreetcodeTagDTO> returnList)
+        private void SetupMapper(List<StreetcodeTagDto> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeTagDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

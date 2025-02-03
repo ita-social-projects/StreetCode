@@ -86,9 +86,9 @@ public class StreetcodeToponymValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private static StreetcodeToponymCreateUpdateDTO GetValidToponym()
+    private static StreetcodeToponymCreateUpdateDto GetValidToponym()
     {
-        return new StreetcodeToponymCreateUpdateDTO()
+        return new StreetcodeToponymCreateUpdateDto()
         {
             StreetcodeId = 1,
             StreetName = "StreetName Test",

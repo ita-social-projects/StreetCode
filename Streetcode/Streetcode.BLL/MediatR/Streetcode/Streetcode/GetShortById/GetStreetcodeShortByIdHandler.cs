@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 {
-    public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortByIdQuery, Result<StreetcodeShortDTO>>
+    public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortByIdQuery, Result<StreetcodeShortDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<StreetcodeShortDto>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
         {
             var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(st => st.Id == request.id);
 
@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var streetcodeShortDTO = _mapper.Map<StreetcodeShortDTO>(streetcode);
+            var streetcodeShortDTO = _mapper.Map<StreetcodeShortDto>(streetcode);
 
             if(streetcodeShortDTO == null)
             {

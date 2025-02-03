@@ -4,7 +4,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Timeline.Update
 {
-    public class TimelineItemCreateUpdateDTO : IModelState
+    public class TimelineItemCreateUpdateDto : IModelState
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
@@ -12,6 +12,6 @@ namespace Streetcode.BLL.DTO.Timeline.Update
         public DateTime Date { get; set; }
         public DateViewPattern DateViewPattern { get; set; }
         public ModelState ModelState { get; set; } = ModelState.Updated;
-        public IEnumerable<HistoricalContextCreateUpdateDTO> HistoricalContexts { get; set; } = new List<HistoricalContextCreateUpdateDTO>();
+        public IEnumerable<HistoricalContextCreateUpdateDto> HistoricalContexts { get; set; } = new List<HistoricalContextCreateUpdateDto>();
     }
 }

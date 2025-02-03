@@ -38,8 +38,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             this.mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
             this.mockCache = new Mock<ICacheService>();
             this.mockCache
-                .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDTO>>>>>(), It.IsAny<TimeSpan>()))
-                .Returns<string, Func<Task<Result<IEnumerable<ImageDTO>>>>, TimeSpan>((key, func, timeSpan) =>
+                .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDto>>>>>(), It.IsAny<TimeSpan>()))
+                .Returns<string, Func<Task<Result<IEnumerable<ImageDto>>>>, TimeSpan>((key, func, timeSpan) =>
                 {
                     return func();
                 });
@@ -51,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var testStreetcode = new StreetcodeContent();
-            var testStreetcodeDTO = new StreetcodeUpdateDTO();
+            var testStreetcodeDTO = new StreetcodeUpdateDto();
             string expectedErrorMessage = "An error occurred while updating a streetcode";
             int testSaveChangesSuccess = 1;
 

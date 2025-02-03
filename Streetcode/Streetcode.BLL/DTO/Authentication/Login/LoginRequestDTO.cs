@@ -4,7 +4,7 @@ using Streetcode.BLL.Constants.Authentication;
 
 namespace Streetcode.BLL.DTO.Authentication.Login;
 
-public class LoginRequestDTO
+public class LoginRequestDto
 {
     [Required]
     [EmailAddress]

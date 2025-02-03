@@ -113,9 +113,9 @@ public class EmailTests
             .WithErrorMessage(expectedError);
     }
 
-    private EmailDTO GetValidEmailDto()
+    private EmailDto GetValidEmailDto()
     {
-        return new EmailDTO()
+        return new EmailDto()
         {
             From = "test@gmail.com",
             Token = "token",

@@ -165,7 +165,7 @@ public class AudioTests
         // Arrange
         var baseValidator =
             new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDto>>()))
             .Returns(new ValidationResult());
         var createValidator = new CreateAudioValidator(baseValidator.Object);
         var createCommand = new CreateAudioCommand(this.GetValidAudioFile());
@@ -174,7 +174,7 @@ public class AudioTests
         createValidator.TestValidate(createCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDto>>()), Times.Once);
     }
 
     [Fact]
@@ -183,10 +183,10 @@ public class AudioTests
         // Arrange
         var baseValidator =
             new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDto>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateAudioValidator(baseValidator.Object);
-        var updateCommand = new UpdateAudioCommand(new AudioFileBaseUpdateDTO()
+        var updateCommand = new UpdateAudioCommand(new AudioFileBaseUpdateDto()
         {
             Id = 1,
             Title = "New Title",
@@ -199,12 +199,12 @@ public class AudioTests
         updateValidator.TestValidate(updateCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDto>>()), Times.Once);
     }
 
-    private AudioFileBaseCreateDTO GetValidAudioFile()
+    private AudioFileBaseCreateDto GetValidAudioFile()
     {
-        return new AudioFileBaseCreateDTO()
+        return new AudioFileBaseCreateDto()
         {
             Title = "Test Title",
             BaseFormat = "sdufhu2374jdwjfs03",

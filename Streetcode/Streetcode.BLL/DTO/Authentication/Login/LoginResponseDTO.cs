@@ -2,9 +2,9 @@
 
 namespace Streetcode.BLL.DTO.Authentication.Login
 {
-    public class LoginResponseDTO
+    public class LoginResponseDto
     {
-        public UserDTO User { get; set; } = null!;
+        public UserDto User { get; set; } = null!;
         public string AccessToken { get; set; } = null!;
         public string RefreshToken { get; set; } = null!;
     }

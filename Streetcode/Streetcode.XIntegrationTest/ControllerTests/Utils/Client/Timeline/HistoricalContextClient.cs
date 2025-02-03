@@ -16,18 +16,18 @@ public class HistoricalContextClient : StreetcodeRelatedBaseClient
         return await this.SendQuery($"/GetByTitle/{title}", authToken);
     }
 
-    public async Task<RestResponse> UpdateAsync(HistoricalContextDTO updateTagDTO, string authToken = "")
+    public async Task<RestResponse> UpdateAsync(HistoricalContextDto updateTagDTO, string authToken = "")
     {
         return await this.SendCommand("/Update", Method.Put, updateTagDTO, authToken);
     }
 
-    public async Task<RestResponse> CreateAsync(HistoricalContextDTO createTagDTO, string authToken = "")
+    public async Task<RestResponse> CreateAsync(HistoricalContextDto createTagDTO, string authToken = "")
     {
         return await this.SendCommand("/Create", Method.Post, createTagDTO, authToken);
     }
 
     public async Task<RestResponse> Delete(int id, string authToken = "")
     {
-        return await this.SendCommand($"/Delete/{id}", Method.Delete, new HistoricalContextDTO(), authToken);
+        return await this.SendCommand($"/Delete/{id}", Method.Delete, new HistoricalContextDto(), authToken);
     }
 }

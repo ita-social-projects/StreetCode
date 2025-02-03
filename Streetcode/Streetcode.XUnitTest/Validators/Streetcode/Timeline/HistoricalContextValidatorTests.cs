@@ -82,9 +82,9 @@ public class HistoricalContextValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private static HistoricalContextCreateUpdateDTO GetValidHistoricalContext()
+    private static HistoricalContextCreateUpdateDto GetValidHistoricalContext()
     {
-        return new HistoricalContextCreateUpdateDTO()
+        return new HistoricalContextCreateUpdateDto()
         {
             Title = "Title Test",
             ModelState = (ModelState)1,

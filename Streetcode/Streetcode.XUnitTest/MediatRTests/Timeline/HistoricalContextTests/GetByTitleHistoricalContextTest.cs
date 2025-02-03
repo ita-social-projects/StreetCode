@@ -27,7 +27,7 @@ public class GetByTitleHistoricalContextTest
         Title = title,
     };
 
-    private readonly HistoricalContextDTO contextDto = new HistoricalContextDTO
+    private readonly HistoricalContextDto contextDto = new HistoricalContextDto
     {
         Id = 1,
         Title = title,
@@ -55,7 +55,7 @@ public class GetByTitleHistoricalContextTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<HistoricalContextDTO>(result.Value),
+            () => Assert.IsType<HistoricalContextDto>(result.Value),
             () => Assert.Equal(title, result.Value.Title));
     }
 
@@ -64,7 +64,7 @@ public class GetByTitleHistoricalContextTest
     {
         // Arrange
         this.SetupRepository(new HistoricalContext());
-        this.SetupMapper(new HistoricalContextDTO());
+        this.SetupMapper(new HistoricalContextDto());
 
         var handler = new GetHistoricalContextByTitleHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -73,7 +73,7 @@ public class GetByTitleHistoricalContextTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<HistoricalContextDTO>(result.Value),
+            () => Assert.IsType<HistoricalContextDto>(result.Value),
             () => Assert.Null(result.Value.Title));
     }
 
@@ -88,9 +88,9 @@ public class GetByTitleHistoricalContextTest
             .ReturnsAsync(context);
     }
 
-    private void SetupMapper(HistoricalContextDTO contextDto)
+    private void SetupMapper(HistoricalContextDto contextDto)
     {
-        this.mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>()))
+        this.mockMapper.Setup(x => x.Map<HistoricalContextDto>(It.IsAny<HistoricalContext>()))
             .Returns(contextDto);
     }
 }

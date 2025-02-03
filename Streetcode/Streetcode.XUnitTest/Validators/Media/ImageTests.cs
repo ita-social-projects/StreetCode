@@ -201,7 +201,7 @@ public class ImageTests
         // Arrange
         var baseValidator =
             new Mock<BaseImageValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDto>>()))
             .Returns(new ValidationResult());
         var updateValidator = new CreateImageValidator(baseValidator.Object);
         var updateCommand = new CreateImageCommand(this.GetValidImageFile());
@@ -210,7 +210,7 @@ public class ImageTests
         updateValidator.TestValidate(updateCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDto>>()), Times.Once);
     }
 
     [Fact]
@@ -219,10 +219,10 @@ public class ImageTests
         // Arrange
         var baseValidator =
             new Mock<BaseImageValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDto>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateImageValidator(baseValidator.Object);
-        var updateCommand = new UpdateImageCommand(new ImageFileBaseUpdateDTO()
+        var updateCommand = new UpdateImageCommand(new ImageFileBaseUpdateDto()
         {
             Id = 1,
             Title = "Test Title",
@@ -236,12 +236,12 @@ public class ImageTests
         updateValidator.TestValidate(updateCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDto>>()), Times.Once);
     }
 
-    private ImageFileBaseCreateDTO GetValidImageFile()
+    private ImageFileBaseCreateDto GetValidImageFile()
     {
-        return new ImageFileBaseCreateDTO()
+        return new ImageFileBaseCreateDto()
         {
             Title = "Test Title",
             BaseFormat = "sdufhu2374jdwjfs03",

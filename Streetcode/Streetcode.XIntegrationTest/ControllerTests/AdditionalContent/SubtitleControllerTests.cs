@@ -27,7 +27,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
         public async Task GetAll_ReturnSuccess()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<SubtitleDto>>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
         }
@@ -39,7 +39,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
 
             var response = await this.Client.GetByIdAsync(expectedSubtitle.Id);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -65,7 +65,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             int streetcodeId = this.testSubtitle.StreetcodeId;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<SubtitleDto>(response.Content);
 
             Assert.True(response.IsSuccessful);
             Assert.NotNull(returnedValue);

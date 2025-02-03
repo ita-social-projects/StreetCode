@@ -34,7 +34,7 @@ public class DeletePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
         this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
@@ -84,7 +84,7 @@ public class DeletePartnerTest
         var testPartner = GetPartner();
         var expectedError = "The partner wasn`t added";
 
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
         this.mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
@@ -109,9 +109,9 @@ public class DeletePartnerTest
         };
     }
 
-    private static PartnerDTO GetPartnerDTO()
+    private static PartnerDto GetPartnerDTO()
     {
-        return new PartnerDTO();
+        return new PartnerDto();
     }
 
     private static Partner? GetPartnerWithNotExistingId()

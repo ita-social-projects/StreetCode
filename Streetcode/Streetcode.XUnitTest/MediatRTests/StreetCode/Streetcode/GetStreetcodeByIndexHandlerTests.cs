@@ -41,17 +41,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 new Model(),
             };
 
-            var testDTOList = new List<StreetcodeDTO>()
+            var testDTOList = new List<StreetcodeDto>()
             {
-                new PersonStreetcodeDTO(),
-                new EventStreetcodeDTO(),
-                new EventStreetcodeDTO(),
+                new PersonStreetcodeDto(),
+                new EventStreetcodeDto(),
+                new EventStreetcodeDto(),
             };
 
             this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
                 .ReturnsAsync(testModelList);
 
-            this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testDTOList);
 
             this.SetupLocalizers();
@@ -70,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsError(int id)
         {
             // Arrange
-            var testStreetcodeDTO = new EventStreetcodeDTO();
+            var testStreetcodeDTO = new EventStreetcodeDto();
             var expectedErrorMessage = $"Cannot find any streetcode with corresponding index: {id}";
             this.SetupLocalizers();
 
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // Arrange
-            var testStreetcodeDTO = new EventStreetcodeDTO();
+            var testStreetcodeDTO = new EventStreetcodeDto();
             var testStreetcode = new Model();
 
             this.Setup(testStreetcode, testStreetcodeDTO);
@@ -101,10 +101,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
+            Assert.IsAssignableFrom<StreetcodeDto>(result.Value);
         }
 
-        private void Setup(Model? testStreetcode, EventStreetcodeDTO testStreetcodeDTO)
+        private void Setup(Model? testStreetcode, EventStreetcodeDto testStreetcodeDTO)
         {
             this.repository
                 .Setup(x => x.StreetcodeRepository
@@ -115,7 +115,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .ReturnsAsync(testStreetcode);
 
             this.mapper
-                .Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
+                .Setup(x => x.Map<StreetcodeDto>(It.IsAny<object>()))
                 .Returns(testStreetcodeDTO);
         }
 

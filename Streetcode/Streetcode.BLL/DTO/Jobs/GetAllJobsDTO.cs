@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Jobs
 {
-    public class GetAllJobsDTO
+    public class GetAllJobsDto
     {
         public int TotalAmount { get; set; }
         public IEnumerable<JobDto> Jobs { get; set; } = new List<JobDto>();

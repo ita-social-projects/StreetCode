@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.DTO.Media.Video
 {
-  public class VideoCreateDTO : VideoCreateUpdateDTO
+  public class VideoCreateDto : VideoCreateUpdateDto
   {
   }
 }

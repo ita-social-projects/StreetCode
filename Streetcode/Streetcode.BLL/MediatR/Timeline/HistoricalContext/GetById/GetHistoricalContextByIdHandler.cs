@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById
 {
-    public class GetHistoricalContextByIdHandler : IRequestHandler<GetHistoricalContextByIdQuery, Result<HistoricalContextDTO>>
+    public class GetHistoricalContextByIdHandler : IRequestHandler<GetHistoricalContextByIdQuery, Result<HistoricalContextDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById
             _localizer = localizer;
         }
 
-        public async Task<Result<HistoricalContextDTO>> Handle(GetHistoricalContextByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<HistoricalContextDto>> Handle(GetHistoricalContextByIdQuery request, CancellationToken cancellationToken)
         {
             var context = await _repository.HistoricalContextRepository.GetFirstOrDefaultAsync(j => j.Id == request.contextId);
 
@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById
 
             try
             {
-                var contextDto = _mapper.Map<HistoricalContextDTO>(context);
+                var contextDto = _mapper.Map<HistoricalContextDto>(context);
                 return Result.Ok(contextDto);
             }
             catch (Exception ex)

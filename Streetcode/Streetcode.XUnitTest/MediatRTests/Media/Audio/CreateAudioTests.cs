@@ -51,9 +51,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             Assert.True(result.IsSuccess);
         }
 
-        private static AudioFileBaseCreateDTO GetCreateAudioDTO()
+        private static AudioFileBaseCreateDto GetCreateAudioDTO()
         {
-            return new AudioFileBaseCreateDTO()
+            return new AudioFileBaseCreateDto()
             {
                 Title = "Title",
                 MimeType = "string",
@@ -62,9 +62,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             };
         }
 
-        private static AudioFileBaseCreateDTO GetCreateAudioDTO_WithoutExtension()
+        private static AudioFileBaseCreateDto GetCreateAudioDTO_WithoutExtension()
         {
-            return new AudioFileBaseCreateDTO()
+            return new AudioFileBaseCreateDto()
             {
                 Title = "Title",
                 MimeType = "string",
@@ -72,9 +72,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             };
         }
 
-        private static AudioFileBaseCreateDTO GetCreateAudioDTO_WithoutTitle()
+        private static AudioFileBaseCreateDto GetCreateAudioDTO_WithoutTitle()
         {
-            return new AudioFileBaseCreateDTO()
+            return new AudioFileBaseCreateDto()
             {
                 MimeType = "string",
                 BaseFormat = "ab34",
@@ -82,9 +82,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             };
         }
 
-        private static AudioDTO GetAudioDTO()
+        private static AudioDto GetAudioDTO()
         {
-            return new AudioDTO()
+            return new AudioDto()
             {
                 Id = 1,
                 BlobName = "fake_blob_name",
@@ -122,11 +122,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
                 .Returns("fake_base64_string");
         }
 
-        private void SetupMapper(AudioEntity testAudio, AudioDTO testAudioDTO)
+        private void SetupMapper(AudioEntity testAudio, AudioDto testAudioDTO)
         {
-            this.mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseCreateDto>()))
                 .Returns(testAudio);
-            this.mockMapper.Setup(x => x.Map<AudioDTO>(It.IsAny<AudioEntity>()))
+            this.mockMapper.Setup(x => x.Map<AudioDto>(It.IsAny<AudioEntity>()))
                 .Returns(testAudioDTO);
         }
     }

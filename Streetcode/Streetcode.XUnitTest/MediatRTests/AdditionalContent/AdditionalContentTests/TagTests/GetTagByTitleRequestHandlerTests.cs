@@ -30,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             Title = title,
         };
 
-        private readonly TagDTO tagDTO = new TagDTO
+        private readonly TagDto tagDTO = new TagDto
         {
             Id = 1,
             Title = title,
@@ -58,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.IsType<TagDto>(result.Value),
                 () => Assert.Equal(result.Value.Title, title));
         }
 
@@ -67,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         {
             // Arrange
             this.SetupRepository(new Tag());
-            this.SetupMapper(new TagDTO());
+            this.SetupMapper(new TagDto());
 
             var handler = new GetTagByTitleHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<TagDTO>(result.Value),
+                () => Assert.IsType<TagDto>(result.Value),
                 () => Assert.Null(result.Value.Title));
         }
 
@@ -89,9 +89,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 .ReturnsAsync(tag);
         }
 
-        private void SetupMapper(TagDTO tagDTO)
+        private void SetupMapper(TagDto tagDTO)
         {
-            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>()))
+            this.mockMapper.Setup(x => x.Map<TagDto>(It.IsAny<Tag>()))
                 .Returns(tagDTO);
         }
     }

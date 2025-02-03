@@ -11,7 +11,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
-    public class GetArtsByStreetcodeIdHandler : IRequestHandler<GetArtsByStreetcodeIdQuery, Result<IEnumerable<ArtDTO>>>
+    public class GetArtsByStreetcodeIdHandler : IRequestHandler<GetArtsByStreetcodeIdQuery, Result<IEnumerable<ArtDto>>>
     {
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<ArtDto>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             if (request.StreetcodeId < 1)
             {
@@ -52,12 +52,12 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             {
                 string message = "Returning empty enumerable of arts";
                 _logger.LogInformation(message);
-                return Result.Ok(Enumerable.Empty<ArtDTO>());
+                return Result.Ok(Enumerable.Empty<ArtDto>());
             }
 
             var imageIds = arts.Where(a => a.Image != null).Select(a => a.Image!.Id);
 
-            var artsDto = _mapper.Map<IEnumerable<ArtDTO>>(arts);
+            var artsDto = _mapper.Map<IEnumerable<ArtDto>>(arts);
             foreach (var artDto in artsDto)
             {
                 if (artDto.Image != null && artDto.Image.BlobName != null)
@@ -66,7 +66,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
                 }
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<ArtDTO>>(artsDto));
+            return Result.Ok(_mapper.Map<IEnumerable<ArtDto>>(artsDto));
         }
     }
 }

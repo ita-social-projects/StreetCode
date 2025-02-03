@@ -114,7 +114,7 @@ public class BaseFactValidatorTests
 
     private FactUpdateCreateDto GetValidFactDto()
     {
-        return new StreetcodeFactCreateDTO()
+        return new StreetcodeFactCreateDto()
         {
             FactContent = "FactContent",
             Title = "WOW",

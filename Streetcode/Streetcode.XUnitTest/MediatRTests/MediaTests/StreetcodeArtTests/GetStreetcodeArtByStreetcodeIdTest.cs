@@ -40,7 +40,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         {
             this.SetupRepository();
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
+            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDto>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
 
             var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -55,13 +55,13 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
         {
             this.SetupRepository();
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
+            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDto>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
 
             var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
-            Assert.IsType<Result<IEnumerable<StreetcodeArtDTO>>>(result);
+            Assert.IsType<Result<IEnumerable<StreetcodeArtDto>>>(result);
         }
 
         private void SetupRepository()
@@ -105,25 +105,25 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
             };
         }
 
-        private List<StreetcodeArtDTO> GetStreetcodeArtDTOList()
+        private List<StreetcodeArtDto> GetStreetcodeArtDTOList()
         {
-            return new List<StreetcodeArtDTO>()
+            return new List<StreetcodeArtDto>()
             {
-                new StreetcodeArtDTO
+                new StreetcodeArtDto
                 {
                     Index = 1,
-                    Art = new ArtDTO
+                    Art = new ArtDto
                     {
-                        Image = new ImageDTO(),
+                        Image = new ImageDto(),
                     },
                 },
 
-                new StreetcodeArtDTO
+                new StreetcodeArtDto
                 {
                     Index = 2,
-                    Art = new ArtDTO
+                    Art = new ArtDto
                     {
-                        Image = new ImageDTO(),
+                        Image = new ImageDto(),
                     },
                 },
             };

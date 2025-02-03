@@ -92,9 +92,9 @@ public class BaseCategoryValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    public static SourceLinkCreateUpdateCategoryDTO GetValidCategory()
+    public static SourceLinkCreateUpdateCategoryDto GetValidCategory()
     {
-        return new SourceLinkCategoryCreateDTO()
+        return new SourceLinkCategoryCreateDto()
         {
             ImageId = 1,
             Title = "Test Title",

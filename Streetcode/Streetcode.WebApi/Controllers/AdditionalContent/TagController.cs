@@ -15,28 +15,28 @@ namespace Streetcode.WebApi.Controllers.AdditionalContent;
 public class TagController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDto))]
     public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
         return HandleResult(await Mediator.Send(new GetAllTagsQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetTagByIdQuery(id)));
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TagDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetTagByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{title}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDto))]
     public async Task<IActionResult> GetTagByTitle([FromRoute] string title)
     {
         return HandleResult(await Mediator.Send(new GetTagByTitleQuery(title)));
@@ -44,10 +44,10 @@ public class TagController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] CreateTagDTO tagTitle)
+    public async Task<IActionResult> Create([FromBody] CreateTagDto tagTitle)
     {
         return HandleResult(await Mediator.Send(new CreateTagQuery(tagTitle)));
     }
@@ -64,10 +64,10 @@ public class TagController : BaseApiController
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TagDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody] UpdateTagDTO tagDto)
+    public async Task<IActionResult> Update([FromBody] UpdateTagDto tagDto)
     {
         return HandleResult(await Mediator.Send(new UpdateTagCommand(tagDto)));
     }

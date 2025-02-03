@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 {
-    public class GetAllStatisticRecordsHandler : IRequestHandler<GetAllStatisticRecordsQuery, Result<IEnumerable<StatisticRecordDTO>>>
+    public class GetAllStatisticRecordsHandler : IRequestHandler<GetAllStatisticRecordsQuery, Result<IEnumerable<StatisticRecordDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
             _stringLocalizerCannotMap = stringLocalizerCannotMap;
         }
 
-        public async Task<Result<IEnumerable<StatisticRecordDTO>>> Handle(GetAllStatisticRecordsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StatisticRecordDto>>> Handle(GetAllStatisticRecordsQuery request, CancellationToken cancellationToken)
         {
             var statisticRecords = await _repositoryWrapper.StatisticRecordRepository
                 .GetAllAsync(include: sr => sr.Include(sr => sr.StreetcodeCoordinate));
@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var mappedEntities = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
+            var mappedEntities = _mapper.Map<IEnumerable<StatisticRecordDto>>(statisticRecords);
 
             if(mappedEntities is null)
             {

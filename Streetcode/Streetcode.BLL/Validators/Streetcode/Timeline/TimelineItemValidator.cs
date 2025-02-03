@@ -6,7 +6,7 @@ using Streetcode.BLL.Validators.Common;
 
 namespace Streetcode.BLL.Validators.Streetcode.TimelineItem;
 
-public class TimelineItemValidator : AbstractValidator<TimelineItemCreateUpdateDTO>
+public class TimelineItemValidator : AbstractValidator<TimelineItemCreateUpdateDto>
 {
     public const int TitleMaxLength = 100;
     public const int DescriptionMaxLength = 600;

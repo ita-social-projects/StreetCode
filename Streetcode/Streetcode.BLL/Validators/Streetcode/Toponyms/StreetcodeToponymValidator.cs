@@ -6,7 +6,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Streetcode.Toponyms;
 
-public class StreetcodeToponymValidator : AbstractValidator<StreetcodeToponymCreateUpdateDTO>
+public class StreetcodeToponymValidator : AbstractValidator<StreetcodeToponymCreateUpdateDto>
 {
     public const int StreetNameMaxLength = 150;
     public StreetcodeToponymValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)

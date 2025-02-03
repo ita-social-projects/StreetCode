@@ -11,13 +11,13 @@ public class ArtCreateUpdateValidatorTests
 {
     private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
     private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly ArtCreateUpdateDTOValidator validator;
+    private readonly ArtCreateUpdateDtoValidator validator;
 
     public ArtCreateUpdateValidatorTests()
     {
         this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.validator = new ArtCreateUpdateDTOValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        this.validator = new ArtCreateUpdateDtoValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
     }
 
     [Fact]
@@ -37,9 +37,9 @@ public class ArtCreateUpdateValidatorTests
     public void ShouldReturnError_WhenTitleLengthIsMoreThan150()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtTitle"], ArtCreateUpdateDTOValidator.MaxTitleLength];
+        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtTitle"], ArtCreateUpdateDtoValidator.MaxTitleLength];
         var art = this.GetValidArt();
-        art.Title = new string('*', ArtCreateUpdateDTOValidator.MaxTitleLength + 1);
+        art.Title = new string('*', ArtCreateUpdateDtoValidator.MaxTitleLength + 1);
 
         // Act
         var result = this.validator.TestValidate(art);
@@ -53,9 +53,9 @@ public class ArtCreateUpdateValidatorTests
     public void ShouldReturnError_WhenTitleDescriptionIsMoreThan150()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtDescription"], ArtCreateUpdateDTOValidator.MaxDescriptionLength];
+        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtDescription"], ArtCreateUpdateDtoValidator.MaxDescriptionLength];
         var art = this.GetValidArt();
-        art.Description = new string('*', ArtCreateUpdateDTOValidator.MaxDescriptionLength + 1);
+        art.Description = new string('*', ArtCreateUpdateDtoValidator.MaxDescriptionLength + 1);
 
         // Act
         var result = this.validator.TestValidate(art);
@@ -80,9 +80,9 @@ public class ArtCreateUpdateValidatorTests
         result.ShouldHaveValidationErrorFor(x => x.ModelState)
             .WithErrorMessage(expectedError);
     }
-    private ArtCreateUpdateDTO GetValidArt()
+    private ArtCreateUpdateDto GetValidArt()
     {
-        return new ArtCreateUpdateDTO()
+        return new ArtCreateUpdateDto()
         {
             Title = "Title",
             Description = "Description",

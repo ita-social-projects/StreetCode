@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.TeamMember.Positions;
 
-public class BasePositionValidator : AbstractValidator<PositionCreateUpdateDTO>
+public class BasePositionValidator : AbstractValidator<PositionCreateUpdateDto>
 {
     public const int MaxPositionLength = 50;
     public BasePositionValidator(

@@ -79,11 +79,11 @@ public class TagsTests
     {
         // Arrange
         var baseValidator = new Mock<BaseTagValidator>(_mockValidationLocalizer, _mockFieldNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDto>>()))
             .Returns(new ValidationResult());
 
         var updateValidator = new UpdateTagValidator(baseValidator.Object);
-        var updateCommand = new UpdateTagCommand(new UpdateTagDTO()
+        var updateCommand = new UpdateTagCommand(new UpdateTagDto()
         {
             Id = 1,
             Title = "Test Title",
@@ -93,7 +93,7 @@ public class TagsTests
         var result = updateValidator.TestValidate(updateCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDto>>()), Times.Once);
     }
 
     [Fact]
@@ -101,11 +101,11 @@ public class TagsTests
     {
         // Arrange
         var baseValidator = new Mock<BaseTagValidator>(_mockValidationLocalizer, _mockFieldNamesLocalizer);
-        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
+        baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDto>>()))
             .Returns(new ValidationResult());
 
         var createValidator = new CreateTagValidator(baseValidator.Object);
-        var createCommand = new CreateTagQuery(new CreateTagDTO()
+        var createCommand = new CreateTagQuery(new CreateTagDto()
         {
             Title = "Test Title",
         });
@@ -114,12 +114,12 @@ public class TagsTests
         var result = createValidator.TestValidate(createCommand);
 
         // Assert
-        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()), Times.Once);
+        baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDto>>()), Times.Once);
     }
 
-    private static CreateUpdateTagDTO GetValidTag()
+    private static CreateUpdateTagDto GetValidTag()
     {
-        return new CreateTagDTO()
+        return new CreateTagDto()
         {
             Title = "Test Title",
         };

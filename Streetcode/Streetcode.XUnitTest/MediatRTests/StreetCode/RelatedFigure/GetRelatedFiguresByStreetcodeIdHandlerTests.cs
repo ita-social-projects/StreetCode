@@ -48,9 +48,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
                 new PersonStreetcode(),
             };
 
-            var testRelatedDTOList = new List<RelatedFigureDTO>()
+            var testRelatedDTOList = new List<RelatedFigureDto>()
             {
-                new RelatedFigureDTO(),
+                new RelatedFigureDto(),
             };
 
             this.RepositorySetup(testRelatedList.AsQueryable(), new List<StreetcodeContent>());
@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
                     It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
                 .ReturnsAsync(testPersonStreetcodeList);
 
-            this.mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<RelatedFigureDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testRelatedDTOList);
 
             var handler = new GetRelatedFiguresByStreetcodeIdHandler(this.mapper.Object, this.repository.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -89,7 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
                 new Entities.RelatedFigure(),
             };
 
-            var testRelatedDTO = new RelatedFigureDTO() { Id = id };
+            var testRelatedDTO = new RelatedFigureDto() { Id = id };
 
             this.repository.Setup(x => x.StreetcodeRepository
                 .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
@@ -104,7 +104,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await handler.Handle(new GetRelatedFigureByStreetcodeIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsAssignableFrom<IEnumerable<RelatedFigureDTO>>(result.Value);
+            Assert.IsAssignableFrom<IEnumerable<RelatedFigureDto>>(result.Value);
         }
 
         [Theory]
@@ -116,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             {
                 new Entities.RelatedFigure(),
             };
-            var testRelatedDTO = new RelatedFigureDTO() { Id = id };
+            var testRelatedDTO = new RelatedFigureDto() { Id = id };
             string expectedErrorMessage = $"Cannot find any related figures by a streetcode id: {id}";
             this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
             {
@@ -154,8 +154,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<RelatedFigureDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<RelatedFigureDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<RelatedFigureDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<RelatedFigureDto>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
 
@@ -189,9 +189,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             Assert.Equal("B", relatedFigures[0].Images[1].ImageDetails?.Alt);
         }
 
-        private void MapperSetup(RelatedFigureDTO relatedFigureDTO)
+        private void MapperSetup(RelatedFigureDto relatedFigureDTO)
         {
-            this.mapper.Setup(x => x.Map<RelatedFigureDTO>(It.IsAny<StreetcodeContent>()))
+            this.mapper.Setup(x => x.Map<RelatedFigureDto>(It.IsAny<StreetcodeContent>()))
                 .Returns(relatedFigureDTO);
         }
 

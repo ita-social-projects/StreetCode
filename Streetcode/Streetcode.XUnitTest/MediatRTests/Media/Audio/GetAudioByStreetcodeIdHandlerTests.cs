@@ -38,7 +38,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             var testAudio = new Model() { };
-            var testAudioDTO = new AudioDTO { };
+            var testAudioDTO = new AudioDto { };
 
             this.RepositorySetup(testAudio);
             this.MapperSetup(testAudioDTO);
@@ -57,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         public async Task Handle_NotExistingId_ReturnsError(int id)
         {
             StreetcodeContent? streetcode = null;
-            var testAudioDTO = new AudioDTO { };
+            var testAudioDTO = new AudioDto { };
 
             this.RepositoryResultFailed();
             this.MapperSetup(testAudioDTO);
@@ -87,7 +87,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             var testAudio = new Model() { };
-            var testAudioDTO = new AudioDTO { };
+            var testAudioDTO = new AudioDto { };
 
             this.RepositorySetup(testAudio);
             this.MapperSetup(testAudioDTO);
@@ -99,7 +99,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
             // Assert
             Assert.True(result.IsSuccess);
-            Assert.IsType<AudioDTO>(result.ValueOrDefault);
+            Assert.IsType<AudioDto>(result.ValueOrDefault);
         }
 
         private void RepositorySetup(Model audio)
@@ -122,11 +122,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
                 .ReturnsAsync(streetcode);
         }
 
-        private void MapperSetup(AudioDTO audioDTO)
+        private void MapperSetup(AudioDto audioDTO)
         {
-            this.mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<Model>()))
+            this.mapper.Setup(x => x.Map<AudioDto>(It.IsAny<Model>()))
                 .Returns(audioDTO);
-            this.mapper.Setup(x => x.Map<AudioDTO>(It.IsAny<DAL.Entities.Media.Audio>()))
+            this.mapper.Setup(x => x.Map<AudioDto>(It.IsAny<DAL.Entities.Media.Audio>()))
                 .Returns(audioDTO);
         }
     }

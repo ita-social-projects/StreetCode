@@ -15,21 +15,21 @@ namespace Streetcode.WebApi.Controllers.Media;
 public class AudioController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AudioDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AudioDto>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllAudiosQuery()));
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDto))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetAudioByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetAudioByIdQuery(id)));
@@ -44,20 +44,20 @@ public class AudioController : BaseApiController
 
     [HttpPost]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AudioDTO))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(AudioDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDTO audio)
+    public async Task<IActionResult> Create([FromBody] AudioFileBaseCreateDto audio)
     {
         return HandleResult(await Mediator.Send(new CreateAudioCommand(audio)));
     }
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AudioDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDTO audio)
+    public async Task<IActionResult> Update([FromBody] AudioFileBaseUpdateDto audio)
     {
         return HandleResult(await Mediator.Send(new UpdateAudioCommand(audio)));
     }

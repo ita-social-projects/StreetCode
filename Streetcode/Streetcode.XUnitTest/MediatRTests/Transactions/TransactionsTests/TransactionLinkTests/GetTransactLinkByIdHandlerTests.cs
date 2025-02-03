@@ -18,7 +18,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IRepositoryWrapper> mockRepo;
         private readonly Mock<IMapper> mockMapper;
         private readonly TransactionLink? nullValue = null;
-        private readonly TransactLinkDTO? nullValueDTO = null;
+        private readonly TransactLinkDto? nullValueDTO = null;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
@@ -59,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
               It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(this.nullValue);
 
-            this.mockMapper.Setup(x => x.Map<TransactLinkDTO?>(It.IsAny<TransactionLink>())).Returns(this.nullValueDTO);
+            this.mockMapper.Setup(x => x.Map<TransactLinkDto?>(It.IsAny<TransactionLink>())).Returns(this.nullValueDTO);
 
             var expectedError = $"Cannot find any transaction link with corresponding id: {id}";
             this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
@@ -101,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault));
+                () => Assert.IsType<TransactLinkDto>(result.ValueOrDefault));
         }
 
         private void SetupRepository(int id)
@@ -113,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         private void SetupMapper(int id)
         {
-            this.mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(new TransactLinkDTO() { Id = id });
+            this.mockMapper.Setup(x => x.Map<TransactLinkDto>(It.IsAny<TransactionLink>())).Returns(new TransactLinkDto() { Id = id });
         }
     }
 }

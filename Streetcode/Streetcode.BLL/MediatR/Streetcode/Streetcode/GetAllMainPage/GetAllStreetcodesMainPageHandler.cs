@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
 {
     public class GetAllStreetcodesMainPageHandler : IRequestHandler<GetAllStreetcodesMainPageQuery,
-        Result<IEnumerable<StreetcodeMainPageDTO>>>
+        Result<IEnumerable<StreetcodeMainPageDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetAllStreetcodesMainPageQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StreetcodeMainPageDto>>> Handle(GetAllStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage
                 var random = new Random();
                 var shuffledStreetcodes = streetcodes.OrderBy(sc => random.Next());
 
-                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(shuffledStreetcodes));
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDto>>(shuffledStreetcodes));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;

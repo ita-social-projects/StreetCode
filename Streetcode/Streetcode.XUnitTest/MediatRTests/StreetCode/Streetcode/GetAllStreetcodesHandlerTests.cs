@@ -32,15 +32,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var testModel = new Model();
-            var testDTO = new PersonStreetcodeDTO();
+            var testDTO = new PersonStreetcodeDto();
 
             this.repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
                 .ReturnsAsync(testModel);
 
-            this.mapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
+            this.mapper.Setup(x => x.Map<StreetcodeDto>(It.IsAny<object>()))
                 .Returns(testDTO);
 
-            var request = new GetAllStreetcodesRequestDTO();
+            var request = new GetAllStreetcodesRequestDto();
 
             var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object);
 
@@ -56,30 +56,30 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var testModelList = new List<Model>();
-            var testDTOList = new List<StreetcodeDTO>();
+            var testDTOList = new List<StreetcodeDto>();
 
             this.repository.Setup(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), null))
                 .ReturnsAsync(testModelList);
 
-            this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<StreetcodeDto>>(It.IsAny<IEnumerable<object>>()))
             .Returns(testDTOList);
 
             var handler = new GetAllStreetcodesHandler(this.repository.Object, this.mapper.Object);
 
-            var request = new GetAllStreetcodesRequestDTO();
+            var request = new GetAllStreetcodesRequestDto();
 
             // Act
             var result = await handler.Handle(new GetAllStreetcodesQuery(request), CancellationToken.None);
 
             // Assert
-            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDto>(result.Value);
         }
 
         [Fact]
         public async Task FindStreetCodeWithMatchTitleTest()
         {
             // Arrange
-            var request = new GetAllStreetcodesRequestDTO
+            var request = new GetAllStreetcodesRequestDto
             {
                 Title = "Some Title",
             };
@@ -102,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public void FindSortedStreetcodesTest()
         {
             // Arrange
-            var request = new GetAllStreetcodesRequestDTO
+            var request = new GetAllStreetcodesRequestDto
             {
                 Sort = "-Title",
             };
@@ -135,7 +135,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public void FindFilteredStreetcodesTest()
         {
             // Arrange
-            var request = new GetAllStreetcodesRequestDTO
+            var request = new GetAllStreetcodesRequestDto
             {
                 Filter = "filter:Filter",
             };

@@ -4,14 +4,14 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Analytics.Update
 {
-    public class StatisticRecordUpdateDTO : IModelState
+    public class StatisticRecordUpdateDto : IModelState
     {
         public int Id { get; set; }
         public int QrId { get; set; }
         public int Count { get; set; }
         public string Address { get; set; } = null!;
         public int StreetcodeId { get; set; }
-        public StreetcodeCoordinateUpdateDTO StreetcodeCoordinate { get; set; } = null!;
+        public StreetcodeCoordinateUpdateDto StreetcodeCoordinate { get; set; } = null!;
         public ModelState ModelState { get; set; }
     }
 }

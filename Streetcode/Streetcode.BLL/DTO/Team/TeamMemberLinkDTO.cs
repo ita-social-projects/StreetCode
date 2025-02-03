@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class TeamMemberLinkDTO : TeamMemberLinkCreateUpdateDTO
+    public class TeamMemberLinkDto : TeamMemberLinkCreateUpdateDto
     {
         public int Id { get; set; }
     }

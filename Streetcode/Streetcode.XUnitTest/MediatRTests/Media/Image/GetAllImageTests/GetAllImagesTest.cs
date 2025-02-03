@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.MockRepositoryAndMapper(null, new List<ImageDTO>() { });
+            this.MockRepositoryAndMapper(null, new List<ImageDto>() { });
             var expectedError = $"Cannot find any image";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyImage"])
                 .Returns(new LocalizedString("CannotFindAnyImage", expectedError));
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             var result = await handler.Handle(new GetAllImagesQuery(), default);
 
             // Assert
-            Assert.IsType<Result<IEnumerable<ImageDTO>>>(result);
+            Assert.IsType<Result<IEnumerable<ImageDto>>>(result);
         }
 
         private List<ImageEntity.Image> GetImagesList()
@@ -98,22 +98,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private List<ImageDTO> GetImagesDTOList()
+        private List<ImageDto> GetImagesDTOList()
         {
-            return new List<ImageDTO>()
+            return new List<ImageDto>()
             {
-                new ImageDTO
+                new ImageDto
                 {
                     Id = 1,
                 },
-                new ImageDTO
+                new ImageDto
                 {
                     Id = 2,
                 },
             };
         }
 
-        private void MockRepositoryAndMapper(List<ImageEntity.Image> imageList, List<ImageDTO> imageListDTO)
+        private void MockRepositoryAndMapper(List<ImageEntity.Image> imageList, List<ImageDto> imageListDTO)
         {
             this.mockRepo.Setup(r => r.ImageRepository.GetAllAsync(
             It.IsAny<Expression<Func<ImageEntity.Image, bool>>>(),
@@ -121,7 +121,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             IIncludableQueryable<ImageEntity.Image, object>>>()))
             .ReturnsAsync(imageList);
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<ImageDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<ImageDto>>(It.IsAny<IEnumerable<object>>()))
             .Returns(imageListDTO);
         }
     }

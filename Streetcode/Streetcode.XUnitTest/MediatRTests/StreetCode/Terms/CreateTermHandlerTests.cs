@@ -39,8 +39,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Create(It.IsAny<Term>())).Returns(createdTerm);
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>())).Returns(createdTerm);
-            this.mockMapper.Setup(x => x.Map<TermDTO>(createdTerm)).Returns(GetTermDTO());
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDto>())).Returns(createdTerm);
+            this.mockMapper.Setup(x => x.Map<TermDto>(createdTerm)).Returns(GetTermDTO());
 
             var handler = new CreateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerCannotConvertNull.Object);
 
@@ -59,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermCreateDto>()))
               .Returns(GetNotExistingTerm() !);
 
             var expectedError = "Cannot convert null to Term";
@@ -78,12 +78,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
         private static Term GetTerm() => new ();
 
-        private static TermCreateDTO GetTermCreateDTO() => new ();
+        private static TermCreateDto GetTermCreateDTO() => new ();
 
-        private static TermDTO GetTermDTO() => new ();
+        private static TermDto GetTermDTO() => new ();
 
         private static Term? GetNotExistingTerm() => null;
 
-        private static TermCreateDTO? GetNotExistingTermDTO() => null;
+        private static TermCreateDto? GetNotExistingTermDTO() => null;
     }
 }

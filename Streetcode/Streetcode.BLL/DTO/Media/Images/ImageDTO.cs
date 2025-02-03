@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.DTO.Media.Images;
 
-public class ImageDTO
+public class ImageDto
 {
     public int Id { get; set; }
 

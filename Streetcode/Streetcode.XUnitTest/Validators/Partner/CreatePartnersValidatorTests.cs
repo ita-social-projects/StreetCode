@@ -38,7 +38,7 @@ public class CreatePartnersValidatorTests
         this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
         this.mockBasePartnerValidator = new Mock<BasePartnersValidator>(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, _mockLocalizerNoShared, this._mockRepositoryWrapper.Object);
         
-        this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
+        this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDto>>()))
             .Returns(new ValidationResult());
         this.mockBasePartnerValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>()))
             .Returns(new ValidationResult());
@@ -48,7 +48,7 @@ public class CreatePartnersValidatorTests
     public async void ShouldCallBaseValidator()
     {
         // Arrange
-        var query = new CreatePartnerQuery(new CreatePartnerDTO());
+        var query = new CreatePartnerQuery(new CreatePartnerDto());
         var createValidator = new CreatePartnerValidator(this.mockBasePartnerValidator.Object, mockValidationLocalizer, mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
         MockHelpers.SetupMockPartnersRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, query.newPartner.LogoId);
 
@@ -64,7 +64,7 @@ public class CreatePartnersValidatorTests
     {
         // Arrange
         var expectedError = mockValidationLocalizer["MustBeUnique", mockNamesLocalizer["Title"]];
-        var query = new CreatePartnerQuery(new CreatePartnerDTO());
+        var query = new CreatePartnerQuery(new CreatePartnerDto());
         query.newPartner.Title = "NonUniqueTitle";
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner() { Title = "NonUniqueTitle" });
@@ -83,7 +83,7 @@ public class CreatePartnersValidatorTests
     public async Task BeUniqueTitle_ShouldReturnSuccessResult_WhenTitleDoesNotExist()
     {
         // Arrange
-        var query = new CreatePartnerQuery(new CreatePartnerDTO());
+        var query = new CreatePartnerQuery(new CreatePartnerDto());
         query.newPartner.Title = "UniqueTitle";
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
@@ -102,7 +102,7 @@ public class CreatePartnersValidatorTests
     public async Task BeUniqueImageId_ShouldReturnError_WhenPartnerWithTheSameLogoIdExist()
     {
         // Arrange
-        var query = new CreatePartnerQuery(new CreatePartnerDTO());
+        var query = new CreatePartnerQuery(new CreatePartnerDto());
         query.newPartner.LogoId = 2;
         var expectedError = _mockAlreadyExistLocalizer["PartnerWithFieldAlreadyExist", _mockLocalizerFieldNames["LogoId"], query.newPartner.LogoId];
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
@@ -122,7 +122,7 @@ public class CreatePartnersValidatorTests
     public async Task BeUniqueImageId_ShouldReturnSuccessResult_WhenPartnerWithTheSameLogoIdDoesNotExist()
     {
         // Arrange
-        var query = new CreatePartnerQuery(new CreatePartnerDTO());
+        var query = new CreatePartnerQuery(new CreatePartnerDto());
         query.newPartner.LogoId = 2;
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))

@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
 {
     public class
-        UpdateHistoricalContextHandler : IRequestHandler<UpdateHistoricalContextCommand, Result<HistoricalContextDTO>>
+        UpdateHistoricalContextHandler : IRequestHandler<UpdateHistoricalContextCommand, Result<HistoricalContextDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
             _stringLocalizerFieldNames = stringLocalizerFieldNames;
         }
 
-        public async Task<Result<HistoricalContextDTO>> Handle(
+        public async Task<Result<HistoricalContextDto>> Handle(
             UpdateHistoricalContextCommand request,
             CancellationToken cancellationToken)
         {
@@ -67,7 +67,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
                 var contextToUpdate = _mapper.Map<DAL.Entities.Timeline.HistoricalContext>(request.HistoricalContext);
                 _repositoryWrapper.HistoricalContextRepository.Update(contextToUpdate);
                 await _repositoryWrapper.SaveChangesAsync();
-                return Result.Ok(_mapper.Map<HistoricalContextDTO>(contextToUpdate));
+                return Result.Ok(_mapper.Map<HistoricalContextDto>(contextToUpdate));
             }
             catch (Exception ex)
             {

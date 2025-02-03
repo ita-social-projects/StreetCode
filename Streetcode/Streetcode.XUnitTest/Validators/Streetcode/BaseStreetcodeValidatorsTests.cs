@@ -29,7 +29,7 @@ public class BaseStreetcodeValidatorsTests
     private readonly Mock<TimelineItemValidator> mockTimelineItemValidator;
     private readonly Mock<ImageDetailsValidator> mockimageDetailsValidator;
     private readonly Mock<StreetcodeArtSlideValidator> mockartSlideValidator;
-    private readonly Mock<ArtCreateUpdateDTOValidator> mockArtValidator;
+    private readonly Mock<ArtCreateUpdateDtoValidator> mockArtValidator;
     private MockFailedToValidateLocalizer mockValidationLocalizer;
     private MockFieldNamesLocalizer mockNamesLocalizer;
     private readonly BaseStreetcodeValidator validator;
@@ -44,7 +44,7 @@ public class BaseStreetcodeValidatorsTests
         this.mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
         this.mockimageDetailsValidator = new Mock<ImageDetailsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer, mockRepositoryWrapper.Object);
-        this.mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        this.mockArtValidator = new Mock<ArtCreateUpdateDtoValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         this.validator = new BaseStreetcodeValidator(
             this.mockToponymValidator.Object,
@@ -414,11 +414,11 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldCallChildValidators_WhenValidated()
     {
         // Arrange
-        this.mockToponymValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>())).Returns(new ValidationResult());
+        this.mockToponymValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDto>>())).Returns(new ValidationResult());
         this.mockimageDetailsValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>())).Returns(new ValidationResult());
-        this.mockTimelineItemValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>())).Returns(new ValidationResult());
-        this.mockartSlideValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>())).Returns(new ValidationResult());
-        this.mockArtValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>())).Returns(new ValidationResult());
+        this.mockTimelineItemValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDto>>())).Returns(new ValidationResult());
+        this.mockartSlideValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDto>>())).Returns(new ValidationResult());
+        this.mockArtValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDto>>())).Returns(new ValidationResult());
 
         var streetcode = this.GetValidStreetcodeDto();
 
@@ -426,16 +426,16 @@ public class BaseStreetcodeValidatorsTests
         this.validator.TestValidate(streetcode);
 
         // Assert
-        this.mockToponymValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>()), Times.AtLeast(1));
+        this.mockToponymValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDto>>()), Times.AtLeast(1));
         this.mockimageDetailsValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>()), Times.AtLeast(1));
-        this.mockTimelineItemValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>()), Times.AtLeast(1));
-        this.mockartSlideValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>()), Times.AtLeast(1));
-        this.mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>()), Times.AtLeast(1));
+        this.mockTimelineItemValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDto>>()), Times.AtLeast(1));
+        this.mockartSlideValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDto>>()), Times.AtLeast(1));
+        this.mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDto>>()), Times.AtLeast(1));
     }
 
-    private StreetcodeCreateUpdateDTO GetValidStreetcodeDto()
+    private StreetcodeCreateUpdateDto GetValidStreetcodeDto()
     {
-        return new StreetcodeCreateDTO()
+        return new StreetcodeCreateDto()
         {
             FirstName = "Taras",
             LastName = "Shevchenko",
@@ -447,11 +447,11 @@ public class BaseStreetcodeValidatorsTests
             DateString = "25 лютого (9 березня) 1814 року – 26 лютого (10 березня) 1861 року",
             StreetcodeType = StreetcodeType.Person,
             Status = StreetcodeStatus.Published,
-            Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
+            Toponyms = new List<StreetcodeToponymCreateUpdateDto>()
             {
                 new (),
             },
-            TimelineItems = new List<TimelineItemCreateUpdateDTO>()
+            TimelineItems = new List<TimelineItemCreateUpdateDto>()
             {
                 new (),
             },
@@ -465,11 +465,11 @@ public class BaseStreetcodeValidatorsTests
                     Alt = "1",
                 },
             },
-            StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>()
+            StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDto>()
             {
                 new (),
             },
-            Arts = new List<ArtCreateUpdateDTO>()
+            Arts = new List<ArtCreateUpdateDto>()
             {
                 new (),
             },

@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Users
 {
-    public class UserDTO
+    public class UserDto
     {
         [Required]
         [MaxLength(50)]

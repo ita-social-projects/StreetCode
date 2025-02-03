@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 
-public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, Result<GetAllStreetcodesResponseDTO>>
+public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, Result<GetAllStreetcodesResponseDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -20,7 +20,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         _mapper = mapper;
     }
 
-    public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
+    public Task<Result<GetAllStreetcodesResponseDto>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
         var filterRequest = query.request;
 
@@ -49,9 +49,9 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);
         }
 
-        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDTO>>(streetcodes.AsEnumerable());
+        var streetcodeDtos = _mapper.Map<IEnumerable<StreetcodeDto>>(streetcodes.AsEnumerable());
 
-        var response = new GetAllStreetcodesResponseDTO
+        var response = new GetAllStreetcodesResponseDto
         {
             TotalAmount = totalAmount,
             Streetcodes = streetcodeDtos

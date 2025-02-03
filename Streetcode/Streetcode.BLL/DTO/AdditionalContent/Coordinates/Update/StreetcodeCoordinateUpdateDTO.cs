@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update
 {
-    public class StreetcodeCoordinateUpdateDTO
+    public class StreetcodeCoordinateUpdateDto
     {
         public int StreetcodeId { get; set; }
         public int Id { get; set; }

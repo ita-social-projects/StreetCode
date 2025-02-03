@@ -10,7 +10,7 @@ namespace Streetcode.WebApi.Controllers.Email
         [EnableRateLimiting("EmailRateLimit")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Send([FromBody] EmailDTO email)
+        public async Task<IActionResult> Send([FromBody] EmailDto email)
         {
             return HandleResult(await Mediator.Send(new SendEmailCommand(email)));
         }

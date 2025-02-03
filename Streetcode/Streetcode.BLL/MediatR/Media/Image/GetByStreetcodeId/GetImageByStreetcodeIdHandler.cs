@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
 
-public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcodeIdQuery, Result<IEnumerable<ImageDTO>>>
+public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcodeIdQuery, Result<IEnumerable<ImageDto>>>
 {
     private readonly IBlobService _blobService;
     private readonly IMapper _mapper;
@@ -31,7 +31,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
         _cacheService = cacheService;
     }
 
-    public async Task<Result<IEnumerable<ImageDTO>>> Handle(GetImageByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<ImageDto>>> Handle(GetImageByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         string cacheKey = $"ImageCache_{request.StreetcodeId}";
         _logger.LogInformation(cacheKey + "cacheKey was created");
@@ -52,7 +52,7 @@ public class GetImageByStreetcodeIdHandler : IRequestHandler<GetImageByStreetcod
                     return Result.Fail(new Error(errorMsg));
                 }
 
-                var imageDtos = _mapper.Map<IEnumerable<ImageDTO>>(images);
+                var imageDtos = _mapper.Map<IEnumerable<ImageDto>>(images);
 
                 foreach (var image in imageDtos)
                 {

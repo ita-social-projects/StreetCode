@@ -8,10 +8,10 @@ public class VideoProfile : Profile
 {
     public VideoProfile()
     {
-        CreateMap<Video, VideoDTO>();
+        CreateMap<Video, VideoDto>();
 
-        CreateMap<VideoCreateDTO, Video>().ReverseMap();
+        CreateMap<VideoCreateDto, Video>().ReverseMap();
 
-        CreateMap<Video, VideoUpdateDTO>().ReverseMap();
+        CreateMap<Video, VideoUpdateDto>().ReverseMap();
     }
 }

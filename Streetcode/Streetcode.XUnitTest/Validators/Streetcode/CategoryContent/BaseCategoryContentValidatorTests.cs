@@ -24,7 +24,7 @@ public class BaseCategoryContentValidatorTests
     public void ShouldReturnSuccess_WhenAllFieldsAreValid()
     {
         // Arrange
-        var category = new StreetcodeCategoryContentDTO()
+        var category = new StreetcodeCategoryContentDto()
         {
             Text = "Some very important text",
         };
@@ -41,7 +41,7 @@ public class BaseCategoryContentValidatorTests
     {
         // Arrange
         var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["CategoryContent"], BaseCategoryContentValidator.TextMaxLength];
-        var category = new StreetcodeCategoryContentDTO()
+        var category = new StreetcodeCategoryContentDto()
         {
             Text = new string('*', BaseCategoryContentValidator.TextMaxLength + 1),
         };

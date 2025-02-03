@@ -12,7 +12,7 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
     public class RelatedTermController : BaseApiController
     {
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedTermDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedTermDto>))]
         public async Task<IActionResult> GetByTermId([FromRoute] int id)
         {
             return HandleResult(await Mediator.Send(new GetAllRelatedTermsByTermIdQuery(id)));
@@ -20,10 +20,10 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RelatedTermDTO))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RelatedTermDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create([FromBody] RelatedTermCreateDTO relatedTerm)
+        public async Task<IActionResult> Create([FromBody] RelatedTermCreateDto relatedTerm)
         {
             return HandleResult(await Mediator.Send(new CreateRelatedTermCommand(relatedTerm)));
         }
@@ -33,14 +33,14 @@ namespace Streetcode.WebApi.Controllers.Streetcode.TextContent
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] RelatedTermDTO relatedTerm)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] RelatedTermDto relatedTerm)
         {
             return HandleResult(await Mediator.Send(new UpdateRelatedTermCommand(id, relatedTerm)));
         }
 
         [HttpDelete("{word}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RelatedTermDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RelatedTermDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete([FromRoute] string word)

@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.SetupMocks(null, new List<TeamMemberDTO>());
+            this.SetupMocks(null, new List<TeamMemberDto>());
             var handler = new GetAllMainTeamHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockStringLocalizerCannotFind.Object);
             var expectedError = "Cannot find any team";
             this.mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
@@ -83,18 +83,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             return teamMembers;
         }
 
-        private static List<TeamMemberDTO> GetListTeamDTO()
+        private static List<TeamMemberDto> GetListTeamDTO()
         {
-            var teamMembersDTO = new List<TeamMemberDTO>
+            var teamMembersDTO = new List<TeamMemberDto>
             {
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 1,
                     IsMain = true,
                     Positions = { },
                     TeamMemberLinks = { },
                 },
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 2,
                     IsMain = true,
@@ -105,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             return teamMembersDTO;
         }
 
-        private void SetupMocks(IEnumerable<TeamMember> teamMembers, IEnumerable<TeamMemberDTO> teamMemberDTOs)
+        private void SetupMocks(IEnumerable<TeamMember> teamMembers, IEnumerable<TeamMemberDto> teamMemberDTOs)
         {
             this.mockRepo
                 .Setup(r => r.TeamRepository
@@ -115,7 +115,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
                         IIncludableQueryable<TeamMember, object>>?>()))
                 .ReturnsAsync(teamMembers);
 
-            this.mockMapper.Setup(r => r.Map<IEnumerable<TeamMemberDTO>>(
+            this.mockMapper.Setup(r => r.Map<IEnumerable<TeamMemberDto>>(
                 It.IsAny<IEnumerable<TeamMember>>()))
                 .Returns(teamMemberDTOs);
         }

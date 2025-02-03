@@ -56,7 +56,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
     {
         var response = await this.Client.GetAllAsync();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<GetAllPositionsDTO>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<GetAllPositionsDto>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
@@ -69,7 +69,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         TeamPositionsExtracter.AddTeamMemberPositions(this.testTeamMember.Id, this.testCreatePosition.Id);
         var response = await this.Client.GetAllWithTeamMembers();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDTO>>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PositionDto>>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
@@ -81,7 +81,7 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         Positions expectedPosition = this.testCreatePosition;
         var response = await this.Client.GetByIdAsync(expectedPosition.Id);
 
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PositionDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PositionDto>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);

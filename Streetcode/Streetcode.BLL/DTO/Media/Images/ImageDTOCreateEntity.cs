@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Media.Images
 {
-    public class ImageDTOCreateEntity
+    public class ImageDtoCreateEntity
     {
         public int Id { get; set; }
         public string? BlobName { get; set; }

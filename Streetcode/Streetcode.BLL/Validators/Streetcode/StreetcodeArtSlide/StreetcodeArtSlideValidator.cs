@@ -6,7 +6,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 
-public class StreetcodeArtSlideValidator : AbstractValidator<StreetcodeArtSlideCreateUpdateDTO>
+public class StreetcodeArtSlideValidator : AbstractValidator<StreetcodeArtSlideCreateUpdateDto>
 {
     public StreetcodeArtSlideValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {

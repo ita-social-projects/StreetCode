@@ -10,7 +10,7 @@ using SourcesEntity = Streetcode.DAL.Entities.Sources;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
 {
-    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<UpdateSourceLinkCategoryDTO>>
+    public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, Result<UpdateSourceLinkCategoryDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             _stringLocalizerCannotFindSharedResource = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<UpdateSourceLinkCategoryDTO>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<Result<UpdateSourceLinkCategoryDto>> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var existingCategory = await _repositoryWrapper.SourceCategoryRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Category.Id);
@@ -57,7 +57,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLink.Update
             _repositoryWrapper.SourceCategoryRepository.Update(category);
 
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-            var returnCategory = _mapper.Map<UpdateSourceLinkCategoryDTO>(category);
+            var returnCategory = _mapper.Map<UpdateSourceLinkCategoryDto>(category);
             if (resultIsSuccess)
             {
                 return Result.Ok(returnCategory);

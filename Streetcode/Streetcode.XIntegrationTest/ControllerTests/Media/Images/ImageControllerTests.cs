@@ -33,7 +33,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public async Task GetAllReturn_SuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDto>>(response.Content);
 
             Assert.Multiple(
                 () => Assert.True(response.IsSuccessStatusCode),
@@ -45,7 +45,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         {
             Image expectedImage = this.testImage;
             var response = await this.Client.GetByIdAsync(expectedImage.Id);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ImageDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ImageDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -72,7 +72,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             ImageExtracter.AddStreetcodeImage(this.testStreetcodeContent.Id, this.testImage.Id);
             int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

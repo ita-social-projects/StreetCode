@@ -4,11 +4,11 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Media.Art
 {
-    public class StreetcodeArtSlideCreateUpdateDTO : IModelState
+    public class StreetcodeArtSlideCreateUpdateDto : IModelState
     {
         public int SlideId { get; set; }
         public int Index { get; set; }
-        public IEnumerable<StreetcodeArtCreateUpdateDTO> StreetcodeArts { get; set; } = new List<StreetcodeArtCreateUpdateDTO>();
+        public IEnumerable<StreetcodeArtCreateUpdateDto> StreetcodeArts { get; set; } = new List<StreetcodeArtCreateUpdateDto>();
         public int? StreetcodeId { get; set; }
         public StreetcodeArtSlideTemplate Template { get; set; }
         public ModelState ModelState { get; set; }

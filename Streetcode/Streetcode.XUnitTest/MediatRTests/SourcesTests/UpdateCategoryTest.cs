@@ -67,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                    It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image());
 
-            this.mockMapper.Setup(m => m.Map<DAL.Entities.Sources.SourceLinkCategory?>(It.IsAny<SourceLinkCreateUpdateCategoryDTO>()))
+            this.mockMapper.Setup(m => m.Map<DAL.Entities.Sources.SourceLinkCategory?>(It.IsAny<SourceLinkCreateUpdateCategoryDto>()))
                 .Returns((DAL.Entities.Sources.SourceLinkCategory?)null);
 
             var expectedError = "Cannot convert null to category";
@@ -218,9 +218,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static UpdateSourceLinkCategoryDTO GetCategoryDTO()
+        private static UpdateSourceLinkCategoryDto GetCategoryDTO()
         {
-            return new UpdateSourceLinkCategoryDTO();
+            return new UpdateSourceLinkCategoryDto();
         }
 
         private void SetupCreateRepository(int returnNumber)
@@ -229,11 +229,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             this._mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, UpdateSourceLinkCategoryDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, UpdateSourceLinkCategoryDto testCategoryDTO)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<UpdateSourceLinkCategoryDto>()))
                 .Returns(testCategory);
-            this.mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            this.mockMapper.Setup(x => x.Map<UpdateSourceLinkCategoryDto>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
     }

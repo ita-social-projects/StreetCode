@@ -12,7 +12,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 {
-    internal class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
+    internal class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDto>?>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 
         // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
-        public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<RelatedFigureDto>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
@@ -50,10 +50,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.TagId].Value;
                 _logger.LogError(request, errorMsg);
 
-                return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
+                return Result.Ok<IEnumerable<RelatedFigureDto>?>(null);
             }
 
-            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
+            return Result.Ok<IEnumerable<RelatedFigureDto>?>(_mapper.Map<IEnumerable<RelatedFigureDto>>(streetcodes));
         }
     }
 }

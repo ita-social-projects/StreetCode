@@ -8,7 +8,7 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class StreetcodeArtSlideController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeArtSlideDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeArtSlideDto>))]
     public async Task<IActionResult> GetPageByStreetcodeId([FromRoute] uint streetcodeId, ushort fromSlideN, ushort amountOfSlides)
     {
         return HandleResult(await Mediator.Send(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, fromSlideN, amountOfSlides)));

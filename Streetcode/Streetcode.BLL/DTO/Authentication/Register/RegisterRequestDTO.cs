@@ -5,7 +5,7 @@ using Streetcode.BLL.Constants.Authentication;
 
 namespace Streetcode.BLL.DTO.Authentication.Register;
 
-public class RegisterRequestDTO
+public class RegisterRequestDto
 {
     [Required]
     [MaxLength(50)]

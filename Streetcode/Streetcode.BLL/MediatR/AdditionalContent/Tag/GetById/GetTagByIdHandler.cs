@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 
-public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>>
+public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<TagDTO>> Handle(GetTagByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TagDto>> Handle(GetTagByIdQuery request, CancellationToken cancellationToken)
     {
         var tag = await _repositoryWrapper.TagRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
@@ -35,6 +35,6 @@ public class GetTagByIdHandler : IRequestHandler<GetTagByIdQuery, Result<TagDTO>
             return Result.Fail(new Error(errorMsg));
         }
 
-        return Result.Ok(_mapper.Map<TagDTO>(tag));
+        return Result.Ok(_mapper.Map<TagDto>(tag));
     }
 }

@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
 
-public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimelineItemsByStreetcodeIdQuery, Result<IEnumerable<TimelineItemDTO>>>
+public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimelineItemsByStreetcodeIdQuery, Result<IEnumerable<TimelineItemDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,7 +25,7 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<IEnumerable<TimelineItemDTO>>> Handle(GetTimelineItemsByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TimelineItemDto>>> Handle(GetTimelineItemsByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var timelineItems = await _repositoryWrapper.TimelineRepository
             .GetAllAsync(
@@ -38,9 +38,9 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
         {
             string message = "Returning empty enumerable of timeline items";
             _logger.LogInformation(message);
-            return Result.Ok(Enumerable.Empty<TimelineItemDTO>());
+            return Result.Ok(Enumerable.Empty<TimelineItemDto>());
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDTO>>(timelineItems));
+        return Result.Ok(_mapper.Map<IEnumerable<TimelineItemDto>>(timelineItems));
     }
 }

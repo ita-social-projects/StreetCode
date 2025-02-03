@@ -6,7 +6,7 @@ using Streetcode.BLL.Validators.Common;
 
 namespace Streetcode.BLL.Validators.Streetcode.Video;
 
-public class BaseVideoValidator : AbstractValidator<VideoCreateUpdateDTO>
+public class BaseVideoValidator : AbstractValidator<VideoCreateUpdateDto>
 {
     public static readonly List<string> VideoHosts = new()
     {

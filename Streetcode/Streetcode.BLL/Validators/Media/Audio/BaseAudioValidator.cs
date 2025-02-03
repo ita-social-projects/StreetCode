@@ -5,7 +5,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Media.Audio;
 
-public class BaseAudioValidator : AbstractValidator<AudioFileBaseCreateDTO>
+public class BaseAudioValidator : AbstractValidator<AudioFileBaseCreateDto>
 {
     public const int MaxTitleLength = 100;
     public const int MaxMimeTypeLength = 10;

@@ -39,16 +39,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             },
         };
 
-        private readonly List<TransactLinkDTO> transactionsDTOs = new List<TransactLinkDTO>()
+        private readonly List<TransactLinkDto> transactionsDTOs = new List<TransactLinkDto>()
         {
-            new TransactLinkDTO
+            new TransactLinkDto
             {
                 Id = 1,
                 Url = "URL",
                 QrCodeUrl = "URL",
                 StreetcodeId = 1,
             },
-            new TransactLinkDTO
+            new TransactLinkDto
             {
                 Id = 2,
                 Url = "URL2",
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TransactLinkDTO>>(result.Value),
+                () => Assert.IsType<List<TransactLinkDto>>(result.Value),
                 () => Assert.True(result.Value.Count() == this.transactions.Count));
         }
 
@@ -88,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         {
             // Arrange
             this.SetupRepository(null);
-            this.SetupMapper(new List<TransactLinkDTO>());
+            this.SetupMapper(new List<TransactLinkDto>());
 
             var expectedError = $"Cannot find any transaction link";
             this.mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
@@ -110,9 +110,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(returnList);
         }
 
-        private void SetupMapper(List<TransactLinkDTO> returnList)
+        private void SetupMapper(List<TransactLinkDto> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDto>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
         }
     }
 }

@@ -15,28 +15,28 @@ namespace Streetcode.WebApi.Controllers.Newss
     public class NewsController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDto>))]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
             return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDto))]
         public async Task<IActionResult> GetById(int id)
         {
             return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id)));
         }
 
         [HttpGet("{url}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDto))]
         public async Task<IActionResult> GetByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url)));
         }
 
         [HttpGet("{url}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTOWithURLs))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDtoWithUrls))]
         public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
         {
             return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
@@ -44,10 +44,10 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(NewsDTO))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(NewsDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create([FromBody] NewsCreateDTO partner)
+        public async Task<IActionResult> Create([FromBody] NewsCreateDto partner)
         {
             return HandleResult(await Mediator.Send(new CreateNewsCommand(partner)));
         }
@@ -64,10 +64,10 @@ namespace Streetcode.WebApi.Controllers.Newss
 
         [HttpPut]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateNewsDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateNewsDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Update(UpdateNewsDTO newsDto)
+        public async Task<IActionResult> Update(UpdateNewsDto newsDto)
         {
             return HandleResult(await Mediator.Send(new UpdateNewsCommand(newsDto)));
         }

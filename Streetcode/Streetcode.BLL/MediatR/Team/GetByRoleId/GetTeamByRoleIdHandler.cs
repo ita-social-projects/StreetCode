@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 {
-    public class GetTeamByRoleIdHandler : IRequestHandler<GetTeamByRoleIdQuery, Result<IEnumerable<TeamMemberDTO>>>
+    public class GetTeamByRoleIdHandler : IRequestHandler<GetTeamByRoleIdQuery, Result<IEnumerable<TeamMemberDto>>>
 	{
 		private readonly IMapper _mapper;
 		private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 			_blob = blob;
 		}
 
-		public async Task<Result<IEnumerable<TeamMemberDTO>>> Handle(GetTeamByRoleIdQuery request, CancellationToken cancellationToken)
+		public async Task<Result<IEnumerable<TeamMemberDto>>> Handle(GetTeamByRoleIdQuery request, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 					team.Image!.Base64 = _blob.FindFileInStorageAsBase64(team.Image.BlobName!);
 				}
 
-				var teamByRoleId = _mapper.Map<IEnumerable<TeamMemberDTO>>(teamDtoByRoleId);
+				var teamByRoleId = _mapper.Map<IEnumerable<TeamMemberDto>>(teamDtoByRoleId);
 
 				return Result.Ok(teamByRoleId);
 			}

@@ -6,7 +6,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.AdditionalContent.Tag;
 
-public class BaseTagValidator : AbstractValidator<CreateUpdateTagDTO>
+public class BaseTagValidator : AbstractValidator<CreateUpdateTagDto>
 {
     public const int TitleMaxLength = 50;
     public BaseTagValidator(

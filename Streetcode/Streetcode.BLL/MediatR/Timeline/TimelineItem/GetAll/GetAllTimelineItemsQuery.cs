@@ -4,4 +4,4 @@ using Streetcode.BLL.DTO.Timeline;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetAll;
 
-public record GetAllTimelineItemsQuery : IRequest<Result<IEnumerable<TimelineItemDTO>>>;
+public record GetAllTimelineItemsQuery : IRequest<Result<IEnumerable<TimelineItemDto>>>;

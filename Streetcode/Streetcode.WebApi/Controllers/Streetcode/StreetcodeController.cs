@@ -32,50 +32,50 @@ namespace Streetcode.WebApi.Controllers.Streetcode;
 public class StreetcodeController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllStreetcodesResponseDTO))]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllStreetcodesResponseDto))]
+    public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDto request)
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDto>))]
     public async Task<IActionResult> GetAllPublished()
     {
         return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDto>))]
     public async Task<IActionResult> GetAllShort()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery()));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDto>))]
     public async Task<IActionResult> GetAllMainPage()
     {
         return HandleResult(await Mediator.Send(new GetAllStreetcodesMainPageQuery()));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeMainPageDto>))]
     public async Task<IActionResult> GetPageMainPage(ushort page, ushort pageSize)
     {
         return HandleResult(await Mediator.Send(new GetPageOfStreetcodesMainPageQuery(page, pageSize)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDto))]
     public async Task<IActionResult> GetShortById(int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id)));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFilterResultDTO>))]
-    public async Task<IActionResult> GetByFilter([FromQuery] StreetcodeFilterRequestDTO request)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFilterResultDto>))]
+    public async Task<IActionResult> GetByFilter([FromQuery] StreetcodeFilterRequestDto request)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByFilterQuery(request)));
     }
@@ -109,14 +109,14 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet("{url}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDto))]
     public async Task<IActionResult> GetByTransliterationUrl([FromRoute] string url)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
@@ -130,7 +130,7 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet("{index}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDto))]
     public async Task<IActionResult> GetByIndex([FromRoute] int index)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index)));
@@ -141,7 +141,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] StreetcodeCreateDTO streetcode)
+    public async Task<IActionResult> Create([FromBody] StreetcodeCreateDto streetcode)
     {
         return HandleResult(await Mediator.Send(new CreateStreetcodeCommand(streetcode)));
     }
@@ -183,7 +183,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
+    public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDto streetcode)
     {
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));
 	}

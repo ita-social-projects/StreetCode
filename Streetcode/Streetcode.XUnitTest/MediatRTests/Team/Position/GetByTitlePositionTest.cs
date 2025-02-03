@@ -27,7 +27,7 @@ public class GetByTitlePositionTest
         Position = title,
     };
 
-    private readonly PositionDTO contextDto = new PositionDTO
+    private readonly PositionDto contextDto = new PositionDto
     {
         Id = 1,
         Position = title,
@@ -55,7 +55,7 @@ public class GetByTitlePositionTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<PositionDTO>(result.Value),
+            () => Assert.IsType<PositionDto>(result.Value),
             () => Assert.Equal(title, result.Value.Position));
     }
 
@@ -64,7 +64,7 @@ public class GetByTitlePositionTest
     {
         // Arrange
         this.SetupRepository(new Positions());
-        this.SetupMapper(new PositionDTO());
+        this.SetupMapper(new PositionDto());
 
         var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -73,7 +73,7 @@ public class GetByTitlePositionTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<PositionDTO>(result.Value),
+            () => Assert.IsType<PositionDto>(result.Value),
             () => Assert.Null(result.Value.Position));
     }
 
@@ -88,10 +88,10 @@ public class GetByTitlePositionTest
             .ReturnsAsync(positions);
     }
 
-    private void SetupMapper(PositionDTO positionsDto)
+    private void SetupMapper(PositionDto positionsDto)
     {
         this.mockMapper
-            .Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            .Setup(x => x.Map<PositionDto>(It.IsAny<Positions>()))
             .Returns(positionsDto);
     }
 }

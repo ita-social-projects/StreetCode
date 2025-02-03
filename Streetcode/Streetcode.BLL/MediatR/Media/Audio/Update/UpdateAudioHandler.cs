@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.Update;
 
-public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<AudioDTO>>
+public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<AudioDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -35,7 +35,7 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<AudioDTO>> Handle(UpdateAudioCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AudioDto>> Handle(UpdateAudioCommand request, CancellationToken cancellationToken)
     {
         var existingAudio = await _repositoryWrapper.AudioRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Audio.Id);
@@ -61,7 +61,7 @@ public class UpdateAudioHandler : IRequestHandler<UpdateAudioCommand, Result<Aud
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        var createdAudio = _mapper.Map<AudioDTO>(updatedAudio);
+        var createdAudio = _mapper.Map<AudioDto>(updatedAudio);
 
         createdAudio.Base64 = _blobService.FindFileInStorageAsBase64(createdAudio.BlobName);
 

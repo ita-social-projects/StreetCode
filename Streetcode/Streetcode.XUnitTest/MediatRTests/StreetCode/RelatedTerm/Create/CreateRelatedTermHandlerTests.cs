@@ -66,7 +66,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             // Arrange
             this.SetupMapperMockToMapEntity(null);
             var handler = new CreateRelatedTermHandler(this.repositoryWrapperMock.Object, this.mapperMock.Object, this.mockLogger.Object, this.mockLocalizerCannotSave.Object, this.mockLocalizerCannotMap.Object, this.mockLocalizer.Object, this.mockLocalizerCannotCreate.Object);
-            var command = new CreateRelatedTermCommand(new RelatedTermCreateDTO());
+            var command = new CreateRelatedTermCommand(new RelatedTermCreateDto());
             this.SetupLocalizers();
 
             // Act
@@ -111,7 +111,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
             var repositoryMock = new Mock<IRepositoryWrapper>();
             var mapperMock = new Mock<IMapper>();
 
-            mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermDTO>())).Returns(entity);
+            mapperMock.Setup(m => m.Map<Entity>(It.IsAny<RelatedTermDto>())).Returns(entity);
             this.SetupGetAllAsyncWithExistingTerms(existingTerms);
 
             repositoryMock.Setup(r => r.RelatedTermRepository.Create(It.IsAny<Entity>()));
@@ -148,9 +148,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
                 .Returns((string key) => new LocalizedString(key, $"Cannot save changes in the database after related word creation"));
         }
 
-        private (RelatedTermCreateDTO relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
+        private (RelatedTermCreateDto relatedTermDTO, Entity entity) CreateRelatedTermObjects(int termId, string word)
         {
-            var relatedTermDTO = new RelatedTermCreateDTO { TermId = termId, Word = word };
+            var relatedTermDTO = new RelatedTermCreateDto { TermId = termId, Word = word };
             var entity = new Entity { TermId = relatedTermDTO.TermId, Word = relatedTermDTO.Word };
 
             return (relatedTermDTO, entity);
@@ -158,7 +158,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Create
 
         private void SetupMapperMockToMapEntity(Entity? entity)
         {
-            this.mapperMock.Setup(m => m.Map<Entity?>(It.IsAny<RelatedTermCreateDTO>())).Returns(entity);
+            this.mapperMock.Setup(m => m.Map<Entity?>(It.IsAny<RelatedTermCreateDto>())).Returns(entity);
         }
 
         private void SetupGetAllAsyncWithExistingTerms(List<Entity> existingTerms)

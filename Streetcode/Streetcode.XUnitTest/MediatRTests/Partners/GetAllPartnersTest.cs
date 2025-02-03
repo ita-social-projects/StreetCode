@@ -48,7 +48,7 @@ public class GetAllPartnersTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners)
+            () => Assert.IsType<List<PartnerDto>>(result.Value.Partners)
         );
     }
 
@@ -86,7 +86,7 @@ public class GetAllPartnersTest
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners),
+            () => Assert.IsType<List<PartnerDto>>(result.Value.Partners),
             () => Assert.Equal(pageSize, result.Value.Partners.Count()));
     }
 
@@ -119,27 +119,27 @@ public class GetAllPartnersTest
         return partners;
     }
 
-    private static List<PartnerDTO> GetListPartnerDTO()
+    private static List<PartnerDto> GetListPartnerDTO()
     {
-        var partnersDTO = new List<PartnerDTO>
+        var partnersDTO = new List<PartnerDto>
     {
-        new PartnerDTO
+        new PartnerDto
         {
             Id = 1,
         },
-        new PartnerDTO
+        new PartnerDto
         {
             Id = 2,
         },
-        new PartnerDTO
+        new PartnerDto
         {
             Id = 3,
         },
-        new PartnerDTO
+        new PartnerDto
         {
             Id = 4,
         },
-        new PartnerDTO
+        new PartnerDto
         {
             Id = 5,
         },
@@ -161,10 +161,10 @@ public class GetAllPartnersTest
         .Returns(PaginationResponse<Partner>.Create(returnList.AsQueryable()));
     }
 
-    private void SetupMapper(IEnumerable<PartnerDTO> returnList)
+    private void SetupMapper(IEnumerable<PartnerDto> returnList)
     {
         this.mockMapper
-            .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Setup(x => x.Map<IEnumerable<PartnerDto>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(returnList);
     }
 }

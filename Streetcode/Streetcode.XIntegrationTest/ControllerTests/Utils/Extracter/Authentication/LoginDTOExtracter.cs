@@ -5,9 +5,9 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication
 {
-    public class LoginDTOExtracter
+    public class LoginDtoExtracter
     {
-        public static LoginRequestDTO Extract(string userId, string userEmail, string roleName = nameof(UserRole.User))
+        public static LoginRequestDto Extract(string userId, string userEmail, string roleName = nameof(UserRole.User))
         {
             string testPassword = "Test_Password_123";
             User testUser = TestDataProvider.GetTestData<User>();
@@ -19,7 +19,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
             IdentityRole role = RoleExtracter.Extract(roleName);
             RoleExtracter.AddUserRole(testUser.Id, role.Id);
 
-            return new LoginRequestDTO()
+            return new LoginRequestDto()
             {
                 Login = testUser.Email,
                 Password = testPassword,

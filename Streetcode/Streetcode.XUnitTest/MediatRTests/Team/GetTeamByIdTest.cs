@@ -101,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<TeamMemberDTO>(result.ValueOrDefault));
+                () => Assert.IsType<TeamMemberDto>(result.ValueOrDefault));
         }
 
         private static TeamMember GetTeam()
@@ -117,15 +117,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             return null;
         }
 
-        private static TeamMemberDTO GetTeamDTO()
+        private static TeamMemberDto GetTeamDTO()
         {
-            return new TeamMemberDTO
+            return new TeamMemberDto
             {
                 Id = 1,
             };
         }
 
-        private static TeamMemberDTO? GetTeamDTOWithNotExistingId()
+        private static TeamMemberDto? GetTeamDTOWithNotExistingId()
         {
             return null;
         }
@@ -139,10 +139,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 .ReturnsAsync(testTeam);
         }
 
-        private void SetupMapTeamMember(TeamMemberDTO? teamMemberDTO)
+        private void SetupMapTeamMember(TeamMemberDto? teamMemberDTO)
         {
             this.mockMapper.Setup(x => x
-                .Map<TeamMemberDTO?>(It.IsAny<TeamMember>()))
+                .Map<TeamMemberDto?>(It.IsAny<TeamMember>()))
                 .Returns(teamMemberDTO);
         }
     }

@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             var testAudio = new Model() { Id = id };
-            var testAudioDTO = new AudioDTO { Id = id };
+            var testAudioDTO = new AudioDto { Id = id };
 
             this.RepositorySetup(testAudio);
             this.MapperSetup(testAudioDTO);
@@ -58,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             // Arrange
             string expectedErrorMessage = $"Cannot find an audio with corresponding id: {id}";
 
-            var testAudioDTO = new AudioDTO { Id = id };
+            var testAudioDTO = new AudioDto { Id = id };
 
             this.RepositorySetup(null);
             this.MapperSetup(testAudioDTO);
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             // Arrange
             var testAudio = new Model() { Id = id };
 
-            var testAudioDTO = new AudioDTO { Id = id };
+            var testAudioDTO = new AudioDto { Id = id };
 
             this.RepositorySetup(testAudio);
             this.MapperSetup(testAudioDTO);
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsAssignableFrom<AudioDTO>(result.Value);
+            Assert.IsAssignableFrom<AudioDto>(result.Value);
         }
 
         private void RepositorySetup(Model? audio)
@@ -111,9 +111,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             });
         }
 
-        private void MapperSetup(AudioDTO? audioDTO)
+        private void MapperSetup(AudioDto? audioDTO)
         {
-            this.mapper.Setup(x => x.Map<AudioDTO?>(It.IsAny<Model>()))
+            this.mapper.Setup(x => x.Map<AudioDto?>(It.IsAny<Model>()))
                 .Returns(audioDTO);
         }
     }

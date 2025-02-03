@@ -132,9 +132,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             };
         }
 
-        private static EmailDTO GetEmailDTO()
+        private static EmailDto GetEmailDTO()
         {
-            return new EmailDTO()
+            return new EmailDto()
             {
                 Content = "Test Content",
                 From = "testemail@gmail.com",

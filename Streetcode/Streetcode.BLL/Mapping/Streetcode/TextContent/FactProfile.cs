@@ -11,11 +11,11 @@ public class FactProfile : Profile
     public FactProfile()
     {
         CreateMap<Fact, FactDto>().ReverseMap();
-        CreateMap<Fact, StreetcodeFactCreateDTO>().ReverseMap();
-        CreateMap<StreetcodeFactUpdateDTO, Fact>()
+        CreateMap<Fact, StreetcodeFactCreateDto>().ReverseMap();
+        CreateMap<StreetcodeFactUpdateDto, Fact>()
           .ForMember(x => x.Streetcode, opt => opt.MapFrom(src => null as StreetcodeContent))
           .ForMember(x => x.Image, opt => opt.MapFrom(src => src.ModelState == Enums.ModelState.Deleted ? new Image { Id = src.ImageId, BlobName = string.Empty, MimeType = string.Empty } : null))
           .ReverseMap();
-        CreateMap<FactCreateDTO, Fact>();
+        CreateMap<FactCreateDto, Fact>();
     }
 }

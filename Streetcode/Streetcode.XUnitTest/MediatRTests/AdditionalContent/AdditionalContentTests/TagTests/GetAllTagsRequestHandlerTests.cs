@@ -41,13 +41,13 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             new Tag { Id = 5, Title = "some title 5" },
         };
 
-        private readonly List<TagDTO> tagDTOs = new List<TagDTO>()
+        private readonly List<TagDto> tagDTOs = new List<TagDto>()
         {
-            new TagDTO { Id = 1, Title = "some title 1" },
-            new TagDTO { Id = 2, Title = "some title 2" },
-            new TagDTO { Id = 3, Title = "some title 3" },
-            new TagDTO { Id = 4, Title = "some title 4" },
-            new TagDTO { Id = 5, Title = "some title 5" },
+            new TagDto { Id = 1, Title = "some title 1" },
+            new TagDto { Id = 2, Title = "some title 2" },
+            new TagDto { Id = 3, Title = "some title 3" },
+            new TagDto { Id = 4, Title = "some title 4" },
+            new TagDto { Id = 5, Title = "some title 5" },
         };
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value.Tags),
+                () => Assert.IsType<List<TagDto>>(result.Value.Tags),
                 () => Assert.True(result.Value.Tags.Count() == this.tags.Count));
         }
 
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
         {
             // Arrange
             this.SetupPaginatedRepository(new List<Tag>());
-            this.SetupMapper(new List<TagDTO>());
+            this.SetupMapper(new List<TagDto>());
 
             var expectedError = $"Cannot find any tags";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTags"])
@@ -86,7 +86,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value.Tags),
+                () => Assert.IsType<List<TagDto>>(result.Value.Tags),
                 () => Assert.Empty(result.Value.Tags));
         }
 
@@ -105,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TagDTO>>(result.Value.Tags),
+                () => Assert.IsType<List<TagDto>>(result.Value.Tags),
                 () => Assert.Equal(pageSize, result.Value.Tags.Count()));
         }
 
@@ -122,9 +122,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             .Returns(PaginationResponse<Tag>.Create(returnList.AsQueryable()));
         }
 
-        private void SetupMapper(List<TagDTO> returnList)
+        private void SetupMapper(List<TagDto> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TagDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

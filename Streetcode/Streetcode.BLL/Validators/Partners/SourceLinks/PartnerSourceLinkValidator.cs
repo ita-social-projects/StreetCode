@@ -7,7 +7,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Validators.Partners.SourceLinks;
 
-public class PartnerSourceLinkValidator : AbstractValidator<CreatePartnerSourceLinkDTO>
+public class PartnerSourceLinkValidator : AbstractValidator<CreatePartnerSourceLinkDto>
 {
     public const int PartnerLinkMaxLength = 255;
     public PartnerSourceLinkValidator(IStringLocalizer<FieldNamesSharedResource> fieldLocalizer, IStringLocalizer<FailedToValidateSharedResource> localizer)

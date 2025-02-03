@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace Streetcode.BLL.DTO.News
 {
-    public class NewsCreateDTO : CreateUpdateNewsDTO
+    public class NewsCreateDto : CreateUpdateNewsDto
     {
     }
 }

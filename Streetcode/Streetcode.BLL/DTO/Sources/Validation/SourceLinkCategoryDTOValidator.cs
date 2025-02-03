@@ -2,9 +2,9 @@
 
 namespace Streetcode.BLL.DTO.Sources.Validation
 {
-    public class SourceLinkCategoryDTOValidator : AbstractValidator<SourceLinkCreateUpdateCategoryDTO>
+    public class SourceLinkCategoryDtoValidator : AbstractValidator<SourceLinkCreateUpdateCategoryDto>
     {
-        public SourceLinkCategoryDTOValidator()
+        public SourceLinkCategoryDtoValidator()
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Title cannot be empty.")

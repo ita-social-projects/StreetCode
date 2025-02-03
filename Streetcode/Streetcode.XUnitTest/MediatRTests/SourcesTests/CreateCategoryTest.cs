@@ -117,9 +117,9 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static SourceLinkCategoryCreateDTO GetCategoryDTO()
+        private static SourceLinkCategoryCreateDto GetCategoryDTO()
         {
-            return new SourceLinkCategoryCreateDTO()
+            return new SourceLinkCategoryCreateDto()
             {
                 ImageId = 1,
                 Title = "Title",
@@ -132,11 +132,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryCreateDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryCreateDto testCategoryDTO)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryCreateDto>()))
                 .Returns(testCategory);
-            this.mockMapper.Setup(x => x.Map<SourceLinkCategoryCreateDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+            this.mockMapper.Setup(x => x.Map<SourceLinkCategoryCreateDto>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
                 .Returns(testCategoryDTO);
         }
     }

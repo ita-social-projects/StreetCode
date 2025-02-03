@@ -101,14 +101,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static TeamMemberDTO GetTeamDTO()
+        private static TeamMemberDto GetTeamDTO()
         {
-            return new TeamMemberDTO();
+            return new TeamMemberDto();
         }
 
         private void SetupMapTeamMember(TeamMember teamMember)
         {
-            this.mockMapper.Setup(x => x.Map<TeamMemberDTO>(teamMember))
+            this.mockMapper.Setup(x => x.Map<TeamMemberDto>(teamMember))
                 .Returns(GetTeamDTO());
         }
 

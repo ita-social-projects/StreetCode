@@ -42,7 +42,7 @@ public class GetVideoByIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<VideoDTO>(It.IsAny<Video>()))
+            .Map<VideoDto>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(id));
 
         var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
@@ -73,7 +73,7 @@ public class GetVideoByIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<VideoDTO?>(It.IsAny<Video>()))
+            .Map<VideoDto?>(It.IsAny<Video>()))
             .Returns(GetVideoDTOWithNotExistingId());
 
         var expectedError = $"Cannot find a video with corresponding id: {id}";
@@ -108,7 +108,7 @@ public class GetVideoByIdTest
 
         this.mockMapper
              .Setup(x => x
-             .Map<VideoDTO>(It.IsAny<Video>()))
+             .Map<VideoDto>(It.IsAny<Video>()))
              .Returns(GetVideoDTO(id));
 
         // Act
@@ -120,12 +120,12 @@ public class GetVideoByIdTest
 
         // Assert
         Assert.NotNull(result.ValueOrDefault);
-        Assert.IsType<VideoDTO>(result.ValueOrDefault);
+        Assert.IsType<VideoDto>(result.ValueOrDefault);
     }
 
-    private static VideoDTO GetVideoDTO(int id)
+    private static VideoDto GetVideoDTO(int id)
     {
-        return new VideoDTO()
+        return new VideoDto()
         {
             Id = id,
         };
@@ -139,7 +139,7 @@ public class GetVideoByIdTest
         };
     }
 
-    private static VideoDTO? GetVideoDTOWithNotExistingId()
+    private static VideoDto? GetVideoDTOWithNotExistingId()
     {
         return null;
     }

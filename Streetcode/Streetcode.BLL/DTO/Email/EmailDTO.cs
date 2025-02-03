@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 namespace Streetcode.BLL.DTO.Email
 {
     [ValidateNever]
-    public class EmailDTO
+    public class EmailDto
     {
         [MaxLength(80)]
         public string From { get; set; } = null!;

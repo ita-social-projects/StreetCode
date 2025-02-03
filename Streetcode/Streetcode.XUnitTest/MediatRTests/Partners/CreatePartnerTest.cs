@@ -41,9 +41,9 @@ public class CreatePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
+        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDto>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
         this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
@@ -62,7 +62,7 @@ public class CreatePartnerTest
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);
 
         // Assert
-        Assert.IsType<PartnerDTO>(result.Value);
+        Assert.IsType<PartnerDto>(result.Value);
     }
 
     [Fact]
@@ -71,9 +71,9 @@ public class CreatePartnerTest
         // Arrange
         var testPartner = GetPartner();
 
-        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
+        this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDto>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
         this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
@@ -107,9 +107,9 @@ public class CreatePartnerTest
         };
     }
 
-    private static CreatePartnerDTO GetCreatePartnerDto()
+    private static CreatePartnerDto GetCreatePartnerDto()
     {
-        return new CreatePartnerDTO
+        return new CreatePartnerDto
         {
             Title = "New Partner",
             LogoId = 100,
@@ -118,9 +118,9 @@ public class CreatePartnerTest
         };
     }
 
-    private static PartnerDTO GetPartnerDto()
+    private static PartnerDto GetPartnerDto()
     {
-        return new PartnerDTO
+        return new PartnerDto
         {
             Title = "New Partner",
             LogoId = 100,
@@ -129,19 +129,19 @@ public class CreatePartnerTest
         };
     }
 
-    private static CreatePartnerDTO GetCreatePartnerDtoWithStreetcodes()
+    private static CreatePartnerDto GetCreatePartnerDtoWithStreetcodes()
     {
-        return new CreatePartnerDTO
+        return new CreatePartnerDto
         {
             Title = "New Partner",
             LogoId = 100,
             IsKeyPartner = false,
             IsVisibleEverywhere = true,
-            Streetcodes = new List<StreetcodeShortDTO>
+            Streetcodes = new List<StreetcodeShortDto>
             {
-                new StreetcodeShortDTO { Id = 1 },
-                new StreetcodeShortDTO { Id = 2 },
-                new StreetcodeShortDTO { Id = 3 },
+                new StreetcodeShortDto { Id = 1 },
+                new StreetcodeShortDto { Id = 2 },
+                new StreetcodeShortDto { Id = 3 },
             },
         };
     }

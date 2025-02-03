@@ -15,14 +15,14 @@ namespace Streetcode.WebApi.Controllers.Analytics
     public class StatisticRecordController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDto>))]
         public async Task<IActionResult> GetAll()
         {
             return HandleResult(await Mediator.Send(new GetAllStatisticRecordsQuery()));
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordDto))]
         public async Task<IActionResult> GetByQrId(int id)
         {
             return HandleResult(await Mediator.Send(new GetStatisticRecordByQrIdQuery(id)));
@@ -36,7 +36,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDto>))]
         public async Task<IActionResult> GetAllByStreetcodeId(int id)
         {
             return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
@@ -44,10 +44,10 @@ namespace Streetcode.WebApi.Controllers.Analytics
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDto)
+        public async Task<IActionResult> Create(StatisticRecordDto statisticRecordDto)
         {
             return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDto)));
         }

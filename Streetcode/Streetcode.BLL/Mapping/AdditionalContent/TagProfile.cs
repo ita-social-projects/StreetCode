@@ -9,22 +9,22 @@ public class TagProfile : Profile
 {
     public TagProfile()
     {
-        CreateMap<Tag, TagDTO>().ReverseMap();
-        CreateMap<Tag, UpdateTagDTO>().ReverseMap();
-        CreateMap<Tag, StreetcodeTagDTO>().ReverseMap();
-        CreateMap<StreetcodeTagIndex, StreetcodeTagDTO>()
+        CreateMap<Tag, TagDto>().ReverseMap();
+        CreateMap<Tag, UpdateTagDto>().ReverseMap();
+        CreateMap<Tag, StreetcodeTagDto>().ReverseMap();
+        CreateMap<StreetcodeTagIndex, StreetcodeTagDto>()
             .ForMember(x => x.Id, conf => conf.MapFrom(ti => ti.TagId))
             .ForMember(x => x.Title, conf => conf.MapFrom(ti => ti.Tag!.Title ?? ""));
 
-        CreateMap<StreetcodeTagUpdateDTO, StreetcodeTagIndex>()
+        CreateMap<StreetcodeTagUpdateDto, StreetcodeTagIndex>()
             .ForMember(x => x.TagId, conf => conf.MapFrom(ti => ti.Id))
             .ForPath(sti => sti.Tag, conf => conf.MapFrom(stu => stu.Id <= 0 ? new Tag() { Id = stu.Id, Title = stu.Title } : null));
 
-        CreateMap<StreetcodeTagUpdateDTO, Tag>()
+        CreateMap<StreetcodeTagUpdateDto, Tag>()
             .ForMember(t => t.Id, conf => conf.MapFrom(stu => stu.Id))
             .ForMember(t => t.Title, conf => conf.MapFrom(stu => stu.Title));
 
-        CreateMap<StreetcodeTagDTO, StreetcodeTagUpdateDTO>().ReverseMap();
-        CreateMap<Tag, StreetcodeTagUpdateDTO>().ReverseMap();
+        CreateMap<StreetcodeTagDto, StreetcodeTagUpdateDto>().ReverseMap();
+        CreateMap<Tag, StreetcodeTagUpdateDto>().ReverseMap();
     }
 }

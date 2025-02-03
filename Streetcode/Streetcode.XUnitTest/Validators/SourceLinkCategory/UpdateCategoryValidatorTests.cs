@@ -24,7 +24,7 @@ public class UpdateCategoryValidatorTests
         _mockFieldsLocalizer = new MockFieldNamesLocalizer();
         _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
         _mockBaseValidator = new Mock<BaseCategoryValidator>(_mockRepositoryWrapper.Object, _mockValidationLocalizer, _mockFieldsLocalizer);
-        _mockBaseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<SourceLinkCreateUpdateCategoryDTO>>(), default))
+        _mockBaseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<SourceLinkCreateUpdateCategoryDto>>(), default))
             .ReturnsAsync(new ValidationResult());
     }
 
@@ -40,7 +40,7 @@ public class UpdateCategoryValidatorTests
         await updateValidator.TestValidateAsync(updateCommand);
 
         // Assert
-        _mockBaseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SourceLinkCreateUpdateCategoryDTO>>(), default), Times.Once);
+        _mockBaseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SourceLinkCreateUpdateCategoryDto>>(), default), Times.Once);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class UpdateCategoryValidatorTests
 
     private static UpdateCategoryCommand GetValidUpdateCategoryCommand()
     {
-        return new UpdateCategoryCommand(new UpdateSourceLinkCategoryDTO()
+        return new UpdateCategoryCommand(new UpdateSourceLinkCategoryDto()
         {
             Id = 1,
             Title = "Test Title",

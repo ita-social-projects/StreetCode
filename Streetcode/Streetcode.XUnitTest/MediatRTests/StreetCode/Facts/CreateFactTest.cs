@@ -36,7 +36,7 @@ public class CreateFactTest
         this.mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDTO>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDto>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
@@ -55,7 +55,7 @@ public class CreateFactTest
         this.mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDTO>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDto>()))
             .Returns(GetFact());
 
         var handler = new CreateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
@@ -75,7 +75,7 @@ public class CreateFactTest
         this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
         this.mockMapper
-            .Setup(x => x.Map<Fact?>(It.IsAny<StreetcodeFactCreateDTO>()))
+            .Setup(x => x.Map<Fact?>(It.IsAny<StreetcodeFactCreateDto>()))
             .Returns(GetFactWithNotExistId());
 
         var expectedError = "Cannot convert null to Fact";
@@ -98,7 +98,7 @@ public class CreateFactTest
         this.mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
         this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDTO>()))
+        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<StreetcodeFactCreateDto>()))
             .Returns(GetFact());
 
         var expectedError = "Failed to create a fact";
@@ -119,9 +119,9 @@ public class CreateFactTest
         return new Fact();
     }
 
-    private static StreetcodeFactCreateDTO GetFactDTO()
+    private static StreetcodeFactCreateDto GetFactDTO()
     {
-        return new StreetcodeFactCreateDTO();
+        return new StreetcodeFactCreateDto();
     }
 
     private static Fact? GetFactWithNotExistId()
@@ -129,7 +129,7 @@ public class CreateFactTest
         return null;
     }
 
-    private static StreetcodeFactCreateDTO? GetFactDTOWithNotExistId()
+    private static StreetcodeFactCreateDto? GetFactDTOWithNotExistId()
     {
         return null;
     }

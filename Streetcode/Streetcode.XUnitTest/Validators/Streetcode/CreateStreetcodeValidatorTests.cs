@@ -72,7 +72,7 @@ public class CreateStreetcodeValidatorTests
         var mockTimelineItemValidator = new Mock<TimelineItemValidator>(mockContextValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
         var mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
         var mockimageDetailsValidator = new Mock<ImageDetailsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer, this.repositoryWrapper.Object);
-        var mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        var mockArtValidator = new Mock<ArtCreateUpdateDtoValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         this.baseStreetcodeValidator = new Mock<BaseStreetcodeValidator>(
             mockToponymValidator.Object,
@@ -153,13 +153,13 @@ public class CreateStreetcodeValidatorTests
         this.SetupRepositoryWrapperReturnsNull();
         var expectedError = this.mockValidationLocalizer["CannotBeEmptyWithCondition", this.mockNamesLocalizer["Title"], this.mockNamesLocalizer["Video"]];
         var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.Text = new TextCreateDTO()
+        command.Streetcode.Text = new TextCreateDto()
         {
             Title = string.Empty,
         };
-        command.Streetcode.Videos = new List<VideoCreateDTO>()
+        command.Streetcode.Videos = new List<VideoCreateDto>()
         {
-            new VideoCreateDTO()
+            new VideoCreateDto()
             {
                 Url = "uuuurl",
             },
@@ -228,7 +228,7 @@ public class CreateStreetcodeValidatorTests
         var result = await this.validator.TestValidateAsync(command);
 
         // Assert
-        this.baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>(), default), Times.AtLeast(1));
+        this.baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDto>>(), default), Times.AtLeast(1));
     }
 
     [Fact]
@@ -243,12 +243,12 @@ public class CreateStreetcodeValidatorTests
         var result = await this.validator.TestValidateAsync(command);
 
         // Assert
-        this.categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>(), default), Times.AtLeast(1));
-        this.videoValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>(), default), Times.AtLeast(1));
-        this.baseTextValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<BaseTextDTO>>(), default), Times.AtLeast(1));
+        this.categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDto>>(), default), Times.AtLeast(1));
+        this.videoValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<VideoCreateUpdateDto>>(), default), Times.AtLeast(1));
+        this.baseTextValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<BaseTextDto>>(), default), Times.AtLeast(1));
         this.baseFactValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<FactUpdateCreateDto>>(), default), Times.AtLeast(1));
-        this.tagValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateTagDTO>>(), default), Times.AtLeast(1));
-        this.baseSubtitleValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>(), default), Times.AtLeast(1));
+        this.tagValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateTagDto>>(), default), Times.AtLeast(1));
+        this.baseSubtitleValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SubtitleCreateUpdateDto>>(), default), Times.AtLeast(1));
     }
 
     private void SetupRepositoryWrapperReturnsNull()
@@ -282,25 +282,25 @@ public class CreateStreetcodeValidatorTests
 
     private void SetupValidatorMocks()
     {
-        this.baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>()))
+        this.baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDto>>()))
             .Returns(new ValidationResult());
-        this.categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>()))
+        this.categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDto>>()))
             .Returns(new ValidationResult());
-        this.videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>()))
+        this.videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDto>>()))
             .Returns(new ValidationResult());
-        this.baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDTO>>()))
+        this.baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDto>>()))
             .Returns(new ValidationResult());
         this.baseFactValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<FactUpdateCreateDto>>()))
             .Returns(new ValidationResult());
-        this.tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
+        this.tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDto>>()))
             .Returns(new ValidationResult());
-        this.baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>()))
+        this.baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDto>>()))
             .Returns(new ValidationResult());
     }
 
     private CreateStreetcodeCommand GetValidCreateStreetcodeCommand()
     {
-        return new CreateStreetcodeCommand(new StreetcodeCreateDTO()
+        return new CreateStreetcodeCommand(new StreetcodeCreateDto()
         {
             FirstName = "Taras",
             LastName = "Shevchenko",
@@ -312,36 +312,36 @@ public class CreateStreetcodeValidatorTests
             DateString = "25 лютого (9 березня) 1814 року – 26 лютого (10 березня) 1861 року",
             StreetcodeType = StreetcodeType.Person,
             Status = StreetcodeStatus.Published,
-            Videos = new List<VideoCreateDTO>()
+            Videos = new List<VideoCreateDto>()
             {
                 new (),
             },
-            Text = new TextCreateDTO()
+            Text = new TextCreateDto()
             {
                 Title = "Taras Shevchenko",
             },
-            Subtitles = new List<SubtitleCreateDTO>()
+            Subtitles = new List<SubtitleCreateDto>()
             {
                 new (),
             },
-            Tags = new List<StreetcodeTagDTO>()
+            Tags = new List<StreetcodeTagDto>()
             {
                 new (),
             },
             ARBlockURL = "http://streetcode.com.ua/taras-shevchenko",
-            Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
+            Toponyms = new List<StreetcodeToponymCreateUpdateDto>()
             {
                 new (),
             },
-            StreetcodeCategoryContents = new List<CategoryContentCreateDTO>()
+            StreetcodeCategoryContents = new List<CategoryContentCreateDto>()
             {
                 new (),
             },
-            Facts = new List<StreetcodeFactCreateDTO>()
+            Facts = new List<StreetcodeFactCreateDto>()
             {
                 new (),
             },
-            TimelineItems = new List<TimelineItemCreateUpdateDTO>()
+            TimelineItems = new List<TimelineItemCreateUpdateDto>()
             {
                 new (),
             },
@@ -359,11 +359,11 @@ public class CreateStreetcodeValidatorTests
                     Alt = "1",
                 },
             },
-            StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>()
+            StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDto>()
             {
                 new (),
             },
-            Arts = new List<ArtCreateUpdateDTO>()
+            Arts = new List<ArtCreateUpdateDto>()
             {
                 new (),
             },

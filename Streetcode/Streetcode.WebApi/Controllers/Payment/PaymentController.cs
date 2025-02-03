@@ -9,7 +9,7 @@ namespace Streetcode.WebApi.Controllers.Payment
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(InvoiceInfo))]
-        public async Task<IActionResult> CreateInvoice([FromBody] PaymentDTO payment)
+        public async Task<IActionResult> CreateInvoice([FromBody] PaymentDto payment)
         {
             return HandleResult(await Mediator.Send(new CreateInvoiceCommand(payment)));
         }

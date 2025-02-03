@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Update;
 
-public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<ImageDTO>>
+public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<ImageDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -35,7 +35,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<ImageDTO>> Handle(UpdateImageCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ImageDto>> Handle(UpdateImageCommand request, CancellationToken cancellationToken)
     {
         var existingImage = await _repositoryWrapper.ImageRepository
                 .GetFirstOrDefaultAsync(a => a.Id == request.Image.Id);
@@ -61,7 +61,7 @@ public class UpdateImageHandler : IRequestHandler<UpdateImageCommand, Result<Ima
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        var returnedImaged = _mapper.Map<ImageDTO>(updatedImage);
+        var returnedImaged = _mapper.Map<ImageDto>(updatedImage);
 
         returnedImaged.Base64 = _blobService.FindFileInStorageAsBase64(returnedImaged.BlobName);
 

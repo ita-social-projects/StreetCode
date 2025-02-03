@@ -40,9 +40,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             {
                 new Model { Id = id },
             };
-            var testAudioListDTO = new List<AudioDTO>()
+            var testAudioListDTO = new List<AudioDto>()
             {
-                new AudioDTO() { Id = id },
+                new AudioDto() { Id = id },
             };
             var testAudio = new Model() { Id = id };
 
@@ -65,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             // Arrange
             string expectedErrorMessage = "Cannot find any audios";
             this.RepositorySetup(null, null);
-            this.MapperSetup(new List<AudioDTO>());
+            this.MapperSetup(new List<AudioDto>());
             this.BlobSetup(null);
 
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
@@ -91,9 +91,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
                 .ReturnsAsync(audios);
         }
 
-        private void MapperSetup(List<AudioDTO> audioDTOs)
+        private void MapperSetup(List<AudioDto> audioDTOs)
         {
-            this.mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mapper.Setup(x => x.Map<IEnumerable<AudioDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(audioDTOs);
         }
 

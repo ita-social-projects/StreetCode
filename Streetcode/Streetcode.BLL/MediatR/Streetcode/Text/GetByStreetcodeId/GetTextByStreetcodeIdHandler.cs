@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
 
-public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDTO>>
+public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeIdQuery, Result<TextDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -31,7 +31,7 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
         _cacheService = cacheService;
     }
 
-    public async Task<Result<TextDTO>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TextDto>> Handle(GetTextByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         string cacheKey = $"TextCache_{request.StreetcodeId}";
 
@@ -49,14 +49,14 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
                         {
                             string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
                             _logger.LogError(request, errorMsg);
-                            return Result.Fail<TextDTO>(new Error(errorMsg));
+                            return Result.Fail<TextDto>(new Error(errorMsg));
                         }
                     }
 
-                    NullResult<TextDTO> result = new NullResult<TextDTO>();
+                    NullResult<TextDto> result = new NullResult<TextDto>();
                     if (text != null)
                     {
-                        result.WithValue(_mapper.Map<TextDTO>(text));
+                        result.WithValue(_mapper.Map<TextDto>(text));
                     }
 
                     return result;

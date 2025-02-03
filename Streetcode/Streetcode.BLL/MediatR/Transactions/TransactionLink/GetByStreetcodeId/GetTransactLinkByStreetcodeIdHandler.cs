@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Transactions.TransactionLink.GetByStreetcodeId;
 
-public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactLinkByStreetcodeIdQuery, Result<TransactLinkDTO>>
+public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactLinkByStreetcodeIdQuery, Result<TransactLinkDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,7 +25,7 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TransactLinkDto>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var transactLink = await _repositoryWrapper.TransactLinksRepository
             .GetFirstOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
@@ -42,8 +42,8 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
             }
         }
 
-        NullResult<TransactLinkDTO> result = new NullResult<TransactLinkDTO>();
-        result.WithValue(_mapper.Map<TransactLinkDTO>(transactLink));
+        NullResult<TransactLinkDto> result = new NullResult<TransactLinkDto>();
+        result.WithValue(_mapper.Map<TransactLinkDto>(transactLink));
         return result;
     }
 }

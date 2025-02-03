@@ -40,7 +40,7 @@ public class StreetcodeArtSlideValidatorTests
         // Arrange
         var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["StreetcodeArts"]];
         var slide = this.GetArtSlideDto();
-        slide.StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>();
+        slide.StreetcodeArts = new List<StreetcodeArtCreateUpdateDto>();
 
         // Act
         var result = this.validator.TestValidate(slide);
@@ -66,17 +66,17 @@ public class StreetcodeArtSlideValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private StreetcodeArtSlideCreateUpdateDTO GetArtSlideDto()
+    private StreetcodeArtSlideCreateUpdateDto GetArtSlideDto()
     {
-        return new StreetcodeArtSlideCreateUpdateDTO()
+        return new StreetcodeArtSlideCreateUpdateDto()
         {
             Index = 5,
             ModelState = ModelState.Created,
             SlideId = 5,
             Template = StreetcodeArtSlideTemplate.OneToTwo,
-            StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>()
+            StreetcodeArts = new List<StreetcodeArtCreateUpdateDto>()
             {
-                new StreetcodeArtCreateUpdateDTO(),
+                new StreetcodeArtCreateUpdateDto(),
             },
         };
     }

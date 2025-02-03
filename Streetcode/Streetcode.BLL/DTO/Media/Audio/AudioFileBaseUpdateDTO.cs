@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Media.Audio;
 
-public class AudioFileBaseUpdateDTO : AudioFileBaseCreateDTO
+public class AudioFileBaseUpdateDto : AudioFileBaseCreateDto
 {
   public int Id { get; set; }
 }

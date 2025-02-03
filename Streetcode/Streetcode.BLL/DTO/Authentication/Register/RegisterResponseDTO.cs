@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Authentication.Register
 {
-    public class RegisterResponseDTO
+    public class RegisterResponseDto
     {
         public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;

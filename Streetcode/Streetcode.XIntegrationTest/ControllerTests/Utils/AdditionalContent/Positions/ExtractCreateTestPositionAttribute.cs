@@ -8,11 +8,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Po
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class ExtractCreateTestPositionAttribute : BeforeAfterTestAttribute
 {
-    public static PositionDTO PositionForTest { get; set; } = null!;
+    public static PositionDto PositionForTest { get; set; } = null!;
 
     public override void Before(MethodInfo methodUnderTest)
     {
-        PositionForTest = new PositionDTO
+        PositionForTest = new PositionDto
         {
             Position = "Test",
         };

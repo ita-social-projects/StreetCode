@@ -13,17 +13,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authenticatio
         {
         }
 
-        public async Task<RestResponse> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<RestResponse> Login(LoginRequestDto loginRequestDTO)
         {
             return await this.SendCommand("/Login", Method.Post, loginRequestDTO);
         }
 
-        public async Task<RestResponse> Register(RegisterRequestDTO registerRequestDTO)
+        public async Task<RestResponse> Register(RegisterRequestDto registerRequestDTO)
         {
             return await this.SendCommand("/Register", Method.Post, registerRequestDTO);
         }
 
-        public async Task<RestResponse> RefreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO)
+        public async Task<RestResponse> RefreshToken(RefreshTokenRequestDto refreshTokenRequestDTO)
         {
             return await this.SendCommand("/RefreshToken", Method.Post, refreshTokenRequestDTO);
         }

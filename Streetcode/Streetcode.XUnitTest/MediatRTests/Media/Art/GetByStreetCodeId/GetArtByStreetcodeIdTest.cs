@@ -56,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_ReturnsEmptyArray(int streetcodeId)
         {
             // Arrange
-            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
+            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDto>());
             var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
@@ -64,8 +64,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<ArtDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<ArtDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<ArtDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<ArtDto>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
 
@@ -82,7 +82,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
 
             // Assert
-            Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
+            Assert.IsType<Result<IEnumerable<ArtDto>>>(result);
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_HistorycodeWithNonExistentId_ReturnsError(int streetcodeId)
         {
             // Arrange
-            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
+            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDto>());
             var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
             var expectedError = $"Cannot find any art with corresponding streetcode id: {streetcodeId}";
 
@@ -118,24 +118,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private List<ArtDTO> GetArtsDTOList()
+        private List<ArtDto> GetArtsDTOList()
         {
-            return new List<ArtDTO>()
+            return new List<ArtDto>()
             {
-                new ArtDTO
+                new ArtDto
                 {
                     Id = 1,
-                    Image = new ImageDTO(),
+                    Image = new ImageDto(),
                 },
-                new ArtDTO
+                new ArtDto
                 {
                     Id = 2,
-                    Image = new ImageDTO(),
+                    Image = new ImageDto(),
                 },
             };
         }
 
-        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
+        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDto> artListDTO)
         {
             this.mockRepo
                 .Setup(r => r.ArtRepository
@@ -145,7 +145,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                         IIncludableQueryable<Art, object>>>()))
                 .ReturnsAsync(artList);
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDto>>(It.IsAny<IEnumerable<object>>()))
             .Returns(artListDTO);
 
             this.mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])

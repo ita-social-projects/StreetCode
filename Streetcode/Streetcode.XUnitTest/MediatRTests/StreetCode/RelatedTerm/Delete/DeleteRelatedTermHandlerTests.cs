@@ -10,7 +10,7 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Entity = Streetcode.DAL.Entities.Streetcode.TextContent.RelatedTerm;
-using EntityDTO = Streetcode.BLL.DTO.Streetcode.TextContent.RelatedTermDTO;
+using EntityDTO = Streetcode.BLL.DTO.Streetcode.TextContent.RelatedTermDto;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.Delete
 {

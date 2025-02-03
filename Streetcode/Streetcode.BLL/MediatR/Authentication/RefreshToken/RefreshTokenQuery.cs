@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.Authentication.RefreshToken;
 
 namespace Streetcode.BLL.MediatR.Authentication.RefreshToken
 {
-    public record RefreshTokenQuery(RefreshTokenRequestDTO token)
-        : IRequest<Result<RefreshTokenResponceDTO>>;
+    public record RefreshTokenQuery(RefreshTokenRequestDto token)
+        : IRequest<Result<RefreshTokenResponceDto>>;
 }

@@ -23,7 +23,7 @@ public class UpdatePartnerValidator : AbstractValidator<UpdatePartnerQuery>
         RuleFor(c => c.Partner).MustAsync(BeUniqueImageId).WithMessage(x => alreadyExistLocalizer["PartnerWithFieldAlreadyExist", fieldLocalizer["LogoId"], x.Partner.LogoId]);
     }
 
-    private async Task<bool> BeUniqueImageId(UpdatePartnerDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueImageId(UpdatePartnerDto dto, CancellationToken cancellationToken)
     {
         var existingNewsByImageId = await _repositoryWrapper.PartnersRepository.GetSingleOrDefaultAsync(n => n.LogoId == dto.LogoId);
 

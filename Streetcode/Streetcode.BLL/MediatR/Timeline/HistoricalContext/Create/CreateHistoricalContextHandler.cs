@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
 {
-    public class CreateHistoricalContextHandler : IRequestHandler<CreateHistoricalContextCommand, Result<HistoricalContextDTO>>
+    public class CreateHistoricalContextHandler : IRequestHandler<CreateHistoricalContextCommand, Result<HistoricalContextDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -26,7 +26,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
             _stringLocalizerFieldNames = stringLocalizerFieldNames;
         }
 
-        public async Task<Result<HistoricalContextDTO>> Handle(CreateHistoricalContextCommand request, CancellationToken cancellationToken)
+        public async Task<Result<HistoricalContextDto>> Handle(CreateHistoricalContextCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Create
 
                 var createdContext = await _repositoryWrapper.HistoricalContextRepository.CreateAsync(context);
                 await _repositoryWrapper.SaveChangesAsync();
-                return Result.Ok(_mapper.Map<HistoricalContextDTO>(createdContext));
+                return Result.Ok(_mapper.Map<HistoricalContextDto>(createdContext));
             }
             catch (Exception ex)
             {

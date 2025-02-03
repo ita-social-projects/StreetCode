@@ -26,7 +26,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<VideoDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<VideoDto>>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
         }
@@ -36,7 +36,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         {
             int id = this.testVideo.Id;
             var response = await this.Client.GetByIdAsync(id);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -60,7 +60,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             int streetcodeId = this.testVideo.StreetcodeId;
             int videoId = this.testVideo.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<VideoDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

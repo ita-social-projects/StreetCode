@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Authentication.Register
 {
-    public class RegisterHandler : IRequestHandler<RegisterQuery, Result<RegisterResponseDTO>>
+    public class RegisterHandler : IRequestHandler<RegisterQuery, Result<RegisterResponseDto>>
     {
         private readonly ILoggerService _logger;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
             _localizer = localizer;
         }
 
-        public async Task<Result<RegisterResponseDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
+        public async Task<Result<RegisterResponseDto>> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
             User user = _mapper.Map<User>(request.registerRequestDTO);
             string password = request.registerRequestDTO.Password;
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
                 return Result.Fail(registerResponse.Errors);
             }
 
-            var responseDTO = _mapper.Map<RegisterResponseDTO>(user);
+            var responseDTO = _mapper.Map<RegisterResponseDto>(user);
             responseDTO.Password = password;
             responseDTO.Role = nameof(UserRole.User);
 

@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
 {
-    public class GetStreetcodeByFilterHandler : IRequestHandler<GetStreetcodeByFilterQuery, Result<List<StreetcodeFilterResultDTO>>>
+    public class GetStreetcodeByFilterHandler : IRequestHandler<GetStreetcodeByFilterQuery, Result<List<StreetcodeFilterResultDto>>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
 
@@ -16,10 +16,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
             _repositoryWrapper = repositoryWrapper;
         }
 
-        public async Task<Result<List<StreetcodeFilterResultDTO>>> Handle(GetStreetcodeByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<Result<List<StreetcodeFilterResultDto>>> Handle(GetStreetcodeByFilterQuery request, CancellationToken cancellationToken)
         {
             var searchQuery = request.Filter.SearchQuery.Trim();
-            var results = new List<StreetcodeFilterResultDTO>();
+            var results = new List<StreetcodeFilterResultDto>();
 
             results.AddRange(await GetStreetcodeResultsAsync(searchQuery));
             results.AddRange(await GetTextResultsAsync(searchQuery));
@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
             return results;
         }
 
-        private async Task<IEnumerable<StreetcodeFilterResultDTO>> GetStreetcodeResultsAsync(string searchQuery)
+        private async Task<IEnumerable<StreetcodeFilterResultDto>> GetStreetcodeResultsAsync(string searchQuery)
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                 x => x.Status == DAL.Enums.StreetcodeStatus.Published &&
@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 streetcode.TransliterationUrl!));
         }
 
-        private async Task<IEnumerable<StreetcodeFilterResultDTO>> GetTextResultsAsync(string searchQuery)
+        private async Task<IEnumerable<StreetcodeFilterResultDto>> GetTextResultsAsync(string searchQuery)
         {
             var texts = await _repositoryWrapper.TextRepository.GetAllAsync(
                 x => x.Streetcode!.Status == DAL.Enums.StreetcodeStatus.Published,
@@ -55,7 +55,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 .Select(text => CreateFilterResult(text.Streetcode!, text.Title!.Contains(searchQuery) ? text.Title! : text.TextContent!, "Текст", "text"));
         }
 
-        private async Task<IEnumerable<StreetcodeFilterResultDTO>> GetFactResultsAsync(string searchQuery)
+        private async Task<IEnumerable<StreetcodeFilterResultDto>> GetFactResultsAsync(string searchQuery)
         {
             var facts = await _repositoryWrapper.FactRepository.GetAllAsync(
                 x => x.Streetcode!.Status == DAL.Enums.StreetcodeStatus.Published,
@@ -66,7 +66,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 .Select(fact => CreateFilterResult(fact.Streetcode!, fact.Title!, "Wow-факти", "wow-facts", factId: fact.Id));
         }
 
-        private async Task<IEnumerable<StreetcodeFilterResultDTO>> GetTimelineResultsAsync(string searchQuery)
+        private async Task<IEnumerable<StreetcodeFilterResultDto>> GetTimelineResultsAsync(string searchQuery)
         {
             var timelineItems = await _repositoryWrapper.TimelineRepository.GetAllAsync(
                 x => x.Streetcode!.Status == DAL.Enums.StreetcodeStatus.Published,
@@ -77,7 +77,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                 .Select(timelineItem => CreateFilterResult(timelineItem.Streetcode!, timelineItem.Title!, "Хронологія", "timeline", timelineItemId: timelineItem.Id));
         }
 
-        private async Task<IEnumerable<StreetcodeFilterResultDTO>> GetArtGalleryResultsAsync(string searchQuery)
+        private async Task<IEnumerable<StreetcodeFilterResultDto>> GetArtGalleryResultsAsync(string searchQuery)
         {
             var streetcodeArts = await _repositoryWrapper.StreetcodeArtRepository.GetAllAsync(
                 x => x.StreetcodeArtSlide!.Streetcode != null && x.StreetcodeArtSlide.Streetcode.Status == DAL.Enums.StreetcodeStatus.Published,
@@ -89,9 +89,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                     CreateFilterResult(art.StreetcodeArtSlide!.Streetcode!, streetcodeArt.Art!.Description!, "Арт-галерея", "art-gallery")));
         }
 
-        private StreetcodeFilterResultDTO CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null, int factId = 0, int timelineItemId = 0)
+        private StreetcodeFilterResultDto CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null, int factId = 0, int timelineItemId = 0)
         {
-            return new StreetcodeFilterResultDTO
+            return new StreetcodeFilterResultDto
             {
                 StreetcodeId = streetcode.Id,
                 StreetcodeTransliterationUrl = streetcode.TransliterationUrl!,

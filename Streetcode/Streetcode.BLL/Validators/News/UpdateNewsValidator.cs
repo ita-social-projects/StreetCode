@@ -23,7 +23,8 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         RuleFor(c => c.news)
             .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]])
             .MustAsync(BeUniqueText).WithMessage(localizer["MustBeUnique", fieldLocalizer["Text"]])
-            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]]);
+            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]])
+            .MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
     }
 
     private async Task<bool> BeUniqueTitle(UpdateNewsDTO dto, CancellationToken cancellationToken)
@@ -60,5 +61,17 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         }
 
         return existingNewsByUrl is null;
+    }
+
+    private async Task<bool> BeUniqueImageId(UpdateNewsDTO dto, CancellationToken cancellationToken)
+    {
+        var existingNewsBuImageId = await _repositoryWrapper.NewsRepository.GetSingleOrDefaultAsync(n => n.ImageId == dto.ImageId);
+
+        if (existingNewsBuImageId is not null)
+        {
+            return existingNewsBuImageId.Id == dto.Id;
+        }
+
+        return existingNewsBuImageId is null;
     }
 }

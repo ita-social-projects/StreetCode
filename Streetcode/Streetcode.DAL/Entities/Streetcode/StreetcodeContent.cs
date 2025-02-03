@@ -55,12 +55,15 @@ public class StreetcodeContent
 
     public DateTime UpdatedAt { get; set; }
 
+    public string UserId { get; set; }
+
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
 
     public DateTime? EventEndOrPersonDeathDate { get; set; }
 
     public int? AudioId { get; set; }
+    public User? User { get; set; }
 
     public Text? Text { get; set; }
 

@@ -10,13 +10,14 @@ using Streetcode.DAL.Repositories.Interfaces.News;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.Favourites;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Team;
 using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
-using Streetcode.DAL.Repositories.Interfaces.Users.Favourites;
+using Streetcode.DAL.Repositories.Interfaces.Users.Expertise;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
 using Streetcode.DAL.Repositories.Realizations.Jobs;
@@ -32,6 +33,7 @@ using Streetcode.DAL.Repositories.Realizations.Timeline;
 using Streetcode.DAL.Repositories.Realizations.Toponyms;
 using Streetcode.DAL.Repositories.Realizations.Transactions;
 using Streetcode.DAL.Repositories.Realizations.Users;
+using Streetcode.DAL.Repositories.Realizations.Users.Expertise;
 
 namespace Streetcode.DAL.Repositories.Realizations.Base;
 
@@ -114,6 +116,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IJobRepository? _jobRepository;
 
     private IFavouritesRepository? _favouritesRepository;
+
+    private IExpertiseRepository? _expertiseRepository;
+
+    private IUserExpertiseRepository? _userExpertiseRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -475,7 +481,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if(_relatedTermRepository is null)
+            if (_relatedTermRepository is null)
             {
                 _relatedTermRepository = new RelatedTermRepository(_streetcodeDbContext);
             }
@@ -514,7 +520,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if(_partnerStreetcodeRepository is null)
+            if (_partnerStreetcodeRepository is null)
             {
                 _partnerStreetcodeRepository = new PartnerStreetodeRepository(_streetcodeDbContext);
             }
@@ -549,7 +555,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository??=new ImageDetailsRepository(_streetcodeDbContext);
+    public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository ??= new ImageDetailsRepository(_streetcodeDbContext);
 
     public IHistoricalContextTimelineRepository HistoricalContextTimelineRepository
     {
@@ -600,6 +606,32 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _jobRepository;
+        }
+    }
+
+    public IExpertiseRepository ExpertiseRepository
+    {
+        get
+        {
+            if (_expertiseRepository is null)
+            {
+                _expertiseRepository = new ExpertiseRepository(_streetcodeDbContext);
+            }
+
+            return _expertiseRepository;
+        }
+    }
+
+    public IUserExpertiseRepository UserExpertiseRepository
+    {
+        get
+        {
+            if (_userExpertiseRepository is null)
+            {
+                _userExpertiseRepository = new UserExpertiseRepository(_streetcodeDbContext);
+            }
+
+            return _userExpertiseRepository;
         }
     }
 

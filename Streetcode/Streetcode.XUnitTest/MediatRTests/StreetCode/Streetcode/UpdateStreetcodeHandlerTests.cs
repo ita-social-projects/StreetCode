@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Images;
@@ -24,6 +25,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> mockStringLocalizerFailedToValidate;
         private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> mockStringLocalizerFieldNames;
         private readonly Mock<ICacheService> mockCache;
+        private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
 
         public UpdateStreetcodeHandlerTests()
         {
@@ -41,6 +43,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 {
                     return func();
                 });
+            this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
         }
 
         [Fact]
@@ -67,7 +70,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                     this.mockLocalizerFailedToUpdate.Object,
                     this.mockStringLocalizerFailedToValidate.Object,
                     this.mockStringLocalizerFieldNames.Object,
-                    this.mockCache.Object);
+                    this.mockCache.Object,
+                    this.mockHttpContextAccessor.Object);
 
             // Act
             var result = await handler.Handle(new UpdateStreetcodeCommand(testStreetcodeDTO), CancellationToken.None);

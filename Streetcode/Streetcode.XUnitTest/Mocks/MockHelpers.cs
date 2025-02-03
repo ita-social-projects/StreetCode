@@ -2,7 +2,9 @@ using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.XUnitTest.Mocks;
@@ -17,7 +19,7 @@ public static class MockHelpers
                 It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync(new Image { Id = imageId });
     }
-
+    
     public static void SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(Mock<IRepositoryWrapper> mockRepositoryWrapper)
     {
         // Returns null
@@ -25,6 +27,15 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<Image, bool>>>(),
                 It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync((Image)null!);
+    }
+
+    public static void SetupMockPartnersRepositoryGetFirstOrDefaultAsync(Mock<IRepositoryWrapper> mockRepositoryWrapper, int imageId)
+    {
+        // Returns an Image with Id = 1
+        mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(
+                It.IsAny<Expression<Func<Partner, bool>>>(),
+                It.IsAny<Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>>()))
+            .ReturnsAsync(new Partner { LogoId = imageId });
     }
 
     // This mock method will return an existing category (not null)
@@ -43,5 +54,14 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>, IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync((SourceLinkCategory)null!);
+    }
+
+    //This method will return existing streetcode ids
+    public static void SetupMockStreetcodeRepositoryFindAll(Mock<IRepositoryWrapper> mockRepositoryWrapper, List<int> streetcodeIds)
+    {
+        mockRepositoryWrapper.Setup(x => x.StreetcodeRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
+            .ReturnsAsync(streetcodeIds.Select(id => new StreetcodeContent { Id = id }).ToList());
     }
 }

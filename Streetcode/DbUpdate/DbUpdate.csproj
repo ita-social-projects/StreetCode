@@ -11,7 +11,11 @@
     <PackageReference Include="DbUp" Version="5.0.8" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -24,7 +28,58 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230622110726_Initial.sql">
+      <Link>ScriptsMigration\Script_20230622110726_Initial.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230703154732_UpdatePartnerModel.sql">
+      <Link>ScriptsMigration\Script_20230703154732_UpdatePartnerModel.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb.sql">
+      <Link>ScriptsMigration\Script_20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230905201616_Jobs.sql">
+      <Link>ScriptsMigration\Script_20230905201616_Jobs.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20231130202258_DatestringLength.sql">
+      <Link>ScriptsMigration\Script_20231130202258_DatestringLength.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240104113247_JobsDescriptionLength.sql">
+      <Link>ScriptsMigration\Script_20240104113247_JobsDescriptionLength.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240104204923_AddIdentityTables.sql">
+      <Link>ScriptsMigration\Script_20240104204923_AddIdentityTables.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240122161255_ForFansLength.sql">
+      <Link>ScriptsMigration\Script_20240122161255_ForFansLength.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240407205620_AddRefreshTokenToUser.sql">
+      <Link>ScriptsMigration\Script_20240407205620_AddRefreshTokenToUser.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240417150303_AudioConstraintChange.sql">
+      <Link>ScriptsMigration\Script_20240417150303_AudioConstraintChange.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240428073027_FactIndexAdd.sql">
+      <Link>ScriptsMigration\Script_20240428073027_FactIndexAdd.sql</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="appsettings.json" />
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Remove="appsettings.Local.json" />
+    <Content Include="appsettings.Local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 	
   <PropertyGroup>

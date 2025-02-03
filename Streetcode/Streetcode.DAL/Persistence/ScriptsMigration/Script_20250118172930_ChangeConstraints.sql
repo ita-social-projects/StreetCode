@@ -104,12 +104,6 @@ GO
 
 IF NOT EXISTS(SELECT * FROM [entity_framework].[__EFMigrationsHistory] WHERE [MigrationId] = N'20240906091812_AddConstraintsToNews')
 BEGIN
-    ALTER TABLE news.news ADD CONSTRAINT NewsTextMaxLength CHECK ( DATALENGTH(Text)/2 <= 25000 );
-END;
-GO
-
-IF NOT EXISTS(SELECT * FROM [entity_framework].[__EFMigrationsHistory] WHERE [MigrationId] = N'20240906091812_AddConstraintsToNews')
-BEGIN
     INSERT INTO [entity_framework].[__EFMigrationsHistory] ([MigrationId], [ProductVersion])
     VALUES (N'20240906091812_AddConstraintsToNews', N'7.0.13');
 END;

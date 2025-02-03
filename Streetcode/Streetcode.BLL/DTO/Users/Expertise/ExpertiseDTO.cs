@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Users.Expertise;
 
-public class ExpertiseDTO
+public class ExpertiseDto
 {
     public int Id { get; set; }
     public string? Title { get; set; }

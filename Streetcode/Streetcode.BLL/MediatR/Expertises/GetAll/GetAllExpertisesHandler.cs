@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Expertises.GetAll;
 
-public class GetAllExpertisesHandler : IRequestHandler<GetAllExpertisesQuery, Result<List<ExpertiseDTO>>>
+public class GetAllExpertisesHandler : IRequestHandler<GetAllExpertisesQuery, Result<List<ExpertiseDto>>>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IMapper _mapper;
@@ -18,10 +18,10 @@ public class GetAllExpertisesHandler : IRequestHandler<GetAllExpertisesQuery, Re
         _mapper = mapper;
     }
 
-    public async Task<Result<List<ExpertiseDTO>>> Handle(GetAllExpertisesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<ExpertiseDto>>> Handle(GetAllExpertisesQuery request, CancellationToken cancellationToken)
     {
        var expertises = await _repositoryWrapper.ExpertiseRepository.GetAllAsync();
-       var expertisesDto = _mapper.Map<List<ExpertiseDTO>>(expertises);
+       var expertisesDto = _mapper.Map<List<ExpertiseDto>>(expertises);
 
        return Result.Ok(expertisesDto);
     }

@@ -5,6 +5,6 @@ using Streetcode.DAL.Entities.Users.Expertise;
 
 namespace Streetcode.BLL.MediatR.Expertises.GetAll;
 
-public record GetAllExpertisesQuery() : IRequest<Result<List<ExpertiseDTO>>>
+public record GetAllExpertisesQuery() : IRequest<Result<List<ExpertiseDto>>>
 {
 }

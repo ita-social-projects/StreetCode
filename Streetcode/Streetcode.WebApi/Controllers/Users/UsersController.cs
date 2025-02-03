@@ -41,7 +41,7 @@ namespace Streetcode.WebApi.Controllers.Users
         [HttpPut]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update(UpdateUserDTO user)
+        public async Task<IActionResult> Update(UpdateUserDto user)
         {
             return HandleResult(await Mediator.Send(new UpdateUserCommand(user)));
         }
@@ -56,14 +56,14 @@ namespace Streetcode.WebApi.Controllers.Users
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO forgotPasswordDto)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
             return HandleResult(await Mediator.Send(new ForgotPasswordCommand(forgotPasswordDto)));
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UpdateForgotPassword([FromBody] UpdateForgotPasswordDTO updateForgotPasswordDto)
+        public async Task<IActionResult> UpdateForgotPassword([FromBody] UpdateForgotPasswordDto updateForgotPasswordDto)
         {
             return HandleResult(await Mediator.Send(new UpdateForgotPasswordCommand(updateForgotPasswordDto)));
         }

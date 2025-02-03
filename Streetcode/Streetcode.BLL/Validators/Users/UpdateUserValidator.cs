@@ -24,7 +24,7 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
             .WithMessage(localizer["UserWithSuchUsernameExists"]);
     }
 
-    private async Task<bool> BeUniqueUserName(UpdateUserDTO dto, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueUserName(UpdateUserDto dto, CancellationToken cancellationToken)
     {
         var existingUserByUserName = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(n => n.UserName == dto.UserName);
 

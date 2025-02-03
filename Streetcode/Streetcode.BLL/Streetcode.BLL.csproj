@@ -41,11 +41,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Constants\MessageData\" />
+    <Folder Include="DTO\Users\Expertise\" />
+    <Folder Include="Factories\MessageDataFactory\Concretes\" />
     <Folder Include="Mapping\Payment\" />
+    <Folder Include="Mapping\Users\Expertises\" />
     <Folder Include="MediatR\AdditionalContent\Tag\" />
     <Folder Include="Exceptions\" />
     <Folder Include="DTO\Instagram\" />
+    <Folder Include="MediatR\Expertises\GetAll\" />
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
+    <Folder Include="MediatR\Users\UpdateForgotPassword\" />
     <Folder Include="Util\Helpers\" />
     <Folder Include="Util\MappingResolvers\" />
   </ItemGroup>

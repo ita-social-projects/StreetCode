@@ -138,6 +138,7 @@ namespace Streetcode.BLL.Services.Authentication
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
                     new Claim(ClaimTypes.GivenName, user.Name),
                     new Claim(ClaimTypes.Surname, user.Surname),

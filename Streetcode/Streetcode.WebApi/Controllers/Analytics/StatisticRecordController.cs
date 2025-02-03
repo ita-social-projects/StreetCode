@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Analytics
 {
@@ -35,11 +36,12 @@ namespace Streetcode.WebApi.Controllers.Analytics
             return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id)));
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{streetcodeId:int}")]
+        [ValidateStreetcodeExistence]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
-        public async Task<IActionResult> GetAllByStreetcodeId(int id)
+        public async Task<IActionResult> GetAllByStreetcodeId(int streetcodeId)
         {
-            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(streetcodeId)));
         }
 
         [HttpPost]

@@ -18,6 +18,7 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Entities.Users.Expertise;
 using StreetcodeArtSlide = Streetcode.DAL.Entities.Streetcode.StreetcodeArtSlide;
 
 namespace Streetcode.DAL.Persistence;
@@ -71,6 +72,8 @@ public class StreetcodeDbContext : IdentityDbContext<User>
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
     public DbSet<Job> Job { get; set; }
+    public DbSet<Expertise> Expertises { get; set; }
+    public DbSet<UserExpertise> UserExpertises { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

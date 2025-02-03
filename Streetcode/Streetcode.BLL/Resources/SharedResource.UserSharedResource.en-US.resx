@@ -124,7 +124,7 @@
     <value>Password is incorrect</value>
   </data>
   <data name="UserWithSuchEmailNotFound" xml:space="preserve">
-    <value>User with such Email and Username in not found</value>
+    <value>User with such Email is not found</value>
   </data>
   <data name="UserWithSuchEmailExists" xml:space="preserve">
     <value>User with such Email already exists in database</value>
@@ -134,5 +134,14 @@
   </data>
   <data name="UserManagerError" xml:space="preserve">
     <value>Error in User Manager</value>
+  </data>
+  <data name="UserWithSuchUsernameNotExists" xml:space="preserve">
+    <value>User with such Username not exists</value>
+  </data>
+  <data name="EmailNotMatch" xml:space="preserve">
+    <value>Email not match</value>
+  </data>
+  <data name="UserNameOrTokenIsEmpty" xml:space="preserve">
+    <value>Username or token is empty</value>
   </data>
 </root>

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.DAL.Configurations;
 
@@ -39,5 +40,10 @@ public class ImageMap : IEntityTypeConfiguration<Image>
             .WithOne(p => p.Image)
             .HasForeignKey<News>(d => d.ImageId)
             .OnDelete(DeleteBehavior.ClientCascade);
+
+        builder.HasOne(i => i.User)
+            .WithOne(u => u.Avatar)
+            .HasForeignKey<User>(u => u.AvatarId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

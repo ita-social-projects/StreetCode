@@ -58,7 +58,9 @@ public class HistoricalContextValidatorTests
 
         // Act
         var result = _validator.TestValidate(validHistoricalContext);
-        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["HistoricalContextTitle"],
+        var expectedError = _mockValidationLocalizer[
+            "MaxLength",
+            _mockNamesLocalizer["HistoricalContextTitle"],
             HistoricalContextValidator.TitleMaxLength];
 
         // Asssert

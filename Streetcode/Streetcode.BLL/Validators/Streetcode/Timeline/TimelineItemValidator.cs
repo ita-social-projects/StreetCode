@@ -2,7 +2,6 @@ using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Validators.Common;
 
 namespace Streetcode.BLL.Validators.Streetcode.TimelineItem;
 

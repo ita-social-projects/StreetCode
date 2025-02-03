@@ -16,18 +16,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
     public class GetByIdHistoricalContextTest
     {
         private const int id = 1;
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
-        private readonly HistoricalContext context = new HistoricalContext
+        private readonly HistoricalContext _context = new ()
         {
             Id = id,
             Title = "some title 1",
         };
 
-        private readonly HistoricalContextDTO contextDto = new HistoricalContextDTO
+        private readonly HistoricalContextDTO _contextDto = new ()
         {
             Id = id,
             Title = "some title 1",
@@ -35,20 +35,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         public GetByIdHistoricalContextTest()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_Matching_Element()
         {
             // Arrange
-            this.SetupRepository(this.context);
-            this.SetupMapper(this.contextDto);
+            this.SetupRepository(_context);
+            this.SetupMapper(_contextDto);
 
-            var handler = new GetHistoricalContextByIdHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetHistoricalContextByIdHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetHistoricalContextByIdQuery(id), CancellationToken.None);
@@ -66,7 +66,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             this.SetupRepository(new HistoricalContext());
             this.SetupMapper(new HistoricalContextDTO());
 
-            var handler = new GetHistoricalContextByIdHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetHistoricalContextByIdHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetHistoricalContextByIdQuery(id), CancellationToken.None);
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         private void SetupRepository(HistoricalContext context)
         {
-            this.mockRepo
+            _mockRepo
                 .Setup(repo => repo.HistoricalContextRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         private void SetupMapper(HistoricalContextDTO contextDto)
         {
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>()))
                 .Returns(contextDto);
         }

@@ -159,4 +159,7 @@
   <data name="NoTeamWithSuchId" xml:space="preserve">
     <value>Жодної команди з таким ідентифікатором</value>
   </data>
+  <data name="NoToponymWithSuchId" xml:space="preserve">
+    <value>Жодного топоніма з таким ідентифікатором стріткоду: {0}</value>
+  </data>
 </root>

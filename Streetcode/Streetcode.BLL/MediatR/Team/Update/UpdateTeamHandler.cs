@@ -42,9 +42,9 @@ namespace Streetcode.BLL.MediatR.Team.Update
 
                 team.Positions?.Clear();
                 _repositoryWrapper.TeamRepository.Update(team);
-                _repositoryWrapper.SaveChanges();
+                await _repositoryWrapper.SaveChangesAsync();
 
-                var newPositions = request.TeamMember.Positions.ToList();
+                var newPositions = request.TeamMember.Positions!.ToList();
                 var newPositionsIds = newPositions.Select(s => s.Id).ToList();
 
                 var oldPositions = await _repositoryWrapper.TeamPositionRepository
@@ -62,22 +62,22 @@ namespace Streetcode.BLL.MediatR.Team.Update
                 {
                     if (newPosition.Id < 0)
                     {
-                        Positions position = new Positions() { Id = 0, Position = newPosition.Position, TeamMembers = null };
-                        var tpm = _repositoryWrapper.PositionRepository.Create(position);
+                        Positions position = new() { Id = 0, Position = newPosition.Position, TeamMembers = null };
+                        var tpm = await _repositoryWrapper.PositionRepository.CreateAsync(position);
 
-                        _repositoryWrapper.SaveChanges();
+                        await _repositoryWrapper.SaveChangesAsync();
 
-                        _repositoryWrapper.TeamPositionRepository.Create(
+                        await _repositoryWrapper.TeamPositionRepository.CreateAsync(
                             new TeamMemberPositions { TeamMemberId = team.Id, PositionsId = tpm.Id });
                     }
                     else if (oldPositions.FirstOrDefault(x => x.PositionsId == newPosition.Id) == null)
                     {
-                        _repositoryWrapper.TeamPositionRepository.Create(
+                        await _repositoryWrapper.TeamPositionRepository.CreateAsync(
                             new TeamMemberPositions { TeamMemberId = team.Id, PositionsId = newPosition.Id });
                     }
                 }
 
-                _repositoryWrapper.SaveChanges();
+                await _repositoryWrapper.SaveChangesAsync();
                 var dbo = _mapper.Map<UpdateTeamMemberDTO>(team);
                 dbo.Positions = newPositions;
                 return Result.Ok(dbo);

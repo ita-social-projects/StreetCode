@@ -28,8 +28,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldReturnSuccessfully_TeamUpdated()
         {
             // Arrange
-            var teamMember = this.GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(this.GetTeamMemberDTO());
+            var teamMember = GetTeamMember(1);
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
 
             this.MapperSetup(teamMember, updateQuery.TeamMember);
             this.BasicRepositorySetup(updateQuery.TeamMember);
@@ -53,12 +53,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             const string exceptionMessage = "Failed to update a team";
 
-            var teamMember = this.GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(this.GetTeamMemberDTO());
+            var teamMember = GetTeamMember(1);
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
             this.MapperSetup(teamMember, updateQuery.TeamMember);
             this.BasicRepositorySetup(updateQuery.TeamMember);
             this.GetsAsyncRepositorySetup(teamMember);
-            this.mockRepository.Setup(repo => repo.SaveChanges())
+            this.mockRepository.Setup(repo => repo.SaveChangesAsync())
             .Throws(new Exception(exceptionMessage));
 
             var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
@@ -75,9 +75,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeleteUnusedTeamLinks(int unusedLinkId)
         {
             // Arrange
-            var teamMember = this.GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(this.GetTeamMemberDTO());
-            var existingLinks = this.GetTeamMemberLinksList().ToList();
+            var teamMember = GetTeamMember(1);
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            var existingLinks = GetTeamMemberLinksList().ToList();
             existingLinks.Add(new TeamMemberLink { Id = unusedLinkId });
 
             this.MapperSetup(teamMember, updateQuery.TeamMember);
@@ -101,10 +101,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task ShouldDeleteUnusedTeamPositions(int unusedPositionId)
         {
             // Arrange
-            var teamMember = this.GetTeamMember(1);
-            var updateQuery = new UpdateTeamQuery(this.GetTeamMemberDTO());
-            var existingPositions = this.GetTeamMemberPositionsList().ToList();
-            existingPositions.Add(this.GetTeamMemberPositions(teamMember.Id, unusedPositionId));
+            var teamMember = GetTeamMember(1);
+            var updateQuery = new UpdateTeamQuery(GetTeamMemberDTO());
+            var existingPositions = GetTeamMemberPositionsList().ToList();
+            existingPositions.Add(GetTeamMemberPositions(teamMember.Id, unusedPositionId));
 
             this.MapperSetup(teamMember, updateQuery.TeamMember);
             this.BasicRepositorySetup(updateQuery.TeamMember);
@@ -126,15 +126,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         public async Task WhenNewPositionIdIsNegative_UpdatesPositionAndTeamMemberPosition(int id, string posName)
         {
             // Arrange
-            var teamMember = this.GetTeamMember(1);
-            var existingPositions = this.GetTeamMemberPositionsList().ToList();
-            existingPositions.Add(this.GetTeamMemberPositions(teamMember.Id, id));
+            var teamMember = GetTeamMember(1);
+            var existingPositions = GetTeamMemberPositionsList().ToList();
+            existingPositions.Add(GetTeamMemberPositions(teamMember.Id, id));
 
             var teamMemberDto = new UpdateTeamMemberDTO
             {
                 Positions = new List<PositionDTO>
                 {
-                    new PositionDTO { Id = id, Position = posName },
+                    new () { Id = id, Position = posName },
                 },
             };
             var updateQuery = new UpdateTeamQuery(teamMemberDto);
@@ -143,8 +143,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.BasicRepositorySetup(updateQuery.TeamMember);
             this.GetsAsyncRepositorySetup(teamMember, memberPos: existingPositions);
             this.mockRepository.Setup(repo => repo.TeamPositionRepository.Delete(It.IsAny<TeamMemberPositions>()));
-            this.mockRepository.Setup(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()));
-            this.mockRepository.Setup(repo => repo.PositionRepository.Create(It.IsAny<Positions>())).Returns(new Positions());
+            this.mockRepository.Setup(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()));
+            this.mockRepository.Setup(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>())).ReturnsAsync(new Positions());
 
             var handler = new UpdateTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object);
 
@@ -156,8 +156,89 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                 () => Assert.True(result.IsSuccess),
                 () => Assert.Equal(0, result.Value.Id));
 
-            this.mockRepository.Verify(repo => repo.PositionRepository.Create(It.IsAny<Positions>()), Times.Once);
-            this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
+            this.mockRepository.Verify(repo => repo.PositionRepository.CreateAsync(It.IsAny<Positions>()), Times.Once);
+            this.mockRepository.Verify(repo => repo.TeamPositionRepository.CreateAsync(It.IsAny<TeamMemberPositions>()), Times.Once);
+        }
+
+        private static TeamMember GetTeamMember(int imageId = 0)
+        {
+            return new TeamMember
+            {
+                Id = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                Positions = GetPositionsList(),
+                TeamMemberLinks = GetTeamMemberLinksList(),
+                ImageId = imageId,
+            };
+        }
+
+        private static UpdateTeamMemberDTO GetTeamMemberDTO()
+        {
+            return new UpdateTeamMemberDTO
+            {
+                Id = 1,
+                Name = "Test",
+                Description = "Test",
+                IsMain = true,
+                Positions = GetPositionsDTOList(),
+                TeamMemberLinks = GetTeamMemberLinksDTOList(),
+            };
+        }
+
+        private static TeamMemberPositions GetTeamMemberPositions(int teamMemberId, int posId)
+        {
+            return new TeamMemberPositions
+            {
+                TeamMemberId = teamMemberId,
+                PositionsId = posId,
+            };
+        }
+
+        private static List<PositionDTO> GetPositionsDTOList()
+        {
+            return new List<PositionDTO>
+            {
+                new () { Id = 1, Position = "Position 1" },
+                new () { Id = 2, Position = "Position 2" },
+            };
+        }
+
+        private static List<Positions> GetPositionsList()
+        {
+            return new List<Positions>
+            {
+                new () { Id = 1, Position = "Position 1" },
+                new () { Id = 2, Position = "Position 2" },
+            };
+        }
+
+        private static List<TeamMemberPositions> GetTeamMemberPositionsList()
+        {
+            return new List<TeamMemberPositions>
+            {
+                new () { TeamMemberId = 1, PositionsId = 1 },
+                new () { TeamMemberId = 1, PositionsId = 2 },
+            };
+        }
+
+        private static List<TeamMemberLinkDTO> GetTeamMemberLinksDTOList()
+        {
+            return new List<TeamMemberLinkDTO>
+            {
+                new () { Id = 1 },
+                new () { Id = 2 },
+            };
+        }
+
+        private static List<TeamMemberLink> GetTeamMemberLinksList()
+        {
+            return new List<TeamMemberLink>
+            {
+                new () { Id = 1 },
+                new () { Id = 2 },
+            };
         }
 
         private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
@@ -167,7 +248,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             {
                 tm.Positions = updatedTeamMember.Positions?.Select(p => new Positions { Id = p.Id, Position = p.Position }).ToList();
             });
-            this.mockRepository.Setup(repo => repo.SaveChanges());
+            this.mockRepository.Setup(repo => repo.SaveChangesAsync());
         }
 
         private void GetsAsyncRepositorySetup(TeamMember teamMember, List<TeamMemberLink>? link = null, List<TeamMemberPositions>? memberPos = null)
@@ -191,87 +272,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             this.mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDTO>(teamMember))
                 .Returns(updatedTeamMember);
-        }
-
-        private TeamMember GetTeamMember(int imageId = 0)
-        {
-            return new TeamMember
-            {
-                Id = 1,
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                Positions = this.GetPositionsList(),
-                TeamMemberLinks = this.GetTeamMemberLinksList(),
-                ImageId = imageId,
-            };
-        }
-
-        private UpdateTeamMemberDTO GetTeamMemberDTO()
-        {
-            return new UpdateTeamMemberDTO
-            {
-                Id = 1,
-                Name = "Test",
-                Description = "Test",
-                IsMain = true,
-                Positions = this.GetPositionsDTOList(),
-                TeamMemberLinks = this.GetTeamMemberLinksDTOList(),
-            };
-        }
-
-        private TeamMemberPositions GetTeamMemberPositions(int teamMemberId, int posId)
-        {
-            return new TeamMemberPositions
-            {
-                TeamMemberId = teamMemberId,
-                PositionsId = posId,
-            };
-        }
-
-        private List<PositionDTO> GetPositionsDTOList()
-        {
-            return new List<PositionDTO>
-            {
-                new PositionDTO { Id = 1, Position = "Position 1" },
-                new PositionDTO { Id = 2, Position = "Position 2" },
-            };
-        }
-
-        private List<Positions> GetPositionsList()
-        {
-            return new List<Positions>
-            {
-                new Positions { Id = 1, Position = "Position 1" },
-                new Positions { Id = 2, Position = "Position 2" },
-            };
-        }
-
-        private List<TeamMemberPositions> GetTeamMemberPositionsList()
-        {
-            return new List<TeamMemberPositions>
-            {
-                new TeamMemberPositions { TeamMemberId = 1, PositionsId = 1 },
-                new TeamMemberPositions { TeamMemberId = 1, PositionsId = 2 },
-            };
-        }
-
-        private List<TeamMemberLinkDTO> GetTeamMemberLinksDTOList()
-        {
-            return new List<TeamMemberLinkDTO>
-            {
-                new TeamMemberLinkDTO { Id = 1 },
-                new TeamMemberLinkDTO { Id = 2 },
-            };
-        }
-
-        private List<TeamMemberLink> GetTeamMemberLinksList()
-        {
-            return new List<TeamMemberLink>
-            {
-                new TeamMemberLink { Id = 1 },
-                new TeamMemberLink { Id = 2 },
-            };
         }
     }
 }

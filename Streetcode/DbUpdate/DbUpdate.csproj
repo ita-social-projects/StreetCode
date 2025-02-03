@@ -28,50 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230622110726_Initial.sql">
-      <Link>ScriptsMigration\Script_20230622110726_Initial.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230703154732_UpdatePartnerModel.sql">
-      <Link>ScriptsMigration\Script_20230703154732_UpdatePartnerModel.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb.sql">
-      <Link>ScriptsMigration\Script_20230804120930_Change_StreetcodeCategoryContent_Text_to_10000_simb.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20230905201616_Jobs.sql">
-      <Link>ScriptsMigration\Script_20230905201616_Jobs.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20231130202258_DatestringLength.sql">
-      <Link>ScriptsMigration\Script_20231130202258_DatestringLength.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240104113247_JobsDescriptionLength.sql">
-      <Link>ScriptsMigration\Script_20240104113247_JobsDescriptionLength.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240104204923_AddIdentityTables.sql">
-      <Link>ScriptsMigration\Script_20240104204923_AddIdentityTables.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240122161255_ForFansLength.sql">
-      <Link>ScriptsMigration\Script_20240122161255_ForFansLength.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240407205620_AddRefreshTokenToUser.sql">
-      <Link>ScriptsMigration\Script_20240407205620_AddRefreshTokenToUser.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240417150303_AudioConstraintChange.sql">
-      <Link>ScriptsMigration\Script_20240417150303_AudioConstraintChange.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\Streetcode.DAL\Persistence\ScriptsMigration\Script_20240428073027_FactIndexAdd.sql">
-      <Link>ScriptsMigration\Script_20240428073027_FactIndexAdd.sql</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Remove="appsettings.json" />
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -81,6 +37,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <ItemGroup>
+  <!-- Include the files you want to copy from the other project -->
+  	<FilesToCopy Include="..\Streetcode.DAL\Persistence\ScriptsMigration\*.*" />
+  </ItemGroup>
+ 
+  <Target Name="CopyFiles" AfterTargets="Build">
+  	<Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)\ScriptsMigration\" />
+  </Target>
 	
   <PropertyGroup>
 	<SonarQubeExclude>true</SonarQubeExclude>

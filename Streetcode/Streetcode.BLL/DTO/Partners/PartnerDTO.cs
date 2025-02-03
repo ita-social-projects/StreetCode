@@ -3,7 +3,7 @@ using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Partners;
 
-public class PartnerDTO
+public class PartnerDto
 {
     public int Id { get; set; }
     public bool IsKeyPartner { get; set; }
@@ -11,7 +11,7 @@ public class PartnerDTO
     public string Title { get; set; } = null!;
     public string? Description { get; set; }
     public int LogoId { get; set; }
-    public UrlDTO? TargetUrl { get; set; }
-    public List<PartnerSourceLinkDTO> PartnerSourceLinks { get; set; } = new List<PartnerSourceLinkDTO>();
-    public List<StreetcodeShortDTO> Streetcodes { get; set; } = new List<StreetcodeShortDTO>();
+    public UrlDto? TargetUrl { get; set; }
+    public List<PartnerSourceLinkDto> PartnerSourceLinks { get; set; } = new List<PartnerSourceLinkDto>();
+    public List<StreetcodeShortDto> Streetcodes { get; set; } = new List<StreetcodeShortDto>();
 }

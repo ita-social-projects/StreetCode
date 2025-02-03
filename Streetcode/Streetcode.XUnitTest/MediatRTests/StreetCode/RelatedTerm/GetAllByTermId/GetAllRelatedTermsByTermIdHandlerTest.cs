@@ -74,7 +74,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                         IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
             this.mockMapper
-                .Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms))
+                .Setup(x => x.Map<IEnumerable<RelatedTermDto>>(relatedTerms))
                 .Returns(GetRelatedTermDTOListWithNotExistingId());
 
             var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
@@ -98,7 +98,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
 
             var relatedTerms = new List<Entity> { new Entity() };
 
-            var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
+            var relatedTermDTOs = new List<RelatedTermDto> { new RelatedTermDto() };
 
             this.mockRepository
                 .Setup(x => x.RelatedTermRepository
@@ -107,7 +107,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
                         It.IsAny<Func<IQueryable<Entity>,
                         IIncludableQueryable<Entity, object>>>()))
                 .ReturnsAsync(relatedTerms);
-            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDto>>(relatedTerms)).Returns(relatedTermDTOs);
 
             var handler = new GetAllRelatedTermsByTermIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotGet.Object, this.mockLocalizerCannotCreate.Object);
 
@@ -127,9 +127,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             // Arrange
             var relatedTerm = CreateNewEntity(id, testWord, termId);
             var relatedTerms = new List<Entity> { relatedTerm };
-            var relatedTermDTOs = new List<RelatedTermDTO> { new RelatedTermDTO() };
+            var relatedTermDTOs = new List<RelatedTermDto> { new RelatedTermDto() };
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTerms)).Returns(relatedTermDTOs);
+            this.mockMapper.Setup(x => x.Map<IEnumerable<RelatedTermDto>>(relatedTerms)).Returns(relatedTermDTOs);
 
             this.mockRepository
                 .Setup(x => x.RelatedTermRepository
@@ -148,7 +148,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             // Assert
             Assert.Multiple(
              () => Assert.True(result.IsSuccess),
-             () => Assert.IsAssignableFrom<IEnumerable<RelatedTermDTO>>(result.Value),
+             () => Assert.IsAssignableFrom<IEnumerable<RelatedTermDto>>(result.Value),
              () => Assert.Equal(relatedTermDTOs.Count, result.Value.Count()),
              () => Assert.Equal(relatedTermDTOs[0].Id, result.Value.First().Id),
              () => Assert.Equal(relatedTermDTOs[0].TermId, result.Value.First().TermId),
@@ -160,7 +160,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.RelatedTerm.GetAllByTermI
             return null;
         }
 
-        private static List<RelatedTermDTO> GetRelatedTermDTOListWithNotExistingId()
+        private static List<RelatedTermDto> GetRelatedTermDTOListWithNotExistingId()
         {
             return null;
         }

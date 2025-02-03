@@ -32,7 +32,7 @@ public class GetStreetcodeByFilterHandlerTests
     public async Task Handle_ReturnsResults_WhenSearchQueryMatches(string searchQuery, string expectedContent)
     {
         // Arrange
-        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDto { SearchQuery = searchQuery });
 
         this.SetupRepositoryMock(expectedContent);
 
@@ -50,7 +50,7 @@ public class GetStreetcodeByFilterHandlerTests
     public async Task Handle_ReturnsAllResults_WhenSearchQueryIsEmpty(string searchQuery)
     {
         // Arrange
-        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDto { SearchQuery = searchQuery });
         this.SetupRepositoryMock("SomeContent");
 
         // Act
@@ -66,7 +66,7 @@ public class GetStreetcodeByFilterHandlerTests
     public async Task Handle_ReturnsEmptyList_WhenNoMatchesFound(string searchQuery)
     {
         // Arrange
-        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDto { SearchQuery = searchQuery });
 
         this.SetupRepositoryMock(null, true);
 
@@ -83,7 +83,7 @@ public class GetStreetcodeByFilterHandlerTests
     public async Task Handle_ReturnsEmptyList_WhenAllRepositoriesReturnEmpty(string searchQuery)
     {
         // Arrange
-        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDto { SearchQuery = searchQuery });
         this.SetupRepositoryMock(null, true);
 
         // Act
@@ -99,7 +99,7 @@ public class GetStreetcodeByFilterHandlerTests
     public async Task Handle_ThrowsException_WhenRepositoryThrowsException(string searchQuery)
     {
         // Arrange
-        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDTO { SearchQuery = searchQuery });
+        var query = new GetStreetcodeByFilterQuery(new StreetcodeFilterRequestDto { SearchQuery = searchQuery });
 
         this.repositoryWrapper.Setup(r => r.StreetcodeRepository
             .GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))

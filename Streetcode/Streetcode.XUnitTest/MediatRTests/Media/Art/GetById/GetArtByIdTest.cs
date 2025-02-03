@@ -57,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsType<Result<ArtDTO>>(result);
+            Assert.IsType<Result<ArtDto>>(result);
         }
 
         [Theory]
@@ -84,15 +84,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private ArtDTO GetArtDTO()
+        private ArtDto GetArtDTO()
         {
-            return new ArtDTO
+            return new ArtDto
             {
                 Id = 1,
             };
         }
 
-        private void GetMockRepositoryAndMapper(Art? art, ArtDTO? artDTO)
+        private void GetMockRepositoryAndMapper(Art? art, ArtDto? artDTO)
         {
             this.mockRepo
                 .Setup(r => r.ArtRepository
@@ -103,7 +103,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
                 .ReturnsAsync(art);
 
             this.mockMapper
-                .Setup(x => x.Map<ArtDTO?>(It.IsAny<object>()))
+                .Setup(x => x.Map<ArtDto?>(It.IsAny<object>()))
                 .Returns(artDTO);
 
             this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])

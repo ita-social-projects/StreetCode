@@ -51,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
 
             // Assert.
             Assert.True(result.IsSuccess);
-            Assert.IsType<LoginResponseDTO>(result.ValueOrDefault);
+            Assert.IsType<LoginResponseDto>(result.ValueOrDefault);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
-        private static UserDTO GetUserDTO()
+        private static UserDto GetUserDTO()
         {
             return new ()
             {
@@ -125,18 +125,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             };
         }
 
-        private static LoginRequestDTO GetNonExistingCredentials()
+        private static LoginRequestDto GetNonExistingCredentials()
         {
-            return new LoginRequestDTO
+            return new LoginRequestDto
             {
                 Login = "dummyLogin@gmail.com",
                 Password = "qwertyQWE123!@#",
             };
         }
 
-        private static LoginRequestDTO GetExistingCredentials()
+        private static LoginRequestDto GetExistingCredentials()
         {
-            return new LoginRequestDTO
+            return new LoginRequestDto
             {
                 Login = "one@gmail.com",
                 Password = "One111oneOne#@#",
@@ -204,7 +204,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
         {
             this.mockMapper
                 .Setup(x => x
-                .Map<UserDTO>(It.IsAny<User>()))
+                .Map<UserDto>(It.IsAny<User>()))
                 .Returns(GetUserDTO());
         }
 

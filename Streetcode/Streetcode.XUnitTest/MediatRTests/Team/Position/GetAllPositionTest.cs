@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault.Positions)
+                () => Assert.IsType<List<PositionDto>>(result.ValueOrDefault.Positions)
             );
         }
 
@@ -83,7 +83,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<PositionDTO>>(result.Value.Positions),
+                () => Assert.IsType<List<PositionDto>>(result.Value.Positions),
                 () => Assert.Equal(pageSize, result.Value.Positions.Count()));
         }
 
@@ -116,27 +116,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             return positions;
         }
 
-        private static List<PositionDTO> GetListPositionDTO()
+        private static List<PositionDto> GetListPositionDTO()
         {
-            var positionDTOs = new List<PositionDTO>
+            var positionDTOs = new List<PositionDto>
             {
-                new PositionDTO
+                new PositionDto
                 {
                     Id = 1,
                 },
-                new PositionDTO
+                new PositionDto
                 {
                     Id = 2,
                 },
-                new PositionDTO
+                new PositionDto
                 {
                     Id = 3,
                 },
-                new PositionDTO
+                new PositionDto
                 {
                     Id = 4,
                 },
-                new PositionDTO
+                new PositionDto
                 {
                     Id = 5,
                 },
@@ -145,9 +145,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             return positionDTOs;
         }
 
-        private void SetupMapper(IEnumerable<PositionDTO> positionDTOs)
+        private void SetupMapper(IEnumerable<PositionDto> positionDTOs)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDto>>(It.IsAny<IEnumerable<Positions>>()))
                 .Returns(positionDTOs);
         }
 

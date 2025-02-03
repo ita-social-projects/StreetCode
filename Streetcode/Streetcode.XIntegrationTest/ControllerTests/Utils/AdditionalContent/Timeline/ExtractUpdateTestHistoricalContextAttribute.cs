@@ -9,11 +9,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Ti
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class ExtractUpdateTestHistoricalContextAttribute : BeforeAfterTestAttribute
 {
-    public static HistoricalContextDTO HistoricalContextForTest { get; set; } = null!;
+    public static HistoricalContextDto HistoricalContextForTest { get; set; } = null!;
 
     public override void Before(MethodInfo methodUnderTest)
     {
-        HistoricalContextForTest = new HistoricalContextDTO
+        HistoricalContextForTest = new HistoricalContextDto
         {
             Id = 1,
             Title = "New Title Test",

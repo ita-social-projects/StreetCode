@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Media.Images;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Update;
 
-public record UpdateImageCommand(ImageFileBaseUpdateDTO Image)
-    : IRequest<Result<ImageDTO>>;
+public record UpdateImageCommand(ImageFileBaseUpdateDto Image)
+    : IRequest<Result<ImageDto>>;

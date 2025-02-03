@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.GetByName;
 
-public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<UserDTO>>
+public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<UserDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -33,7 +33,7 @@ public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<U
         _localizer = localizer;
     }
 
-    public async Task<Result<UserDTO>> Handle(GetByUserNameQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserDto>> Handle(GetByUserNameQuery request, CancellationToken cancellationToken)
     {
         var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Email == HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor), include: qu => qu.Include(x => x.Expertises));
 
@@ -44,7 +44,7 @@ public class GetByUserNameHandler : IRequestHandler<GetByUserNameQuery, Result<U
             return Result.Fail(errorMessage);
         }
 
-        var userDto = _mapper.Map<UserDTO>(user);
+        var userDto = _mapper.Map<UserDto>(user);
         userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
         return Result.Ok(userDto);

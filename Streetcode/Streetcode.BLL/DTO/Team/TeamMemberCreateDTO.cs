@@ -2,8 +2,8 @@
 
 namespace Streetcode.BLL.DTO.Team
 {
-    public class TeamMemberCreateDTO : TeamMemberCreateUpdateDTO
+    public class TeamMemberCreateDto : TeamMemberCreateUpdateDto
     {
-        public List<TeamMemberLinkCreateDTO>? TeamMemberLinks { get; set; } = new List<TeamMemberLinkCreateDTO>();
+        public List<TeamMemberLinkCreateDto>? TeamMemberLinks { get; set; } = new List<TeamMemberLinkCreateDto>();
     }
 }

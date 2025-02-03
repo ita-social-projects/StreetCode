@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.AdditionalContent.Tag
 {
-    public class UpdateTagDTO : CreateUpdateTagDTO
+    public class UpdateTagDto : CreateUpdateTagDto
     {
         public int Id { get; set; }
     }

@@ -287,11 +287,11 @@ public class NewsTests
 
         var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer,
             _mockRepositoryWrapper.Object);
-        baseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDTO>>(), default))
+        baseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDto>>(), default))
             .ReturnsAsync(new ValidationResult());
 
         var updateValidator = new UpdateNewsValidator(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object, baseValidator.Object);
-        var updateCommand = new UpdateNewsCommand(new UpdateNewsDTO()
+        var updateCommand = new UpdateNewsCommand(new UpdateNewsDto()
         {
             Id = 1,  // Id that does not match an existing Id in the database
             Title = "Test Title",
@@ -309,7 +309,7 @@ public class NewsTests
         }
 
         // Assert
-        baseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDTO>>(), default), Times.Once);
+        baseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDto>>(), default), Times.Once);
         result.ShouldHaveValidationErrorFor(x => x.news);
     }
 
@@ -318,7 +318,7 @@ public class NewsTests
     {
         // Arrange
         var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
-        baseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDTO>>(), default))
+        baseValidator.Setup(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDto>>(), default))
             .ReturnsAsync(new ValidationResult());
 
         _mockRepositoryWrapper.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
@@ -327,7 +327,7 @@ public class NewsTests
             .ReturnsAsync(() => default);
 
         var createValidator = new CreateNewsValidator(baseValidator.Object, _mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
-        var createCommand = new CreateNewsCommand(new NewsCreateDTO()
+        var createCommand = new CreateNewsCommand(new NewsCreateDto()
         {
             Title = "Test Title",
             Text = "Test Text", // Text that is not unique
@@ -344,12 +344,12 @@ public class NewsTests
         }
 
         // Assert
-        baseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDTO>>(), default), Times.Once);
+        baseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateNewsDto>>(), default), Times.Once);
     }
 
-    private static NewsCreateDTO GetValidNews()
+    private static NewsCreateDto GetValidNews()
     {
-        return new NewsCreateDTO()
+        return new NewsCreateDto()
         {
             Title = "Test Title",
             Text = "Test Text",

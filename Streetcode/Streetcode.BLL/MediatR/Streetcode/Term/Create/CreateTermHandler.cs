@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
 {
-    public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDTO>>
+    public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
             _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
         }
 
-        public async Task<Result<TermDTO>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
+        public async Task<Result<TermDto>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
         {
             var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
 
@@ -63,7 +63,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var createdTermDTO = _mapper.Map<TermDTO>(createdTerm);
+            var createdTermDTO = _mapper.Map<TermDto>(createdTerm);
 
             if(createdTermDTO != null)
             {

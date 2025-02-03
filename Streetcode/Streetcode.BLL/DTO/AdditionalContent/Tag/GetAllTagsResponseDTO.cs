@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.AdditionalContent.Tag
 {
-    public class GetAllTagsResponseDTO
+    public class GetAllTagsResponseDto
     {
         public int TotalAmount { get; set; }
-        public IEnumerable<TagDTO> Tags { get; set; } = new List<TagDTO>();
+        public IEnumerable<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 }

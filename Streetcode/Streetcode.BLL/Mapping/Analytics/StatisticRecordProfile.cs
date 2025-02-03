@@ -10,10 +10,10 @@ namespace Streetcode.BLL.Mapping.Analytics
     {
         public StatisticRecordProfile()
         {
-            CreateMap<StatisticRecord, StatisticRecordDTO>().ReverseMap();
-            CreateMap<StatisticRecord, StatisticRecordResponseDTO>().ReverseMap();
+            CreateMap<StatisticRecord, StatisticRecordDto>().ReverseMap();
+            CreateMap<StatisticRecord, StatisticRecordResponseDto>().ReverseMap();
 
-            CreateMap<StatisticRecordUpdateDTO, StreetcodeCoordinate>()
+            CreateMap<StatisticRecordUpdateDto, StreetcodeCoordinate>()
                 .ForMember(sc => sc.Id, conf => conf.MapFrom(sru => sru.StreetcodeCoordinate.Id))
                 .ForMember(sc => sc.Latitude, conf => conf.MapFrom(sru => sru.StreetcodeCoordinate.Latitude))
                 .ForMember(sc => sc.Longtitude, conf => conf.MapFrom(sru => sru.StreetcodeCoordinate.Longtitude))

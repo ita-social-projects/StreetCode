@@ -43,7 +43,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
             var expectedError = "Поле 'Назва' не може бути пусте";
             int imageId = UniqueNumberGenerator.GenerateInt();
             ImageExtracter.Extract(imageId);
-            var partner = new CreatePartnerDTO()
+            var partner = new CreatePartnerDto()
             {
                 Title = string.Empty,
                 Description = "Test",
@@ -63,7 +63,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllPartnersResponseDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllPartnersResponseDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -74,7 +74,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
         {
             Partner expectedPartner = this.testPartner;
             var response = await this.Client.GetByIdAsync(expectedPartner.Id);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<PartnerDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -104,7 +104,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
             int streetcodeId = this.testStreetcodeContent.Id;
 
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<PartnerDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

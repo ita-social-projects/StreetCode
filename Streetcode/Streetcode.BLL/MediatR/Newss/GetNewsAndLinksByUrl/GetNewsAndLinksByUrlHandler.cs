@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
-    public class GetNewsAndLinksByUrlHandler : IRequestHandler<GetNewsAndLinksByUrlQuery, Result<NewsDTOWithURLs>>
+    public class GetNewsAndLinksByUrlHandler : IRequestHandler<GetNewsAndLinksByUrlQuery, Result<NewsDtoWithUrls>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -27,10 +27,10 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<NewsDTOWithURLs>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
+        public async Task<Result<NewsDtoWithUrls>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
         {
             string url = request.url;
-            var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
+            var newsDTO = _mapper.Map<NewsDto>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
                 predicate: sc => sc.URL == url,
                 include: scl => scl
                     .Include(sc => sc.Image!)));
@@ -62,7 +62,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                 nextNewsLink = news[newsIndex + 1].URL;
             }
 
-            RandomNewsDTO? randomNewsDTO = null;
+            RandomNewsDto? randomNewsDTO = null;
             if (news.Count > 1)
             {
                 Random rnd = new();
@@ -72,12 +72,12 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                     randomIndex = rnd.Next(news.Count);
                 }
 
-                randomNewsDTO = new RandomNewsDTO();
+                randomNewsDTO = new RandomNewsDto();
                 randomNewsDTO.Title = news[randomIndex].Title;
                 randomNewsDTO.RandomNewsUrl = news[randomIndex].URL;
             }
 
-            var newsDTOWithUrls = new NewsDTOWithURLs();
+            var newsDTOWithUrls = new NewsDtoWithUrls();
             newsDTOWithUrls.RandomNews = randomNewsDTO;
             newsDTOWithUrls.News = newsDTO;
             newsDTOWithUrls.NextNewsUrl = nextNewsLink!;

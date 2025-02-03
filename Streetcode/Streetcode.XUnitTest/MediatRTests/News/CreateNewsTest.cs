@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
 
             // Assert
-            Assert.IsType<NewsDTO>(result.Value);
+            Assert.IsType<NewsDto>(result.Value);
         }
 
         [Fact]
@@ -130,9 +130,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsCreateDTO GetNewsCreateDTO()
+        private static NewsCreateDto GetNewsCreateDTO()
         {
-            return new NewsCreateDTO()
+            return new NewsCreateDto()
             {
                 ImageId = 1,
                 Title = "Title",
@@ -142,9 +142,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsDTO GetNewsDTO()
+        private static NewsDto GetNewsDTO()
         {
-            return new NewsDTO()
+            return new NewsDto()
             {
                 Id = 1,
                 ImageId = 1,
@@ -157,19 +157,19 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private static DAL.Entities.News.News? GetNewsWithNotExistId() => null;
 
-        private static NewsCreateDTO? GetNewsDTOWithNotExistId() => null;
+        private static NewsCreateDto? GetNewsDTOWithNotExistId() => null;
 
         private void SetupMockMapping(DAL.Entities.News.News testNews)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsCreateDto>()))
                 .Returns(testNews);
-            this.mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
+            this.mockMapper.Setup(x => x.Map<NewsDto>(It.IsAny<DAL.Entities.News.News>()))
                 .Returns(GetNewsDTO());
         }
 
         private void SetupMapperWithNullNews()
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News?>(It.IsAny<NewsDTO>()))
+            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News?>(It.IsAny<NewsDto>()))
                 .Returns(GetNewsWithNotExistId());
         }
 

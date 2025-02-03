@@ -36,7 +36,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -48,7 +48,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Art expectedArt = this.testArt;
             var response = await this.Client.GetByIdAsync(expectedArt.Id);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ArtDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ArtDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -76,7 +76,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             ArtExtracter.AddStreetcodeArtWithStreetcodeArtSlide(this.testStreetcodeContent.Id, this.testArt.Id, this.testStreetcodeArtSlide.Id);
             int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetArtsByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ArtDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

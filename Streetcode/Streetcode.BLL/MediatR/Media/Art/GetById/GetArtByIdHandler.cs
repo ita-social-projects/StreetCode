@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetById;
 
-public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>>
+public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<ArtDTO>> Handle(GetArtByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ArtDto>> Handle(GetArtByIdQuery request, CancellationToken cancellationToken)
     {
         var art = await _repositoryWrapper.ArtRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
@@ -35,6 +35,6 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
             return Result.Fail(new Error(errorMsg));
         }
 
-        return Result.Ok(_mapper.Map<ArtDTO>(art));
+        return Result.Ok(_mapper.Map<ArtDto>(art));
     }
 }

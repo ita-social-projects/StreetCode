@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         public async Task ShouldReturnSuccessfully_ExistingId_ImageNull(int id, string expectedBase64)
         {
             // Arrange
-            var testNewsDTO = new NewsDTO { Id = id };
+            var testNewsDTO = new NewsDto { Id = id };
             var testNews = GetNews(id);
             this.RepositorySetup(testNews);
             this.MapperSetup(testNewsDTO);
@@ -128,12 +128,12 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<NewsDTO>(result.ValueOrDefault));
+                () => Assert.IsType<NewsDto>(result.ValueOrDefault));
         }
 
-        private static ImageDTO GetImageDTO()
+        private static ImageDto GetImageDTO()
         {
-            return new ImageDTO
+            return new ImageDto
             {
                 BlobName = It.IsAny<string>(),
             };
@@ -147,9 +147,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsDTO GetNewsDTO(int id)
+        private static NewsDto GetNewsDTO(int id)
         {
-            return new NewsDTO
+            return new NewsDto
             {
                 Id = id,
                 Image = GetImageDTO(),
@@ -163,9 +163,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                 IIncludableQueryable<NewsModel, object>>>())).ReturnsAsync(news);
         }
 
-        private void MapperSetup(NewsDTO? news)
+        private void MapperSetup(NewsDto? news)
         {
-            this.mockMapper.Setup(mapper => mapper.Map<NewsDTO?>(It.IsAny<NewsModel>()))
+            this.mockMapper.Setup(mapper => mapper.Map<NewsDto?>(It.IsAny<NewsModel>()))
                 .Returns(news);
         }
 

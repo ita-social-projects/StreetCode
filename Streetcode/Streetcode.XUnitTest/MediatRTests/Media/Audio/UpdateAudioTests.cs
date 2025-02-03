@@ -54,9 +54,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             Assert.True(result.IsSuccess);
         }
 
-        private static AudioFileBaseUpdateDTO GetUpdateAudioDTO()
+        private static AudioFileBaseUpdateDto GetUpdateAudioDTO()
         {
-            return new AudioFileBaseUpdateDTO()
+            return new AudioFileBaseUpdateDto()
             {
                 Id = 1,
                 Title = "Title",
@@ -66,9 +66,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             };
         }
 
-        private static AudioDTO GetAudioDTO()
+        private static AudioDto GetAudioDTO()
         {
-            return new AudioDTO()
+            return new AudioDto()
             {
                 Id = 1,
                 BlobName = "fake_blob_name",
@@ -110,11 +110,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
                 .Returns("fake_base64_string");
         }
 
-        private void SetupMapper(AudioEntity testAudio, AudioDTO testAudioDTO)
+        private void SetupMapper(AudioEntity testAudio, AudioDto testAudioDTO)
         {
-            this.mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseUpdateDTO>()))
+            this.mockMapper.Setup(x => x.Map<AudioEntity>(It.IsAny<AudioFileBaseUpdateDto>()))
                 .Returns(testAudio);
-            this.mockMapper.Setup(x => x.Map<AudioDTO>(It.IsAny<AudioEntity>()))
+            this.mockMapper.Setup(x => x.Map<AudioDto>(It.IsAny<AudioEntity>()))
                 .Returns(testAudioDTO);
         }
     }

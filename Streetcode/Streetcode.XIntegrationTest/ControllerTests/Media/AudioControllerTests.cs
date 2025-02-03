@@ -35,7 +35,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<AudioDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<AudioDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -47,7 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Audio expected = this.testAudio;
             var response = await this.Client.GetByIdAsync(expected.Id);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -71,7 +71,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             int streetcodeId = this.testStreetcodeContent.Id;
             int audioId = this.testAudio.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<AudioDto>(response.Content);
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
             Assert.True(returnedValue.Id == audioId);

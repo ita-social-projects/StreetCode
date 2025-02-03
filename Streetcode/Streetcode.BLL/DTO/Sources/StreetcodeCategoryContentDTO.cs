@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Sources
 {
-    public class StreetcodeCategoryContentDTO
+    public class StreetcodeCategoryContentDto
     {
         [Required]
         [MaxLength(15000)]

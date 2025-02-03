@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Partners.Create
 {
-  public class CreatePartnerSourceLinkDTO
+  public class CreatePartnerSourceLinkDto
   {
     public int Id { get; set; }
 

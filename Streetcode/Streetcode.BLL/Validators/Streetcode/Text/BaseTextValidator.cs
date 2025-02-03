@@ -5,7 +5,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Streetcode.Text;
 
-public class BaseTextValidator : AbstractValidator<BaseTextDTO>
+public class BaseTextValidator : AbstractValidator<BaseTextDto>
 {
     public const int TitleMaxLength = 50;
     public const int TextMaxLength = 35000;
@@ -25,7 +25,7 @@ public class BaseTextValidator : AbstractValidator<BaseTextDTO>
             .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["TextContent"], fieldLocalizer["AdditionalText"]]);
     }
 
-    private bool HaveTextWithTitle(BaseTextDTO dto)
+    private bool HaveTextWithTitle(BaseTextDto dto)
     {
         if (!string.IsNullOrWhiteSpace(dto.TextContent))
         {
@@ -35,7 +35,7 @@ public class BaseTextValidator : AbstractValidator<BaseTextDTO>
         return true;
     }
 
-    private bool HaveAdditionalTextWithMainText(BaseTextDTO dto)
+    private bool HaveAdditionalTextWithMainText(BaseTextDto dto)
     {
         if(!string.IsNullOrWhiteSpace(dto.AdditionalText))
         {

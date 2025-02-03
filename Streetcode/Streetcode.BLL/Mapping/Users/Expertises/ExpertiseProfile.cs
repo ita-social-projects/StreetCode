@@ -8,6 +8,6 @@ public class ExpertiseProfile : Profile
 {
     public ExpertiseProfile()
     {
-        CreateMap<ExpertiseDTO, Expertise>().ForMember(x => x.Users, conf => conf.Ignore()).ReverseMap();
+        CreateMap<ExpertiseDto, Expertise>().ForMember(x => x.Users, conf => conf.Ignore()).ReverseMap();
     }
 }

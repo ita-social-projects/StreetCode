@@ -9,7 +9,7 @@ public class StreetcodeCoordinateProfile : Profile
 {
    public StreetcodeCoordinateProfile()
    {
-        CreateMap<StreetcodeCoordinate, StreetcodeCoordinateDTO>().ReverseMap();
-        CreateMap<StreetcodeCoordinate, StreetcodeCoordinateUpdateDTO>().ReverseMap();
+        CreateMap<StreetcodeCoordinate, StreetcodeCoordinateDto>().ReverseMap();
+        CreateMap<StreetcodeCoordinate, StreetcodeCoordinateUpdateDto>().ReverseMap();
    }
 }

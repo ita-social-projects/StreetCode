@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Streetcode;
 
-public class GetAllStreetcodesRequestDTO
+public class GetAllStreetcodesRequestDto
 {
     public int? Page { get; set; } = null;
     public int? Amount { get; set; } = null;

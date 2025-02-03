@@ -48,9 +48,9 @@ public class SubtitlesValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private SubtitleCreateUpdateDTO GetValidSubtitle()
+    private SubtitleCreateUpdateDto GetValidSubtitle()
     {
-        return new SubtitleCreateDTO()
+        return new SubtitleCreateDto()
         {
             SubtitleText = "Subtitle text",
         };

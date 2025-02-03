@@ -36,14 +36,14 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
             },
         };
 
-        private readonly List<StreetcodeCoordinateDTO> coordinateDTOs = new List<StreetcodeCoordinateDTO>
+        private readonly List<StreetcodeCoordinateDto> coordinateDTOs = new List<StreetcodeCoordinateDto>
         {
-            new StreetcodeCoordinateDTO
+            new StreetcodeCoordinateDto
             {
                 Id = 1,
                 StreetcodeId = streetcode_id,
             },
-            new StreetcodeCoordinateDTO
+            new StreetcodeCoordinateDto
             {
                 Id = 2,
                 StreetcodeId = streetcode_id,
@@ -72,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<StreetcodeCoordinateDTO>>(result.Value),
+                () => Assert.IsType<List<StreetcodeCoordinateDto>>(result.Value),
                 () => Assert.True(result.Value.All(co => co.StreetcodeId.Equals(streetcode_id))));
         }
 
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
         {
             // Arrange
             this.SetupRepository(new List<StreetcodeCoordinate>(), new StreetcodeContent());
-            this.SetupMapper(new List<StreetcodeCoordinateDTO>());
+            this.SetupMapper(new List<StreetcodeCoordinateDto>());
 
             var expectedError = $"Cannot find coordinates by streetcodeId: {streetcode_id}";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindCoordinatesByStreetcodeId", streetcode_id])
@@ -112,9 +112,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
                 .ReturnsAsync(streetcode);
         }
 
-        private void SetupMapper(List<StreetcodeCoordinateDTO> returnList)
+        private void SetupMapper(List<StreetcodeCoordinateDto> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeCoordinateDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeCoordinateDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

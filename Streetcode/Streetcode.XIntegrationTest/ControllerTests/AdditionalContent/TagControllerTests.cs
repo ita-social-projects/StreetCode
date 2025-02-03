@@ -52,7 +52,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTagsResponseDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTagsResponseDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -64,7 +64,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             TagEntity expectedTag = this.testCreateTag;
             var response = await this.Client.GetByIdAsync(expectedTag.Id);
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -90,7 +90,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, this.testCreateTag.Id);
             int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);
@@ -102,7 +102,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, this.testCreateTag.Id);
             int streetcodeId = -100;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeTagDto>>(response.Content);
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
@@ -125,7 +125,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         {
             TagEntity expectedTag = this.testCreateTag;
             var response = await this.Client.GetTagByTitle(expectedTag.Title);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TagDto>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

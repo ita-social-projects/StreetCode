@@ -22,7 +22,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private readonly Subtitle subtitle = new Subtitle { Id = subtitle_id, StreetcodeId = streetcode_id };
 
-        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = subtitle_id, StreetcodeId = streetcode_id };
+        private readonly SubtitleDto subtitleDTO = new SubtitleDto { Id = subtitle_id, StreetcodeId = streetcode_id };
 
         public GetSubtitlesByStreetcodeIdRequestHandlerTests()
         {
@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<SubtitleDTO>(result.Value),
+                () => Assert.IsType<SubtitleDto>(result.Value),
                 () => Assert.True(result.Value != null));
         }
 
@@ -74,9 +74,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
                 .ReturnsAsync(returnElement);
         }
 
-        private void SetupMapper(SubtitleDTO returnElement)
+        private void SetupMapper(SubtitleDto returnElement)
         {
-            this.mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+            this.mockMapper.Setup(x => x.Map<SubtitleDto>(It.IsAny<object>()))
                 .Returns(returnElement);
         }
     }

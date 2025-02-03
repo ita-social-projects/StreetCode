@@ -8,7 +8,7 @@ namespace Streetcode.BLL.Mapping.Toponyms
 	{
 		public StreetcodeToponymProfile()
 		{
-			CreateMap<StreetcodeToponym, StreetcodeToponymCreateUpdateDTO>().ReverseMap();
+			CreateMap<StreetcodeToponym, StreetcodeToponymCreateUpdateDto>().ReverseMap();
 		}
 	}
 }

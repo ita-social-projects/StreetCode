@@ -11,7 +11,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners
         {
         }
 
-        public async Task<RestResponse> CreateAsync(CreatePartnerDTO createPartnerDto, string authToken)
+        public async Task<RestResponse> CreateAsync(CreatePartnerDto createPartnerDto, string authToken)
         {
             return await this.SendCommand("/Create", Method.Post, createPartnerDto, authToken);
         }

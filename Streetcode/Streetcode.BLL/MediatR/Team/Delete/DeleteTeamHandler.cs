@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Delete
 {
-    public class DeleteTeamHandler : IRequestHandler<DeleteTeamQuery, Result<TeamMemberDTO>>
+    public class DeleteTeamHandler : IRequestHandler<DeleteTeamQuery, Result<TeamMemberDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Team.Delete
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<TeamMemberDTO>> Handle(DeleteTeamQuery request, CancellationToken cancellationToken)
+        public async Task<Result<TeamMemberDto>> Handle(DeleteTeamQuery request, CancellationToken cancellationToken)
         {
             var team = await _repositoryWrapper.TeamRepository.GetFirstOrDefaultAsync(p => p.Id == request.id);
             if (team == null)
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Team.Delete
                 try
                 {
                     _repositoryWrapper.SaveChanges();
-                    return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
+                    return Result.Ok(_mapper.Map<TeamMemberDto>(team));
                 }
                 catch (Exception ex)
                 {

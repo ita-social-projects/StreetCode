@@ -8,7 +8,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode;
 
-public abstract class StreetcodeCreateUpdateDTO
+public abstract class StreetcodeCreateUpdateDto
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -22,9 +22,9 @@ public abstract class StreetcodeCreateUpdateDTO
     public string TransliterationUrl { get; set; } = null!; // this is "URL"
     public DateTime EventStartOrPersonBirthDate { get; set; }
     public DateTime? EventEndOrPersonDeathDate { get; set; }
-    public IEnumerable<StreetcodeToponymCreateUpdateDTO> Toponyms { get; set; } = null!;
-    public IEnumerable<TimelineItemCreateUpdateDTO> TimelineItems { get; set; } = null!;
+    public IEnumerable<StreetcodeToponymCreateUpdateDto> Toponyms { get; set; } = null!;
+    public IEnumerable<TimelineItemCreateUpdateDto> TimelineItems { get; set; } = null!;
     public IEnumerable<ImageDetailsDto>? ImagesDetails { get; set; } // strange behaviour, a random number is passed as 'Alt' property
-    public IEnumerable<StreetcodeArtSlideCreateUpdateDTO> StreetcodeArtSlides { get; set; } = null!;
-    public List<ArtCreateUpdateDTO> Arts { get; set; } = null!;
+    public IEnumerable<StreetcodeArtSlideCreateUpdateDto> StreetcodeArtSlides { get; set; } = null!;
+    public List<ArtCreateUpdateDto> Arts { get; set; } = null!;
 }

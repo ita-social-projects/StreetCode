@@ -121,9 +121,9 @@ public class BaseTeamMemberLinkTests
             .WithErrorMessage(expectedError);
     }
 
-    private TeamMemberLinkCreateUpdateDTO GetValidTeamMemberLink()
+    private TeamMemberLinkCreateUpdateDto GetValidTeamMemberLink()
     {
-        return new TeamMemberLinkDTO()
+        return new TeamMemberLinkDto()
         {
             TeamMemberId = 1,
             Id = 4,

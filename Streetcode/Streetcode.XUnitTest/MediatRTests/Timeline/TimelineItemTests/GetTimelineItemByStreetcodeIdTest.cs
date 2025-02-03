@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
 
             this.mockMapper
             .Setup(x => x
-            .Map<IEnumerable<TimelineItemDTO>>(It.IsAny<IEnumerable<TimelineItem>>()))
+            .Map<IEnumerable<TimelineItemDto>>(It.IsAny<IEnumerable<TimelineItem>>()))
             .Returns(GetTimelineItemDTOList());
 
             var handler = new GetTimelineItemsByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -79,8 +79,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<TimelineItemDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<TimelineItemDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<TimelineItemDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<TimelineItemDto>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
 
@@ -105,11 +105,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             return new List<TimelineItem>();
         }
 
-        public static List<TimelineItemDTO> GetTimelineItemDTOList()
+        public static List<TimelineItemDto> GetTimelineItemDTOList()
         {
-            return new List<TimelineItemDTO>
+            return new List<TimelineItemDto>
             {
-                new TimelineItemDTO
+                new TimelineItemDto
                 {
                     Id = 1,
                     Date = DateTime.Now,

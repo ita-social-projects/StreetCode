@@ -117,9 +117,9 @@ public class BaseTextValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private static BaseTextDTO GetValidTextCreateDTO()
+    private static BaseTextDto GetValidTextCreateDTO()
     {
-        return new TextCreateDTO()
+        return new TextCreateDto()
         {
             AdditionalText = "AdditionalText Test",
             TextContent = "TextContent",

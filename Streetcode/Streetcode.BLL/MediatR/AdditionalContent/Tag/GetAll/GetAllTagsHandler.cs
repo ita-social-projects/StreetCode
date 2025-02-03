@@ -13,7 +13,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Tag;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 
-public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllTagsResponseDTO>>
+public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllTagsResponseDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
         _stringLocalizerCannotFind = CannotFindSharedResource;
     }
 
-    public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
+    public Task<Result<GetAllTagsResponseDto>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
         PaginationResponse<DAL.Entities.AdditionalContent.Tag> paginationResponse = _repositoryWrapper
             .TagRepository
@@ -41,13 +41,13 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
-            return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg)));
+            return Task.FromResult(Result.Fail<GetAllTagsResponseDto>(new Error(errorMsg)));
         }
 
-        GetAllTagsResponseDTO getAllTagsResponseDTO = new GetAllTagsResponseDTO
+        GetAllTagsResponseDto getAllTagsResponseDTO = new GetAllTagsResponseDto
         {
             TotalAmount = paginationResponse.TotalItems,
-            Tags = _mapper.Map<IEnumerable<TagDTO>>(paginationResponse.Entities),
+            Tags = _mapper.Map<IEnumerable<TagDto>>(paginationResponse.Entities),
         };
 
         return Task.FromResult(Result.Ok(getAllTagsResponseDTO));

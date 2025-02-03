@@ -8,7 +8,7 @@ using Streetcode.BLL.Validators.Common;
 
 namespace Streetcode.BLL.Validators.TeamMember.TeamMemberLInk;
 
-public class BaseTeamMemberLinkValidator : AbstractValidator<TeamMemberLinkCreateUpdateDTO>
+public class BaseTeamMemberLinkValidator : AbstractValidator<TeamMemberLinkCreateUpdateDto>
 {
     public const int MaxTeamMemberLinkLength = 255;
     public BaseTeamMemberLinkValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)

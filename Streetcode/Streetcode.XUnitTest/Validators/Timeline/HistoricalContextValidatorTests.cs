@@ -65,9 +65,9 @@ public class HistoricalContextValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private HistoricalContextDTO GetValidHistoricalContext()
+    private HistoricalContextDto GetValidHistoricalContext()
     {
-        return new HistoricalContextDTO()
+        return new HistoricalContextDto()
         {
             Id = 1,
             Title = "Title",

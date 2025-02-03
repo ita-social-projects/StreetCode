@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.GetAll
 {
-    public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllTeamDTO>>
+    public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllTeamDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllTeamDto>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<TeamMember> paginationResponse = _repositoryWrapper
                 .TeamRepository
@@ -42,13 +42,13 @@ namespace Streetcode.BLL.MediatR.Team.GetAll
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeam"].Value;
                 _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllTeamDTO>(new Error(errorMsg)));
+                return Task.FromResult(Result.Fail<GetAllTeamDto>(new Error(errorMsg)));
             }
 
-            GetAllTeamDTO getAllTeamDTO = new GetAllTeamDTO()
+            GetAllTeamDto getAllTeamDTO = new GetAllTeamDto()
             {
                 TotalAmount = paginationResponse.TotalItems,
-                TeamMembers = _mapper.Map<IEnumerable<TeamMemberDTO>>(paginationResponse.Entities),
+                TeamMembers = _mapper.Map<IEnumerable<TeamMemberDto>>(paginationResponse.Entities),
             };
 
             return Task.FromResult(Result.Ok(getAllTeamDTO));

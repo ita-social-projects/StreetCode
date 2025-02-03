@@ -9,7 +9,7 @@ public class CoordinateController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
     [ValidateStreetcodeExistence]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeCoordinateDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeCoordinateDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetCoordinatesByStreetcodeIdQuery(streetcodeId)));

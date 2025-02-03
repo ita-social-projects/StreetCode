@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Streetcode.BLL.DTO.Users.Password;
 
-public class UpdateForgotPasswordDTO
+public class UpdateForgotPasswordDto
 {
     public string Token { get; set; }
     public string Username { get; set; }

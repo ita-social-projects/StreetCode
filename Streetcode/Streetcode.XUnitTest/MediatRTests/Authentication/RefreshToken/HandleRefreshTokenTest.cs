@@ -73,9 +73,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
             Assert.True(result.IsFailed);
         }
 
-        private RefreshTokenRequestDTO GetRefreshTokenRequestDTO()
+        private RefreshTokenRequestDto GetRefreshTokenRequestDTO()
         {
-            return new RefreshTokenRequestDTO();
+            return new RefreshTokenRequestDto();
         }
 
         private RefreshTokenHandler GetRefreshTokenHandler()

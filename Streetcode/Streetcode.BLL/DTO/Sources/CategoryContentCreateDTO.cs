@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.DTO.Sources
 {
-  public class CategoryContentCreateDTO : StreetcodeCategoryContentDTO
+  public class CategoryContentCreateDto : StreetcodeCategoryContentDto
   {
   }
 }

@@ -16,19 +16,19 @@ public class TeamPositionsClient : StreetcodeRelatedBaseClient
         return await this.SendQuery($"/GetByTitle/{title}", authToken);
     }
 
-    public async Task<RestResponse> UpdateAsync(PositionDTO positionDto, string authToken = "")
+    public async Task<RestResponse> UpdateAsync(PositionDto positionDto, string authToken = "")
     {
         return await this.SendCommand("/Update", Method.Put, positionDto, authToken);
     }
 
-    public async Task<RestResponse> CreateAsync(PositionDTO positionDto, string authToken = "")
+    public async Task<RestResponse> CreateAsync(PositionDto positionDto, string authToken = "")
     {
         return await this.SendCommand("/Create", Method.Post, positionDto, authToken);
     }
 
     public async Task<RestResponse> Delete(int id, string authToken = "")
     {
-        return await this.SendCommand($"/Delete/{id}", Method.Delete, new PositionDTO(), authToken);
+        return await this.SendCommand($"/Delete/{id}", Method.Delete, new PositionDto(), authToken);
     }
 
     public async Task<RestResponse> GetAllWithTeamMembers(string authToken = "")

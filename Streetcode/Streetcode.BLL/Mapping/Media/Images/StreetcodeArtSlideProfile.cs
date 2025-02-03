@@ -9,9 +9,9 @@ public class StreetcodeArtSlideProfile : Profile
 {
     public StreetcodeArtSlideProfile()
     {
-        CreateMap<StreetcodeArtSlide, ArtSlideDTO>().ReverseMap();
+        CreateMap<StreetcodeArtSlide, ArtSlideDto>().ReverseMap();
 
-        CreateMap<StreetcodeArtSlideCreateUpdateDTO, StreetcodeArtSlide>()
+        CreateMap<StreetcodeArtSlideCreateUpdateDto, StreetcodeArtSlide>()
             .ForMember(s => s.Id, conf => conf.Ignore())
             .ForMember(s => s.StreetcodeId, conf => conf.Ignore())
             .ForMember(s => s.Index, opt => opt.MapFrom(src => src.Index))
@@ -20,7 +20,7 @@ public class StreetcodeArtSlideProfile : Profile
             .ForMember(s => s.Streetcode, conf => conf.Ignore())
             .ReverseMap();
 
-        CreateMap<StreetcodeArtSlideDTO, StreetcodeArtSlide>()
+        CreateMap<StreetcodeArtSlideDto, StreetcodeArtSlide>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SlideId))
             .ReverseMap();
     }

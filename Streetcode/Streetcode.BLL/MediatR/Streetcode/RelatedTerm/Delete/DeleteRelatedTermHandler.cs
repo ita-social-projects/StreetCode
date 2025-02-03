@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
 {
-    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<RelatedTermDTO>>
+    public class DeleteRelatedTermHandler : IRequestHandler<DeleteRelatedTermCommand, Result<RelatedTermDto>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
@@ -31,7 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<RelatedTermDTO>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
+        public async Task<Result<RelatedTermDto>> Handle(DeleteRelatedTermCommand request, CancellationToken cancellationToken)
         {
             var relatedTerm = await _repository.RelatedTermRepository.GetFirstOrDefaultAsync(rt => rt.Word!.ToLower().Equals(request.word.ToLower()));
 
@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Delete
             _repository.RelatedTermRepository.Delete(relatedTerm);
 
             var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            var relatedTermDto = _mapper.Map<RelatedTermDTO>(relatedTerm);
+            var relatedTermDto = _mapper.Map<RelatedTermDto>(relatedTerm);
             if(resultIsSuccess && relatedTermDto != null)
             {
                 return Result.Ok(relatedTermDto);

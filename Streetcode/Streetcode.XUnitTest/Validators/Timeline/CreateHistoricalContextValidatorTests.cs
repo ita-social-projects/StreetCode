@@ -21,7 +21,7 @@ public class CreateHistoricalContextValidatorTests
         this.mockFieldsLocalizer = new MockFieldNamesLocalizer();
         this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
         this.mockBaseValidator = new Mock<BaseHistoricalContextValidator>(this.mockValidationLocalizer, this.mockFieldsLocalizer);
-        this.mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()))
+        this.mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDto>>()))
             .Returns(new ValidationResult());
     }
 
@@ -40,6 +40,6 @@ public class CreateHistoricalContextValidatorTests
         createValidator.TestValidate(createCommand);
 
         // Assert
-        this.mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDTO>>()), Times.Once);
+        this.mockBaseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextDto>>()), Times.Once);
     }
 }

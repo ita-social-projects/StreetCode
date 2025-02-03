@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Authentication.RefreshToken
 {
-    public class RefreshTokenResponceDTO
+    public class RefreshTokenResponceDto
     {
         public string AccessToken { get; set; } = null!;
     }

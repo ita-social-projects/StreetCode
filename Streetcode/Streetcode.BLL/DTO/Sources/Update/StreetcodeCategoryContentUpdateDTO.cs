@@ -3,7 +3,7 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Sources.Update
 {
-    public class StreetcodeCategoryContentUpdateDTO : StreetcodeCategoryContentDTO, IModelState
+    public class StreetcodeCategoryContentUpdateDto : StreetcodeCategoryContentDto, IModelState
     {
         public ModelState ModelState { get; set; }
     }

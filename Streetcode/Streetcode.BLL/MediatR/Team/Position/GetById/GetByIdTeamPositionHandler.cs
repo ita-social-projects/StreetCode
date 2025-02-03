@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetById;
 
-public class GetByIdTeamPositionHandler : IRequestHandler<GetByIdTeamPositionQuery, Result<PositionDTO>>
+public class GetByIdTeamPositionHandler : IRequestHandler<GetByIdTeamPositionQuery, Result<PositionDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
@@ -24,7 +24,7 @@ public class GetByIdTeamPositionHandler : IRequestHandler<GetByIdTeamPositionQue
         _stringLocalizer = localizer;
     }
 
-    public async Task<Result<PositionDTO>> Handle(GetByIdTeamPositionQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PositionDto>> Handle(GetByIdTeamPositionQuery request, CancellationToken cancellationToken)
     {
         var position = await _repository.PositionRepository.GetFirstOrDefaultAsync(j => j.Id == request.positionId);
 
@@ -37,7 +37,7 @@ public class GetByIdTeamPositionHandler : IRequestHandler<GetByIdTeamPositionQue
 
         try
         {
-            var positionDTO = _mapper.Map<PositionDTO>(position);
+            var positionDTO = _mapper.Map<PositionDto>(position);
             return Result.Ok(positionDTO);
         }
         catch (Exception ex)

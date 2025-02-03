@@ -18,20 +18,20 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.Update
 {
-    public class StreetcodeUpdateDTO : StreetcodeCreateUpdateDTO
+    public class StreetcodeUpdateDto : StreetcodeCreateUpdateDto
     {
         public int Id { get; set; }
-        public TextUpdateDTO? Text { get; set; }
+        public TextUpdateDto? Text { get; set; }
         public string? ARBlockUrl { get; set; }
-        public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = null!;
-        public IEnumerable<StreetcodeFactUpdateDTO> Facts { get; set; }
-        public IEnumerable<VideoUpdateDTO>? Videos { get; set; }
-        public IEnumerable<AudioUpdateDTO> Audios { get; set; } = null!;
-        public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; } = null!;
-        public IEnumerable<PartnersUpdateDTO> Partners { get; set; } = null!;
-        public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; } = null!;
-        public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
-        public IEnumerable<ImageUpdateDTO> Images { get; set; } = null!;
-        public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
+        public IEnumerable<SubtitleUpdateDto> Subtitles { get; set; } = null!;
+        public IEnumerable<StreetcodeFactUpdateDto> Facts { get; set; }
+        public IEnumerable<VideoUpdateDto>? Videos { get; set; }
+        public IEnumerable<AudioUpdateDto> Audios { get; set; } = null!;
+        public IEnumerable<RelatedFigureUpdateDto> RelatedFigures { get; set; } = null!;
+        public IEnumerable<PartnersUpdateDto> Partners { get; set; } = null!;
+        public IEnumerable<StreetcodeTagUpdateDto> Tags { get; set; } = null!;
+        public IEnumerable<StatisticRecordUpdateDto> StatisticRecords { get; set; }
+        public IEnumerable<ImageUpdateDto> Images { get; set; } = null!;
+        public IEnumerable<StreetcodeCategoryContentUpdateDto> StreetcodeCategoryContents { get; set; }
     }
 }

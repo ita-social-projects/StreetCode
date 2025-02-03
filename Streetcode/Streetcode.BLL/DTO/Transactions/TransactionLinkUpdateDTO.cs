@@ -3,7 +3,7 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Transactions
 {
-    public class TransactionLinkUpdateDTO : TransactLinkDTO, IModelState
+    public class TransactionLinkUpdateDto : TransactLinkDto, IModelState
     {
         public ModelState ModelState { get; set; }
     }

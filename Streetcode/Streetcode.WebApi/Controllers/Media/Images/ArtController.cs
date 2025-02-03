@@ -10,22 +10,21 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class ArtController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDto>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllArtsQuery()));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArtDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArtDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
             return HandleResult(await Mediator.Send(new GetArtByIdQuery(id)));
     }
 
-    [HttpGet("{streetcodeId:int}")]
-    [ValidateStreetcodeExistence]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDTO>))]
+    [HttpGet("{streetcodeId:int}")][ValidateStreetcodeExistence]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDto>))]
     public async Task<IActionResult> GetArtsByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId)));

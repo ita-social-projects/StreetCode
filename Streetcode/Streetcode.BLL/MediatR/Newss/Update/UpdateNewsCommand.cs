@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.News;
 
 namespace Streetcode.BLL.MediatR.Newss.Update
 {
-    public record UpdateNewsCommand(UpdateNewsDTO news)
-        : IRequest<Result<UpdateNewsDTO>>;
+    public record UpdateNewsCommand(UpdateNewsDto news)
+        : IRequest<Result<UpdateNewsDto>>;
 }

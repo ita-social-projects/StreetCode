@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Payment
 {
-    public class PaymentDTO
+    public class PaymentDto
     {
         [Required]
         public long Amount { get; set; }

@@ -16,7 +16,7 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 public class ImageController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDto>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllImagesQuery()));
@@ -24,34 +24,35 @@ public class ImageController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [ValidateStreetcodeExistence]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
        return HandleResult(await Mediator.Send(new GetImageByIdQuery(id)));
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDTO))]
+    [Authorize(Roles = nameof(UserRole.Admin))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDTO image)
+    public async Task<IActionResult> Create([FromBody] ImageFileBaseCreateDto image)
     {
         return HandleResult(await Mediator.Send(new CreateImageCommand(image)));
     }
 
     [HttpPut]
     [Authorize(Roles = nameof(UserRole.Admin))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ImageDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDTO image)
+    public async Task<IActionResult> Update([FromBody] ImageFileBaseUpdateDto image)
     {
         return HandleResult(await Mediator.Send(new UpdateImageCommand(image)));
     }

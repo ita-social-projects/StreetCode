@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.SourceLinkCategory;
 
-public class BaseCategoryValidator : AbstractValidator<SourceLinkCreateUpdateCategoryDTO>
+public class BaseCategoryValidator : AbstractValidator<SourceLinkCreateUpdateCategoryDto>
 {
     public const int MaxCategoryLength = 23;
     private readonly IRepositoryWrapper _repositoryWrapper;

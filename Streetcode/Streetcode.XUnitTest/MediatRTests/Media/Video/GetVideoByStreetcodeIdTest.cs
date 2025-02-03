@@ -43,7 +43,7 @@ public class GetVideoByStreetcodeIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<VideoDTO>(It.IsAny<Video>()))
+            .Map<VideoDto>(It.IsAny<Video>()))
             .Returns(GetVideoDTO(streetcodeId));
 
         var handler = new GetVideoByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
@@ -66,7 +66,7 @@ public class GetVideoByStreetcodeIdTest
     {
         // Arrange
         Video? video = null;
-        VideoDTO? videoDto = null;
+        VideoDto? videoDto = null;
         StreetcodeContent? streetcodeContent = null;
         this.mockRepository.Setup(x => x.VideoRepository
             .GetFirstOrDefaultAsync(
@@ -84,7 +84,7 @@ public class GetVideoByStreetcodeIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<VideoDTO?>(It.IsAny<Video>()))
+            .Map<VideoDto?>(It.IsAny<Video>()))
             .Returns(videoDto);
 
         this.mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
@@ -125,7 +125,7 @@ public class GetVideoByStreetcodeIdTest
 
         this.mockMapper
              .Setup(x => x
-             .Map<VideoDTO>(It.IsAny<Video>()))
+             .Map<VideoDto>(It.IsAny<Video>()))
              .Returns(GetVideoDTO(streetcodeId));
 
         var handler = new GetVideoByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
@@ -138,12 +138,12 @@ public class GetVideoByStreetcodeIdTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result.ValueOrDefault),
-            () => Assert.IsType<VideoDTO>(result.ValueOrDefault));
+            () => Assert.IsType<VideoDto>(result.ValueOrDefault));
     }
 
-    private static VideoDTO GetVideoDTO(int id)
+    private static VideoDto GetVideoDTO(int id)
     {
-        return new VideoDTO()
+        return new VideoDto()
         {
             Id = id,
         };

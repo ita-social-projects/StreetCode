@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.Create;
 
-public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<ImageDTO>>
+public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<ImageDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -35,7 +35,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         _stringLocalizerCannot = stringLocalizerCannot;
     }
 
-    public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ImageDto>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
         string hashBlobStorageName = _blobService.SaveFileInStorage(
             request.Image.BaseFormat,
@@ -49,7 +49,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         await _repositoryWrapper.ImageRepository.CreateAsync(image);
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        var createdImage = _mapper.Map<ImageDTO>(image);
+        var createdImage = _mapper.Map<ImageDto>(image);
 
         createdImage.Base64 = _blobService.FindFileInStorageAsBase64(createdImage.BlobName);
 

@@ -26,23 +26,23 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
         "Minor Code Smell",
         "S101:Types should be named in PascalCase",
         Justification = "DTOs are named this way throughout the project")]
-    public static class StreetcodeUpdateDTOExtracter
+    public static class StreetcodeUpdateDtoExtracter
     {
         private static SqlDbHelper dbHelper;
 
-        static StreetcodeUpdateDTOExtracter()
+        static StreetcodeUpdateDtoExtracter()
         {
             dbHelper = BaseControllerTests.GetSqlDbHelper();
         }
 
-        public static StreetcodeUpdateDTO Extract(int id, int index, string transliterationUrl)
+        public static StreetcodeUpdateDto Extract(int id, int index, string transliterationUrl)
         {
             StreetcodeContent testStreetcode = StreetcodeContentExtracter.Extract(id, index, transliterationUrl);
             Image testImage = ImageExtracter.Extract(id);
             return GetTestStreetcodeUpdateDTO(testStreetcode.Id, testStreetcode.Index, testStreetcode.TransliterationUrl!, testImage);
         }
 
-        public static void Remove(StreetcodeUpdateDTO entity)
+        public static void Remove(StreetcodeUpdateDto entity)
         {
             BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
 
@@ -58,9 +58,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
             }
         }
 
-        private static StreetcodeUpdateDTO GetTestStreetcodeUpdateDTO(int id, int index, string transliterationUrl, Image testImage)
+        private static StreetcodeUpdateDto GetTestStreetcodeUpdateDTO(int id, int index, string transliterationUrl, Image testImage)
         {
-            return new StreetcodeUpdateDTO
+            return new StreetcodeUpdateDto
             {
                 Id = id,
                 Index = index,
@@ -68,10 +68,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 Title = "Test_Title",
                 DateString = "тест-2024",
                 Teaser = "Test_Teaser",
-                Tags = new List<StreetcodeTagUpdateDTO>(),
-                Facts = new List<StreetcodeFactUpdateDTO>(),
-                Audios = new List<AudioUpdateDTO>(),
-                Images = new List<ImageUpdateDTO>
+                Tags = new List<StreetcodeTagUpdateDto>(),
+                Facts = new List<StreetcodeFactUpdateDto>(),
+                Audios = new List<AudioUpdateDto>(),
+                Images = new List<ImageUpdateDto>
                 {
                     new ()
                     {
@@ -90,16 +90,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                         Id = 0,
                     },
                 },
-                Videos = new List<VideoUpdateDTO>(),
-                Partners = new List<PartnersUpdateDTO>(),
-                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
-                Subtitles = new List<SubtitleUpdateDTO>(),
-                TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
-                RelatedFigures = new List<RelatedFigureUpdateDTO>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
-                StatisticRecords = new List<StatisticRecordUpdateDTO>(),
-                StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
+                Videos = new List<VideoUpdateDto>(),
+                Partners = new List<PartnersUpdateDto>(),
+                Toponyms = new List<StreetcodeToponymCreateUpdateDto>(),
+                Subtitles = new List<SubtitleUpdateDto>(),
+                TimelineItems = new List<TimelineItemCreateUpdateDto>(),
+                RelatedFigures = new List<RelatedFigureUpdateDto>(),
+                Arts = new List<ArtCreateUpdateDto>(),
+                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDto>(),
+                StatisticRecords = new List<StatisticRecordUpdateDto>(),
+                StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDto>(),
                 ARBlockUrl = "https://streetcode/1"
             };
         }

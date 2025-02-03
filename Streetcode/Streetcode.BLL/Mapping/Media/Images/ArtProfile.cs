@@ -9,8 +9,8 @@ public class ArtProfile : Profile
 {
     public ArtProfile()
     {
-        CreateMap<Art, ArtDTO>().ReverseMap();
-        CreateMap<ArtCreateUpdateDTO, Art>()
+        CreateMap<Art, ArtDto>().ReverseMap();
+        CreateMap<ArtCreateUpdateDto, Art>()
             .ForMember(a => a.Id, conf => conf.Ignore())
             .ForMember(a => a.StreetcodeId, conf => conf.Ignore())
             .ForMember(a => a.Description, opt => opt.MapFrom(src => src.Description))

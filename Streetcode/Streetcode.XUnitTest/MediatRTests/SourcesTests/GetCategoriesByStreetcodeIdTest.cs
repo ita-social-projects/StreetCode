@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(GetSourceLinkCategories());
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDto>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
@@ -61,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             // Assert
             Assert.Multiple(
                 () => Assert.NotEmpty(result.Value),
-                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDTO>>(result.ValueOrDefault));
+                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDto>>(result.ValueOrDefault));
         }
 
         [Theory]
@@ -89,8 +89,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<SourceLinkCategoryDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDTO>>(result.Value),
+                () => Assert.IsType<Result<IEnumerable<SourceLinkCategoryDto>>>(result),
+                () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDto>>(result.Value),
                 () => Assert.Empty(result.Value));
         }
 
@@ -111,19 +111,19 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static List<SourceLinkCategoryDTO> GetSourceDTOs()
+        private static List<SourceLinkCategoryDto> GetSourceDTOs()
         {
-            return new List<SourceLinkCategoryDTO>()
+            return new List<SourceLinkCategoryDto>()
             {
-                new SourceLinkCategoryDTO()
+                new SourceLinkCategoryDto()
                 {
                     Id = 1,
-                    Image = new BLL.DTO.Media.Images.ImageDTO(),
+                    Image = new BLL.DTO.Media.Images.ImageDto(),
                 },
-                new SourceLinkCategoryDTO()
+                new SourceLinkCategoryDto()
                 {
                     Id = 2,
-                    Image = new BLL.DTO.Media.Images.ImageDTO(),
+                    Image = new BLL.DTO.Media.Images.ImageDto(),
                 },
             };
         }

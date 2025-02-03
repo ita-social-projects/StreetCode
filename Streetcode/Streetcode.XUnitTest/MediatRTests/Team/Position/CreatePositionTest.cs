@@ -30,9 +30,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             var testPositionDTO = GetPositionDTO();
             var testPositionCreateDTO = GetPositionCreateDTO();
 
-            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDto>()))
                 .Returns(testPosition);
-            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            this.mockMapper.Setup(x => x.Map<PositionDto>(It.IsAny<Positions>()))
                 .Returns(testPositionDTO);
 
             this.mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
@@ -48,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-            Assert.IsType<PositionDTO>(result.Value);
+            Assert.IsType<PositionDto>(result.Value);
             Assert.Equal(testPositionDTO, result.Value);
         }
 
@@ -59,17 +59,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             this.mockRepo.Setup(repo => repo.PositionRepository.CreateAsync(new Positions()));
             this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
-            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
-                .Returns(new PositionDTO());
+            this.mockMapper.Setup(x => x.Map<PositionDto>(It.IsAny<Positions>()))
+                .Returns(new PositionDto());
 
             var handler = new CreatePositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new CreatePositionQuery(new PositionCreateDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreatePositionQuery(new PositionCreateDto()), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<PositionDTO>(result.Value),
+                () => Assert.IsType<PositionDto>(result.Value),
                 () => Assert.True(result.IsSuccess));
         }
 
@@ -80,9 +80,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             var testPosition = GetPosition();
             var expectedError = "Failed to create a Position";
 
-            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<Positions>(It.IsAny<PositionCreateDto>()))
                 .Returns(testPosition);
-            this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
+            this.mockMapper.Setup(x => x.Map<PositionDto>(It.IsAny<Positions>()))
                 .Returns(GetPositionDTO());
 
             this.mockRepo.Setup(x => x.PositionRepository.CreateAsync(It.Is<Positions>(y => y.Id == testPosition.Id)))
@@ -110,18 +110,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             };
         }
 
-        private static PositionDTO GetPositionDTO()
+        private static PositionDto GetPositionDTO()
         {
-            return new PositionDTO()
+            return new PositionDto()
             {
                 Id = 1,
                 Position = "position",
             };
         }
 
-        private static PositionCreateDTO GetPositionCreateDTO()
+        private static PositionCreateDto GetPositionCreateDTO()
         {
-            return new PositionCreateDTO();
+            return new PositionCreateDto();
         }
     }
 }

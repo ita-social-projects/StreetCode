@@ -5,7 +5,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Timeline.HistoricalContext;
 
-public class BaseHistoricalContextValidator : AbstractValidator<HistoricalContextDTO>
+public class BaseHistoricalContextValidator : AbstractValidator<HistoricalContextDto>
 {
     public const int MaxTitleLength = 50;
     public BaseHistoricalContextValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)

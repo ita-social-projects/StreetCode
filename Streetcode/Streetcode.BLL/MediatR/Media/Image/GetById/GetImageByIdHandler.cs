@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Image.GetById;
 
-public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<ImageDTO>>
+public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<ImageDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -27,7 +27,7 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<ImageDTO>> Handle(GetImageByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<ImageDto>> Handle(GetImageByIdQuery request, CancellationToken cancellationToken)
     {
         var image = await _repositoryWrapper.ImageRepository.GetFirstOrDefaultAsync(
             f => f.Id == request.Id,
@@ -40,7 +40,7 @@ public class GetImageByIdHandler : IRequestHandler<GetImageByIdQuery, Result<Ima
             return Result.Fail(new Error(errorMsg));
         }
 
-        var imageDto = _mapper.Map<ImageDTO>(image);
+        var imageDto = _mapper.Map<ImageDto>(image);
         if(imageDto.BlobName is not null)
         {
             imageDto.Base64 = _blobService.FindFileInStorageAsBase64(image.BlobName!);

@@ -35,7 +35,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsSuccess(int id)
         {
             // Arrange
-            var testContentDTO = new EventStreetcodeDTO();
+            var testContentDTO = new EventStreetcodeDto();
             var testContent = new StreetcodeContent();
 
             this.RepositorySetup(testContent);
@@ -55,7 +55,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // arrange
-            var testContentDTO = new EventStreetcodeDTO();
+            var testContentDTO = new EventStreetcodeDto();
             var testContent = new StreetcodeContent();
 
             this.RepositorySetup(testContent);
@@ -67,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
+            Assert.IsAssignableFrom<StreetcodeDto>(result.Value);
         }
 
         [Theory]
@@ -111,9 +111,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                .ReturnsAsync(new List<StreetcodeTagIndex>());
         }
 
-        private void MapperSetup(EventStreetcodeDTO? streetcodeDTO)
+        private void MapperSetup(EventStreetcodeDto? streetcodeDTO)
         {
-            this.mapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<object>()))
+            this.mapper.Setup(x => x.Map<StreetcodeDto?>(It.IsAny<object>()))
                 .Returns(streetcodeDTO);
         }
     }

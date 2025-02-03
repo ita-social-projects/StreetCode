@@ -8,7 +8,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Validators.Media.Image;
 
-public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
+public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDto>
 {
     public const int MaxTitleLength = 100;
     public const int MaxAltLength = 300;

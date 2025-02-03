@@ -20,7 +20,7 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryCommand>
             .WithMessage(localizer["MustBeUnique", fieldLocalizer["Title"]]);
     }
 
-    private async Task<bool> BeUniqueAsync(SourceLinkCategoryCreateDTO category, CancellationToken token)
+    private async Task<bool> BeUniqueAsync(SourceLinkCategoryCreateDto category, CancellationToken token)
     {
         var existingCategory = await _repositoryWrapper.SourceCategoryRepository
             .GetFirstOrDefaultAsync(a => a.Title == category.Title);

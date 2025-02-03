@@ -130,11 +130,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var existingPositions = this.GetTeamMemberPositionsList().ToList();
             existingPositions.Add(this.GetTeamMemberPositions(teamMember.Id, id));
 
-            var teamMemberDto = new UpdateTeamMemberDTO
+            var teamMemberDto = new UpdateTeamMemberDto
             {
-                Positions = new List<PositionDTO>
+                Positions = new List<PositionDto>
                 {
-                    new PositionDTO { Id = id, Position = posName },
+                    new PositionDto { Id = id, Position = posName },
                 },
             };
             var updateQuery = new UpdateTeamQuery(teamMemberDto);
@@ -160,7 +160,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             this.mockRepository.Verify(repo => repo.TeamPositionRepository.Create(It.IsAny<TeamMemberPositions>()), Times.Once);
         }
 
-        private void BasicRepositorySetup(UpdateTeamMemberDTO updatedTeamMember)
+        private void BasicRepositorySetup(UpdateTeamMemberDto updatedTeamMember)
         {
             this.mockRepository.Setup(repo => repo.TeamRepository.Update(It.IsAny<TeamMember>()))
             .Callback<TeamMember>(tm =>
@@ -184,12 +184,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                IIncludableQueryable<TeamMemberPositions, object>>>())).ReturnsAsync(posList);
         }
 
-        private void MapperSetup(TeamMember teamMember, UpdateTeamMemberDTO updatedTeamMember)
+        private void MapperSetup(TeamMember teamMember, UpdateTeamMemberDto updatedTeamMember)
         {
             this.mockMapper.Setup(mapper => mapper.Map<TeamMember>(updatedTeamMember))
                 .Returns(teamMember);
 
-            this.mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDTO>(teamMember))
+            this.mockMapper.Setup(mapper => mapper.Map<UpdateTeamMemberDto>(teamMember))
                 .Returns(updatedTeamMember);
         }
 
@@ -207,9 +207,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private UpdateTeamMemberDTO GetTeamMemberDTO()
+        private UpdateTeamMemberDto GetTeamMemberDTO()
         {
-            return new UpdateTeamMemberDTO
+            return new UpdateTeamMemberDto
             {
                 Id = 1,
                 Name = "Test",
@@ -229,12 +229,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private List<PositionDTO> GetPositionsDTOList()
+        private List<PositionDto> GetPositionsDTOList()
         {
-            return new List<PositionDTO>
+            return new List<PositionDto>
             {
-                new PositionDTO { Id = 1, Position = "Position 1" },
-                new PositionDTO { Id = 2, Position = "Position 2" },
+                new PositionDto { Id = 1, Position = "Position 1" },
+                new PositionDto { Id = 2, Position = "Position 2" },
             };
         }
 
@@ -256,12 +256,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private List<TeamMemberLinkDTO> GetTeamMemberLinksDTOList()
+        private List<TeamMemberLinkDto> GetTeamMemberLinksDTOList()
         {
-            return new List<TeamMemberLinkDTO>
+            return new List<TeamMemberLinkDto>
             {
-                new TeamMemberLinkDTO { Id = 1 },
-                new TeamMemberLinkDTO { Id = 2 },
+                new TeamMemberLinkDto { Id = 1 },
+                new TeamMemberLinkDto { Id = 2 },
             };
         }
 

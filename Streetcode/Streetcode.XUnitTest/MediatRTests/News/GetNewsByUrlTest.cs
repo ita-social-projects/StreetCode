@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         public async Task ShouldReturnSuccessfully_ExistingId_ImageNull(string url, string expectedBase64)
         {
             // Arrange
-            var testNewsDTO = new NewsDTO { URL = url };
+            var testNewsDTO = new NewsDto { URL = url };
             var testNews = GetNews(url);
 
             this.RepositorySetup(testNews);
@@ -130,12 +130,12 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<NewsDTO>(result.ValueOrDefault));
+                () => Assert.IsType<NewsDto>(result.ValueOrDefault));
         }
 
-        private static ImageDTO GetImageDTO()
+        private static ImageDto GetImageDTO()
         {
-            return new ImageDTO
+            return new ImageDto
             {
                 BlobName = It.IsAny<string>(),
                 Base64 = It.IsAny<string>(),
@@ -150,9 +150,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsDTO GetNewsDTO(string url)
+        private static NewsDto GetNewsDTO(string url)
         {
-            return new NewsDTO
+            return new NewsDto
             {
                 URL = url,
                 Image = GetImageDTO(),
@@ -166,9 +166,9 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                 .ReturnsAsync(news);
         }
 
-        private void MapperSetup(NewsDTO? news)
+        private void MapperSetup(NewsDto? news)
         {
-            this.mockMapper.Setup(mapper => mapper.Map<NewsDTO?>(It.IsAny<object>()))
+            this.mockMapper.Setup(mapper => mapper.Map<NewsDto?>(It.IsAny<object>()))
                 .Returns(news);
         }
 

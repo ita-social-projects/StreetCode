@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Media;
 
-public class FileBaseCreateDTO
+public class FileBaseCreateDto
 {
     public string Title { get; set; } = null!;
     public string BaseFormat { get; set; } = null!;

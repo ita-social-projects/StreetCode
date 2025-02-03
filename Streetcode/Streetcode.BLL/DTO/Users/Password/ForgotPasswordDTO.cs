@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Users.Password;
 
-public class ForgotPasswordDTO
+public class ForgotPasswordDto
 {
     public string Email { get; set; } = null!;
 }

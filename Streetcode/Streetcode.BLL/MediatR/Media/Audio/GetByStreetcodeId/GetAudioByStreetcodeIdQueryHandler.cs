@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Media.Audio.GetByStreetcodeId;
 
-public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStreetcodeIdQuery, Result<AudioDTO>>
+public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStreetcodeIdQuery, Result<AudioDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<AudioDTO>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<AudioDto>> Handle(GetAudioByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
             s => s.Id == request.StreetcodeId,
@@ -41,12 +41,12 @@ public class GetAudioByStreetcodeIdQueryHandler : IRequestHandler<GetAudioByStre
             return Result.Fail(new Error(errorMsg));
         }
 
-        NullResult<AudioDTO> result = new NullResult<AudioDTO>();
+        NullResult<AudioDto> result = new NullResult<AudioDto>();
 
         if (streetcode.Audio != null)
         {
-            AudioDTO audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
-            audioDto = _mapper.Map<AudioDTO>(streetcode.Audio);
+            AudioDto audioDto = _mapper.Map<AudioDto>(streetcode.Audio);
+            audioDto = _mapper.Map<AudioDto>(streetcode.Audio);
             audioDto.Base64 = _blobService.FindFileInStorageAsBase64(audioDto.BlobName);
             result.WithValue(audioDto);
         }

@@ -27,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             Title = "some title 1",
         };
 
-        private readonly HistoricalContextDTO contextDto = new HistoricalContextDTO
+        private readonly HistoricalContextDto contextDto = new HistoricalContextDto
         {
             Id = id,
             Title = "some title 1",
@@ -55,7 +55,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<HistoricalContextDTO>(result.Value),
+                () => Assert.IsType<HistoricalContextDto>(result.Value),
                 () => Assert.True(result.Value.Id.Equals(id)));
         }
 
@@ -64,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         {
             // Arrange
             this.SetupRepository(new HistoricalContext());
-            this.SetupMapper(new HistoricalContextDTO());
+            this.SetupMapper(new HistoricalContextDto());
 
             var handler = new GetHistoricalContextByIdHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<HistoricalContextDTO>(result.Value),
+                () => Assert.IsType<HistoricalContextDto>(result.Value),
                 () => Assert.False(result.Value.Id.Equals(id)));
         }
 
@@ -88,10 +88,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
                 .ReturnsAsync(context);
         }
 
-        private void SetupMapper(HistoricalContextDTO contextDto)
+        private void SetupMapper(HistoricalContextDto contextDto)
         {
             this.mockMapper
-                .Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>()))
+                .Setup(x => x.Map<HistoricalContextDto>(It.IsAny<HistoricalContext>()))
                 .Returns(contextDto);
         }
     }

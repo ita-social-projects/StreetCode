@@ -47,16 +47,16 @@ public class UpdateHistoricalContextTest
             });
 
         this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        this.mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDTO());
+        this.mockMapper.Setup(x => x.Map<HistoricalContextDto>(It.IsAny<HistoricalContext>())).Returns(new HistoricalContextDto());
 
         var handler = new UpdateHistoricalContextHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object, this.mockLocalizerValidation.Object, this.mockLocalizerFieldNames.Object);
 
         // Act
-        var result = await handler.Handle(new UpdateHistoricalContextCommand(new HistoricalContextDTO()), CancellationToken.None);
+        var result = await handler.Handle(new UpdateHistoricalContextCommand(new HistoricalContextDto()), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<HistoricalContextDTO>(result.Value),
+            () => Assert.IsType<HistoricalContextDto>(result.Value),
             () => Assert.True(result.IsSuccess));
     }
 }

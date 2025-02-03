@@ -13,7 +13,7 @@ using Streetcode.DAL.Entities.Team;
 
 namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 {
-    public class GetAllPositionsHandler : IRequestHandler<GetAllPositionsQuery, Result<GetAllPositionsDTO>>
+    public class GetAllPositionsHandler : IRequestHandler<GetAllPositionsQuery, Result<GetAllPositionsDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public Task<Result<GetAllPositionsDTO>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllPositionsDto>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<Positions> paginationResponse = _repositoryWrapper
                 .PositionRepository
@@ -41,13 +41,13 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
                 _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllPositionsDTO>(new Error(errorMsg)));
+                return Task.FromResult(Result.Fail<GetAllPositionsDto>(new Error(errorMsg)));
             }
 
-            GetAllPositionsDTO getAllPositionsDTO = new GetAllPositionsDTO()
+            GetAllPositionsDto getAllPositionsDTO = new GetAllPositionsDto()
             {
                 TotalAmount = paginationResponse.TotalItems,
-                Positions = _mapper.Map<IEnumerable<PositionDTO>>(paginationResponse.Entities),
+                Positions = _mapper.Map<IEnumerable<PositionDto>>(paginationResponse.Entities),
             };
 
             return Task.FromResult(Result.Ok(getAllPositionsDTO));

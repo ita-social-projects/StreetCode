@@ -8,6 +8,6 @@ public class ResponseProfile : Profile
 {
     public ResponseProfile()
     {
-        CreateMap<Response, ResponseDTO>().ReverseMap();
+        CreateMap<Response, ResponseDto>().ReverseMap();
     }
 }

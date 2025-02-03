@@ -59,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             var result = await handler.Handle(new GetImageByIdQuery(id), CancellationToken.None);
 
             // Assert
-            Assert.IsType<Result<ImageDTO>>(result);
+            Assert.IsType<Result<ImageDto>>(result);
         }
 
         [Theory]
@@ -88,15 +88,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private ImageDTO GetImageDTO()
+        private ImageDto GetImageDTO()
         {
-            return new ImageDTO
+            return new ImageDto
             {
                 Id = 1,
             };
         }
 
-        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Image? image, ImageDTO? imageDTO)
+        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Image? image, ImageDto? imageDTO)
         {
             this.mockRepo
                 .Setup(r => r.ImageRepository.GetFirstOrDefaultAsync(
@@ -106,7 +106,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
                 .ReturnsAsync(image);
 
             this.mockMapper
-                .Setup(x => x.Map<ImageDTO?>(It.IsAny<object>()))
+                .Setup(x => x.Map<ImageDto?>(It.IsAny<object>()))
                 .Returns(imageDTO);
 
             this.mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])

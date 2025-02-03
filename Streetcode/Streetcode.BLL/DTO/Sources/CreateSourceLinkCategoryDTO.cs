@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.Sources
 {
-    public class CreateSourceLinkCategoryDTO
+    public class CreateSourceLinkCategoryDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

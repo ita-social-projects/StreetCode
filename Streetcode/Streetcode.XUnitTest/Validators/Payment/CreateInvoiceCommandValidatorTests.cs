@@ -67,7 +67,7 @@ public class CreateInvoiceCommandValidatorTests
 
     public CreateInvoiceCommand GetValidCreateInvoiceCommand()
     {
-        return new CreateInvoiceCommand(new PaymentDTO()
+        return new CreateInvoiceCommand(new PaymentDto()
         {
             Amount = 100,
             RedirectUrl = "https://stage.streetcode.com.ua/support-us",

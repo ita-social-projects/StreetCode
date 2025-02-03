@@ -15,7 +15,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Users.Update;
 
-public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserDTO>>
+public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -34,7 +34,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
         _localizer = localizer;
     }
 
-    public async Task<Result<UserDTO>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UserDto>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         try
         {
@@ -66,12 +66,12 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
             {
                 var errorMessages = result.Errors.Select(e => e.Description).ToList();
                 _logger.LogError(request, string.Join(" ", errorMessages));
-                return Result.Fail<UserDTO>(errorMessages);
+                return Result.Fail<UserDto>(errorMessages);
             }
 
             await _repositoryWrapper.SaveChangesAsync();
 
-            var userDto = _mapper.Map<UserDTO>(user);
+            var userDto = _mapper.Map<UserDto>(user);
             userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
 
             return Result.Ok(userDto);

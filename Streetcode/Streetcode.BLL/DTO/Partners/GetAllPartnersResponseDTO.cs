@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Partners
 {
-    public class GetAllPartnersResponseDTO
+    public class GetAllPartnersResponseDto
     {
         public int TotalAmount { get; set; }
-        public IEnumerable<PartnerDTO> Partners { get; set; } = new List<PartnerDTO>();
+        public IEnumerable<PartnerDto> Partners { get; set; } = new List<PartnerDto>();
     }
 }

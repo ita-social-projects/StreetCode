@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentByStreetcodeId
 {
-    public class GetCategoryContentByStreetcodeIdHandler : IRequestHandler<GetCategoryContentByStreetcodeIdQuery, Result<StreetcodeCategoryContentDTO>>
+    public class GetCategoryContentByStreetcodeIdHandler : IRequestHandler<GetCategoryContentByStreetcodeIdQuery, Result<StreetcodeCategoryContentDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public async Task<Result<StreetcodeCategoryContentDTO>> Handle(GetCategoryContentByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<StreetcodeCategoryContentDto>> Handle(GetCategoryContentByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var streetcodeContent = await _repositoryWrapper.StreetcodeCategoryContentRepository
                 .GetFirstOrDefaultAsync(
@@ -37,7 +37,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetCategoryContentBy
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(_mapper.Map<StreetcodeCategoryContentDTO>(streetcodeContent));
+            return Result.Ok(_mapper.Map<StreetcodeCategoryContentDto>(streetcodeContent));
         }
     }
 }

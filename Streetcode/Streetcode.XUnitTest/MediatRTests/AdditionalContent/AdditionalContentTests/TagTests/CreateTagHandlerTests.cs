@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             this.mockRepo.Setup(repo => repo.TagRepository.CreateAsync(new Tag()));
             this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
 
-            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
+            this.mockMapper.Setup(x => x.Map<TagDto>(It.IsAny<Tag>())).Returns(new TagDto());
 
 
             var handler = new CreateTagHandler(
@@ -48,11 +48,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 this.mockStringLocalizerFieldNames.Object);
 
             // Act
-            var result = await handler.Handle(new CreateTagQuery(new CreateTagDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTagQuery(new CreateTagDto()), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
-               () => Assert.IsType<TagDTO>(result.Value),
+               () => Assert.IsType<TagDto>(result.Value),
                () => Assert.True(result.IsSuccess));
         }
     }

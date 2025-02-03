@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Team.Abstractions;
 
-public abstract class TeamMemberLinkCreateUpdateDTO
+public abstract class TeamMemberLinkCreateUpdateDto
 {
     public LogoType? LogoType { get; set; }
     public string TargetUrl { get; set; } = null!;

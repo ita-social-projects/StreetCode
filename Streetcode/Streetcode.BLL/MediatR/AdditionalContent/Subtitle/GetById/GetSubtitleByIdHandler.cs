@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetById;
 
-public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Result<SubtitleDTO>>
+public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Result<SubtitleDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,7 +25,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<SubtitleDTO>> Handle(GetSubtitleByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<SubtitleDto>> Handle(GetSubtitleByIdQuery request, CancellationToken cancellationToken)
     {
         var subtitle = await _repositoryWrapper.SubtitleRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
 
@@ -37,6 +37,6 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
             return returner;
         }
 
-        return Result.Ok(_mapper.Map<SubtitleDTO>(subtitle));
+        return Result.Ok(_mapper.Map<SubtitleDto>(subtitle));
     }
 }

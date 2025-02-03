@@ -13,7 +13,7 @@ using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
 {
-    public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResponseDTO>>
+    public class LoginHandler : IRequestHandler<LoginQuery, Result<LoginResponseDto>>
     {
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
             _localizer = localizer;
         }
 
-        public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<Result<LoginResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -61,11 +61,11 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                     var token = await _tokenService.GenerateAccessTokenAsync(user!);
                     var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-                    var userDTO = _mapper.Map<UserDTO>(user);
+                    var userDTO = _mapper.Map<UserDto>(user);
                     string? userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
                     userDTO.Role = userRole ?? "User";
 
-                    var response = new LoginResponseDTO()
+                    var response = new LoginResponseDto()
                     {
                         User = userDTO,
                         AccessToken = stringToken,

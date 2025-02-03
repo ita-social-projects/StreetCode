@@ -19,7 +19,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IRepositoryWrapper> mockRepo;
         private readonly Mock<IMapper> mockMapper;
         private readonly StreetcodeContent? nullValue = null;
-        private readonly StreetcodeDTO? nullValueDTO = null;
+        private readonly StreetcodeDto? nullValueDTO = null;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
               It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
                IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(this.nullValue);
 
-            this.mockMapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<StreetcodeContent>())).Returns(this.nullValueDTO);
+            this.mockMapper.Setup(x => x.Map<StreetcodeDto?>(It.IsAny<StreetcodeContent>())).Returns(this.nullValueDTO);
 
             var expectedError = $"Cannot find streetcode by transliteration url: {url}";
             this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
@@ -102,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<StreetcodeDTO>(result.ValueOrDefault));
+                () => Assert.IsType<StreetcodeDto>(result.ValueOrDefault));
         }
 
         private void SetupRepository(string url)
@@ -123,7 +123,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private void SetupMapper(string url)
         {
-            this.mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(new StreetcodeDTO() { TransliterationUrl = url });
+            this.mockMapper.Setup(x => x.Map<StreetcodeDto>(It.IsAny<StreetcodeContent>())).Returns(new StreetcodeDto() { TransliterationUrl = url });
         }
     }
 }

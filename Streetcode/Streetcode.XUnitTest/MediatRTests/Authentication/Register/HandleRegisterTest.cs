@@ -185,25 +185,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             };
         }
 
-        private RegisterRequestDTO GetSampleRequestDTO()
+        private RegisterRequestDto GetSampleRequestDTO()
         {
-            return new RegisterRequestDTO()
+            return new RegisterRequestDto()
             {
                 Email = "zero@gmail.com",
             };
         }
 
-        private RegisterRequestDTO GetRegisterRequestWithExistingEmail()
+        private RegisterRequestDto GetRegisterRequestWithExistingEmail()
         {
-            return new RegisterRequestDTO()
+            return new RegisterRequestDto()
             {
                 Email = "zero@gmail.com",
             };
         }
 
-        private RegisterRequestDTO GetRegisterRequestWithExistingUserName()
+        private RegisterRequestDto GetRegisterRequestWithExistingUserName()
         {
-            return new RegisterRequestDTO()
+            return new RegisterRequestDto()
             {
                 Email = string.Empty,
             };
@@ -228,10 +228,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockMapper(User? user = null, bool isEmailExists = false)
         {
-            RegisterResponseDTO registerResponseToReturnFromMapper = new RegisterResponseDTO();
+            RegisterResponseDto registerResponseToReturnFromMapper = new RegisterResponseDto();
             if (user is not null)
             {
-                registerResponseToReturnFromMapper = new RegisterResponseDTO
+                registerResponseToReturnFromMapper = new RegisterResponseDto
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -243,7 +243,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             this.mockMapper
                 .Setup(x => x
-                .Map<RegisterResponseDTO>(It.IsAny<User>()))
+                .Map<RegisterResponseDto>(It.IsAny<User>()))
                 .Returns(registerResponseToReturnFromMapper);
 
             User sampleUser = this.GetSampleUser();
@@ -258,7 +258,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
             this.mockMapper
                .Setup(x => x
-               .Map<User>(It.IsAny<RegisterRequestDTO>()))
+               .Map<User>(It.IsAny<RegisterRequestDto>()))
                .Returns(sampleUser);
         }
 

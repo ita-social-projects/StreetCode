@@ -23,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
         private readonly StreetcodeContent? nullStreetcodeContent = null;
         private readonly TransactionLink? nullValue = null;
-        private readonly TransactLinkDTO? nullValueDTO = null;
+        private readonly TransactLinkDto? nullValueDTO = null;
 
         public GetTransactLinkByStreetcodeIdHandlerTests()
         {
@@ -73,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
                 .ReturnsAsync(this.nullStreetcodeContent);
 
             this.mockMapper
-                .Setup(x => x.Map<TransactLinkDTO?>(It.IsAny<TransactionLink>()))
+                .Setup(x => x.Map<TransactLinkDto?>(It.IsAny<TransactionLink>()))
                 .Returns(this.nullValueDTO);
 
             var expectedError = $"Cannot find a transaction link by a streetcode id: {id}";
@@ -108,7 +108,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             // Assert
             Assert.Multiple(
                    () => Assert.NotNull(result.ValueOrDefault),
-                   () => Assert.IsType<TransactLinkDTO>(result.ValueOrDefault));
+                   () => Assert.IsType<TransactLinkDto>(result.ValueOrDefault));
         }
 
         private void SetupRepository(int id)
@@ -121,7 +121,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         private void SetupMapper(int id)
         {
-            this.mockMapper.Setup(x => x.Map<TransactLinkDTO>(It.IsAny<TransactionLink>())).Returns(new TransactLinkDTO() { Id = id });
+            this.mockMapper.Setup(x => x.Map<TransactLinkDto>(It.IsAny<TransactionLink>())).Returns(new TransactLinkDto() { Id = id });
         }
     }
 }

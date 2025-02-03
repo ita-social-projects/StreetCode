@@ -8,11 +8,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class ExtractCreateTestTagAttribute : BeforeAfterTestAttribute
     {
-        public static CreateTagDTO TagForTest { get; set; } = null!;
+        public static CreateTagDto TagForTest { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
-            TagForTest = new CreateTagDTO
+            TagForTest = new CreateTagDto
             {
                 Title = "Test",
             };

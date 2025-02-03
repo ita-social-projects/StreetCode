@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.DTO.Media;
 
-public class VideoDTO
+public class VideoDto
 {
     public int Id { get; set; }
     public string? Description { get; set; }

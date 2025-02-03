@@ -30,7 +30,7 @@ public class BasePartnersValidatorTests
         this.mockNamesLocalizer = new MockFieldNamesLocalizer();
         _mockLocalizerNoShared = new MockNoSharedResourceLocalizer();
         this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
-        this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
+        this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDto>>()))
             .Returns(new ValidationResult());
         this.validator = new BasePartnersValidator(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, _mockLocalizerNoShared, this._mockRepositoryWrapper.Object);
     }
@@ -231,7 +231,7 @@ public class BasePartnersValidatorTests
         await this.validator.ValidateAsync(partner);
 
         // Assert
-        this.mockPartnerSourceLinkValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>(), CancellationToken.None), Times.Once);
+        this.mockPartnerSourceLinkValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreatePartnerSourceLinkDto>>(), CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -253,7 +253,7 @@ public class BasePartnersValidatorTests
 
     private PartnerCreateUpdateDto GetValidPartner()
     {
-        return new CreatePartnerDTO()
+        return new CreatePartnerDto()
         {
             Title = "SoftServe Academy",
             Description = "Soft Serve Academy",
@@ -262,16 +262,16 @@ public class BasePartnersValidatorTests
             IsVisibleEverywhere = true,
             IsKeyPartner = true,
             LogoId = 3,
-            PartnerSourceLinks = new List<CreatePartnerSourceLinkDTO>()
+            PartnerSourceLinks = new List<CreatePartnerSourceLinkDto>()
             {
-                new CreatePartnerSourceLinkDTO()
+                new CreatePartnerSourceLinkDto()
                 {
                     Id = 1,
                     LogoType = LogoType.Behance,
                     TargetUrl = "http://test.com",
                 },
             },
-            Streetcodes = new List<StreetcodeShortDTO>()
+            Streetcodes = new List<StreetcodeShortDto>()
             {
                 new () { Id = 1 },
                 new () { Id = 3 },

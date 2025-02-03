@@ -162,7 +162,7 @@ public class TimelineItemValidatorTests
     {
         // Arrange
         _mockHistoricalContextValidator
-            .Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextCreateUpdateDTO>>()))
+            .Setup(x => x.Validate(It.IsAny<ValidationContext<HistoricalContextCreateUpdateDto>>()))
             .Returns(new ValidationResult());
 
         // Act
@@ -170,18 +170,18 @@ public class TimelineItemValidatorTests
 
         // Assert
         _mockHistoricalContextValidator.Verify(
-            x => x.Validate(It.IsAny<ValidationContext<HistoricalContextCreateUpdateDTO>>()), Times.Once);
+            x => x.Validate(It.IsAny<ValidationContext<HistoricalContextCreateUpdateDto>>()), Times.Once);
     }
 
-    private static TimelineItemCreateUpdateDTO GetValidTimelineItem()
+    private static TimelineItemCreateUpdateDto GetValidTimelineItem()
     {
-        return new TimelineItemCreateUpdateDTO()
+        return new TimelineItemCreateUpdateDto()
         {
             Title = "Test Title",
             Description = "Description Test",
             Date = DateTime.Now,
             DateViewPattern = (DateViewPattern)1,
-            HistoricalContexts = new List<HistoricalContextCreateUpdateDTO>()
+            HistoricalContexts = new List<HistoricalContextCreateUpdateDto>()
             {
                 new ()
                 {

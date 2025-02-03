@@ -3,7 +3,7 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Streetcode.RelatedFigure
 {
-    public class RelatedFigureUpdateDTO : IModelState
+    public class RelatedFigureUpdateDto : IModelState
     {
         public ModelState ModelState { get; set; }
         public int ObserverId { get; set; }

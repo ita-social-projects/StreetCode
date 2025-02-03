@@ -49,7 +49,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.NotNull(result.Value),
-                () => Assert.IsType<List<TeamMemberDTO>>(result.ValueOrDefault.TeamMembers)
+                () => Assert.IsType<List<TeamMemberDto>>(result.ValueOrDefault.TeamMembers)
             );
         }
 
@@ -91,7 +91,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<TeamMemberDTO>>(result.Value.TeamMembers),
+                () => Assert.IsType<List<TeamMemberDto>>(result.Value.TeamMembers),
                 () => Assert.Equal(pageSize, result.Value.TeamMembers.Count()));
         }
 
@@ -122,27 +122,27 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static List<TeamMemberDTO> GetListTeamDTO()
+        private static List<TeamMemberDto> GetListTeamDTO()
         {
-            return new List<TeamMemberDTO>
+            return new List<TeamMemberDto>
             {
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 1,
                 },
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 2,
                 },
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 3,
                 },
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 4,
                 },
-                new TeamMemberDTO
+                new TeamMemberDto
                 {
                     Id = 5,
                 },
@@ -162,9 +162,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             .Returns(PaginationResponse<TeamMember>.Create(returnList.AsQueryable()));
         }
 
-        private void SetupMapper(IEnumerable<TeamMemberDTO> teamDTOList)
+        private void SetupMapper(IEnumerable<TeamMemberDto> teamDTOList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberDTO>>(It.IsAny<IEnumerable<TeamMember>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<TeamMemberDto>>(It.IsAny<IEnumerable<TeamMember>>()))
                 .Returns(teamDTOList);
         }
     }

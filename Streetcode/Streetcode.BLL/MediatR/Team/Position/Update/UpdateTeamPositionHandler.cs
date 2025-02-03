@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Position.Update;
 
-public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionCommand, Result<PositionDTO>>
+public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionCommand, Result<PositionDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
@@ -25,7 +25,7 @@ public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionComma
         _stringLocalizer = localizer;
     }
 
-    public async Task<Result<PositionDTO>> Handle(UpdateTeamPositionCommand request, CancellationToken cancellationToken)
+    public async Task<Result<PositionDto>> Handle(UpdateTeamPositionCommand request, CancellationToken cancellationToken)
     {
         var position = await _repository.PositionRepository.GetFirstOrDefaultAsync(x => x.Id == request.positionDto.Id);
 
@@ -41,7 +41,7 @@ public class UpdateTeamPositionHandler : IRequestHandler<UpdateTeamPositionComma
             var positionToUpdate = _mapper.Map<Positions>(request.positionDto);
             _repository.PositionRepository.Update(positionToUpdate);
             await _repository.SaveChangesAsync();
-            var positionDto = _mapper.Map<PositionDTO>(positionToUpdate);
+            var positionDto = _mapper.Map<PositionDto>(positionToUpdate);
             return Result.Ok(positionDto);
         }
         catch (Exception ex)

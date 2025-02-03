@@ -8,8 +8,8 @@ namespace Streetcode.BLL.Mapping.Authentication
     {
         public AuthProfile()
         {
-            CreateMap<User, RegisterResponseDTO>().ReverseMap();
-            CreateMap<User, RegisterRequestDTO>().ReverseMap();
+            CreateMap<User, RegisterResponseDto>().ReverseMap();
+            CreateMap<User, RegisterRequestDto>().ReverseMap();
         }
     }
 }

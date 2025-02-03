@@ -5,5 +5,5 @@ using Streetcode.BLL.DTO.Team;
 namespace Streetcode.BLL.MediatR.Team.Delete
 {
     public record DeleteTeamQuery(int id)
-        : IRequest<Result<TeamMemberDTO>>;
+        : IRequest<Result<TeamMemberDto>>;
 }

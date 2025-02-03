@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 
-public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelatedFigureByStreetcodeIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
+public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelatedFigureByStreetcodeIdQuery, Result<IEnumerable<RelatedFigureDto>?>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
 
     // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
-    public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<RelatedFigureDto>?>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
@@ -37,7 +37,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);
-            return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
+            return Result.Ok(Enumerable.Empty<RelatedFigureDto>());
         }
 
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
@@ -61,7 +61,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
             }
         }
 
-        return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(relatedFigures));
+        return Result.Ok<IEnumerable<RelatedFigureDto>?>(_mapper.Map<IEnumerable<RelatedFigureDto>>(relatedFigures));
     }
 
     private IQueryable<int> GetRelatedFigureIdsByStreetcodeId(int streetcodeId)

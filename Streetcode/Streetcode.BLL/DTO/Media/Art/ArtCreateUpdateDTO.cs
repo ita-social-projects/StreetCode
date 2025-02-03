@@ -3,7 +3,7 @@ using Streetcode.BLL.Enums;
 
 namespace Streetcode.BLL.DTO.Media.Create
 {
-    public class ArtCreateUpdateDTO : IModelState
+    public class ArtCreateUpdateDto : IModelState
     {
         public int Id { get; set; }
         public int ImageId { get; set; }

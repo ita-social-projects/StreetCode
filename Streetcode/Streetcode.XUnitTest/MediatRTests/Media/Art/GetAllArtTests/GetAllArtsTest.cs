@@ -72,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var result = await handler.Handle(new GetAllArtsQuery(), default);
 
             // Assert
-            Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
+            Assert.IsType<Result<IEnumerable<ArtDto>>>(result);
         }
 
         private List<Art> GetArtsList()
@@ -90,22 +90,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
              };
         }
 
-        private List<ArtDTO> GetArtsDTOList()
+        private List<ArtDto> GetArtsDTOList()
         {
-            return new List<ArtDTO>()
+            return new List<ArtDto>()
             {
-                new ArtDTO
+                new ArtDto
                 {
                     Id = 1,
                 },
-                new ArtDTO
+                new ArtDto
                 {
                     Id = 2,
                 },
             };
         }
 
-        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
+        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDto> artListDTO)
         {
            this.mockRepo.Setup(r => r.ArtRepository.GetAllAsync(
            It.IsAny<Expression<Func<Art, bool>>>(),
@@ -113,7 +113,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
            IIncludableQueryable<Art, object>>>()))
            .ReturnsAsync(artList);
 
-           this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
+           this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDto>>(It.IsAny<IEnumerable<object>>()))
            .Returns(artListDTO);
         }
     }

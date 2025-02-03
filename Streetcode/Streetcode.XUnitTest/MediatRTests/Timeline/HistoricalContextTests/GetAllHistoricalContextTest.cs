@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<HistoricalContextDTO>>(result.ValueOrDefault.HistoricalContexts));
+                () => Assert.IsType<List<HistoricalContextDto>>(result.ValueOrDefault.HistoricalContexts));
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<HistoricalContextDTO>>(result.Value.HistoricalContexts),
+                () => Assert.IsType<List<HistoricalContextDto>>(result.Value.HistoricalContexts),
                 () => Assert.Equal(pageSize, result.Value.HistoricalContexts.Count()));
         }
 
@@ -99,15 +99,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             return historicalContexts.AsQueryable();
         }
 
-        private static IEnumerable<HistoricalContextDTO> GetListHistoricalContextDTO()
+        private static IEnumerable<HistoricalContextDto> GetListHistoricalContextDTO()
         {
-            var historicalContextsDTO = new List<HistoricalContextDTO>
+            var historicalContextsDTO = new List<HistoricalContextDto>
             {
-                new HistoricalContextDTO { Id = 1, Title = "HistoricalContext1" },
-                new HistoricalContextDTO { Id = 2, Title = "HistoricalContext2" },
-                new HistoricalContextDTO { Id = 3, Title = "HistoricalContext3" },
-                new HistoricalContextDTO { Id = 4, Title = "HistoricalContext4" },
-                new HistoricalContextDTO { Id = 5, Title = "HistoricalContext5" },
+                new HistoricalContextDto { Id = 1, Title = "HistoricalContext1" },
+                new HistoricalContextDto { Id = 2, Title = "HistoricalContext2" },
+                new HistoricalContextDto { Id = 3, Title = "HistoricalContext3" },
+                new HistoricalContextDto { Id = 4, Title = "HistoricalContext4" },
+                new HistoricalContextDto { Id = 5, Title = "HistoricalContext5" },
             };
 
             return historicalContextsDTO;
@@ -126,10 +126,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             .Returns(PaginationResponse<HistoricalContext>.Create(returnList.AsQueryable()));
         }
 
-        private void SetupMapper(IEnumerable<HistoricalContextDTO> returnList)
+        private void SetupMapper(IEnumerable<HistoricalContextDto> returnList)
         {
             this.mockMapper
-                .Setup(x => x.Map<IEnumerable<HistoricalContextDTO>>(It.IsAny<IEnumerable<HistoricalContext>>()))
+                .Setup(x => x.Map<IEnumerable<HistoricalContextDto>>(It.IsAny<IEnumerable<HistoricalContext>>()))
                 .Returns(returnList);
         }
     }

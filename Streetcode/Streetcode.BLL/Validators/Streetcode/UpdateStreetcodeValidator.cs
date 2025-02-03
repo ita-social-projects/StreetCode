@@ -65,7 +65,7 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleForEach(c => c.Streetcode.StreetcodeCategoryContents).SetValidator(categoryContentValidator);
     }
 
-    private async Task<bool> BeUniqueIndex(StreetcodeUpdateDTO streetcode, CancellationToken cancellationToken)
+    private async Task<bool> BeUniqueIndex(StreetcodeUpdateDto streetcode, CancellationToken cancellationToken)
     {
         var existingStreetcodeByIndex = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(n => n.Index == streetcode.Index);
         if (existingStreetcodeByIndex != null)

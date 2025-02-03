@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 });
 
             this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-            this.mockMapper.Setup(x => x.Map<TagDTO>(It.IsAny<Tag>())).Returns(new TagDTO());
+            this.mockMapper.Setup(x => x.Map<TagDto>(It.IsAny<Tag>())).Returns(new TagDto());
 
             var handler = new UpdateTagHandler(
                 this.mockRepo.Object,
@@ -58,11 +58,11 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 this.mockStringLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new UpdateTagCommand(new UpdateTagDTO()), CancellationToken.None);
+            var result = await handler.Handle(new UpdateTagCommand(new UpdateTagDto()), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
-               () => Assert.IsType<TagDTO>(result.Value),
+               () => Assert.IsType<TagDto>(result.Value),
                () => Assert.True(result.IsSuccess));
         }
     }

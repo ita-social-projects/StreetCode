@@ -45,7 +45,7 @@ public class GetAllVideosTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<VideoDTO>>(result.ValueOrDefault));
+            () => Assert.IsType<List<VideoDto>>(result.ValueOrDefault));
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class GetAllVideosTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
+            .Map<IEnumerable<VideoDto>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetVideosDTOWithNotExistingId());
 
         var expectedError = "Cannot find any videos";
@@ -103,7 +103,7 @@ public class GetAllVideosTest
 
         mockMapper
             .Setup(x => x
-            .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
+            .Map<IEnumerable<VideoDto>>(It.IsAny<IEnumerable<Video>>()))
             .Returns(GetListVideosDTO());
 
         return (mockRepository, mockMapper);
@@ -126,15 +126,15 @@ public class GetAllVideosTest
         return videos.AsQueryable();
     }
 
-    private static List<VideoDTO> GetListVideosDTO()
+    private static List<VideoDto> GetListVideosDTO()
     {
-        var videosDTO = new List<VideoDTO>
+        var videosDTO = new List<VideoDto>
         {
-            new VideoDTO
+            new VideoDto
             {
                 Id = 1,
             },
-            new VideoDTO
+            new VideoDto
             {
                 Id = 2,
             },
@@ -148,7 +148,7 @@ public class GetAllVideosTest
         return null;
     }
 
-    private static List<VideoDTO> GetVideosDTOWithNotExistingId()
+    private static List<VideoDto> GetVideosDTOWithNotExistingId()
     {
         return null;
     }

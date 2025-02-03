@@ -23,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
 
         private readonly Subtitle subtitle = new Subtitle { Id = id };
-        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = id };
+        private readonly SubtitleDto subtitleDTO = new SubtitleDto { Id = id };
 
         public GetSubtitleByIdRequestHandlerTests()
         {
@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<SubtitleDTO>(result.Value),
+                () => Assert.IsType<SubtitleDto>(result.Value),
                 () => Assert.True(result.Value.Id.Equals(id)));
         }
 
@@ -56,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         {
             // Arrange
             this.SetupRepository(new Subtitle());
-            this.SetupMapper(new SubtitleDTO());
+            this.SetupMapper(new SubtitleDto());
 
             var handler = new GetSubtitleByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
@@ -78,9 +78,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
                 .ReturnsAsync(returnElement);
         }
 
-        private void SetupMapper(SubtitleDTO returnElement)
+        private void SetupMapper(SubtitleDto returnElement)
         {
-            this.mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+            this.mockMapper.Setup(x => x.Map<SubtitleDto>(It.IsAny<object>()))
                 .Returns(returnElement);
         }
     }

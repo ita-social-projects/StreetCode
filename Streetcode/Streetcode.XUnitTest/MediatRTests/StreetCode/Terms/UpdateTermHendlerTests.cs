@@ -37,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDto>()))
             .Returns(GetTerm());
 
             var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
@@ -59,7 +59,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Update(GetTermWithNotExistId() !));
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDto>()))
                 .Returns(GetTermWithNotExistId() !);
 
             var expectedError = "Cannot convert null to Term";
@@ -85,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Update(GetTerm()));
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDto>()))
                 .Returns(GetTerm());
 
             var expectedError = "Failed to update a term";
@@ -110,7 +110,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
             this.mockRepository.Setup(x => x.TermRepository.Create(GetTerm()));
             this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNuber);
 
-            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDTO>()))
+            this.mockMapper.Setup(x => x.Map<Term>(It.IsAny<TermDto>()))
                 .Returns(GetTerm());
 
             var handler = new UpdateTermHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerCannotConvertNull.Object);
@@ -124,10 +124,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms
 
         private static Term GetTerm() => new ();
 
-        private static TermDTO GetTermDTO() => new ();
+        private static TermDto GetTermDTO() => new ();
 
         private static Term? GetTermWithNotExistId() => null;
 
-        private static TermDTO? GetTermDTOWithNotExistId() => null;
+        private static TermDto? GetTermDTOWithNotExistId() => null;
     }
 }

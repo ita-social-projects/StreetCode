@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.Streetcode.TextContent;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
 {
-    public record UpdateTermCommand(TermDTO Term)
+    public record UpdateTermCommand(TermDto Term)
         : IRequest<Result<Unit>>;
 }

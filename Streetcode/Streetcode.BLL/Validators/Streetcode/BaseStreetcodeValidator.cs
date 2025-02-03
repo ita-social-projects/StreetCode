@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
-public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateDTO>
+public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateDto>
 {
     public const int FirstNameMaxLength = 50;
     public const int LastNameMaxLength = 50;
@@ -31,7 +31,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         TimelineItemValidator timelineItemValidator,
         ImageDetailsValidator imageDetailsValidator,
         StreetcodeArtSlideValidator streetcodeArtSlideValidator,
-        ArtCreateUpdateDTOValidator artCreateUpdateDtoValidator,
+        ArtCreateUpdateDtoValidator artCreateUpdateDtoValidator,
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {

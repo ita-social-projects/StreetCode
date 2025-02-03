@@ -5,11 +5,11 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Streetcode.Art;
 
-public class ArtCreateUpdateDTOValidator : AbstractValidator<ArtCreateUpdateDTO>
+public class ArtCreateUpdateDtoValidator : AbstractValidator<ArtCreateUpdateDto>
 {
     public const int MaxTitleLength = 150;
     public const int MaxDescriptionLength = 400;
-    public ArtCreateUpdateDTOValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
+    public ArtCreateUpdateDtoValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Description)
             .MaximumLength(MaxDescriptionLength).WithMessage(localizer["MaxLength", fieldLocalizer["ArtDescription"], MaxDescriptionLength]);

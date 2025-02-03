@@ -14,28 +14,28 @@ namespace Streetcode.WebApi.Controllers.Team
     public class TeamController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTeamDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTeamDto))]
         public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
             return HandleResult(await Mediator.Send(new GetAllTeamQuery(page, pageSize)));
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamMemberDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamMemberDto>))]
         public async Task<IActionResult> GetAllMain()
         {
             return HandleResult(await Mediator.Send(new GetAllMainTeamQuery()));
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDto))]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             return HandleResult(await Mediator.Send(new GetByIdTeamQuery(id)));
         }
 
         [HttpGet("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamMemberDTO>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TeamMemberDto>))]
         public async Task<IActionResult> GetByRoleId([FromRoute] int id)
 		{
 			return HandleResult(await Mediator.Send(new GetTeamByRoleIdQuery(id)));
@@ -43,27 +43,27 @@ namespace Streetcode.WebApi.Controllers.Team
 
         [HttpPost]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create([FromBody] TeamMemberCreateDTO teamMember)
+        public async Task<IActionResult> Create([FromBody] TeamMemberCreateDto teamMember)
         {
             return HandleResult(await Mediator.Send(new CreateTeamQuery(teamMember)));
         }
 
         [HttpPut]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateTeamMemberDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UpdateTeamMemberDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Update([FromBody] UpdateTeamMemberDTO teamMember)
+        public async Task<IActionResult> Update([FromBody] UpdateTeamMemberDto teamMember)
         {
             return HandleResult(await Mediator.Send(new UpdateTeamQuery(teamMember)));
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDTO))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TeamMemberDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete([FromRoute] int id)

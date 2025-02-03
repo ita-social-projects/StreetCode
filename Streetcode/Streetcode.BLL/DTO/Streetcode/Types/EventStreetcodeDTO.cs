@@ -1,5 +1,5 @@
 namespace Streetcode.BLL.DTO.Streetcode.Types;
 
-public class EventStreetcodeDTO : StreetcodeDTO
+public class EventStreetcodeDto : StreetcodeDto
 {
 }

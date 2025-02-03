@@ -42,7 +42,7 @@ public class GetAllWithTeamMembersTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault));
+            () => Assert.IsType<List<PositionDto>>(result.ValueOrDefault));
     }
 
     [Fact]
@@ -83,15 +83,15 @@ public class GetAllWithTeamMembersTest
         return partners;
     }
 
-    private static List<PositionDTO> GetListPositionDTO()
+    private static List<PositionDto> GetListPositionDTO()
     {
-        var positionDTO = new List<PositionDTO>
+        var positionDTO = new List<PositionDto>
         {
-            new PositionDTO
+            new PositionDto
             {
                 Id = 1,
             },
-            new PositionDTO
+            new PositionDto
             {
                 Id = 2,
             },
@@ -99,9 +99,9 @@ public class GetAllWithTeamMembersTest
         return positionDTO;
     }
 
-    private void SetupMapMethod(IEnumerable<PositionDTO> positionDTOs)
+    private void SetupMapMethod(IEnumerable<PositionDto> positionDTOs)
     {
-        this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDTO>>(It.IsAny<IEnumerable<Positions>>()))
+        this.mockMapper.Setup(x => x.Map<IEnumerable<PositionDto>>(It.IsAny<IEnumerable<Positions>>()))
             .Returns(positionDTOs);
     }
 

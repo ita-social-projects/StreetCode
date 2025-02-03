@@ -22,11 +22,11 @@ public class CreateTeamMemberValidatorTests
         MockFailedToValidateLocalizer mockValidationLocalizer = new MockFailedToValidateLocalizer();
         MockFieldNamesLocalizer mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockBaseTeamMemberValidator = new Mock<BaseTeamValidator>(mockValidationLocalizer, mockNamesLocalizer);
-        this.mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()))
+        this.mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDto>>()))
             .Returns(new ValidationResult());
 
         this.mockBaseTeamMemberLinkValidator = new Mock<BaseTeamMemberLinkValidator>(mockValidationLocalizer, mockNamesLocalizer);
-        this.mockBaseTeamMemberLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()))
+        this.mockBaseTeamMemberLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDto>>()))
             .Returns(new ValidationResult());
     }
 
@@ -34,11 +34,11 @@ public class CreateTeamMemberValidatorTests
     public void ShouldCallBaseValidator()
     {
         // Arrange
-        var query = new CreateTeamQuery(new TeamMemberCreateDTO()
+        var query = new CreateTeamQuery(new TeamMemberCreateDto()
         {
-            TeamMemberLinks = new List<TeamMemberLinkCreateDTO>()
+            TeamMemberLinks = new List<TeamMemberLinkCreateDto>()
             {
-                new TeamMemberLinkCreateDTO(),
+                new TeamMemberLinkCreateDto(),
             },
         });
         var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
@@ -47,18 +47,18 @@ public class CreateTeamMemberValidatorTests
         createValidator.Validate(query);
 
         // Assert
-        this.mockBaseTeamMemberValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()), Times.Once);
+        this.mockBaseTeamMemberValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDto>>()), Times.Once);
     }
 
     [Fact]
     public void ShouldCallLinkValidator()
     {
         // Arrange
-        var query = new CreateTeamQuery(new TeamMemberCreateDTO()
+        var query = new CreateTeamQuery(new TeamMemberCreateDto()
         {
-            TeamMemberLinks = new List<TeamMemberLinkCreateDTO>()
+            TeamMemberLinks = new List<TeamMemberLinkCreateDto>()
             {
-                new TeamMemberLinkCreateDTO(),
+                new TeamMemberLinkCreateDto(),
             },
         });
         var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
@@ -67,6 +67,6 @@ public class CreateTeamMemberValidatorTests
         createValidator.Validate(query);
 
         // Assert
-        this.mockBaseTeamMemberLinkValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()), Times.Once);
+        this.mockBaseTeamMemberLinkValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDto>>()), Times.Once);
     }
 }

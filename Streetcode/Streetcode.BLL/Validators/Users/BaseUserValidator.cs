@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Users;
 
-public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
+public class BaseUserValidator : AbstractValidator<UpdateUserDto>
 {
     public const int MaxLengthAboutYourself = 500;
     public const int MinLengthName = 2;

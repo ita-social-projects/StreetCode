@@ -8,7 +8,7 @@ using Streetcode.BLL.Validators.TeamMember.TeamMemberLInk;
 
 namespace Streetcode.BLL.Validators.TeamMember;
 
-public class BaseTeamValidator : AbstractValidator<TeamMemberCreateUpdateDTO>
+public class BaseTeamValidator : AbstractValidator<TeamMemberCreateUpdateDto>
 {
     public const int NameMaxLength = 41;
     public const int DescriptionMaxLength = 70;

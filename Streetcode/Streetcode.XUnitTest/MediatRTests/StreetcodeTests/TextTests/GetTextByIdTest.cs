@@ -42,9 +42,9 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(testText);
 
-            this.mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
+            this.mockMapper.Setup(x => x.Map<TextDto>(It.IsAny<Text>())).Returns((Text sourceText) =>
             {
-                return new TextDTO { Id = sourceText.Id };
+                return new TextDto { Id = sourceText.Id };
             });
             var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
@@ -68,9 +68,9 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(testText);
 
-            this.mockMapper.Setup(x => x.Map<TextDTO>(It.IsAny<Text>())).Returns((Text sourceText) =>
+            this.mockMapper.Setup(x => x.Map<TextDto>(It.IsAny<Text>())).Returns((Text sourceText) =>
             {
-                return new TextDTO { Id = sourceText.Id };
+                return new TextDto { Id = sourceText.Id };
             });
 
             var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-            Assert.IsAssignableFrom<TextDTO>(result.Value);
+            Assert.IsAssignableFrom<TextDto>(result.Value);
         }
     }
 }

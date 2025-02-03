@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
-    public class GetAllNewsHandler : IRequestHandler<GetAllNewsQuery, Result<GetAllNewsResponseDTO>>
+    public class GetAllNewsHandler : IRequestHandler<GetAllNewsQuery, Result<GetAllNewsResponseDto>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IMapper _mapper;
@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllNewsResponseDto>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<News> paginationResponse = _repositoryWrapper
                 .NewsRepository
@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
 
             var newsDTOs = MapToNewsDTOs(paginationResponse.Entities);
 
-            GetAllNewsResponseDTO getAllNewsResponseDTO = new GetAllNewsResponseDTO()
+            GetAllNewsResponseDto getAllNewsResponseDTO = new GetAllNewsResponseDto()
             {
                 TotalAmount = paginationResponse.TotalItems,
                 News = newsDTOs,
@@ -51,9 +51,9 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             return Task.FromResult(Result.Ok(getAllNewsResponseDTO));
         }
 
-        private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)
+        private IEnumerable<NewsDto> MapToNewsDTOs(IEnumerable<News> entities)
         {
-            var newsDTOs = _mapper.Map<IEnumerable<NewsDTO>>(entities);
+            var newsDTOs = _mapper.Map<IEnumerable<NewsDto>>(entities);
             foreach (var dto in newsDTOs)
             {
                 if (dto.Image is not null)

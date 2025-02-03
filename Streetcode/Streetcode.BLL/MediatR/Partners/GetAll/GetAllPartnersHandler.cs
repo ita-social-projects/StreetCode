@@ -14,7 +14,7 @@ using Streetcode.BLL.DTO.News;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAll;
 
-public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result<GetAllPartnersResponseDTO>>
+public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result<GetAllPartnersResponseDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
         _stringLocalizeCannotFind = stringLocalizeCannotFind;
     }
 
-    public Task<Result<GetAllPartnersResponseDTO>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
+    public Task<Result<GetAllPartnersResponseDto>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
         PaginationResponse<Partner> paginationResponse = _repositoryWrapper
                 .PartnersRepository
@@ -44,13 +44,13 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
         {
             string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMsg);
-            return Task.FromResult(Result.Fail<GetAllPartnersResponseDTO>(new Error(errorMsg)));
+            return Task.FromResult(Result.Fail<GetAllPartnersResponseDto>(new Error(errorMsg)));
         }
 
-        GetAllPartnersResponseDTO getAllPartnersResponseDTO = new GetAllPartnersResponseDTO()
+        GetAllPartnersResponseDto getAllPartnersResponseDTO = new GetAllPartnersResponseDto()
         {
             TotalAmount = paginationResponse.TotalItems,
-            Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginationResponse.Entities),
+            Partners = _mapper.Map<IEnumerable<PartnerDto>>(paginationResponse.Entities),
         };
 
         return Task.FromResult(Result.Ok(getAllPartnersResponseDTO));

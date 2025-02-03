@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 {
-    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<GetAllCategoriesResponseDTO>>
+    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<GetAllCategoriesResponseDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
+        public Task<Result<GetAllCategoriesResponseDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
         {
             PaginationResponse<DAL.Entities.Sources.SourceLinkCategory> paginationResponse = _repositoryWrapper.SourceCategoryRepository
                 .GetAllPaginated(
@@ -42,17 +42,17 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             {
                 string errorMsg = _stringLocalizerNo["NoCategories"].Value;
                 _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllCategoriesResponseDTO>(new Error(errorMsg)));
+                return Task.FromResult(Result.Fail<GetAllCategoriesResponseDto>(new Error(errorMsg)));
             }
 
-            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDTO>>(paginationResponse.Entities);
+            var dtos = _mapper.Map<IEnumerable<SourceLinkCategoryDto>>(paginationResponse.Entities);
 
             foreach (var dto in dtos)
             {
                 dto.Image.Base64 = _blobService.FindFileInStorageAsBase64(dto.Image.BlobName);
             }
 
-            GetAllCategoriesResponseDTO getAllCategoriesResponseDTO = new GetAllCategoriesResponseDTO
+            GetAllCategoriesResponseDto getAllCategoriesResponseDTO = new GetAllCategoriesResponseDto
             {
                 TotalAmount = paginationResponse.TotalItems,
                 Categories = dtos,

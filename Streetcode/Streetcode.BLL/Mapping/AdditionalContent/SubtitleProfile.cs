@@ -8,8 +8,8 @@ public class SubtitleProfile : Profile
 {
    public SubtitleProfile()
    {
-        CreateMap<Subtitle, SubtitleDTO>().ReverseMap();
-        CreateMap<SubtitleCreateDTO, Subtitle>().ReverseMap();
-        CreateMap<SubtitleUpdateDTO, Subtitle>().ReverseMap();
+        CreateMap<Subtitle, SubtitleDto>().ReverseMap();
+        CreateMap<SubtitleCreateDto, Subtitle>().ReverseMap();
+        CreateMap<SubtitleUpdateDto, Subtitle>().ReverseMap();
   }
 }

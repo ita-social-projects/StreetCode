@@ -1,6 +1,6 @@
 ﻿namespace Streetcode.BLL.DTO.News
 {
-    public class RandomNewsDTO
+    public class RandomNewsDto
     {
         public string Title { get; set; } = null!;
 

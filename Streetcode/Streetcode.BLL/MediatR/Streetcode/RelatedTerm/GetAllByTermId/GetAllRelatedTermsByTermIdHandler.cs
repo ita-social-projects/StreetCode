@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
 {
-    public record GetAllRelatedTermsByTermIdHandler : IRequestHandler<GetAllRelatedTermsByTermIdQuery, Result<IEnumerable<RelatedTermDTO>>>
+    public record GetAllRelatedTermsByTermIdHandler : IRequestHandler<GetAllRelatedTermsByTermIdQuery, Result<IEnumerable<RelatedTermDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
             _stringLocalizerCannotGet = stringLocalizerCannotGet;
         }
 
-        public async Task<Result<IEnumerable<RelatedTermDTO>>> Handle(GetAllRelatedTermsByTermIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<RelatedTermDto>>> Handle(GetAllRelatedTermsByTermIdQuery request, CancellationToken cancellationToken)
         {
             var relatedTerms = await _repository.RelatedTermRepository
                 .GetAllAsync(
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.GetAllByTermId
                 return new Error(errorMsg);
             }
 
-            var relatedTermsDTO = _mapper.Map<IEnumerable<RelatedTermDTO>>(relatedTerms);
+            var relatedTermsDTO = _mapper.Map<IEnumerable<RelatedTermDto>>(relatedTerms);
 
             if (relatedTermsDTO is null)
             {

@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
 {
 	internal class GetAllJobsHandler
-		: IRequestHandler<GetAllJobsQuery, Result<GetAllJobsDTO>>
+		: IRequestHandler<GetAllJobsQuery, Result<GetAllJobsDto>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;
 		private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 			_logger = logger;
 		}
 
-		public Task<Result<GetAllJobsDTO>> Handle(GetAllJobsQuery request, CancellationToken cancellationToken)
+		public Task<Result<GetAllJobsDto>> Handle(GetAllJobsQuery request, CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 						request.page,
 						request.pageSize);
 
-				GetAllJobsDTO getAllJobsDTO = new GetAllJobsDTO()
+				GetAllJobsDto getAllJobsDTO = new GetAllJobsDto()
 				{
 					TotalAmount = paginationResponse.TotalItems,
 					Jobs = _mapper.Map<IEnumerable<JobDto>>(paginationResponse.Entities),
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 			catch(Exception ex)
 			{
 				_logger.LogError(request, ex.Message);
-				return Task.FromResult(Result.Fail<GetAllJobsDTO>(ex.Message));
+				return Task.FromResult(Result.Fail<GetAllJobsDto>(ex.Message));
 			}
 		}
 	}

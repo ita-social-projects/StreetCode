@@ -48,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
 
             // Assert
-            Assert.IsType<TeamMemberLinkDTO>(result.Value);
+            Assert.IsType<TeamMemberLinkDto>(result.Value);
         }
 
         [Fact]
@@ -131,7 +131,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 
             // Arrange
             // The specific setup of the 'Map' method returned null, causing an error.
-            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDto>()))
                 .Returns((TeamMemberLink)null!);
 
             var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
@@ -153,17 +153,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             };
         }
 
-        private static TeamMemberLinkCreateDTO GetTeamMemberLinkDTO()
+        private static TeamMemberLinkCreateDto GetTeamMemberLinkDTO()
         {
-            return new TeamMemberLinkCreateDTO();
+            return new TeamMemberLinkCreateDto();
         }
 
         private void SetupMapMethod(TeamMemberLink teamMemberLink)
         {
-            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
+            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDto>()))
                 .Returns(teamMemberLink);
-            this.mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
-                .Returns(new TeamMemberLinkDTO());
+            this.mockMapper.Setup(x => x.Map<TeamMemberLinkDto>(It.IsAny<TeamMemberLink>()))
+                .Returns(new TeamMemberLinkDto());
         }
 
         private void SetupCreateMethod(TeamMemberLink teamMemberLink)

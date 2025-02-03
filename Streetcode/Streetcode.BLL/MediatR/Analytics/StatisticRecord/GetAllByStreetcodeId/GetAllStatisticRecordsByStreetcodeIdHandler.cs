@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
 {
-    internal class GetAllStatisticRecordsByStreetcodeIdHandler : IRequestHandler<GetAllStatisticRecordsByStreetcodeIdQuery, Result<IEnumerable<StatisticRecordDTO>>>
+    internal class GetAllStatisticRecordsByStreetcodeIdHandler : IRequestHandler<GetAllStatisticRecordsByStreetcodeIdQuery, Result<IEnumerable<StatisticRecordDto>>>
     {
         private readonly IRepositoryWrapper _repository;
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
             _stringLocalizerCannotMap = stringLocalizerCannotMap;
         }
 
-        public async Task<Result<IEnumerable<StatisticRecordDTO>>> Handle(GetAllStatisticRecordsByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StatisticRecordDto>>> Handle(GetAllStatisticRecordsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var statisticRecords = await _repository.StatisticRecordRepository.GetAllAsync(
                     predicate: st => st.StreetcodeCoordinate.StreetcodeId == request.streetcodeId,
@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var statisticRecordsDTOs = _mapper.Map<IEnumerable<StatisticRecordDTO>>(statisticRecords);
+            var statisticRecordsDTOs = _mapper.Map<IEnumerable<StatisticRecordDto>>(statisticRecords);
 
             if (statisticRecordsDTOs is null)
             {

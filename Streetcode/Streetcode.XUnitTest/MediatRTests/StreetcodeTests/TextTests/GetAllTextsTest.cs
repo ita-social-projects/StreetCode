@@ -36,9 +36,9 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 new Text() { Id = 1 },
             };
 
-            var testTextslistDTO = new List<TextDTO>()
+            var testTextslistDTO = new List<TextDto>()
             {
-                new TextDTO() { Id = 1 },
+                new TextDto() { Id = 1 },
             };
 
             var testTexts = new Text() { Id = 1 };
@@ -49,7 +49,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             this.repository.Setup(repo => repo.TextRepository.GetAllAsync(null, null)).ReturnsAsync(testTextsList);
 
             this.mockMapper
-                .Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>()))
+                .Setup(x => x.Map<IEnumerable<TextDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testTextslistDTO);
             this.mockLocalizerCannotFind
                 .Setup(x => x["CannotFindAnyText"])
@@ -82,8 +82,8 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 .ReturnsAsync(new List<Text>());
 
             this.mockMapper
-                .Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(new List<TextDTO>() { new TextDTO() { Id = 1 } });
+                .Setup(x => x.Map<IEnumerable<TextDto>>(It.IsAny<IEnumerable<object>>()))
+                .Returns(new List<TextDto>() { new TextDto() { Id = 1 } });
             this.mockLocalizerCannotFind
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));

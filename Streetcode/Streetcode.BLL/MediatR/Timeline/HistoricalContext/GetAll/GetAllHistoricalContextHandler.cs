@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 {
-    public class GetAllHistoricalContextHandler : IRequestHandler<GetAllHistoricalContextQuery, Result<GetAllHistoricalContextDTO>>
+    public class GetAllHistoricalContextHandler : IRequestHandler<GetAllHistoricalContextQuery, Result<GetAllHistoricalContextDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public Task<Result<GetAllHistoricalContextDTO>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllHistoricalContextDto>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<DAL.Entities.Timeline.HistoricalContext> paginationResponse = _repositoryWrapper
                 .HistoricalContextRepository
@@ -41,13 +41,13 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
                 _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
+                return Task.FromResult(Result.Fail<GetAllHistoricalContextDto>(new Error(errorMsg)));
             }
 
-            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new GetAllHistoricalContextDTO
+            GetAllHistoricalContextDto getAllHistoricalContextDTO = new GetAllHistoricalContextDto
             {
                 TotalAmount = paginationResponse.TotalItems,
-                HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginationResponse.Entities)
+                HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDto>>(paginationResponse.Entities)
             };
 
             return Task.FromResult(Result.Ok(getAllHistoricalContextDTO));

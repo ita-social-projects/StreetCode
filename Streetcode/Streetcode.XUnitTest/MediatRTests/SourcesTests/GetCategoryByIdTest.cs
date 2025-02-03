@@ -43,7 +43,7 @@ public class GetCategoryByIdTest
             IIncludableQueryable<SourceLinkCategory, object>>>()))
         .ReturnsAsync(this.GetSourceLinkCategory());
 
-        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDto>(It.IsAny<SourceLinkCategory>()))
             .Returns(this.GetSourceDTO());
 
         var handler = new GetCategoryByIdHandler(
@@ -59,7 +59,7 @@ public class GetCategoryByIdTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<SourceLinkCategoryDTO>(result.ValueOrDefault));
+            () => Assert.IsType<SourceLinkCategoryDto>(result.ValueOrDefault));
     }
 
     [Theory]
@@ -74,7 +74,7 @@ public class GetCategoryByIdTest
             IIncludableQueryable<SourceLinkCategory, object>>>()))
         .ReturnsAsync(this.GetSourceLinkCategoryNotExists());
 
-        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDTO>(It.IsAny<SourceLinkCategory>()))
+        this.mockMapper.Setup(x => x.Map<SourceLinkCategoryDto>(It.IsAny<SourceLinkCategory>()))
             .Returns(this.GetSourceDTO());
 
         var handler = new GetCategoryByIdHandler(
@@ -102,12 +102,12 @@ public class GetCategoryByIdTest
         Assert.Equal(expectedError, result.Errors[0].Message);
     }
 
-    private SourceLinkCategoryDTO GetSourceDTO()
+    private SourceLinkCategoryDto GetSourceDTO()
     {
-        return new SourceLinkCategoryDTO()
+        return new SourceLinkCategoryDto()
         {
             Id = 1,
-            Image = new BLL.DTO.Media.Images.ImageDTO()
+            Image = new BLL.DTO.Media.Images.ImageDto()
             {
                 BlobName = string.Empty,
             },

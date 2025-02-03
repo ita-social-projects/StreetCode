@@ -9,13 +9,13 @@ public class PartnerProfile : Profile
 {
     public PartnerProfile()
     {
-        CreateMap<Partner, PartnerDTO>()
+        CreateMap<Partner, PartnerDto>()
             .ForPath(dto => dto.TargetUrl!.Title, conf => conf.MapFrom(ol => ol.UrlTitle))
             .ForPath(dto => dto.TargetUrl!.Href, conf => conf.MapFrom(ol => ol.TargetUrl));
-        CreateMap<Partner, CreatePartnerDTO>().ReverseMap();
-        CreateMap<UpdatePartnerDTO, Partner>();
-        CreateMap<Partner, PartnerShortDTO>().ReverseMap();
-        CreateMap<PartnersUpdateDTO, StreetcodePartner>()
+        CreateMap<Partner, CreatePartnerDto>().ReverseMap();
+        CreateMap<UpdatePartnerDto, Partner>();
+        CreateMap<Partner, PartnerShortDto>().ReverseMap();
+        CreateMap<PartnersUpdateDto, StreetcodePartner>()
           .ReverseMap();
     }
 }

@@ -51,7 +51,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     {
         var response = await this.Client.GetAllAsync();
         var returnedValue =
-            CaseIsensitiveJsonDeserializer.Deserialize<GetAllHistoricalContextDTO>(response.Content);
+            CaseIsensitiveJsonDeserializer.Deserialize<GetAllHistoricalContextDto>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
@@ -63,7 +63,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         HistoricalContext expectedContext = this.testCreateContext;
         var response = await this.Client.GetByIdAsync(expectedContext.Id);
 
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContextDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContextDto>(response.Content);
 
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);

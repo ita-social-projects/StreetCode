@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Team;
 
 namespace Streetcode.BLL.MediatR.Team.Position.Update;
 
-public record UpdateTeamPositionCommand(PositionDTO positionDto)
-    : IRequest<Result<PositionDTO>>;
+public record UpdateTeamPositionCommand(PositionDto positionDto)
+    : IRequest<Result<PositionDto>>;

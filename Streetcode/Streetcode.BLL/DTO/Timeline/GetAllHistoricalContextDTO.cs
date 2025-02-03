@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Timeline
 {
-    public class GetAllHistoricalContextDTO
+    public class GetAllHistoricalContextDto
     {
         public int TotalAmount { get; set; }
-        public IEnumerable<HistoricalContextDTO> HistoricalContexts { get; set; } = new List<HistoricalContextDTO>();
+        public IEnumerable<HistoricalContextDto> HistoricalContexts { get; set; } = new List<HistoricalContextDto>();
     }
 }

@@ -3,7 +3,7 @@ using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Partners
 {
-    public class CreatePartnerDTO : PartnerCreateUpdateDto
+    public class CreatePartnerDto : PartnerCreateUpdateDto
     {
     }
 }

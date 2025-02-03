@@ -12,7 +12,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetByStreetcodeId;
 
-public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQuery, Result<IEnumerable<StreetcodeTagDTO>>>
+public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQuery, Result<IEnumerable<StreetcodeTagDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -27,7 +27,7 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<IEnumerable<StreetcodeTagDTO>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<StreetcodeTagDto>>> Handle(GetTagByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
         var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
             .GetAllAsync(
@@ -38,9 +38,9 @@ public class GetTagByStreetcodeIdHandler : IRequestHandler<GetTagByStreetcodeIdQ
         {
             string message = "Returning empty enumerable of tags";
             _logger.LogInformation(message);
-            return Result.Ok(Enumerable.Empty<StreetcodeTagDTO>());
+            return Result.Ok(Enumerable.Empty<StreetcodeTagDto>());
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeTagDTO>>(tagIndexed.OrderBy(ti => ti.Index)));
+        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeTagDto>>(tagIndexed.OrderBy(ti => ti.Index)));
     }
 }

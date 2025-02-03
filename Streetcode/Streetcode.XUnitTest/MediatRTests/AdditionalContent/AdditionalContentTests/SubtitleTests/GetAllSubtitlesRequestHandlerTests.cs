@@ -34,14 +34,14 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             },
         };
 
-        private readonly List<SubtitleDTO> subtitleDTOs = new List<SubtitleDTO>
+        private readonly List<SubtitleDto> subtitleDTOs = new List<SubtitleDto>
         {
-            new SubtitleDTO
+            new SubtitleDto
             {
                 Id = 1,
                 StreetcodeId = 1,
             },
-            new SubtitleDTO
+            new SubtitleDto
             {
                 Id = 2,
                 StreetcodeId = 1,
@@ -70,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
             // Assert
             Assert.Multiple(
-                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+                () => Assert.IsType<List<SubtitleDto>>(result.Value),
                 () => Assert.True(result.Value.Count().Equals(this.subtitles.Count)));
         }
 
@@ -79,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         {
             // Arrange
             this.SetupRepository(null);
-            this.SetupMapper(new List<SubtitleDTO>());
+            this.SetupMapper(new List<SubtitleDto>());
 
             var expectedError = $"Cannot find any subtitles";
             this.mockLocalizer.Setup(localizer => localizer["CannotFindAnySubtitles"])
@@ -103,9 +103,9 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
                 .ReturnsAsync(returnList);
         }
 
-        private void SetupMapper(List<SubtitleDTO> returnList)
+        private void SetupMapper(List<SubtitleDto> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
+            this.mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDto>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

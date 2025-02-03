@@ -14,7 +14,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 {
     public class GetPageOfStreetcodesMainPageHandler : IRequestHandler<GetPageOfStreetcodesMainPageQuery,
-        Result<IEnumerable<StreetcodeMainPageDTO>>>
+        Result<IEnumerable<StreetcodeMainPageDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
+        public Task<Result<IEnumerable<StreetcodeMainPageDto>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
                 request.page,
@@ -47,12 +47,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                return Task.FromResult(Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDTO>>(ShuffleStreetcodes(streetcodes))));
+                return Task.FromResult(Result.Ok(_mapper.Map<IEnumerable<StreetcodeMainPageDto>>(ShuffleStreetcodes(streetcodes))));
             }
 
             string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
-            return Task.FromResult(Result.Fail<IEnumerable<StreetcodeMainPageDTO>>(errorMsg));
+            return Task.FromResult(Result.Fail<IEnumerable<StreetcodeMainPageDto>>(errorMsg));
         }
 
         private static List<StreetcodeContent> ShuffleStreetcodes(IEnumerable<StreetcodeContent> streetcodes)

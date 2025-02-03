@@ -8,7 +8,7 @@ using Streetcode.BLL.DTO.Media.Art;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
-  public class GetArtSlidesByStreetcodeIdHandler : IRequestHandler<GetArtSlidesByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtSlideDTO>>>
+  public class GetArtSlidesByStreetcodeIdHandler : IRequestHandler<GetArtSlidesByStreetcodeIdQuery, Result<IEnumerable<StreetcodeArtSlideDto>>>
     {
         private readonly IBlobService _blobService;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
             _blobService = blobService;
         }
 
-        public async Task<Result<IEnumerable<StreetcodeArtSlideDTO>>> Handle(GetArtSlidesByStreetcodeIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<StreetcodeArtSlideDto>>> Handle(GetArtSlidesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
             var query = _repositoryWrapper.StreetcodeArtSlideRepository
                 .FindAll(
@@ -38,13 +38,13 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
             var slides = await query.ToListAsync(cancellationToken);
 
-            var slidesDto = _mapper.Map<IEnumerable<StreetcodeArtSlideDTO>>(slides);
+            var slidesDto = _mapper.Map<IEnumerable<StreetcodeArtSlideDto>>(slides);
             slidesDto = ConvertArtImagesToBase64(slidesDto);
 
             return Result.Ok(slidesDto);
         }
 
-        private IEnumerable<StreetcodeArtSlideDTO> ConvertArtImagesToBase64(IEnumerable<StreetcodeArtSlideDTO> slidesDto)
+        private IEnumerable<StreetcodeArtSlideDto> ConvertArtImagesToBase64(IEnumerable<StreetcodeArtSlideDto> slidesDto)
         {
             foreach (var slideDto in slidesDto)
             {

@@ -163,15 +163,15 @@ public class BaseTeamValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private TeamMemberCreateUpdateDTO GetValidTeamMember()
+    private TeamMemberCreateUpdateDto GetValidTeamMember()
     {
-        return new TeamMemberCreateDTO()
+        return new TeamMemberCreateDto()
         {
             Name = "John Doe",
             Description = "Description",
             ImageId = 85,
             IsMain = true,
-            Positions = new List<PositionDTO>()
+            Positions = new List<PositionDto>()
             {
                 new ()
                 {
@@ -179,7 +179,7 @@ public class BaseTeamValidatorTests
                     Position = "CEO"
                 },
             },
-            TeamMemberLinks = new List<TeamMemberLinkCreateDTO>()
+            TeamMemberLinks = new List<TeamMemberLinkCreateDto>()
             {
                 new ()
                 {

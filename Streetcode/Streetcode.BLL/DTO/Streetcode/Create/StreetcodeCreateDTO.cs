@@ -11,21 +11,21 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 
 namespace Streetcode.BLL.DTO.Streetcode.Create
 {
-  public class StreetcodeCreateDTO : StreetcodeCreateUpdateDTO
+  public class StreetcodeCreateDto : StreetcodeCreateUpdateDto
     {
         public string? ARBlockURL { get; set; }
         public int ViewCount { get; set; }
-        public TextCreateDTO? Text { get; set; }
+        public TextCreateDto? Text { get; set; }
         public int? AudioId { get; set; }
         public IEnumerable<int> ImagesIds { get; set; } = null!; // one image black and white is required at front-end side, so at least one will be passed
-        public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = null!;
-        public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; } = null!; // subtitles are only in one example
-        public IEnumerable<StreetcodeFactCreateDTO> Facts { get; set; } = null!;
-        public IEnumerable<VideoCreateDTO>? Videos { get; set; } = null!; // video is only one
-        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
+        public IEnumerable<StreetcodeTagDto> Tags { get; set; } = null!;
+        public IEnumerable<SubtitleCreateDto> Subtitles { get; set; } = null!; // subtitles are only in one example
+        public IEnumerable<StreetcodeFactCreateDto> Facts { get; set; } = null!;
+        public IEnumerable<VideoCreateDto>? Videos { get; set; } = null!; // video is only one
+        public IEnumerable<RelatedFigureShortDto> RelatedFigures { get; set; } = null!;
         public IEnumerable<int> Partners { get; set; } = null!;
-        public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; } = null!;
-        public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; } = null!;
-        public IEnumerable<StatisticRecordDTO> StatisticRecords { get; set; } = null!;
+        public IEnumerable<CategoryContentCreateDto> StreetcodeCategoryContents { get; set; } = null!;
+        public IEnumerable<StreetcodeCoordinateDto> Coordinates { get; set; } = null!;
+        public IEnumerable<StatisticRecordDto> StatisticRecords { get; set; } = null!;
     }
 }

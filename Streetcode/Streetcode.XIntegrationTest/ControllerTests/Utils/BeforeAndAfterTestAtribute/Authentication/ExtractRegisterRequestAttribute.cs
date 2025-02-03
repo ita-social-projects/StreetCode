@@ -9,11 +9,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class ExtractRegisterRequestAttribute : BeforeAfterTestAttribute
     {
-        public static RegisterRequestDTO RegisterRequest { get; set; } = null!;
+        public static RegisterRequestDto RegisterRequest { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
-            RegisterRequest = new RegisterRequestDTO()
+            RegisterRequest = new RegisterRequestDto()
             {
                 Email = "test@register.com",
                 Name = "Test",

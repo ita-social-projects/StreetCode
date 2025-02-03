@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
 {
-    public class GetStatisticRecordByQrIdHandler : IRequestHandler<GetStatisticRecordByQrIdQuery, Result<StatisticRecordDTO>>
+    public class GetStatisticRecordByQrIdHandler : IRequestHandler<GetStatisticRecordByQrIdQuery, Result<StatisticRecordDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public async Task<Result<StatisticRecordDTO>> Handle(GetStatisticRecordByQrIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<StatisticRecordDto>> Handle(GetStatisticRecordByQrIdQuery request, CancellationToken cancellationToken)
         {
             var statRecord = await _repositoryWrapper.StatisticRecordRepository
                 .GetFirstOrDefaultAsync(
@@ -46,7 +46,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var statRecordDTO = _mapper.Map<StatisticRecordDTO>(statRecord);
+            var statRecordDTO = _mapper.Map<StatisticRecordDto>(statRecord);
 
             if(statRecordDTO == null)
             {

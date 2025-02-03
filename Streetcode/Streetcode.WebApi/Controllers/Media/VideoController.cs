@@ -10,7 +10,7 @@ namespace Streetcode.WebApi.Controllers.Media;
 public class VideoController : BaseApiController
 {
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<VideoDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<VideoDto>))]
     public async Task<IActionResult> GetAll()
     {
         return HandleResult(await Mediator.Send(new GetAllVideosQuery()));
@@ -18,14 +18,14 @@ public class VideoController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [ValidateStreetcodeExistence]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDto))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetVideoByStreetcodeIdQuery(streetcodeId)));
     }
 
     [HttpGet("{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
         return HandleResult(await Mediator.Send(new GetVideoByIdQuery(id)));

@@ -43,16 +43,16 @@ public class UpdatePositionTest
             });
 
         this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
+        this.mockMapper.Setup(x => x.Map<PositionDto>(It.IsAny<Positions>())).Returns(new PositionDto());
 
         var handler = new UpdateTeamPositionHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new UpdateTeamPositionCommand(new PositionDTO()), CancellationToken.None);
+        var result = await handler.Handle(new UpdateTeamPositionCommand(new PositionDto()), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
-            () => Assert.IsType<PositionDTO>(result.Value),
+            () => Assert.IsType<PositionDto>(result.Value),
             () => Assert.True(result.IsSuccess));
     }
 }

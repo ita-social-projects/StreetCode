@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.News
 {
-    public class UpdateNewsDTO : CreateUpdateNewsDTO
+    public class UpdateNewsDto : CreateUpdateNewsDto
     {
         public int Id { get; set; }
     }

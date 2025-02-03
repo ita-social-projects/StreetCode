@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
 
-public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQuery, Result<IEnumerable<TransactLinkDTO>>>
+public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQuery, Result<IEnumerable<TransactLinkDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
-    public async Task<Result<IEnumerable<TransactLinkDTO>>> Handle(GetAllTransactLinksQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<TransactLinkDto>>> Handle(GetAllTransactLinksQuery request, CancellationToken cancellationToken)
     {
         var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();
 
@@ -35,6 +35,6 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
             return Result.Fail(new Error(errorMsg));
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<TransactLinkDTO>>(transactLinks));
+        return Result.Ok(_mapper.Map<IEnumerable<TransactLinkDto>>(transactLinks));
     }
 }

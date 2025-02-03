@@ -9,7 +9,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
 {
-    internal class GetAllPartnerShortHandler : IRequestHandler<GetAllPartnersShortQuery, Result<IEnumerable<PartnerShortDTO>>>
+    internal class GetAllPartnerShortHandler : IRequestHandler<GetAllPartnersShortQuery, Result<IEnumerable<PartnerShortDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -24,7 +24,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
             _stringLocalizer = stringLocalizer;
         }
 
-        public async Task<Result<IEnumerable<PartnerShortDTO>>> Handle(GetAllPartnersShortQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<PartnerShortDto>>> Handle(GetAllPartnersShortQuery request, CancellationToken cancellationToken)
         {
             var partners = await _repositoryWrapper.PartnersRepository.GetAllAsync();
 
@@ -35,7 +35,7 @@ namespace Streetcode.BLL.MediatR.Partners.GetAllPartnerShort
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<PartnerShortDTO>>(partners));
+            return Result.Ok(_mapper.Map<IEnumerable<PartnerShortDto>>(partners));
         }
     }
 }

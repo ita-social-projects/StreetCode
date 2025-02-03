@@ -36,7 +36,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             ArtExtracter.AddStreetcodeArt(this.testStreetcodeContent.Id, this.testArt.Id);
             int streetcodeId = this.testStreetcodeContent.Id;
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeArtDTO>>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeArtDto>>(response.Content);
 
             Assert.True(response.IsSuccessStatusCode);
             Assert.NotNull(returnedValue);

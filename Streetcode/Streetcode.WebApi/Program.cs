@@ -14,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication(builder);
 
+// Localization
 builder.Services.AddLocalization(option => option.ResourcesPath = "Resources");
+
+// Add application services
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddSwaggerServices();
 builder.Services.AddCustomServices();
@@ -25,13 +28,35 @@ builder.Services.ConfigureSerilog(builder);
 builder.Services.ConfigureRequestResponseMiddlewareOptions(builder);
 builder.Services.ConfigureRateLimitMiddleware(builder);
 builder.Services.ConfigureResponseCompressingMiddleware(builder);
+
+// Configure forwarded headers
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
+
+// ✅ **Enhanced Rate Limiting Configuration**
 builder.Services.AddRateLimiter(options =>
 {
+    options.AddFixedWindowLimiter("api", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 100; // General API: 100 requests per minute
+    });
+
+    options.AddFixedWindowLimiter("registration", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(10);
+        opt.PermitLimit = 5; // Registration: 5 attempts per 10 minutes
+    });
+
+    options.AddFixedWindowLimiter("token-refresh", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(5);
+        opt.PermitLimit = 10; // Token Refresh: 10 attempts per 5 minutes
+    });
+
     options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
         partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
         factory: _ => new FixedWindowRateLimiterOptions
@@ -42,6 +67,7 @@ builder.Services.AddRateLimiter(options =>
             Window = TimeSpan.FromMinutes(5)
         }));
 
+    // Global Rate Limiting Handler
     options.OnRejected = async (context, token) =>
     {
         context.HttpContext.Response.StatusCode = 429;
@@ -49,12 +75,14 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
+// Add HttpClient
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 app.UseForwardedHeaders();
 
+// ✅ **Enhanced Localization**
 var supportedCulture = new[]
 {
     new CultureInfo("en-US"),
@@ -67,6 +95,8 @@ app.UseRequestLocalization(new RequestLocalizationOptions
     SupportedUICultures = supportedCulture,
     ApplyCurrentCultureToResponseHeaders = true
 });
+
+// ✅ **Swagger only for non-production**
 if (app.Environment.EnvironmentName != "Production")
 {
     app.UseSwagger();
@@ -77,10 +107,14 @@ else
     app.UseHsts();
 }
 
+// Apply migrations
 await app.ApplyMigrations();
 
+// Hangfire jobs
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
+
+// ✅ **Security & Middleware**
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRequestResponseMiddleware();
@@ -92,9 +126,11 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
     Authorization = new[] { new HangfireDashboardAuthorizationFilter() }
 });
 
+// ✅ **Enable Rate Limiting & IP Rate Limiting**
 app.UseIpRateLimiting();
 app.UseRateLimiter();
 
+// ✅ **Background Jobs**
 BackgroundJob.Schedule<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
 RecurringJob.AddOrUpdate<WebParsingUtils>(
@@ -102,10 +138,14 @@ RecurringJob.AddOrUpdate<WebParsingUtils>(
     wp => wp.ParseZipFileFromWebAsync(),
     Cron.Monthly);
 
+// ✅ **Ensure All Controllers Are Mapped**
 app.MapControllers();
+
+// ✅ **Custom Response Compression Middleware**
 app.UseMiddleware<CustomResponseCompressionMiddleware>();
 
 app.Run();
+
 public partial class Program
 {
 }

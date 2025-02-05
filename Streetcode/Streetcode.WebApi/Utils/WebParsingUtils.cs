@@ -200,9 +200,6 @@ public class WebParsingUtils
                 (latitude, longitude) = await FetchCoordsByAddressAsync(addressRow);
             }
 
-            Console.WriteLine("\n" + addressRow);
-            Console.WriteLine($"Coordinates[{latitude}-{longitude}]");
-
             var newRow = string.Empty;
             for (int i = 0; i <= AddressColumn; i++)
             {
@@ -210,7 +207,6 @@ public class WebParsingUtils
             }
 
             newRow += $"{latitude};{longitude}";
-            Console.WriteLine(newRow);
 
             await File.AppendAllTextAsync(csvPath, newRow + "\n", Encoding.GetEncoding(1251));
         }

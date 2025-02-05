@@ -120,29 +120,42 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 
         private void TruncateProperties(JToken token)
         {
-            foreach (var property in token.Children<JProperty>().ToList())
+            switch (token)
             {
-                if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
-                {
-                    property.Remove();
-                    continue;
-                }
+                case JObject obj:
+                    foreach (var property in obj.Properties())
+                    {
+                        if (property.Value is JValue)
+                        {
+                            TruncateValue(property);
+                        }
+                        else
+                        {
+                            TruncateProperties(property.Value);
+                        }
+                    };
+                    break;
 
-                var valueType = property.Value.Type;
+                case JArray array:
+                    foreach (var item in array)
+                    {
+                        TruncateProperties(item);
+                    };
+                    break;
+            }
+        }
 
-                if (valueType == JTokenType.Object || valueType == JTokenType.Array)
-                {
-                    TruncateProperties(property.Value);
-                    continue;
-                }
+        private void TruncateValue(JProperty property)
+        {
+            if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
+            {
+                property.Remove();
+            }
 
-                var valueAsString = property.Value.ToString();
-                var valueLength = valueAsString.Length;
-
-                if (valueLength > _options.MaxResponseLength)
-                {
-                    property.Value = new JValue(valueAsString.Substring(0, _options.MaxResponseLength) + "...");
-                }
+            var valueAsString = property.Value.ToString();
+            if (valueAsString.Length > _options.MaxResponseLength)
+            {
+                property.Value = new JValue(valueAsString.Substring(0, _options.MaxResponseLength) + "...");
             }
         }
     }

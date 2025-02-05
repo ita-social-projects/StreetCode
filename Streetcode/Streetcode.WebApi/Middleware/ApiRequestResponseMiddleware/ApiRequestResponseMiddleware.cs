@@ -133,14 +133,16 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
                         {
                             TruncateProperties(property.Value);
                         }
-                    };
+                    }
+
                     break;
 
                 case JArray array:
                     foreach (var item in array)
                     {
                         TruncateProperties(item);
-                    };
+                    }
+
                     break;
             }
         }

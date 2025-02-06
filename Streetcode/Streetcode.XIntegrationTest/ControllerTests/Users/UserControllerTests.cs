@@ -239,6 +239,25 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
         // Arrange
         var forgotPassword = new UpdateForgotPasswordDTO
         {
+            Username = Uri.EscapeDataString(_testUser.UserName),
+            Password = "Newpassword1!",
+            ConfirmPassword = "Newpassword1!",
+        };
+        var token = await _userManager.GeneratePasswordResetTokenAsync(_testUser);
+        forgotPassword.Token = Uri.EscapeDataString(token);
+
+        // Act
+        var response = await Client.UpdateForgotPassword(forgotPassword);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    public async Task UpdateForgotPassword_InvalidData_ReturnsBadRequest()
+    {
+        // Arrange
+        var forgotPassword = new UpdateForgotPasswordDTO
+        {
             Username = _testUser.UserName,
             Password = "newpassword1!",
             ConfirmPassword = "newpassword1!",

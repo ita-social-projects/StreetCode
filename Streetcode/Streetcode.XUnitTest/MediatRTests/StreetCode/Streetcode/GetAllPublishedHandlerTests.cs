@@ -40,23 +40,23 @@ public class GetAllPublishedHandlerTests
     {
         // Arrange
         var testStreetcodes = GetTestStreetcodes(3);
+        GetAllPublishedQuery query = new GetAllPublishedQuery();
 
         _repositoryMock
             .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
                 sc => sc.Status == StreetcodeStatus.Published, null))
             .ReturnsAsync(testStreetcodes);
 
-        SetupRepositoryMock(testStreetcodes);
-        SetupMapperMock();
+        SetupMocks(testStreetcodes);
 
         // Act
-        var result = await _handler.Handle(new GetAllPublishedQuery(), CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(testStreetcodes.Count(), result.Value.Count());
+        Assert.Equal(testStreetcodes.Count, result.Value.Count());
         _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(sc => sc.Status == StreetcodeStatus.Published, null), Times.Once);
-        _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()), Times.Once);
+        _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
     }
 
     [Fact]
@@ -65,17 +65,17 @@ public class GetAllPublishedHandlerTests
         // Arrange
         string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockNoSharedResourceLocalizer[expectedErrorKey];
+        var query = new GetAllPublishedQuery();
 
-        SetupMapperMock();
-        SetupRepositoryMock(null);
+        SetupMocks(null);
 
         // Act
-        var result = await _handler.Handle(new GetAllPublishedQuery(), CancellationToken.None);
+        var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         Assert.False(result.IsSuccess);
         Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(It.IsAny<GetAllPublishedQuery>(), It.IsAny<string>()), Times.Once);
+        _loggerMock.Verify(logger => logger.LogError(query, expectedErrorValue), Times.Once);
     }
 
     private List<StreetcodeContent> GetTestStreetcodes(int count)
@@ -85,8 +85,13 @@ public class GetAllPublishedHandlerTests
             .ToList();
     }
 
-    private void SetupMapperMock()
+    private void SetupMocks(List<StreetcodeContent>? streetcodes)
     {
+        _repositoryMock
+            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
+                sc => sc.Status == StreetcodeStatus.Published, null))
+            .ReturnsAsync(streetcodes!);
+
         _mapperMock
             .Setup(m => m.Map<IEnumerable<StreetcodeShortDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()))
             .Returns((IEnumerable<StreetcodeContent> src) =>
@@ -94,13 +99,5 @@ public class GetAllPublishedHandlerTests
                 {
                     Id = s.Id,
                 }).ToList());
-    }
-
-    private void SetupRepositoryMock(List<StreetcodeContent>? streetcodes)
-    {
-        _repositoryMock
-            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
-                sc => sc.Status == StreetcodeStatus.Published, null))
-            .ReturnsAsync(streetcodes!);
     }
 }

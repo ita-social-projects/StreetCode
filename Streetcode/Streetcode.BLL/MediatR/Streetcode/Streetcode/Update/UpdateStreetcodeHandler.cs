@@ -249,10 +249,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         {
             if (url is null)
             {
-                streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
+                streetcode.TransactionLink = new TransactionLink()
                 {
-                    Url = "",
-                    UrlTitle = "",
+                    Url = string.Empty,
+                    UrlTitle = string.Empty,
                 };
             }
         }

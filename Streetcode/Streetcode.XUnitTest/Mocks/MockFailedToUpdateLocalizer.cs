@@ -12,6 +12,7 @@ public class MockFailedToUpdateLocalizer : BaseMockStringLocalizer<FailedToUpdat
                 0, new List<string>
                 {
                     "FailedToUpdateStatusOfStreetcode",
+                    "FailedToChangeStatusOfStreetcodeToDeleted",
                 }
             },
         };

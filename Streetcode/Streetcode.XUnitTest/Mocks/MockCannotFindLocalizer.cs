@@ -13,6 +13,7 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                 {
                     "CannotFindAnyPropertyWithThisName",
                     "CannotFindStreetcodeById",
+                    "CannotFindRecordWithQrId",
                 }
             },
             {

@@ -189,4 +189,7 @@
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>Розмір картинки не може перевищувати {0} MB</value>
   </data>
+  <data name="InvalidPaginationParameters" xml:space="preserve">
+    <value>Параметри пагінації повинні бути коректними</value>
+  </data>
 </root>

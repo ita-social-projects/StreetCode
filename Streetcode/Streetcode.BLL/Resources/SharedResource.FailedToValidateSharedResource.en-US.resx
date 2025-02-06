@@ -189,4 +189,7 @@
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>The image size can't exceed {0} MB</value>
   </data>
+  <data name="InvalidPaginationParameters" xml:space="preserve">
+    <value>Pagination parameters must be valid</value>
+  </data>
 </root>

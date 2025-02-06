@@ -82,7 +82,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.InRange(responseDto!.Streetcodes.Count(), 1, 2);
     }
 
-    [Fact(Skip = "return status code 0, automapper ex")]
+    [Fact]
     public async Task GetAllStreetcodes_WithIncorrectPagination_ReturnsBadRequest()
     {
         // Arrange
@@ -90,7 +90,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
 
         // Act
         var response = await Client.GetAllAsync(request);
-        var responseDto = CaseIsensitiveJsonDeserializer.Deserialize<GetAllStreetcodesResponseDTO>(response.Content);
 
         // Assert
         Assert.Multiple(
@@ -150,7 +149,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.Equal(sorted, responseDto.Streetcodes.ToList());
     }
 
-    [Fact(Skip = "status code 0, inner exception")]
+    [Fact]
     public async Task GetAllStreetcodes_WithIncorrectSortingProp_ReturnsBadRequest()
     {
         // Arrange
@@ -169,7 +168,8 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetAllStreetcodes_WithFilter_ReturnsFilteredResults()
     {
         // Arrange
-        var request = new GetAllStreetcodesRequestDTO { Filter = "Status:Published" };
+        string testTitle = "Test_Title";
+        var request = new GetAllStreetcodesRequestDTO { Filter = $"Title:{testTitle}" };
 
         // Act
         var response = await Client.GetAllAsync(request);
@@ -179,10 +179,11 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(response.Content);
-        Assert.All(responseDto!.Streetcodes, s => Assert.Equal(StreetcodeStatus.Published, s.Status));
+        Assert.Equal(2, responseDto!.Streetcodes.Count());
+        Assert.All(responseDto!.Streetcodes, s => Assert.Equal(testTitle, s.Title));
     }
 
-    [Fact(Skip = "returns ok, but maybe need bad request")]
+    [Fact]
     public async Task GetAllStreetcodes_WithIncorrectFilter_ReturnsBadRequest()
     {
         // Arrange

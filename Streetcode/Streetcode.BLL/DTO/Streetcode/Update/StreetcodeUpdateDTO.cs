@@ -26,12 +26,12 @@ namespace Streetcode.BLL.DTO.Streetcode.Update
         public IEnumerable<SubtitleUpdateDTO> Subtitles { get; set; } = null!;
         public IEnumerable<StreetcodeFactUpdateDTO> Facts { get; set; }
         public IEnumerable<VideoUpdateDTO>? Videos { get; set; }
-        public IEnumerable<AudioUpdateDTO> Audios { get; set; } = null!;
+        public IEnumerable<AudioUpdateDTO> Audios { get; set; } = new List<AudioUpdateDTO>();
         public IEnumerable<RelatedFigureUpdateDTO> RelatedFigures { get; set; } = null!;
         public IEnumerable<PartnersUpdateDTO> Partners { get; set; } = null!;
         public IEnumerable<StreetcodeTagUpdateDTO> Tags { get; set; } = null!;
-        public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; }
-        public IEnumerable<ImageUpdateDTO> Images { get; set; } = null!;
+        public IEnumerable<StatisticRecordUpdateDTO> StatisticRecords { get; set; } = new List<StatisticRecordUpdateDTO>();
+        public IEnumerable<ImageUpdateDTO> Images { get; set; } = new List<ImageUpdateDTO>();
         public IEnumerable<StreetcodeCategoryContentUpdateDTO> StreetcodeCategoryContents { get; set; }
     }
 }

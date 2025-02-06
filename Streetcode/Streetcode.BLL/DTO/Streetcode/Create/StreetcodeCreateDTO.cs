@@ -17,12 +17,12 @@ namespace Streetcode.BLL.DTO.Streetcode.Create
         public int ViewCount { get; set; }
         public TextCreateDTO? Text { get; set; }
         public int? AudioId { get; set; }
-        public IEnumerable<int> ImagesIds { get; set; } = null!; // one image black and white is required at front-end side, so at least one will be passed
-        public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = null!;
+        public IEnumerable<int> ImagesIds { get; set; } = new List<int>();
+        public IEnumerable<StreetcodeTagDTO> Tags { get; set; } = new List<StreetcodeTagDTO>();
         public IEnumerable<SubtitleCreateDTO> Subtitles { get; set; } = null!; // subtitles are only in one example
         public IEnumerable<StreetcodeFactCreateDTO> Facts { get; set; } = null!;
         public IEnumerable<VideoCreateDTO>? Videos { get; set; } = null!; // video is only one
-        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = null!;
+        public IEnumerable<RelatedFigureShortDTO> RelatedFigures { get; set; } = new List<RelatedFigureShortDTO>();
         public IEnumerable<int> Partners { get; set; } = null!;
         public IEnumerable<CategoryContentCreateDTO> StreetcodeCategoryContents { get; set; } = null!;
         public IEnumerable<StreetcodeCoordinateDTO> Coordinates { get; set; } = null!;

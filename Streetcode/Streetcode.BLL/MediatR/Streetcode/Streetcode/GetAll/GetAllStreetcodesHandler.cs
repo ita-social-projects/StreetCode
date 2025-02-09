@@ -2,14 +2,12 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Realizations.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 
@@ -94,7 +92,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         return Task.FromResult(Result.Ok(response));
     }
 
-    private void FindStreetcodesWithMatchTitle(
+    private static void FindStreetcodesWithMatchTitle(
         ref IQueryable<StreetcodeContent> streetcodes,
         string title)
     {
@@ -105,7 +103,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             .ToString() == title);
     }
 
-    private Result FindFilteredStreetcodes(
+    private static Result FindFilteredStreetcodes(
         ref IQueryable<StreetcodeContent> streetcodes,
         string filter)
     {
@@ -129,7 +127,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         return Result.Ok();
     }
 
-    private Result FindSortedStreetcodes(
+    private static Result FindSortedStreetcodes(
         ref IQueryable<StreetcodeContent> streetcodes,
         string sort)
     {
@@ -138,7 +136,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         var sortColumn = sort.Trim();
         var sortDirection = "asc";
 
-        if (sortColumn.StartsWith("-"))
+        if (sortColumn.StartsWith('-'))
         {
             sortDirection = "desc";
             sortColumn = sortColumn.Substring(1);
@@ -164,7 +162,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         return Result.Ok();
     }
 
-    private void ApplyPagination(
+    private static void ApplyPagination(
         ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)

@@ -285,7 +285,7 @@ public class GetAllStreetcodesHandlerTests
          }.AsQueryable();
 
          // Assert
-         var methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
+         var methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Static);
          var parameters = new object[] { streetcodes, request.Sort };
          methodInfo?.Invoke(handler, parameters);
          var sortedStreetcodes = (IQueryable<StreetcodeContent>)parameters[0];
@@ -315,7 +315,7 @@ public class GetAllStreetcodesHandlerTests
         }.AsQueryable();
 
         // Act
-        MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
+        MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Static);
         var parameters = new object[] { streetcodes, request.Sort };
         var result = methodInfo?.Invoke(handler, parameters);
 
@@ -372,7 +372,7 @@ public class GetAllStreetcodesHandlerTests
         }.AsQueryable();
 
         // Act
-        MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindFilteredStreetcodes", BindingFlags.NonPublic | BindingFlags.Instance);
+        MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindFilteredStreetcodes", BindingFlags.NonPublic | BindingFlags.Static);
         var parameters = new object[] { streetcodes, request.Filter };
         var result = methodInfo?.Invoke(handler, parameters);
 

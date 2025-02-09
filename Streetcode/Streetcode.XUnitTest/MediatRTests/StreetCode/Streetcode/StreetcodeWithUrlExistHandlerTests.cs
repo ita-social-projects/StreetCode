@@ -11,17 +11,14 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode;
 public class StreetcodeWithUrlExistHandlerTests
 {
     private readonly Mock<IRepositoryWrapper> _repositoryMock;
-    private readonly Mock<ILoggerService> _loggerMock;
     private readonly StreetcodeWithUrlExistHandler _handler;
 
     public StreetcodeWithUrlExistHandlerTests()
     {
         _repositoryMock = new Mock<IRepositoryWrapper>();
-        _loggerMock = new Mock<ILoggerService>();
 
         _handler = new StreetcodeWithUrlExistHandler(
-            _repositoryMock.Object,
-            _loggerMock.Object);
+            _repositoryMock.Object);
     }
 
     [Fact]

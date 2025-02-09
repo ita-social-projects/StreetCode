@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
         private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
         private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
         private readonly ICacheService _cacheService;
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UpdateStreetcodeHandler(
             IMapper mapper,
@@ -77,8 +77,6 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
                     await UpdateEntitiesAsync(request.Streetcode.RelatedFigures, _repositoryWrapper.RelatedFigureRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Partners, _repositoryWrapper.PartnerStreetcodeRepository);
                     await UpdateEntitiesAsync(request.Streetcode.Facts, _repositoryWrapper.FactRepository);
-
-                    // await UpdateEntitiesAsync(request.Streetcode.Tags, _repositoryWrapper.StreetcodeTagIndexRepository);
                     await UpdateTags(request.Streetcode.Tags);
                     await UpdateStreetcodeToponymAsync(streetcodeToUpdate, request.Streetcode.Toponyms);
                     await UpdateTimelineItemsAsync(streetcodeToUpdate, request.Streetcode.TimelineItems);
@@ -381,9 +379,9 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             await _repositoryWrapper.SaveChangesAsync();
         }
 
-        private async Task UpdateEntitiesAsync<T, U>(IEnumerable<U>? updates, IRepositoryBase<T> repository)
+        private async Task UpdateEntitiesAsync<T, TU>(IEnumerable<TU>? updates, IRepositoryBase<T> repository)
             where T : class
-            where U : IModelState
+            where TU : IModelState
         {
             if (updates == null)
             {
@@ -420,7 +418,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             _repositoryWrapper.StreetcodeTagIndexRepository.UpdateRange(_mapper.Map<IEnumerable<StreetcodeTagIndex>>(toUpdate));
         }
 
-        private (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)
+        private static (IEnumerable<T> toUpdate, IEnumerable<T> toCreate, IEnumerable<T> toDelete) CategorizeItems<T>(IEnumerable<T> items)
               where T : IModelState
         {
             var toUpdate = new List<T>();

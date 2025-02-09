@@ -70,11 +70,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsError(int id)
         {
             // Arrange
-            var testStreetcodeDTO = new EventStreetcodeDTO();
+            var testStreetcodeDto = new EventStreetcodeDTO();
             var expectedErrorMessage = $"Cannot find any streetcode with corresponding index: {id}";
             SetupLocalizers();
 
-            Setup(null, testStreetcodeDTO);
+            Setup(null, testStreetcodeDto);
 
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -90,10 +90,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // Arrange
-            var testStreetcodeDTO = new EventStreetcodeDTO();
+            var testStreetcodeDto = new EventStreetcodeDTO();
             var testStreetcode = new Model();
 
-            Setup(testStreetcode, testStreetcodeDTO);
+            Setup(testStreetcode, testStreetcodeDto);
 
             var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -104,7 +104,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
         }
 
-        private void Setup(Model? testStreetcode, EventStreetcodeDTO testStreetcodeDTO)
+        private void Setup(Model? testStreetcode, EventStreetcodeDTO testStreetcodeDto)
         {
             _repository
                 .Setup(x => x.StreetcodeRepository
@@ -116,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             _mapper
                 .Setup(x => x.Map<StreetcodeDTO>(It.IsAny<object>()))
-                .Returns(testStreetcodeDTO);
+                .Returns(testStreetcodeDto);
         }
 
         private void SetupLocalizers()

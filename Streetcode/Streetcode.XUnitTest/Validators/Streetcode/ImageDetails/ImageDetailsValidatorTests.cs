@@ -110,6 +110,17 @@ public class ImageDetailsValidatorTests
             .WithErrorMessage(expectedError);
     }
 
+    private static ImageDetailsDto GetImageDetails(int id)
+    {
+        return new ImageDetailsDto()
+        {
+            Id = id,
+            Title = "Title",
+            Alt = "1",
+            ImageId = 5,
+        };
+    }
+
     private void SetupRepositoryWrapper(int id)
     {
         _mockRepositoryWrapper.Setup(x => x.ImageDetailsRepository.GetFirstOrDefaultAsync(
@@ -121,16 +132,5 @@ public class ImageDetailsValidatorTests
             It.IsAny<Expression<Func<Image, bool>>>(),
             It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync(new Image { Id = id });
-    }
-
-    private static ImageDetailsDto GetImageDetails(int id)
-    {
-        return new ImageDetailsDto()
-        {
-            Id = id,
-            Title = "Title",
-            Alt = "1",
-            ImageId = 5,
-        };
     }
 }

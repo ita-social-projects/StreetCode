@@ -31,7 +31,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
-        if (!relatedFigureIds.Any())
+        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);
@@ -43,7 +43,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
-        if (!relatedFigureIds.Any())
+        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);

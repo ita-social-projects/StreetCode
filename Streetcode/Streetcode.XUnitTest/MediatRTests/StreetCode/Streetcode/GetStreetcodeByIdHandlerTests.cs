@@ -35,11 +35,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsSuccess(int id)
         {
             // Arrange
-            var testContentDTO = new EventStreetcodeDTO();
+            var testContentDto = new EventStreetcodeDTO();
             var testContent = new StreetcodeContent();
 
             RepositorySetup(testContent);
-            MapperSetup(testContentDTO);
+            MapperSetup(testContentDto);
 
             var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -55,11 +55,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // arrange
-            var testContentDTO = new EventStreetcodeDTO();
+            var testContentDto = new EventStreetcodeDTO();
             var testContent = new StreetcodeContent();
 
             RepositorySetup(testContent);
-            MapperSetup(testContentDTO);
+            MapperSetup(testContentDto);
 
             var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -111,10 +111,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                .ReturnsAsync(new List<StreetcodeTagIndex>());
         }
 
-        private void MapperSetup(EventStreetcodeDTO? streetcodeDTO)
+        private void MapperSetup(EventStreetcodeDTO? streetcodeDto)
         {
             _mapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<object>()))
-                .Returns(streetcodeDTO);
+                .Returns(streetcodeDto);
         }
     }
 }

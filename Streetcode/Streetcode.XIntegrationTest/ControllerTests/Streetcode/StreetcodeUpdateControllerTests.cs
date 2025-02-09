@@ -60,7 +60,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         [Fact]
         public async Task Update_WithInvalidId_ReturnsBadRequest()
         {
-            StreetcodeUpdateDTO updateStreetCodeDto = new()
+            StreetcodeUpdateDTO updateStreetCodeDto = new ()
             {
                 Id = _testStreetcodeUpdateDto.Id + 1,
                 Teaser = _testStreetcodeUpdateDto.Teaser,

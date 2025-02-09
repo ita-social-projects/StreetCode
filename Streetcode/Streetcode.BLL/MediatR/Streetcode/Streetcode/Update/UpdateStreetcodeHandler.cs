@@ -281,12 +281,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
 
             if (toCreateList is { Count: > 0 })
             {
-                streetcode.AudioId = toCreateList.First().Id;
+                streetcode.AudioId = toCreateList[0].Id;
             }
 
             if (toUpdateList is { Count: > 0 })
             {
-                streetcode.AudioId = toUpdateList.First().Id;
+                streetcode.AudioId = toUpdateList[0].Id;
             }
         }
 

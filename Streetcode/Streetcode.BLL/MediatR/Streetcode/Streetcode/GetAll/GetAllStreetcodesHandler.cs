@@ -50,7 +50,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             var sortedResult = FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
             if (sortedResult.IsFailed)
             {
-                string errorMsg = _stringLocalizerCannotFind[sortedResult.Errors.ElementAt(0).Message].Value;
+                string errorMsg = _stringLocalizerCannotFind[sortedResult.Errors[0].Message].Value;
                 _logger.LogError(query, errorMsg);
                 return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
@@ -61,7 +61,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             var filterResult = FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
             if (filterResult.IsFailed)
             {
-                string errorMsg = _stringLocalizerCannotFind[filterResult.Errors.ElementAt(0).Message].Value;
+                string errorMsg = _stringLocalizerCannotFind[filterResult.Errors[0].Message].Value;
                 _logger.LogError(query, errorMsg);
                 return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }

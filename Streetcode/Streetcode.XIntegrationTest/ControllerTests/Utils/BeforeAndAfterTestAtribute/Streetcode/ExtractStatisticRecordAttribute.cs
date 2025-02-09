@@ -13,13 +13,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class ExtractStatisticRecordAttribute : BeforeAfterTestAttribute
 {
+    public static int QrId { get; private set; }
+
     public static StreetcodeContent TestStreetcode { get; private set; } = null!;
 
     private static StreetcodeCoordinate TestCoordinate { get; set; } = null!;
 
     private static StatisticRecord TestStatisticRecord { get; set; } = null!;
-
-    public static int QrId { get; private set; }
 
     public override void Before(
         MethodInfo methodUnderTest)

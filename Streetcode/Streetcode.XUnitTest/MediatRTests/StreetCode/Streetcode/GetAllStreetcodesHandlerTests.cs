@@ -1,15 +1,14 @@
 using System.Reflection;
 using AutoMapper;
 using FluentResults;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Streetcode.StreetcodeContent;
 
@@ -21,17 +20,17 @@ public class GetAllStreetcodesHandlerTests
     private readonly Mock<IStreetcodeRepository> _streetcodeRepositoryMock;
     private readonly Mock<IMapper> _mapper;
     private readonly Mock<ILoggerService> _logger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-    private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _mockFailedToValidateLocalizer;
+    private readonly MockCannotFindLocalizer _mockCannotFindLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockFailedToValidateLocalizer;
 
     public GetAllStreetcodesHandlerTests()
     {
         _streetcodeRepositoryMock = new Mock<IStreetcodeRepository>();
         _logger = new Mock<ILoggerService>();
-        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockCannotFindLocalizer = new MockCannotFindLocalizer();
         _repositoryWrapperMock = new Mock<IRepositoryWrapper>();
         _mapper = new Mock<IMapper>();
-        _mockFailedToValidateLocalizer = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
+        _mockFailedToValidateLocalizer = new MockFailedToValidateLocalizer();
     }
 
     [Fact]
@@ -256,6 +255,7 @@ public class GetAllStreetcodesHandlerTests
         };
 
         var handler = SetupMockObjectsAndGetHandler(mockStreetcodes);
+        var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindAnyPropertyWithThisName"];
 
         // Act
         var result = await handler.Handle(query, default);
@@ -263,7 +263,7 @@ public class GetAllStreetcodesHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.True(result.IsFailed);
-        Assert.Contains(result.Errors, e => e.Message.Contains("Cannot find any field with this name"));
+        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
     }
 
     [Fact]
@@ -313,6 +313,7 @@ public class GetAllStreetcodesHandlerTests
             new () { Id = 1, Title = "Streetcode 1" },
             new () { Id = 2, Title = "Streetcode 2" },
         }.AsQueryable();
+        var expectedErrorMessage = "CannotFindAnyPropertyWithThisName";
 
         // Act
         MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Static);
@@ -323,7 +324,7 @@ public class GetAllStreetcodesHandlerTests
         Assert.NotNull(result);
         var typedResult = (Result)result;
         Assert.True(typedResult.IsFailed);
-        Assert.Contains(typedResult.Errors, e => e.Message.Contains("CannotFindAnyPropertyWithThisName"));
+        Assert.Contains(expectedErrorMessage, typedResult.Errors.Single().Message);
     }
 
     [Fact]
@@ -484,7 +485,7 @@ public class GetAllStreetcodesHandlerTests
             Page = page,
             Amount = amount,
         };
-
+        var expectedErrorMessage = _mockFailedToValidateLocalizer["InvalidPaginationParameters"];
         var query = new GetAllStreetcodesQuery(request);
         var handler = SetupMockObjectsAndGetHandler();
 
@@ -494,9 +495,8 @@ public class GetAllStreetcodesHandlerTests
         // Assert
         Assert.NotNull(result);
         Assert.True(result.IsFailed);
-        Assert.Contains(result.Errors, e => e.Message.Contains("Invalid pagination parameters"));
+        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
     }
-
 
     private GetAllStreetcodesHandler SetupMockObjectsAndGetHandler(IEnumerable<StreetcodeContent>? mockStreetcodes = null)
     {
@@ -520,17 +520,8 @@ public class GetAllStreetcodesHandlerTests
                     Teaser = s.Teaser!,
                 }).ToList());
 
-
-        _mockLocalizer
-            .Setup(x => x["CannotFindAnyPropertyWithThisName"])
-            .Returns(new LocalizedString("CannotFindAnyPropertyWithThisName", "Cannot find any field with this name"));
-
-        _mockFailedToValidateLocalizer.Setup(x => x["InvalidPaginationParameters"])
-            .Returns(new LocalizedString("InvalidPaginationParameters", "Invalid pagination parameters"));
-
-        var handler = new GetAllStreetcodesHandler(_repositoryWrapperMock.Object, _mapper.Object, _logger.Object, _mockLocalizer.Object, _mockFailedToValidateLocalizer.Object);
+        var handler = new GetAllStreetcodesHandler(_repositoryWrapperMock.Object, _mapper.Object, _logger.Object, _mockCannotFindLocalizer, _mockFailedToValidateLocalizer);
 
         return handler;
     }
 }
-

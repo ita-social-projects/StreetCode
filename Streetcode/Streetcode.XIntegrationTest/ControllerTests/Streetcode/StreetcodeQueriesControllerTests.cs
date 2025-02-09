@@ -261,7 +261,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
 
         Assert.NotNull(streetcodes);
         Assert.NotEmpty(streetcodes);
-        Assert.True(streetcodes.Count() <= pageSize);
+        Assert.True(streetcodes.Count <= pageSize);
     }
 
     [Fact]

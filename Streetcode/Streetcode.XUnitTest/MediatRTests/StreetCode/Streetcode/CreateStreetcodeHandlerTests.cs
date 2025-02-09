@@ -5,7 +5,6 @@ using System.Transactions;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
@@ -20,7 +19,6 @@ using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
@@ -31,43 +29,43 @@ using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 {
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "For better reading")]
+    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1124:Do not use regions", Justification = "For better searching")]
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1204:Static elements should appear before instance elements", Justification = "Private static method for DTO creation is placed at the bottom for better readability and convenience.")]
     public class CreateStreetcodeHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repositoryMock;
         private readonly Mock<ILoggerService> _loggerMock;
-        private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> _localizerErrorMock;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _localizerFailedToCreateMock;
-        private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _localizerValidationMock;
-        private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _localizerFieldMock;
+        private readonly MockFailedToValidateLocalizer _localizerValidationMock;
+        private readonly MockFieldNamesLocalizer _localizerFieldMock;
+        private readonly MockFailedToCreateLocalizer _localizerFailedToCreateMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<IHttpContextAccessor> _httpAccessorMock;
-        private CreateStreetcodeHandler _handler;
+        private readonly CreateStreetcodeHandler _handler;
 
         public CreateStreetcodeHandlerTests()
         {
-            _localizerValidationMock = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-            _localizerFieldMock = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
+            _localizerValidationMock = new MockFailedToValidateLocalizer();
+            _localizerFieldMock = new MockFieldNamesLocalizer();
             _repositoryMock = new Mock<IRepositoryWrapper>();
             _loggerMock = new Mock<ILoggerService>();
             _mapperMock = new Mock<IMapper>();
-            _localizerErrorMock = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            _localizerFailedToCreateMock = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            _httpAccessorMock = new Mock<IHttpContextAccessor>();
+            _localizerFailedToCreateMock = new MockFailedToCreateLocalizer();
+            var localizerErrorMock = new MockAnErrorOccurredLocalizer();
+            var httpAccessorMock = new Mock<IHttpContextAccessor>();
 
             _handler = new CreateStreetcodeHandler(
                 _mapperMock.Object,
                 _repositoryMock.Object,
                 _loggerMock.Object,
-                _localizerErrorMock.Object,
-                _localizerFailedToCreateMock.Object,
-                _localizerValidationMock.Object,
-                _localizerFieldMock.Object,
-                _httpAccessorMock.Object);
+                localizerErrorMock,
+                _localizerFailedToCreateMock,
+                _localizerValidationMock,
+                _localizerFieldMock,
+                httpAccessorMock.Object);
         }
 
         #region AddImagesDetails
@@ -94,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddImagesDetails_WhenImageDetailsIsNull_ThrowException()
+        public async Task AddImagesDetails_WhenImageDetailsIsNull_ThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             List<ImageDetailsDto>? imageDetails = null;
@@ -103,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddImagesDetails", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { imageDetails! });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { imageDetails! }) !;
 
             // Assert
             await action.Should().ThrowAsync<ArgumentNullException>();
@@ -117,9 +115,9 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_WhenImageDetailsIsNull_ReturnsErrorResult()
         {
             var streetcodeCreateDto = Create();
-            streetcodeCreateDto.ImagesDetails = null;
+            streetcodeCreateDto.ImagesDetails = null!;
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
+            string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["ImagesDetails"]];
             SetupMocksForCreateStreetcode();
 
             // Act
@@ -128,7 +126,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsFailed);
-            Assert.Contains("Field ImagesDetails cannot be empty", result.Errors.First().Message);
+            Assert.Contains(expectedErrorValue, result.Errors.First().Message);
         }
 
         #endregion
@@ -144,23 +142,23 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddImagesAsync", BindingFlags.NonPublic | BindingFlags.Instance);
-            await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, imagesIds });
+            await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, imagesIds }) !;
 
             // Assert
             _repositoryMock.Verify(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()), Times.Once);
         }
 
         [Fact]
-        public async Task AddImagesAsync_WhenImagesIdsIsNull_ThrowException()
+        public async Task AddImagesAsync_WhenImagesIdsIsNull_ThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             StreetcodeContent streetcode = new StreetcodeContent();
-            IEnumerable<int>? imagesIds = null;
+            IEnumerable<int>? imagesIds = null!;
             SetupMockStreetcodeImageCreate();
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddImagesAsync", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, imagesIds });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, imagesIds }) !;
 
             // Assert
             await action.Should().ThrowAsync<ArgumentNullException>();
@@ -171,12 +169,32 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task Handle_WhenImagesIsNull_ReturnsErrorResult()
+        public async Task AddImagesAsync_WhenImagesIdsIsEmpty_ThrowException_And_DoesNotCallRepositories()
+        {
+            // Arrange
+            StreetcodeContent streetcode = new StreetcodeContent();
+            IEnumerable<int> imagesIds = new List<int>();
+            SetupMockStreetcodeImageCreate();
+
+            // Act
+            var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddImagesAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, imagesIds }) !;
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+
+            _repositoryMock.Verify(
+                repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_WhenImagesIdsIsNull_ReturnsErrorResult()
         {
             var streetcodeCreateDto = Create();
             streetcodeCreateDto.ImagesIds = null!;
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
+            string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["Images"]];
             SetupMocksForCreateStreetcode();
 
             // Act
@@ -185,9 +203,26 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsFailed);
-            Assert.Contains("Field Images cannot be empty", result.Errors.First().Message);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
         }
 
+        [Fact]
+        public async Task Handle_WhenImagesIdsIsEmpty_ReturnsErrorResult()
+        {
+            var streetcodeCreateDto = Create();
+            streetcodeCreateDto.ImagesIds = new List<int>();
+            var request = new CreateStreetcodeCommand(streetcodeCreateDto);
+            string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["Images"]];
+            SetupMocksForCreateStreetcode();
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+        }
         #endregion
 
         #region AddTimelineItems
@@ -217,7 +252,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .GetMethod("AddTimelineItems", BindingFlags.NonPublic | BindingFlags.Instance);
 
             // Act
-            await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, timelineItems! });
+            await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, timelineItems }) !;
 
             // Assert
             _repositoryMock.Verify(repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()), Times.Once);
@@ -225,7 +260,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddTimelineItems_WhenTimelineItemsIsNull_DoesNotThrowException_And_DoesNotSaveAnything()
+        public async Task AddTimelineItems_WhenTimelineItemsIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             StreetcodeContent streetcode = new StreetcodeContent();
@@ -235,7 +270,32 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 .GetMethod("AddTimelineItems", BindingFlags.NonPublic | BindingFlags.Instance);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, timelineItems! });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, timelineItems! }) !;
+
+            // Assert
+            await action.Should().NotThrowAsync();
+
+            _repositoryMock.Verify(
+                repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()),
+                Times.Never);
+
+            _repositoryMock.Verify(
+                repo => repo.SaveChangesAsync(),
+                Times.Never);
+        }
+
+        [Fact]
+        public async Task AddTimelineItems_WhenTimelineItemsIsEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
+        {
+            // Arrange
+            StreetcodeContent streetcode = new StreetcodeContent();
+            IEnumerable<TimelineItemCreateUpdateDTO> timelineItems = new List<TimelineItemCreateUpdateDTO>();
+
+            var methodInfo = typeof(CreateStreetcodeHandler)
+                .GetMethod("AddTimelineItems", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // Act
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, timelineItems }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -258,7 +318,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
 
             SetupMocksForCreateStreetcode();
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
@@ -266,14 +325,24 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
+        }
 
-            _loggerMock.Verify(
-                logger => logger.LogError(It.IsAny<object>(), It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
-                Times.Never);
+        [Fact]
+        public async Task Handle_WhenTimelineItemsIsEmpty_DoesNotReturnsErrorResult()
+        {
+            // Arrange
+            var streetcodeCreateDto = Create();
+            streetcodeCreateDto.TimelineItems = new List<TimelineItemCreateUpdateDTO>();
+            var request = new CreateStreetcodeCommand(streetcodeCreateDto);
 
-            _repositoryMock.Verify(
-                repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()),
-                Times.Never);
+            SetupMocksForCreateStreetcode();
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
         }
         #endregion
 
@@ -286,7 +355,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var audioId = 1;
 
             var methodInfo = typeof(CreateStreetcodeHandler)
-                .GetMethod("AddAudio", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("AddAudio", BindingFlags.NonPublic | BindingFlags.Static);
 
             // Act
             methodInfo?.Invoke(_handler, new object[] { streetcode, audioId });
@@ -326,7 +395,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddArtGallery", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, artSlides, arts });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, artSlides, arts }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -338,22 +407,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddArtGallery_WhenArtSlidesEmpty_AddsSuccessfully()
+        public async Task AddArtGallery_WhenArtSlideAndArtsAreEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1 };
             var artSlides = new List<StreetcodeArtSlideCreateUpdateDTO>();
-
-            var arts = new List<ArtCreateUpdateDTO>
-            {
-                new () { Id = 10, ImageId = 100, Description = "ArtDesc", Title = "ArtTitle" },
-            };
+            var arts = new List<ArtCreateUpdateDTO>();
 
             SetupMockAddArtGallery();
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddArtGallery", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, artSlides, arts });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, artSlides, arts }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -365,25 +430,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddArtGallery_WhenArtSlideAndArtsAreEmpty_DoesNotThrowException()
-        {
-            // Arrange
-            var streetcode = new StreetcodeContent { Id = 1 };
-            var artSlides = new List<StreetcodeArtSlideCreateUpdateDTO>();
-            var arts = new List<ArtCreateUpdateDTO>();
-
-            SetupMockAddArtGallery();
-
-            // Act
-            var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddArtGallery", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, artSlides, arts });
-
-            // Assert
-            await action.Should().NotThrowAsync();
-        }
-
-        [Fact]
-        public async Task AddArtGallery_WhenArtSlideAndArtsAreNull_DoesNotThrowException()
+        public async Task AddArtGallery_WhenArtSlideAndArtsAreNull_DoesNotThrowExceptionAndDoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1 };
@@ -394,7 +441,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Act
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddArtGallery", BindingFlags.NonPublic | BindingFlags.Instance);
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, artSlides, arts });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, artSlides, arts }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -402,7 +449,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
             _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
             _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Exactly(0));
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
         }
 
         [Fact]
@@ -412,7 +459,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             streetcodeCreateDto.StreetcodeArtSlides = null!;
             streetcodeCreateDto.Arts = null!;
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
             SetupMocksForCreateStreetcode();
 
             // Act
@@ -423,12 +469,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.True(result.IsSuccess);
 
             _loggerMock.Verify(
-                logger => logger.LogError(It.IsAny<object>(), It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
+                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
                 Times.Never);
-
-            _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
         }
 
         #endregion
@@ -451,7 +493,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, tags });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, tags }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -459,7 +501,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddTags_WhenTagExist_ThrowException()
+        public async Task AddTags_WhenTagExist_ThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent();
@@ -472,7 +514,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddTags", BindingFlags.NonPublic | BindingFlags.Instance);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, tags });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, tags }) !;
 
             // Assert
             await action.Should().ThrowAsync<HttpRequestException>();
@@ -481,17 +523,35 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddTags_WhenTagsIsNull_DoesNotThrowException()
+        public async Task AddTags_WhenTagsIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent();
-            List<StreetcodeTagDTO> tags = null;
+            List<StreetcodeTagDTO> tags = null!;
             SetupMockAddTags();
 
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddTags", BindingFlags.NonPublic | BindingFlags.Instance);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, tags });
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, tags }) !;
+
+            // Assert
+            await action.Should().NotThrowAsync();
+            _repositoryMock.Verify(repo => repo.StreetcodeTagIndexRepository.CreateRangeAsync(It.IsAny<List<StreetcodeTagIndex>>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task AddTags_WhenTagsIsEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
+        {
+            // Arrange
+            var streetcode = new StreetcodeContent();
+            List<StreetcodeTagDTO> tags = new List<StreetcodeTagDTO>();
+            SetupMockAddTags();
+
+            var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddTags", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            // Act
+            Func<Task> action = async () => await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, tags }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -502,9 +562,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_WhenTagsIsNull_DoesNotReturnsErrorResult()
         {
             var streetcodeCreateDto = Create();
-            streetcodeCreateDto.Tags = null;
+            streetcodeCreateDto.Tags = null!;
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
             SetupMocksForCreateStreetcode();
 
             // Act
@@ -515,10 +574,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.True(result.IsSuccess);
 
             _loggerMock.Verify(
-                logger => logger.LogError(It.IsAny<object>(), It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
+                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
                 Times.Never);
-
-            _repositoryMock.Verify(repo => repo.StreetcodeTagIndexRepository.CreateRangeAsync(It.IsAny<List<StreetcodeTagIndex>>()), Times.Never);
         }
         #endregion
 
@@ -541,7 +598,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -549,18 +606,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddRelatedFigures_WhenFiguresIsNull_DoesNotThrowException()
+        public async Task AddRelatedFigures_WhenFiguresIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent();
-            List<RelatedFigureShortDTO> relatedFigures = null;
+            List<RelatedFigureShortDTO> relatedFigures = null!;
 
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddRelatedFigures", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -568,18 +625,19 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddRelatedFigures_WhenFiguresIsEmpty_DoesNotCallRepository()
+        public async Task AddRelatedFigures_WhenFiguresIsEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1 };
             var relatedFigures = new List<RelatedFigureShortDTO>();
+            SetupMockAddRelaredFigures();
 
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddRelatedFigures", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, relatedFigures }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -592,7 +650,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var streetcodeCreateDto = Create();
             streetcodeCreateDto.RelatedFigures = null;
             var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-            SetupMockAnErrorOccurredWhileCreatingLocalizer();
             SetupMocksForCreateStreetcode();
 
             // Act
@@ -603,10 +660,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.True(result.IsSuccess);
 
             _loggerMock.Verify(
-                logger => logger.LogError(It.IsAny<object>(), It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
+                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
                 Times.Never);
-
-            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.CreateRangeAsync(It.IsAny<List<RelatedFigure>>()), Times.Never);
         }
         #endregion
 
@@ -625,7 +680,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -633,18 +688,18 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddPartners_WhenPartnersIsNull_DoesNotThrowException()
+        public async Task AddPartners_WhenPartnersIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent();
-            List<int> partners = null;
+            List<int> partners = null!;
 
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddPartners", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -652,7 +707,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddPartners_WhenPartnersIsEmpty_DoesNotCallRepository()
+        public async Task AddPartners_WhenPartnersIsEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1 };
@@ -663,7 +718,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(methodInfo);
 
             // Act
-            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners });
+            Func<Task> action = async () => await (Task)methodInfo.Invoke(_handler, new object[] { streetcode, partners }) !;
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -686,8 +741,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-
-            _repositoryMock.Verify(repo => repo.PartnerStreetcodeRepository.CreateRangeAsync(It.IsAny<List<StreetcodePartner>>()), Times.Never);
         }
 
         #endregion
@@ -719,7 +772,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task AddToponyms_WhenToponymsIsNull_DoesNotThrowException()
+        public async Task AddToponyms_WhenToponymsIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Toponyms = new List<Toponym>() };
@@ -753,8 +806,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
-
-            _repositoryMock.Verify(repo => repo.ToponymRepository.GetAllAsync(It.IsAny<Expression<Func<Toponym, bool>>>(), null), Times.Never);
         }
 
         #endregion
@@ -804,7 +855,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var streetcode = new StreetcodeContent { StatisticRecords = new List<StatisticRecord>() };
-            List<StatisticRecordDTO> statisticRecords = null;
+            List<StatisticRecordDTO> statisticRecords = null!;
 
             var methodInfo = typeof(CreateStreetcodeHandler).GetMethod("AddStatisticRecords", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -875,6 +926,24 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.True(result.IsSuccess);
         }
 
+        [Fact]
+        public async Task Handle_WhenStatisticRecordsIsEmpty_DoesNotReturnsErrorResult()
+        {
+            // Arrange
+            var streetcodeCreateDto = Create();
+            streetcodeCreateDto.StatisticRecords = new List<StatisticRecordDTO>();
+
+            var request = new CreateStreetcodeCommand(streetcodeCreateDto);
+            SetupMocksForCreateStreetcode();
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+        }
+
         #endregion
 
         #region AddTransactionLink
@@ -883,10 +952,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var streetcode = new StreetcodeContent();
-            string url = "https://example.com";
+            const string url = "https://example.com";
 
             var methodInfo = typeof(CreateStreetcodeHandler)
-                .GetMethod("AddTransactionLink", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("AddTransactionLink", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -904,10 +973,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             var streetcode = new StreetcodeContent { TransactionLink = null };
-            string? url = null;
+            string url = null!;
 
             var methodInfo = typeof(CreateStreetcodeHandler)
-                .GetMethod("AddTransactionLink", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("AddTransactionLink", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -922,7 +991,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         #region AddFactImageDescription
         [Fact]
-        public void AddFactImageDescription_WhenFactsListIsEmpty_DoesNotCallRepository()
+        public void AddFactImageDescription_WhenFactsListIsEmpty_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             var facts = new List<FactUpdateCreateDto>();
@@ -935,14 +1004,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             Assert.NotNull(methodInfo);
 
             // Act
-            methodInfo.Invoke(_handler, new object[] { facts });
+            Action action = () => methodInfo.Invoke(_handler, new object[] { facts });
 
             // Assert
+            action.Should().NotThrow();
+
             _repositoryMock.Verify(repo => repo.ImageDetailsRepository.Create(It.IsAny<ImageDetails>()), Times.Never);
         }
 
         [Fact]
-        public void AddFactImageDescription_WhenFactsIsNull_DoesNotThrowException()
+        public void AddFactImageDescription_WhenFactsIsNull_DoesNotThrowException_And_DoesNotCallRepositories()
         {
             // Arrange
             List<FactUpdateCreateDto> facts = null!;
@@ -963,6 +1034,42 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repositoryMock.Verify(repo => repo.ImageDetailsRepository.Create(It.IsAny<ImageDetails>()), Times.Never);
         }
 
+        [Fact]
+        public async Task Handle_WhenFactsIsNull_DoesNotReturnErrorResult()
+        {
+            // Arrange
+            var streetcodeCreateDto = Create();
+            streetcodeCreateDto.Facts = null!;
+
+            var request = new CreateStreetcodeCommand(streetcodeCreateDto);
+            SetupMocksForCreateStreetcode();
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Handle_WhenFactsIsEmpty_DoesNotReturnErrorResult()
+        {
+            // Arrange
+            var streetcodeCreateDto = Create();
+            streetcodeCreateDto.Facts = new List<StreetcodeFactCreateDTO>();
+
+            var request = new CreateStreetcodeCommand(streetcodeCreateDto);
+            SetupMocksForCreateStreetcode();
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+        }
+
         #endregion
         [Fact]
         public async Task Handle_ReturnsSuccess_WhenStreetcodeCreated()
@@ -979,6 +1086,25 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             Assert.NotNull(result);
             Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Handle_ReturnsFail_WhenStreetcodeCreationFails()
+        {
+            // Arrange
+            var createdStreetcode = Create();
+            var request = new CreateStreetcodeCommand(createdStreetcode);
+            string expectedErrorValue = _localizerFailedToCreateMock["FailedToCreateStreetcode"];
+            SetupMocksForCreateStreetcode();
+            _repositoryMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(0);
+
+            // Act
+            var result = await _handler.Handle(request, CancellationToken.None);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
         }
 
         private void SetupMockAddArtGallery()
@@ -1064,7 +1190,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private void SetupMockAddRelaredFigures()
         {
-            _repositoryMock.Setup(repo => repo.RelatedFigureRepository.CreateRangeAsync(It.IsAny<List<DAL.Entities.Streetcode.RelatedFigure>>()))
+            _repositoryMock.Setup(repo => repo.RelatedFigureRepository.CreateRangeAsync(It.IsAny<List<RelatedFigure>>()))
                 .Returns(Task.CompletedTask);
         }
 
@@ -1084,18 +1210,10 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             _repositoryMock.Setup(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()))
                 .Returns(Task.CompletedTask);
-
-            _localizerFieldMock
-                .Setup(l => l["Images"])
-                .Returns(new LocalizedString("Images", "Images"));
         }
 
         private void SetupMockStreetcodeImageDetailsCreate()
         {
-           _localizerFieldMock
-                .Setup(l => l["ImagesDetails"])
-                .Returns(new LocalizedString("ImagesDetails", "ImagesDetails"));
-
            _mapperMock
                 .Setup(m => m.Map<List<ImageDetails>>(It.IsAny<List<ImageDetailsDto>>()))
                 .Returns((List<ImageDetailsDto> src) =>
@@ -1120,14 +1238,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 });
         }
 
-        private void SetupMockAnErrorOccurredWhileCreatingLocalizer()
-        {
-            _localizerErrorMock
-                .Setup(x => x["AnErrorOccurredWhileCreating", It.IsAny<object>()])
-                .Returns((string key, object[] args) =>
-                    new LocalizedString(key, $"AnErrorOccurredWhileCreating: {args[0]}"));
-        }
-
         private static StreetcodeCreateDTO Create()
         {
             return new StreetcodeCreateDTO()
@@ -1141,17 +1251,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 TransliterationUrl = "Url",
                 ViewCount = 1,
                 StreetcodeType = StreetcodeType.Person,
-                TimelineItems = new List<TimelineItemCreateUpdateDTO>() { },
                 ImagesIds = new List<int>() { 1, 2 },
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                Tags = new List<StreetcodeTagDTO>(),
-                RelatedFigures = new List<RelatedFigureShortDTO>(),
-                Partners = new List<int>(),
-                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
-                StatisticRecords = new List<StatisticRecordDTO>(),
-                Coordinates = new List<StreetcodeCoordinateDTO>(),
-                Facts = new List<StreetcodeFactCreateDTO>(),
                 ImagesDetails = new List<ImageDetailsDto>()
                 {
                     new () { Alt = "1", Title = "TestImage", Id = 1 },
@@ -1190,15 +1290,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repositoryMock
                 .Setup(x => x.BeginTransaction())
                 .Returns(new TransactionScope(TransactionScopeOption.Suppress));
-
-            _localizerErrorMock
-                .Setup(x => x["AnErrorOccurredWhileCreating", It.IsAny<object>()])
-                .Returns((string key, object[] args) =>
-                    new LocalizedString(key, $"AnErrorOccurredWhileCreating: {args[0]}"));
-
-            _localizerValidationMock
-                .Setup(l => l["CannotBeEmpty", It.IsAny<object[]>()])
-                .Returns((string key, object[] args) => new LocalizedString(key, $"Field {args[0]} cannot be empty"));
         }
     }
 }

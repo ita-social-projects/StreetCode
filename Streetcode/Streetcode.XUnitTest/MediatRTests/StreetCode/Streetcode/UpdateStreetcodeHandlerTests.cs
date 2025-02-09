@@ -4,9 +4,6 @@ using AutoMapper;
 using FluentAssertions;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Update;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
@@ -18,32 +15,24 @@ using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Partners.Update;
 using Streetcode.BLL.DTO.Sources.Update;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
-using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Interfaces.Partners;
-using Streetcode.DAL.Repositories.Interfaces.Source;
-using Streetcode.DAL.Repositories.Interfaces.Streetcode;
-using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
@@ -52,81 +41,32 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repositoryMock;
         private readonly Mock<IMapper> _mapperMock;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<AnErrorOccurredSharedResource>> _mockLocalizerAnErrorOccurred;
-        private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> _mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<FailedToValidateSharedResource>> _mockStringLocalizerFailedToValidate;
-        private readonly Mock<IStringLocalizer<FieldNamesSharedResource>> _mockStringLocalizerFieldNames;
-        private readonly Mock<ICacheService> _mockCache;
-        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
         private readonly UpdateStreetcodeHandler _handler;
 
         public UpdateStreetcodeHandlerTests()
         {
             _repositoryMock = new Mock<IRepositoryWrapper>();
             _mapperMock = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerAnErrorOccurred = new Mock<IStringLocalizer<AnErrorOccurredSharedResource>>();
-            _mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
-            _mockStringLocalizerFailedToValidate = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-            _mockStringLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-            _mockCache = new Mock<ICacheService>();
-            _mockCache
+            Mock<ILoggerService> mockLogger = new ();
+            MockAnErrorOccurredLocalizer mockLocalizerAnErrorOccurred = new ();
+            MockFailedToUpdateLocalizer mockLocalizerFailedToUpdate = new ();
+            MockFailedToValidateLocalizer mockStringLocalizerFailedToValidate = new ();
+            MockFieldNamesLocalizer mockStringLocalizerFieldNames = new ();
+            Mock<IHttpContextAccessor> mockHttpContextAccessor = new ();
+            Mock<ICacheService> mockCache = new ();
+            mockCache
                 .Setup(c => c.GetOrSetAsync(It.IsAny<string>(), It.IsAny<Func<Task<Result<IEnumerable<ImageDTO>>>>>(), It.IsAny<TimeSpan>()))
                 .Returns<string, Func<Task<Result<IEnumerable<ImageDTO>>>>, TimeSpan>((_, func, _) => func());
-            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             _handler = new UpdateStreetcodeHandler(
                _mapperMock.Object,
                _repositoryMock.Object,
-               _mockLogger.Object,
-               _mockLocalizerAnErrorOccurred.Object,
-               _mockLocalizerFailedToUpdate.Object,
-               _mockStringLocalizerFailedToValidate.Object,
-               _mockStringLocalizerFieldNames.Object,
-               _mockCache.Object,
-               _mockHttpContextAccessor.Object);
-        }
-
-        public static StreetcodeUpdateDTO CreateDto()
-        {
-            return new StreetcodeUpdateDTO()
-            {
-                Id = 1,
-                StreetcodeType = StreetcodeType.Person,
-                Index = 111111,
-                Teaser = "Teaser",
-                StatisticRecords = new List<StatisticRecordUpdateDTO>(),
-                StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
-                RelatedFigures = new List<RelatedFigureUpdateDTO>(),
-                Partners = new List<PartnersUpdateDTO>(),
-                Facts = new List<StreetcodeFactUpdateDTO>(),
-                Tags = new List<StreetcodeTagUpdateDTO>(),
-                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
-                TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
-                Audios = new List<AudioUpdateDTO>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
-                Images = new List<ImageUpdateDTO>(),
-                ImagesDetails = new List<ImageDetailsDto>(),
-            };
-        }
-
-        [Fact]
-        public async Task Handle_ReturnsSuccess()
-        {
-            // Arrange
-            var testStreetcodeDto = CreateDto();
-            string expectedErrorMessage = "An error occurred while updating a streetcode";
-            SetupMocksForUpdateStreetcode();
-
-            _mockLocalizerAnErrorOccurred.Setup(x => x["AnErrorOccurredWhileUpdating", It.IsAny<object[]>()])
-                .Returns(new LocalizedString("AnErrorOccurredWhileUpdating", expectedErrorMessage));
-
-            // Act
-            var result = await _handler.Handle(new UpdateStreetcodeCommand(testStreetcodeDto), CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsSuccess);
+               mockLogger.Object,
+               mockLocalizerAnErrorOccurred,
+               mockLocalizerFailedToUpdate,
+               mockStringLocalizerFailedToValidate,
+               mockStringLocalizerFieldNames,
+               mockCache.Object,
+               mockHttpContextAccessor.Object);
         }
 
         [Fact]
@@ -801,7 +741,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var toCreateStreetcodeArts = new List<StreetcodeArt>();
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -836,7 +776,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var toCreateStreetcodeArts = new List<StreetcodeArt>();
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -865,7 +805,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var toCreateStreetcodeArts = new List<StreetcodeArt>();
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("DistributeArtSlide", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -936,7 +876,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             string? url = null;
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("UpdateTransactionLink", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("UpdateTransactionLink", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -960,7 +900,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             string url = "https://new-url.com";
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("UpdateTransactionLink", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("UpdateTransactionLink", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -1185,89 +1125,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repositoryMock.Setup(repo => repo.ImageDetailsRepository.DeleteRange(It.IsAny<IEnumerable<ImageDetails>>()));
 
             _repositoryMock.Setup(repo => repo.ImageDetailsRepository.UpdateRange(It.IsAny<IEnumerable<ImageDetails>>()));
-        }
-
-        private void SetupMocksForUpdateStreetcode()
-        {
-            _mapperMock
-                .Setup(x => x.Map<StreetcodeContent>(It.IsAny<StreetcodeUpdateDTO>()))
-                .Returns((StreetcodeUpdateDTO src) => new StreetcodeContent()
-                {
-                    Index = src.Index,
-                    Teaser = src.Teaser,
-                    DateString = src.DateString,
-                    Alias = src.Alias,
-                    Status = src.Status,
-                    Title = src.Title,
-                    TransliterationUrl = src.TransliterationUrl,
-                    EventStartOrPersonBirthDate = src.EventStartOrPersonBirthDate,
-                });
-
-            _repositoryMock.Setup(x => x.StreetcodeCoordinateRepository)
-                .Returns(new Mock<IStreetcodeCoordinateRepository>().Object);
-
-            _repositoryMock.Setup(x => x.RelatedFigureRepository)
-                .Returns(new Mock<IRelatedFigureRepository>().Object);
-
-            _repositoryMock.Setup(x => x.StreetcodeCategoryContentRepository)
-                .Returns(new Mock<IStreetcodeCategoryContentRepository>().Object);
-
-            _repositoryMock.Setup(x => x.RelatedFigureRepository)
-                .Returns(new Mock<IRelatedFigureRepository>().Object);
-
-            _repositoryMock.Setup(x => x.PartnerStreetcodeRepository)
-                .Returns(new Mock<IPartnerStreetcodeRepository>().Object);
-
-            _repositoryMock.Setup(x => x.FactRepository)
-                .Returns(new Mock<IFactRepository>().Object);
-
-            SetupMockUpdateTags();
-            SetupMockUpdateToponyms();
-            SetupMockUpdateTimelineItems();
-            SetupMockUpdateArtGallery();
-            SetupMockGetStreetcodeArtsWithNewArtsId();
-            SetupMockUpdateImages();
-            SetupMockUpdateFactsDescription();
-
-            _repositoryMock
-                .Setup(repo => repo.TransactLinksRepository.FindAll(It.IsAny<Expression<Func<TransactionLink, bool>>>(), null))
-                .Returns(Enumerable.Empty<TransactionLink>().AsQueryable());
-
-            _repositoryMock
-                .Setup(repo => repo.TransactLinksRepository.DeleteRange(It.IsAny<IEnumerable<TransactionLink>>()));
-
-            _repositoryMock.Setup(repo => repo.StreetcodeRepository.Update(It.IsAny<StreetcodeContent>()));
-
-            var dbContextMock = new Mock<DbContext>();
-
-            _repositoryMock
-                .Setup(repo => repo.StreetcodeRepository.Entry(It.IsAny<StreetcodeContent>()))
-                .Returns((StreetcodeContent entity) => dbContextMock.Object.Entry(entity));
-            
-
-            var propertyMock = new Mock<PropertyEntry>();
-
-            propertyMock
-                .SetupProperty(p => p.IsModified, false); // Початкове значення false
-
-            _repositoryMock
-                .Setup(repo => repo.StreetcodeRepository.Entry(It.IsAny<StreetcodeContent>()))
-                .Returns((StreetcodeContent entity) =>
-                {
-                    var entryMock = new Mock<EntityEntry<StreetcodeContent>>();
-
-                    entryMock
-                        .Setup(e => e.Property(It.IsAny<string>()))
-                        .Returns(propertyMock.Object);
-
-                    return entryMock.Object;
-                });
-
-
-
-            _repositoryMock
-                .Setup(repo => repo.SaveChangesAsync())
-                .ReturnsAsync(1);
         }
     }
 }

@@ -12,6 +12,7 @@ public class MockFailedToDeleteLocalizer : BaseMockStringLocalizer<FailedToDelet
                 0, new List<string>
                 {
                     "FailedToDeleteStreetcode",
+                    "FailedToDeleteRelation",
                 }
             },
         };

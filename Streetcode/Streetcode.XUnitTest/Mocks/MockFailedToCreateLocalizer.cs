@@ -12,6 +12,8 @@ public class MockFailedToCreateLocalizer : BaseMockStringLocalizer<FailedToCreat
                 0, new List<string>
                 {
                     "FailedToCreateStreetcode",
+                    "TheStreetcodesAreAlreadyLinked",
+                    "FailedToCreateRelation",
                 }
             },
         };

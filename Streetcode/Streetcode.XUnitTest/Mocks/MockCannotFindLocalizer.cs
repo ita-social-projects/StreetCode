@@ -22,6 +22,12 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                     "CannotFindAnyStreetcodeWithCorrespondingId",
                 }
             },
+            {
+                2, new List<string>()
+                {
+                    "CannotFindRelationBetweenStreetcodesWithCorrespondingIds",
+                }
+            },
         };
     }
 }

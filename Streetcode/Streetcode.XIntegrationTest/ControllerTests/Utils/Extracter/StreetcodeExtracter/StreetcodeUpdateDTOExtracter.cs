@@ -100,7 +100,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
                 StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
                 StatisticRecords = new List<StatisticRecordUpdateDTO>(),
                 StreetcodeCategoryContents = new List<StreetcodeCategoryContentUpdateDTO>(),
-                ARBlockUrl = "https://streetcode/1"
+                ArBlockUrl = "https://streetcode/1",
             };
         }
     }

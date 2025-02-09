@@ -39,7 +39,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 DateString = "20 травня 2023",
                 Alias = "TestAlias",
                 TransliterationUrl = Guid.NewGuid().ToString(),
-                ARBlockURL = "test-arblock-url",
+                ArBlockUrl = "test-arblock-url",
                 StreetcodeType = StreetcodeType.Event,
                 Status = StreetcodeStatus.Published,
                 EventStartOrPersonBirthDate = DateTime.Now,

@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -10,7 +9,6 @@ using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Timeline.Update;
@@ -38,7 +36,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
     private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
     private readonly IStringLocalizer<FieldNamesSharedResource> _stringLocalizerFieldNames;
-    private IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public CreateStreetcodeHandler(
         IMapper mapper,
@@ -69,8 +67,8 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
                 _mapper.Map(request.Streetcode, streetcode);
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
-                streetcode.UserId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
-                _repositoryWrapper.StreetcodeRepository.Create(streetcode);
+                streetcode.UserId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor) !;
+                await _repositoryWrapper.StreetcodeRepository.CreateAsync(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
                 await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
@@ -81,7 +79,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await AddPartners(streetcode, request.Streetcode.Partners);
                 await AddToponyms(streetcode, request.Streetcode.Toponyms);
                 AddStatisticRecords(streetcode, request.Streetcode.StatisticRecords);
-                AddTransactionLink(streetcode, request.Streetcode.ARBlockURL);
+                AddTransactionLink(streetcode, request.Streetcode.ArBlockUrl);
 
                 await _repositoryWrapper.SaveChangesAsync();
                 await AddFactImageDescription(request.Streetcode.Facts);
@@ -122,41 +120,51 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
     private async Task AddImagesAsync(StreetcodeContent streetcode, IEnumerable<int> imagesIds)
     {
-        if (imagesIds.IsNullOrEmpty())
+        if (imagesIds == null)
         {
             throw new ArgumentNullException(nameof(imagesIds), _stringLocalizerFailedToValidate["CannotBeEmpty", _stringLocalizerFieldNames["Images"]]);
         }
 
-        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(imagesIds.Select(imageId => new StreetcodeImage()
+        var imagesList = imagesIds.ToList();
+
+        if (imagesList.Count == 0)
         {
-            ImageId = imageId,
-            StreetcodeId = streetcode.Id,
-        }));
+            throw new ArgumentException(_stringLocalizerFailedToValidate["CannotBeEmpty", _stringLocalizerFieldNames["Images"]], nameof(imagesIds));
+        }
+
+        var streetcodeImages = imagesList
+            .Select(imageId => new StreetcodeImage()
+            {
+                ImageId = imageId,
+                StreetcodeId = streetcode.Id,
+            })
+            .ToList();
+
+        await _repositoryWrapper.StreetcodeImageRepository.CreateRangeAsync(streetcodeImages);
     }
 
-    private Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto> facts)
+    private Task AddFactImageDescription(IEnumerable<FactUpdateCreateDto>? facts)
     {
-        if (facts.IsNullOrEmpty())
+        var factsList = facts?.ToList();
+
+        if (factsList is null or { Count: 0 })
         {
             return Task.CompletedTask;
         }
 
-        foreach (FactUpdateCreateDto fact in facts)
+        foreach (var fact in factsList.Where(fact => !string.IsNullOrEmpty(fact.ImageDescription)))
         {
-            if (fact.ImageDescription != null)
+            _repositoryWrapper.ImageDetailsRepository.Create(new ImageDetails()
             {
-                _repositoryWrapper.ImageDetailsRepository.Create(new ImageDetails()
-                {
-                    Alt = fact.ImageDescription,
-                    ImageId = fact.ImageId
-                });
-            }
+                Alt = fact.ImageDescription,
+                ImageId = fact.ImageId
+            });
         }
 
         return Task.CompletedTask;
     }
 
-    private void AddTransactionLink(StreetcodeContent streetcode, string? url)
+    private static void AddTransactionLink(StreetcodeContent streetcode, string? url)
     {
         if (url != null)
         {
@@ -168,16 +176,18 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         }
     }
 
-    private void AddStatisticRecords(StreetcodeContent streetcode, IEnumerable<StatisticRecordDTO> statisticRecords)
+    private void AddStatisticRecords(StreetcodeContent streetcode, IEnumerable<StatisticRecordDTO>? statisticRecords)
     {
-        if (statisticRecords.IsNullOrEmpty())
+        var statisticRecordsList = statisticRecords?.ToList();
+
+        if (statisticRecordsList is null or { Count: 0 })
         {
             return;
         }
 
         var statisticRecordsToCreate = new List<StatisticRecord>();
 
-        foreach (var statisticRecord in statisticRecords)
+        foreach (var statisticRecord in statisticRecordsList)
         {
             var newStatistic = _mapper.Map<StatisticRecord>(statisticRecord);
             var streetcodeCoordinate = streetcode.Coordinates.FirstOrDefault(x =>
@@ -191,19 +201,20 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.StatisticRecords.AddRange(statisticRecordsToCreate);
     }
 
-    private void AddAudio(StreetcodeContent streetcode, int? audioId)
+    private static void AddAudio(StreetcodeContent streetcode, int? audioId)
     {
         streetcode.AudioId = audioId;
     }
 
-    private async Task AddTags(StreetcodeContent streetcode, IEnumerable<StreetcodeTagDTO> tags)
+    private async Task AddTags(StreetcodeContent streetcode, IEnumerable<StreetcodeTagDTO>? tags)
     {
-        if (tags.IsNullOrEmpty())
+        var tagsList = tags?.ToList();
+
+        if (tagsList is null or { Count: 0 })
         {
             return;
         }
 
-        var tagsList = tags.ToList();
         var indexedTags = new List<StreetcodeTagIndex>();
 
         for (int i = 0; i < tagsList.Count; i++)
@@ -235,14 +246,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.StreetcodeTagIndexRepository.CreateRangeAsync(indexedTags);
     }
 
-    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<RelatedFigureShortDTO> relatedFigures)
+    private async Task AddRelatedFigures(StreetcodeContent streetcode, IEnumerable<RelatedFigureShortDTO>? relatedFigures)
     {
-        if (relatedFigures.IsNullOrEmpty())
+        var relatedFiguresList = relatedFigures?.ToList();
+
+        if (relatedFiguresList is null or { Count: 0 })
         {
             return;
         }
 
-        var relatedFiguresToCreate = relatedFigures
+        var relatedFiguresToCreate = relatedFiguresList
             .Select(relatedFigure => new DAL.Entities.Streetcode.RelatedFigure
             {
                 ObserverId = streetcode.Id,
@@ -253,18 +266,23 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.RelatedFigureRepository.CreateRangeAsync(relatedFiguresToCreate);
     }
 
-    private async Task AddArtGallery(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO> artSlides, IEnumerable<ArtCreateUpdateDTO> arts)
+    private async Task AddArtGallery(StreetcodeContent streetcode, IEnumerable<StreetcodeArtSlideCreateUpdateDTO>? artSlides, IEnumerable<ArtCreateUpdateDTO>? arts)
     {
-        if(artSlides.IsNullOrEmpty() || arts.IsNullOrEmpty())
+        var artSlidesList = artSlides?.ToList() ?? new List<StreetcodeArtSlideCreateUpdateDTO>();
+        var artsList = arts?.ToList() ?? new List<ArtCreateUpdateDTO>();
+
+        if (artSlidesList.Count == 0 && artsList.Count == 0)
         {
             return;
         }
 
-        var artSlidesList = artSlides.ToList();
+        var usedArtIds = new HashSet<int>(artSlidesList
+            .SelectMany(slide => slide.StreetcodeArts)
+            .Select(streetcodeArt => streetcodeArt.ArtId));
 
-        var usedArtIds = new HashSet<int>(artSlidesList.SelectMany(slide => slide.StreetcodeArts).Select(streetcodeArt => streetcodeArt.ArtId));
-
-        var filteredArts = arts.Where(art => usedArtIds.Contains(art.Id)).ToList();
+        var filteredArts = artsList
+            .Where(art => usedArtIds.Contains(art.Id))
+            .ToList();
 
         var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
         newArtSlides.ForEach(artSlide => artSlide.StreetcodeId = streetcode.Id);
@@ -278,8 +296,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.ArtRepository.CreateRangeAsync(newArts);
         await _repositoryWrapper.SaveChangesAsync();
 
-        var artIdMap = filteredArts.Zip(newArts, (placeholderArt, newArt) => new { PlaceholderId = placeholderArt.Id, RealId = newArt.Id })
-                                   .ToDictionary(x => x.PlaceholderId, x => x.RealId);
+        var artIdMap = filteredArts
+            .Zip(newArts, (placeholderArt, newArt) => new { PlaceholderId = placeholderArt.Id, RealId = newArt.Id })
+            .ToDictionary(x => x.PlaceholderId, x => x.RealId);
 
         var newStreetcodeArts = new List<StreetcodeArt>();
 
@@ -308,14 +327,15 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.SaveChangesAsync();
     }
 
-    private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO> timelineItems)
+    private async Task AddTimelineItems(StreetcodeContent streetcode, IEnumerable<TimelineItemCreateUpdateDTO>? timelineItems)
     {
-        if (timelineItems.IsNullOrEmpty())
+        var timelineItemCreateUpdateDtos = timelineItems?.ToList();
+
+        if (timelineItemCreateUpdateDtos is null or { Count: 0 })
         {
             return;
         }
 
-        var timelineItemCreateUpdateDtos = timelineItems.ToList();
         var newContexts = timelineItemCreateUpdateDtos.SelectMany(x => x.HistoricalContexts).Where(c => c.Id == 0).DistinctBy(x => x.Title).ToList();
         var newContextsDb = _mapper.Map<List<HistoricalContext>>(newContexts);
         await _repositoryWrapper.HistoricalContextRepository.CreateRangeAsync(newContextsDb);
@@ -340,14 +360,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         streetcode.TimelineItems.AddRange(newTimelines);
     }
 
-    private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<int> partners)
+    private async Task AddPartners(StreetcodeContent streetcode, IEnumerable<int>? partners)
     {
-        if (partners.IsNullOrEmpty())
+        var partnersList = partners?.ToList();
+
+        if (partnersList is null or { Count: 0 })
         {
             return;
         }
 
-        var partnersToCreate = partners.Select(partnerId => new StreetcodePartner
+        var partnersToCreate = partnersList.Select(partnerId => new StreetcodePartner
         {
             StreetcodeId = streetcode.Id,
             PartnerId = partnerId
@@ -356,14 +378,16 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
         await _repositoryWrapper.PartnerStreetcodeRepository.CreateRangeAsync(partnersToCreate);
     }
 
-    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymCreateUpdateDTO> toponyms)
+    private async Task AddToponyms(StreetcodeContent streetcode, IEnumerable<StreetcodeToponymCreateUpdateDTO>? toponyms)
     {
-        if (toponyms.IsNullOrEmpty())
+        var toponymList = toponyms?.ToList();
+
+        if (toponymList is null or { Count: 0 })
         {
             return;
         }
 
-        var toponymsName = toponyms.Select(x => x.StreetName);
+        var toponymsName = toponymList.Select(x => x.StreetName);
         streetcode.Toponyms.AddRange(await _repositoryWrapper.ToponymRepository.GetAllAsync(x => toponymsName.Contains(x.StreetName)));
     }
 }

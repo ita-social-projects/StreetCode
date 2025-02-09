@@ -17,14 +17,12 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetRelatedFiguresByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetRelatedFiguresByStreetcodeIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
@@ -33,7 +31,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
-        if (!relatedFigureIds.Any())
+        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);
@@ -45,12 +43,11 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
-        if (!relatedFigures.Any())
+        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyRelatedFiguresByStreetcodeId", request.StreetcodeId].Value;
-            _logger.LogError(request, errorMsg);
-
-            return Result.Fail(new Error(errorMsg));
+            string message = "Returning empty enumerable of related figures";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
         }
 
         foreach(StreetcodeContent streetcode in relatedFigures)

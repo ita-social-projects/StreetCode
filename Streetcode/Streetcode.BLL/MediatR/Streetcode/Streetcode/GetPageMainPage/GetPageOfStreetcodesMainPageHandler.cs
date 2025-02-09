@@ -34,7 +34,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
                 request.page,
                 request.pageSize,
-                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
+                predicate: sc => sc.Status == StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails!),
                 descendingSortKeySelector: sc => sc.CreatedAt)
                 .Entities.ToList();
@@ -57,15 +57,13 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
 
         private static List<StreetcodeContent> ShuffleStreetcodes(IEnumerable<StreetcodeContent> streetcodes)
         {
-            using (var rng = RandomNumberGenerator.Create())
+            using var rng = RandomNumberGenerator.Create();
+            return streetcodes.OrderBy(sc =>
             {
-                return streetcodes.OrderBy(sc =>
-                {
-                    byte[] random = new byte[4];
-                    rng.GetBytes(random);
-                    return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
-                }).ToList();
-            }
+                byte[] random = new byte[4];
+                rng.GetBytes(random);
+                return BitConverter.ToInt32(random, 0) & 0x7FFFFFFF;
+            }).ToList();
         }
     }
 }

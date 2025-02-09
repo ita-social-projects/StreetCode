@@ -44,15 +44,15 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
                                                 t => t.StreetcodeId == streetcode.Id,
                                                 include: q => q.Include(ti => ti.Tag!));
 
-            var streetcodeDTO = _mapper.Map<StreetcodeDTO>(streetcode);
-            streetcodeDTO.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
+            var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
+            streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
 
-            if(streetcodeDTO.Tags is not null)
+            if(streetcodeDto.Tags is not null)
             {
-                streetcodeDTO.Tags = streetcodeDTO.Tags.OrderBy(tag => tag.Index);
+                streetcodeDto.Tags = streetcodeDto.Tags.OrderBy(tag => tag.Index);
             }
 
-            return Result.Ok(streetcodeDTO);
+            return Result.Ok(streetcodeDto);
         }
     }
 }

@@ -8,25 +8,25 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Subtitles;
 
 public class SubtitlesValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly BaseSubtitleValidator validator;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly BaseSubtitleValidator _validator;
 
     public SubtitlesValidatorTests()
     {
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.validator = new BaseSubtitleValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _validator = new BaseSubtitleValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenSubtitleIsValid()
     {
        // Arrange
-       var subtitle = this.GetValidSubtitle();
+       var subtitle = GetValidSubtitle();
 
        // Act
-       var result = this.validator.Validate(subtitle);
+       var result = _validator.Validate(subtitle);
 
        // Assert
        Assert.True(result.IsValid);
@@ -36,19 +36,19 @@ public class SubtitlesValidatorTests
     public void ShouldReturnError_WhenSubtitleLengthIsMoreThan255()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["SubtitleText"], BaseSubtitleValidator.SubtitleMaxLength];
-        var subtitle = this.GetValidSubtitle();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["SubtitleText"], BaseSubtitleValidator.SubtitleMaxLength];
+        var subtitle = GetValidSubtitle();
         subtitle.SubtitleText = new string('s', BaseSubtitleValidator.SubtitleMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(subtitle);
+        var result = _validator.TestValidate(subtitle);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.SubtitleText)
             .WithErrorMessage(expectedError);
     }
 
-    private SubtitleCreateUpdateDTO GetValidSubtitle()
+    private static SubtitleCreateUpdateDTO GetValidSubtitle()
     {
         return new SubtitleCreateDTO()
         {

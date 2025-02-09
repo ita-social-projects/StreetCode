@@ -42,16 +42,16 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var streetcodeShortDTO = _mapper.Map<StreetcodeShortDTO>(streetcode);
+            var streetcodeShortDto = _mapper.Map<StreetcodeShortDTO>(streetcode);
 
-            if(streetcodeShortDTO == null)
+            if(streetcodeShortDto == null)
             {
                 string errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(streetcodeShortDTO);
+            return Result.Ok(streetcodeShortDto);
         }
     }
 }

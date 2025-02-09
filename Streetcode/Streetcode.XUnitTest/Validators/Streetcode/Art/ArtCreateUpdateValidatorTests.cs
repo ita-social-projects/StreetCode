@@ -9,25 +9,25 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.Art;
 
 public class ArtCreateUpdateValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly ArtCreateUpdateDTOValidator validator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly ArtCreateUpdateDTOValidator _validator;
 
     public ArtCreateUpdateValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.validator = new ArtCreateUpdateDTOValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _validator = new ArtCreateUpdateDTOValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenAllFieldsAreValid()
     {
         // Arrange
-        var art = this.GetValidArt();
+        var art = GetValidArt();
 
         // Act
-        var result = this.validator.Validate(art);
+        var result = _validator.Validate(art);
 
         // Assert
         Assert.True(result.IsValid);
@@ -37,12 +37,12 @@ public class ArtCreateUpdateValidatorTests
     public void ShouldReturnError_WhenTitleLengthIsMoreThan150()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtTitle"], ArtCreateUpdateDTOValidator.MaxTitleLength];
-        var art = this.GetValidArt();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["ArtTitle"], ArtCreateUpdateDTOValidator.MaxTitleLength];
+        var art = GetValidArt();
         art.Title = new string('*', ArtCreateUpdateDTOValidator.MaxTitleLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(art);
+        var result = _validator.TestValidate(art);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
@@ -53,12 +53,12 @@ public class ArtCreateUpdateValidatorTests
     public void ShouldReturnError_WhenTitleDescriptionIsMoreThan150()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["ArtDescription"], ArtCreateUpdateDTOValidator.MaxDescriptionLength];
-        var art = this.GetValidArt();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["ArtDescription"], ArtCreateUpdateDTOValidator.MaxDescriptionLength];
+        var art = GetValidArt();
         art.Description = new string('*', ArtCreateUpdateDTOValidator.MaxDescriptionLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(art);
+        var result = _validator.TestValidate(art);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Description)
@@ -69,18 +69,19 @@ public class ArtCreateUpdateValidatorTests
     public void ShouldReturnError_WhenModelStateIsInvalid()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["ModelState"]];
-        var art = this.GetValidArt();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["ModelState"]];
+        var art = GetValidArt();
         art.ModelState = (ModelState)50;
 
         // Act
-        var result = this.validator.TestValidate(art);
+        var result = _validator.TestValidate(art);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ModelState)
             .WithErrorMessage(expectedError);
     }
-    private ArtCreateUpdateDTO GetValidArt()
+
+    private static ArtCreateUpdateDTO GetValidArt()
     {
         return new ArtCreateUpdateDTO()
         {

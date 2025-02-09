@@ -25,11 +25,11 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId
             var statisticRecord = await _repository.StatisticRecordRepository
                 .GetFirstOrDefaultAsync(
                 predicate: (sr) => sr.QrId == request.qrId,
-                include: (sr) => sr.Include((sr) => sr.StreetcodeCoordinate));
+                include: (sr) => sr.Include((record) => record.StreetcodeCoordinate));
 
             if (statisticRecord == null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
+                var errorMsg = _stringLocalizerCannotFind["CannotFindRecordWithQrId"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

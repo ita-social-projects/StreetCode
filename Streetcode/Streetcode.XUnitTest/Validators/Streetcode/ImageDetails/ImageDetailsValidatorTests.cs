@@ -123,7 +123,7 @@ public class ImageDetailsValidatorTests
             .ReturnsAsync(new Image { Id = id });
     }
 
-    private ImageDetailsDto GetImageDetails(int id)
+    private static ImageDetailsDto GetImageDetails(int id)
     {
         return new ImageDetailsDto()
         {

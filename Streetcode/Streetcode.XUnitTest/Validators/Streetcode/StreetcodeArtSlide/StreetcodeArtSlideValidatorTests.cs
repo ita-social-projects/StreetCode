@@ -66,7 +66,7 @@ public class StreetcodeArtSlideValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private StreetcodeArtSlideCreateUpdateDTO GetArtSlideDto()
+    private static StreetcodeArtSlideCreateUpdateDTO GetArtSlideDto()
     {
         return new StreetcodeArtSlideCreateUpdateDTO()
         {

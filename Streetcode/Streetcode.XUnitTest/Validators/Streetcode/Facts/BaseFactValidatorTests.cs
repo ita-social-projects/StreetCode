@@ -112,7 +112,7 @@ public class BaseFactValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private FactUpdateCreateDto GetValidFactDto()
+    private static FactUpdateCreateDto GetValidFactDto()
     {
         return new StreetcodeFactCreateDTO()
         {

@@ -86,6 +86,13 @@ public class GetStreetcodesCountHandlerTests
         _loggerMock.Verify(logger => logger.LogError(It.IsAny<GetStreetcodesCountQuery>(), It.IsAny<string>()), Times.Once);
     }
 
+    private static List<StreetcodeContent> GetTestStreetcodes(int count, StreetcodeStatus status = StreetcodeStatus.Published)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => new StreetcodeContent { Id = i, Status = status })
+            .ToList();
+    }
+
     private void SetupRepositoryMock(List<StreetcodeContent> streetcodes, bool onlyPublished = false)
     {
         if (onlyPublished)
@@ -101,12 +108,5 @@ public class GetStreetcodesCountHandlerTests
                 .Setup(repo => repo.StreetcodeRepository.GetAllAsync(null, null))
                 .ReturnsAsync(streetcodes);
         }
-    }
-
-    private List<StreetcodeContent> GetTestStreetcodes(int count, StreetcodeStatus status = StreetcodeStatus.Published)
-    {
-        return Enumerable.Range(1, count)
-            .Select(i => new StreetcodeContent { Id = i, Status = status })
-            .ToList();
     }
 }

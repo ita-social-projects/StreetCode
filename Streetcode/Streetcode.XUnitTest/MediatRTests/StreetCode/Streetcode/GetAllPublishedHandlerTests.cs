@@ -78,7 +78,7 @@ public class GetAllPublishedHandlerTests
         _loggerMock.Verify(logger => logger.LogError(query, expectedErrorValue), Times.Once);
     }
 
-    private List<StreetcodeContent> GetTestStreetcodes(int count)
+    private static List<StreetcodeContent> GetTestStreetcodes(int count)
     {
         return Enumerable.Range(1, count)
             .Select(i => new StreetcodeContent { Id = i, Status = StreetcodeStatus.Published })

@@ -94,16 +94,7 @@ public class GetRelatedFiguresByTagIdHandlerTests
         });
     }
 
-    private void SetupMocksForStreetcodes(List<StreetcodeContent> streetcodes)
-    {
-        _repositoryMock
-            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
-                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
-            .ReturnsAsync(streetcodes);
-    }
-
-    private List<StreetcodeContent> GetTestStreetcodes(int count, int tagId)
+    private static List<StreetcodeContent> GetTestStreetcodes(int count, int tagId)
     {
         return Enumerable.Range(1, count).Select(i => new StreetcodeContent
         {
@@ -115,5 +106,14 @@ public class GetRelatedFiguresByTagIdHandlerTests
                 new () { ImageDetails = new ImageDetails { Alt = ((int)ImageAssigment.Blackandwhite).ToString() } },
             },
         }).ToList();
+    }
+
+    private void SetupMocksForStreetcodes(List<StreetcodeContent> streetcodes)
+    {
+        _repositoryMock
+            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
+            .ReturnsAsync(streetcodes);
     }
 }

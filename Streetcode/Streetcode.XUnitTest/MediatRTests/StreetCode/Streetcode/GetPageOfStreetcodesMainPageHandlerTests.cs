@@ -96,7 +96,7 @@ public class GetPageOfStreetcodesMainPageHandlerTests
         Assert.NotEqual(result1.Value, result2.Value);
     }
 
-    private List<StreetcodeContent> GetTestStreetcodes(int count)
+    private static List<StreetcodeContent> GetTestStreetcodes(int count)
     {
         return Enumerable.Range(1, count).Select(i => new StreetcodeContent
         {

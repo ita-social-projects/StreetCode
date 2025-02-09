@@ -127,7 +127,7 @@ public class GetAllStreetcodesCatalogHandlerTests
         }
     }
 
-    private List<StreetcodeContent> GetTestStreetcodes(int count)
+    private static List<StreetcodeContent> GetTestStreetcodes(int count)
     {
         var streetcodes = new List<StreetcodeContent>();
         for (int i = 1; i <= count; i++)

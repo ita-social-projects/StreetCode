@@ -470,7 +470,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             };
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("UpdateAudio", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("UpdateAudio", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 
@@ -492,7 +492,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             };
 
             var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("UpdateAudio", BindingFlags.NonPublic | BindingFlags.Instance);
+                .GetMethod("UpdateAudio", BindingFlags.NonPublic | BindingFlags.Static);
 
             Assert.NotNull(methodInfo);
 

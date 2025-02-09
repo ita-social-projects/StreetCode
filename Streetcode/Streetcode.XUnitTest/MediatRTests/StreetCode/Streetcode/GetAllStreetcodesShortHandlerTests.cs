@@ -69,6 +69,13 @@ public class GetAllStreetcodesShortHandlerTests
         _loggerMock.Verify(logger => logger.LogError(query, It.IsAny<string>()), Times.Once);
     }
 
+    private static List<StreetcodeContent> GetTestStreetcodes(int count)
+    {
+        return Enumerable.Range(1, count)
+            .Select(i => new StreetcodeContent { Id = i })
+            .ToList();
+    }
+
     private void SetupRepositoryMock(List<StreetcodeContent>? streetcodes)
     {
         _repositoryMock
@@ -82,12 +89,5 @@ public class GetAllStreetcodesShortHandlerTests
                 {
                     Id = s.Id,
                 }).ToList());
-    }
-
-    private List<StreetcodeContent> GetTestStreetcodes(int count)
-    {
-        return Enumerable.Range(1, count)
-            .Select(i => new StreetcodeContent { Id = i })
-            .ToList();
     }
 }

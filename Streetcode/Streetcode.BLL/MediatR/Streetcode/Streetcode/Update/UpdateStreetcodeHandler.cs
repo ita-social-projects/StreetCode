@@ -267,7 +267,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Update
             }
         }
 
-        private void UpdateAudio(IEnumerable<AudioUpdateDTO>? audios, StreetcodeContent streetcode)
+        private static void UpdateAudio(IEnumerable<AudioUpdateDTO>? audios, StreetcodeContent streetcode)
         {
             if (audios is null)
             {

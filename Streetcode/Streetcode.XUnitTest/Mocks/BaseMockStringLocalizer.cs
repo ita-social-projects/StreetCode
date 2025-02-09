@@ -13,8 +13,6 @@ public abstract class BaseMockStringLocalizer<TResource> : IStringLocalizer<TRes
         _groupedErrors = DefineGroupedErrors();
     }
 
-    protected abstract Dictionary<int, List<string>> DefineGroupedErrors();
-
     public LocalizedString this[string name]
     {
         get
@@ -41,6 +39,8 @@ public abstract class BaseMockStringLocalizer<TResource> : IStringLocalizer<TRes
             throw new ArgumentException($"Cannot find error message '{name}' that accepts {argumentsCount} arguments");
         }
     }
+
+    protected abstract Dictionary<int, List<string>> DefineGroupedErrors();
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
     {

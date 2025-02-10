@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Streetcode.BLL.DTO.Event
+﻿namespace Streetcode.BLL.DTO.Event
 {
     public class GetAllEventsResponseDTO
     {
         public int TotalAmount { get; set; }
-        public IEnumerable<EventDTO> Events { get; set; } = new List<EventDTO>();
+        public IEnumerable<object> Events { get; set; } = new List<object>();
     }
 }

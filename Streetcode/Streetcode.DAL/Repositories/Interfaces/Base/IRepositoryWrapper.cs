@@ -57,6 +57,7 @@ public interface IRepositoryWrapper
     IStreetcodeImageRepository StreetcodeImageRepository { get; }
     IJobRepository JobRepository { get; }
     IEventRepository EventRepository { get; }
+    IEventStreetcodesRepository EventStreetcodesRepository { get; }
     public int SaveChanges();
 
     public Task<int> SaveChangesAsync();

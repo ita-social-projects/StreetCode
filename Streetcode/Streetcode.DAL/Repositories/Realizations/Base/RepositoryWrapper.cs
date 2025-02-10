@@ -116,6 +116,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IEventRepository? _eventRepository;
 
+    private IEventStreetcodesRepository? _eventStreetcodesRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -601,6 +603,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _eventRepository;
+        }
+    }
+
+    public IEventStreetcodesRepository EventStreetcodesRepository
+    {
+        get
+        {
+            if (_eventStreetcodesRepository is null)
+            {
+                _eventStreetcodesRepository = new EventStreetcodesRepository(_streetcodeDbContext);
+            }
+
+            return _eventStreetcodesRepository;
         }
     }
 

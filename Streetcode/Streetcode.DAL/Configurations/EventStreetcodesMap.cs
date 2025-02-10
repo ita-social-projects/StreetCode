@@ -15,13 +15,13 @@ namespace Streetcode.DAL.Configurations
                 .HasOne(es => es.Event)
                 .WithMany(x => x.EventStreetcodes)
                 .HasForeignKey(x => x.EventId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasOne(es => es.StreetcodeContent)
                 .WithMany(x => x.EventStreetcodes)
                 .HasForeignKey(x => x.StreetcodeId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

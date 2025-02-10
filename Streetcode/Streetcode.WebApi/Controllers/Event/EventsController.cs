@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Event.CreateUpdate;
 using Streetcode.BLL.MediatR.Event.Create;
 using Streetcode.BLL.MediatR.Event.Delete;
 using Streetcode.BLL.MediatR.Event.GetAll;
+using Streetcode.BLL.MediatR.Event.GetAllShort;
 using Streetcode.BLL.MediatR.Event.GetById;
 using Streetcode.BLL.MediatR.Event.Update;
 using Streetcode.DAL.Enums;
@@ -16,9 +17,16 @@ namespace Streetcode.WebApi.Controllers.Event
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllEventsResponseDTO))]
-        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] EventType? eventType, [FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
-            return HandleResult(await Mediator.Send(new GetAllEventsQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllEventsQuery(eventType, page, pageSize)));
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EventShortDTO>))]
+        public async Task<IActionResult> GetAllShort()
+        {
+            return HandleResult(await Mediator.Send(new GetAllEventsShortQuery()));
         }
 
         [HttpGet("{id:int}")]

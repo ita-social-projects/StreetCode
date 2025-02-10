@@ -5,6 +5,8 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Factories.Event;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Event;
+using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.Create
@@ -38,11 +40,37 @@ namespace Streetcode.BLL.MediatR.Event.Create
                 {
                     var eventEntity = EventFactory.CreateEvent(request.Event.EventType);
                     _mapper.Map(request.Event, eventEntity);
+
+                    if (eventEntity is HistoricalEvent historicalEvent)
+                    {
+                        historicalEvent.TimelineItemId = request.Event.TimelineItemId;
+                    }
+                    else if(eventEntity is CustomEvent customEvent)
+                    {
+                        customEvent.Location = request.Event.Location;
+                        customEvent.Organizer = request.Event.Organizer;
+                    }
+
                     _repositoryWrapper.EventRepository.Create(eventEntity);
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-                    if(isResultSuccess)
+                    _logger.LogInformation($"Event created with ID: {eventEntity.Id}");
+
+                    if (isResultSuccess)
                     {
+                        if (request.Event.StreetcodeIds != null && request.Event.StreetcodeIds.Any())
+                        {
+                            _logger.LogInformation($"Creating event-streetcode links for EventId: {eventEntity.Id}");
+
+                            var eventStreetcodes = request.Event.StreetcodeIds
+                                .Select(id => new EventStreetcodes { EventId = eventEntity.Id, StreetcodeId = id })
+                                .ToList();
+
+                            await _repositoryWrapper.EventStreetcodesRepository.CreateRangeAsync(eventStreetcodes);
+                            await _repositoryWrapper.SaveChangesAsync();
+                            _logger.LogInformation($"Successfully created {eventStreetcodes.Count} event-streetcode links.");
+                        }
+
                         transactionScope.Complete();
                         return Result.Ok(eventEntity.Id);
                     }

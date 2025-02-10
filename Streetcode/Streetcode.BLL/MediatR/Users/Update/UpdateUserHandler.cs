@@ -24,7 +24,13 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
 
-    public UpdateUserHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IStringLocalizer<UserSharedResource> localizer)
+    public UpdateUserHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        UserManager<User> userManager,
+        IHttpContextAccessor httpContextAccessor,
+        IStringLocalizer<UserSharedResource> localizer)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
@@ -41,7 +47,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
             var currentUserEmail = HttpContextHelper.GetCurrentUserEmail(_httpContextAccessor);
             var user = await _userManager.Users
                 .Include(u => u.Expertises)
-                .SingleOrDefaultAsync(u => u.Email == currentUserEmail);
+                .SingleOrDefaultAsync(u => u.Email == currentUserEmail, cancellationToken);
 
             if (user is null)
             {
@@ -72,7 +78,7 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
             await _repositoryWrapper.SaveChangesAsync();
 
             var userDto = _mapper.Map<UserDTO>(user);
-            userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+            userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() !;
 
             return Result.Ok(userDto);
         }

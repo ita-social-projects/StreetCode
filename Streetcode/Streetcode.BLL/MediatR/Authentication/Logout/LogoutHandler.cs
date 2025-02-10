@@ -1,6 +1,8 @@
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -9,15 +11,20 @@ namespace Streetcode.BLL.MediatR.Authentication.Logout;
 public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LogoutHandler(IRepositoryWrapper repositoryWrapper)
+    public LogoutHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IHttpContextAccessor httpContextAccessor)
     {
         _repositoryWrapper = repositoryWrapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> Handle(LogoutCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Id == request.UserId);
+        var userUserName = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == userUserName);
 
         if (user == null)
         {

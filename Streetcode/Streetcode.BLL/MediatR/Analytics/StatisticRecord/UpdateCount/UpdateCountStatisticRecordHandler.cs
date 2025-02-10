@@ -44,7 +44,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             _repositoryWrapper.StatisticRecordRepository.Update(statRecord);
 
-            var resultIsSuccess = _repositoryWrapper.SaveChanges() > 0;
+            var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {

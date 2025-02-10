@@ -18,6 +18,9 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "InvalidNewsUrl",
                     "DateStringFormat",
                     "EventStreetcodeCannotHasFirstName",
+                    "UserNameFormat",
+                    "NameFormat",
+                    "SurnameFormat",
                 }
             },
             {
@@ -34,6 +37,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "MustContainAtMostOneAlt0",
                     "MustContainAtMostOneAlt2",
                     "ImageSizeExceeded",
+                    "MustContainAtMostThreeExpertises",
                 }
             },
             {
@@ -44,6 +48,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "GreaterThan",
                     "MustBeOneOf",
                     "MaxLength",
+                    "MinLength",
                 }
             },
             {

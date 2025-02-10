@@ -1,6 +1,10 @@
 ﻿using System.Net;
+using Moq;
+using Streetcode.BLL.DTO.Authentication.GoogleLogin;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
+using Streetcode.BLL.MediatR.Authentication.LoginGoogle;
+using Streetcode.BLL.Models.Email.Messages.Base;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
@@ -18,10 +22,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
     {
         private readonly User _testUser;
         private readonly string _testPassword;
+        private readonly CustomWebApplicationFactory<Program> _factory;
 
         public AuthControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Auth", tokenStorage)
         {
+            _factory = factory;
+            _factory.GoogleServiceMock.Reset();
+            _factory.EmailServiceMock.Reset();
+
             TokenStorage = new TokenStorage();
             (_testUser, _testPassword) = UserExtracter.Extract(
                 userId: Guid.NewGuid().ToString(),
@@ -190,6 +199,72 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LoginGoogle_ValidToken_ReturnsSuccessAndUserData()
+        {
+            // Arrange
+            var validToken = "valid_google_id_token";
+            var request = new GoogleLoginRequest
+            {
+                IdToken = validToken,
+            };
+            _factory.SetupMockGoogleLogin(_testUser, validToken);
+
+            // Act
+            var response = await Client.GoogleLogin(request);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<LoginResponseDTO>(response.Content);
+
+            // Assert
+            _factory.GoogleServiceMock.Verify(es => es.ValidateGoogleToken(It.IsAny<string>()), Times.Once);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(returnedValue);
+            Assert.NotNull(returnedValue.User);
+            Assert.False(string.IsNullOrEmpty(returnedValue.AccessToken));
+        }
+
+        [Fact]
+        public async Task LoginGoogle_InvalidToken_ReturnsBadRequest()
+        {
+            // Arrange
+            var invalidToken = "invalid_google_id_token";
+            var request = new GoogleLoginRequest
+            {
+                IdToken = invalidToken,
+            };
+            _factory.SetupMockGoogleLogin(_testUser);
+
+            // Act
+            var response = await Client.GoogleLogin(request);
+
+            // Assert
+            _factory.GoogleServiceMock.Verify(es => es.ValidateGoogleToken(It.IsAny<string>()), Times.Once);
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task LoginGoogle_NewUser_CreatesAccountAndReturnsToken()
+        {
+            // Arrange
+            var newUserToken = "new_google_id_token";
+            var request = new GoogleLoginRequest
+            {
+                IdToken = newUserToken,
+            };
+            _testUser.Email = "newemail@test.com";
+            _factory.SetupMockGoogleLogin(_testUser, newUserToken);
+
+            // Act
+            var response = await Client.GoogleLogin(request);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<LoginResponseDTO>(response.Content);
+
+            // Assert
+            _factory.GoogleServiceMock.Verify(es => es.ValidateGoogleToken(It.IsAny<string>()), Times.Once);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(returnedValue);
+            Assert.NotNull(returnedValue.User);
+            Assert.False(string.IsNullOrEmpty(returnedValue.AccessToken));
         }
 
         protected override void Dispose(bool disposing)

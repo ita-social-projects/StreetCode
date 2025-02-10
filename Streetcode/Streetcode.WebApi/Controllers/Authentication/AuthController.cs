@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Authentication.GoogleLogin;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.DTO.Authentication.Register;
@@ -53,9 +54,9 @@ namespace Streetcode.WebApi.Controllers.Authentication
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
-        public async Task<IActionResult> GoogleLogin([FromBody] string idToken)
+        public async Task<IActionResult> GoogleLogin(GoogleLoginRequest googleLoginRequest)
         {
-            var result = await Mediator.Send(new LoginGoogleQuery(idToken));
+            var result = await Mediator.Send(new LoginGoogleQuery(googleLoginRequest.IdToken));
 
             if (result.IsSuccess)
             {

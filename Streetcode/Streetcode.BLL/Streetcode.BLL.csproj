@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="Constants\MessageData\" />
+    <Folder Include="DTO\Authentication\GoogleLogin\" />
     <Folder Include="DTO\Users\Expertise\" />
     <Folder Include="Factories\MessageDataFactory\Concretes\" />
     <Folder Include="Mapping\Payment\" />

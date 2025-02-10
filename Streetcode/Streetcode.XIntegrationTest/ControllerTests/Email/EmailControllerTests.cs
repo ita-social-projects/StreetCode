@@ -24,6 +24,7 @@ public class EmailControllerTests : BaseControllerTests<EmailClient>
     {
         // Arrange
         var emailDto = GetEmailDTO();
+        _factory.SetupMockEmailService();
 
         // Act
         var response = await Client.Send(emailDto);

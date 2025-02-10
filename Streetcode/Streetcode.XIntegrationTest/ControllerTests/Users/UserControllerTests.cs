@@ -215,6 +215,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
         {
             Email = _testUser.Email!,
         };
+        _factory.SetupMockEmailService();
 
         // Act
         var response = await Client.ForgotPassword(forgotPassword);

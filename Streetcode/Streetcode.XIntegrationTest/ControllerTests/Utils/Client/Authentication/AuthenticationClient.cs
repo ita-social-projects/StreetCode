@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using Streetcode.BLL.DTO.Authentication.GoogleLogin;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.DTO.Authentication.Register;
@@ -31,6 +32,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authenticatio
         public async Task<RestResponse> Logout(string authToken = "")
         {
             return await SendCommand("/Logout", Method.Post, authToken: authToken);
+        }
+
+        public async Task<RestResponse> GoogleLogin(GoogleLoginRequest googleLoginRequest, string authToken = "")
+        {
+            return await SendCommand("/GoogleLogin", Method.Post, googleLoginRequest, authToken: authToken);
         }
     }
 }

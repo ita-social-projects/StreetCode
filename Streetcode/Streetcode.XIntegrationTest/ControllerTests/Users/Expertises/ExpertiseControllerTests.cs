@@ -31,14 +31,4 @@ public class ExpertiseControllerTests : BaseControllerTests<ExpertiseClient>
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(returnedValue);
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            ExpertiseExtracter.Remove(_testExpertise);
-        }
-
-        base.Dispose(disposing);
-    }
 }

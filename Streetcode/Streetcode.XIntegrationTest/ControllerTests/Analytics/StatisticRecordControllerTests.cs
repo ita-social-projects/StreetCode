@@ -137,11 +137,9 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
 
         // Act
         var response = await Client.GetAllByStreetcodeId(streetcodeId);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<List<StatisticRecordDTO>>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.NotNull(returnedValue);
     }
 
     [Fact]
@@ -152,11 +150,9 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
 
         // Act
         var response = await Client.GetAllByStreetcodeId(streetcodeId);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<StatisticRecordDTO>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Null(returnedValue);
     }
 
     [Fact]

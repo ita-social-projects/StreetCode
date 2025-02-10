@@ -1,9 +1,11 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.DTO.Users.Expertise;
 using Streetcode.BLL.DTO.Users.Password;
+using Streetcode.BLL.Models.Email.Messages.Base;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Entities.Users.Expertise;
 using Streetcode.DAL.Enums;
@@ -26,18 +28,22 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     private readonly Expertise _testExpertise;
     private readonly string _testPassword;
     private readonly UserManager<User> _userManager;
+    private readonly CustomWebApplicationFactory<Program> _factory;
 
     public UserControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/Users", tokenStorage)
     {
-        var serviceProvider = factory.Services.CreateScope().ServiceProvider;
+        _factory = factory;
+        var serviceProvider = _factory.Services.CreateScope().ServiceProvider;
 
         _userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+        TokenStorage = new TokenStorage();
 
         var uniqueExpertiseId = UniqueNumberGenerator.GenerateInt();
 
         _testExpertise = ExpertiseExtracter.Extract(uniqueExpertiseId);
-        TokenStorage = new TokenStorage();
+
         (_testUser, _testPassword) = UserExtracter.Extract(
             userId: Guid.NewGuid().ToString(),
             userName: Guid.NewGuid().ToString(),
@@ -214,6 +220,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
         var response = await Client.ForgotPassword(forgotPassword);
 
         // Assert
+        _factory.EmailServiceMock.Verify(es => es.SendEmailAsync(It.IsAny<MessageData>()), Times.Once);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
@@ -253,6 +260,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
+    [Fact]
     public async Task UpdateForgotPassword_InvalidData_ReturnsBadRequest()
     {
         // Arrange
@@ -270,17 +278,6 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            UserExtracter.Remove(_testUser);
-            ExpertiseExtracter.Remove(_testExpertise);
-        }
-
-        base.Dispose(disposing);
     }
 
     private static string GenerateTestPassword()

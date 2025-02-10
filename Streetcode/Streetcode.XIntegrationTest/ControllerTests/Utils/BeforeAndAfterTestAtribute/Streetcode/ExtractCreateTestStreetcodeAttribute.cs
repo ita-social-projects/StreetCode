@@ -7,7 +7,6 @@ using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Create;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Media.Video;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;

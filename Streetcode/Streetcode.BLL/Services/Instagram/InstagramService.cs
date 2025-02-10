@@ -8,15 +8,15 @@ namespace Streetcode.BLL.Services.Instagram
 {
     public class InstagramService : IInstagramService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly InstagramEnvirovmentVariables _envirovment;
         private readonly string _userId;
         private readonly string _accessToken;
         private static int postLimit = 10;
 
-        public InstagramService(IOptions<InstagramEnvirovmentVariables> instagramEnvirovment)
+        public InstagramService(IOptions<InstagramEnvirovmentVariables> instagramEnvirovment, IHttpClientFactory httpClientFactory)
         {
-            _httpClient = new HttpClient();
+            _httpClientFactory = httpClientFactory;
             _envirovment = instagramEnvirovment.Value;
             _userId = _envirovment.InstagramID;
             _accessToken = _envirovment.InstagramToken;
@@ -26,7 +26,8 @@ namespace Streetcode.BLL.Services.Instagram
         {
             string apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={2 * postLimit}&access_token={_accessToken}";
 
-            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+            var httpClient = _httpClientFactory.CreateClient();
+            HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
             response.EnsureSuccessStatusCode();
 
             string jsonResponse = await response.Content.ReadAsStringAsync();

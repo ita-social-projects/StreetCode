@@ -31,6 +31,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.30.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+		<PackageReference Include="MockQueryable.Moq" Version="7.0.3" />
 		<PackageReference Include="Moq" Version="4.18.3" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 		  <PrivateAssets>all</PrivateAssets>
@@ -50,7 +51,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Validators\Analytics\" />
+	  <Folder Include="Factories\MessageDataFactory\" />
+	  <Folder Include="MediatRTests\Authentication\Logout\" />
+	  <Folder Include="MediatRTests\Users\" />
+	  <Folder Include="Validators\Users\" />
 	</ItemGroup>
 
 </Project>

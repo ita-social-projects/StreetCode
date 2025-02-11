@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Email
                 string captchaErrorMessage = reCaptchaValidationResult.Errors[0].Message;
                 _logger.LogError(request, captchaErrorMessage);
                 return Result.Fail(new Error(captchaErrorMessage));
-            };
+            }
 
             var message = _messageDataAbstractFactory.CreateFeedbackMessageData(
                 request.Email.From,

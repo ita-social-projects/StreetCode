@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -32,11 +33,18 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
 
         public Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<News, bool>>? dataPredicate = null;
+            if (request.maxDateOfPublication is not null)
+            {
+                dataPredicate = newsCollection => newsCollection.CreationDate <= request.maxDateOfPublication;
+            }
+
             PaginationResponse<News> paginationResponse = _repositoryWrapper
                 .NewsRepository
                 .GetAllPaginated(
                     request.page,
                     request.pageSize,
+                    predicate: dataPredicate,
                     include: newsCollection => newsCollection.Include(news => news.Image!),
                     descendingSortKeySelector: news => news.CreationDate);
 

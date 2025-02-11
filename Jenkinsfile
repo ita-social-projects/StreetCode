@@ -85,10 +85,6 @@ pipeline {
         stage('Run tests') {
           steps {
             script {
-                sh 'dotnet clean'
-                sh 'dotnet restore'
-                sh 'dotnet build --configuration Release'
-                
                 sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
                 sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
             }

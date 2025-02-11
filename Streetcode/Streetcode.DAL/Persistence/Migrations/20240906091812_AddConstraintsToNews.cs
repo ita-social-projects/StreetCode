@@ -20,9 +20,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(100)",
                 oldMaxLength: 100);
-
-            migrationBuilder.Sql(
-                "ALTER TABLE news.news ADD CONSTRAINT NewsTextMaxLength CHECK ( DATALENGTH(Text)/2 <= 25000 );");
         }
 
         /// <inheritdoc />
@@ -38,8 +35,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                 oldClrType: typeof(string),
                 oldType: "nvarchar(200)",
                 oldMaxLength: 200);
-
-            migrationBuilder.Sql("ALTER TABLE news.news DROP CONSTRAINT NewsTextMaxLength;");
         }
     }
 }

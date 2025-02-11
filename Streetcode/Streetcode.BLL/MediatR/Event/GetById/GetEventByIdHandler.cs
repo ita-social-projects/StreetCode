@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Event;
+using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.GetById
@@ -26,16 +29,51 @@ namespace Streetcode.BLL.MediatR.Event.GetById
 
         public async Task<Result<EventDTO>> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
-            var eventDTO = _mapper.Map<EventDTO>(await _repositoryWrapper.EventRepository.GetFirstOrDefaultAsync(e => e.Id == request.id));
+            var eventEntity = await _repositoryWrapper.EventRepository
+                .GetFirstOrDefaultAsync(
+                e => e.Id == request.id,
+                include: e => e.Include(ev => ev.EventStreetcodes)
+                      .ThenInclude(es => es.StreetcodeContent));
 
-            if (eventDTO is null)
+            if (eventEntity is null)
             {
                 string errorMsg = _stringLocalizer["NoEventsByEnteredId", request.id].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }
 
-            return Result.Ok(eventDTO);
+            EventDTO mappedEvent;
+
+            switch (eventEntity.EventType)
+            {
+                case "Historical":
+                    mappedEvent = _mapper.Map<HistoricalEventDTO>(eventEntity);
+                    break;
+                case "Custom":
+                    mappedEvent = _mapper.Map<CustomEventDTO>(eventEntity);
+                    break;
+                default:
+                    mappedEvent = _mapper.Map<EventDTO>(eventEntity);
+                    break;
+            }
+
+            if (eventEntity.EventStreetcodes != null)
+            {
+                mappedEvent.Streetcodes = eventEntity.EventStreetcodes
+                    .Where(es => es.StreetcodeContent != null)
+                    .Select(es => new StreetcodeShortDTO
+                    {
+                        Id = es.StreetcodeContent.Id,
+                        Title = es.StreetcodeContent.Title
+                    })
+                    .ToList();
+            }
+            else
+            {
+                mappedEvent.Streetcodes = new List<StreetcodeShortDTO>();
+            }
+
+            return Result.Ok(mappedEvent);
         }
     }
 }

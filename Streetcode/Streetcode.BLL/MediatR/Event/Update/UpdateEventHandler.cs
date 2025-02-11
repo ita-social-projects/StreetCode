@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Factories.Event;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Event;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -34,21 +36,81 @@ namespace Streetcode.BLL.MediatR.Event.Update
                 try
                 {
                     var eventToUpdate = await _repositoryWrapper.EventRepository
-                        .GetFirstOrDefaultAsync(e => e.Id == request.Event.Id);
+                        .GetFirstOrDefaultAsync(
+                            e => e.Id == request.Event.Id,
+                            include: q => q.Include(e => e.EventStreetcodes));
 
                     if (eventToUpdate == null)
                     {
                         return Result.Fail(new Error("Event not found"));
                     }
 
+                    bool eventTypeChanged = eventToUpdate.EventType != request.Event.EventType.ToString();
+
+                    if(eventTypeChanged)
+                    {
+                        if (eventToUpdate is HistoricalEvent historicalEvent)
+                        {
+                            historicalEvent.TimelineItemId = null;
+                        }
+                        else if (eventToUpdate is CustomEvent customEvent)
+                        {
+                            customEvent.Location = null;
+                            customEvent.Organizer = null;
+                        }
+
+                        eventToUpdate = EventFactory.CreateEvent(request.Event.EventType);
+                        eventToUpdate.Id = request.Event.Id;
+                    }
+
                     _mapper.Map(request.Event, eventToUpdate);
 
-                    var discriminatorProperty = _repositoryWrapper.EventRepository.Entry(eventToUpdate).Property<string>(EventTypeDiscriminators.DiscriminatorName);
-                    discriminatorProperty.CurrentValue = EventTypeDiscriminators.GetEventType(request.Event.EventType);
-                    discriminatorProperty.IsModified = true;
+                    if (eventToUpdate is HistoricalEvent updatedHistoricalEvent)
+                    {
+                        updatedHistoricalEvent.TimelineItemId = request.Event.TimelineItemId;
+                    }
+                    else if (eventToUpdate is CustomEvent updatedCustomEvent)
+                    {
+                        updatedCustomEvent.Location = request.Event.Location;
+                        updatedCustomEvent.Organizer = request.Event.Organizer;
+                    }
+
+                    eventToUpdate.EventStreetcodes?.Clear();
+
+                    if (request.Event.StreetcodeIds != null)
+                    {
+                        _logger.LogInformation($"Updating event-streetcode links for EventId: {eventToUpdate.Id}");
+
+                        var existingStreetcodeLinks = await _repositoryWrapper.EventStreetcodesRepository
+                            .GetAllAsync(es => es.EventId == eventToUpdate.Id);
+
+                        var existingStreetcodeIds = existingStreetcodeLinks.Select(es => es.StreetcodeId).ToList();
+
+                        var streetcodesToAdd = request.Event.StreetcodeIds
+                            .Where(id => !existingStreetcodeIds.Contains(id))
+                            .Select(id => new EventStreetcodes { EventId = eventToUpdate.Id, StreetcodeId = id })
+                            .ToList();
+
+                        var streetcodesToRemove = existingStreetcodeLinks
+                            .Where(es => !request.Event.StreetcodeIds.Contains(es.StreetcodeId))
+                            .ToList();
+
+                        if (streetcodesToAdd.Any())
+                        {
+                            await _repositoryWrapper.EventStreetcodesRepository.CreateRangeAsync(streetcodesToAdd);
+                            _logger.LogInformation($"Added {streetcodesToAdd.Count} new event-streetcode links.");
+                        }
+
+                        if (streetcodesToRemove.Any())
+                        {
+                            _repositoryWrapper.EventStreetcodesRepository.DeleteRange(streetcodesToRemove);
+                            _logger.LogInformation($"Removed {streetcodesToRemove.Count} old event-streetcode links.");
+                        }
+
+                        await _repositoryWrapper.SaveChangesAsync();
+                    }
 
                     _repositoryWrapper.EventRepository.Update(eventToUpdate);
-
                     var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
                     if (isResultSuccess)

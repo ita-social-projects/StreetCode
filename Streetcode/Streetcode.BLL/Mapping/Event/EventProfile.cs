@@ -19,6 +19,18 @@ namespace Streetcode.BLL.Mapping.Event
                 .ReverseMap();
 
             CreateMap<DAL.Entities.Event.Event, CreateUpdateEventDTO>().ReverseMap();
+
+            CreateMap<UpdateEventDTO, DAL.Entities.Event.Event>()
+                .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType.ToString()))
+                .Include<UpdateEventDTO, HistoricalEvent>()
+                .Include<UpdateEventDTO, CustomEvent>();
+
+            CreateMap<UpdateEventDTO, CustomEvent>()
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.Organizer, opt => opt.MapFrom(src => src.Organizer));
+
+            CreateMap<UpdateEventDTO, HistoricalEvent>()
+                .ForMember(dest => dest.TimelineItemId, opt => opt.MapFrom(src => src.TimelineItemId));
         }
     }
 }

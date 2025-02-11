@@ -36,6 +36,9 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
                     .GetAllPaginated(
                         request.page,
                         request.pageSize,
+                        predicate: request.EventType.HasValue
+                        ? e => e.EventType == request.EventType.ToString()
+                        : null,
                         include: query => query
                             .Include(e => e.EventStreetcodes)
                             .ThenInclude(es => es.StreetcodeContent));
@@ -48,12 +51,6 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
             }
 
             IEnumerable<DAL.Entities.Event.Event> filteredEvents = paginationResponse.Entities;
-
-            if (request.EventType.HasValue)
-            {
-                string eventTypeString = request.EventType.ToString();
-                filteredEvents = filteredEvents.Where(e => e.EventType == eventTypeString);
-            }
 
             IEnumerable<object> mappedEvents = filteredEvents
                .Select(e =>

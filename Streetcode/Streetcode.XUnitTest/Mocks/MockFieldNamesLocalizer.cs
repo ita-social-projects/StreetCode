@@ -3,7 +3,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.Mocks;
 
-public class MockFieldNamesLocalizer: IStringLocalizer<FieldNamesSharedResource>
+public class MockFieldNamesLocalizer : IStringLocalizer<FieldNamesSharedResource>
 {
     public LocalizedString this[string name] => new (name, name);
 

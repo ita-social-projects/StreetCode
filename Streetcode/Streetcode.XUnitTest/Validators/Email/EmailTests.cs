@@ -15,34 +15,34 @@ public class EmailTests
 
     public EmailTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.validator = new SendEmailCommandValidator(this.mockNamesLocalizer, this.mockValidationLocalizer);
+        mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        mockNamesLocalizer = new MockFieldNamesLocalizer();
+        validator = new SendEmailCommandValidator(mockNamesLocalizer, mockValidationLocalizer);
     }
 
     [Fact]
-    public void ShouldReturnSuccessResult_WhenEmailIsValid()
+    public void Validate_EmailIsValid_ShouldReturnSuccessResult()
     {
         // Arrange
-        var email = this.GetValidEmailDto();
+        var email = GetValidEmailDto();
 
         // Act
-        var result = this.validator.Validate(new SendEmailCommand(email));
+        var result = validator.Validate(new SendEmailCommand(email));
 
         // Assert
         Assert.True(result.IsValid);
     }
 
     [Fact]
-    public void ShouldReturnError_WhenFromIsEmpty()
+    public void Validate_FromIsEmpty_ShouldReturnError()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Email"]];
-        var email = this.GetValidEmailDto();
+        var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Email"]];
+        var email = GetValidEmailDto();
         email.From = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(new SendEmailCommand(email));
+        var result = validator.TestValidate(new SendEmailCommand(email));
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email.From)
@@ -50,15 +50,15 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenFromLengthIsOutOfRange()
+    public void Validate_FromLengthIsOutOfRange_ShouldReturnError()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Email"], SendEmailCommandValidator.EmailMaxLength];
-        var email = this.GetValidEmailDto();
+        var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Email"], SendEmailCommandValidator.EmailMaxLength];
+        var email = GetValidEmailDto();
         email.From = new string('e', SendEmailCommandValidator.EmailMaxLength + 2);
 
         // Act
-        var result = this.validator.TestValidate(new SendEmailCommand(email));
+        var result = validator.TestValidate(new SendEmailCommand(email));
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email.From)
@@ -66,15 +66,15 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenEmailFormatIsInvalid()
+    public void Validate_EmailFormatIsInvalid_ShouldReturnError()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["EmailAddressFormat"];
-        var email = this.GetValidEmailDto();
+        var expectedError = mockValidationLocalizer["EmailAddressFormat"];
+        var email = GetValidEmailDto();
         email.From = "invalid////";
 
         // Act
-        var result = this.validator.TestValidate(new SendEmailCommand(email));
+        var result = validator.TestValidate(new SendEmailCommand(email));
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email.From)
@@ -82,15 +82,15 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenTokenIsEmpty()
+    public void Validate_TokenIsEmpty_ShouldReturnError()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["CaptchaToken"]];
-        var email = this.GetValidEmailDto();
+        var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["CaptchaToken"]];
+        var email = GetValidEmailDto();
         email.Token = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(new SendEmailCommand(email));
+        var result = validator.TestValidate(new SendEmailCommand(email));
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email.Token)
@@ -98,15 +98,15 @@ public class EmailTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenContentLengthIsOutOfRange()
+    public void Validate_ContentLengthIsOutOfRange_ShouldReturnError()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["LengthMustBeInRange", this.mockNamesLocalizer["Content"], SendEmailCommandValidator.ContentMinLength, SendEmailCommandValidator.ContentMaxLength];
-        var email = this.GetValidEmailDto();
+        var expectedError = mockValidationLocalizer["LengthMustBeInRange", mockNamesLocalizer["Content"], SendEmailCommandValidator.ContentMinLength, SendEmailCommandValidator.ContentMaxLength];
+        var email = GetValidEmailDto();
         email.Content = new string('c', SendEmailCommandValidator.ContentMaxLength + 2);
 
         // Act
-        var result = this.validator.TestValidate(new SendEmailCommand(email));
+        var result = validator.TestValidate(new SendEmailCommand(email));
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Email.Content)

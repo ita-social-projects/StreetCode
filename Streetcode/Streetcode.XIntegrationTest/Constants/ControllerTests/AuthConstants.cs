@@ -33,7 +33,9 @@ namespace Streetcode.XIntegrationTest.Constants.ControllerTests
             Name = "User_Admin",
             Surname = "User_Admin",
             Email = "user@admin.com",
+            NormalizedEmail = "USER@ADMIN.COM",
             UserName = "User_Admin_T",
+            NormalizedUserName = "USER_ADMIN_T",
             RefreshToken = "User_Admin_Refresh_Token",
             RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };
@@ -44,7 +46,9 @@ namespace Streetcode.XIntegrationTest.Constants.ControllerTests
             Name = "User_User",
             Surname = "User_User",
             Email = "user@user.com",
+            NormalizedEmail = "USER@USER.COM",
             UserName = "User_User_T",
+            NormalizedUserName = "User_User_T",
             RefreshToken = "User_User_Refresh_Token",
             RefreshTokenExpiry = DateTime.Now.AddDays(1),
         };

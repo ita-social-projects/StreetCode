@@ -32,7 +32,7 @@
     <Content Include="appsettings.Local.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="appsettings.IntegrationTests.json" />
+    <!-- <None Remove="appsettings.IntegrationTests.json" /> -->
     <Content Include="appsettings.IntegrationTests.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,136 +1,136 @@
 ﻿using AutoMapper;
+using FluentAssertions;
 using MediatR;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class UpdateFactTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepository;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
-    private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly MockFailedToUpdateLocalizer _mockFailedToUpdateLocalizer;
+    private readonly MockCannotConvertNullLocalizer _mockCannotConvertNullLocalizer;
+    private readonly UpdateFactHandler _handler;
 
     public UpdateFactTest()
     {
-        this.mockRepository = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-        this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockFailedToUpdateLocalizer = new MockFailedToUpdateLocalizer();
+        _mockCannotConvertNullLocalizer = new MockCannotConvertNullLocalizer();
+        _handler = new UpdateFactHandler(
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockLogger.Object,
+            _mockFailedToUpdateLocalizer,
+            _mockCannotConvertNullLocalizer);
     }
 
     [Fact]
-    public async Task ShouldReturnSuccessfully_WhenUpdated()
+    public async Task ShouldUpdateSuccessfully_WhenFactExists()
     {
         // Arrange
-        this.mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
-        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        var (fact, factDto) = GetFactObjects();
+        var request = GetRequest(factDto);
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
-            .Returns(GetFact());
-
-        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
+        SetupMockRepository(fact, 1);
+        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
-        var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
+        result.IsSuccess.Should().BeTrue();
+        _mockRepository.Verify(x => x.FactRepository.Update(fact), Times.Once);
+        _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
-    public async Task ShouldThrowExeption_TryMapNullRequest()
+    public async Task ShouldUpdateSuccessfully_WithCorrectDataType()
     {
         // Arrange
-        this.mockRepository.Setup(x => x.FactRepository.Update(GetFactWithNotExistId() !));
-        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        var (fact, factDto) = GetFactObjects();
+        var request = GetRequest(factDto);
 
-        this.mockMapper
-            .Setup(x => x.Map<Fact?>(It.IsAny<FactDto>()))
-            .Returns(GetFactWithNotExistId());
-
-        var expectedError = "Cannot convert null to Fact";
-        this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToFact"])
-           .Returns(new LocalizedString("CannotConvertNullToFact", expectedError));
-
-        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
+        SetupMockRepository(fact, 1);
+        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
-        var result = await handler.Handle(new UpdateFactCommand(GetFactDTOWithNotExistId() !), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.Equal(expectedError, result.Errors[0].Message);
+        result.IsSuccess.Should().BeTrue();
+        result.ValueOrDefault.Should().BeOfType<Unit>();
     }
 
     [Fact]
-    public async Task ShouldThrowExeption_SaveChangesAsyncIsNotSuccessful()
+    public async Task ShouldUpdateFailingly_WhenMappingFailed()
     {
         // Arrange
-        this.mockRepository.Setup(x => x.FactRepository.Update(GetFact()));
-        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(-1);
+        var (_, factDto) = GetFactObjects();
+        var request = GetRequest(factDto);
+        var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToFact"].Value;
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
-            .Returns(GetFact());
-
-        var expectedError = "Failed to update a fact";
-        this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateFact"])
-           .Returns(new LocalizedString("FailedToUpdateFact", expectedError));
-
-        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
+        MockHelpers.SetupMockMapper<Fact?, FactDto>(_mockMapper, null, request.Fact);
 
         // Act
-        var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.Equal(expectedError, result.Errors[0].Message);
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
     [Fact]
-    public async Task ShouldReturnSuccessfully_TypeIsCorrect()
+    public async Task ShouldUpdateFailingly_WhenSaveChangesAsyncFailed()
     {
         // Arrange
-        this.mockRepository.Setup(x => x.FactRepository.Create(GetFact()));
-        this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+        var (fact, factDto) = GetFactObjects();
+        var request = GetRequest(factDto);
+        var expectedErrorMessage = _mockFailedToUpdateLocalizer["FailedToUpdateFact"].Value;
 
-        this.mockMapper.Setup(x => x.Map<Fact>(It.IsAny<FactDto>()))
-            .Returns(GetFact());
-
-        var handler = new UpdateFactHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerFailedToUpdate.Object, this.mockLocalizerConvertNull.Object);
+        SetupMockRepository(fact, -1);
+        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
-        var result = await handler.Handle(new UpdateFactCommand(GetFactDTO()), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.IsType<Unit>(result.Value);
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static Fact GetFact()
+    private static (Fact, FactDto) GetFactObjects()
     {
-        return new Fact();
+        var fact = new Fact();
+        var factDto = new FactDto();
+
+        return (fact, factDto);
     }
 
-    private static FactDto GetFactDTO()
+    private static UpdateFactCommand GetRequest(FactDto factDto)
     {
-        return new FactDto();
+        return new UpdateFactCommand(factDto);
     }
 
-    private static Fact? GetFactWithNotExistId()
+    private void SetupMockRepository(Fact fact, int saveChangesResult)
     {
-        return null;
-    }
-
-    private static FactDto? GetFactDTOWithNotExistId()
-    {
-        return null;
+        _mockRepository
+            .Setup(x => x.FactRepository.Update(fact));
+        _mockRepository
+            .Setup(x => x.SaveChangesAsync())
+            .ReturnsAsync(saveChangesResult);
     }
 }

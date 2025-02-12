@@ -1,11 +1,10 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.Fact.GetAll;
+using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
@@ -13,35 +12,36 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
-public class GetAllFactsTest
+public class GetFactsByStreetcodeIdTest
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
     private readonly MockCannotFindLocalizer _mockCannotFindLocalizer;
-    private readonly GetAllFactsHandler _handler;
+    private readonly GetFactByStreetcodeIdHandler _handler;
 
-    public GetAllFactsTest()
+    public GetFactsByStreetcodeIdTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
         _mockCannotFindLocalizer = new MockCannotFindLocalizer();
-        _handler = new GetAllFactsHandler(
+        _handler = new GetFactByStreetcodeIdHandler(
             _mockRepository.Object,
             _mockMapper.Object,
             _mockLogger.Object,
             _mockCannotFindLocalizer);
     }
 
-    [Fact]
-    public async Task ShouldGetAllSuccessfully_WhenFactsExist()
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldGetByStreetcodeIdSuccessfully_WhenIdExists(int streetcodeId)
     {
         // Arrange
-        var (factsList, factDtoList) = GetFactObjectsLists();
-        var request = GetRequest();
+        var (factsList, factDtoList) = GetFactObjectsLists(streetcodeId);
+        var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(factsList);
+        SetupMockRepository(request, factsList);
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -53,17 +53,19 @@ public class GetAllFactsTest
             first => first.Id.Should().Be(factsList[0].Id),
             second => second.Id.Should().Be(factsList[1].Id));
         result.Value.Should().HaveCount(2);
-        VerifyGetAllAsyncAndMockingOperationsExecution(factsList);
+        _mockMapper.Verify(x => x.Map<IEnumerable<FactDto>>(factsList), Times.Once);
+        VerifyGetAllAsyncOperationExecution(request);
     }
 
-    [Fact]
-    public async Task ShouldGetAllSuccessfully_WithCorrectDataType()
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldGetByStreetcodeIdSuccessfully_WithCorrectDataType(int streetcodeId)
     {
         // Arrange
-        var (factsList, factDtoList) = GetFactObjectsLists();
-        var request = GetRequest();
+        var (factsList, factDtoList) = GetFactObjectsLists(streetcodeId);
+        var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(factsList);
+        SetupMockRepository(request, factsList);
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -74,15 +76,15 @@ public class GetAllFactsTest
         result.ValueOrDefault.Should().BeOfType<List<FactDto>>();
     }
 
-    [Fact]
-    public async Task ShouldGetAllSuccessfully_WhenFactsNotExist()
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldGetByStreetcodeIdSuccessfully_WhenIdNotExists(int streetcodeId)
     {
         // Arrange
-        var (emptyFactsList, emptyFactDtoList) = GetEmptyFactsObjectsLists();
-        var request = GetRequest();
+        var emptyFactsList = GetEmptyFactsList();
+        var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(emptyFactsList);
-        MockHelpers.SetupMockMapper(_mockMapper, emptyFactDtoList, emptyFactsList);
+        SetupMockRepository(request, emptyFactsList);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -91,20 +93,22 @@ public class GetAllFactsTest
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeEmpty();
         result.ValueOrDefault.Should().BeAssignableTo<IEnumerable<FactDto>>();
-        VerifyGetAllAsyncAndMockingOperationsExecution(emptyFactsList);
+        VerifyGetAllAsyncOperationExecution(request);
     }
 
-    private static (List<Fact>, List<FactDto>) GetFactObjectsLists()
+    private static (List<Fact>, List<FactDto>) GetFactObjectsLists(int streetcodeId)
     {
         var factsList = new List<Fact>()
         {
             new Fact()
             {
                 Id = 1,
+                StreetcodeId = streetcodeId,
             },
             new Fact()
             {
                 Id = 2,
+                StreetcodeId = streetcodeId,
             },
         };
         var factDtoList = new List<FactDto>()
@@ -122,32 +126,31 @@ public class GetAllFactsTest
         return (factsList, factDtoList);
     }
 
-    private static (List<Fact>, List<FactDto>) GetEmptyFactsObjectsLists()
+    private static List<Fact> GetEmptyFactsList()
     {
-        return (new List<Fact>(), new List<FactDto>());
+        return new List<Fact>();
     }
 
-    private static GetAllFactsQuery GetRequest()
+    private static GetFactByStreetcodeIdQuery GetRequest(int streetcodeId)
     {
-        return new GetAllFactsQuery();
+        return new GetFactByStreetcodeIdQuery(streetcodeId);
     }
 
-    private void SetupMockRepository(List<Fact> getAllAsyncResult)
+    private void SetupMockRepository(GetFactByStreetcodeIdQuery request, List<Fact> getAllAsyncResult)
     {
         _mockRepository
             .Setup(x => x.FactRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Fact, bool>>>(),
+                f => f.StreetcodeId == request.StreetcodeId,
                 It.IsAny<Func<IQueryable<Fact>, IIncludableQueryable<Fact, object>>>()))
             .ReturnsAsync(getAllAsyncResult);
     }
 
-    private void VerifyGetAllAsyncAndMockingOperationsExecution(List<Fact> factsList)
+    private void VerifyGetAllAsyncOperationExecution(GetFactByStreetcodeIdQuery request)
     {
         _mockRepository.Verify(
             x => x.FactRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Fact, bool>>>(),
+                f => f.StreetcodeId == request.StreetcodeId,
                 It.IsAny<Func<IQueryable<Fact>, IIncludableQueryable<Fact, object>>>()),
             Times.Once);
-        _mockMapper.Verify(x => x.Map<IEnumerable<FactDto>>(factsList), Times.Once);
     }
 }

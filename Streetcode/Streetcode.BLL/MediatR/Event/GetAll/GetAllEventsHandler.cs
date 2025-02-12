@@ -83,7 +83,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
 
             GetAllEventsResponseDTO getAllEventsResponseDTO = new GetAllEventsResponseDTO()
             {
-                TotalAmount = mappedEvents.Count(),
+                TotalAmount = paginationResponse.TotalItems,
                 Events = mappedEvents,
             };
 

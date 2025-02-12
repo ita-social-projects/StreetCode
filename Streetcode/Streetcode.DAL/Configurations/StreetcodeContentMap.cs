@@ -5,11 +5,11 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Streetcode.Favourites;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
-using Streetcode.DAL.Entities.Users.Favourites;
 using Streetcode.DAL.Enums;
 
 namespace Streetcode.DAL.Configurations;
@@ -103,18 +103,6 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .ToTable("streetcode_partners", "streetcode");
 
         builder
-            .HasMany(u => u.Users)
-            .WithMany(s => s.Streetcodes)
-            .UsingEntity<Favourites>(
-                    f => f.HasOne(i => i.User)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(x => x.UserId),
-                    f => f.HasOne(i => i.Streetcode)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(x => x.StreetcodeId))
-            .ToTable("favourite_streetcodes", "user");
-
-        builder
                 .HasMany(d => d.Videos)
                 .WithOne(p => p.Streetcode)
                 .HasForeignKey(d => d.StreetcodeId)
@@ -149,5 +137,17 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .WithMany(u => u.StreetcodeContent)
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasMany(u => u.UserFavourites)
+            .WithMany(s => s.StreetcodeFavourites)
+            .UsingEntity<Favourite>(
+                    f => f.HasOne(i => i.User)
+                                                                        .WithMany()
+                                                                        .HasForeignKey(x => x.UserId),
+                    f => f.HasOne(i => i.Streetcode)
+                                                                        .WithMany()
+                                                                        .HasForeignKey(x => x.StreetcodeId))
+            .ToTable("favourites", "streetcode");
     }
 }

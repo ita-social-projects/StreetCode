@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Streetcode
 {
-    public class StreetcodeFavouriteDTO
+    public class StreetcodeFavouriteDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

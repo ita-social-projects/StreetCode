@@ -45,7 +45,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var createdTerm = _repository.TermRepository.Create(term);
+            var createdTerm = await _repository.TermRepository.CreateAsync(term);
 
             if (createdTerm is null)
             {

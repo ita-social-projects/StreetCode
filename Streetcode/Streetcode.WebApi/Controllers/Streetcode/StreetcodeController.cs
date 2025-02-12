@@ -27,10 +27,12 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateStatus;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.UpdateToFavourites;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.CreateFavourite;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteStatus;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -99,6 +101,23 @@ public class StreetcodeController : BaseApiController
         return HandleResult(await Mediator.Send(new StreetcodeWithUrlExistQuery(url)));
     }
 
+    [HttpGet("{streetcodeId:int}")]
+    [Authorize(Roles = nameof(UserRole.User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetFavouriteStatus([FromRoute] int streetcodeId)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        return HandleResult(await Mediator.Send(new GetFavouriteStatusQuery(streetcodeId, userId)));
+    }
+
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CatalogItem>))]
     public async Task<IActionResult> GetAllCatalog([FromQuery] int page, [FromQuery] int count)
@@ -107,8 +126,8 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFavouriteDTO>))]
+    [Authorize(Roles = nameof(UserRole.User))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StreetcodeFavouriteDto>))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAllFavourites([FromQuery] StreetcodeType? type)
@@ -124,8 +143,9 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
-    [Authorize]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeFavouriteDTO))]
+    [Authorize(Roles = nameof(UserRole.User))]
+    [ValidateStreetcodeExistence]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeFavouriteDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetFavouriteById([FromRoute] int streetcodeId)
@@ -198,7 +218,8 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpPost("{streetcodeId:int}")]
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.User))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -236,7 +257,8 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpDelete("{streetcodeId:int}")]
-    [Authorize]
+    [Authorize(Roles = nameof(UserRole.User))]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

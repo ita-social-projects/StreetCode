@@ -5,6 +5,7 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Streetcode.Favourites;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Toponyms;
@@ -136,5 +137,17 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .WithMany(u => u.StreetcodeContent)
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasMany(u => u.UserFavourites)
+            .WithMany(s => s.StreetcodeFavourites)
+            .UsingEntity<Favourite>(
+                    f => f.HasOne(i => i.User)
+                                                                        .WithMany()
+                                                                        .HasForeignKey(x => x.UserId),
+                    f => f.HasOne(i => i.Streetcode)
+                                                                        .WithMany()
+                                                                        .HasForeignKey(x => x.StreetcodeId))
+            .ToTable("favourites", "streetcode");
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,11 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250204150151_AddFavourites")]
+    partial class AddFavourites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -806,6 +809,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("ViewCount")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
@@ -822,6 +829,8 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("TransliterationUrl")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("streetcodes", "streetcode");
 
@@ -1068,7 +1077,7 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasIndex("HistoricalContextId");
 
-                    b.ToTable("HistoricalContextsTimelines", (string)null);
+                    b.ToTable("HistoricalContextsTimelines");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Timeline.TimelineItem", b =>
@@ -1622,7 +1631,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany()
                         .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
@@ -1697,7 +1706,15 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasForeignKey("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "AudioId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
+                        .WithMany("StreetcodeContent")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Audio");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.TextContent.Fact", b =>
@@ -1997,6 +2014,11 @@ namespace Streetcode.DAL.Persistence.Migrations
             modelBuilder.Entity("Streetcode.DAL.Entities.Toponyms.Toponym", b =>
                 {
                     b.Navigation("Coordinate");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Users.User", b =>
+                {
+                    b.Navigation("StreetcodeContent");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types.StreetcodeCoordinate", b =>

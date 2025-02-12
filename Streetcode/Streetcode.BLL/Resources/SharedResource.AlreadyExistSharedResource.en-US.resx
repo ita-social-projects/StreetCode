@@ -21,4 +21,7 @@
     <data name="PartnerWithFieldAlreadyExist" xml:space="preserve">
         <value>Partner with field '{0}' and its value '{1}' already exists</value>
     </data>
+    <data name="FavouriteAlreadyExists" xml:space="preserve">
+        <value>Streetcode is already in favourites</value>
+    </data>
 </root>

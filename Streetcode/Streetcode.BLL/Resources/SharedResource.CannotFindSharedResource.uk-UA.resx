@@ -189,6 +189,9 @@
   <data name="CannotFindAnyStreetcodeWithCorrespondingTagId" xml:space="preserve">
     <value>Не вдалося знайти жодний стріткод з відповідним TagId: {0}</value>
   </data>
+  <data name="CannotFindStreetcodeInFavourites" xml:space="preserve">
+    <value>Не вдалося знайти стріткод в улюблених</value>
+  </data>
   <data name="CannotFindAnySubtitleByTheStreetcodeId" xml:space="preserve">
     <value>Не вдалося знайти жодного субтитра за ідентифікатором стріткоду: {0}</value>
   </data>

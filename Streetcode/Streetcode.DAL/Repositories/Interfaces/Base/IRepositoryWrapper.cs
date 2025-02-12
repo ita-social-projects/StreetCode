@@ -8,6 +8,7 @@ using Streetcode.DAL.Repositories.Interfaces.News;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.Favourites;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Team;
 using Streetcode.DAL.Repositories.Interfaces.Timeline;
@@ -15,7 +16,6 @@ using Streetcode.DAL.Repositories.Interfaces.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Transactions;
 using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Interfaces.Users.Expertise;
-
 namespace Streetcode.DAL.Repositories.Interfaces.Base;
 
 public interface IRepositoryWrapper
@@ -50,13 +50,14 @@ public interface IRepositoryWrapper
     IPartnerSourceLinkRepository PartnerSourceLinkRepository { get; }
     IUserRepository UserRepository { get; }
     IStreetcodeTagIndexRepository StreetcodeTagIndexRepository { get; }
-    IPartnerStreetcodeRepository PartnerStreetcodeRepository { get;  }
+    IPartnerStreetcodeRepository PartnerStreetcodeRepository { get; }
     INewsRepository NewsRepository { get; }
     IPositionRepository PositionRepository { get; }
     IHistoricalContextTimelineRepository HistoricalContextTimelineRepository { get; }
     IStreetcodeToponymRepository StreetcodeToponymRepository { get; }
     IStreetcodeImageRepository StreetcodeImageRepository { get; }
     IJobRepository JobRepository { get; }
+    IFavouritesRepository FavouritesRepository { get; }
     IExpertiseRepository ExpertiseRepository { get; }
     IUserExpertiseRepository UserExpertiseRepository { get; }
     public int SaveChanges();

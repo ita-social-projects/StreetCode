@@ -159,4 +159,10 @@
   <data name="NoTeamWithSuchId" xml:space="preserve">
     <value>No team with such id</value>
   </data>
+  <data name="NoFavouritesFound" xml:space="preserve">
+    <value>No streetcode has been added to favourites</value>
+  </data>
+  <data name="NoFavouritesWithId" xml:space="preserve">
+    <value>No favourite streetcode with corresponding id: {0}</value>
+  </data>
 </root>

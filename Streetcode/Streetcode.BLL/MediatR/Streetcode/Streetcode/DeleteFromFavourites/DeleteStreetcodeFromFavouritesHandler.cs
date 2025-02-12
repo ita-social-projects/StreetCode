@@ -24,23 +24,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteFromFavourites
 
         public async Task<Result<Unit>> Handle(DeleteStreetcodeFromFavouritesCommand request, CancellationToken cancellationToken)
         {
-            var streetcode = await _repositoryWrapper.StreetcodeRepository
-            .GetFirstOrDefaultAsync(
-            predicate: s => s.Id == request.streetcodeId);
-
-            if (streetcode is null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.streetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var favourite = await _repositoryWrapper.FavouritesRepository.GetFirstOrDefaultAsync(
                  f => f.UserId == request.userId && f.StreetcodeId == request.streetcodeId);
 
             if(favourite is null)
             {
-                string errorMsg = "Streetcode is not in favourites";
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeInFavourites"].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }

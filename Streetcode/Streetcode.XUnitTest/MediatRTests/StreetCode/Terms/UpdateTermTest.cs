@@ -2,56 +2,56 @@
 using FluentAssertions;
 using MediatR;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
+using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.Fact.Update;
+using Streetcode.BLL.MediatR.Streetcode.Term.Update;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Terms;
 
-public class UpdateFactTest
+public class UpdateTermTest
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly MockFailedToUpdateLocalizer _mockFailedToUpdateLocalizer;
     private readonly MockCannotConvertNullLocalizer _mockCannotConvertNullLocalizer;
-    private readonly UpdateFactHandler _handler;
+    private readonly MockFailedToUpdateLocalizer _mockFailedToUpdateLocalizer;
+    private readonly UpdateTermHandler _handler;
 
-    public UpdateFactTest()
+    public UpdateTermTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockFailedToUpdateLocalizer = new MockFailedToUpdateLocalizer();
         _mockCannotConvertNullLocalizer = new MockCannotConvertNullLocalizer();
-        _handler = new UpdateFactHandler(
-            _mockRepository.Object,
+        _mockFailedToUpdateLocalizer = new MockFailedToUpdateLocalizer();
+        _handler = new UpdateTermHandler(
             _mockMapper.Object,
+            _mockRepository.Object,
             _mockLogger.Object,
             _mockFailedToUpdateLocalizer,
             _mockCannotConvertNullLocalizer);
     }
 
     [Fact]
-    public async Task ShouldUpdateSuccessfully_WhenFactExists()
+    public async Task ShouldUpdateSuccessfully_WhenTermExists()
     {
         // Arrange
-        var (fact, factDto) = GetFactObjects();
-        var request = GetRequest(factDto);
+        var (term, termDto) = GetTermObjects();
+        var request = GetRequest(termDto);
 
-        SetupMockRepository(fact, 1);
-        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
+        SetupMockRepository(term, 1);
+        MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        _mockRepository.Verify(x => x.FactRepository.Update(fact), Times.Once);
+        _mockRepository.Verify(x => x.TermRepository.Update(term), Times.Once);
         _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
@@ -59,11 +59,11 @@ public class UpdateFactTest
     public async Task ShouldUpdateSuccessfully_WithCorrectDataType()
     {
         // Arrange
-        var (fact, factDto) = GetFactObjects();
-        var request = GetRequest(factDto);
+        var (term, termDto) = GetTermObjects();
+        var request = GetRequest(termDto);
 
-        SetupMockRepository(fact, 1);
-        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
+        SetupMockRepository(term, 1);
+        MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -77,11 +77,11 @@ public class UpdateFactTest
     public async Task ShouldUpdateFailingly_WhenMappingFailed()
     {
         // Arrange
-        var (_, factDto) = GetFactObjects();
-        var request = GetRequest(factDto);
-        var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToFact"].Value;
+        var (_, termDto) = GetTermObjects();
+        var request = GetRequest(termDto);
+        var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToTerm"].Value;
 
-        MockHelpers.SetupMockMapper<Fact?, FactDto>(_mockMapper, null, request.Fact);
+        MockHelpers.SetupMockMapper<Term?, TermDTO>(_mockMapper, null, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -96,12 +96,12 @@ public class UpdateFactTest
     public async Task ShouldUpdateFailingly_WhenSaveChangesAsyncFailed()
     {
         // Arrange
-        var (fact, factDto) = GetFactObjects();
-        var request = GetRequest(factDto);
-        var expectedErrorMessage = _mockFailedToUpdateLocalizer["FailedToUpdateFact"].Value;
+        var (term, termDto) = GetTermObjects();
+        var request = GetRequest(termDto);
+        var expectedErrorMessage = _mockFailedToUpdateLocalizer["FailedToUpdateTerm"].Value;
 
-        SetupMockRepository(fact, -1);
-        MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
+        SetupMockRepository(term, -1);
+        MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -112,23 +112,23 @@ public class UpdateFactTest
         _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static (Fact, FactDto) GetFactObjects()
+    private static (Term, TermDTO) GetTermObjects()
     {
-        var fact = new Fact();
-        var factDto = new FactDto();
+        var term = new Term();
+        var termDto = new TermDTO();
 
-        return (fact, factDto);
+        return (term, termDto);
     }
 
-    private static UpdateFactCommand GetRequest(FactDto factDto)
+    private static UpdateTermCommand GetRequest(TermDTO termDto)
     {
-        return new UpdateFactCommand(factDto);
+        return new UpdateTermCommand(termDto);
     }
 
-    private void SetupMockRepository(Fact fact, int saveChangesResult)
+    private void SetupMockRepository(Term term, int saveChangesResult)
     {
         _mockRepository
-            .Setup(x => x.FactRepository.Update(fact));
+            .Setup(x => x.TermRepository.Update(term));
         _mockRepository
             .Setup(x => x.SaveChangesAsync())
             .ReturnsAsync(saveChangesResult);

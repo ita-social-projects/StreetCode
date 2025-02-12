@@ -41,7 +41,7 @@ public class CreateFactHandler : IRequestHandler<CreateFactCommand, Result<Unit>
             return Result.Fail(new Error(errorMsg));
         }
 
-        _repositoryWrapper.FactRepository.Create(fact);
+        await _repositoryWrapper.FactRepository.CreateAsync(fact);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         if (resultIsSuccess)

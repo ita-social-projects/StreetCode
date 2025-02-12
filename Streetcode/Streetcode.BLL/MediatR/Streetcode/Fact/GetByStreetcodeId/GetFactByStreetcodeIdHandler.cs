@@ -16,7 +16,11 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetFactByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetFactByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -31,7 +35,7 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
 
         if (!facts.Any())
         {
-            string message = "Returning empty enumerable of facts";
+            string message = _stringLocalizerCannotFind["CannotFindAnyFact"].Value;
             _logger.LogInformation(message);
             return Result.Ok(Enumerable.Empty<FactDto>());
         }

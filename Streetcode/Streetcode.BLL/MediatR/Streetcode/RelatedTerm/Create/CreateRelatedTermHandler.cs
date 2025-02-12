@@ -61,7 +61,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedTerm.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            var createdRelatedTerm = _repository.RelatedTermRepository.Create(relatedTerm);
+            var createdRelatedTerm = await _repository.RelatedTermRepository.CreateAsync(relatedTerm);
 
             var isSuccessResult = await _repository.SaveChangesAsync() > 0;
 

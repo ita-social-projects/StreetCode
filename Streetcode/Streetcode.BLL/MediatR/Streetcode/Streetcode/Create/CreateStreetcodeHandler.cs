@@ -284,7 +284,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             .Where(art => usedArtIds.Contains(art.Id))
             .ToList();
 
-        var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlides);
+        var newArtSlides = _mapper.Map<List<StreetcodeArtSlide>>(artSlidesList);
         newArtSlides.ForEach(artSlide => artSlide.StreetcodeId = streetcode.Id);
 
         await _repositoryWrapper.StreetcodeArtSlideRepository.CreateRangeAsync(newArtSlides);

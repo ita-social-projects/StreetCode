@@ -31,7 +31,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     {
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
-        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
+        if (!relatedFigureIds.Any())
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);
@@ -43,7 +43,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
           include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
                              .Include(sc => sc.Tags));
 
-        if (!await relatedFigureIds.AnyAsync(cancellationToken: cancellationToken))
+        if (!relatedFigureIds.Any())
         {
             string message = "Returning empty enumerable of related figures";
             _logger.LogInformation(message);
@@ -66,7 +66,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         try
         {
             var observerIds = _repositoryWrapper.RelatedFigureRepository
-            .FindAll(f => f.TargetId == streetcodeId).Select(o => o.ObserverId);
+                .FindAll(f => f.TargetId == streetcodeId).Select(o => o.ObserverId);
 
             var targetIds = _repositoryWrapper.RelatedFigureRepository
                 .FindAll(f => f.ObserverId == streetcodeId).Select(t => t.TargetId);

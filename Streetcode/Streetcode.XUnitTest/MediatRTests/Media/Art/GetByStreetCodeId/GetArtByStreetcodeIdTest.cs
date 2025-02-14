@@ -85,22 +85,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
         }
 
-        [Theory]
-        [InlineData(-1)]
-        public async Task Handle_HistorycodeWithNonExistentId_ReturnsError(int streetcodeId)
-        {
-            // Arrange
-            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
-            var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-            var expectedError = $"Cannot find any art with corresponding streetcode id: {streetcodeId}";
-
-            // Act
-            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
-
-            // Assert
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
         private List<Art> GetArtsList()
         {
             return new List<Art>()

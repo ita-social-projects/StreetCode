@@ -19,9 +19,9 @@ namespace Streetcode.BLL.Attributes.Authentication
                 return new ValidationResult("Attribute cannot be applied to non-string property");
             }
 
-            if (password.Length < 14)
+            if (password.Length < 8)
             {
-                return new ValidationResult("Password minimum length is 14");
+                return new ValidationResult("Password minimum length is 8");
             }
 
             if (Regex.Matches(password, @"[\s]", RegexOptions.None, TimeSpan.FromMilliseconds(100)).Any())

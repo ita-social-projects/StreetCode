@@ -10,14 +10,14 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 {
-    public class GetStreetcodesCountHander : IRequestHandler<GetStreetcodesCountQuery,
+    public class GetStreetcodesCountHandler : IRequestHandler<GetStreetcodesCountQuery,
         Result<int>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-        public GetStreetcodesCountHander(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+        public GetStreetcodesCountHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;

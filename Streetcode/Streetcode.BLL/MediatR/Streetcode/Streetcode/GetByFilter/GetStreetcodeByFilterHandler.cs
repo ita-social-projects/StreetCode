@@ -89,7 +89,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByFilter
                     CreateFilterResult(art.StreetcodeArtSlide!.Streetcode!, streetcodeArt.Art!.Description!, "Арт-галерея", "art-gallery")));
         }
 
-        private StreetcodeFilterResultDTO CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null, int factId = 0, int timelineItemId = 0)
+        private static StreetcodeFilterResultDTO CreateFilterResult(StreetcodeContent streetcode, string content, string? sourceName = null, string? blockName = null, int factId = 0, int timelineItemId = 0)
         {
             return new StreetcodeFilterResultDTO
             {

@@ -55,7 +55,7 @@ public class BaseVideoValidatorTests
     {
         // Arrange
         var video = GetValidVideo();
-        video.Url = string.Empty;
+        video.Url = invalidUrl;
         var expectedError = _mockValidationLocalizer["ValidUrl", _mockNamesLocalizer["Video"]];
 
         // Act
@@ -82,7 +82,7 @@ public class BaseVideoValidatorTests
         result.ShouldNotHaveValidationErrorFor(dto => dto.Url);
     }
 
-    public static VideoCreateUpdateDTO GetValidVideo()
+    private static VideoCreateUpdateDTO GetValidVideo()
     {
         return new VideoCreateDTO()
         {

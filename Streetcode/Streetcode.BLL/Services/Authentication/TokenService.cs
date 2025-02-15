@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
@@ -58,15 +57,8 @@ namespace Streetcode.BLL.Services.Authentication
                 throw new Exception(InvalidRefreshTokenErrorMessage);
             }
 
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new ClaimsIdentity(principles?.Claims),
-                Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.AccessTokenLifetimeInMinutes),
-                SigningCredentials = _signingCredentials,
-                Issuer = _jwtOptions.Issuer,
-                Audience = _jwtOptions.Audience
-            };
-            var newToken = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+            var tokenDescriptor = GetTokenDescriptorAsync(user);
+            var newToken = _jwtSecurityTokenHandler.CreateJwtSecurityToken(tokenDescriptor.Result);
 
             return newToken;
         }
@@ -113,9 +105,9 @@ namespace Streetcode.BLL.Services.Authentication
             {
                 claimsPrincipal = _jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out _);
             }
-            catch (SecurityTokenValidationException ex)
+            catch (SecurityTokenException ex)
             {
-                throw new SecurityTokenValidationException(ex.Message, ex);
+                throw new SecurityTokenException(ex.Message, ex);
             }
 
             return claimsPrincipal;

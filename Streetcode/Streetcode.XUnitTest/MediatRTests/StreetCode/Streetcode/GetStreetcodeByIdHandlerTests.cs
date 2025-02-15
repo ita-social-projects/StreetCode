@@ -19,15 +19,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetStreetcodeByIdHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -41,7 +37,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             RepositorySetup(testContent);
             MapperSetup(testContentDto);
 
-            var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object);
 
             // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
@@ -61,42 +57,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             RepositorySetup(testContent);
             MapperSetup(testContentDto);
 
-            var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object);
 
             // act
             var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
 
             // Assert
             Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);
-        }
-
-        [Theory]
-        [InlineData(1)]
-        public async Task Handle_ReturnsError(int id)
-        {
-            // arrange
-            string expectedErrorMessage = $"Cannot find any streetcode with corresponding id: {id}";
-            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
-               .Returns((string key, object[] args) =>
-               {
-                   if (args != null && args.Length > 0 && args[0] is int id)
-                   {
-                       return new LocalizedString(key, $"Cannot find any streetcode with corresponding id: {id}");
-                   }
-
-                   return new LocalizedString(key, "Cannot find any streetcode with unknown id");
-               });
-
-            RepositorySetup(null);
-            MapperSetup(null);
-
-            var handler = new GetStreetcodeByIdHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
-
-            // act
-            var result = await handler.Handle(new GetStreetcodeByIdQuery(id), CancellationToken.None);
-
-            // Assert
-            Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
         }
 
         private void RepositorySetup(StreetcodeContent? streetcode)

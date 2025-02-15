@@ -1,11 +1,9 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
@@ -19,7 +17,6 @@ public class GetStreetcodeShortByIdHandlerTests
     private readonly Mock<IMapper> _mapperMock;
     private readonly Mock<ILoggerService> _loggerMock;
     private readonly MockCannotMapLocalizer _mockCannotMapLocalizer;
-    private readonly MockCannotFindLocalizer _mockCannotFindLocalizer;
     private readonly GetStreetcodeShortByIdHandler _handler;
 
     public GetStreetcodeShortByIdHandlerTests()
@@ -28,14 +25,12 @@ public class GetStreetcodeShortByIdHandlerTests
         _mapperMock = new Mock<IMapper>();
         _loggerMock = new Mock<ILoggerService>();
         _mockCannotMapLocalizer = new MockCannotMapLocalizer();
-        _mockCannotFindLocalizer = new MockCannotFindLocalizer();
 
         _handler = new GetStreetcodeShortByIdHandler(
             _mapperMock.Object,
             _repositoryMock.Object,
             _loggerMock.Object,
-            _mockCannotMapLocalizer,
-            _mockCannotFindLocalizer);
+            _mockCannotMapLocalizer);
     }
 
     [Fact]
@@ -55,25 +50,6 @@ public class GetStreetcodeShortByIdHandlerTests
         // Assert
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedDto.Id, result.Value.Id);
-    }
-
-    [Fact]
-    public async Task Handle_WhenStreetcodeDoesNotExist_ReturnsError()
-    {
-        // Arrange
-        var request = new GetStreetcodeShortByIdQuery(id: 1);
-        string expectedErrorKey = "CannotFindStreetcodeById";
-        string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey];
-
-        SetupRepositoryMock(null);
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
     }
 
     [Fact]

@@ -14,34 +14,23 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<CannotMapSharedResource> _stringLocalizerCannotMap;
 
         public GetStreetcodeShortByIdHandler(
             IMapper mapper,
             IRepositoryWrapper repository,
             ILoggerService logger,
-            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap,
-            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+            IStringLocalizer<CannotMapSharedResource> stringLocalizerCannotMap)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
             _stringLocalizerCannotMap = stringLocalizerCannotMap;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
         {
             var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(st => st.Id == request.id);
-
-            if (streetcode == null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var streetcodeShortDto = _mapper.Map<StreetcodeShortDTO>(streetcode);
 
             if(streetcodeShortDto == null)

@@ -419,8 +419,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-
-    // is it really good send OK(with empty list) if invalid number for count
     public async Task GetAllCatalog_WithInvalidCount_ReturnsEmptyList()
     {
         // Arrange
@@ -508,7 +506,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         int existingId = _testStreetcodeContent.Id;
 
         // Act
-        var response = await this.Client.GetByIdAsync(existingId);
+        var response = await Client.GetByIdAsync(existingId);
         var streetcode = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeDTO>(response.Content);
 
         // Assert
@@ -571,7 +569,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         int existingId = _testStreetcodeContent.Id;
 
         // Act
-        var response = await this.Client.GetByIndexAsync(existingId);
+        var response = await Client.GetByIndexAsync(existingId);
         var streetcode = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeDTO>(response.Content);
 
         // Assert

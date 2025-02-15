@@ -54,15 +54,14 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
     }
 
     [Fact]
-    public async Task GetByStreetcodeId_Incorrect_ReturnEmptyList()
+    public async Task GetByStreetcodeId_Incorrect_ReturnsBadRequest()
     {
         int incorrectId = -100;
         var response = await Client.GetByStreetcodeId(incorrectId);
 
         Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode),
-            () => Assert.True(response.IsSuccessStatusCode),
-            () => Assert.Equal("[]", response.Content));
+            () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+            () => Assert.False(response.IsSuccessStatusCode));
     }
 
     [Fact]

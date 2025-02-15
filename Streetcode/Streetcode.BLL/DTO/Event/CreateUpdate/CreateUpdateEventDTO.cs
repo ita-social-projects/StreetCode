@@ -8,7 +8,7 @@ namespace Streetcode.BLL.DTO.Event.CreateUpdate
         public DateTime Date { get; set; }
         public string? Description { get; set; }
         public List<int>? StreetcodeIds { get; set; }
-        public EventType EventType { get; set; }
+        public string EventType { get; set; }
         public string? Location { get; set; }
         public string? Organizer { get; set; }
         public int? TimelineItemId { get; set; }

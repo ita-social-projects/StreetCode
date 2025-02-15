@@ -12,8 +12,8 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20250210070751_UpdateEventStreetcodesDeleteBehavior")]
-    partial class UpdateEventStreetcodesDeleteBehavior
+    [Migration("20250213203537_AddEventTable")]
+    partial class AddEventTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

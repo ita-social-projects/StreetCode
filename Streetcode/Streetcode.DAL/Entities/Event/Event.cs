@@ -30,6 +30,6 @@ namespace Streetcode.DAL.Entities.Event
 
         [Required]
         public string EventType { get; set; }
-        public List<EventStreetcodes>? EventStreetcodes { get; set; } = new();
+        public List<EventStreetcodes> EventStreetcodes { get; set; } = new();
     }
 }

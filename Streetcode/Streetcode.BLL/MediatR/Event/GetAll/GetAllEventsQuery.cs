@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Event.GetAll
 {
-    public record GetAllEventsQuery(EventType? EventType, ushort? page = null, ushort? pageSize = null)
+    public record GetAllEventsQuery(string? EventType, ushort? page = null, ushort? pageSize = null)
         : IRequest<Result<GetAllEventsResponseDTO>>;
 }

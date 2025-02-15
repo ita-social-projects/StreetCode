@@ -17,7 +17,7 @@ namespace Streetcode.WebApi.Controllers.Event
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllEventsResponseDTO))]
-        public async Task<IActionResult> GetAll([FromQuery] EventType? eventType, [FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] string? eventType, [FromQuery] ushort? page, [FromQuery] ushort? pageSize)
         {
             return HandleResult(await Mediator.Send(new GetAllEventsQuery(eventType, page, pageSize)));
         }

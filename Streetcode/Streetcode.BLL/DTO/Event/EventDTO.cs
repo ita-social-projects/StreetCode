@@ -9,7 +9,7 @@ namespace Streetcode.BLL.DTO.Event
         public DateTime Date { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public EventType EventType { get; set; }
+        public string EventType { get; set; }
         public List<StreetcodeShortDTO>? Streetcodes { get; set; }
     }
 }

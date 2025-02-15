@@ -3,6 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Event;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
@@ -36,12 +37,12 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
                     .GetAllPaginated(
                         request.page,
                         request.pageSize,
-                        predicate: request.EventType.HasValue
-                        ? e => e.EventType == request.EventType.ToString()
+                        predicate: !string.IsNullOrEmpty(request.EventType)
+                        ? e => e.EventType == request.EventType
                         : null,
                         include: query => query
-                            .Include(e => e.EventStreetcodes)
-                            .ThenInclude(es => es.StreetcodeContent));
+                            .Include(e => e.EventStreetcodes !)
+                            .ThenInclude(es => es.StreetcodeContent !));
 
             if (paginationResponse is null)
             {

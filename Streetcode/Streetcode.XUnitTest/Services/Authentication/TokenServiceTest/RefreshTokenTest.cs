@@ -1,12 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Streetcode.BLL.Services.Authentication;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
 using Xunit;
 
@@ -27,10 +29,10 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         /// </summary>
         public RefreshTokenTest()
         {
-            this.mockDbContext = new Mock<StreetcodeDbContext>();
-            this.fakeConfiguration = this.GetFakeConfiguration();
+            mockDbContext = new Mock<StreetcodeDbContext>();
+            fakeConfiguration = GetFakeConfiguration();
 
-            this.tokenService = this.GetTokenService();
+            tokenService = GetTokenService();
         }
 
         private enum CreateTokenOptions
@@ -44,14 +46,14 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            var invalidToken = this.GetToken(CreateTokenOptions.InvalidToken, new User(), string.Empty);
+            var invalidToken = GetToken(CreateTokenOptions.InvalidToken, new User(), string.Empty);
             string invalidTokenStringified = new JwtSecurityTokenHandler().WriteToken(invalidToken);
-            var exceptionAction = this.tokenService.RefreshToken;
+            var exceptionAction = tokenService.RefreshToken;
 
             // Act.
 
             // Assert.
-            Assert.Throws<SecurityTokenValidationException>(() => exceptionAction(invalidTokenStringified, testRefreshToken));
+            Assert.Throws<SecurityTokenException>(() => exceptionAction(invalidTokenStringified, testRefreshToken));
         }
 
         [Fact]
@@ -59,10 +61,10 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            var validToken = this.GetToken(CreateTokenOptions.ValidToken, this.GetUser(), string.Empty);
+            var validToken = GetToken(CreateTokenOptions.ValidToken, GetUser(), string.Empty);
             string validTokenStringified = new JwtSecurityTokenHandler().WriteToken(validToken);
-            this.SetupMockDbContext(null);
-            var exceptionAction = this.tokenService.RefreshToken;
+            SetupMockDbContext(null);
+            var exceptionAction = tokenService.RefreshToken;
 
             // Act.
 
@@ -75,11 +77,11 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            User testUser = this.GetUser();
-            var invalidToken = this.GetToken(CreateTokenOptions.ValidToken, this.GetUser(), string.Empty);
+            User testUser = GetUser();
+            var invalidToken = GetToken(CreateTokenOptions.ValidToken, GetUser(), string.Empty);
             string invalidTokenStringified = new JwtSecurityTokenHandler().WriteToken(invalidToken);
-            this.SetupMockDbContext(testUser);
-            var exceptionAction = this.tokenService.RefreshToken;
+            SetupMockDbContext(testUser);
+            var exceptionAction = tokenService.RefreshToken;
 
             // Act.
 
@@ -93,11 +95,11 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            User testUser = this.GetUser(testRefreshToken);
-            var invalidToken = this.GetToken(CreateTokenOptions.ValidToken, this.GetUser(), string.Empty);
+            User testUser = GetUser(testRefreshToken);
+            var invalidToken = GetToken(CreateTokenOptions.ValidToken, GetUser(), string.Empty);
             string invalidTokenStringified = new JwtSecurityTokenHandler().WriteToken(invalidToken);
-            this.SetupMockDbContext(testUser);
-            var exceptionAction = this.tokenService.RefreshToken;
+            SetupMockDbContext(testUser);
+            var exceptionAction = tokenService.RefreshToken;
 
             // Act.
 
@@ -111,14 +113,16 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            var user = this.GetUser(testRefreshToken, DateTime.Now.AddDays(1));
+            var user = GetUser(testRefreshToken, DateTime.Now.AddDays(1));
             string role = "User";
-            var invalidToken = this.GetToken(CreateTokenOptions.ValidToken, user, role);
+            var invalidToken = GetToken(CreateTokenOptions.ValidToken, user, role);
             string invalidTokenStringified = new JwtSecurityTokenHandler().WriteToken(invalidToken);
-            this.SetupMockDbContext(user);
+            SetupMockDbContext(user);
+            SetupMockDbContextGetUserRoles();
+            SetupMockDbContextGetRoles();
 
             // Act.
-            var actualToken = this.tokenService.RefreshToken(invalidTokenStringified, testRefreshToken);
+            var actualToken = tokenService.RefreshToken(invalidTokenStringified, testRefreshToken);
 
             // Assert.
             Assert.NotNull(actualToken);
@@ -129,14 +133,16 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             // Arrange.
             string testRefreshToken = "TestRefreshToken";
-            User expectedUser = this.GetUser(testRefreshToken, DateTime.Now.AddDays(1));
+            User expectedUser = GetUser(testRefreshToken, DateTime.Now.AddDays(1));
             string expectedRole = "User";
-            var invalidToken = this.GetToken(CreateTokenOptions.ValidToken, expectedUser, expectedRole);
+            var invalidToken = GetToken(CreateTokenOptions.ValidToken, expectedUser, expectedRole);
             string invalidTokenStringified = new JwtSecurityTokenHandler().WriteToken(invalidToken);
-            this.SetupMockDbContext(expectedUser);
+            SetupMockDbContext(expectedUser);
+            SetupMockDbContextGetUserRoles();
+            SetupMockDbContextGetRoles();
 
             // Act.
-            var actualToken = this.tokenService.RefreshToken(invalidTokenStringified, testRefreshToken);
+            var actualToken = tokenService.RefreshToken(invalidTokenStringified, testRefreshToken);
 
             // Assert.
             Assert.Equal(expectedUser.Email, actualToken.Claims.First(claim => claim.Type == "email").Value);
@@ -145,11 +151,11 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 
         private void SetupMockDbContext(User? userToReturn)
         {
-            var mockDbSet = this.GetConfiguredMockDbSet<User>(new List<User>()
+            var mockDbSet = GetConfiguredMockDbSet<User>(new List<User>()
             {
                 userToReturn ?? new User(),
             });
-            this.mockDbContext
+            mockDbContext
                 .Setup(context => context.Users)
                 .Returns(mockDbSet.Object);
         }
@@ -170,9 +176,9 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
                     new Claim(ClaimTypes.Email, user.Email!),
                     new Claim(ClaimTypes.Role, userRoleName),
                 }),
-                SigningCredentials = this.GetSigningCredentials(),
-                Issuer = this.jwtIssuer,
-                Audience = this.jwtAudience,
+                SigningCredentials = GetSigningCredentials(),
+                Issuer = jwtIssuer,
+                Audience = jwtAudience,
             };
             var token = new JwtSecurityTokenHandler().CreateJwtSecurityToken(tokenDescriptor);
             return token;
@@ -193,7 +199,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 
         private SigningCredentials GetSigningCredentials()
         {
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.jwtKey));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
             return signingCredentials;
         }
@@ -202,10 +208,10 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         {
             var appSettingsStub = new Dictionary<string, string?>
             {
-                { "Jwt:Key", this.jwtKey },
-                { "Jwt:Issuer", this.jwtIssuer },
-                { "Jwt:Audience", this.jwtAudience },
-                { "Jwt:AccessTokenLifetimeInMinutes", this.accessTokenLifetimeInMinutes },
+                { "Jwt:Key", jwtKey },
+                { "Jwt:Issuer", jwtIssuer },
+                { "Jwt:Audience", jwtAudience },
+                { "Jwt:AccessTokenLifetimeInMinutes", accessTokenLifetimeInMinutes },
             };
             var fakeConfiguration = new ConfigurationBuilder()
                 .AddInMemoryCollection(appSettingsStub)
@@ -228,11 +234,59 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             return dbSet;
         }
 
+        private static IQueryable<IdentityRole> GetRoles()
+        {
+            var roles = new List<IdentityRole>()
+            {
+                new IdentityRole() { Id = "1", Name = nameof(UserRole.Admin) },
+                new IdentityRole() { Id = "2", Name = nameof(UserRole.User) },
+            };
+            return roles.AsQueryable();
+        }
+
+        private User GetUser()
+        {
+            return new User()
+            {
+                Id = "1",
+                Name = "John",
+                Surname = "Doe",
+                Email = "JohnDoe@gmail.com",
+            };
+        }
+
+        private static IQueryable<IdentityUserRole<string>> GetUserRoles()
+        {
+            var userRoles = new List<IdentityUserRole<string>>()
+            {
+                new IdentityUserRole<string>() { UserId = "1", RoleId = "2" },
+                new IdentityUserRole<string>() { UserId = "2", RoleId = "1" },
+                new IdentityUserRole<string>() { UserId = "3", RoleId = "2" },
+            };
+            return userRoles.AsQueryable();
+        }
+
+        private void SetupMockDbContextGetUserRoles()
+        {
+            var mockDbSet = GetConfiguredMockDbSet(GetUserRoles());
+            mockDbContext
+                .Setup(context => context.UserRoles)
+                .Returns(mockDbSet.Object);
+        }
+
+        private void SetupMockDbContextGetRoles()
+        {
+            var mockDbSet = GetConfiguredMockDbSet(GetRoles());
+            mockDbContext
+                .Setup(context => context.Roles)
+                .Returns(mockDbSet.Object);
+        }
+
         private TokenService GetTokenService()
         {
             return new TokenService(
-                this.fakeConfiguration,
-                this.mockDbContext.Object);
+                fakeConfiguration,
+                mockDbContext.Object);
         }
     }
 }

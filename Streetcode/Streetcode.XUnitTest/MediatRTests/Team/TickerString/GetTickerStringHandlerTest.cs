@@ -36,29 +36,43 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
                  () => Assert.True(result.IsSuccess));
         }
 
+        [Fact]
+        public async Task Handle_EmptyPositionsList_ReturnsEmptyString()
+        {
+            // Arrange
+            this.SetupGetAllAsyncMethod(new List<Positions>());
+            var handler = new GetTickerStringHandler(_mockRepository.Object, _mockLogger.Object);
+
+            // Act
+            var result = await handler.Handle(new GetTickerStringQuery(), CancellationToken.None);
+
+            // Assert
+            Assert.Multiple(
+                () => Assert.NotNull(result),
+                () => Assert.True(result.IsSuccess),
+                () => Assert.Empty(result.Value));
+        }
+
         private static IEnumerable<Positions> GetPositionsList()
         {
             var partners = new List<Positions>
         {
-            new Positions
+            new ()
             {
                 Id = 1,
                 TeamMembers = new List<TeamMember>
                 {
-                    new TeamMember { Id = 2 },
+                    new () { Id = 2 },
                 },
             },
-            new Positions
-            {
-                Id = 2,
-            },
+            new () { Id = 2 },
         };
             return partners;
         }
 
         private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
         {
-            this._mockRepository
+            _mockRepository
                 .Setup(x => x.PositionRepository
                     .GetAllAsync(
                         null,

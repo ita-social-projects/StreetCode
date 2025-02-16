@@ -50,9 +50,12 @@ public class GetRelatedFiguresByTagIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.NotEmpty(result.Value);
-        Assert.Equal(testStreetcodes.Count, result.Value.Count());
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.NotEmpty(result.Value);
+            Assert.Equal(testStreetcodes.Count, result.Value.Count());
+        });
     }
 
     [Fact]
@@ -66,9 +69,12 @@ public class GetRelatedFiguresByTagIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Empty(result.Value);
-        _loggerMock.Verify(logger => logger.LogInformation("Returning empty enumerable of related figures"), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Empty(result.Value);
+            _loggerMock.Verify(logger => logger.LogInformation("Returning empty enumerable of related figures"), Times.Once);
+        });
     }
 
     [Fact]

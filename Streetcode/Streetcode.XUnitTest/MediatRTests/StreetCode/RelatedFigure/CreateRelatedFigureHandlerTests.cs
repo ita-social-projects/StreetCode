@@ -45,9 +45,12 @@ public class CreateRelatedFigureHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Create(It.IsAny<Entities.RelatedFigure>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.CreateAsync(It.IsAny<Entities.RelatedFigure>()), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
     [Fact]
@@ -62,9 +65,12 @@ public class CreateRelatedFigureHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedError, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedError, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedError), Times.Once);
+        });
     }
 
     [Fact]
@@ -80,9 +86,12 @@ public class CreateRelatedFigureHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedError, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedError, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedError), Times.Once);
+        });
     }
 
     [Fact]
@@ -98,10 +107,13 @@ public class CreateRelatedFigureHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedError, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Create(It.IsAny<Entities.RelatedFigure>()), Times.Never);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedError, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedError), Times.Once);
+            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Create(It.IsAny<Entities.RelatedFigure>()), Times.Never);
+        });
     }
 
     [Fact]
@@ -118,9 +130,12 @@ public class CreateRelatedFigureHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedError, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedError, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedError), Times.Once);
+        });
     }
 
     private void SetupMocksForExistingStreetcodes(params int[] streetcodeIds)
@@ -143,7 +158,7 @@ public class CreateRelatedFigureHandlerTests
     private void SetupMocksForExistingRelation(int observerId, int targetId)
     {
         _repositoryMock
-            .Setup(repo => repo.RelatedFigureRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Streetcode.RelatedFigure, bool>>>(), null))
+            .Setup(repo => repo.RelatedFigureRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Streetcode.RelatedFigure { ObserverId = observerId, TargetId = targetId });
     }
 

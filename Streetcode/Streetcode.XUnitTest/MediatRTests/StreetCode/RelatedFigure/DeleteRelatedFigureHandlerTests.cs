@@ -5,6 +5,7 @@ using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
+using Entity = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure;
 
@@ -34,9 +35,9 @@ public class DeleteRelatedFigureHandlerTests
     public async Task Handle_WhenRelationExists_DeletesRelationAndReturnsSuccess()
     {
         // Arrange
-        var observerId = 1;
-        var targetId = 2;
-        var relation = new DAL.Entities.Streetcode.RelatedFigure { ObserverId = observerId, TargetId = targetId };
+        const int observerId = 1;
+        const int targetId = 2;
+        var relation = new Entity { ObserverId = observerId, TargetId = targetId };
 
         SetupMocksForHandler(relation, 1);
 
@@ -46,17 +47,20 @@ public class DeleteRelatedFigureHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Delete(relation), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Delete(relation), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
     [Fact]
     public async Task Handle_WhenRelationDoesNotExist_ReturnsError()
     {
         // Arrange
-        var observerId = 1;
-        var targetId = 2;
+        const int observerId = 1;
+        const int targetId = 2;
         string expectedErrorMessage = _mockCannotFindLocalizer["CannotFindRelationBetweenStreetcodesWithCorrespondingIds", observerId, targetId];
 
         SetupMocksForHandler(null, 0);
@@ -67,19 +71,22 @@ public class DeleteRelatedFigureHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(command, expectedErrorMessage), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(command, expectedErrorMessage), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        });
     }
 
     [Fact]
     public async Task Handle_WhenSaveChangesFails_ReturnsError()
     {
         // Arrange
-        var observerId = 1;
-        var targetId = 2;
-        var relation = new DAL.Entities.Streetcode.RelatedFigure { ObserverId = observerId, TargetId = targetId };
+        const int observerId = 1;
+        const int targetId = 2;
+        var relation = new Entity { ObserverId = observerId, TargetId = targetId };
         string expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteRelation"];
 
         SetupMocksForHandler(relation, 0);
@@ -90,17 +97,20 @@ public class DeleteRelatedFigureHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(command, expectedErrorMessage), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(command, expectedErrorMessage), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
-    private void SetupMocksForHandler(DAL.Entities.Streetcode.RelatedFigure? relation, int saveChangesResult)
+    private void SetupMocksForHandler(Entity? relation, int saveChangesResult)
     {
         _repositoryMock
             .Setup(repo => repo.RelatedFigureRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<DAL.Entities.Streetcode.RelatedFigure, bool>>>(), null))
+                It.IsAny<Expression<Func<Entity, bool>>>(), null))
             .ReturnsAsync(relation);
 
         _repositoryMock

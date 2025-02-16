@@ -47,11 +47,9 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
         {
             return Result.Ok(Unit.Value);
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelation"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        string finalErrorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelation"].Value;
+        _logger.LogError(request, finalErrorMsg);
+        return Result.Fail(new Error(finalErrorMsg));
     }
 }

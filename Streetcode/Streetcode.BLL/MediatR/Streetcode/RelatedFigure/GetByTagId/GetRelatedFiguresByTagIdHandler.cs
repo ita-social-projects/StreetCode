@@ -10,7 +10,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
 {
-    public class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
+    public class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
         {
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
-                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published &&
+                predicate: sc => sc.Status == StreetcodeStatus.Published &&
                   sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId),
                 include: scl => scl
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
@@ -48,7 +48,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
                 streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(blackAndWhiteImageAssignmentKey.ToString())).ToList();
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
+            var relatedFigureDtos = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);
+            return Result.Ok(relatedFigureDtos);
         }
     }
 }

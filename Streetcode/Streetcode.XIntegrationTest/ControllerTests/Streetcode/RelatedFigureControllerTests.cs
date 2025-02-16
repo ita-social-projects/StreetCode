@@ -46,45 +46,69 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
     [Fact]
     public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
     {
+        // Act
         var response = await Client.GetByStreetcodeId(_testStreetcodeContent1.Id);
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<RelatedFigureDTO>>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+        });
     }
 
     [Fact]
     public async Task GetByStreetcodeId_Incorrect_ReturnsBadRequest()
     {
+        // Arrange
         int incorrectId = -100;
+
+        // Act
         var response = await Client.GetByStreetcodeId(incorrectId);
 
-        Assert.Multiple(
-            () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
-            () => Assert.False(response.IsSuccessStatusCode));
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.False(response.IsSuccessStatusCode);
+        });
     }
 
     [Fact]
     public async Task GetByTagId_ReturnSuccessStatusCode()
     {
+        // Arrange
         TagExtracter.AddStreetcodeTagIndex(_testStreetcodeContent1.Id, _testTag.Id);
+
+        // Act
         var response = await Client.GetByTagId(_testTag.Id);
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<RelatedFigureDTO>>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+        });
     }
 
     [Fact]
     public async Task GetByTagId_Incorrect_ReturnEmptyList()
     {
+        // Arrange
         int incorrectId = -100;
+
+        // Act
         var response = await Client.GetByTagId(incorrectId);
 
-        Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode),
-            () => Assert.True(response.IsSuccessStatusCode),
-            () => Assert.Equal("[]", response.Content));
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal("[]", response.Content);
+        });
     }
 
     [Fact]
@@ -99,10 +123,12 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
         var response = await Client.Create(observerId, targetId, TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode),
-            () => Assert.True(response.IsSuccessStatusCode),
-            () => Assert.Equal("{}", response.Content));
+        Assert.Multiple(() =>
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal("{}", response.Content);
+        });
     }
 
     [Fact]
@@ -137,10 +163,12 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
         var response = await Client.Delete(observerId, targetId, TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode),
-            () => Assert.True(response.IsSuccessStatusCode),
-            () => Assert.Equal("{}", response.Content));
+        Assert.Multiple(() =>
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.Equal("{}", response.Content);
+        });
     }
 
     [Fact]

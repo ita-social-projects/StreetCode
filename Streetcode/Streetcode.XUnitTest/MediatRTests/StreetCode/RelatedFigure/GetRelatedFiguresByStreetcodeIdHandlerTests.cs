@@ -56,11 +56,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Value);
-            Assert.Equal(2, result.Value.Count());
-            Assert.Contains(result.Value, dto => dto.Id == 1);
-            Assert.Contains(result.Value, dto => dto.Id == 2);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                Assert.NotNull(result.Value);
+                Assert.Equal(2, result.Value.Count());
+                Assert.Contains(result.Value, dto => dto.Id == 1);
+                Assert.Contains(result.Value, dto => dto.Id == 2);
+            });
         }
 
         [Fact]
@@ -74,12 +77,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Value);
-            Assert.Empty(result.Value);
-            _loggerMock.Verify(
-                logger => logger.LogInformation("Returning empty enumerable of related figures"),
-                Times.Once);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                Assert.NotNull(result.Value);
+                Assert.Empty(result.Value);
+                _loggerMock.Verify(logger => logger.LogInformation("Returning empty enumerable of related figures"), Times.Once);
+            });
         }
 
         [Fact]
@@ -100,9 +104,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Value);
-            Assert.Empty(result.Value);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                Assert.NotNull(result.Value);
+                Assert.Empty(result.Value);
+            });
         }
 
         [Fact]
@@ -119,8 +126,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Empty(result.Value!);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                Assert.Empty(result.Value!);
+            });
         }
 
         [Fact]
@@ -155,11 +165,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.NotNull(result.Value);
-            Assert.Equal(1, result.Value.First().Id);
-            Assert.Equal("0", streetcodes.First().Images[0].ImageDetails?.Alt);
-            Assert.Equal("1", streetcodes.First().Images[1].ImageDetails?.Alt);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                Assert.NotNull(result.Value);
+                Assert.Equal(1, result.Value.First().Id);
+                Assert.Equal("0", streetcodes.First().Images[0].ImageDetails?.Alt);
+                Assert.Equal("1", streetcodes.First().Images[1].ImageDetails?.Alt);
+            });
         }
 
         private void SetupMocksForRelatedFigures(
@@ -172,7 +185,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure
                     It.IsAny<Func<IQueryable<Entities.RelatedFigure>,
                         IIncludableQueryable<Entities.RelatedFigure, object>>>()))
                 .Returns((
-                    Expression<Func<Entities.RelatedFigure, bool>> predicate,
+                    Expression<Func<Entities.RelatedFigure, bool>> _,
                     Func<IQueryable<Entities.RelatedFigure>, IIncludableQueryable<Entities.RelatedFigure, object>>
                         include) =>
                 {

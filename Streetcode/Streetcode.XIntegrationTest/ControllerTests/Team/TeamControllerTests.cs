@@ -41,7 +41,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         public async Task GetAll_ReturnSuccessStatusCode()
         {
             // Act
-            var response = await this.Client.GetAllAsync(1, 10, TokenStorage.AdminAccessToken);
+            var response = await this.Client.GetAllAsync(1, 10, this.TokenStorage.AdminAccessToken);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTeamDTO>(response.Content);
 
             // Assert
@@ -74,9 +74,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TeamMemberDTO>(response.Content);
 
             // Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.NotNull(returnedValue);
             Assert.Multiple(
+                () => Assert.True(response.IsSuccessStatusCode),
+                () => Assert.NotNull(returnedValue),
                 () => Assert.Equal(expectedTeamMember.Id, returnedValue?.Id),
                 () => Assert.Equal(expectedTeamMember.Name, returnedValue?.Name));
         }
@@ -85,7 +85,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         public async Task GetById_Incorrect_ReturnBadRequest()
         {
             // Act
-            int incorrectId = -1;
+            const int incorrectId = -1;
             var response = await this.Client.GetByIdAsync(incorrectId);
 
             // Assert
@@ -102,14 +102,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
 
             // Act
             var response = await this.Client.GetByRoleIdAsync(_testPosition.Id);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TeamMemberDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TeamMemberDTO>>(response.Content);
 
             // Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.NotNull(returnedValue);
             Assert.Multiple(
-                () => Assert.Equal(expectedTeamMember.Id, returnedValue.Id),
-                () => Assert.Equal(expectedTeamMember.Name, returnedValue.Name));
+                () => Assert.True(response.IsSuccessStatusCode),
+                () => Assert.NotNull(returnedValue),
+                () => Assert.Equal(expectedTeamMember.Id, returnedValue!.Single().Id),
+                () => Assert.Equal(expectedTeamMember.Name, returnedValue!.Single().Name));
         }
 
         [Fact]
@@ -220,7 +220,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         public async Task Update_WithInvalidData_ReturnsBadRequest()
         {
             // Arrange
-            int id = -1;
+            const int id = -1;
             var teamMemberUpdateDto = ExtractUpdateTeamMemberAttribute.TeamMemberForTest;
             teamMemberUpdateDto.Id = id;
 
@@ -305,7 +305,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         public async Task Delete_WithInvalidData_ReturnsBadRequest()
         {
             // Act
-            int id = -1;
+            const int id = -1;
             var response = await this.Client.DeleteAsync(id, this.TokenStorage.AdminAccessToken);
 
             // Assert

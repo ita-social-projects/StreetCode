@@ -1,7 +1,5 @@
 ﻿using RestSharp;
 using Streetcode.BLL.DTO.Team;
-using Streetcode.BLL.DTO.Team.Abstractions;
-using Streetcode.BLL.DTO.Timeline;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Team
@@ -30,7 +28,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Team
 
         public async Task<RestResponse> GetByRoleIdAsync(int id, string authToken = "")
         {
-            return await this.SendQuery($"/GetById/{id}", authToken);
+            return await this.SendQuery($"/GetByRoleId/{id}", authToken);
         }
 
         public async Task<RestResponse> CreateAsync(TeamMemberCreateDTO createTeamMemberDTO, string authToken = "")

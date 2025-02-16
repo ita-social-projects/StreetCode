@@ -98,10 +98,10 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     public async Task ExistWithUserName_InvalidUserName_ReturnFalse()
     {
         // Arrange
-        var invalidUserName = _testUser.UserName;
+        var invalidUserName = "NonExistentUser_" + Guid.NewGuid();
 
         // Act
-        var response = await Client.ExistWithUserName(invalidUserName.Substring(0, 4), TokenStorage.UserAccessToken);
+        var response = await Client.ExistWithUserName(invalidUserName, TokenStorage.UserAccessToken);
         bool.TryParse(response.Content, out bool result);
 
         // Assert

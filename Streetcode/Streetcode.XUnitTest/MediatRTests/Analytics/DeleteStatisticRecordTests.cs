@@ -85,7 +85,7 @@ public class DeleteStatisticRecordTests
         Assert.False(result.IsSuccess);
         Assert.Contains("Record not found", result.Errors[0].Message);
         _repositoryWrapperMock.Verify(repo => repo.StatisticRecordRepository.Delete(It.IsAny<StatisticRecord>()), Times.Never);
-        _repositoryWrapperMock.Verify(repo => repo.SaveChanges(), Times.Never);
+        _repositoryWrapperMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
     }
 
     [Fact]

@@ -7,17 +7,37 @@ public static class HttpContextHelper
 {
     public static string GetCurrentUserName(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Identity?.Name!;
+        var userName = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+        if (string.IsNullOrEmpty(userName))
+        {
+            throw new UnauthorizedAccessException("User is not authenticated or username is not available.");
+        }
+
+        return userName;
     }
 
     public static string GetCurrentUserId(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value!;
+        var userId = httpContextAccessor.HttpContext?.User?.Claims
+                    .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+             throw new UnauthorizedAccessException("User ID claim is not available.");
+        }
+
+        return userId;
     }
 
     public static string GetCurrentUserEmail(IHttpContextAccessor httpContextAccessor)
     {
-        return httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value!;
+        var email = httpContextAccessor.HttpContext?.User?.Claims
+                          .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnauthorizedAccessException("Email claim is not available.");
+        }
+
+        return email;
     }
 
     public static string? GetCurrentDomain(IHttpContextAccessor httpContextAccessor)

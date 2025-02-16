@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Users;
 
-public class GetByUserNameTest
+public class GetByEmailHandlerTests
 {
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
@@ -25,7 +25,7 @@ public class GetByUserNameTest
     private readonly Mock<ILoggerService> _loggerMock;
     private readonly GetByEmailHandler _handler;
 
-    public GetByUserNameTest()
+    public GetByEmailHandlerTests()
     {
         var userStoreMock = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
@@ -59,7 +59,7 @@ public class GetByUserNameTest
     }
 
     [Fact]
-    public async Task ShouldReturnPaginatedNews_CorrectPage()
+    public async Task Handle_ValidEmail_ReturnsSuccessWithUser()
     {
         // Arrange
         var cancellationToken = CancellationToken.None;

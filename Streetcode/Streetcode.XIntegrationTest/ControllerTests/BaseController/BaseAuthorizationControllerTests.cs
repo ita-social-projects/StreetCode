@@ -11,6 +11,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
             this.TokenStorage = tokenStorage;
         }
 
-        protected TokenStorage TokenStorage { get; set; }
+        protected TokenStorage TokenStorage { get; init; }
     }
 }

@@ -133,12 +133,10 @@ public class UpdateUserHandlerTests
     public async Task Handle_ShouldReturnError_WhenUserIsNotFound()
     {
         // Arrange
-        var existingUser = GetExistingUser();
-
         var updateUserCommand = GetUpdateUserCommand();
 
         _userManagerMock.Setup(um => um.Users)
-            .Returns(new List<User> { existingUser }.AsQueryable().BuildMockDbSet().Object);
+            .Returns(new List<User>().AsQueryable().BuildMockDbSet().Object);
 
         _repositoryWrapperMock.Setup(rw => rw.ExpertiseRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Expertise, bool>>>(),
@@ -160,9 +158,6 @@ public class UpdateUserHandlerTests
     {
         // Arrange
         var updateUserCommand = GetUpdateUserCommand();
-
-        _userManagerMock.Setup(um => um.Users)
-            .Returns(new List<User>().AsQueryable().BuildMockDbSet().Object);
 
         _userManagerMock.Setup(um => um.Users)
             .Returns(new List<User>().AsQueryable().BuildMockDbSet().Object);

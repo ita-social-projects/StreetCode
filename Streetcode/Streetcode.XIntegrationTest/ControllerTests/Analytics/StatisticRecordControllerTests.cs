@@ -115,7 +115,7 @@ public class StatisticRecordControllerTests : BaseAuthorizationControllerTests<A
     }
 
     [Fact]
-    public async Task ExistByQrId_InvalidQrId_ReturnsBadRequest()
+    public async Task ExistByQrId_InvalidQrId_ReturnsFalse()
     {
         // Arrange
         var validQrId = -9999;

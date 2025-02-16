@@ -1,9 +1,7 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllPublished;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;

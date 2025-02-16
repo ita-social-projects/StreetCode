@@ -35,10 +35,10 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenRecordExists_ReturnsStreetcodeUrl()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(qrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
         var testStatisticRecord = new StatisticRecord
         {
-            QrId = request.qrId,
+            QrId = request.QrId,
             StreetcodeCoordinate = new StreetcodeCoordinate { StreetcodeId = 1 },
         };
         var testStreetcode = new StreetcodeContent
@@ -61,7 +61,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenRecordDoesNotExist_ReturnsError()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(qrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
         string expectedErrorKey = "CannotFindRecordWithQrId";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey];
 
@@ -80,10 +80,10 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenStreetcodeDoesNotExist_ReturnsError()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(qrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
         var testStatisticRecord = new StatisticRecord
         {
-            QrId = request.qrId,
+            QrId = request.QrId,
             StreetcodeCoordinate = new StreetcodeCoordinate { StreetcodeId = 1 },
         };
         string expectedErrorKey = "CannotFindStreetcodeById";

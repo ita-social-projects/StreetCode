@@ -42,10 +42,10 @@ public class GetPageOfStreetcodesMainPageHandlerTests
     public async Task Handle_WhenStreetcodesExist_ReturnsPagedCatalogItems()
     {
         // Arrange
-        var request = new GetPageOfStreetcodesMainPageQuery(page: 1, pageSize: 2);
+        var request = new GetPageOfStreetcodesMainPageQuery(Page: 1, PageSize: 2);
         var testStreetcodes = GetTestStreetcodes(5);
 
-        SetupRepositoryMocks(testStreetcodes, request.page, request.pageSize);
+        SetupRepositoryMocks(testStreetcodes, request.Page, request.PageSize);
 
         _mapperMock
             .Setup(m => m.Map<IEnumerable<StreetcodeMainPageDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()))
@@ -56,14 +56,14 @@ public class GetPageOfStreetcodesMainPageHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(request.pageSize, result.Value.Count());
+        Assert.Equal(request.PageSize, result.Value.Count());
     }
 
     [Fact]
     public async Task Handle_WhenNoStreetcodesExist_ReturnsError()
     {
         // Arrange
-        var request = new GetPageOfStreetcodesMainPageQuery(page: 1, pageSize: 2);
+        var request = new GetPageOfStreetcodesMainPageQuery(Page: 1, PageSize: 2);
         string expectedErrorMessage = _mockLocalizer["NoStreetcodesExistNow"];
 
         SetupRepositoryMocks(new List<StreetcodeContent>());
@@ -81,7 +81,7 @@ public class GetPageOfStreetcodesMainPageHandlerTests
     public async Task Handle_WhenStreetcodesExist_ShufflesResults()
     {
         // Arrange
-        var request = new GetPageOfStreetcodesMainPageQuery(page: 1, pageSize: 5);
+        var request = new GetPageOfStreetcodesMainPageQuery(Page: 1, PageSize: 5);
         var testStreetcodes = GetTestStreetcodes(10);
 
         SetupRepositoryMocks(testStreetcodes);

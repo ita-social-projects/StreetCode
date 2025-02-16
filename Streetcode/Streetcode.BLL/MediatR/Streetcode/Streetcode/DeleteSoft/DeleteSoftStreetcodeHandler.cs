@@ -29,7 +29,7 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -39,17 +39,15 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
 
         _repositoryWrapper.StreetcodeRepository.Update(streetcode);
 
-        var resultIsDeleteSucces = await _repositoryWrapper.SaveChangesAsync() > 0;
+        var resultIsDeleteSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
-        if(resultIsDeleteSucces)
+        if(resultIsDeleteSuccess)
         {
             return Result.Ok(Unit.Value);
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        var finalErrorMsg = _stringLocalizerFailedToUpdate["FailedToChangeStatusOfStreetcodeToDeleted"].Value;
+        _logger.LogError(request, finalErrorMsg);
+        return Result.Fail(new Error(finalErrorMsg));
     }
 }

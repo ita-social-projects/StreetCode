@@ -40,7 +40,7 @@ public class GetAllStreetcodesCatalogHandlerTests
     public async Task Handle_WhenStreetcodesExist_ReturnsPagedCatalogItems()
     {
         // Arrange
-        var request = new GetAllStreetcodesCatalogQuery(page: 1, count: 2);
+        var request = new GetAllStreetcodesCatalogQuery(Page: 1, Count: 2);
         var testStreetcodes = GetTestStreetcodes(5);
 
         SetupMocksForStreetcodeCatalogHandler(testStreetcodes);
@@ -50,7 +50,7 @@ public class GetAllStreetcodesCatalogHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(request.count, result.Value.Count());
+        Assert.Equal(request.Count, result.Value.Count());
         Assert.Equal(1, result.Value.ElementAt(0).Id);
         Assert.Equal(2, result.Value.ElementAt(1).Id);
         _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
@@ -61,7 +61,7 @@ public class GetAllStreetcodesCatalogHandlerTests
     public async Task Handle_WhenNoStreetcodesExist_ReturnsError()
     {
         // Arrange
-        var request = new GetAllStreetcodesCatalogQuery(page: 1, count: 2);
+        var request = new GetAllStreetcodesCatalogQuery(Page: 1, Count: 2);
         string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockNoStreetcodesLocalizer[expectedErrorKey];
 
@@ -80,7 +80,7 @@ public class GetAllStreetcodesCatalogHandlerTests
     public async Task Handle_WhenStreetcodesExist_FiltersImagesByKeyNumOfImageToDisplay()
     {
         // Arrange
-        var request = new GetAllStreetcodesCatalogQuery(page: 1, count: 2);
+        var request = new GetAllStreetcodesCatalogQuery(Page: 1, Count: 2);
         const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
 
         var testStreetcodes = new List<StreetcodeContent>
@@ -112,7 +112,7 @@ public class GetAllStreetcodesCatalogHandlerTests
 
         // Assert
         Assert.True(result.IsSuccess);
-        Assert.Equal(request.count, result.Value.Count());
+        Assert.Equal(request.Count, result.Value.Count());
 
         foreach (var streetcode in testStreetcodes)
         {

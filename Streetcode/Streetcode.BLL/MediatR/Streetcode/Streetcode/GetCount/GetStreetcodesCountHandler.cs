@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
@@ -8,44 +7,44 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
+namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount;
+
+public class GetStreetcodesCountHandler : IRequestHandler<GetStreetcodesCountQuery,
+    Result<int>>
 {
-    public class GetStreetcodesCountHandler : IRequestHandler<GetStreetcodesCountQuery,
-        Result<int>>
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+
+    public GetStreetcodesCountHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
-        private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+        _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
+        _stringLocalizerNo = stringLocalizerNo;
+    }
 
-        public GetStreetcodesCountHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+    public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
+    {
+        IEnumerable<StreetcodeContent> streetcodes;
+
+        if (request.OnlyPublished)
         {
-            _repositoryWrapper = repositoryWrapper;
-            _logger = logger;
-            _stringLocalizerNo = stringLocalizerNo;
+            streetcodes = await _repositoryWrapper.StreetcodeRepository
+                .GetAllAsync(s => s.Status == StreetcodeStatus.Published);
+        }
+        else
+        {
+            streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
         }
 
-        public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
+        var streetcodeContents = streetcodes.ToList();
+        if (streetcodeContents.Any())
         {
-            IEnumerable<StreetcodeContent> streetcodes;
-
-            if (request.onlyPublished)
-            {
-                streetcodes = await _repositoryWrapper.StreetcodeRepository
-                    .GetAllAsync(s => s.Status == StreetcodeStatus.Published);
-            }
-            else
-            {
-                streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
-            }
-
-            if (streetcodes.Any())
-            {
-                return Result.Ok(streetcodes.Count());
-            }
-
-            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(errorMsg);
+            return Result.Ok(streetcodeContents.Count);
         }
+
+        string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+        _logger.LogError(request, errorMsg);
+        return Result.Fail(errorMsg);
     }
 }

@@ -19,13 +19,13 @@ using Streetcode.BLL.DTO.AdditionalContent.Filter;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
-using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage;
 using Microsoft.AspNetCore.Authorization;
 using Streetcode.BLL.DTO.Streetcode.CatalogItem;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllMainPage;
+using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllPublished;
 using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;

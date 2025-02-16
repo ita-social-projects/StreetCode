@@ -35,7 +35,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
     public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
-        var filterRequest = query.request;
+        var filterRequest = query.Request;
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
             .FindAll();

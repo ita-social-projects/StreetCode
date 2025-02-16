@@ -35,7 +35,7 @@ public class GetStreetcodesCountHandlerTests
         var testStreetcodes = GetTestStreetcodes(5);
         SetupRepositoryMock(testStreetcodes);
 
-        var request = new GetStreetcodesCountQuery(onlyPublished: false);
+        var request = new GetStreetcodesCountQuery(OnlyPublished: false);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -53,7 +53,7 @@ public class GetStreetcodesCountHandlerTests
         var testStreetcodes = GetTestStreetcodes(5);
         SetupRepositoryMock(testStreetcodes, onlyPublished: true);
 
-        var request = new GetStreetcodesCountQuery(onlyPublished: true);
+        var request = new GetStreetcodesCountQuery(OnlyPublished: true);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -75,7 +75,7 @@ public class GetStreetcodesCountHandlerTests
 
         SetupRepositoryMock(new List<StreetcodeContent>());
 
-        var request = new GetStreetcodesCountQuery(onlyPublished: false);
+        var request = new GetStreetcodesCountQuery(OnlyPublished: false);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);

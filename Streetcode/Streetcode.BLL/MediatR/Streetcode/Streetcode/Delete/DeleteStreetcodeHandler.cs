@@ -51,11 +51,9 @@ public class DeleteStreetcodeHandler : IRequestHandler<DeleteStreetcodeCommand, 
         {
             return Result.Ok(Unit.Value);
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteStreetcode"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        var finalErrorMsg = _stringLocalizerFailedToDelete["FailedToDeleteStreetcode"].Value;
+        _logger.LogError(request, finalErrorMsg);
+        return Result.Fail(new Error(finalErrorMsg));
     }
 }

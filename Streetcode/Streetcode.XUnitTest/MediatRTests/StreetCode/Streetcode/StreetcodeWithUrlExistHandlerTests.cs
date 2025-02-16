@@ -25,7 +25,7 @@ public class StreetcodeWithUrlExistHandlerTests
     public async Task Handle_WhenStreetcodeExists_ReturnsTrue()
     {
         // Arrange
-        var request = new StreetcodeWithUrlExistQuery(url: "existing-url");
+        var request = new StreetcodeWithUrlExistQuery(Url: "existing-url");
         var testStreetcode = new StreetcodeContent { TransliterationUrl = "existing-url" };
 
         _repositoryMock.Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(
@@ -44,7 +44,7 @@ public class StreetcodeWithUrlExistHandlerTests
     public async Task Handle_WhenStreetcodeDoesNotExist_ReturnsFalse()
     {
         // Arrange
-        var request = new StreetcodeWithUrlExistQuery(url: "non-existing-url");
+        var request = new StreetcodeWithUrlExistQuery(Url: "non-existing-url");
 
         _repositoryMock.Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))

@@ -37,9 +37,9 @@ public class GetStreetcodeShortByIdHandlerTests
     public async Task Handle_WhenStreetcodeExists_ReturnsStreetcodeShortDTO()
     {
         // Arrange
-        var request = new GetStreetcodeShortByIdQuery(id: 1);
-        var testStreetcode = new StreetcodeContent { Id = request.id };
-        var expectedDto = new StreetcodeShortDTO { Id = request.id };
+        var request = new GetStreetcodeShortByIdQuery(Id: 1);
+        var testStreetcode = new StreetcodeContent { Id = request.Id };
+        var expectedDto = new StreetcodeShortDTO { Id = request.Id };
 
         SetupRepositoryMock(testStreetcode);
         SetupMapperMock();
@@ -56,8 +56,8 @@ public class GetStreetcodeShortByIdHandlerTests
     public async Task Handle_WhenMappingFails_ReturnsError()
     {
         // Arrange
-        var request = new GetStreetcodeShortByIdQuery(id: 1);
-        var testStreetcode = new StreetcodeContent { Id = request.id };
+        var request = new GetStreetcodeShortByIdQuery(Id: 1);
+        var testStreetcode = new StreetcodeContent { Id = request.Id };
         string expectedErrorKey = "CannotMapStreetcodeToShortDTO";
         string expectedErrorValue = _mockCannotMapLocalizer[expectedErrorKey];
 

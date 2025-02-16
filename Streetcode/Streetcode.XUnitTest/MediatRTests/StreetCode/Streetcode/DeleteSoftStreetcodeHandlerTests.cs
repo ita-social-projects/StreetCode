@@ -36,7 +36,7 @@ public class DeleteSoftStreetcodeHandlerTests
     public async Task Handle_WhenStreetcodeExists_UpdatesStatusAndUpdatedAt()
     {
         // Arrange
-        var streetcodeId = 1;
+        const int streetcodeId = 1;
         var testStreetcode = new StreetcodeContent { Id = streetcodeId, Status = StreetcodeStatus.Published, UpdatedAt = DateTime.UtcNow.AddDays(-1) };
         var previousUpdatedAt = testStreetcode.UpdatedAt;
         int testSaveChangesSuccess = 1;
@@ -61,7 +61,7 @@ public class DeleteSoftStreetcodeHandlerTests
     public async Task Handle_WhenStreetcodeNotFound_ReturnsError()
     {
         // Arrange
-        var streetcodeId = 2;
+        const int streetcodeId = 2;
         string expectedErrorKey = "CannotFindAnyStreetcodeWithCorrespondingId";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey, streetcodeId];
 
@@ -84,7 +84,7 @@ public class DeleteSoftStreetcodeHandlerTests
     public async Task Handle_WhenSaveChangesFails_ReturnsUpdateError()
     {
         // Arrange
-        var streetcodeId = 3;
+        const int streetcodeId = 3;
         var testStreetcode = new StreetcodeContent { Id = streetcodeId, Status = StreetcodeStatus.Published };
         string expectedErrorKey = "FailedToChangeStatusOfStreetcodeToDeleted";
         string expectedErrorValue = _mockFailedToUpdateLocalizer[expectedErrorKey];

@@ -64,7 +64,7 @@ public class GetAllPublishedHandlerTests
     public async Task Handle_WhenNoPublishedStreetcodesExist_ReturnsError()
     {
         // Arrange
-        string expectedErrorKey = "NoStreetcodesExistNow";
+        const string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockNoSharedResourceLocalizer[expectedErrorKey];
         var query = new GetAllPublishedQuery();
 

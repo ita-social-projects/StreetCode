@@ -65,7 +65,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     {
         // Arrange
         var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
-        string expectedErrorKey = "CannotFindRecordWithQrId";
+        const string expectedErrorKey = "CannotFindRecordWithQrId";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey];
 
         SetupRepositoryMock(null, new StreetcodeContent());
@@ -92,7 +92,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
             QrId = request.QrId,
             StreetcodeCoordinate = new StreetcodeCoordinate { StreetcodeId = 1 },
         };
-        string expectedErrorKey = "CannotFindStreetcodeById";
+        const string expectedErrorKey = "CannotFindStreetcodeById";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey];
 
         SetupRepositoryMock(testStatisticRecord, null);

@@ -26,9 +26,9 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public StreetcodeQueriesControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/Streetcode", tokenStorage)
     {
-        int uniqueId = UniqueNumberGenerator.GenerateInt();
-        int uniqueId2 = UniqueNumberGenerator.GenerateInt();
-        int uniqueId3 = UniqueNumberGenerator.GenerateInt();
+        var uniqueId = UniqueNumberGenerator.GenerateInt();
+        var uniqueId2 = UniqueNumberGenerator.GenerateInt();
+        var uniqueId3 = UniqueNumberGenerator.GenerateInt();
         _testStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,
@@ -168,7 +168,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetAllStreetcodes_WithFilter_ReturnsFilteredResults()
     {
         // Arrange
-        string testTitle = "Test_Title";
+        const string testTitle = "Test_Title";
         var request = new GetAllStreetcodesRequestDTO { Filter = $"Title:{testTitle}" };
 
         // Act
@@ -247,8 +247,8 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetPageMainPage_ReturnsPaginatedPublishedStreetcodes()
     {
         // Arrange
-        ushort page = 1;
-        ushort pageSize = 5;
+        const ushort page = 1;
+        const ushort pageSize = 5;
 
         // Act
         var response = await Client.GetPageMainPageAsync(page, pageSize);
@@ -355,7 +355,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task ExistWithIndex_WithNonExistingIndex_ReturnsFalse()
     {
         // Arrange
-        int nonExistingIndex = -99999;
+        const int nonExistingIndex = -99999;
 
         // Act
         var response = await Client.ExistWithIndexAsync(nonExistingIndex);
@@ -403,8 +403,8 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetAllCatalog_ReturnsSuccessAndNonEmptyList()
     {
         // Arrange
-        int page = 1;
-        int count = 10;
+        const int page = 1;
+        const int count = 10;
 
         // Act
         var response = await Client.GetAllCatalogAsync(page, count);
@@ -422,8 +422,8 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetAllCatalog_WithInvalidCount_ReturnsEmptyList()
     {
         // Arrange
-        int page = 1;
-        int count = -10;
+        const int page = 1;
+        const int count = -10;
 
         // Act
         var response = await Client.GetAllCatalogAsync(page, count);
@@ -520,7 +520,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetById_ReturnsBadRequest_WhenNotExists()
     {
         // Arrange
-        int nonExistingId = -1000;
+        const int nonExistingId = -1000;
 
         // Act
         var response = await Client.GetByIdAsync(nonExistingId);
@@ -552,7 +552,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetByQrId_ReturnsBadRequest_WhenNotExists()
     {
         // Arrange
-        int nonExistingId = -1000;
+        const int nonExistingId = -1000;
 
         // Act
         var response = await Client.GetByQrIdAsync(nonExistingId);
@@ -583,7 +583,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
     public async Task GetByIndex_ReturnsBadRequest_WhenNotExists()
     {
         // Arrange
-        int nonExistingId = -1000;
+        const int nonExistingId = -1000;
 
         // Act
         var response = await Client.GetByIndexAsync(nonExistingId);

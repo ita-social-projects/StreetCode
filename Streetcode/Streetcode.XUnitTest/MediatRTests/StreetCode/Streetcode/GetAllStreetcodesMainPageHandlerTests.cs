@@ -69,7 +69,7 @@ public class GetAllStreetcodesMainPageHandlerTests
     {
         // Arrange
         var request = new GetAllStreetcodesMainPageQuery();
-        string expectedErrorKey = "NoStreetcodesExistNow";
+        const string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockLocalizer[expectedErrorKey];
 
         _repositoryMock

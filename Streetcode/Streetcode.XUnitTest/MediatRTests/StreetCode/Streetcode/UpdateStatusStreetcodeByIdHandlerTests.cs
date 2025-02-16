@@ -64,7 +64,7 @@ public class UpdateStatusStreetcodeByIdHandlerTests
     {
         // Arrange
         var request = new UpdateStatusStreetcodeByIdCommand(999, StreetcodeStatus.Published);
-        string expectedErrorKey = "CannotFindAnyStreetcodeWithCorrespondingId";
+        const string expectedErrorKey = "CannotFindAnyStreetcodeWithCorrespondingId";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey, request.Id];
 
         _repositoryMock
@@ -90,7 +90,7 @@ public class UpdateStatusStreetcodeByIdHandlerTests
         // Arrange
         var request = new UpdateStatusStreetcodeByIdCommand(1, StreetcodeStatus.Published);
         var streetcode = new StreetcodeContent { Id = 1, Status = StreetcodeStatus.Draft };
-        string expectedErrorKey = "FailedToUpdateStatusOfStreetcode";
+        const string expectedErrorKey = "FailedToUpdateStatusOfStreetcode";
         string expectedErrorValue = _mockFailedToUpdateLocalizer[expectedErrorKey];
 
         _repositoryMock

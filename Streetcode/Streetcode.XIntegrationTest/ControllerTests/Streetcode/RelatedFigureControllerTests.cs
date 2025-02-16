@@ -62,7 +62,7 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
     public async Task GetByStreetcodeId_Incorrect_ReturnsBadRequest()
     {
         // Arrange
-        int incorrectId = -100;
+        const int incorrectId = -100;
 
         // Act
         var response = await Client.GetByStreetcodeId(incorrectId);
@@ -97,7 +97,7 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
     public async Task GetByTagId_Incorrect_ReturnEmptyList()
     {
         // Arrange
-        int incorrectId = -100;
+        const int incorrectId = -100;
 
         // Act
         var response = await Client.GetByTagId(incorrectId);

@@ -5,21 +5,20 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
 {
     [Collection("Authorization")]
-    public class StreetcodeCreateControllerTests : BaseAuthorizationControllerTests<StreetcodeClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class StreetcodeCreateControllerTests : BaseAuthorizationControllerTests<StreetcodeClient>
     {
         private readonly StreetcodeContent _testStreetcodeContent;
 
         public StreetcodeCreateControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
            : base(factory, "/api/Streetcode", tokenStorage)
         {
-            int uniqueId = UniqueNumberGenerator.GenerateInt();
+            var uniqueId = UniqueNumberGenerator.GenerateInt();
             _testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueId,
@@ -90,7 +89,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         public async Task Create_WithLongTransliterationUrl_ReturnsBadRequest()
         {
             // Arrange
-            var transliterationUrlMaxLength = 150;
+            const int transliterationUrlMaxLength = 150;
             var streetcodeCreateDto = ExtractCreateTestStreetcodeAttribute.StreetcodeForTest;
             streetcodeCreateDto.TransliterationUrl = new string('a', transliterationUrlMaxLength + 1);
 

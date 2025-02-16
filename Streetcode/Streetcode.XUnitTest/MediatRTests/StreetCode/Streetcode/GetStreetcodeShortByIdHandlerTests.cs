@@ -61,7 +61,7 @@ public class GetStreetcodeShortByIdHandlerTests
         // Arrange
         var request = new GetStreetcodeShortByIdQuery(Id: 1);
         var testStreetcode = new StreetcodeContent { Id = request.Id };
-        string expectedErrorKey = "CannotMapStreetcodeToShortDTO";
+        const string expectedErrorKey = "CannotMapStreetcodeToShortDTO";
         string expectedErrorValue = _mockCannotMapLocalizer[expectedErrorKey];
 
         SetupRepositoryMock(testStreetcode);

@@ -33,18 +33,30 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
             return await SendQuery($"/GetAll{queryString}");
         }
 
-        public async Task<RestResponse> GetAllPublishedAsync() => await SendQuery("/GetAllPublished");
+        public async Task<RestResponse> GetAllPublishedAsync()
+        {
+            return await SendQuery("/GetAllPublished");
+        }
 
-        public async Task<RestResponse> GetAllShortAsync() => await SendQuery("/GetAllShort");
+        public async Task<RestResponse> GetAllShortAsync()
+        {
+            return await SendQuery("/GetAllShort");
+        }
 
-        public async Task<RestResponse> GetAllMainPageAsync() => await SendQuery("/GetAllMainPage");
+        public async Task<RestResponse> GetAllMainPageAsync()
+        {
+            return await SendQuery("/GetAllMainPage");
+        }
 
         public async Task<RestResponse> GetPageMainPageAsync(ushort page, ushort pageSize)
         {
             return await SendQuery($"/GetPageMainPage?page={page}&pageSize={pageSize}");
         }
 
-        public async Task<RestResponse> GetShortByIdAsync(int id) => await SendQuery($"/GetShortById/{id}");
+        public async Task<RestResponse> GetShortByIdAsync(int id)
+        {
+            return await SendQuery($"/GetShortById/{id}");
+        }
 
         public async Task<RestResponse> GetByFilterAsync(StreetcodeFilterRequestDTO request)
         {
@@ -64,7 +76,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
 
         public async Task<RestResponse> GetAllCatalogAsync(int page, int count)
         {
-            return await this.SendQuery($"/GetAllCatalog?page={page}&count={count}");
+            return await SendQuery($"/GetAllCatalog?page={page}&count={count}");
         }
 
         public async Task<RestResponse> GetCountAsync(bool? onlyPublished)
@@ -75,7 +87,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
 
         public async Task<RestResponse> GetByTransliterationUrl(string url)
         {
-            return await this.SendQuery($"/GetByTransliterationUrl/{url}");
+            return await SendQuery($"/GetByTransliterationUrl/{url}");
         }
 
         public async Task<RestResponse> GetByQrIdAsync(int qrid)
@@ -85,7 +97,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode
 
         public async Task<RestResponse> GetByIndexAsync(int index)
         {
-            return await this.SendQuery($"/GetByIndex/{index}");
+            return await SendQuery($"/GetByIndex/{index}");
         }
 
         public async Task<RestResponse> PatchStageAsync(UpdateStatusStreetcodeByIdCommand request, string authToken = "")

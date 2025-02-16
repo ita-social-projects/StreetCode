@@ -74,7 +74,7 @@ public class GetStreetcodesCountHandlerTests
     public async Task Handle_WhenNoStreetcodesExist_ReturnsError()
     {
         // Arrange
-        string expectedErrorKey = "NoStreetcodesExistNow";
+        const string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockLocalizer[expectedErrorKey];
 
         SetupRepositoryMock(new List<StreetcodeContent>());

@@ -114,7 +114,7 @@ public class GetRelatedFiguresByTagIdHandlerTests
         }).ToList();
     }
 
-    private void SetupMocksForStreetcodes(List<StreetcodeContent> streetcodes)
+    private void SetupMocksForStreetcodes(IEnumerable<StreetcodeContent> streetcodes)
     {
         _repositoryMock
             .Setup(repo => repo.StreetcodeRepository.GetAllAsync(

@@ -72,7 +72,7 @@ public class GetAllStreetcodesHandlerTests
             new () { Id = 2, Title = "Title 2" },
         };
 
-        var request = new GetAllStreetcodesRequestDTO() { Page = 1, Amount = 1 };
+        var request = new GetAllStreetcodesRequestDTO { Page = 1, Amount = 1 };
         var query = new GetAllStreetcodesQuery(request);
 
         var handler = SetupMockObjectsAndGetHandler(mockStreetcodes);
@@ -98,7 +98,7 @@ public class GetAllStreetcodesHandlerTests
     public async Task Handle_ReturnsSuccess_WhenNoStreetcodesExist()
     {
         // Arrange
-        var request = new GetAllStreetcodesRequestDTO() { Page = 1, Amount = 5 };
+        var request = new GetAllStreetcodesRequestDTO { Page = 1, Amount = 5 };
         var query = new GetAllStreetcodesQuery(request);
         var handler = SetupMockObjectsAndGetHandler();
 
@@ -340,7 +340,7 @@ public class GetAllStreetcodesHandlerTests
             new () { Id = 1, Title = "Streetcode 1" },
             new () { Id = 2, Title = "Streetcode 2" },
         }.AsQueryable();
-        var expectedErrorMessage = "CannotFindAnyPropertyWithThisName";
+        const string expectedErrorMessage = "CannotFindAnyPropertyWithThisName";
 
         // Act
         MethodInfo? methodInfo = typeof(GetAllStreetcodesHandler).GetMethod("FindSortedStreetcodes", BindingFlags.NonPublic | BindingFlags.Static);
@@ -450,7 +450,6 @@ public class GetAllStreetcodesHandlerTests
             Assert.NotNull(result.Value);
             Assert.NotNull(result.Value.Streetcodes);
             Assert.Equal(1, result.Value.TotalAmount);
-
             var resultList = result.Value.Streetcodes.ToList();
             Assert.Equal("Teaser", resultList[0].Teaser);
         });

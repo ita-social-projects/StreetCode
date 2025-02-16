@@ -57,7 +57,7 @@ public class GetAllStreetcodesShortHandlerTests
     public async Task Handle_WhenNoStreetcodesExist_ReturnsError()
     {
         // Arrange
-        string expectedErrorKey = "NoStreetcodesExistNow";
+        const string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockLocalizer[expectedErrorKey];
         var query = new GetAllStreetcodesShortQuery();
 

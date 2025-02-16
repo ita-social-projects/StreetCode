@@ -79,7 +79,7 @@ public static class ValidationExtentions
         return result;
     }
 
-    public static async Task<bool> HasExistingImage(IRepositoryWrapper repositoryWrapper, int imageId, CancellationToken token)
+    public static async Task<bool> HasExistingImage(IRepositoryWrapper repositoryWrapper, int? imageId, CancellationToken token)
     {
         var image = await repositoryWrapper.ImageRepository
             .GetFirstOrDefaultAsync(a => a.Id == imageId);

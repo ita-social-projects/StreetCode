@@ -125,6 +125,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             string expectedErrorMessage = "UserManagerError";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
             this.SetupMockUserManagerCreate(isSuccess: false);
+            SetupMockMapper();
             var handler = this.GetRegisterHandler();
 
             // Act.
@@ -142,6 +143,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             string expectedErrorMessage = "Exception is thrown from UserManager while creating user";
             this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
             this.SetupMockUserManagerCreateThrowsException(expectedErrorMessage);
+            SetupMockMapper();
             var handler = this.GetRegisterHandler();
 
             // Act.
@@ -160,6 +162,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
             this.SetupMockUserManagerCreate(isSuccess: true);
             this.SetupMockUserManagerAddToRoleThrowsException(expectedErrorMessage);
+            SetupMockMapper();
             var handler = this.GetRegisterHandler();
 
             // Act.
@@ -195,7 +198,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             return new RegisterRequestDTO()
             {
                 Email = "zero@gmail.com",
-                UserName = string.Empty,
             };
         }
 
@@ -204,7 +206,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             return new RegisterRequestDTO()
             {
                 Email = string.Empty,
-                UserName = "Zero_zero",
             };
         }
 

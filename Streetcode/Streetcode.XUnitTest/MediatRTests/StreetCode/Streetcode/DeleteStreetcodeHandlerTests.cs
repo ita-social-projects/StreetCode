@@ -47,9 +47,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            _repositoryMock.Verify(repo => repo.StreetcodeRepository.Delete(testStreetcode), Times.Once);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            Assert.Multiple(() =>
+            {
+                Assert.True(result.IsSuccess);
+                _repositoryMock.Verify(repo => repo.StreetcodeRepository.Delete(testStreetcode), Times.Once);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            });
         }
 
         [Theory]
@@ -66,10 +69,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
 
             // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-            _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteStreetcodeCommand>(), It.IsAny<string>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            Assert.Multiple(() =>
+            {
+                Assert.False(result.IsSuccess);
+                Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+                _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteStreetcodeCommand>(), expectedErrorValue), Times.Once);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            });
         }
 
         [Theory]
@@ -87,10 +93,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(new DeleteStreetcodeCommand(id), CancellationToken.None);
 
             // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedErrorValue, result.Errors.Single().Message);
-            _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteStreetcodeCommand>(), It.IsAny<string>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            Assert.Multiple(() =>
+            {
+                Assert.False(result.IsSuccess);
+                Assert.Equal(expectedErrorValue, result.Errors.Single().Message);
+                _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteStreetcodeCommand>(), expectedErrorValue), Times.Once);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            });
         }
 
         private void SetupRepositoryMocks(StreetcodeContent? streetcodeContent, List<RelatedFigure> relatedFigures, int saveChangesVariable)

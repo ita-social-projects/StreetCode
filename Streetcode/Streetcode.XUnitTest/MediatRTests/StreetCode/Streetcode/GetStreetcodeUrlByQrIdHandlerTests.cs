@@ -53,8 +53,11 @@ public class GetStreetcodeUrlByQrIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(testStreetcode.TransliterationUrl, result.Value);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(testStreetcode.TransliterationUrl, result.Value);
+        });
     }
 
     [Fact]
@@ -71,9 +74,12 @@ public class GetStreetcodeUrlByQrIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        });
     }
 
     [Fact]
@@ -95,9 +101,12 @@ public class GetStreetcodeUrlByQrIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        });
     }
 
     private void SetupRepositoryMock(StatisticRecord? statisticRecord, StreetcodeContent? streetcode)

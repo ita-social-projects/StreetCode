@@ -51,10 +51,13 @@ public class GetAllPublishedHandlerTests
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(testStreetcodes.Count, result.Value.Count());
-        _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(sc => sc.Status == StreetcodeStatus.Published, null), Times.Once);
-        _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(testStreetcodes.Count, result.Value.Count());
+            _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(sc => sc.Status == StreetcodeStatus.Published, null), Times.Once);
+            _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
+        });
     }
 
     [Fact]
@@ -71,9 +74,12 @@ public class GetAllPublishedHandlerTests
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(query, expectedErrorValue), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(query, expectedErrorValue), Times.Once);
+        });
     }
 
     private static List<StreetcodeContent> GetTestStreetcodes(int count)

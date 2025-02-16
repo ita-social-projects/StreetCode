@@ -27,7 +27,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>>()))
-            .ReturnsAsync(this.GetStreetCodeContent(id));
+            .ReturnsAsync(GetStreetCodeContent(id));
 
             var handler = new StreetcodeWithIndexExistHandler(_repository.Object);
 

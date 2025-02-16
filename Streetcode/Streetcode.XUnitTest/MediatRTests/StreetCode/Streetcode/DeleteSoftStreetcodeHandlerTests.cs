@@ -47,11 +47,14 @@ public class DeleteSoftStreetcodeHandlerTests
         var result = await _handler.Handle(new DeleteSoftStreetcodeCommand(streetcodeId), CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(StreetcodeStatus.Deleted, testStreetcode.Status);
-        Assert.True(testStreetcode.UpdatedAt > previousUpdatedAt);
-        _repositoryMock.Verify(repo => repo.StreetcodeRepository.Update(testStreetcode), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(StreetcodeStatus.Deleted, testStreetcode.Status);
+            Assert.True(testStreetcode.UpdatedAt > previousUpdatedAt);
+            _repositoryMock.Verify(repo => repo.StreetcodeRepository.Update(testStreetcode), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
     [Fact]
@@ -68,10 +71,13 @@ public class DeleteSoftStreetcodeHandlerTests
         var result = await _handler.Handle(new DeleteSoftStreetcodeCommand(streetcodeId), CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteSoftStreetcodeCommand>(), It.IsAny<string>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteSoftStreetcodeCommand>(), expectedErrorValue), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        });
     }
 
     [Fact]
@@ -89,10 +95,13 @@ public class DeleteSoftStreetcodeHandlerTests
         var result = await _handler.Handle(new DeleteSoftStreetcodeCommand(streetcodeId), CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteSoftStreetcodeCommand>(), It.IsAny<string>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _mockLogger.Verify(logger => logger.LogError(It.IsAny<DeleteSoftStreetcodeCommand>(), expectedErrorValue), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
     private void SetupRepositoryMocks(StreetcodeContent? streetcodeContent, int saveChangesVariable)

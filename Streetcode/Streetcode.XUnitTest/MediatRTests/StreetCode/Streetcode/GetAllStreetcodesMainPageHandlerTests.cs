@@ -50,14 +50,18 @@ public class GetAllStreetcodesMainPageHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(_testStreetcodes.Count, result.Value.Count());
-        _repositoryMock.Verify(
-            repo => repo.StreetcodeRepository.GetAllAsync(
-            It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-            It.IsAny<Func<IQueryable<StreetcodeContent>,
-                IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
-        _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeMainPageDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(_testStreetcodes.Count, result.Value.Count());
+            _repositoryMock.Verify(
+                repo => repo.StreetcodeRepository.GetAllAsync(
+                    It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                    It.IsAny<Func<IQueryable<StreetcodeContent>,
+                        IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
+            _mapperMock.Verify(
+                m => m.Map<IEnumerable<StreetcodeMainPageDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()), Times.Once);
+        });
     }
 
     [Fact]
@@ -78,9 +82,12 @@ public class GetAllStreetcodesMainPageHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        });
     }
 
     [Fact]

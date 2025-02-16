@@ -51,12 +51,15 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.NotEmpty(result.Value.Streetcodes);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.Equal(2, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Value);
+            Assert.NotEmpty(result.Value.Streetcodes);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.Equal(2, result.Value.TotalAmount);
+        });
     }
 
     [Fact]
@@ -78,14 +81,17 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.NotEmpty(result.Value.Streetcodes);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.Equal(mockStreetcodes.Count, result.Value.TotalAmount);
-        Assert.InRange(result.Value.Streetcodes.Count(), 0, request.Amount.Value);
-        Assert.Single(result.Value.Streetcodes);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Value);
+            Assert.NotEmpty(result.Value.Streetcodes);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.Equal(mockStreetcodes.Count, result.Value.TotalAmount);
+            Assert.InRange(result.Value.Streetcodes.Count(), 0, request.Amount.Value);
+            Assert.Single(result.Value.Streetcodes);
+        });
     }
 
     [Fact]
@@ -100,12 +106,15 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.Empty(result.Value.Streetcodes);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.Equal(0, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Value);
+            Assert.Empty(result.Value.Streetcodes);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.Equal(0, result.Value.TotalAmount);
+        });
     }
 
     [Fact]
@@ -128,13 +137,16 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, CancellationToken.None);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.NotNull(result.Value);
-        Assert.NotEmpty(result.Value.Streetcodes);
-        Assert.Equal(2, result.Value.Streetcodes.Count());
-        Assert.Equal(mockStreetcodes[2].Id, result.Value.Streetcodes.First().Id);
-        Assert.Equal(mockStreetcodes[3].Id, result.Value.Streetcodes.Last().Id);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.NotNull(result.Value);
+            Assert.NotEmpty(result.Value.Streetcodes);
+            Assert.Equal(2, result.Value.Streetcodes.Count());
+            Assert.Equal(mockStreetcodes[2].Id, result.Value.Streetcodes.First().Id);
+            Assert.Equal(mockStreetcodes[3].Id, result.Value.Streetcodes.Last().Id);
+        });
     }
 
     [Fact]
@@ -161,13 +173,16 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.NotNull(result.Value);
-        Assert.NotNull(result.Value.Streetcodes);
-        Assert.Equal(2, result.Value.Streetcodes.Count());
-        Assert.Equal(2, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(result.Value.Streetcodes);
+            Assert.Equal(2, result.Value.Streetcodes.Count());
+            Assert.Equal(2, result.Value.TotalAmount);
+        });
     }
 
     [Fact]
@@ -192,12 +207,15 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.NotNull(result.Value);
-        Assert.NotNull(result.Value.Streetcodes);
-        Assert.Equal(0, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(result.Value.Streetcodes);
+            Assert.Equal(0, result.Value.TotalAmount);
+        });
     }
 
     [Fact]
@@ -224,17 +242,20 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.NotNull(result.Value);
-        Assert.NotNull(result.Value.Streetcodes);
-        Assert.Equal(3, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(result.Value.Streetcodes);
+            Assert.Equal(3, result.Value.TotalAmount);
 
-        var resultList = result.Value.Streetcodes.ToList();
-        Assert.Equal("Streetcode 3", resultList[0].Title);
-        Assert.Equal("Streetcode 2", resultList[1].Title);
-        Assert.Equal("Streetcode 1", resultList[2].Title);
+            var resultList = result.Value.Streetcodes.ToList();
+            Assert.Equal("Streetcode 3", resultList[0].Title);
+            Assert.Equal("Streetcode 2", resultList[1].Title);
+            Assert.Equal("Streetcode 1", resultList[2].Title);
+        });
     }
 
     [Fact]
@@ -261,9 +282,12 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+            Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+        });
     }
 
     [Fact]
@@ -292,9 +316,12 @@ public class GetAllStreetcodesHandlerTests
 
          // Act
          var resultList = sortedStreetcodes.ToList();
-         Assert.Equal("Streetcode 3", resultList[0].Title);
-         Assert.Equal("Streetcode 2", resultList[1].Title);
-         Assert.Equal("Streetcode 1", resultList[2].Title);
+         Assert.Multiple(() =>
+         {
+             Assert.Equal("Streetcode 3", resultList[0].Title);
+             Assert.Equal("Streetcode 2", resultList[1].Title);
+             Assert.Equal("Streetcode 1", resultList[2].Title);
+         });
      }
 
     [Fact]
@@ -321,10 +348,13 @@ public class GetAllStreetcodesHandlerTests
         var result = methodInfo?.Invoke(handler, parameters);
 
         // Assert
-        Assert.NotNull(result);
-        var typedResult = (Result)result;
-        Assert.True(typedResult.IsFailed);
-        Assert.Contains(expectedErrorMessage, typedResult.Errors.Single().Message);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            var typedResult = (Result)result;
+            Assert.True(typedResult.IsFailed);
+            Assert.Contains(expectedErrorMessage, typedResult.Errors.Single().Message);
+        });
     }
 
     [Fact]
@@ -352,8 +382,11 @@ public class GetAllStreetcodesHandlerTests
 
         // Assert
         var resultList = filteredStreetcodes.ToList();
-        Assert.Equal("Streetcode 1", resultList[0].Teaser);
-        Assert.Equal("Streetcode 2", resultList[1].Teaser);
+        Assert.Multiple(() =>
+        {
+            Assert.Equal("Streetcode 1", resultList[0].Teaser);
+            Assert.Equal("Streetcode 2", resultList[1].Teaser);
+        });
     }
 
     [Fact]
@@ -378,9 +411,12 @@ public class GetAllStreetcodesHandlerTests
         var result = methodInfo?.Invoke(handler, parameters);
 
         // Assert
-        Assert.NotNull(result);
-        var typedResult = (Result)result;
-        Assert.True(typedResult.IsFailed);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            var typedResult = (Result)result;
+            Assert.True(typedResult.IsFailed);
+        });
     }
 
     [Fact]
@@ -406,15 +442,18 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.NotNull(result.Value);
-        Assert.NotNull(result.Value.Streetcodes);
-        Assert.Equal(1, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(result.Value.Streetcodes);
+            Assert.Equal(1, result.Value.TotalAmount);
 
-        var resultList = result.Value.Streetcodes.ToList();
-        Assert.Equal("Teaser", resultList[0].Teaser);
+            var resultList = result.Value.Streetcodes.ToList();
+            Assert.Equal("Teaser", resultList[0].Teaser);
+        });
     }
 
     [Fact]
@@ -439,8 +478,11 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+        });
     }
 
     [Fact]
@@ -465,12 +507,15 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsSuccess);
-        Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
-        Assert.NotNull(result.Value);
-        Assert.NotNull(result.Value.Streetcodes);
-        Assert.Equal(0, result.Value.TotalAmount);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.IsAssignableFrom<GetAllStreetcodesResponseDTO>(result.Value);
+            Assert.NotNull(result.Value);
+            Assert.NotNull(result.Value.Streetcodes);
+            Assert.Equal(0, result.Value.TotalAmount);
+        });
     }
 
     [Theory]
@@ -493,9 +538,12 @@ public class GetAllStreetcodesHandlerTests
         var result = await handler.Handle(query, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.True(result.IsFailed);
-        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+        Assert.Multiple(() =>
+        {
+            Assert.NotNull(result);
+            Assert.True(result.IsFailed);
+            Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+        });
     }
 
     private GetAllStreetcodesHandler SetupMockObjectsAndGetHandler(IEnumerable<StreetcodeContent>? mockStreetcodes = null)

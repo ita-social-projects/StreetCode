@@ -50,10 +50,13 @@ public class UpdateStatusStreetcodeByIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(StreetcodeStatus.Published, streetcode.Status);
-        _repositoryMock.Verify(repo => repo.StreetcodeRepository.Update(streetcode), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(StreetcodeStatus.Published, streetcode.Status);
+            _repositoryMock.Verify(repo => repo.StreetcodeRepository.Update(streetcode), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 
     [Fact]
@@ -72,10 +75,13 @@ public class UpdateStatusStreetcodeByIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors[0].Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors[0].Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+        });
     }
 
     [Fact]
@@ -99,9 +105,12 @@ public class UpdateStatusStreetcodeByIdHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors[0].Message);
-        _loggerMock.Verify(logger => logger.LogError(request, It.IsAny<string>()), Times.Once);
-        _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors[0].Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+        });
     }
 }

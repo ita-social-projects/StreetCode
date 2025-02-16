@@ -105,9 +105,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo.Invoke(_handler, new object[] { statisticRecords, repositoryMock.Object }) !;
 
             // Assert
-            repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
+            Assert.Multiple(() =>
+            {
+                repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StatisticRecord>>()), Times.Once);
+            });
         }
 
         [Fact]
@@ -133,9 +136,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo.Invoke(_handler, new object[] { categoryContents, repositoryMock.Object }) !;
 
             // Assert
-            repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
+            Assert.Multiple(() =>
+            {
+                repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StreetcodeCategoryContent>>()), Times.Once);
+            });
         }
 
         [Fact]
@@ -161,9 +167,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo.Invoke(_handler, new object[] { relatedFigures, repositoryMock.Object }) !;
 
             // Assert
-            repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
+            Assert.Multiple(() =>
+            {
+                repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<RelatedFigure>>()), Times.Once);
+            });
         }
 
         [Fact]
@@ -189,9 +198,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await ((Task)methodInfo.Invoke(_handler, new object[] { partners, repositoryMock.Object }) !);
 
             // Assert
-            repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
-            repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
+            Assert.Multiple(() =>
+            {
+                repositoryMock.Verify(repo => repo.UpdateRange(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
+                repositoryMock.Verify(repo => repo.DeleteRange(It.IsAny<IEnumerable<StreetcodePartner>>()), Times.Once);
+            });
         }
 
         [Fact]
@@ -307,8 +319,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo.Invoke(_handler, new object[] { streetcodeContent, toponyms }) !;
 
             // Assert
-            Assert.Single(streetcodeContent.Toponyms);
-            Assert.Equal("New Street", streetcodeContent.Toponyms.First().StreetName);
+            Assert.Multiple(() =>
+            {
+                Assert.Single(streetcodeContent.Toponyms);
+                Assert.Equal("New Street", streetcodeContent.Toponyms.First().StreetName);
+            });
         }
 
         [Fact]
@@ -393,7 +408,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task UpdateTimelineItemsAsync_WhenUpdatingTimelineItem_CallsHistoricalContextCreateRangeAsynce()
+        public async Task UpdateTimelineItemsAsync_WhenUpdatingTimelineItem_CallsHistoricalContextCreateRangeAsync()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1, TimelineItems = new List<TimelineItem>() };
@@ -414,8 +429,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             SetupMockUpdateTimelineItems();
 
-            var methodInfo = typeof(UpdateStreetcodeHandler)
-                .GetMethod("UpdateTimelineItemsAsync", BindingFlags.NonPublic | BindingFlags.Instance);
+            var methodInfo = typeof(UpdateStreetcodeHandler).GetMethod("UpdateTimelineItemsAsync", BindingFlags.NonPublic | BindingFlags.Instance);
 
             Assert.NotNull(methodInfo);
 
@@ -427,7 +441,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         }
 
         [Fact]
-        public async Task UpdateTimelineItemsAsync_WhenUpdatingTimelineItem_CallsHistoricalContextDeleteRangeAsynce()
+        public async Task UpdateTimelineItemsAsync_WhenUpdatingTimelineItem_CallsHistoricalContextDeleteRangeAsync()
         {
             // Arrange
             var streetcode = new StreetcodeContent { Id = 1, TimelineItems = new List<TimelineItem>() };
@@ -663,8 +677,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = (List<StreetcodeArt>)methodInfo.Invoke(_handler, new object[] { streetcodeId, artIdMap, streetcodeArtSlide }) !;
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal(200, result[0].ArtId);
+            Assert.Multiple(() =>
+            {
+                Assert.Single(result);
+                Assert.Equal(200, result[0].ArtId);
+            });
         }
 
         [Fact]
@@ -693,8 +710,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = (List<StreetcodeArt>)methodInfo.Invoke(_handler, new object[] { streetcodeId, artIdMap, streetcodeArtSlide }) !;
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal(300, result[0].ArtId);
+            Assert.Multiple(() =>
+            {
+                Assert.Single(result);
+                Assert.Equal(300, result[0].ArtId);
+            });
         }
 
         [Fact]
@@ -723,8 +743,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = (List<StreetcodeArt>)methodInfo.Invoke(_handler, new object[] { streetcodeId, artIdMap, streetcodeArtSlide }) !;
 
             // Assert
-            Assert.Single(result);
-            Assert.Equal(5, result[0].StreetcodeId);
+            Assert.Multiple(() =>
+            {
+                Assert.Single(result);
+                Assert.Equal(5, result[0].StreetcodeId);
+            });
         }
 
         [Fact]
@@ -749,8 +772,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             methodInfo.Invoke(_handler, new object[] { artSlideDto, artSlide, newStreetcodeArts, toCreateSlide!, toUpdateSlides, toDeleteSlides, toCreateStreetcodeArts });
 
             // Assert
-            Assert.Single(toDeleteSlides);
-            Assert.Contains(artSlide, toDeleteSlides);
+            Assert.Multiple(() =>
+            {
+                Assert.Single(toDeleteSlides);
+                Assert.Contains(artSlide, toDeleteSlides);
+            });
         }
 
         [Fact]
@@ -784,11 +810,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             methodInfo.Invoke(_handler, new object[] { artSlideDto, artSlide, newStreetcodeArts, toCreateSlide!, toUpdateSlides, toDeleteSlides, toCreateStreetcodeArts });
 
             // Assert
-            Assert.Single(toUpdateSlides);
-            Assert.Contains(artSlide, toUpdateSlides);
-
-            Assert.Equal(2, toCreateStreetcodeArts.Count);
-            Assert.All(toCreateStreetcodeArts, art => Assert.Equal(artSlideDto.SlideId, art.StreetcodeArtSlideId));
+            Assert.Multiple(() =>
+            {
+                Assert.Single(toUpdateSlides);
+                Assert.Contains(artSlide, toUpdateSlides);
+                Assert.Equal(2, toCreateStreetcodeArts.Count);
+                Assert.All(toCreateStreetcodeArts, art => Assert.Equal(artSlideDto.SlideId, art.StreetcodeArtSlideId));
+            });
         }
 
         [Fact]
@@ -816,8 +844,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             toCreateSlide = (StreetcodeArtSlide?)parameters[3];
 
             // Assert
-            Assert.NotNull(toCreateSlide);
-            Assert.Equal(artSlide, toCreateSlide);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(toCreateSlide);
+                Assert.Equal(artSlide, toCreateSlide);
+            });
         }
 
         [Fact]
@@ -884,9 +915,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             methodInfo.Invoke(_handler, new object[] { streetcode, url! });
 
             // Assert
-            Assert.NotNull(streetcode.TransactionLink);
-            Assert.Equal(string.Empty, streetcode.TransactionLink.Url);
-            Assert.Equal(string.Empty, streetcode.TransactionLink.UrlTitle);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(streetcode.TransactionLink);
+                Assert.Equal(string.Empty, streetcode.TransactionLink.Url);
+                Assert.Equal(string.Empty, streetcode.TransactionLink.UrlTitle);
+            });
         }
 
         [Fact]
@@ -908,9 +942,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             methodInfo.Invoke(_handler, new object[] { streetcode, url });
 
             // Assert
-            Assert.NotNull(streetcode.TransactionLink);
-            Assert.Equal("https://example.com", streetcode.TransactionLink.Url);
-            Assert.Equal("Example", streetcode.TransactionLink.UrlTitle);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(streetcode.TransactionLink);
+                Assert.Equal("https://example.com", streetcode.TransactionLink.Url);
+                Assert.Equal("Example", streetcode.TransactionLink.UrlTitle);
+            });
         }
 
         [Fact]
@@ -978,9 +1015,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo.Invoke(_handler, new object[] { imageDetails! }) !;
 
             // Assert
-            _repositoryMock.Verify(repo => repo.ImageDetailsRepository.DeleteRange(It.IsAny<IEnumerable<ImageDetails>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.ImageDetailsRepository.UpdateRange(It.IsAny<IEnumerable<ImageDetails>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            Assert.Multiple(() =>
+            {
+               _repositoryMock.Verify(repo => repo.ImageDetailsRepository.DeleteRange(It.IsAny<IEnumerable<ImageDetails>>()), Times.Never);
+               _repositoryMock.Verify(repo => repo.ImageDetailsRepository.UpdateRange(It.IsAny<IEnumerable<ImageDetails>>()), Times.Never);
+               _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            });
         }
 
         private void SetupMockUpdateTags(bool tagExists = false)

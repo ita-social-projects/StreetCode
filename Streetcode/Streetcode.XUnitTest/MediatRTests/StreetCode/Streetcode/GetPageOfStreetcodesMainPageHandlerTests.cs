@@ -55,8 +55,11 @@ public class GetPageOfStreetcodesMainPageHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(request.PageSize, result.Value.Count());
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(request.PageSize, result.Value.Count());
+        });
     }
 
     [Fact]
@@ -72,9 +75,12 @@ public class GetPageOfStreetcodesMainPageHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(request, expectedErrorMessage), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorMessage, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorMessage), Times.Once);
+        });
     }
 
     [Fact]
@@ -91,9 +97,12 @@ public class GetPageOfStreetcodesMainPageHandlerTests
         var result2 = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result1.IsSuccess);
-        Assert.True(result2.IsSuccess);
-        Assert.NotEqual(result1.Value, result2.Value);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result1.IsSuccess);
+            Assert.True(result2.IsSuccess);
+            Assert.NotEqual(result1.Value, result2.Value);
+        });
     }
 
     private static List<StreetcodeContent> GetTestStreetcodes(int count)

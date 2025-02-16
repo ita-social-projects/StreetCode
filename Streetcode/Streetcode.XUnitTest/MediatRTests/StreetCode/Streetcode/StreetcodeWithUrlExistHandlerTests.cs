@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Moq;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -36,8 +35,11 @@ public class StreetcodeWithUrlExistHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.True(result.Value);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.True(result.Value);
+        });
     }
 
     [Fact]
@@ -54,7 +56,10 @@ public class StreetcodeWithUrlExistHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.False(result.Value);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.False(result.Value);
+        });
     }
 }

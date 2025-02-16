@@ -49,12 +49,18 @@ public class GetAllStreetcodesCatalogHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(request.Count, result.Value.Count());
-        Assert.Equal(1, result.Value.ElementAt(0).Id);
-        Assert.Equal(2, result.Value.ElementAt(1).Id);
-        _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
-        _mapperMock.Verify(m => m.Map<IEnumerable<CatalogItem>>(It.IsAny<IEnumerable<StreetcodeContent>>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(request.Count, result.Value.Count());
+            Assert.Equal(1, result.Value.ElementAt(0).Id);
+            Assert.Equal(2, result.Value.ElementAt(1).Id);
+            _repositoryMock.Verify(
+                repo => repo.StreetcodeRepository.GetAllAsync(
+                    It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                    It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
+            _mapperMock.Verify(m => m.Map<IEnumerable<CatalogItem>>(testStreetcodes), Times.Once);
+        });
     }
 
     [Fact]
@@ -71,9 +77,12 @@ public class GetAllStreetcodesCatalogHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _mockLogger.Verify(logger => logger.LogError(It.IsAny<GetAllStreetcodesCatalogQuery>(), It.IsAny<string>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _mockLogger.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        });
     }
 
     [Fact]

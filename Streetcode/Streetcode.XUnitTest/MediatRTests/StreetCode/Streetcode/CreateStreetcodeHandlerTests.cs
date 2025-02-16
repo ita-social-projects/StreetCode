@@ -106,9 +106,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             await action.Should().ThrowAsync<ArgumentNullException>();
 
-            _repositoryMock.Verify(
-                repo => repo.ImageDetailsRepository.CreateRangeAsync(It.IsAny<IEnumerable<ImageDetails>>()),
-                Times.Never);
+            _repositoryMock.Verify(repo => repo.ImageDetailsRepository.CreateRangeAsync(It.IsAny<IEnumerable<ImageDetails>>()), Times.Never);
         }
 
         [Fact]
@@ -124,9 +122,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsFailed);
-            Assert.Contains(expectedErrorValue, result.Errors.First().Message);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsFailed);
+                Assert.Contains(expectedErrorValue, result.Errors.First().Message);
+            });
         }
 
         #endregion
@@ -163,9 +164,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             await action.Should().ThrowAsync<ArgumentNullException>();
 
-            _repositoryMock.Verify(
-                repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()),
-                Times.Never);
+            _repositoryMock.Verify(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()), Times.Never);
         }
 
         [Fact]
@@ -183,9 +182,7 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             // Assert
             await action.Should().ThrowAsync<ArgumentException>();
 
-            _repositoryMock.Verify(
-                repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()),
-                Times.Never);
+            _repositoryMock.Verify(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()), Times.Never);
         }
 
         [Fact]
@@ -201,9 +198,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsFailed);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsFailed);
+                Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            });
         }
 
         [Fact]
@@ -219,9 +219,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsFailed);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsFailed);
+                Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            });
         }
         #endregion
 
@@ -255,8 +258,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             await (Task)methodInfo?.Invoke(_handler, new object[] { streetcode, timelineItems }) !;
 
             // Assert
-            _repositoryMock.Verify(repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()), Times.Once);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
+            });
         }
 
         [Fact]
@@ -274,14 +280,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().NotThrowAsync();
-
-            _repositoryMock.Verify(
-                repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()),
-                Times.Never);
-
-            _repositoryMock.Verify(
-                repo => repo.SaveChangesAsync(),
-                Times.Never);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(
+                    repo => repo.HistoricalContextRepository.CreateRangeAsync(
+                        It.IsAny<IEnumerable<HistoricalContext>>()), Times.Never);
+                _repositoryMock.Verify(
+                    repo => repo.SaveChangesAsync(),
+                    Times.Never);
+            });
         }
 
         [Fact]
@@ -299,14 +306,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().NotThrowAsync();
-
-            _repositoryMock.Verify(
-                repo => repo.HistoricalContextRepository.CreateRangeAsync(It.IsAny<IEnumerable<HistoricalContext>>()),
-                Times.Never);
-
-            _repositoryMock.Verify(
-                repo => repo.SaveChangesAsync(),
-                Times.Never);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(
+                    repo => repo.HistoricalContextRepository.CreateRangeAsync(
+                        It.IsAny<IEnumerable<HistoricalContext>>()), Times.Never);
+                _repositoryMock.Verify(
+                    repo => repo.SaveChangesAsync(),
+                    Times.Never);
+            });
         }
 
         [Fact]
@@ -323,8 +331,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         [Fact]
@@ -341,8 +352,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
         #endregion
 
@@ -399,11 +413,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().NotThrowAsync();
-
-            _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Once);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Exactly(3));
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Once);
+                _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Once);
+                _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Once);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Exactly(3));
+            });
         }
 
         [Fact]
@@ -422,11 +438,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().NotThrowAsync();
-
-            _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            });
         }
 
         [Fact]
@@ -445,11 +463,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().NotThrowAsync();
-
-            _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
-            _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(repo => repo.StreetcodeArtSlideRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArtSlide>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.ArtRepository.CreateRangeAsync(It.IsAny<List<Art>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.StreetcodeArtRepository.CreateRangeAsync(It.IsAny<List<StreetcodeArt>>()), Times.Never);
+                _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Never);
+            });
         }
 
         [Fact]
@@ -465,12 +485,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
-
-            _loggerMock.Verify(
-                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
-                Times.Never);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+                _loggerMock.Verify(logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))), Times.Never);
+            });
         }
 
         #endregion
@@ -518,8 +538,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             // Assert
             await action.Should().ThrowAsync<HttpRequestException>();
-            _repositoryMock.Verify(repo => repo.TagRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Tag, bool>>>(), null), Times.Once);
-            _repositoryMock.Verify(repo => repo.StreetcodeTagIndexRepository.CreateRangeAsync(It.IsAny<List<StreetcodeTagIndex>>()), Times.Never);
+            Assert.Multiple(() =>
+            {
+                _repositoryMock.Verify(repo => repo.TagRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Tag, bool>>>(), null), Times.Once);
+                _repositoryMock.Verify(repo => repo.StreetcodeTagIndexRepository.CreateRangeAsync(It.IsAny<List<StreetcodeTagIndex>>()), Times.Never);
+            });
         }
 
         [Fact]
@@ -570,12 +593,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
-
-            _loggerMock.Verify(
-                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
-                Times.Never);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+                _loggerMock.Verify(logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))), Times.Never);
+            });
         }
         #endregion
 
@@ -656,12 +679,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
-
-            _loggerMock.Verify(
-                logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))),
-                Times.Never);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+                _loggerMock.Verify(logger => logger.LogError(request, It.Is<string>(msg => msg.Contains("AnErrorOccurredWhileCreating"))), Times.Never);
+            });
         }
         #endregion
 
@@ -739,8 +762,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         #endregion
@@ -804,8 +830,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         #endregion
@@ -922,8 +951,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         [Fact]
@@ -940,8 +972,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         #endregion
@@ -963,9 +998,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             methodInfo.Invoke(_handler, new object[] { streetcode, url });
 
             // Assert
-            Assert.NotNull(streetcode.TransactionLink);
-            Assert.Equal(url, streetcode.TransactionLink.Url);
-            Assert.Equal(url, streetcode.TransactionLink.UrlTitle);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(streetcode.TransactionLink);
+                Assert.Equal(url, streetcode.TransactionLink.Url);
+                Assert.Equal(url, streetcode.TransactionLink.UrlTitle);
+            });
         }
 
         [Fact]
@@ -1048,8 +1086,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         [Fact]
@@ -1066,8 +1107,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         #endregion
@@ -1084,8 +1128,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.True(result.IsSuccess);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.True(result.IsSuccess);
+            });
         }
 
         [Fact]
@@ -1102,9 +1149,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             var result = await _handler.Handle(request, CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.False(result.IsSuccess);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(result);
+                Assert.False(result.IsSuccess);
+                Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            });
         }
 
         private void SetupMockAddArtGallery()

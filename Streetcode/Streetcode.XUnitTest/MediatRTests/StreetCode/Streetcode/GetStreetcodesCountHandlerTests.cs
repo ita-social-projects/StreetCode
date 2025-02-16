@@ -41,9 +41,12 @@ public class GetStreetcodesCountHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(testStreetcodes.Count, result.Value);
-        _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(null, null), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(testStreetcodes.Count, result.Value);
+            _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(null, null), Times.Once);
+        });
     }
 
     [Fact]
@@ -59,11 +62,12 @@ public class GetStreetcodesCountHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.True(result.IsSuccess);
-        Assert.Equal(testStreetcodes.Count, result.Value);
-        _repositoryMock.Verify(
-            repo => repo.StreetcodeRepository.GetAllAsync(
-            It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.True(result.IsSuccess);
+            Assert.Equal(testStreetcodes.Count, result.Value);
+            _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Once);
+        });
     }
 
     [Fact]
@@ -81,9 +85,12 @@ public class GetStreetcodesCountHandlerTests
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.False(result.IsSuccess);
-        Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        _loggerMock.Verify(logger => logger.LogError(It.IsAny<GetStreetcodesCountQuery>(), It.IsAny<string>()), Times.Once);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result.IsSuccess);
+            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
+            _loggerMock.Verify(logger => logger.LogError(request, expectedErrorValue), Times.Once);
+        });
     }
 
     private static List<StreetcodeContent> GetTestStreetcodes(int count, StreetcodeStatus status = StreetcodeStatus.Published)

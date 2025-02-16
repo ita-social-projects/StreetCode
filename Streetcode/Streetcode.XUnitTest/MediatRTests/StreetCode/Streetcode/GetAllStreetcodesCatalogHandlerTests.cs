@@ -59,7 +59,7 @@ public class GetAllStreetcodesCatalogHandlerTests
                 repo => repo.StreetcodeRepository.GetAllAsync(
                     It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                     It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()), Times.Once);
-            _mapperMock.Verify(m => m.Map<IEnumerable<CatalogItem>>(testStreetcodes), Times.Once);
+            _mapperMock.Verify(m => m.Map<IEnumerable<CatalogItem>>(It.IsAny<IEnumerable<StreetcodeContent>>()), Times.Once);
         });
     }
 

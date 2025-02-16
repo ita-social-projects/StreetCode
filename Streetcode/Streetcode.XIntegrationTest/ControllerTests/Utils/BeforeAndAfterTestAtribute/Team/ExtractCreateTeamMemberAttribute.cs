@@ -1,7 +1,10 @@
 ﻿using System.Reflection;
 using Streetcode.BLL.DTO.Team;
+using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Team;
+using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Team
@@ -11,6 +14,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     {
         public static TeamMemberCreateDTO TeamMemberForTest { get; set; } = null!;
 
+        private readonly Image _image = ImageExtracter.Extract(UniqueNumberGenerator.GenerateInt());
+
         public override void Before(MethodInfo methodUnderTest)
         {
             TeamMemberForTest = new TeamMemberCreateDTO
@@ -18,6 +23,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 Name = "test create",
                 Description = "test create description",
                 IsMain = false,
+                ImageId = _image.Id,
             };
         }
 
@@ -30,6 +36,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 sqlDbHelper.DeleteItem(context);
                 sqlDbHelper.SaveChanges();
             }
+
+            ImageExtracter.Remove(_image);
         }
     }
 }

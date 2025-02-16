@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Streetcode.BLL.DTO.Team;
-using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
@@ -8,7 +7,6 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Team;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Team;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.MediaExtracter.Image;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Team
@@ -17,8 +15,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
     public class TeamControllerTests : BaseAuthorizationControllerTests<TeamClient>,
         IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Image _testImage;
-        private readonly Image _testCreateImage;
         private readonly TeamMember _testTeamMember;
         private readonly Positions _testPosition;
 
@@ -26,11 +22,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             : base(factory, "api/Team", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            _testImage = ImageExtracter.Extract(uniqueId);
-            _testCreateImage = ImageExtracter.Extract(UniqueNumberGenerator.GenerateInt());
 
-            _testTeamMember = TeamMemberExtracter.Extract(uniqueId, _testImage.Id);
-            _testTeamMember.ImageId = _testImage.Id;
+            _testTeamMember = TeamMemberExtracter.Extract(uniqueId, uniqueId);
 
             _testPosition = TeamPositionsExtracter.Extract(uniqueId);
 
@@ -118,7 +111,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         {
             // Arrange
             var teamMemberCreateDto = ExtractCreateTeamMemberAttribute.TeamMemberForTest;
-            teamMemberCreateDto.ImageId = _testCreateImage.Id;
 
             // Act
             var response = await this.Client.CreateAsync(teamMemberCreateDto, this.TokenStorage.AdminAccessToken);
@@ -161,7 +153,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         {
             // Arrange
             var teamMemberCreateDto = ExtractCreateTeamMemberAttribute.TeamMemberForTest;
-            teamMemberCreateDto.ImageId = _testCreateImage.Id;
 
             // Act
             var response = await this.Client.CreateAsync(teamMemberCreateDto, this.TokenStorage.AdminAccessToken);
@@ -192,7 +183,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
         {
             // Arrange
             var teamMemberCreateDto = ExtractCreateTeamMemberAttribute.TeamMemberForTest;
-            teamMemberCreateDto.ImageId = _testImage.Id;
+            teamMemberCreateDto.ImageId = _testTeamMember.ImageId;
 
             // Act
             var response = await this.Client.CreateAsync(teamMemberCreateDto, this.TokenStorage.AdminAccessToken);
@@ -317,8 +308,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             if (disposing)
             {
                 TeamMemberExtracter.Remove(_testTeamMember);
-                ImageExtracter.Remove(_testImage);
-                ImageExtracter.Remove(_testCreateImage);
                 TeamPositionsExtracter.Remove(_testPosition);
             }
 

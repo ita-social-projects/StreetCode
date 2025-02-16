@@ -37,25 +37,32 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task GetAll_ReturnSuccessStatusCode()
     {
+        // Act
         var response = await this.Client.GetAllAsync();
         var returnedValue =
             CaseIsensitiveJsonDeserializer.Deserialize<GetAllHistoricalContextDTO>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
+        Assert.Multiple(
+            () => Assert.True(response.IsSuccessStatusCode),
+            () => Assert.NotNull(returnedValue));
     }
 
     [Fact]
     public async Task GetById_ReturnSuccessStatusCode()
     {
+        // Arrange
         HistoricalContext expectedContext = _testCreateContext;
+
+        // Act
         var response = await this.Client.GetByIdAsync(expectedContext.Id);
 
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContextDTO>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
         Assert.Multiple(
+            () => Assert.True(response.IsSuccessStatusCode),
+            () => Assert.NotNull(returnedValue),
             () => Assert.Equal(expectedContext.Id, returnedValue?.Id),
             () => Assert.Equal(expectedContext.Title, returnedValue?.Title));
     }
@@ -63,9 +70,13 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task GetByIdIncorrect_ReturnBadRequest()
     {
+        // Arrange
         const int incorrectId = -100;
+
+        // Act
         var response = await this.Client.GetByIdAsync(incorrectId);
 
+        // Assert
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.False(response.IsSuccessStatusCode));

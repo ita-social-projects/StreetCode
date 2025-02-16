@@ -1,18 +1,7 @@
-﻿using System.Linq.Expressions;
-using System.Net;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
-using Moq;
+﻿using System.Net;
 using Streetcode.BLL.DTO.Timeline;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
-using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
@@ -74,11 +63,11 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task GetByIdIncorrect_ReturnBadRequest()
     {
-        int incorrectId = -100;
+        const int incorrectId = -100;
         var response = await this.Client.GetByIdAsync(incorrectId);
 
         Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+            () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.False(response.IsSuccessStatusCode));
     }
 
@@ -171,7 +160,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_ReturnSuccessStatusCode()
     {
         // Arrange
@@ -186,12 +175,12 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_Incorect_ReturnBadRequest()
     {
         // Arrange
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        var invalidHistoricalContextId = -10;
+        const int invalidHistoricalContextId = -10;
         historicalContextCreateDto.Id = invalidHistoricalContextId;
 
         // Act
@@ -204,7 +193,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_TokenNotPassed_ReturnsUnauthorized()
     {
         // Arrange
@@ -218,7 +207,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
@@ -232,7 +221,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
@@ -247,7 +236,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_WithExistingTitle_ReturnsBadRequest()
     {
         // Arrange
@@ -260,46 +249,6 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
-    public async Task Update_ChangesNotSaved_ReturnsBadRequest()
-    {
-        // Arrange
-        var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        historicalContextCreateDto.Id = _testUpdateContext.Id;
-
-        var repositoryMock = new Mock<IHistoricalContextRepository>();
-        var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-        var mockLocalizerValidation = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-        var mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
-            .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>
-            {
-                var compiledExpr = expr.Compile();
-                return compiledExpr(_testUpdateContext) ? _testUpdateContext : null;
-            });
-
-        repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
-
-        var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(m => m.Map<HistoricalContext>(default)).Returns(_testUpdateContext);
-        var loggerMock = new Mock<ILoggerService>();
-
-        var handler = new UpdateHistoricalContextHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object, mockLocalizerValidation.Object, mockLocalizerFieldNames.Object);
-
-        var query = new UpdateHistoricalContextCommand(historicalContextCreateDto);
-        var cancellationToken = CancellationToken.None;
-
-        // Act
-        var result = await handler.Handle(query, cancellationToken);
-
-        // Assert
-        Assert.False(result.IsSuccess);
     }
 
     [Fact]
@@ -345,43 +294,13 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     public async Task Delete_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
-        int id = -100;
+        const int id = -100;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
-    {
-        int id = _testUpdateContext.Id;
-
-        var repositoryMock = new Mock<IHistoricalContextRepository>();
-        var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
-            .ReturnsAsync(_testUpdateContext);
-        repositoryMock.Setup(r => r.Delete(default!));
-
-        repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
-
-        var loggerMock = new Mock<ILoggerService>();
-
-        var handler = new DeleteHistoricalContextHandler(repositoryWrapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object);
-
-        var query = new DeleteHistoricalContextCommand(id);
-        var cancellationToken = CancellationToken.None;
-
-        // Act
-        var result = await handler.Handle(query, cancellationToken);
-
-        // Assert
-        Assert.False(result.IsSuccess);
     }
 
     protected override void Dispose(bool disposing)

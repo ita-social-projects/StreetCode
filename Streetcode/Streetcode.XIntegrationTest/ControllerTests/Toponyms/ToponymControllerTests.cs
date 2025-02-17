@@ -15,15 +15,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
     [Collection("Toponym")]
     public class ToponymControllerTests : BaseControllerTests<ToponymsClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly Toponym toponym;
-        private readonly StreetcodeContent testStreetcodeContent;
+        private readonly Toponym _toponym;
+        private readonly StreetcodeContent _testStreetcodeContent;
 
         public ToponymControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "api/Toponym")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this.toponym = ToponymExtracter.Extract(uniqueId);
-            this.testStreetcodeContent = StreetcodeContentExtracter
+            _toponym = ToponymExtracter.Extract(uniqueId);
+            _testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,
                 uniqueId,
@@ -46,61 +46,75 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
         public async Task GetById_ReturnsSuccessStatusCode()
         {
             // Arrange
-            Toponym expectedToponym = this.toponym;
+            Toponym expectedToponym = _toponym;
 
             // Act
             var response = await this.Client.GetByIdAsync(expectedToponym.Id);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<ToponymDTO>(response.Content);
 
             // Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.NotNull(returnedValue);
             Assert.Multiple(
-                () => Assert.Equal(expectedToponym.Id, returnedValue.Id),
-                () => Assert.Equal(expectedToponym.Oblast, returnedValue.Oblast));
+                () => Assert.True(response.IsSuccessStatusCode),
+                () => Assert.NotNull(returnedValue),
+                () => Assert.Equal(expectedToponym.Id, returnedValue?.Id),
+                () => Assert.Equal(expectedToponym.Oblast, returnedValue?.Oblast));
         }
 
         [Fact]
         public async Task GetByIdIncorrect_ReturnsBadRequest()
         {
             // Arrange
-            int incorrectId = -1;
+            const int incorrectId = -1;
 
             // Act
             var response = await this.Client.GetByIdAsync(incorrectId);
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
         }
 
         [Fact]
         public async Task GetByStreetcodeId_ReturnsSuccessStatusCode()
         {
             // Arrange
-            int streetcodeId = this.testStreetcodeContent.Id;
+            int streetcodeId = _testStreetcodeContent.Id;
 
             // Act
             var response = await this.Client.GetByStreetcodeId(streetcodeId);
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<List<ToponymDTO>>(response.Content);
 
             // Assert
-            Assert.True(response.IsSuccessful);
-            Assert.NotNull(returnedValue);
+            Assert.Multiple(
+                () => Assert.True(response.IsSuccessStatusCode),
+                () => Assert.NotNull(returnedValue));
         }
 
-        [Fact(Skip = "will fail until pr 2098 is merged")]
+        [Fact]
         public async Task GetByStreetcodeIdIncorrect_ReturnsBadRequest()
         {
             // Assert
-            int incorrectStreetcodeId = -1;
+            const int incorrectStreetcodeId = -1;
 
             // Act
             var response = await this.Client.GetByStreetcodeId(incorrectStreetcodeId);
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.False(response.IsSuccessStatusCode);
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(_testStreetcodeContent);
+                ToponymExtracter.Remove(_toponym);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

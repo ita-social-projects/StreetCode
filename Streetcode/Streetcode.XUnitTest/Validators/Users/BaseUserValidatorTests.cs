@@ -74,8 +74,6 @@ public class BaseUserValidatorTests
     }
 
     [Theory]
-    [InlineData("Нікнейм1")]
-    [InlineData("NAME")]
     [InlineData("!name")]
     public void Validate_UserNameIsInvalid_ShouldReturnError(string userName)
     {

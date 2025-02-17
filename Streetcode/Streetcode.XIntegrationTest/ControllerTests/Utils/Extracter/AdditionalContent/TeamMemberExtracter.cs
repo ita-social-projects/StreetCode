@@ -14,7 +14,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Additional
             testTeamMember.ImageId = imageId;
 
             ImageExtracter.Extract(imageId);
-            return BaseExtracter.Extract<TeamMember>(testTeamMember, teamMember => teamMember.Id == teamMemberId);
+            return BaseExtracter.Extract(testTeamMember, teamMember => teamMember.Id == teamMemberId);
         }
 
         public static void Remove(TeamMember entity)

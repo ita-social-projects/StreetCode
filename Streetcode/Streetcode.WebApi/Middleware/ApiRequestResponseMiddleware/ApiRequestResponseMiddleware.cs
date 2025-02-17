@@ -123,6 +123,7 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
             switch (token)
             {
                 case JObject obj:
+                {
                     foreach (var property in obj.Properties())
                     {
                         if (property.Value is JValue)
@@ -136,14 +137,17 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
                     }
 
                     break;
+                }
 
                 case JArray array:
+                {
                     foreach (var item in array)
                     {
                         TruncateProperties(item);
                     }
 
                     break;
+                }
             }
         }
 
@@ -157,7 +161,8 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
             var valueAsString = property.Value.ToString();
             if (valueAsString.Length > _options.MaxResponseLength)
             {
-                property.Value = new JValue(valueAsString.Substring(0, _options.MaxResponseLength) + "...");
+                var shortenedLog = new JValue(valueAsString.Substring(0, _options.MaxResponseLength));
+                property.Value = $"{shortenedLog}...";
             }
         }
     }

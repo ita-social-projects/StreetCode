@@ -14,10 +14,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     {
         public static TeamMemberCreateDTO TeamMemberForTest { get; set; } = null!;
 
-        private readonly Image _image = ImageExtracter.Extract(UniqueNumberGenerator.GenerateInt());
+        private Image _image { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
+            _image = ImageExtracter.Extract(UniqueNumberGenerator.GenerateInt());
             TeamMemberForTest = new TeamMemberCreateDTO
             {
                 Name = "test create",
@@ -37,7 +38,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 sqlDbHelper.SaveChanges();
             }
 
-            ImageExtracter.Remove(_image);
+            var image = sqlDbHelper.GetExistItem<Image>(t => t.Id == _image.Id);
+            if (image != null)
+            {
+                sqlDbHelper.DeleteItem(image);
+                sqlDbHelper.SaveChanges();
+            }
         }
     }
 }

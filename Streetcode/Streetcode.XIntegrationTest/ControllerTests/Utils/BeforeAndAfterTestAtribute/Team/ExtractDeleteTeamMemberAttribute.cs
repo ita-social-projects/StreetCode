@@ -15,8 +15,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
     {
         public static UpdateTeamMemberDTO TeamMemberForTest { get; set; } = null!;
 
-        private TeamMember _teamMember;
-        private Image _image;
+        private TeamMember _teamMember { get; set; } = null!;
+
+        private Image _image { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
@@ -48,6 +49,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
             if (image != null)
             {
                 sqlDbHelper.DeleteItem(image);
+                sqlDbHelper.SaveChanges();
+            }
+
+            var teamMember = sqlDbHelper.GetExistItem<TeamMember>(t => t.Id == _teamMember.Id);
+            if (teamMember != null)
+            {
+                sqlDbHelper.DeleteItem(teamMember);
                 sqlDbHelper.SaveChanges();
             }
         }

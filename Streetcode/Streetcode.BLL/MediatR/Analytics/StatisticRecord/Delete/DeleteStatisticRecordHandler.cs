@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
@@ -10,20 +9,17 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 {
     public class DeleteStatisticRecordHandler : IRequestHandler<DeleteStatisticRecordCommand, Result<Unit>>
     {
-        private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
 
         public DeleteStatisticRecordHandler(
-            IMapper mapper,
             IRepositoryWrapper repositoryWrapper,
             ILoggerService logger,
             IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
             IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
         {
-            _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
@@ -44,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete
 
             _repositoryWrapper.StatisticRecordRepository.Delete(statRecord);
 
-            var resultIsSuccess = _repositoryWrapper.SaveChanges() > 0;
+            var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if (resultIsSuccess)
             {

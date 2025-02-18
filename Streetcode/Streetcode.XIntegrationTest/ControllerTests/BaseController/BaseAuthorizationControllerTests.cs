@@ -1,4 +1,5 @@
 ﻿using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
 {
@@ -10,16 +11,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
             this.TokenStorage = tokenStorage;
         }
 
-        protected TokenStorage TokenStorage { get; }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.TokenStorage.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
+        protected TokenStorage TokenStorage { get; set; }
     }
 }

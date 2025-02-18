@@ -3,7 +3,6 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.News;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.News;
 using Xunit;
 

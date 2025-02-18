@@ -8,12 +8,10 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
 {
     public class ExistStatisticRecordByQrIdHandler : IRequestHandler<ExistStatisticRecordByQrIdCommand, Result<bool>>
     {
-        private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
 
-        public ExistStatisticRecordByQrIdHandler(IMapper mapper, IRepositoryWrapper repository)
+        public ExistStatisticRecordByQrIdHandler(IRepositoryWrapper repository)
         {
-            _mapper = mapper;
             _repository = repository;
         }
 

@@ -19,6 +19,7 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
         PartnerSourceLinkValidator partnerSourceLinkValidator,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
         IStringLocalizer<FailedToValidateSharedResource> localizer,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo,
         IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
@@ -48,6 +49,27 @@ public class BasePartnersValidator : AbstractValidator<PartnerCreateUpdateDto>
 
         RuleFor(dto => dto.LogoId)
             .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))
-            .WithMessage(x => localizer["ImageDoesntExist", fieldLocalizer["LogoId"]]);
+            .WithMessage(x => localizer["ImageDoesntExist", x.LogoId].Value);
+
+        RuleFor(dto => dto.Streetcodes.Select(id => id.Id).ToList())
+            .MustAsync((_, listIds, context, _) => BeValidStreetcodeIds(context, listIds))
+            .WithMessage(x => stringLocalizerNo["NoExistingStreetcodeWithId", "{ListIds}"].Value);
+    }
+
+    private async Task<bool> BeValidStreetcodeIds(ValidationContext<PartnerCreateUpdateDto> context, List<int> streetcodeIds)
+    {
+        var existingStreetcodeIds = (await _repositoryWrapper.StreetcodeRepository
+                .GetAllAsync(s => streetcodeIds.Contains(s.Id)))
+            .Select(s => s.Id)
+            .ToList();
+
+        var missingIds = streetcodeIds.Except(existingStreetcodeIds).ToList();
+        if (missingIds.Any())
+        {
+            context.MessageFormatter.AppendArgument("ListIds",  string.Join(", ", missingIds));
+            return false;
+        }
+
+        return true;
     }
 }

@@ -312,4 +312,16 @@
   <data name="Amount" xml:space="preserve">
     <value>Сума</value>
   </data>
+  <data name="AboutYourself" xml:space="preserve">
+    <value>Опис про себе</value>
+  </data>
+  <data name="Expertises" xml:space="preserve">
+    <value>Досвіди</value>
+  </data>
+  <data name="Surname" xml:space="preserve">
+    <value>Прізвище</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>Нікнейм</value>
+  </data>
 </root>

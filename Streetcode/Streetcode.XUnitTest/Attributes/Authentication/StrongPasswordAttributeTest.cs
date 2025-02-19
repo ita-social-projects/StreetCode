@@ -42,10 +42,10 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         }
 
         [Fact]
-        public void ShouldReturnCorrectFailMessage_PasswordLengthLessThan14()
+        public void ShouldReturnCorrectFailMessage_PasswordLengthLessThan8()
         {
             // Arrange.
-            string expectedErrorMessage = "Password minimum length is 14";
+            string expectedErrorMessage = "Password minimum length is 8";
             string password = "qwer";
 
             // Act.

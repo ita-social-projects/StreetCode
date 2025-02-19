@@ -3,13 +3,11 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
-using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Event;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Event;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -22,7 +20,11 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
 
-        public GetAllEventsHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
+        public GetAllEventsHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;

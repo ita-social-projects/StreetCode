@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.Delete
@@ -9,10 +11,18 @@ namespace Streetcode.BLL.MediatR.Event.Delete
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly ILoggerService _logger;
-        public DeleteEventHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger)
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
+        public DeleteEventHandler(
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
+            IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
+            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
         }
 
         public async Task<Result<int>> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
@@ -21,21 +31,23 @@ namespace Streetcode.BLL.MediatR.Event.Delete
 
             if (eventToDelete is null)
             {
-                string exMessage = $"No event found by entered Id - {request.id}";
+                var exMessage = _stringLocalizerCannotFind["CannotFindEventWithCorrespondingId", request.id].Value;
                 _logger.LogError(request, exMessage);
                 return Result.Fail(exMessage);
             }
 
-            try
+            _repositoryWrapper.EventRepository.Delete(eventToDelete);
+            var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
+
+            if (resultIsSuccess)
             {
-                _repositoryWrapper.EventRepository.Delete(eventToDelete);
-                await _repositoryWrapper.SaveChangesAsync();
                 return Result.Ok(request.id);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(request, ex.Message);
-                return Result.Fail(ex.Message);
+                var finalExMessage = _stringLocalizerFailedToDelete["FailedToDeleteEvent"].Value;
+                _logger.LogError(request, finalExMessage);
+                return Result.Fail(new Error(finalExMessage));
             }
         }
     }

@@ -7,7 +7,6 @@ using Streetcode.BLL.Factories.Event;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Event;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.Update
@@ -19,14 +18,22 @@ namespace Streetcode.BLL.MediatR.Event.Update
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
         private readonly IStringLocalizer<AnErrorOccurredSharedResource> _stringLocalizerAnErrorOccurred;
+        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public UpdateEventHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate, IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred)
+        public UpdateEventHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+            IStringLocalizer<AnErrorOccurredSharedResource> stringLocalizerAnErrorOccurred,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
             _stringLocalizerAnErrorOccurred = stringLocalizerAnErrorOccurred;
+            _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
         public async Task<Result<int>> Handle(UpdateEventCommand request, CancellationToken cancellationToken)
@@ -42,7 +49,9 @@ namespace Streetcode.BLL.MediatR.Event.Update
 
                     if (eventToUpdate == null)
                     {
-                        return Result.Fail(new Error("Event not found"));
+                        var exMessage = _stringLocalizerCannotFind["CannotFindEventWithCorrespondingId", request.Event.Id].Value;
+                        _logger.LogError(request, exMessage);
+                        return Result.Fail(exMessage);
                     }
 
                     bool eventTypeChanged = eventToUpdate.EventType != request.Event.EventType.ToString();
@@ -79,8 +88,6 @@ namespace Streetcode.BLL.MediatR.Event.Update
 
                     if (request.Event.StreetcodeIds != null)
                     {
-                        _logger.LogInformation($"Updating event-streetcode links for EventId: {eventToUpdate.Id}");
-
                         var existingStreetcodeLinks = await _repositoryWrapper.EventStreetcodesRepository
                             .GetAllAsync(es => es.EventId == eventToUpdate.Id);
 
@@ -98,13 +105,11 @@ namespace Streetcode.BLL.MediatR.Event.Update
                         if (streetcodesToAdd.Any())
                         {
                             await _repositoryWrapper.EventStreetcodesRepository.CreateRangeAsync(streetcodesToAdd);
-                            _logger.LogInformation($"Added {streetcodesToAdd.Count} new event-streetcode links.");
                         }
 
                         if (streetcodesToRemove.Any())
                         {
                             _repositoryWrapper.EventStreetcodesRepository.DeleteRange(streetcodesToRemove);
-                            _logger.LogInformation($"Removed {streetcodesToRemove.Count} old event-streetcode links.");
                         }
 
                         await _repositoryWrapper.SaveChangesAsync();
@@ -127,7 +132,7 @@ namespace Streetcode.BLL.MediatR.Event.Update
                 }
                 catch (Exception ex)
                 {
-                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdating", ex.Message].Value;
+                    string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdatingEvent", ex.Message].Value;
 
                     _logger.LogError(request, errorMsg);
                     return Result.Fail(new Error(errorMsg));

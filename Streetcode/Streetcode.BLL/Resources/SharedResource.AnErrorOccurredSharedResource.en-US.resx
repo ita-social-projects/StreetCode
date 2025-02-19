@@ -120,7 +120,13 @@
   <data name="AnErrorOccurredWhileCreating" xml:space="preserve">
     <value>An error occurred while creating a streetcode. Message: {0}</value>
   </data>
+  <data name="AnErrorOccurredWhileCreatingEvent" xml:space="preserve">
+    <value>An error occurred while creating an event. Message: {0}</value>
+  </data>
   <data name="AnErrorOccurredWhileUpdating" xml:space="preserve">
     <value>An error occurred while updating a streetcode. Message: {0}</value>
+  </data>
+  <data name="AnErrorOccurredWhileUpdatingEvent" xml:space="preserve">
+    <value>An error occurred while updating an event. Message: {0}</value>
   </data>
 </root>

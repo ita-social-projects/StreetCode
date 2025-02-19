@@ -7,7 +7,6 @@ using Streetcode.BLL.DTO.Event;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.GetById
@@ -19,7 +18,11 @@ namespace Streetcode.BLL.MediatR.Event.GetById
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizer;
 
-        public GetEventByIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizer)
+        public GetEventByIdHandler(
+            IMapper mapper,
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizer)
         {
             _mapper = mapper;
             _repositoryWrapper = repositoryWrapper;
@@ -33,11 +36,11 @@ namespace Streetcode.BLL.MediatR.Event.GetById
                 .GetFirstOrDefaultAsync(
                 e => e.Id == request.id,
                 include: e => e.Include(ev => ev.EventStreetcodes)
-                      .ThenInclude(es => es.StreetcodeContent));
+                      .ThenInclude(es => es.StreetcodeContent!));
 
             if (eventEntity is null)
             {
-                string errorMsg = _stringLocalizer["NoEventsByEnteredId", request.id].Value;
+                string errorMsg = _stringLocalizer["CannotFindEventWithCorrespondingId", request.id].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(errorMsg);
             }

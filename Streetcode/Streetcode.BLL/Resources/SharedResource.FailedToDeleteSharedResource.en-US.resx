@@ -123,6 +123,9 @@
   <data name="FailedToDeleteCategory" xml:space="preserve">
     <value>Failed to delete a category</value>
   </data>
+  <data name="FailedToDeleteEvent" xml:space="preserve">
+    <value>Failed to delete the event</value>
+  </data>
   <data name="FailedToDeleteFact" xml:space="preserve">
     <value>Failed to delete a fact</value>
   </data>

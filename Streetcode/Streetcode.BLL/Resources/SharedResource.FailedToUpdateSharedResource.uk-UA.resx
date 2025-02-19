@@ -126,6 +126,9 @@
   <data name="FailedToUpdateCategory" xml:space="preserve">
     <value>Не вдалося оновити категорію</value>
   </data>
+  <data name="FailedToUpdateEvent" xml:space="preserve">
+    <value>Не вдалося оновити подію</value>
+  </data>
   <data name="FailedToUpdateFact" xml:space="preserve">
     <value>Не вдалося оновити факт</value>
   </data>

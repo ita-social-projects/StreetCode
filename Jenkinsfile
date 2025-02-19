@@ -169,24 +169,19 @@ pipeline {
         }
         stage('Push images') {
             when {
-                expression { IS_IMAGE_BUILDED == true || IS_DBUPDATE_IMAGE_BUILDED == true }
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
             }   
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
 
-                        if (IS_IMAGE_BUILDED) {
-                            sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
-                            IS_IMAGE_PUSH = true
-                           }
+                        sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
+                        IS_IMAGE_PUSH = true
 
-                        if (IS_DBUPDATE_IMAGE_BUILDED) {
-                            sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
-                            IS_DBUPDATE_IMAGE_PUSH = true
-                           }
+                        sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
+                        IS_DBUPDATE_IMAGE_PUSH = true
 
-                
                     }
                 }
             }

@@ -17,7 +17,11 @@ public class GetAllStreetcodesShortHandler : IRequestHandler<GetAllStreetcodesSh
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-    public GetAllStreetcodesShortHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+    public GetAllStreetcodesShortHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -34,7 +38,7 @@ public class GetAllStreetcodesShortHandler : IRequestHandler<GetAllStreetcodesSh
             return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
         }
 
-        string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+        var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
         _logger.LogError(request, errorMsg);
         return Result.Fail(errorMsg);
     }

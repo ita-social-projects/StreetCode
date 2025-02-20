@@ -24,6 +24,7 @@ using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using TransactionLinkEntity = Streetcode.DAL.Entities.Transactions.TransactionLink;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 
@@ -91,12 +92,10 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                     transactionScope.Complete();
                     return Result.Ok(streetcode.Id);
                 }
-                else
-                {
-                    string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
+
+                var errorMsg = _stringLocalizerFailedToCreate["FailedToCreateStreetcode"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
             catch (Exception ex)
             {
@@ -168,7 +167,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
     {
         if (url != null)
         {
-            streetcode.TransactionLink = new DAL.Entities.Transactions.TransactionLink()
+            streetcode.TransactionLink = new TransactionLinkEntity()
             {
                 Url = url,
                 UrlTitle = url,
@@ -309,14 +308,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             {
                 var newStreetcodeArt = _mapper.Map<StreetcodeArt>(streetcodeArt);
                 newStreetcodeArt.StreetcodeId = streetcode.Id;
-                if (artIdMap.TryGetValue(streetcodeArt.ArtId, out var newArtId))
-                {
-                    newStreetcodeArt.ArtId = newArtId;
-                }
-                else
-                {
-                    throw new KeyNotFoundException($"Art ID '{streetcodeArt.ArtId}' not found in the mapped arts.");
-                }
+                newStreetcodeArt.ArtId = artIdMap.TryGetValue(streetcodeArt.ArtId, out var newArtId)
+                    ? newArtId
+                    : throw new KeyNotFoundException($"Art ID '{streetcodeArt.ArtId}' not found in the mapped arts.");
 
                 newStreetcodeArt.StreetcodeArtSlideId = slideId;
                 newStreetcodeArts.Add(newStreetcodeArt);

@@ -16,7 +16,10 @@ public class GetStreetcodesCountHandler : IRequestHandler<GetStreetcodesCountQue
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-    public GetStreetcodesCountHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+    public GetStreetcodesCountHandler(
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
@@ -43,7 +46,7 @@ public class GetStreetcodesCountHandler : IRequestHandler<GetStreetcodesCountQue
             return Result.Ok(streetcodeContents.Count);
         }
 
-        string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+        var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
         _logger.LogError(request, errorMsg);
         return Result.Fail(errorMsg);
     }

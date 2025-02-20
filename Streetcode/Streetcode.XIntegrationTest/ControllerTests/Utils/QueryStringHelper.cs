@@ -11,11 +11,15 @@ public static class QueryStringHelper<T>
             return string.Empty;
         }
 
-        var properties = obj.GetType().GetProperties()
+        var properties = typeof(T).GetProperties()
             .Where(p => p.GetValue(obj) != null)
-            .Select(p => $"{HttpUtility.UrlEncode(p.Name)}={HttpUtility.UrlEncode(p.GetValue(obj)?.ToString())}");
+            .Select(p => $"{HttpUtility.UrlEncode(p.Name)}={HttpUtility.UrlEncode(p.GetValue(obj)?.ToString() ?? string.Empty)}")
+            .ToList();
 
-        var enumerable = properties as string[] ?? properties.ToArray();
-        return enumerable.Any() ? "?" + string.Join("&", enumerable) : string.Empty;
+        var queryString = string.Join("&", properties);
+
+        return queryString.Any()
+            ? queryString.Insert(0, "?")
+            : string.Empty;
     }
 }

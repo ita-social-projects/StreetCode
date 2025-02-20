@@ -1,11 +1,9 @@
 ﻿using System.Linq.Expressions;
-using AutoMapper.Configuration;
 using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.TestHelper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Serilog.Enrichers;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
@@ -196,15 +194,14 @@ public class CreateStreetcodeValidatorTests
         SetupRepositoryWrapperReturnsNull();
         MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(_repositoryWrapper);
         var command = GetValidCreateStreetcodeCommand();
-        var invalidImageIds = new List<int>() {10, 20};
+        var invalidImageIds = new List<int>() { 10, 20 };
         command.Streetcode.ImagesIds = invalidImageIds;
-
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        var imageIds = command.Streetcode.ImagesIds.ToList(); 
+        var imageIds = command.Streetcode.ImagesIds.ToList();
         for (int i = 0; i < imageIds.Count; i++)
         {
             var imageId = imageIds[i];
@@ -224,7 +221,7 @@ public class CreateStreetcodeValidatorTests
         var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await _validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
         _baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>(), default), Times.AtLeast(1));
@@ -239,7 +236,7 @@ public class CreateStreetcodeValidatorTests
         var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await _validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
         _categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>(), default), Times.AtLeast(1));

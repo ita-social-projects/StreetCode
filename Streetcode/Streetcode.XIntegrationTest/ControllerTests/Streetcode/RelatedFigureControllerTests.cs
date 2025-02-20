@@ -2,7 +2,6 @@
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
-using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.RelatedFigure;
@@ -27,20 +26,7 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
         TokenStorage tokenStorage)
         : base(factory, "/api/RelatedFigure", tokenStorage)
     {
-         int observerId = UniqueNumberGenerator.GenerateInt();
-         int targetId = UniqueNumberGenerator.GenerateInt();
-         _testStreetcodeContent1 = StreetcodeContentExtracter
-             .Extract(
-                 observerId,
-                 observerId,
-                 Guid.NewGuid().ToString());
-         _testStreetcodeContent2 = StreetcodeContentExtracter
-             .Extract(
-                 targetId,
-                 targetId,
-                 Guid.NewGuid().ToString());
-         _testRelatedFigure = RelatedFigureExtracter.Extract(_testStreetcodeContent1.Id, _testStreetcodeContent2.Id);
-         _testTag = TagExtracter.Extract(targetId, Guid.NewGuid().ToString());
+        (_testStreetcodeContent1, _testStreetcodeContent2, _testRelatedFigure, _testTag) = RelatedFigureExtracter.ExtractTestData();
     }
 
     [Fact]

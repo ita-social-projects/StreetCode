@@ -33,9 +33,9 @@ public class GetStreetcodeShortByIdHandler : IRequestHandler<GetStreetcodeShortB
         var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(st => st.Id == request.Id);
         var streetcodeShortDto = _mapper.Map<StreetcodeShortDTO>(streetcode);
 
-        if(streetcodeShortDto == null)
+        if (streetcodeShortDto == null)
         {
-            string errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
+            var errorMsg = _stringLocalizerCannotMap["CannotMapStreetcodeToShortDTO"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -86,23 +86,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         [Fact]
         public async Task Update_WithInvalidTags_ReturnsBadRequest()
         {
-            StreetcodeUpdateDTO updateStreetCodeDto = _testStreetcodeUpdateDto;
-
             // Invalid tag data
-            updateStreetCodeDto.Tags = new List<StreetcodeTagUpdateDTO>
+            _testStreetcodeUpdateDto.Tags = new List<StreetcodeTagUpdateDTO>
                     {
-                        new ()
+                        new StreetcodeTagUpdateDTO()
                         {
                             Id = 9999, // Non-existent tag ID
                             Title = "Invalid Tag",
                             IsVisible = true,
                             Index = 0,
-                            StreetcodeId = updateStreetCodeDto.Id,
+                            StreetcodeId = _testStreetcodeUpdateDto.Id,
                             ModelState = ModelState.Updated,
                         },
                     };
 
-            var response = await Client.UpdateAsync(updateStreetCodeDto, TokenStorage.AdminAccessToken);
+            var response = await Client.UpdateAsync(_testStreetcodeUpdateDto, TokenStorage.AdminAccessToken);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 

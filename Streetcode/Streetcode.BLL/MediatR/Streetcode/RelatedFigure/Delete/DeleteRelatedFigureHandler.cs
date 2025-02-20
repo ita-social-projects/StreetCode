@@ -29,13 +29,13 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
     public async Task<Result<Unit>> Handle(DeleteRelatedFigureCommand request, CancellationToken cancellationToken)
     {
         var relation = await _repositoryWrapper.RelatedFigureRepository
-                                .GetFirstOrDefaultAsync(rel =>
-                                rel.ObserverId == request.ObserverId &&
-                                rel.TargetId == request.TargetId);
+            .GetFirstOrDefaultAsync(rel =>
+                rel.ObserverId == request.ObserverId &&
+                rel.TargetId == request.TargetId);
 
         if (relation is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindRelationBetweenStreetcodesWithCorrespondingIds", request.ObserverId, request.TargetId].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindRelationBetweenStreetcodesWithCorrespondingIds", request.ObserverId, request.TargetId].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -48,7 +48,7 @@ public class DeleteRelatedFigureHandler : IRequestHandler<DeleteRelatedFigureCom
             return Result.Ok(Unit.Value);
         }
 
-        string finalErrorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelation"].Value;
+        var finalErrorMsg = _stringLocalizerFailedToDelete["FailedToDeleteRelation"].Value;
         _logger.LogError(request, finalErrorMsg);
         return Result.Fail(new Error(finalErrorMsg));
     }

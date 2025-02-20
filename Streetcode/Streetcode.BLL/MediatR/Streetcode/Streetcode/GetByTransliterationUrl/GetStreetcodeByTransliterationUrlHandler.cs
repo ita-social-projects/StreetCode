@@ -18,7 +18,11 @@ public class GetStreetcodeByTransliterationUrlHandler : IRequestHandler<GetStree
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetStreetcodeByTransliterationUrlHandler(IRepositoryWrapper repository, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetStreetcodeByTransliterationUrlHandler(
+        IRepositoryWrapper repository,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repository = repository;
         _mapper = mapper;
@@ -34,7 +38,7 @@ public class GetStreetcodeByTransliterationUrlHandler : IRequestHandler<GetStree
 
         if (streetcode == null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.Url].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.Url].Value;
             _logger.LogError(request, errorMsg);
             return new Error(errorMsg);
         }

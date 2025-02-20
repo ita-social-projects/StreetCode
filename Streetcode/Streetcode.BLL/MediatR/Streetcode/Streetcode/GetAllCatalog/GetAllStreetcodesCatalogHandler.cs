@@ -31,7 +31,9 @@ public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodes
     {
         var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
             predicate: sc => sc.Status == StreetcodeStatus.Published,
-            include: src => src.Include(item => item.Images).ThenInclude(x => x.ImageDetails!));
+            include: src => src
+                .Include(item => item.Images)
+                .ThenInclude(x => x.ImageDetails!));
 
         var streetcodesList = streetcodes.ToList();
         if (streetcodesList.Any())
@@ -39,14 +41,17 @@ public class GetAllStreetcodesCatalogHandler : IRequestHandler<GetAllStreetcodes
             const int keyNumOfImageToDisplay = (int)ImageAssigment.Blackandwhite;
             foreach (var streetcode in streetcodesList)
             {
-                streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
+                streetcode.Images = streetcode.Images
+                    .Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString()))
+                    .ToList();
             }
 
             var skipped = streetcodesList.Skip((request.Page - 1) * request.Count).Take(request.Count);
+
             return Result.Ok(_mapper.Map<IEnumerable<CatalogItem>>(skipped));
         }
 
-        string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+        var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
         _logger.LogError(request, errorMsg);
         return Result.Fail(errorMsg);
     }

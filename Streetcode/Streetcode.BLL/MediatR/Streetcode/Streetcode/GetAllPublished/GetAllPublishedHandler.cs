@@ -18,7 +18,11 @@ public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-    public GetAllPublishedHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+    public GetAllPublishedHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -33,7 +37,7 @@ public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
 
         if (streetcodes.IsNullOrEmpty())
         {
-            string errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(errorMsg);
         }

@@ -112,17 +112,14 @@ public class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, 
                     _cacheService.RemoveStreetcodeCaches(streetcodeToUpdate.Id);
                     return Result.Ok(streetcodeToUpdate.Id);
                 }
-                else
-                {
-                    string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
-                    _logger.LogError(request, errorMsg);
-                    return Result.Fail(new Error(errorMsg));
-                }
+
+                var errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStreetcode"].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
             }
             catch (Exception ex)
             {
-                string errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdating", ex.Message].Value;
-
+                var errorMsg = _stringLocalizerAnErrorOccurred["AnErrorOccurredWhileUpdating", ex.Message].Value;
                 _logger.LogError(request, errorMsg);
                 return Result.Fail(new Error(errorMsg));
             }
@@ -460,27 +457,27 @@ public class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, 
 
     private static void DistributeArtSlide(StreetcodeArtSlideCreateUpdateDTO artSlideDto, StreetcodeArtSlide artSlide, List<StreetcodeArt> newStreetcodeArts, ref StreetcodeArtSlide? toCreateSlide, ref List<StreetcodeArtSlide> toUpdateSlides, ref List<StreetcodeArtSlide> toDeleteSlides, ref List<StreetcodeArt> toCreateStreetcodeArts)
     {
-        if (artSlideDto.ModelState == ModelState.Created)
+        switch (artSlideDto.ModelState)
         {
-            toCreateSlide = artSlide;
-            return;
-        }
+            case ModelState.Created:
+                toCreateSlide = artSlide;
+                break;
 
-        artSlide.Id = artSlideDto.SlideId;
-        if (artSlideDto.ModelState == ModelState.Deleted)
-        {
-            toDeleteSlides.Add(artSlide);
-            return;
-        }
+            case ModelState.Deleted:
+                artSlide.Id = artSlideDto.SlideId;
+                toDeleteSlides.Add(artSlide);
+                break;
 
-        if (artSlideDto.ModelState == ModelState.Updated)
-        {
-            toUpdateSlides.Add(artSlide);
-            foreach (var streetcodeArt in newStreetcodeArts)
-            {
-                streetcodeArt.StreetcodeArtSlideId = artSlideDto.SlideId;
-                toCreateStreetcodeArts.Add(streetcodeArt);
-            }
+            case ModelState.Updated:
+                artSlide.Id = artSlideDto.SlideId;
+                toUpdateSlides.Add(artSlide);
+                foreach (var streetcodeArt in newStreetcodeArts)
+                {
+                    streetcodeArt.StreetcodeArtSlideId = artSlideDto.SlideId;
+                    toCreateStreetcodeArts.Add(streetcodeArt);
+                }
+
+                break;
         }
     }
 }

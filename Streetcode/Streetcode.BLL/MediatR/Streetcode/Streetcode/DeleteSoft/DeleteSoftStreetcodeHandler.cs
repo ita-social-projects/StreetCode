@@ -14,7 +14,11 @@ public class DeleteSoftStreetcodeHandler : IRequestHandler<DeleteSoftStreetcodeC
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
 
-    public DeleteSoftStreetcodeHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
+    public DeleteSoftStreetcodeHandler(
+        IRepositoryWrapper repositoryWrapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
+        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;

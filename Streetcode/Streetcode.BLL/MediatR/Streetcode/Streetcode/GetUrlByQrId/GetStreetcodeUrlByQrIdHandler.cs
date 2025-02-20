@@ -38,7 +38,7 @@ public class GetStreetcodeUrlByQrIdHandler : IRequestHandler<GetStreetcodeUrlByQ
 
         if(streetcode == null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeById"].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -10,7 +10,7 @@ using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractStatisticRecordAttribute : BeforeAfterTestAttribute
 {
     public static int QrId { get; private set; }
@@ -26,7 +26,7 @@ public class ExtractStatisticRecordAttribute : BeforeAfterTestAttribute
     {
         var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
         QrId = UniqueNumberGenerator.GenerateInt();
-        int streetcodeId = UniqueNumberGenerator.GenerateInt();
+        var streetcodeId = UniqueNumberGenerator.GenerateInt();
 
         TestStreetcode = StreetcodeContentExtracter
             .Extract(

@@ -24,8 +24,8 @@ public class StreetcodeDeleteControllerTests : BaseAuthorizationControllerTests<
         TokenStorage tokenStorage)
         : base(factory, "/api/Streetcode", tokenStorage)
     {
-        int uniqueId = UniqueNumberGenerator.GenerateInt();
-        int uniqueId2 = UniqueNumberGenerator.GenerateInt();
+        var uniqueId = UniqueNumberGenerator.GenerateInt();
+        var uniqueId2 = UniqueNumberGenerator.GenerateInt();
         _testSoftDeleteStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,

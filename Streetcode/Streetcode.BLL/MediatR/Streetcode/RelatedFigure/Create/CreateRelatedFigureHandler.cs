@@ -6,7 +6,7 @@ using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Entity = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
-namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Сreate;
+namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 
 public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCommand, Result<Unit>>
 {
@@ -14,6 +14,7 @@ public class CreateRelatedFigureHandler : IRequestHandler<CreateRelatedFigureCom
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
+
     public CreateRelatedFigureHandler(
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,

@@ -50,7 +50,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             var sortedResult = FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
             if (sortedResult.IsFailed)
             {
-                string errorMsg = _stringLocalizerCannotFind[sortedResult.Errors[0].Message].Value;
+                var errorMsg = _stringLocalizerCannotFind[sortedResult.Errors[0].Message].Value;
                 _logger.LogError(query, errorMsg);
                 return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
@@ -61,7 +61,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             var filterResult = FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
             if (filterResult.IsFailed)
             {
-                string errorMsg = _stringLocalizerCannotFind[filterResult.Errors[0].Message].Value;
+                var errorMsg = _stringLocalizerCannotFind[filterResult.Errors[0].Message].Value;
                 _logger.LogError(query, errorMsg);
                 return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
@@ -73,7 +73,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         {
             if (filterRequest.Page <= 0 || filterRequest.Amount <= 0)
             {
-               string errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
+               var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
                _logger.LogError(query, errorMsg);
                return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
@@ -159,6 +159,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             "desc" => Queryable.OrderByDescending(sortedRecords, (dynamic)lambda),
             _ => sortedRecords,
         };
+
         return Result.Ok();
     }
 

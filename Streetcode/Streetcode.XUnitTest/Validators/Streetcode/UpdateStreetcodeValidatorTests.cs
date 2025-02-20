@@ -18,7 +18,6 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
@@ -181,7 +180,7 @@ public class UpdateStreetcodeValidatorTests
         var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await _validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
         _baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>(), default), Times.AtLeast(1));
@@ -196,7 +195,7 @@ public class UpdateStreetcodeValidatorTests
         var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await _validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
         _categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>(), default), Times.AtLeast(1));

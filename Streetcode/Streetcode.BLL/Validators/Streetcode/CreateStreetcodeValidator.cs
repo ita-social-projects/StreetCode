@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;

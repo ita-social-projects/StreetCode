@@ -106,10 +106,22 @@ public class GetRelatedFiguresByTagIdHandlerTests
         {
             Id = i,
             Status = StreetcodeStatus.Published,
-            Tags = new List<Tag> { new () { Id = tagId } },
+            Tags = new List<Tag>
+            {
+                new ()
+                {
+                    Id = tagId,
+                },
+            },
             Images = new List<Image>
             {
-                new () { ImageDetails = new ImageDetails { Alt = ((int)ImageAssigment.Blackandwhite).ToString() } },
+                new ()
+                {
+                    ImageDetails = new ImageDetails
+                    {
+                        Alt = ((int)ImageAssigment.Blackandwhite).ToString(),
+                    },
+                },
             },
         }).ToList();
     }

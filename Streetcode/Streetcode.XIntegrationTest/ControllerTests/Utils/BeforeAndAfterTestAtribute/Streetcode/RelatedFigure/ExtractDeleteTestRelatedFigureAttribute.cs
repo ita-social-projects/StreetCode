@@ -2,26 +2,26 @@
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter.RelatedFigure;
 using Xunit.Sdk;
+using RelateFigureEntity = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.RelatedFigure;
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractDeleteTestRelatedFigureAttribute : BeforeAfterTestAttribute
 {
-    public static StreetcodeContent StreetcodeContent1 { get; private set; } = null!;
+    public static StreetcodeContent StreetcodeContent1 { get; private set; } = new ();
 
-    public static StreetcodeContent StreetcodeContent2 { get; set; } = null!;
+    public static StreetcodeContent StreetcodeContent2 { get; private set; } = new ();
 
-    public static DAL.Entities.Streetcode.RelatedFigure RelatedFigureForTest { get; private set; } = null!;
+    public static RelateFigureEntity RelatedFigureForTest { get; private set; } = new ();
 
     public override void Before(MethodInfo methodUnderTest)
     {
-        int observerId = UniqueNumberGenerator.GenerateInt();
-        int targetId = UniqueNumberGenerator.GenerateInt();
+        var observerId = UniqueNumberGenerator.GenerateInt();
+        var targetId = UniqueNumberGenerator.GenerateInt();
         StreetcodeContent1 = StreetcodeContentExtracter
             .Extract(
                 observerId,

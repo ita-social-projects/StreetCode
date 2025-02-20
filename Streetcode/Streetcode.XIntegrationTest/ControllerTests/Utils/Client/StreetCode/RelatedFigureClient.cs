@@ -6,8 +6,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 public class RelatedFigureClient : StreetcodeRelatedBaseClient
 {
     public RelatedFigureClient(
-        HttpClient client,
-        string secondPartUrl = "")
+        HttpClient client, string secondPartUrl = "")
         : base(client, secondPartUrl)
     {
     }

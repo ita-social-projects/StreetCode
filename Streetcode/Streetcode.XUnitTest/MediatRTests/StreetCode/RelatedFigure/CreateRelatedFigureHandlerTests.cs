@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Сreate;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
-using Entities = Streetcode.DAL.Entities.Streetcode;
+using RelatedFigureEntity = Streetcode.DAL.Entities.Streetcode.RelatedFigure;
 
 namespace Streetcode.XUnitTest.MediatRTests.Streetcode.RelatedFigure;
 
@@ -48,7 +48,9 @@ public class CreateRelatedFigureHandlerTests
         Assert.Multiple(() =>
         {
             Assert.True(result.IsSuccess);
-            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.CreateAsync(It.IsAny<Entities.RelatedFigure>()), Times.Once);
+            _repositoryMock.Verify(
+                repo => repo.RelatedFigureRepository.CreateAsync(
+                It.IsAny<RelatedFigureEntity>()), Times.Once);
             _repositoryMock.Verify(repo => repo.SaveChangesAsync(), Times.Once);
         });
     }
@@ -112,7 +114,9 @@ public class CreateRelatedFigureHandlerTests
             Assert.False(result.IsSuccess);
             Assert.Contains(expectedError, result.Errors.Single().Message);
             _loggerMock.Verify(logger => logger.LogError(request, expectedError), Times.Once);
-            _repositoryMock.Verify(repo => repo.RelatedFigureRepository.Create(It.IsAny<Entities.RelatedFigure>()), Times.Never);
+            _repositoryMock.Verify(
+                repo => repo.RelatedFigureRepository.Create(
+                It.IsAny<RelatedFigureEntity>()), Times.Never);
         });
     }
 
@@ -143,7 +147,11 @@ public class CreateRelatedFigureHandlerTests
         foreach (var id in streetcodeIds)
         {
             _repositoryMock
-                .Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(It.Is<Expression<Func<StreetcodeContent, bool>>>(expr => expr.Compile().Invoke(new StreetcodeContent { Id = id })), null))
+                .Setup(repo => repo.StreetcodeRepository
+                    .GetFirstOrDefaultAsync(
+                        It.Is<Expression<Func<StreetcodeContent, bool>>>(expr => expr
+                            .Compile()
+                            .Invoke(new StreetcodeContent { Id = id })), null))
                 .ReturnsAsync(new StreetcodeContent { Id = id });
         }
     }
@@ -151,21 +159,28 @@ public class CreateRelatedFigureHandlerTests
     private void SetupMocksForNonExistingStreetcode(int streetcodeId)
     {
         _repositoryMock
-            .Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(It.Is<Expression<Func<StreetcodeContent, bool>>>(expr => expr.Compile().Invoke(new StreetcodeContent { Id = streetcodeId })), null))
+            .Setup(repo => repo.StreetcodeRepository
+                .GetFirstOrDefaultAsync(
+                    It.Is<Expression<Func<StreetcodeContent, bool>>>(expr => expr
+                    .Compile()
+                    .Invoke(new StreetcodeContent { Id = streetcodeId })), null))
             .ReturnsAsync((StreetcodeContent)null!);
     }
 
     private void SetupMocksForExistingRelation(int observerId, int targetId)
     {
         _repositoryMock
-            .Setup(repo => repo.RelatedFigureRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>>(), null))
-            .ReturnsAsync(new DAL.Entities.Streetcode.RelatedFigure { ObserverId = observerId, TargetId = targetId });
+            .Setup(repo => repo.RelatedFigureRepository.
+                GetFirstOrDefaultAsync(It.IsAny<Expression<Func<RelatedFigureEntity, bool>>>(), null))
+            .ReturnsAsync(new RelatedFigureEntity { ObserverId = observerId, TargetId = targetId });
     }
 
     private void SetupMocksForNonExistingRelation()
     {
         _repositoryMock
-            .Setup(repo => repo.RelatedFigureRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Entities.RelatedFigure, bool>>>(), null))
-            .ReturnsAsync((DAL.Entities.Streetcode.RelatedFigure)null!);
+            .Setup(repo => repo.RelatedFigureRepository
+                .GetFirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<RelatedFigureEntity, bool>>>(), null))
+            .ReturnsAsync((RelatedFigureEntity)null!);
     }
 }

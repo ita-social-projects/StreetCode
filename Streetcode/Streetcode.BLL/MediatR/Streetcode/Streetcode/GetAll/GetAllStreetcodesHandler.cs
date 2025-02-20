@@ -2,8 +2,8 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -25,7 +25,9 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         var filterRequest = query.request;
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll();
+            .FindAll()
+            .Include(s => s.Tags)
+            .AsQueryable();
 
         if (filterRequest.Title is not null)
         {

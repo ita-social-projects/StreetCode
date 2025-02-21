@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManagerService;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
@@ -18,6 +21,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+
         public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
@@ -30,8 +34,12 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
         public async Task<Result<NewsDTOWithURLs>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
         {
             string url = request.url;
+            Expression<Func<News, bool>>? basePredicate = sc => sc.URL == url;
+
+            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.userRole);
+
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
-                predicate: sc => sc.URL == url,
+                predicate: predicate,
                 include: scl => scl
                     .Include(sc => sc.Image!)));
 

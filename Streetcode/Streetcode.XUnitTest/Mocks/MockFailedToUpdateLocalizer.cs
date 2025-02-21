@@ -13,6 +13,8 @@ public class MockFailedToUpdateLocalizer : BaseMockStringLocalizer<FailedToUpdat
                 {
                     "FailedToUpdateFact",
                     "FailedToUpdateTerm",
+                    "FailedToUpdateStatusOfStreetcode",
+                    "FailedToChangeStatusOfStreetcodeToDeleted",
                 }
             },
         };

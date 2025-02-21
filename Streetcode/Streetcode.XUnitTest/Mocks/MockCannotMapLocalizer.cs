@@ -12,6 +12,7 @@ public class MockCannotMapLocalizer : BaseMockStringLocalizer<CannotMapSharedRes
                 0, new List<string>()
                 {
                     "CannotMapEntity",
+                    "CannotMapStreetcodeToShortDTO",
                 }
             },
         };

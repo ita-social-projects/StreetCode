@@ -1,17 +1,17 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllFavourites;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
@@ -21,7 +21,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<NoSharedResource>> _stringLocalizerNo;
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
+        private readonly MockNoSharedResourceLocalizer _stringLocalizerNo;
 
 
         public GetAllStreetcodeFavouritesHandlerTests()
@@ -29,23 +30,25 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _stringLocalizerNo = new Mock<IStringLocalizer<NoSharedResource>>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
+            _stringLocalizerNo = new MockNoSharedResourceLocalizer();
         }
 
         [Fact]
         public async Task Handle_ReturnsBadRequest()
         {
             // Arrange
-            this.SetupRepository(new List<StreetcodeContent>());
-            string expectedError = "No streetcode has been added to favourites";
-            this._stringLocalizerNo.Setup(x => x["NoFavouritesFound"])
-                .Returns(new LocalizedString("NoFavouritesFound", expectedError));
-
-            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo.Object);
             string userId = "mockId";
 
+            this.SetupRepository(new List<StreetcodeContent>());
+            string expectedError = _stringLocalizerNo["NoFavouritesFound"].Value;
+
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+
+            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo, _httpContextAccessor.Object);
+
             // Act
-            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(userId), CancellationToken.None);
+            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -57,6 +60,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsSuccessWithNotFilteredStreetcodes()
         {
             // Arrange
+            string userId = "mockId";
+
             this.SetupRepository(new List<StreetcodeContent>
             {
                 new StreetcodeContent()
@@ -66,11 +71,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 new StreetcodeFavouriteDto()
             });
 
-            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo.Object);
-            string userId = "mockId";
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+
+            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo, _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(userId), CancellationToken.None);
+            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -83,6 +89,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         public async Task Handle_ReturnsSuccessWithFilteredStreetcodes()
         {
             // Arrange
+            string userId = "mockId";
+
             this.SetupRepository(new List<StreetcodeContent>
             {
                 new PersonStreetcode()
@@ -92,12 +100,15 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 new StreetcodeFavouriteDto()
             });
 
-            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo.Object);
-            string userId = "mockId";
+
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+
+            var handler = new GetAllStreetcodeFavouritesHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo, _httpContextAccessor.Object);
+
             StreetcodeType type = StreetcodeType.Person;
 
             // Act
-            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(userId, type), CancellationToken.None);
+            var result = await handler.Handle(new GetAllStreetcodeFavouritesQuery(type), CancellationToken.None);
 
             // Assert
             foreach (var streetcode in result.Value)

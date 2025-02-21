@@ -1,14 +1,15 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteById;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
@@ -18,14 +19,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<IMapper> _mapper;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<NoSharedResource>> _stringLocalizerNo;
+        private readonly MockNoSharedResourceLocalizer _stringLocalizerNo;
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
 
         public GetFavouriteByIdHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _mapper = new Mock<IMapper>();
             _mockLogger = new Mock<ILoggerService>();
-            _stringLocalizerNo = new Mock<IStringLocalizer<NoSharedResource>>();
+            _stringLocalizerNo = new MockNoSharedResourceLocalizer();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
         }
 
         [Fact]
@@ -33,17 +36,16 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             // Arrange
             this.RepositorySetup(null);
-            this.SetupLocalizers();
 
             int incorrectId = -1;
-            string expectedError = $"No favourite streetcode with corresponding id: {incorrectId}";
+            string expectedError = _stringLocalizerNo["NoFavouritesWithId", incorrectId];
 
             string userId = "mockId";
-
-            var handler = new GetFavouriteByIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo.Object);
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+            var handler = new GetFavouriteByIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo, _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new GetFavouriteByIdQuery(incorrectId, userId), CancellationToken.None);
+            var result = await handler.Handle(new GetFavouriteByIdQuery(incorrectId), CancellationToken.None);
 
             // Asset
             Assert.Equal(expectedError, result.Errors.Single().Message);
@@ -67,10 +69,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                     Id = streetcodeId,
                 });
 
-            var handler = new GetFavouriteByIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo.Object);
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+
+            var handler = new GetFavouriteByIdHandler(_mapper.Object, _repository.Object, _mockLogger.Object, _stringLocalizerNo, _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new GetFavouriteByIdQuery(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new GetFavouriteByIdQuery(streetcodeId), CancellationToken.None);
 
             // Asset
             Assert.Multiple(
@@ -80,9 +84,13 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
         private void RepositorySetup(StreetcodeContent? favourite)
         {
-            _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+            var streetcodeRepoMock = new Mock<IStreetcodeRepository>();
+
+            streetcodeRepoMock.Setup(x => x.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(favourite);
+
+            _repository.Setup(x => x.StreetcodeRepository).Returns(streetcodeRepoMock.Object);
 
         }
 
@@ -90,20 +98,6 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
         {
             _mapper.Setup(x => x.Map<StreetcodeFavouriteDto>(It.IsAny<object>()))
                 .Returns(favourite);
-        }
-
-        private void SetupLocalizers()
-        {
-            _stringLocalizerNo.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
-               .Returns((string key, object[] args) =>
-               {
-                   if (args != null && args.Length > 0 && args[0] is int id)
-                   {
-                       return new LocalizedString(key, $"No favourite streetcode with corresponding id: {id}");
-                   }
-
-                   return new LocalizedString(key, "No favourite streetcode with unknown index");
-               });
         }
     }
 }

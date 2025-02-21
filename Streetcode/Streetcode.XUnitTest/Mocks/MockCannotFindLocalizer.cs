@@ -14,6 +14,7 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                     "CannotFindAnyFact",
                     "CannotFindAnyTerm",
                     "CannotFindAnyText",
+                    "CannotFindStreetcodeInFavourites",
                 }
             },
             {

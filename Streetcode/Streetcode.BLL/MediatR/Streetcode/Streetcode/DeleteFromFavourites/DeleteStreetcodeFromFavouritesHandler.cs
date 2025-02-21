@@ -1,8 +1,10 @@
 ﻿using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteFromFavourites
@@ -13,21 +15,25 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteFromFavourites
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
         private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DeleteStreetcodeFromFavouritesHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete)
+        public DeleteStreetcodeFromFavouritesHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete, IHttpContextAccessor httpContextAccessor)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
             _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Result<Unit>> Handle(DeleteStreetcodeFromFavouritesCommand request, CancellationToken cancellationToken)
         {
-            var favourite = await _repositoryWrapper.FavouritesRepository.GetFirstOrDefaultAsync(
-                 f => f.UserId == request.userId && f.StreetcodeId == request.streetcodeId);
+            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor)!;
 
-            if(favourite is null)
+            var favourite = await _repositoryWrapper.FavouritesRepository.GetFirstOrDefaultAsync(
+                 f => f.UserId == userId && f.StreetcodeId == request.StreetcodeId);
+
+            if (favourite is null)
             {
                 string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeInFavourites"].Value;
                 _logger.LogError(request, errorMsg);

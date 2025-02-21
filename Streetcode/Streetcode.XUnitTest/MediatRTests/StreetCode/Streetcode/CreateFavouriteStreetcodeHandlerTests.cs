@@ -1,14 +1,14 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.CreateFavourite;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Favourites;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
@@ -17,15 +17,17 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     {
         private readonly Mock<IRepositoryWrapper> _repository;
         private readonly Mock<ILoggerService> _logger;
-        private readonly Mock<IStringLocalizer<AlreadyExistSharedResource>> _mockAlreadyExists;
-        private readonly Mock<IStringLocalizer<CannotSaveSharedResource>> _mockLocalizerCannotSave;
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
+        private readonly MockAlreadyExistLocalizer _mockAlreadyExists;
+        private readonly MockCannotSaveLocalizer _mockLocalizerCannotSave;
 
         public CreateFavouriteStreetcodeHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
             _logger = new Mock<ILoggerService>();
-            _mockAlreadyExists = new Mock<IStringLocalizer<AlreadyExistSharedResource>>();
-            _mockLocalizerCannotSave = new Mock<IStringLocalizer<CannotSaveSharedResource>>();
+            _mockAlreadyExists = new MockAlreadyExistLocalizer();
+            _mockLocalizerCannotSave = new MockCannotSaveLocalizer();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
         }
 
         [Fact]
@@ -42,25 +44,26 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
 
             this.SetupFavouritesRepository(new List<Favourite>
             {
-                new () 
+                new ()
                 {
                     StreetcodeId = streetcodeId,
                     UserId = userId,
                 },
             });
 
-            this.SetupLocalizers();
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
 
-            string expectedError = "Streetcode is already in favourites";
+            string expectedError = _mockAlreadyExists["FavouriteAlreadyExists"].Value;
 
             var handler = new CreateFavouriteStreetcodeHandler(
                 _repository.Object,
                 _logger.Object,
-                _mockAlreadyExists.Object,
-                _mockLocalizerCannotSave.Object);
+                _mockAlreadyExists,
+                _mockLocalizerCannotSave,
+                _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -81,17 +84,20 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             });
 
             this.SetupFavouritesRepository(new List<Favourite>());
-            _repository.Setup(x => x.FavouritesRepository.CreateAsync(new Favourite()));
-            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+
+            this.SetupSaveChanges(1);
+
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
 
             var handler = new CreateFavouriteStreetcodeHandler(
                 _repository.Object,
                 _logger.Object,
-                _mockAlreadyExists.Object,
-                _mockLocalizerCannotSave.Object);
+                _mockAlreadyExists,
+                _mockLocalizerCannotSave,
+                _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -104,25 +110,28 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             string userId = Guid.NewGuid().ToString();
             int streetcodeId = 1;
 
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+
             this.SetupStreetcodeRepository(new List<StreetcodeContent>
             {
                 new () { Id = streetcodeId, },
             });
 
             this.SetupFavouritesRepository(new List<Favourite>());
-            this.SetupLocalizers();
-            _repository.Setup(x => x.FavouritesRepository.CreateAsync(new Favourite()));
-            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(0);
-            string expectedError = "Cannot save the data";
+
+            this.SetupSaveChanges(0);
+
+            string expectedError = _mockLocalizerCannotSave["CannotSaveTheData"].Value;
 
             var handler = new CreateFavouriteStreetcodeHandler(
                 _repository.Object,
                 _logger.Object,
-                _mockAlreadyExists.Object,
-                _mockLocalizerCannotSave.Object);
+                _mockAlreadyExists,
+                _mockLocalizerCannotSave,
+                _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new CreateFavouriteStreetcodeCommand(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -137,7 +146,8 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 It.IsAny<Func<IQueryable<StreetcodeContent>,
                 IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(returnList);
-            if (!returnList.IsNullOrEmpty()){
+            if (!returnList.IsNullOrEmpty())
+            {
                 _repository.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(), It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(returnList[0]);
@@ -151,22 +161,20 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                 It.IsAny<Func<IQueryable<Favourite>,
                 IIncludableQueryable<Favourite, object>>>()))
                 .ReturnsAsync(returnList);
+
             if (!returnList.IsNullOrEmpty())
             {
                 _repository.Setup(x => x.FavouritesRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Favourite, bool>>?>(), It.IsAny<Func<IQueryable<Favourite>, IIncludableQueryable<Favourite, object>>>()))
                 .ReturnsAsync(returnList[0]);
             }
+
+            _repository.Setup(x => x.FavouritesRepository.CreateAsync(new Favourite()));
         }
 
-        private void SetupLocalizers()
+        private void SetupSaveChanges(int result)
         {
-            _mockAlreadyExists.Setup(x => x["FavouriteAlreadyExists"])
-               .Returns(new LocalizedString("FavouriteAlreadyExists", "Streetcode is already in favourites"));
-
-            _mockLocalizerCannotSave.Setup(x => x["CannotSaveTheData"])
-               .Returns(new LocalizedString("CannotSaveTheData", "Cannot save the data"));
-
+            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(result);
         }
     }
 }

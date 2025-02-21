@@ -4,5 +4,6 @@ using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteById
 {
-    public record GetFavouriteByIdQuery(int streetcodeId, string userId) : IRequest<Result<StreetcodeFavouriteDto>>;
+    public record GetFavouriteByIdQuery(int StreetcodeId)
+        : IRequest<Result<StreetcodeFavouriteDto>>;
 }

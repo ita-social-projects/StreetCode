@@ -3,5 +3,6 @@ using MediatR;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteStatus
 {
-    public record GetFavouriteStatusQuery(int streetcodeId, string userId) : IRequest<Result<bool>>;
+    public record GetFavouriteStatusQuery(int StreetcodeId)
+        : IRequest<Result<bool>>;
 }

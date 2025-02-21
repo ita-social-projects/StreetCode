@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using System.Security.Claims;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
@@ -12,6 +14,20 @@ namespace Streetcode.XUnitTest.Mocks;
 
 public static class MockHelpers
 {
+    public static void SetupMockHttpContextAccessor(Mock<IHttpContextAccessor> mockContextAccessor, string userId)
+    {
+        var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, userId) };
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+
+        var httpContext = new DefaultHttpContext
+        {
+            User = claimsPrincipal,
+        };
+
+        mockContextAccessor.Setup(x => x.HttpContext).Returns(httpContext);
+    }
+
     public static void SetupMockImageRepositoryGetFirstOrDefaultAsync(Mock<IRepositoryWrapper> mockRepositoryWrapper, int imageId)
     {
         // Returns an Image with Id = 1

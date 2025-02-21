@@ -3,6 +3,6 @@ using MediatR;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.CreateFavourite
 {
-    public record CreateFavouriteStreetcodeCommand(int streetcodeId, string userId)
+    public record CreateFavouriteStreetcodeCommand(int StreetcodeId)
     : IRequest<Result<Unit>>;
 }

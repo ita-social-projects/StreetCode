@@ -54,11 +54,11 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .WithMany(i => i.Streetcodes)
                 .UsingEntity<StreetcodeImage>(
                     si => si.HasOne(i => i.Image)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(i => i.ImageId),
+                        .WithMany()
+                        .HasForeignKey(i => i.ImageId),
                     si => si.HasOne(i => i.Streetcode)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(i => i.StreetcodeId))
+                        .WithMany()
+                        .HasForeignKey(i => i.StreetcodeId))
                 .ToTable("streetcode_image", "streetcode");
 
         builder
@@ -71,35 +71,35 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .WithMany(t => t.Streetcodes)
                 .UsingEntity<StreetcodeToponym>(
                     st => st.HasOne(s => s.Toponym)
-                                                                            .WithMany()
-                                                                            .HasForeignKey(x => x.ToponymId),
+                        .WithMany()
+                        .HasForeignKey(x => x.ToponymId),
                     st => st.HasOne(s => s.Streetcode)
-                                                                            .WithMany()
-                                                                            .HasForeignKey(x => x.StreetcodeId))
+                        .WithMany()
+                        .HasForeignKey(x => x.StreetcodeId))
                 .ToTable("streetcode_toponym", "streetcode");
 
         builder
                 .HasMany(d => d.SourceLinkCategories)
                 .WithMany(c => c.Streetcodes)
                 .UsingEntity<StreetcodeCategoryContent>(
-                        scat => scat.HasOne(i => i.SourceLinkCategory)
-                                                                                        .WithMany(s => s.StreetcodeCategoryContents)
-                                                                                        .HasForeignKey(i => i.SourceLinkCategoryId),
-                        scat => scat.HasOne(i => i.Streetcode)
-                                                                                        .WithMany(s => s.StreetcodeCategoryContents)
-                                                                                        .HasForeignKey(i => i.StreetcodeId))
+                    scat => scat.HasOne(i => i.SourceLinkCategory)
+                        .WithMany(s => s.StreetcodeCategoryContents)
+                        .HasForeignKey(i => i.SourceLinkCategoryId),
+                    scat => scat.HasOne(i => i.Streetcode)
+                        .WithMany(s => s.StreetcodeCategoryContents)
+                        .HasForeignKey(i => i.StreetcodeId))
                 .ToTable("streetcode_source_link_categories", "sources");
 
         builder
                 .HasMany(d => d.Partners)
                 .WithMany(p => p.Streetcodes)
                 .UsingEntity<StreetcodePartner>(
-                        sp => sp.HasOne(i => i.Partner)
-                                                                         .WithMany()
-                                                                         .HasForeignKey(x => x.PartnerId),
-                        sp => sp.HasOne(i => i.Streetcode)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(x => x.StreetcodeId))
+                    sp => sp.HasOne(i => i.Partner)
+                        .WithMany()
+                        .HasForeignKey(x => x.PartnerId),
+                    sp => sp.HasOne(i => i.Streetcode)
+                        .WithMany()
+                        .HasForeignKey(x => x.StreetcodeId))
                 .ToTable("streetcode_partners", "streetcode");
 
         builder
@@ -139,15 +139,15 @@ public class StreetcodeContentMap : IEntityTypeConfiguration<StreetcodeContent>
                 .OnDelete(DeleteBehavior.NoAction);
 
         builder
-            .HasMany(u => u.UserFavourites)
-            .WithMany(s => s.StreetcodeFavourites)
-            .UsingEntity<Favourite>(
+                .HasMany(u => u.UserFavourites)
+                .WithMany(s => s.StreetcodeFavourites)
+                .UsingEntity<Favourite>(
                     f => f.HasOne(i => i.User)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(x => x.UserId),
+                        .WithMany()
+                        .HasForeignKey(x => x.UserId),
                     f => f.HasOne(i => i.Streetcode)
-                                                                        .WithMany()
-                                                                        .HasForeignKey(x => x.StreetcodeId))
+                        .WithMany()
+                        .HasForeignKey(x => x.StreetcodeId))
             .ToTable("favourites", "streetcode");
     }
 }

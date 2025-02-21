@@ -1,14 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteStatus;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Streetcode.XUnitTest.Mocks;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
@@ -16,10 +13,12 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
     public class GetFavouriteStatusHandlerTests
     {
         private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
 
         public GetFavouriteStatusHandlerTests()
         {
             _repository = new Mock<IRepositoryWrapper>();
+            _httpContextAccessor = new Mock<IHttpContextAccessor>();
         }
 
         [Fact]
@@ -35,10 +34,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
                     Id = streetcodeId,
                 });
 
-            var handler = new GetFavouriteStatusHandler(_repository.Object);
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+            var handler = new GetFavouriteStatusHandler(_repository.Object, _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new GetFavouriteStatusQuery(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new GetFavouriteStatusQuery(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.True(result.Value);
@@ -52,11 +52,11 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
             string userId = "mockId";
 
             this.RepositorySetup(null);
-
-            var handler = new GetFavouriteStatusHandler(_repository.Object);
+            MockHelpers.SetupMockHttpContextAccessor(_httpContextAccessor, userId);
+            var handler = new GetFavouriteStatusHandler(_repository.Object, _httpContextAccessor.Object);
 
             // Act
-            var result = await handler.Handle(new GetFavouriteStatusQuery(streetcodeId, userId), CancellationToken.None);
+            var result = await handler.Handle(new GetFavouriteStatusQuery(streetcodeId), CancellationToken.None);
 
             // Assert
             Assert.False(result.Value);

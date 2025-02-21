@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.AdditionalContent.Filter;
@@ -108,14 +107,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetFavouriteStatus([FromRoute] int streetcodeId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        return HandleResult(await Mediator.Send(new GetFavouriteStatusQuery(streetcodeId, userId)));
+        return HandleResult(await Mediator.Send(new GetFavouriteStatusQuery(streetcodeId)));
     }
 
     [HttpGet]
@@ -132,14 +124,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAllFavourites([FromQuery] StreetcodeType? type)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        return HandleResult(await Mediator.Send(new GetAllStreetcodeFavouritesQuery(userId, type)));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodeFavouritesQuery(type)));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -150,14 +135,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetFavouriteById([FromRoute] int streetcodeId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        return HandleResult(await Mediator.Send(new GetFavouriteByIdQuery(streetcodeId, userId)));
+        return HandleResult(await Mediator.Send(new GetFavouriteByIdQuery(streetcodeId)));
     }
 
     [HttpGet]
@@ -226,14 +204,7 @@ public class StreetcodeController : BaseApiController
     public async Task<IActionResult> CreateFavourite(
             [FromRoute] int streetcodeId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        return HandleResult(await Mediator.Send(new CreateFavouriteStreetcodeCommand(streetcodeId, userId)));
+        return HandleResult(await Mediator.Send(new CreateFavouriteStreetcodeCommand(streetcodeId)));
     }
 
     [HttpDelete("{id:int}")]
@@ -264,14 +235,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteFromFavourites([FromRoute] int streetcodeId)
     {
-        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized();
-        }
-
-        return HandleResult(await Mediator.Send(new DeleteStreetcodeFromFavouritesCommand(streetcodeId, userId)));
+        return HandleResult(await Mediator.Send(new DeleteStreetcodeFromFavouritesCommand(streetcodeId)));
     }
 
     [HttpPut]
@@ -279,8 +243,8 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
+    public async Task<IActionResult> Update([FromBody] StreetcodeUpdateDTO streetcode)
     {
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));
-	}
+    }
 }

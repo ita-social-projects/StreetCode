@@ -14,6 +14,8 @@ public class CreatePartnerValidator : AbstractValidator<CreatePartnerQuery>
         BasePartnersValidator basePartnersValidator,
         IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer,
+        IStringLocalizer<AlreadyExistSharedResource> stringLocalizerAlreadyExist,
+        IStringLocalizer<FieldNamesSharedResource> stringLocalizerFieldNames,
         IRepositoryWrapper repositoryWrapper)
     {
         _repositoryWrapper = repositoryWrapper;
@@ -23,7 +25,8 @@ public class CreatePartnerValidator : AbstractValidator<CreatePartnerQuery>
         RuleFor(c => c.newPartner.Title)
             .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]]);
 
-        RuleFor(c => c.newPartner.LogoId).MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["LogoId"]]);
+        RuleFor(c => c.newPartner.LogoId).
+            MustAsync(BeUniqueImageId).WithMessage(x => stringLocalizerAlreadyExist["PartnerWithFieldAlreadyExist", stringLocalizerFieldNames["LogoId"], x.newPartner.LogoId]);
     }
 
     private async Task<bool> BeUniqueTitle(string title, CancellationToken token)

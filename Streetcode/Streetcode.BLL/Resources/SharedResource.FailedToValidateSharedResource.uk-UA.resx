@@ -186,7 +186,25 @@
   <data name="EventStreetcodeCannotHasFirstName" xml:space="preserve">
     <value>Стріткод типу 'Подія' не може мати поля 'Ім'я' та 'Прізвище' </value>
   </data>
+  <data name="MinLength" xml:space="preserve">
+    <value>Мінімальна довжина поля '{0}' - {1}</value>
+  </data>
+  <data name="MustContainAtMostThreeExpertises" xml:space="preserve">
+    <value>Поле '{0}' може містити щонайбільше три досвіди.</value>
+  </data>
+  <data name="NameFormat" xml:space="preserve">
+    <value>Ім'я повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (').</value>
+  </data>
+  <data name="SurnameFormat" xml:space="preserve">
+    <value>Прізвище повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (').</value>
+  </data>
+  <data name="UserNameFormat" xml:space="preserve">
+    <value>Нікнейм повинен складатися лише з літер латиниці (малих) та може містити лише символи дефіс (-), апостроф (') та підкреслення(_).</value>
+  </data>
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>Розмір картинки не може перевищувати {0} MB</value>
+  </data>
+  <data name="InvalidPaginationParameters" xml:space="preserve">
+    <value>Параметри пагінації повинні бути коректними</value>
   </data>
 </root>

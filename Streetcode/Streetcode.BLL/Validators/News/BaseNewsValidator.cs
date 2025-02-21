@@ -11,7 +11,7 @@ namespace Streetcode.BLL.Validators.News;
 public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
 {
     public const int TitleMaxLength = 100;
-    public const int TextMaxLength = 15000;
+    public const int TextMaxLength = 25000;
     public const int UrlMaxLength = 200;
     private const int ImageIdMinValue = 0;
     private readonly IRepositoryWrapper _repositoryWrapper;

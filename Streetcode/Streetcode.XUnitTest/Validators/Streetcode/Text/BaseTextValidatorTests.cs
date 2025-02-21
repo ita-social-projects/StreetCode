@@ -23,7 +23,7 @@ public class BaseTextValidatorTests
     public void ShouldReturnSuccessResult_WhenTextCreateDTOIsValid()
     {
         // Arrange
-        var validText = GetValidTextCreateDTO();
+        var validText = GetValidTextCreateDto();
 
         // Act
         var result = _validator.TestValidate(validText);
@@ -36,10 +36,9 @@ public class BaseTextValidatorTests
     public void ShouldReturnValidationError_WhenTitleExceedsMaxLength()
     {
         // Arrange
-        var invalidText = GetValidTextCreateDTO();
+        var invalidText = GetValidTextCreateDto();
         invalidText.Title = new string('a', BaseTextValidator.TitleMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength",
-            _mockNamesLocalizer["TextTitle"], BaseTextValidator.TitleMaxLength];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TextTitle"], BaseTextValidator.TitleMaxLength];
 
         // Act
         var result = _validator.TestValidate(invalidText);
@@ -53,10 +52,9 @@ public class BaseTextValidatorTests
     public void ShouldReturnValidationError_WhenTextExceedsMaxLength()
     {
         // Arrange
-        var invalidText = GetValidTextCreateDTO();
+        var invalidText = GetValidTextCreateDto();
         invalidText.TextContent = new string('a', BaseTextValidator.TextMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength",
-            _mockNamesLocalizer["TextContent"], BaseTextValidator.TextMaxLength];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TextContent"], BaseTextValidator.TextMaxLength];
 
         // Act
         var result = _validator.TestValidate(invalidText);
@@ -70,10 +68,9 @@ public class BaseTextValidatorTests
     public void ShouldReturnValidationError_WhenAdditionalTextExceedsMaxLength()
     {
         // Arrange
-        var invalidText = GetValidTextCreateDTO();
+        var invalidText = GetValidTextCreateDto();
         invalidText.AdditionalText = new string('a', BaseTextValidator.AdditionalTextMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength",
-            _mockNamesLocalizer["AdditionalText"], BaseTextValidator.AdditionalTextMaxLength];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["AdditionalText"], BaseTextValidator.AdditionalTextMaxLength];
 
         // Act
         var result = _validator.TestValidate(invalidText);
@@ -87,10 +84,9 @@ public class BaseTextValidatorTests
     public void ShouldReturnValidationError_WhenTextContentExistsButTitleIsEmpty()
     {
         // Arrange
-        var invalidText = GetValidTextCreateDTO();
+        var invalidText = GetValidTextCreateDto();
         invalidText.Title = string.Empty;
-        var expectedError = _mockValidationLocalizer["CannotBeEmptyWithCondition",
-            _mockNamesLocalizer["TextTitle"], _mockNamesLocalizer["TextContent"]];
+        var expectedError = _mockValidationLocalizer["CannotBeEmptyWithCondition", _mockNamesLocalizer["TextTitle"], _mockNamesLocalizer["TextContent"]];
 
         // Act
         var result = _validator.TestValidate(invalidText);
@@ -104,10 +100,9 @@ public class BaseTextValidatorTests
     public void ShouldReturnValidationError_WhenAdditionalTextExistsButTextContentIsEmpty()
     {
         // Arrange
-        var invalidText = GetValidTextCreateDTO();
+        var invalidText = GetValidTextCreateDto();
         invalidText.TextContent = string.Empty;
-        var expectedError = _mockValidationLocalizer["CannotBeEmptyWithCondition",
-            _mockNamesLocalizer["TextContent"], _mockNamesLocalizer["AdditionalText"]];
+        var expectedError = _mockValidationLocalizer["CannotBeEmptyWithCondition", _mockNamesLocalizer["TextContent"], _mockNamesLocalizer["AdditionalText"]];
 
         // Act
         var result = _validator.TestValidate(invalidText);
@@ -117,7 +112,7 @@ public class BaseTextValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    private static BaseTextDTO GetValidTextCreateDTO()
+    private static BaseTextDTO GetValidTextCreateDto()
     {
         return new TextCreateDTO()
         {

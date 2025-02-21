@@ -150,6 +150,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagination parameters must be valid.
+        /// </summary>
+        internal static string InvalidPaginationParameters {
+            get {
+                return ResourceManager.GetString("InvalidPaginationParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; has invalid precision.
         /// </summary>
         internal static string InvalidPrecision {

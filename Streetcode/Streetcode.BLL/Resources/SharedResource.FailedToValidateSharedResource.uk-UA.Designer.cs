@@ -150,6 +150,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Параметри пагінації повинні бути коректними.
+        /// </summary>
+        internal static string InvalidPaginationParameters {
+            get {
+                return ResourceManager.GetString("InvalidPaginationParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має неправильну точність.
         /// </summary>
         internal static string InvalidPrecision {

@@ -26,6 +26,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
                 userId: Guid.NewGuid().ToString(),
                 userName: Guid.NewGuid().ToString(),
                 password: this.GenerateTestPassword(),
+                Guid.NewGuid().ToString() + "@" + Guid.NewGuid().ToString(),
                 nameof(UserRole.User),
                 nameof(UserRole.Admin));
         }
@@ -151,15 +152,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                UserExtracter.Remove(this.testUser);
-            }
-
-            base.Dispose(disposing);
-        }
+        
 
         private LoginRequestDTO GetLoginRequestDTO()
         {

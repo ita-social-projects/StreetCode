@@ -105,14 +105,5 @@ public class StreetcodeDeleteControllerTests : BaseAuthorizationControllerTests<
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(_testSoftDeleteStreetcodeContent);
-            StreetcodeContentExtracter.Remove(_testDeleteStreetcodeContent);
-        }
-
-        base.Dispose(disposing);
-    }
+   
 }

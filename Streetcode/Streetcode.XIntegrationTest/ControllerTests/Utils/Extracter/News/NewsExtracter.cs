@@ -12,6 +12,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.News
             testNews.Id = newsId;
             testNews.Image = testImage;
             testNews.ImageId = testImage.Id;
+            testNews.URL += Guid.NewGuid();
 
             return BaseExtracter.Extract<DAL.Entities.News.News>(testNews, news => news.Id == newsId);
         }

@@ -485,15 +485,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
             Assert.False(result.IsSuccess);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-                TagExtracter.Remove(this.testCreateTag);
-            }
-
-            base.Dispose(disposing);
-        }
+       
     }
 }

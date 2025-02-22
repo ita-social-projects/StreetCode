@@ -177,16 +177,5 @@ public class RelatedFigureControllerTests : BaseAuthorizationControllerTests<Rel
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            TagExtracter.Remove(_testTag);
-            RelatedFigureExtracter.Remove(_testRelatedFigure);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent1);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent2);
-        }
-
-        base.Dispose(disposing);
-    }
+    
 }

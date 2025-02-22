@@ -9,6 +9,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Team
             : base(client, secondPartUrl)
         {
         }
+
         public async Task<RestResponse> GetNameTickerString(string authToken = "")
         {
             return await this.SendQuery("/GetNameTickerString/", authToken);

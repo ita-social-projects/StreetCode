@@ -33,7 +33,7 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.Coordinate!));
-        _ = toponyms.DistinctBy(x => x.StreetName);
+        toponyms = toponyms.DistinctBy(x => x.StreetName).ToList();
 
         if (!toponyms.Any())
         {

@@ -1,5 +1,4 @@
-﻿using Streetcode.DAL.Entities.AdditionalContent;
-using Streetcode.DAL.Entities.Streetcode;
+﻿using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 
@@ -17,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Timeline
             item.StreetcodeId = testStreetcodeContent.Id;
             item.Id = timelineId;
 
-            return BaseExtracter.Extract<TimelineItem>(item, t => t.Id == timelineId);
+            return BaseExtracter.Extract(item, t => t.Id == timelineId);
         }
 
         public static void Remove(TimelineItem item)

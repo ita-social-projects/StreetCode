@@ -6,7 +6,7 @@ using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Team
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class ExtractCreateTeamLinkAttribute : BeforeAfterTestAttribute
     {
         public static TeamMemberLinkCreateDTO TeamLinkForTest { get; set; } = null!;

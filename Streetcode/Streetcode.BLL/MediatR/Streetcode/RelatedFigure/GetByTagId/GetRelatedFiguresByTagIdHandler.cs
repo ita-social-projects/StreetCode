@@ -3,57 +3,61 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
+namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
+
+public class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>>>
 {
-    internal class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFiguresByTagIdQuery, Result<IEnumerable<RelatedFigureDTO>?>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+
+    public GetRelatedFiguresByTagIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+        _logger = logger;
+    }
 
-        public GetRelatedFiguresByTagIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
-        {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
-            _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
-        }
-
-        // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
-        public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
-        {
-            var streetcodes = await _repositoryWrapper.StreetcodeRepository
-                .GetAllAsync(
-                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published &&
-                  sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId),
+    // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
+    public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
+    {
+        var streetcodes = await _repositoryWrapper.StreetcodeRepository
+            .GetAllAsync(
+                predicate: sc => sc.Status == StreetcodeStatus.Published &&
+                                 sc.Tags
+                                     .Select(t => t.Id)
+                                     .Any(tag => tag == request.TagId),
                 include: scl => scl
-                    .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
+                    .Include(sc => sc.Images)
+                    .ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));
 
-            const int blackAndWhiteImageAssignmentKey = (int)ImageAssigment.Blackandwhite;
-            foreach (var streetcode in streetcodes)
-            {
-                streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(blackAndWhiteImageAssignmentKey.ToString())).ToList();
-            }
-
-            if (!streetcodes.Any())
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyFactWithCorrespondingId", request.TagId].Value;
-                _logger.LogError(request, errorMsg);
-
-                return Result.Ok<IEnumerable<RelatedFigureDTO>?>(null);
-            }
-
-            return Result.Ok<IEnumerable<RelatedFigureDTO>?>(_mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes));
+        if (!streetcodes.Any())
+        {
+            const string message = "Returning empty enumerable of related figures";
+            _logger.LogInformation(message);
+            return Result.Ok(Enumerable.Empty<RelatedFigureDTO>());
         }
+
+        const int blackAndWhiteImageAssignmentKey = (int)ImageAssigment.Blackandwhite;
+        foreach (var streetcode in streetcodes)
+        {
+            streetcode.Images = streetcode.Images
+                .Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(blackAndWhiteImageAssignmentKey.ToString()))
+                .ToList();
+        }
+
+        var relatedFigureDtos = _mapper.Map<IEnumerable<RelatedFigureDTO>>(streetcodes);
+
+        return Result.Ok(relatedFigureDtos);
     }
 }

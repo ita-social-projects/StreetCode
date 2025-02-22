@@ -35,7 +35,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllStreetcodesResponseDTO))]
     public async Task<IActionResult> GetAll([FromQuery] GetAllStreetcodesRequestDTO request)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request)));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesQuery(request, GetUserRole())));
     }
 
     [HttpGet]
@@ -49,7 +49,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
     public async Task<IActionResult> GetAllShort()
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery()));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery(GetUserRole())));
     }
 
     [HttpGet]
@@ -70,7 +70,7 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDTO))]
     public async Task<IActionResult> GetShortById(int id)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet]
@@ -84,14 +84,14 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     public async Task<IActionResult> ExistWithIndex([FromRoute] int index)
     {
-        return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index)));
+        return HandleResult(await Mediator.Send(new StreetcodeWithIndexExistQuery(index, GetUserRole())));
     }
 
     [HttpGet("{url}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     public async Task<IActionResult> ExistWithUrl([FromRoute] string url)
     {
-        return HandleResult(await Mediator.Send(new StreetcodeWithUrlExistQuery(url)));
+        return HandleResult(await Mediator.Send(new StreetcodeWithUrlExistQuery(url, GetUserRole())));
     }
 
     [HttpGet]
@@ -105,35 +105,35 @@ public class StreetcodeController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
     public async Task<IActionResult> GetCount([FromQuery] bool? onlyPublished)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery(onlyPublished ?? false)));
+        return HandleResult(await Mediator.Send(new GetStreetcodesCountQuery(onlyPublished ?? false, GetUserRole())));
     }
 
     [HttpGet("{url}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetByTransliterationUrl([FromRoute] string url)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeByTransliterationUrlQuery(url, GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{qrid:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
     public async Task<IActionResult> GetByQrId([FromRoute] int qrid)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeUrlByQrIdQuery(qrid)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeUrlByQrIdQuery(qrid, GetUserRole())));
     }
 
     [HttpGet("{index}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeDTO))]
     public async Task<IActionResult> GetByIndex([FromRoute] int index)
     {
-        return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index)));
+        return HandleResult(await Mediator.Send(new GetStreetcodeByIndexQuery(index, GetUserRole())));
     }
 
     [HttpPost]

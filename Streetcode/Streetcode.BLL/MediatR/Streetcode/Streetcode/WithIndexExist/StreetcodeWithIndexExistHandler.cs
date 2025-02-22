@@ -1,7 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManagerService;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist
@@ -21,7 +24,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist
 
         public async Task<Result<bool>> Handle(StreetcodeWithIndexExistQuery request, CancellationToken cancellationToken)
         {
-            var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(s => s.Index == request.index);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = s => s.Index == request.index;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+
+            var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(predicate);
             if (streetcode == null)
             {
                 return Result.Ok(false);

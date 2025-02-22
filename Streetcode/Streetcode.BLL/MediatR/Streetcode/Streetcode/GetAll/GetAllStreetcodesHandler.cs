@@ -3,7 +3,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManagerService;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -20,12 +20,15 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         _mapper = mapper;
     }
 
-    public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
+    public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery request, CancellationToken cancellationToken)
     {
-        var filterRequest = query.request;
+        var filterRequest = request.request;
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll();
+            .FindAll(predicate: predicate);
 
         if (filterRequest.Title is not null)
         {

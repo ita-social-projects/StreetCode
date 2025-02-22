@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManagerService;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetById;
@@ -28,8 +31,11 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
 
     public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.Id;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: st => st.Id == request.Id);
+            predicate: predicate);
 
         if (streetcode is null)
         {

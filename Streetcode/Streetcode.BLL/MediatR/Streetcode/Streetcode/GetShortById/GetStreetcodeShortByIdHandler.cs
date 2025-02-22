@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManagerService;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
@@ -33,7 +36,10 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
         {
-            var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(st => st.Id == request.id);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.id;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+
+            var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate);
 
             if (streetcode == null)
             {

@@ -1,8 +1,9 @@
 ﻿using FluentResults;
 using MediatR;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 {
-    public record GetStreetcodesCountQuery(bool onlyPublished)
+    public record GetStreetcodesCountQuery(bool onlyPublished, UserRole? userRole)
         : IRequest<Result<int>>;
 }

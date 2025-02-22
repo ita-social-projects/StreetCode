@@ -6,7 +6,7 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.Services.EntityAccessManagerService;
 
-public class StretcodeAccessManager : IEntityAccessManager<StreetcodeContent>
+public class StreetcodeAccessManager : IEntityAccessManager<StreetcodeContent>
 {
     public Expression<Func<StreetcodeContent, bool>>? GetAccessPredicate(UserRole? userRole)
     {

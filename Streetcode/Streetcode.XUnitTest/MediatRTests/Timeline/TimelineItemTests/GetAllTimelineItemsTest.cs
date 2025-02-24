@@ -88,18 +88,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         {
             var timelines = new List<TimelineItem>
             {
-                new ()
-                {
-                    Id = 1,
-                },
-                new ()
-                {
-                    Id = 2,
-                },
-                new ()
-                {
-                    Id = 3,
-                },
+                new () { Id = 1, },
+                new () { Id = 2, },
+                new () { Id = 3, },
             };
 
             return timelines;
@@ -109,18 +100,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         {
             var timelines = new List<TimelineItemDTO>
             {
-                new ()
-                {
-                    Id = 1,
-                },
-                new ()
-                {
-                    Id = 2,
-                },
-                new ()
-                {
-                    Id = 3,
-                },
+                new () { Id = 1, },
+                new () { Id = 2, },
+                new () { Id = 3, },
             };
 
             return timelines;
@@ -128,16 +110,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
 
         private void SetupRepository(IEnumerable<TimelineItem>? returnList)
         {
-            _mockRepository.Setup(repo => repo.TimelineRepository.GetAllAsync(
-            It.IsAny<Expression<Func<TimelineItem, bool>>>(),
-            It.IsAny<Func<IQueryable<TimelineItem>, IIncludableQueryable<TimelineItem, object>>>()))
-            .ReturnsAsync(returnList ?? default!);
+            _mockRepository
+                .Setup(repo => repo.TimelineRepository.GetAllAsync(
+                    It.IsAny<Expression<Func<TimelineItem, bool>>>(),
+                    It.IsAny<Func<IQueryable<TimelineItem>, IIncludableQueryable<TimelineItem, object>>>()))
+                .ReturnsAsync(returnList ?? default!);
         }
 
         private void SetupMapper(IEnumerable<TimelineItemDTO> returnList)
         {
-            _mockMapper.Setup(x => x.Map<IEnumerable<TimelineItemDTO>>(It.IsAny<IEnumerable<object>>()))
-           .Returns(returnList);
+            _mockMapper
+                .Setup(x => x.Map<IEnumerable<TimelineItemDTO>>(
+                    It.IsAny<IEnumerable<object>>()))
+                .Returns(returnList);
         }
 
         private void SetupLocalizer(string expectedError)

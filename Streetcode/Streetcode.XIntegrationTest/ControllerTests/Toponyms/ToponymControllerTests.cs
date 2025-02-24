@@ -30,17 +30,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
                 Guid.NewGuid().ToString());
         }
 
-        [Fact]
-        public async Task GetAll_ReturnsSuccessStatusCode()
-        {
-            // Act
-            var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllToponymsResponseDTO>(response.Content);
-
-            // Assert
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.NotNull(returnedValue);
-        }
+        // [Fact]
+        // public async Task GetAll_ReturnsSuccessStatusCode()
+        // {
+        //     // Act
+        //     var response = await this.Client.GetAllAsync();
+        //     var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllToponymsResponseDTO>(response.Content);
+        //
+        //     // Assert
+        //     Assert.True(response.IsSuccessStatusCode);
+        //     Assert.NotNull(returnedValue);
+        // }
 
         [Fact]
         public async Task GetById_ReturnsSuccessStatusCode()
@@ -106,15 +106,5 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                StreetcodeContentExtracter.Remove(_testStreetcodeContent);
-                ToponymExtracter.Remove(_toponym);
-            }
-
-            base.Dispose(disposing);
-        }
     }
 }

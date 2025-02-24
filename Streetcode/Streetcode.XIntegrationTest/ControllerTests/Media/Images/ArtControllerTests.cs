@@ -94,16 +94,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
                           () => Assert.False(response.IsSuccessStatusCode));
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-                ArtExtracter.Remove(this.testArt);
-                StreetcodeArtSlideExtracter.Remove(this.testStreetcodeArtSlide);
-            }
-
-            base.Dispose(disposing);
-        }
+       
     }
 }

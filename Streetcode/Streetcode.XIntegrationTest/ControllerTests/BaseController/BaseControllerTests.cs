@@ -15,7 +15,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
         "StyleCop.CSharp.MaintainabilityRules",
         "SA1402:File may only contain a single type",
         Justification = "It's ok to have two classes that differ only by a generic argument in one file")]
-    public abstract class BaseControllerTests<T> : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>, IDisposable
+    public abstract class BaseControllerTests<T> : IntegrationTestBase, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private bool disposed = false;
 
@@ -37,26 +37,26 @@ namespace Streetcode.XIntegrationTest.ControllerTests.BaseController
             return new SqlDbHelper(optionBuilder.Options);
         }
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        // public void Dispose()
+        // {
+        //     this.Dispose(true);
+        //     GC.SuppressFinalize(this);
+        // }
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.disposed)
-            {
-                return;
-            }
-
-            if (disposing && this.Client is IDisposable disposableClient)
-            {
-                disposableClient.Dispose();
-            }
-
-            this.disposed = true;
-        }
+        // protected virtual void Dispose(bool disposing)
+        // {
+        //     if (this.disposed)
+        //     {
+        //         return;
+        //     }
+        //
+        //     if (disposing && this.Client is IDisposable disposableClient)
+        //     {
+        //         disposableClient.Dispose();
+        //     }
+        //
+        //     this.disposed = true;
+        // }
     }
 
     public class BaseControllerTests : BaseControllerTests<BaseClient>

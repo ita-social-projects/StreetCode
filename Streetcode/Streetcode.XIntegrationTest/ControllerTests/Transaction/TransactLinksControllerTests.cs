@@ -95,14 +95,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Transaction
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                TransactLinkExtracter.Remove(this.transactionLink);
-            }
-
-            base.Dispose(disposing);
-        }
+        
     }
 }

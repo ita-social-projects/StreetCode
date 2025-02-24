@@ -72,14 +72,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             Assert.Equal(streetcodeId, returnedValue.StreetcodeId);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                SubtitleExtracter.Remove(this.testSubtitle);
-            }
-
-            base.Dispose(disposing);
-        }
+       
     }
 }

@@ -314,14 +314,5 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent);
-            HistoricalContextExtracter.Remove(_testCreateContext);
-        }
-
-        base.Dispose(disposing);
-    }
+   
 }

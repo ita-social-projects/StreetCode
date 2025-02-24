@@ -15,6 +15,9 @@ public class MockFailedToCreateLocalizer : BaseMockStringLocalizer<FailedToCreat
                     "FailedToCreateTerm",
                     "FailedToMapCreatedTerm",
                     "FailedToCreateTeam",
+                    "FailedToCreateStreetcode",
+                    "TheStreetcodesAreAlreadyLinked",
+                    "FailedToCreateRelation",
                 }
             },
         };

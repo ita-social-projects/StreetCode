@@ -88,15 +88,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-                AudioExtracter.Remove(this.testAudio);
-            }
-
-            base.Dispose(disposing);
-        }
+        
     }
 }

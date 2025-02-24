@@ -41,16 +41,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             Assert.NotNull(returnedValue);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                TeamPositionsExtracter.Remove(_testPosition);
-                ImageExtracter.Remove(_testTeamMemberImage);
-                TeamMemberExtracter.Remove(_testTeamMember);
-            }
-
-            base.Dispose(disposing);
-        }
+        
     }
 }

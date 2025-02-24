@@ -122,16 +122,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Team
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                TeamMemberExtracter.Remove(_testTeamMember);
-                ImageExtracter.Remove(_testImage);
-                TeamLinkExtracter.Remove(_testLink);
-            }
-
-            base.Dispose(disposing);
-        }
+        
     }
 }

@@ -97,14 +97,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Create
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                JobExtracter.Remove(this.testJob);
-            }
-
-            base.Dispose(disposing);
-        }
+       
     }
 }

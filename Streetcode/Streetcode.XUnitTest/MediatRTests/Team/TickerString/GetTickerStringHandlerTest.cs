@@ -23,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
         public async Task ShouldReturnSuccess()
         {
             // Arrange
-            this.SetupGetAllAsyncMethod(GetPositionsList());
+            this.SetupGetAllAsync(GetPositionsList());
 
             var handler = new GetTickerStringHandler(_mockRepository.Object, _mockLogger.Object);
 
@@ -40,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
         public async Task Handle_EmptyPositionsList_ReturnsEmptyString()
         {
             // Arrange
-            this.SetupGetAllAsyncMethod(new List<Positions>());
+            this.SetupGetAllAsync(new List<Positions>());
             var handler = new GetTickerStringHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act
@@ -55,22 +55,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
 
         private static IEnumerable<Positions> GetPositionsList()
         {
-            var partners = new List<Positions>
-        {
-            new ()
+            var partners = new List<Positions>()
             {
-                Id = 1,
-                TeamMembers = new List<TeamMember>
+                new ()
                 {
-                    new () { Id = 2 },
+                    Id = 1,
+                    TeamMembers = new List<TeamMember>
+                    {
+                        new () { Id = 2 },
+                    },
                 },
-            },
-            new () { Id = 2 },
-        };
+                new () { Id = 2 },
+            };
             return partners;
         }
 
-        private void SetupGetAllAsyncMethod(IEnumerable<Positions> positions)
+        private void SetupGetAllAsync(IEnumerable<Positions> positions)
         {
             _mockRepository
                 .Setup(x => x.PositionRepository

@@ -7,7 +7,6 @@ using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;

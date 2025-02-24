@@ -6,7 +6,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Toponyms
     {
         public static Toponym Extract(int toponymId)
         {
-            Toponym toponym = TestDataProvider.GetTestData<Toponym>();
+            var toponym = TestDataProvider.GetTestData<Toponym>();
             toponym.Id = toponymId;
 
             return BaseExtracter.Extract<Toponym>(toponym, t => t.Id == toponymId);

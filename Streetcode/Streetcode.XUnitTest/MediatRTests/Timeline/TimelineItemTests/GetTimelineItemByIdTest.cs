@@ -100,31 +100,36 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
 
         private void SetupRepository(TimelineItem? returnItem)
         {
-           _mockRepository.Setup(repo => repo.TimelineRepository.GetFirstOrDefaultAsync(
-           It.IsAny<Expression<Func<TimelineItem, bool>>>(),
-           It.IsAny<Func<IQueryable<TimelineItem>,
-           IIncludableQueryable<TimelineItem, object>>>()))
-           .ReturnsAsync(returnItem);
+            _mockRepository
+                 .Setup(repo => repo.TimelineRepository.GetFirstOrDefaultAsync(
+                     It.IsAny<Expression<Func<TimelineItem, bool>>>(),
+                     It.IsAny<Func<IQueryable<TimelineItem>,
+                     IIncludableQueryable<TimelineItem, object>>>()))
+                 .ReturnsAsync(returnItem);
         }
 
         private void SetupMapper(TimelineItemDTO returnItem)
         {
-           _mockMapper.Setup(x => x.Map<TimelineItemDTO>(It.IsAny<object>()))
-           .Returns(returnItem);
+            _mockMapper
+                 .Setup(x => x.Map<TimelineItemDTO>(
+                     It.IsAny<object>()))
+                 .Returns(returnItem);
         }
 
         private void SetupLocalizer(string expectedError)
         {
-            _mockStringLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
-            .Returns((string key, object[] args) =>
-            {
-                if (args != null && args.Length > 0)
+            _mockStringLocalizer
+                .Setup(x => x[
+                    It.IsAny<string>(), It.IsAny<object>()])
+                .Returns((string key, object[] args) =>
                 {
-                    return new LocalizedString(key, expectedError);
-                }
+                    if (args.Length > 0)
+                    {
+                        return new LocalizedString(key, expectedError);
+                    }
 
-                return new LocalizedString(key, "Cannot find a timeline item with unknown id");
-            });
+                    return new LocalizedString(key, "Cannot find a timeline item with unknown id");
+                });
         }
     }
 }

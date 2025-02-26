@@ -84,12 +84,14 @@ pipeline {
         }
         stage('Run tests') {
           steps {
+            sh 'dotnet build ./Streetcode/Streetcode.sln --configuration Release --no-restore'
+            
             parallel(
               Unit_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build'
               },
               Integration_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build'
               }
             )
           }

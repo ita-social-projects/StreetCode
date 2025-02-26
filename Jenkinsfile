@@ -83,18 +83,16 @@ pipeline {
             }
         }
         stage('Run tests') {
-            parallel {
-                stage('Unit tests') {
-                    steps {
-                        sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build'
-                    }
-                }
-                stage('Integration tests') {
-                    steps {
-                        sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build'
-                    }
-                }
-            }
+          steps {
+            parallel(
+              Unit_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build'
+              },
+              Integration_test: {
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build'
+              }
+            )
+          }
         }
         stage('Sonar scan') {
             environment {

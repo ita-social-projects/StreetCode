@@ -1,37 +1,32 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Streetcode.DAL.Persistence;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {
     public class SqlDbHelper
     {
-        private static readonly ConcurrentDictionary<Type, object> _entityLocks = new ConcurrentDictionary<Type, object>();
-        private readonly StreetcodeDbContext dbContext;
+        private readonly StreetcodeDbContext _dbContext;
         private readonly object _lock = new object();
+        private static readonly ConcurrentDictionary<Type, object> _entityLocks = new ConcurrentDictionary<Type, object>();
 
         public SqlDbHelper(DbContextOptions<StreetcodeDbContext> options)
         {
-            this.dbContext = new StreetcodeDbContext(options);
-        }
-
-        public string GetEntityTableName<T>()
-        {
-            var entityType = this.dbContext.Model.FindEntityType(typeof(T));
-            return $"{entityType?.GetSchema()}.{entityType?.GetTableName()}";
+            _dbContext = new StreetcodeDbContext(options);
         }
 
         public string GetIdentityInsertString<T>(bool enable)
         {
             var value = enable ? "ON" : "OFF";
-            return $"SET IDENTITY_INSERT {this.GetEntityTableName<T>()} {value};";
+            return $"SET IDENTITY_INSERT {GetEntityTableName<T>()} {value};";
         }
 
         public bool ItemWithIdExist<T>(int id)
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            if (this.dbContext.Set<T>()
+            if (_dbContext.Set<T>()
                 .AsEnumerable()
                 .FirstOrDefault(predicate: s => (int)idProp?.GetValue(s) ! == id) == null)
             {
@@ -45,7 +40,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             where T : class, new()
         {
             var idProp = typeof(T).GetProperty("Id");
-            return this.dbContext.Set<T>()
+            return _dbContext.Set<T>()
                 .AsEnumerable()
                 .FirstOrDefault(s => ((int)idProp?.GetValue(s) !) == id);
         }
@@ -65,7 +60,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 
             lock (_entityLocks.GetOrAdd(typeof(T), new object()))
             {
-                return this.dbContext.Set<T>().Add(newItem).Entity;
+                return _dbContext.Set<T>().Add(newItem).Entity;
             }
         }
 
@@ -78,29 +73,36 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
             {
                 try
                 {
-                    this.dbContext.Database.OpenConnection();
+                    _dbContext.Database.OpenConnection();
 
-                    string tableSchema = this.dbContext.Model.FindEntityType(typeof(T))?.GetSchema() !;
-                    string tableName = this.dbContext.Model.FindEntityType(typeof(T))?.GetTableName() !;
+                    string tableSchema = _dbContext.Model.FindEntityType(typeof(T))?.GetSchema() !;
+                    string tableName = _dbContext.Model.FindEntityType(typeof(T))?.GetTableName() !;
 
                     string identityOnCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} ON";
                     string identityOffCommand = $"SET IDENTITY_INSERT {tableSchema}.{tableName} OFF";
 
-                    this.dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    if (TableHasIdentityColumn(typeof(T)))
+                    {
+                        _dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    }
 
-                    var trackedEntity = this.dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == newItem);
+                    var trackedEntity = _dbContext.ChangeTracker.Entries<T>().FirstOrDefault(e => e.Entity == newItem);
                     if (trackedEntity != null)
                     {
                         trackedEntity.State = EntityState.Detached;
                     }
 
-                    this.dbContext.Add(newItem);
-                    this.dbContext.SaveChanges();
-                    this.dbContext.Database.ExecuteSqlRaw(identityOffCommand);
+                    _dbContext.Add(newItem);
+                    _dbContext.SaveChanges();
+
+                    if (TableHasIdentityColumn(typeof(T)))
+                    {
+                        _dbContext.Database.ExecuteSqlRaw(identityOnCommand);
+                    }
                 }
                 finally
                 {
-                    this.dbContext.Database.CloseConnection();
+                    _dbContext.Database.CloseConnection();
                 }
             }
         }
@@ -110,10 +112,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate);
+                return _dbContext.Set<T>().AsEnumerable().FirstOrDefault(predicate);
             }
 
-            return this.dbContext.Set<T>().FirstOrDefault();
+            return _dbContext.Set<T>().FirstOrDefault();
         }
 
         public bool Any<T>(Func<T, bool>? predicate = default)
@@ -121,10 +123,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsNoTracking().Any(predicate);
+                return _dbContext.Set<T>().AsNoTracking().Any(predicate);
             }
 
-            return this.dbContext.Set<T>().AsNoTracking().Any();
+            return _dbContext.Set<T>().AsNoTracking().Any();
         }
 
         public IEnumerable<T> GetAll<T>(Func<T, bool>? predicate = default)
@@ -132,10 +134,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             if (predicate != null)
             {
-                return this.dbContext.Set<T>().AsNoTracking().AsEnumerable().Where(predicate);
+                return _dbContext.Set<T>().AsNoTracking().AsEnumerable().Where(predicate);
             }
 
-            return this.dbContext.Set<T>().AsNoTracking();
+            return _dbContext.Set<T>().AsNoTracking();
         }
 
         public T DeleteItem<T>(T item)
@@ -143,7 +145,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             lock (_entityLocks.GetOrAdd(typeof(T), new object()))
             {
-                return this.dbContext.Set<T>().Remove(item).Entity;
+                return _dbContext.Set<T>().Remove(item).Entity;
             }
         }
 
@@ -151,8 +153,25 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         {
             lock (_lock)
             {
-                this.dbContext.SaveChanges();
+                _dbContext.SaveChanges();
             }
+        }
+
+        private bool TableHasIdentityColumn(Type entityType)
+        {
+            var entityTypeMeta = _dbContext.Model.FindEntityType(entityType);
+            if (entityTypeMeta == null)
+            {
+                return false;
+            }
+
+            return entityTypeMeta.GetProperties().Any(p => p.ValueGenerated == ValueGenerated.OnAdd);
+        }
+
+        private string GetEntityTableName<T>()
+        {
+            var entityType = _dbContext.Model.FindEntityType(typeof(T));
+            return $"{entityType?.GetSchema()}.{entityType?.GetTableName()}";
         }
     }
 }

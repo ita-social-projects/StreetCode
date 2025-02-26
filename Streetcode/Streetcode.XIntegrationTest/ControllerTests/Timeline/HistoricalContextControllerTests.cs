@@ -384,15 +384,4 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.False(result.IsSuccess);
     }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            HistoricalContextExtracter.Remove(this.testCreateContext);
-        }
-
-        base.Dispose(disposing);
-    }
 }

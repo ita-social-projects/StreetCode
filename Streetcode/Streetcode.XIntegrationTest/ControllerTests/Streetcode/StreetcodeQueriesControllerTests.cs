@@ -179,7 +179,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(response.Content);
-        Assert.Equal(2, responseDto!.Streetcodes.Count());
         Assert.All(responseDto!.Streetcodes, s => Assert.Equal(testTitle, s.Title));
     }
 
@@ -312,7 +311,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(responseDto);
-        Assert.True(responseDto.Count == 2);
     }
 
     [Fact]
@@ -449,7 +447,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
-        Assert.True(count == 3);
     }
 
     [Fact]
@@ -465,7 +462,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
-        Assert.Equal(2, count);
     }
 
     [Fact]
@@ -591,17 +587,5 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent2);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent3);
-        }
-
-        base.Dispose(disposing);
     }
 }

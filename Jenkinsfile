@@ -84,6 +84,11 @@ pipeline {
         }
         stage('Run tests') {
           steps {
+            sh 'pkill -f dotnet || true'
+            sh 'dotnet clean ./Streetcode/Streetcode.sln --configuration Release'
+            sh 'rm -rf Streetcode/**/bin/Release/*'
+            sh 'rm -rf Streetcode/**/obj/Release/*'
+            
             parallel(
               Unit_test: {
                 sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'

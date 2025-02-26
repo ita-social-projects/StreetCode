@@ -7,7 +7,7 @@ public static class HttpContextHelper
 {
     public static string GetCurrentUserName(IHttpContextAccessor httpContextAccessor)
     {
-        var userName = httpContextAccessor.HttpContext?.User?.Identity?.Name;
+        var userName = httpContextAccessor.HttpContext?.User.Identity?.Name;
         if (string.IsNullOrEmpty(userName))
         {
             throw new UnauthorizedAccessException("User is not authenticated or username is not available.");
@@ -18,7 +18,7 @@ public static class HttpContextHelper
 
     public static string GetCurrentUserId(IHttpContextAccessor httpContextAccessor)
     {
-        var userId = httpContextAccessor.HttpContext?.User?.Claims
+        var userId = httpContextAccessor.HttpContext?.User.Claims
                     .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
         {
@@ -30,7 +30,7 @@ public static class HttpContextHelper
 
     public static string GetCurrentUserEmail(IHttpContextAccessor httpContextAccessor)
     {
-        var email = httpContextAccessor.HttpContext?.User?.Claims
+        var email = httpContextAccessor.HttpContext?.User.Claims
                           .FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
         {

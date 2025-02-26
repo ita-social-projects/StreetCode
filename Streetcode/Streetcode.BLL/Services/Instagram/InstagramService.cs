@@ -24,13 +24,13 @@ namespace Streetcode.BLL.Services.Instagram
 
         public async Task<IEnumerable<InstagramPost>> GetPostsAsync()
         {
-            string apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={2 * postLimit}&access_token={_accessToken}";
+            var apiUrl = $"https://graph.instagram.com/{_userId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url&limit={2 * postLimit}&access_token={_accessToken}";
 
             var httpClient = _httpClientFactory.CreateClient();
-            HttpResponseMessage response = await httpClient.GetAsync(apiUrl);
+            var response = await httpClient.GetAsync(apiUrl);
             response.EnsureSuccessStatusCode();
 
-            string jsonResponse = await response.Content.ReadAsStringAsync();
+            var jsonResponse = await response.Content.ReadAsStringAsync();
 
             var jsonOptions = new JsonSerializerOptions
             {
@@ -40,7 +40,7 @@ namespace Streetcode.BLL.Services.Instagram
 
             var postResponse = JsonSerializer.Deserialize<InstagramPostResponse>(jsonResponse, jsonOptions);
 
-            IEnumerable<InstagramPost> posts = RemoveVideoMediaType(postResponse!.Data);
+            var posts = RemoveVideoMediaType(postResponse!.Data);
 
             return posts;
         }

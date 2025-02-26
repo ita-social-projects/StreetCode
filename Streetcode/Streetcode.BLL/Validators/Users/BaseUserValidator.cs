@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.SharedResource;

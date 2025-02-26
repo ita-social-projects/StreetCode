@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using FluentResults;
-using Google.Apis.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +24,6 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
     private readonly IGoogleService _googleService;
 
     public LoginGoogleHandler(
-        IConfiguration configuration,
         IMapper mapper,
         ITokenService tokenService,
         ILoggerService logger,

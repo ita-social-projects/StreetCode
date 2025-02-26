@@ -22,7 +22,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Streetcode
 
         public static void Remove(StreetcodeContent entity)
         {
-            //BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
+            BaseExtracter.RemoveByPredicate<StreetcodeContent>(strCont => strCont.Id == entity.Id);
         }
     }
 }

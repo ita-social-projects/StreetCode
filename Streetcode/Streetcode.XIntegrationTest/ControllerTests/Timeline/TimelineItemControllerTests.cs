@@ -103,6 +103,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Timeline
             Assert.False(response.IsSuccessStatusCode);
         }
 
-        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                TimelineItemExtracter.Remove(_timelineItem);
+                StreetcodeContentExtracter.Remove(_testStreetcodeContent);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

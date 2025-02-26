@@ -121,6 +121,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Partners
                           () => Assert.False(response.IsSuccessStatusCode));
         }
 
-      
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                PartnerExtracter.Remove(this.testPartner);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

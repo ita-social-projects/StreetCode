@@ -100,6 +100,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-      
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(_testStreetcodeContent);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

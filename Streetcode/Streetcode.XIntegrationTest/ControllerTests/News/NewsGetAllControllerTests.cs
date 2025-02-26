@@ -52,5 +52,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.News
             Assert.NotNull(returnedValue);
             Assert.Empty(returnedValue.News);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                NewsExtracter.Remove(this.testNews);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

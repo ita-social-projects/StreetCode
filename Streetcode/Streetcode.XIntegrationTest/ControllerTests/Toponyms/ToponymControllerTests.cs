@@ -106,5 +106,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(_testStreetcodeContent);
+                ToponymExtracter.Remove(_toponym);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

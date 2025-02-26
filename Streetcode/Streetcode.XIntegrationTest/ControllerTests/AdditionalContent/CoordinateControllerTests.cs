@@ -49,5 +49,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent
             Assert.False(response.IsSuccessStatusCode);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
+                CoordinateExtracter.Remove(this.testStreetcodeCoordinate);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

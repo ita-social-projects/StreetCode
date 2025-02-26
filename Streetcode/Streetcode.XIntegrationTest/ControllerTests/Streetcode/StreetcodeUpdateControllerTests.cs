@@ -165,6 +165,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
 
-       
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                StreetcodeUpdateDTOExtracter.Remove(_testStreetcodeUpdateDto);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

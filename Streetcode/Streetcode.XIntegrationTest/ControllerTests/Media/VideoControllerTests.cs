@@ -80,6 +80,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
         }
 
-        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                VideoExtracter.Remove(this.testVideo);
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

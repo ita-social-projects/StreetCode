@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
+using Streetcode.BLL.Services.EntityAccessManagerService;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
@@ -26,6 +30,18 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
 
     public async Task<Result<IEnumerable<StreetcodeCoordinateDTO>>> Handle(GetCoordinatesByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = str => str.Id == request.StreetcodeId;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
+
+        if (streetcode is null)
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var coordinates = await _repositoryWrapper.StreetcodeCoordinateRepository
             .GetAllAsync(c => c.StreetcodeId == request.StreetcodeId);
 

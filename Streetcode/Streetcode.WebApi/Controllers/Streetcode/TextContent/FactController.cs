@@ -19,14 +19,14 @@ public class FactController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllFactsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllFactsQuery(GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FactDto))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetFactByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetFactByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -34,7 +34,7 @@ public class FactController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetFactByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetFactByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpPost]

@@ -2,32 +2,57 @@ using System.Linq.Expressions;
 using Streetcode.BLL.Interfaces.EntityAccessManager;
 using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.Services.EntityAccessManagerService;
+namespace Streetcode.BLL.Services.EntityAccessManager;
 
 public static class AccessPredicateExtender
 {
-    public static Expression<Func<TEntity, bool>>? ExtendWithAccessPredicate<TEntity>(this Expression<Func<TEntity, bool>>? predicate, IEntityAccessManager<TEntity> accessManager, UserRole? userRole)
+    public static Expression<Func<TEntity, bool>>? ExtendWithAccessPredicate<TEntity, TAccessEntity>(
+        this Expression<Func<TEntity, bool>>? predicate,
+        IEntityAccessManager<TAccessEntity> accessManager,
+        UserRole? userRole,
+        Expression<Func<TEntity, TAccessEntity?>>? property = null)
     {
         var accessPredicate = accessManager.GetAccessPredicate(userRole);
-
-        if (predicate is null)
-        {
-            return accessPredicate;
-        }
-
         if (accessPredicate is null)
         {
             return predicate;
         }
 
-        var parameter = Expression.Parameter(typeof(TEntity), "sc");
+        Expression replaceBody = accessPredicate.Parameters[0];
+        var parameter = accessPredicate.Parameters[0];
+        if (property is not null)
+        {
+            replaceBody = property.Body;
+            parameter = property.Parameters[0];
+        }
 
-        // Replacing the parameters in both bodies to ensure they are using the same parameter
-        var left = Expression.Invoke(predicate, parameter);
-        var right = Expression.Invoke(accessPredicate, parameter);
+        var rightVisitor = new ReplaceExpVisitor(replaceBody);
+        var right = rightVisitor.Visit(accessPredicate.Body);
 
+        if (predicate is null)
+        {
+            return Expression.Lambda<Func<TEntity, bool>>(right, parameter);
+        }
+
+        var leftVisitor = new ReplaceExpVisitor(parameter);
+        var left = leftVisitor.Visit(predicate.Body);
         var body = Expression.AndAlso(left, right);
 
         return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
+    }
+}
+
+public class ReplaceExpVisitor : ExpressionVisitor
+{
+    private readonly Expression _newExpression;
+
+    public ReplaceExpVisitor(Expression newExpression)
+    {
+        _newExpression = newExpression;
+    }
+
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        return _newExpression;
     }
 }

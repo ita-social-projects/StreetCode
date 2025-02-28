@@ -3,7 +3,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.Services.EntityAccessManagerService;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 

@@ -3,7 +3,7 @@ using Streetcode.BLL.Interfaces.EntityAccessManager;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.Services.EntityAccessManagerService;
+namespace Streetcode.BLL.Services.EntityAccessManager;
 
 public class NewsAccessManager : IEntityAccessManager<News>
 {

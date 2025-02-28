@@ -1,10 +1,9 @@
 using System.Linq.Expressions;
 using Streetcode.BLL.Interfaces.EntityAccessManager;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 
-namespace Streetcode.BLL.Services.EntityAccessManagerService;
+namespace Streetcode.BLL.Services.EntityAccessManager;
 
 public class StreetcodeAccessManager : IEntityAccessManager<StreetcodeContent>
 {

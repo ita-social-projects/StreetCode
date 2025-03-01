@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,7 +28,10 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 
     public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetAllSubtitlesQuery request, CancellationToken cancellationToken)
     {
-        var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync();
+        Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>> basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sub => sub.Streetcode);
+
+        var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync(predicate: predicate);
 
         if (subtitles is null)
         {

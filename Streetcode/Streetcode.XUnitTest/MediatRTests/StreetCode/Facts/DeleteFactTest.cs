@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.Delete;
@@ -40,7 +39,7 @@ public class DeleteFactTest
         var fact = GetFact(factId);
         var request = GetRequest(factId);
 
-        SetupMockGetFirstOrDefaultAsync(request, fact);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
         SetupMockDeleteAndSaveChangesAsync(fact, 1);
 
         // Act
@@ -60,7 +59,7 @@ public class DeleteFactTest
         var fact = GetFact(factId);
         var request = GetRequest(factId);
 
-        SetupMockGetFirstOrDefaultAsync(request, fact);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
         SetupMockDeleteAndSaveChangesAsync(fact, 1);
 
         // Act
@@ -79,7 +78,7 @@ public class DeleteFactTest
         var request = GetRequest(factId);
         var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindFactWithCorrespondingCategoryId", factId].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, null);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -99,7 +98,7 @@ public class DeleteFactTest
         var request = GetRequest(factId);
         var expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteFact"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, fact);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
         SetupMockDeleteAndSaveChangesAsync(fact, -1);
 
         // Act
@@ -122,15 +121,6 @@ public class DeleteFactTest
     private static DeleteFactCommand GetRequest(int factId)
     {
         return new DeleteFactCommand(factId);
-    }
-
-    private void SetupMockGetFirstOrDefaultAsync(DeleteFactCommand request, Fact? getFirstOrDefaultAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.FactRepository.GetFirstOrDefaultAsync(
-                f => f.Id == request.Id,
-                It.IsAny<Func<IQueryable<Fact>, IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(getFirstOrDefaultAsyncResult);
     }
 
     private void SetupMockDeleteAndSaveChangesAsync(Fact fact, int saveChangesResult)

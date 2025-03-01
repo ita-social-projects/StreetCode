@@ -43,7 +43,7 @@ public class UpdateFactTest
         var (fact, factDto) = GetFactObjects();
         var request = GetRequest(factDto);
 
-        SetupMockRepository(fact, 1);
+        SetupMockUpdateAndSaveChangesAsync(fact, 1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -62,7 +62,7 @@ public class UpdateFactTest
         var (fact, factDto) = GetFactObjects();
         var request = GetRequest(factDto);
 
-        SetupMockRepository(fact, 1);
+        SetupMockUpdateAndSaveChangesAsync(fact, 1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -81,7 +81,7 @@ public class UpdateFactTest
         var request = GetRequest(factDto);
         var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToFact"].Value;
 
-        MockHelpers.SetupMockMapper<Fact?, FactDto>(_mockMapper, null, request.Fact);
+        MockHelpers.SetupMockMapper<Fact?, StreetcodeFactUpdateDTO>(_mockMapper, null, request.Fact);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -100,7 +100,7 @@ public class UpdateFactTest
         var request = GetRequest(factDto);
         var expectedErrorMessage = _mockFailedToUpdateLocalizer["FailedToUpdateFact"].Value;
 
-        SetupMockRepository(fact, -1);
+        SetupMockUpdateAndSaveChangesAsync(fact, -1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -112,20 +112,20 @@ public class UpdateFactTest
         _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static (Fact, FactDto) GetFactObjects()
+    private static (Fact, StreetcodeFactUpdateDTO) GetFactObjects()
     {
         var fact = new Fact();
-        var factDto = new FactDto();
+        var factDto = new StreetcodeFactUpdateDTO();
 
         return (fact, factDto);
     }
 
-    private static UpdateFactCommand GetRequest(FactDto factDto)
+    private static UpdateFactCommand GetRequest(StreetcodeFactUpdateDTO factDto)
     {
         return new UpdateFactCommand(factDto);
     }
 
-    private void SetupMockRepository(Fact fact, int saveChangesResult)
+    private void SetupMockUpdateAndSaveChangesAsync(Fact fact, int saveChangesResult)
     {
         _mockRepository
             .Setup(x => x.FactRepository.Update(fact));

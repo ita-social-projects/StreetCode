@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Streetcode.BLL.Interfaces.Text;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetParsed;
+using Streetcode.BLL.MediatR.Streetcode.Text.UpdateParsed;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Texts;

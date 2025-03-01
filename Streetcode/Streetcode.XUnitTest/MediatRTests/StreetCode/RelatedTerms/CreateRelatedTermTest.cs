@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
@@ -47,10 +46,10 @@ public class CreateRelatedTermTest
     {
         // Arrange
         var (relatedTermCreateDto, relatedTerm, relatedTermDto) = GetRelatedTermObjects();
-        var existingTerms = GetEmptyRelatedTermList();
+        var existingTermsList = GetEmptyRelatedTermList();
         var request = GetRequest(relatedTermCreateDto);
 
-        SetupMockGetAllAsync(request, existingTerms);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, existingTermsList);
         SetupMockCreateAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTerm, request.RelatedTerm);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTermDto, relatedTerm);
@@ -71,10 +70,10 @@ public class CreateRelatedTermTest
     {
         // Arrange
         var (relatedTermCreateDto, relatedTerm, relatedTermDto) = GetRelatedTermObjects();
-        var existingTerms = GetEmptyRelatedTermList();
+        var existingTermsList = GetEmptyRelatedTermList();
         var request = GetRequest(relatedTermCreateDto);
 
-        SetupMockGetAllAsync(request, existingTerms);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, existingTermsList);
         SetupMockCreateAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTerm, request.RelatedTerm);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTermDto, relatedTerm);
@@ -111,11 +110,11 @@ public class CreateRelatedTermTest
     {
         // Arrange
         var (relatedTermCreateDto, relatedTerm, _) = GetRelatedTermObjects();
-        var existingTerms = GetRelatedTermList();
+        var existingTermsList = GetRelatedTermList();
         var request = GetRequest(relatedTermCreateDto);
         var expectedErrorMessage = _mockCreateRelatedTermLocalizer["WordWithThisDefinitionAlreadyExists"].Value;
 
-        SetupMockGetAllAsync(request, existingTerms);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, existingTermsList);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTerm, request.RelatedTerm);
 
         // Act
@@ -132,11 +131,11 @@ public class CreateRelatedTermTest
     {
         // Arrange
         var (relatedTermCreateDto, relatedTerm, _) = GetRelatedTermObjects();
-        var existingTerms = GetEmptyRelatedTermList();
+        var existingTermsList = GetEmptyRelatedTermList();
         var request = GetRequest(relatedTermCreateDto);
         var expectedErrorMessage = _mockCannotSaveLocalizer["CannotSaveChangesInTheDatabaseAfterRelatedWordCreation"].Value;
 
-        SetupMockGetAllAsync(request, existingTerms);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, existingTermsList);
         SetupMockCreateAndSaveChangesAsync(relatedTerm, -1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTerm, request.RelatedTerm);
 
@@ -154,11 +153,11 @@ public class CreateRelatedTermTest
     {
         // Arrange
         var (relatedTermCreateDto, relatedTerm, _) = GetRelatedTermObjects();
-        var existingTerms = GetEmptyRelatedTermList();
+        var existingTermsList = GetEmptyRelatedTermList();
         var request = GetRequest(relatedTermCreateDto);
         var expectedErrorMessage = _mockCannotMapLocalizer["CannotMapEntity"].Value;
 
-        SetupMockGetAllAsync(request, existingTerms);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, existingTermsList);
         SetupMockCreateAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTerm, request.RelatedTerm);
         MockHelpers.SetupMockMapper<RelatedTermDTO?, RelatedTermEntity>(_mockMapper, null, relatedTerm);
@@ -209,15 +208,6 @@ public class CreateRelatedTermTest
     private static CreateRelatedTermCommand GetRequest(RelatedTermCreateDTO relatedTermDto)
     {
         return new CreateRelatedTermCommand(relatedTermDto);
-    }
-
-    private void SetupMockGetAllAsync(CreateRelatedTermCommand request, List<RelatedTermEntity> getAllAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.RelatedTermRepository.GetAllAsync(
-                x => x.TermId == request.RelatedTerm.TermId && x.Word == request.RelatedTerm.Word,
-                It.IsAny<Func<IQueryable<RelatedTermEntity>, IIncludableQueryable<RelatedTermEntity, object>>>()))
-            .ReturnsAsync(getAllAsyncResult);
     }
 
     private void SetupMockCreateAndSaveChangesAsync(RelatedTermEntity relatedTerm, int saveChangesResult)

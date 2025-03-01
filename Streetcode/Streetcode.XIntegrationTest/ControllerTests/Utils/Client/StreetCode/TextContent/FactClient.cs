@@ -16,7 +16,7 @@ public class FactClient : StreetcodeRelatedBaseClient
         return await SendCommand("/Create", Method.Post, streetcodeFactCreateDto, authToken);
     }
 
-    public async Task<RestResponse> Update(int id, FactDto factUpdateDto, string authToken = "")
+    public async Task<RestResponse> Update(int id, StreetcodeFactUpdateDTO factUpdateDto, string authToken = "")
     {
         return await SendCommand($"/Update/{id}", Method.Put, factUpdateDto, authToken);
     }

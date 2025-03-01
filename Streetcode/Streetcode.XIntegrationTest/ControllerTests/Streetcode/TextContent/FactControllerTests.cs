@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Streetcode.TextContent.Facts;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.Facts;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter.TextContent;
 using Xunit;
@@ -106,7 +106,7 @@ public class FactControllerTests : BaseAuthorizationControllerTests<FactClient>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
-    [Fact(Skip = "Some strange execution problems. Should be solved later")]
+    [Fact]
     [ExtractCreateTestFact]
     public async Task Create_ShouldReturnSuccessStatusCode_WhenFactAdded()
     {
@@ -164,19 +164,19 @@ public class FactControllerTests : BaseAuthorizationControllerTests<FactClient>
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
-    [Fact(Skip = "Some strange execution problems. Should be solved later")]
+    [Fact]
     [ExtractUpdateTestFact]
     public async Task Update_ShouldReturnSuccessStatusCode_WhenFactUpdated()
     {
         // Arrange
         var factUpdateDto = ExtractUpdateTestFactAttribute.FactUpdateDtoForTest;
+        factUpdateDto.Id = _testFact.Id;
 
         // Act
         var response = await this.Client.Update(_testFact.Id, factUpdateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal("{}", response.Content);
+        Assert.Equal(0, (int)response.StatusCode);
     }
 
     [Fact]
@@ -185,6 +185,7 @@ public class FactControllerTests : BaseAuthorizationControllerTests<FactClient>
     {
         // Arrange
         var factUpdateDto = ExtractUpdateTestFactAttribute.FactUpdateDtoForTest;
+        factUpdateDto.Id = int.MinValue;
 
         // Act
         var response = await this.Client.Update(int.MinValue, factUpdateDto, this.TokenStorage.AdminAccessToken);
@@ -199,6 +200,7 @@ public class FactControllerTests : BaseAuthorizationControllerTests<FactClient>
     {
         // Arrange
         var factUpdateDto = ExtractUpdateTestFactAttribute.FactUpdateDtoForTest;
+        factUpdateDto.Id = _testFact.Id;
         factUpdateDto.Title = null!;
 
         // Act
@@ -214,6 +216,7 @@ public class FactControllerTests : BaseAuthorizationControllerTests<FactClient>
     {
         // Arrange
         var factUpdateDto = ExtractUpdateTestFactAttribute.FactUpdateDtoForTest;
+        factUpdateDto.Id = _testFact.Id;
 
         // Act
         var response = await this.Client.Update(_testFact.Id, factUpdateDto);

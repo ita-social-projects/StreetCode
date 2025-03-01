@@ -7,7 +7,7 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter.TextContent;
 using Xunit.Sdk;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Streetcode.TextContent.Facts;
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.Facts;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractDeleteTestFactAttribute : BeforeAfterTestAttribute

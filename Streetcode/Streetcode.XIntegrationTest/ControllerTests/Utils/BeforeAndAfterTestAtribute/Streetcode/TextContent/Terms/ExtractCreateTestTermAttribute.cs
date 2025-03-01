@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Xunit.Sdk;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Streetcode.TextContent.Terms;
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.Terms;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractCreateTestTermAttribute : BeforeAfterTestAttribute
@@ -13,7 +13,7 @@ public class ExtractCreateTestTermAttribute : BeforeAfterTestAttribute
 
     public override void Before(MethodInfo methodUnderTest)
     {
-        TermCreateDtoForTest = new TermCreateDTO
+        TermCreateDtoForTest = new TermCreateDTO()
         {
             Title = "TermCreateDto for create test",
             Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",

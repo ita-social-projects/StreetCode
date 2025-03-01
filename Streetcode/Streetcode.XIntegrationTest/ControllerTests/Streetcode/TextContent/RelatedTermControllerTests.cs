@@ -4,7 +4,7 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Streetcode.TextContent.RelatedTerms;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.RelatedTerms;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter.TextContent;
 using Xunit;

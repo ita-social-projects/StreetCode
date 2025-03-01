@@ -41,7 +41,7 @@ public class GetFactByIdTest
         var (fact, factDto) = GetFactObjects(factId);
         var request = GetRequest(factId);
 
-        SetupMockRepository(request, fact);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
         MockHelpers.SetupMockMapper(_mockMapper, factDto, fact);
 
         // Act
@@ -66,7 +66,7 @@ public class GetFactByIdTest
         var (fact, factDto) = GetFactObjects(factId);
         var request = GetRequest(factId);
 
-        SetupMockRepository(request, fact);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
         MockHelpers.SetupMockMapper(_mockMapper, factDto, fact);
 
         // Act
@@ -85,7 +85,7 @@ public class GetFactByIdTest
         var request = GetRequest(factId);
         var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindFactWithCorrespondingCategoryId", factId].Value;
 
-        SetupMockRepository(request, null);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -113,14 +113,5 @@ public class GetFactByIdTest
     private static GetFactByIdQuery GetRequest(int factId)
     {
         return new GetFactByIdQuery(factId);
-    }
-
-    private void SetupMockRepository(GetFactByIdQuery request, Fact? getFirstOrDefaultAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.FactRepository.GetFirstOrDefaultAsync(
-                f => f.Id == request.Id,
-                It.IsAny<Func<IQueryable<Fact>, IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(getFirstOrDefaultAsyncResult);
     }
 }

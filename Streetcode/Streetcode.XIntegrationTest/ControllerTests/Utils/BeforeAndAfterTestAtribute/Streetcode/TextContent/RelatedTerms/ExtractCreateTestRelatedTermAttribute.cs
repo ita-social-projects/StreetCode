@@ -6,7 +6,7 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter.TextContent;
 using Xunit.Sdk;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Streetcode.TextContent.RelatedTerms;
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode.TextContent.RelatedTerms;
 
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractCreateTestRelatedTermAttribute : BeforeAfterTestAttribute
@@ -20,7 +20,7 @@ public class ExtractCreateTestRelatedTermAttribute : BeforeAfterTestAttribute
         var termId = UniqueNumberGenerator.GenerateInt();
 
         TermForTest = TermExtracter.Extract(termId);
-        RelatedTermCreateDtoForTest = new RelatedTermCreateDTO
+        RelatedTermCreateDtoForTest = new RelatedTermCreateDTO()
         {
             Word = "RelatedTermCreateDto for create test",
             TermId = TermForTest.Id,

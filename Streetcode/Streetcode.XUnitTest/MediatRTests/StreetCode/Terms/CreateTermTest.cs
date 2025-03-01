@@ -16,7 +16,6 @@ public class CreateTermTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly MockCannotCreateLocalizer _mockCannotCreateLocalizer;
     private readonly MockFailedToCreateLocalizer _mockFailedToCreateLocalizer;
     private readonly MockCannotConvertNullLocalizer _mockCannotConvertNullLocalizer;
     private readonly CreateTermHandler _handler;
@@ -26,14 +25,12 @@ public class CreateTermTest
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockCannotCreateLocalizer = new MockCannotCreateLocalizer();
         _mockFailedToCreateLocalizer = new MockFailedToCreateLocalizer();
         _mockCannotConvertNullLocalizer = new MockCannotConvertNullLocalizer();
         _handler = new CreateTermHandler(
             _mockMapper.Object,
             _mockRepository.Object,
             _mockLogger.Object,
-            _mockCannotCreateLocalizer,
             _mockFailedToCreateLocalizer,
             _mockCannotConvertNullLocalizer);
     }
@@ -45,7 +42,7 @@ public class CreateTermTest
         var (termCreateDto, term, termDto) = GetTermObjects();
         var request = GetRequest(termCreateDto);
 
-        SetupMockRepository(term, 1);
+        SetupMockCreateAndSaveChangesAsync(term, 1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
         MockHelpers.SetupMockMapper(_mockMapper, termDto, term);
 
@@ -67,7 +64,7 @@ public class CreateTermTest
         var (termCreateDto, term, termDto) = GetTermObjects();
         var request = GetRequest(termCreateDto);
 
-        SetupMockRepository(term, 1);
+        SetupMockCreateAndSaveChangesAsync(term, 1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
         MockHelpers.SetupMockMapper(_mockMapper, termDto, term);
 
@@ -87,7 +84,7 @@ public class CreateTermTest
         var request = GetRequest(termCreateDto);
         var expectedErrorMessage = _mockFailedToCreateLocalizer["FailedToCreateTerm"].Value;
 
-        SetupMockRepository(term, -1);
+        SetupMockCreateAndSaveChangesAsync(term, -1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
@@ -126,7 +123,7 @@ public class CreateTermTest
         var request = GetRequest(termCreateDto);
         var expectedErrorMessage = _mockFailedToCreateLocalizer["FailedToMapCreatedTerm"].Value;
 
-        SetupMockRepository(term, 1);
+        SetupMockCreateAndSaveChangesAsync(term, 1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
         MockHelpers.SetupMockMapper<Term?, Term>(_mockMapper, null, term);
 
@@ -164,7 +161,7 @@ public class CreateTermTest
         return new CreateTermCommand(termCreateDto);
     }
 
-    private void SetupMockRepository(Term term, int saveChangesResult)
+    private void SetupMockCreateAndSaveChangesAsync(Term term, int saveChangesResult)
     {
         _mockRepository
             .Setup(x => x.TermRepository.CreateAsync(term))

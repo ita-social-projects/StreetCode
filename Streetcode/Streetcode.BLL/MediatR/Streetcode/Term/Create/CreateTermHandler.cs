@@ -6,75 +6,62 @@ using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using TermEntity = Streetcode.DAL.Entities.Streetcode.TextContent.Term;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Term.Create
+namespace Streetcode.BLL.MediatR.Streetcode.Term.Create;
+
+public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDTO>>
 {
-    public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDTO>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repository;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
+    private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
+
+    public CreateTermHandler(
+        IMapper mapper,
+        IRepositoryWrapper repository,
+        ILoggerService logger,
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
+        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
-        private readonly IStringLocalizer<CannotCreateSharedResource> _stringLocalizerCannotCreate;
-        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailedToCreate;
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
+        _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
+        _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
+    }
 
-        public CreateTermHandler(
-            IMapper mapper,
-            IRepositoryWrapper repository,
-            ILoggerService logger,
-            IStringLocalizer<CannotCreateSharedResource> stringLocalizerCannotCreate,
-            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailedToCreate,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
+    public async Task<Result<TermDTO>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
+    {
+        var term = _mapper.Map<TermEntity>(request.Term);
+
+        if (term is null)
         {
-            _mapper = mapper;
-            _repository = repository;
-            _logger = logger;
-            _stringLocalizerCannotCreate = stringLocalizerCannotCreate;
-            _stringLocalizerFailedToCreate = stringLocalizerFailedToCreate;
-            _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
+            var errorMessage = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
-        public async Task<Result<TermDTO>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
+        var createdTerm = await _repository.TermRepository.CreateAsync(term);
+        var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
+
+        if (!resultIsSuccess)
         {
-            var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
-
-            if (term is null)
-            {
-                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            var createdTerm = await _repository.TermRepository.CreateAsync(term);
-
-            if (createdTerm is null)
-            {
-                string errorMsg = _stringLocalizerCannotCreate["CannotCreateTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-
-            if(!resultIsSuccess)
-            {
-                string errorMsg = _stringLocalizerFailedToCreate["FailedToCreateTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            var createdTermDTO = _mapper.Map<TermDTO>(createdTerm);
-
-            if(createdTermDTO != null)
-            {
-                return Result.Ok(createdTermDTO);
-            }
-            else
-            {
-                string errorMsg = _stringLocalizerFailedToCreate["FailedToMapCreatedTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
+            var errorMessage = _stringLocalizerFailedToCreate["FailedToCreateTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
+
+        var createdTermDto = _mapper.Map<TermDTO>(createdTerm);
+
+        if (createdTermDto is null)
+        {
+            var errorMessage = _stringLocalizerFailedToCreate["FailedToMapCreatedTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
+        }
+
+        return Result.Ok(createdTermDto);
     }
 }

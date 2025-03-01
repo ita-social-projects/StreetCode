@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.Delete;
@@ -40,7 +39,7 @@ public class DeleteTextTest
         var text = GetText(textId);
         var request = GetRequest(textId);
 
-        SetupMockGetFirstOrDefaultAsync(request, text);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, text);
         SetupMockDeleteAndSaveChangesAsync(text, 1);
 
         // Act
@@ -60,7 +59,7 @@ public class DeleteTextTest
         var text = GetText(termId);
         var request = GetRequest(termId);
 
-        SetupMockGetFirstOrDefaultAsync(request, text);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, text);
         SetupMockDeleteAndSaveChangesAsync(text, 1);
 
         // Act
@@ -79,7 +78,7 @@ public class DeleteTextTest
         var request = GetRequest(textId);
         var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindTextWithCorrespondingCategoryId", request.Id].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, null);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -99,7 +98,7 @@ public class DeleteTextTest
         var request = GetRequest(textId);
         var expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteText"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, text);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, text);
         SetupMockDeleteAndSaveChangesAsync(text, -1);
 
         // Act
@@ -122,15 +121,6 @@ public class DeleteTextTest
     private static DeleteTextCommand GetRequest(int textId)
     {
         return new DeleteTextCommand(textId);
-    }
-
-    private void SetupMockGetFirstOrDefaultAsync(DeleteTextCommand request, Text? getFirstOrDefaultAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.TextRepository.GetFirstOrDefaultAsync(
-                t => t.Id == request.Id,
-                It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, object>>>()))
-            .ReturnsAsync(getFirstOrDefaultAsyncResult);
     }
 
     private void SetupMockDeleteAndSaveChangesAsync(Text text, int saveChangesResult)

@@ -41,7 +41,7 @@ public class GetFactsByStreetcodeIdTest
         var (factsList, factDtoList) = GetFactObjectsLists(streetcodeId);
         var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(request, factsList);
+        MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, factsList);
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -65,7 +65,7 @@ public class GetFactsByStreetcodeIdTest
         var (factsList, factDtoList) = GetFactObjectsLists(streetcodeId);
         var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(request, factsList);
+        MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, factsList);
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -84,7 +84,7 @@ public class GetFactsByStreetcodeIdTest
         var emptyFactsList = GetEmptyFactsList();
         var request = GetRequest(streetcodeId);
 
-        SetupMockRepository(request, emptyFactsList);
+        MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, emptyFactsList);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -134,15 +134,6 @@ public class GetFactsByStreetcodeIdTest
     private static GetFactByStreetcodeIdQuery GetRequest(int streetcodeId)
     {
         return new GetFactByStreetcodeIdQuery(streetcodeId);
-    }
-
-    private void SetupMockRepository(GetFactByStreetcodeIdQuery request, List<Fact> getAllAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.FactRepository.GetAllAsync(
-                f => f.StreetcodeId == request.StreetcodeId,
-                It.IsAny<Func<IQueryable<Fact>, IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(getAllAsyncResult);
     }
 
     private void VerifyGetAllAsyncOperationExecution(GetFactByStreetcodeIdQuery request)

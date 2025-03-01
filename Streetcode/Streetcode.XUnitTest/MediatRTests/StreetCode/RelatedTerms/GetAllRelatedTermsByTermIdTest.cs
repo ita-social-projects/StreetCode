@@ -17,7 +17,6 @@ public class GetAllRelatedTermsByTermIdTest
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
-    private readonly MockCannotGetLocalizer _mockCannotGetLocalizer;
     private readonly MockCannotCreateLocalizer _mockCannotCreateLocalizer;
     private readonly GetAllRelatedTermsByTermIdHandler _handler;
 
@@ -26,13 +25,11 @@ public class GetAllRelatedTermsByTermIdTest
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
-        _mockCannotGetLocalizer = new MockCannotGetLocalizer();
         _mockCannotCreateLocalizer = new MockCannotCreateLocalizer();
         _handler = new GetAllRelatedTermsByTermIdHandler(
             _mockMapper.Object,
             _mockRepository.Object,
             _mockLogger.Object,
-            _mockCannotGetLocalizer,
             _mockCannotCreateLocalizer);
     }
 
@@ -44,7 +41,7 @@ public class GetAllRelatedTermsByTermIdTest
         var (relatedTermsList, relatedTermDtoList) = GetRelatedTermsObjectsLists(termId);
         var request = GetRequest(termId);
 
-        SetupMockRepository(request, relatedTermsList);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, relatedTermsList);
         MockHelpers.SetupMockMapper<IEnumerable<RelatedTermDTO>, List<RelatedTermEntity>>(
             _mockMapper,
             relatedTermDtoList,
@@ -78,7 +75,7 @@ public class GetAllRelatedTermsByTermIdTest
         var (relatedTermsList, relatedTermDtoList) = GetRelatedTermsObjectsLists(termId);
         var request = GetRequest(termId);
 
-        SetupMockRepository(request, relatedTermsList);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, relatedTermsList);
         MockHelpers.SetupMockMapper<IEnumerable<RelatedTermDTO>, List<RelatedTermEntity>>(
             _mockMapper,
             relatedTermDtoList,
@@ -100,7 +97,7 @@ public class GetAllRelatedTermsByTermIdTest
         var (emptyRelatedTermsList, emptyRelatedTermDtoList) = GetEmptyRelatedTermsObjectsLists();
         var request = GetRequest(termId);
 
-        SetupMockRepository(request, emptyRelatedTermsList);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, emptyRelatedTermsList);
         MockHelpers.SetupMockMapper(_mockMapper, emptyRelatedTermDtoList, emptyRelatedTermsList);
 
         // Act
@@ -122,7 +119,7 @@ public class GetAllRelatedTermsByTermIdTest
         var request = GetRequest(termId);
         var expectedErrorMessage = _mockCannotCreateLocalizer["CannotCreateDTOsForRelatedWords"].Value;
 
-        SetupMockRepository(request, relatedTermsList);
+        MockHelpers.SetupMockRelatedTermRepositoryGetAllAsync(_mockRepository, relatedTermsList);
         MockHelpers.SetupMockMapper<IEnumerable<RelatedTermDTO>?, List<RelatedTermEntity>>(
             _mockMapper,
             null,
@@ -179,24 +176,13 @@ public class GetAllRelatedTermsByTermIdTest
         return new GetAllRelatedTermsByTermIdQuery(termId);
     }
 
-    private void SetupMockRepository(
-        GetAllRelatedTermsByTermIdQuery request,
-        List<RelatedTermEntity> relatedTermsList)
-    {
-        _mockRepository
-            .Setup(x => x.RelatedTermRepository.GetAllAsync(
-                rt => rt.TermId == request.id,
-                It.IsAny<Func<IQueryable<RelatedTermEntity>, IIncludableQueryable<RelatedTermEntity, object>>?>()))
-            .ReturnsAsync(relatedTermsList);
-    }
-
     private void VerifyGetAllAsyncAndMockingOperationsExecution(
         GetAllRelatedTermsByTermIdQuery request,
         List<RelatedTermEntity> relatedTermsList)
     {
         _mockRepository.Verify(
             x => x.RelatedTermRepository.GetAllAsync(
-                rt => rt.TermId == request.id,
+                rt => rt.TermId == request.Id,
                 It.IsAny<Func<IQueryable<RelatedTermEntity>, IIncludableQueryable<RelatedTermEntity, object>>?>()),
             Times.Once);
         _mockMapper.Verify(x => x.Map<IEnumerable<RelatedTermDTO>>(relatedTermsList), Times.Once);

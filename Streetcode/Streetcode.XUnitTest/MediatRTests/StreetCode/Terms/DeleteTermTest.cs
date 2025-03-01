@@ -40,7 +40,7 @@ public class DeleteTermTest
         var term = GetTerm(termId);
         var request = GetRequest(termId);
 
-        SetupMockGetFirstOrDefaultAsync(request, term);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, term);
         SetupMockDeleteAndSaveChangesAsync(term, 1);
 
         // Act
@@ -60,7 +60,7 @@ public class DeleteTermTest
         var term = GetTerm(termId);
         var request = GetRequest(termId);
 
-        SetupMockGetFirstOrDefaultAsync(request, term);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, term);
         SetupMockDeleteAndSaveChangesAsync(term, 1);
 
         // Act
@@ -79,7 +79,7 @@ public class DeleteTermTest
         var request = GetRequest(termId);
         var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToTerm"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, null);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -99,7 +99,7 @@ public class DeleteTermTest
         var request = GetRequest(termId);
         var expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteTerm"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, term);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, term);
         SetupMockDeleteAndSaveChangesAsync(term, -1);
 
         // Act
@@ -122,15 +122,6 @@ public class DeleteTermTest
     private static DeleteTermCommand GetRequest(int termId)
     {
         return new DeleteTermCommand(termId);
-    }
-
-    private void SetupMockGetFirstOrDefaultAsync(DeleteTermCommand request, Term? getFirstOrDefaultAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.TermRepository.GetFirstOrDefaultAsync(
-                t => t.Id == request.id,
-                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
-            .ReturnsAsync(getFirstOrDefaultAsyncResult);
     }
 
     private void SetupMockDeleteAndSaveChangesAsync(Term term, int saveChangesResult)

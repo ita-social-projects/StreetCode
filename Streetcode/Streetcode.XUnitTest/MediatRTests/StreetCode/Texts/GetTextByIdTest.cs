@@ -41,7 +41,7 @@ public class GetTextByIdTest
         var (text, textDto) = GetTextObjects(textId);
         var request = GetRequest(textId);
 
-        SetupMockRepository(request, text);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, text);
         MockHelpers.SetupMockMapper(_mockMapper, textDto, text);
 
         // Act
@@ -66,7 +66,7 @@ public class GetTextByIdTest
         var (text, textDto) = GetTextObjects(textId);
         var request = GetRequest(textId);
 
-        SetupMockRepository(request, text);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, text);
         MockHelpers.SetupMockMapper(_mockMapper, textDto, text);
 
         // Act
@@ -85,7 +85,7 @@ public class GetTextByIdTest
         var request = GetRequest(textId);
         var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindAnyTextWithCorrespondingId", request.Id].Value;
 
-        SetupMockRepository(request, null);
+        MockHelpers.SetupMockTextGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -113,14 +113,5 @@ public class GetTextByIdTest
     private static GetTextByIdQuery GetRequest(int textId)
     {
         return new GetTextByIdQuery(textId);
-    }
-
-    private void SetupMockRepository(GetTextByIdQuery request, Text? text)
-    {
-        _mockRepository
-            .Setup(x => x.TextRepository.GetFirstOrDefaultAsync(
-                t => t.Id == request.Id,
-                It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, object>>>()))
-            .ReturnsAsync(text);
     }
 }

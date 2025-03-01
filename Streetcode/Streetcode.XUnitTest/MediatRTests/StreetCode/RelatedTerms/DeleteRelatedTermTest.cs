@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.BLL.Interfaces.Logging;
@@ -44,7 +43,7 @@ public class DeleteRelatedTermTest
         var (relatedTerm, relatedTermDto) = GetRelatedTermObjects(word);
         var request = GetRequest(word);
 
-        SetupMockGetFirstOrDefaultAsync(request, relatedTerm);
+        MockHelpers.SetupMockRelatedTermRepositoryGetFirstOrDefaultAsync(_mockRepository, relatedTerm);
         SetupMockDeleteAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTermDto, relatedTerm);
 
@@ -66,7 +65,7 @@ public class DeleteRelatedTermTest
         var (relatedTerm, relatedTermDto) = GetRelatedTermObjects(word);
         var request = GetRequest(word);
 
-        SetupMockGetFirstOrDefaultAsync(request, relatedTerm);
+        MockHelpers.SetupMockRelatedTermRepositoryGetFirstOrDefaultAsync(_mockRepository, relatedTerm);
         SetupMockDeleteAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper(_mockMapper, relatedTermDto, relatedTerm);
 
@@ -84,9 +83,9 @@ public class DeleteRelatedTermTest
     {
         // Arrange
         var request = GetRequest(word);
-        var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindRelatedTermWithCorrespondingId", request.word].Value;
+        var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindRelatedTermWithCorrespondingId", request.Word].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, null);
+        MockHelpers.SetupMockRelatedTermRepositoryGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -106,7 +105,7 @@ public class DeleteRelatedTermTest
         var request = GetRequest(word);
         var expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteRelatedTerm"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, relatedTerm);
+        MockHelpers.SetupMockRelatedTermRepositoryGetFirstOrDefaultAsync(_mockRepository, relatedTerm);
         SetupMockDeleteAndSaveChangesAsync(relatedTerm, -1);
 
         // Act
@@ -127,7 +126,7 @@ public class DeleteRelatedTermTest
         var request = GetRequest(word);
         var expectedErrorMessage = _mockFailedToDeleteLocalizer["FailedToDeleteRelatedTerm"].Value;
 
-        SetupMockGetFirstOrDefaultAsync(request, relatedTerm);
+        MockHelpers.SetupMockRelatedTermRepositoryGetFirstOrDefaultAsync(_mockRepository, relatedTerm);
         SetupMockDeleteAndSaveChangesAsync(relatedTerm, 1);
         MockHelpers.SetupMockMapper<RelatedTermDTO?, RelatedTermEntity>(_mockMapper, null, relatedTerm);
 
@@ -157,15 +156,6 @@ public class DeleteRelatedTermTest
     private static DeleteRelatedTermCommand GetRequest(string word)
     {
         return new DeleteRelatedTermCommand(word);
-    }
-
-    private void SetupMockGetFirstOrDefaultAsync(DeleteRelatedTermCommand request, RelatedTermEntity? getFirstOrDefaultAsyncResult)
-    {
-        _mockRepository
-            .Setup(x => x.RelatedTermRepository.GetFirstOrDefaultAsync(
-                x => x.Word!.ToLower().Equals(request.word.ToLower()),
-                It.IsAny<Func<IQueryable<RelatedTermEntity>, IIncludableQueryable<RelatedTermEntity, object>>>()))
-            .ReturnsAsync(getFirstOrDefaultAsyncResult);
     }
 
     private void SetupMockDeleteAndSaveChangesAsync(RelatedTermEntity relatedTerm, int saveChangesResult)

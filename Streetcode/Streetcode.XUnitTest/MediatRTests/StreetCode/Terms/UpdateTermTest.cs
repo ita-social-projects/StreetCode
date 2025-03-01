@@ -43,7 +43,7 @@ public class UpdateTermTest
         var (term, termDto) = GetTermObjects();
         var request = GetRequest(termDto);
 
-        SetupMockRepository(term, 1);
+        SetupMockUpdateAndSaveChangesAsync(term, 1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
@@ -62,7 +62,7 @@ public class UpdateTermTest
         var (term, termDto) = GetTermObjects();
         var request = GetRequest(termDto);
 
-        SetupMockRepository(term, 1);
+        SetupMockUpdateAndSaveChangesAsync(term, 1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
@@ -100,7 +100,7 @@ public class UpdateTermTest
         var request = GetRequest(termDto);
         var expectedErrorMessage = _mockFailedToUpdateLocalizer["FailedToUpdateTerm"].Value;
 
-        SetupMockRepository(term, -1);
+        SetupMockUpdateAndSaveChangesAsync(term, -1);
         MockHelpers.SetupMockMapper(_mockMapper, term, request.Term);
 
         // Act
@@ -125,7 +125,7 @@ public class UpdateTermTest
         return new UpdateTermCommand(termDto);
     }
 
-    private void SetupMockRepository(Term term, int saveChangesResult)
+    private void SetupMockUpdateAndSaveChangesAsync(Term term, int saveChangesResult)
     {
         _mockRepository
             .Setup(x => x.TermRepository.Update(term));

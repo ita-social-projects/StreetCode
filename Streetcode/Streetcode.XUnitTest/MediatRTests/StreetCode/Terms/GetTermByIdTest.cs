@@ -41,7 +41,7 @@ public class GetTermByIdTest
         var (term, termDto) = GetTermObjects(termId);
         var request = GetRequest(termId);
 
-        SetupMockRepository(request, term);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, term);
         MockHelpers.SetupMockMapper(_mockMapper, termDto, term);
 
         // Act
@@ -66,7 +66,7 @@ public class GetTermByIdTest
         var (term, termDto) = GetTermObjects(termId);
         var request = GetRequest(termId);
 
-        SetupMockRepository(request, term);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, term);
         MockHelpers.SetupMockMapper(_mockMapper, termDto, term);
 
         // Act
@@ -85,7 +85,7 @@ public class GetTermByIdTest
         var request = GetRequest(termId);
         var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindAnyTermWithCorrespondingId", request.Id].Value;
 
-        SetupMockRepository(request, null);
+        MockHelpers.SetupMockTermGetFirstOrDefaultAsync(_mockRepository, null);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -113,14 +113,5 @@ public class GetTermByIdTest
     private static GetTermByIdQuery GetRequest(int termId)
     {
         return new GetTermByIdQuery(termId);
-    }
-
-    private void SetupMockRepository(GetTermByIdQuery request, Term? term)
-    {
-        _mockRepository
-            .Setup(x => x.TermRepository.GetFirstOrDefaultAsync(
-                t => t.Id == request.Id,
-                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()))
-            .ReturnsAsync(term);
     }
 }

@@ -28,27 +28,25 @@ public class DeleteFactHandler : IRequestHandler<DeleteFactCommand, Result<Unit>
 
     public async Task<Result<Unit>> Handle(DeleteFactCommand request, CancellationToken cancellationToken)
     {
-        var fact = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var fact = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (fact is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindFactWithCorrespondingCategoryId", request.Id].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var errorMessage = _stringLocalizerCannotFind["CannotFindFactWithCorrespondingCategoryId", request.Id].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
         _repositoryWrapper.FactRepository.Delete(fact);
-
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        if (resultIsSuccess)
+
+        if (!resultIsSuccess)
         {
-            return Result.Ok(Unit.Value);
+            var errorMessage = _stringLocalizerFailedToDelete["FailedToDeleteFact"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteFact"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        return Result.Ok(Unit.Value);
     }
 }

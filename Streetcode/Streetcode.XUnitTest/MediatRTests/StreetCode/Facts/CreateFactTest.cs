@@ -18,7 +18,7 @@ public class CreateFactTest
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
     private readonly MockFailedToCreateLocalizer _mockFailedToCreateLocalizer;
-    private readonly MockCannotConvertNullLocalizer mockCannotConvertNullLocalizer;
+    private readonly MockCannotConvertNullLocalizer _mockCannotConvertNullLocalizer;
     private readonly CreateFactHandler _handler;
 
     public CreateFactTest()
@@ -27,13 +27,13 @@ public class CreateFactTest
         _mockMapper = new Mock<IMapper>();
         _mockLogger = new Mock<ILoggerService>();
         _mockFailedToCreateLocalizer = new MockFailedToCreateLocalizer();
-        mockCannotConvertNullLocalizer = new MockCannotConvertNullLocalizer();
+        _mockCannotConvertNullLocalizer = new MockCannotConvertNullLocalizer();
         _handler = new CreateFactHandler(
             _mockRepository.Object,
             _mockMapper.Object,
             _mockLogger.Object,
             _mockFailedToCreateLocalizer,
-            mockCannotConvertNullLocalizer);
+            _mockCannotConvertNullLocalizer);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class CreateFactTest
         var (factDto, fact) = GetFactObjects();
         var request = GetRequest(factDto);
 
-        SetupMockRepository(fact, 1);
+        SetupMockCreateAndSaveChangesAsync(fact, 1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -62,7 +62,7 @@ public class CreateFactTest
         var (factDto, fact) = GetFactObjects();
         var request = GetRequest(factDto);
 
-        SetupMockRepository(fact, 1);
+        SetupMockCreateAndSaveChangesAsync(fact, 1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -79,7 +79,7 @@ public class CreateFactTest
         // Arrange
         var (factDto, _) = GetFactObjects();
         var request = GetRequest(factDto);
-        var expectedErrorMessage = mockCannotConvertNullLocalizer["CannotConvertNullToFact"].Value;
+        var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToFact"].Value;
 
         MockHelpers.SetupMockMapper<Fact?, StreetcodeFactCreateDTO>(_mockMapper, null, request.Fact);
 
@@ -100,7 +100,7 @@ public class CreateFactTest
         var request = GetRequest(factDto);
         var expectedErrorMessage = _mockFailedToCreateLocalizer["FailedToCreateFact"].Value;
 
-        SetupMockRepository(fact, -1);
+        SetupMockCreateAndSaveChangesAsync(fact, -1);
         MockHelpers.SetupMockMapper(_mockMapper, fact, request.Fact);
 
         // Act
@@ -125,7 +125,7 @@ public class CreateFactTest
         return new CreateFactCommand(factDto);
     }
 
-    private void SetupMockRepository(Fact fact, int saveChangesResult)
+    private void SetupMockCreateAndSaveChangesAsync(Fact fact, int saveChangesResult)
     {
         _mockRepository
             .Setup(x => x.FactRepository.CreateAsync(fact));

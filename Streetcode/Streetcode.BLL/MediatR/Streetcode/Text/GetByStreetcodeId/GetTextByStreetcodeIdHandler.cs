@@ -42,18 +42,19 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
                 async () =>
                 {
                     var text = await _repositoryWrapper.TextRepository
-            .GetFirstOrDefaultAsync(text => text.StreetcodeId == request.StreetcodeId);
+                        .GetFirstOrDefaultAsync(x => x.StreetcodeId == request.StreetcodeId);
 
                     if (text is null && await _repositoryWrapper.StreetcodeRepository
-                            .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) is null)
+                            .GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId) is null)
                     {
-                        string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
-                        _logger.LogError(request, errorMsg);
-                        return Result.Fail<TextDTO>(new Error(errorMsg));
+                        var errorMessage = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
+                        _logger.LogError(request, errorMessage);
+                        return Result.Fail<TextDTO>(new Error(errorMessage));
                     }
 
-                    NullResult<TextDTO> result = new NullResult<TextDTO>();
-                    if (text != null)
+                    var result = new NullResult<TextDTO>();
+
+                    if (text is not null)
                     {
                         result.WithValue(_mapper.Map<TextDTO>(text));
                     }

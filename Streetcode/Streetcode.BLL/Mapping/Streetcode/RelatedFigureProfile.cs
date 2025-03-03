@@ -25,6 +25,5 @@ public class RelatedFigureProfile : Profile
 
         CreateMap<RelatedFigureUpdateDTO, RelatedFigure>();
         CreateMap<StreetcodeContent, RelatedFigureShortDTO>();
-        CreateMap<StreetcodeContent, RelatedFigureDTO>();
     }
 }

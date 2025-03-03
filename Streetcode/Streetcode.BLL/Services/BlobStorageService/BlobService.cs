@@ -92,20 +92,17 @@ public class BlobService : IBlobService
         byte[] buffer = ArrayPool<byte>.Shared.Rent(byteCount);
         try
         {
-            Convert.TryFromBase64String(base64, buffer, out int bytesWritten);
+            if (!Convert.TryFromBase64String(base64, buffer, out int bytesWritten))
+            {
+                throw new FormatException("Invalid Base64 string.");
+            }
+
             return buffer[..bytesWritten];
         }
         finally
         {
             ArrayPool<byte>.Shared.Return(buffer);
         }
-    }
-
-    private IEnumerable<string> GetAllBlobNames()
-    {
-        var paths = Directory.EnumerateFiles(_blobPath);
-
-        return paths.Select(p => Path.GetFileName(p));
     }
 
     private string HashFunction(string createdFileName)

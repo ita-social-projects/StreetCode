@@ -118,20 +118,26 @@ public class BlobService : IBlobService
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
         using var aes = Aes.Create();
-        using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-
         aes.KeySize = 256;
         aes.Key = keyBytes;
         aes.GenerateIV();
+
+        using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
         fileStream.Write(aes.IV, 0, aes.IV.Length);
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent(imageBytes.Length);
+        using var cryptoStream = new CryptoStream(fileStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
+
+        int bufferSize = 4096;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+
         try
         {
-            Buffer.BlockCopy(imageBytes, 0, buffer, 0, imageBytes.Length);
-
-            using var cryptoStream = new CryptoStream(fileStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
-            cryptoStream.Write(buffer, 0, imageBytes.Length);
+            using var memoryStream = new MemoryStream(imageBytes);
+            int bytesRead;
+            while ((bytesRead = memoryStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                cryptoStream.Write(buffer, 0, bytesRead);
+            }
         }
         finally
         {
@@ -142,28 +148,36 @@ public class BlobService : IBlobService
     private byte[] DecryptFile(string fileName, string type)
     {
         string filePath = Path.Combine(_blobPath, $"{fileName}.{type}");
+
         using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        using var aes = Aes.Create();
-
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
-        byte[] iv = new byte[16];
 
+        byte[] iv = new byte[16];
         if (fileStream.Read(iv, 0, iv.Length) != iv.Length)
         {
             throw new IOException("Invalid IV length");
         }
 
+        using var aes = Aes.Create();
         aes.KeySize = 256;
         aes.Key = keyBytes;
         aes.IV = iv;
 
-        byte[] buffer = ArrayPool<byte>.Shared.Rent((int)(fileStream.Length - iv.Length));
+        using var cryptoStream = new CryptoStream(fileStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+        using var memoryStream = new MemoryStream();
+
+        int bufferSize = 4096;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
         try
         {
-            using var cryptoStream = new CryptoStream(fileStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
-            int bytesRead = cryptoStream.Read(buffer, 0, buffer.Length);
-            return buffer[..bytesRead];
+            int bytesRead;
+            while ((bytesRead = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                memoryStream.Write(buffer, 0, bytesRead);
+            }
+
+            return memoryStream.ToArray();
         }
         finally
         {

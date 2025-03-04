@@ -1,7 +1,15 @@
-﻿using System.Net;
+﻿using System.Linq.Expressions;
+using System.Net;
+using Microsoft.Extensions.Localization;
+using Moq;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
@@ -318,13 +326,13 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
     {
-        int id = this.testUpdateContext.Id;
+        int id = _testUpdateContext.Id;
 
         var repositoryMock = new Mock<IHistoricalContextRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
         var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
-            .ReturnsAsync(this.testUpdateContext);
+            .ReturnsAsync(_testUpdateContext);
         repositoryMock.Setup(r => r.Delete(default!));
 
         repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);

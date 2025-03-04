@@ -40,7 +40,11 @@ public class StreetcodeToponymValidatorTests
         // Arrange
         var validTimeline = GetValidToponym();
         validTimeline.StreetName = new string('a', StreetcodeToponymValidator.StreetNameMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["StreetName"], StreetcodeToponymValidator.StreetNameMaxLength];
+        var expectedError =
+            _mockValidationLocalizer[
+                "MaxLength",
+                _mockNamesLocalizer["StreetName"],
+                StreetcodeToponymValidator.StreetNameMaxLength];
 
         // Act
         var result = _validator.TestValidate(validTimeline);
@@ -80,7 +84,7 @@ public class StreetcodeToponymValidatorTests
         var result = _validator.TestValidate(timeline);
         var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["ModelState"]];
 
-        // Asssert
+        // Assert
         result.ShouldHaveValidationErrorFor(x => x.ModelState)
             .WithErrorMessage(expectedError);
     }

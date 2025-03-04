@@ -6,11 +6,14 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
 {
     protected override Dictionary<int, List<string>> DefineGroupedErrors()
     {
-        return new Dictionary<int, List<string>>
+        var groupedErrors = new Dictionary<int, List<string>>()
         {
             {
-                0, new List<string>
+                0, new List<string>()
                 {
+                    "CannotFindAnyFact",
+                    "CannotFindAnyTerm",
+                    "CannotFindAnyText",
                     "CannotFindAnyPropertyWithThisName",
                     "CannotFindStreetcodeById",
                     "CannotFindRecordWithQrId",
@@ -19,6 +22,13 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
             {
                 1, new List<string>()
                 {
+                    "CannotFindFactWithCorrespondingCategoryId",
+                    "CannotFindRelatedTermWithCorrespondingId",
+                    "CannotFindAnyTermWithCorrespondingId",
+                    "CannotFindTextWithCorrespondingCategoryId",
+                    "CannotFindAnyTextWithCorrespondingId",
+                    "CannotFindTransactionLinkByStreetcodeIdBecause",
+                    "CannotFindHistoricalContextWithCorrespondingId",
                     "CannotFindAnyStreetcodeWithCorrespondingId",
                 }
             },
@@ -29,5 +39,7 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                 }
             },
         };
+
+        return groupedErrors;
     }
 }

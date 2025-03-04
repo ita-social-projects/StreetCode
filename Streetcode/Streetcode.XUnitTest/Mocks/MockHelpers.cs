@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
@@ -74,4 +75,15 @@ public static class MockHelpers
                 It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
             .ReturnsAsync(new User { Email = email });
     }
+
+    public static void SetupMockMapper<TDestination, TSource>(
+        Mock<IMapper> mockMapper,
+        TDestination mapperResult,
+        TSource mapperSource)
+    {
+        mockMapper
+            .Setup(x => x.Map<TDestination>(mapperSource))
+            .Returns(mapperResult);
+    }
 }
+

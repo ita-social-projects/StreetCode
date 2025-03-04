@@ -11,8 +11,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
             User testUser = TestDataProvider.GetTestData<User>();
             testUser.Id = userId;
             testUser.UserName = userName;
+            testUser.NormalizedUserName = userName.ToUpper();
             testUser.PasswordHash = HashPassword(password, testUser);
-            BaseExtracter.Extract<User>(testUser, user => user.Id == userId, false);
+            testUser.Email += userId;
+            testUser.NormalizedEmail += userId.ToUpper();
+            BaseExtracter.Extract(testUser, user => user.Id == userId, false);
             if (roleNames.Length == 0)
             {
                 IdentityRole role = RoleExtracter.Extract(nameof(UserRole.User));
@@ -20,7 +23,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
                 return (testUser, password);
             }
 
-            foreach (var roleName in roleNames)
+            for (var i = 0; i < roleNames.Length; i++)
             {
                 IdentityRole role = RoleExtracter.Extract(nameof(UserRole.User));
                 RoleExtracter.AddUserRole(testUser.Id, role.Id);
@@ -38,6 +41,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
         {
             var hasher = new PasswordHasher<User>();
             var hashedPassword = hasher.HashPassword(user, password);
+
             return hashedPassword;
         }
     }

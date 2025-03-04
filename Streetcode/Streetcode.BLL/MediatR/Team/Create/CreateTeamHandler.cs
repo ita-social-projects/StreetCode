@@ -2,12 +2,10 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Team;
-using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Team.Create
@@ -17,18 +15,18 @@ namespace Streetcode.BLL.MediatR.Team.Create
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repository;
         private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
+        private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizerFailed;
 
         public CreateTeamHandler(
             IMapper mapper,
             IRepositoryWrapper repository,
             ILoggerService logger,
-            IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+            IStringLocalizer<FailedToCreateSharedResource> stringLocalizerFailed)
         {
             _mapper = mapper;
             _repository = repository;
             _logger = logger;
-            _stringLocalizerCannot = stringLocalizerCannot;
+            _stringLocalizerFailed = stringLocalizerFailed;
         }
 
         public async Task<Result<TeamMemberDTO>> Handle(CreateTeamQuery request, CancellationToken cancellationToken)
@@ -38,40 +36,38 @@ namespace Streetcode.BLL.MediatR.Team.Create
             {
                 teamMember.Positions!.Clear();
 
-                var newLogoTypes = request.teamMember.TeamMemberLinks.Select(links => links.LogoType).ToList();
-
                 teamMember = await _repository.TeamRepository.CreateAsync(teamMember);
-                _repository.SaveChanges();
+                await _repository.SaveChangesAsync();
 
-                var newPositions = request.teamMember.Positions.ToList();
+                var newPositions = request.teamMember.Positions!.ToList();
 
                 foreach (var newPosition in newPositions)
                 {
                     if (newPosition.Id < 0)
                     {
-                        Positions position = new Positions() { Id = 0, Position = newPosition.Position, TeamMembers = null };
-                        var tpm = _repository.PositionRepository.Create(position);
+                        Positions position = new () { Id = 0, Position = newPosition.Position, TeamMembers = null };
+                        var tpm = await _repository.PositionRepository.CreateAsync(position);
 
-                        _repository.SaveChanges();
+                        await _repository.SaveChangesAsync();
 
-                        _repository.TeamPositionRepository.Create(
+                        await _repository.TeamPositionRepository.CreateAsync(
                             new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = tpm.Id });
                     }
                     else
                     {
-                        _repository.TeamPositionRepository.Create(
+                        await _repository.TeamPositionRepository.CreateAsync(
                             new TeamMemberPositions { TeamMemberId = teamMember.Id, PositionsId = newPosition.Id });
                     }
                 }
 
-                _repository.SaveChanges();
-                var resulted = _mapper.Map<TeamMemberDTO>(teamMember);
+                await _repository.SaveChangesAsync();
                 return Result.Ok(_mapper.Map<TeamMemberDTO>(teamMember));
             }
             catch (Exception ex)
             {
+                string errorMessage = _stringLocalizerFailed["FailedToCreateTeam"].Value;
                 _logger.LogError(request, ex.Message);
-                return Result.Fail(ex.Message);
+                return Result.Fail(errorMessage);
             }
         }
     }

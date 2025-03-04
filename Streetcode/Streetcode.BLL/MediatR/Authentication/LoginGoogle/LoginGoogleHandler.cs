@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using AutoMapper;
 using FluentResults;
-using Google.Apis.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -18,34 +17,31 @@ namespace Streetcode.BLL.MediatR.Authentication.LoginGoogle;
 public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<LoginResponseDTO>>
 {
     private const string LoginProvider = "Google";
-    private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
     private readonly ITokenService _tokenService;
     private readonly ILoggerService _logger;
     private readonly UserManager<User> _userManager;
+    private readonly IGoogleService _googleService;
 
     public LoginGoogleHandler(
-        IConfiguration configuration,
         IMapper mapper,
         ITokenService tokenService,
         ILoggerService logger,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        IGoogleService googleService)
     {
-        _configuration = configuration;
         _mapper = mapper;
         _tokenService = tokenService;
         _logger = logger;
         _userManager = userManager;
+        _googleService = googleService;
     }
 
     public async Task<Result<LoginResponseDTO>> Handle(LoginGoogleQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var payload = await GoogleJsonWebSignature.ValidateAsync(request.idToken, new GoogleJsonWebSignature.ValidationSettings
-            {
-                Audience = new[] { _configuration["Authentication:Google:ClientId"] }
-            });
+            var payload = await _googleService.ValidateGoogleToken(request.idToken);
 
             var user = await _userManager.FindByEmailAsync(payload.Email);
             if (user == null)

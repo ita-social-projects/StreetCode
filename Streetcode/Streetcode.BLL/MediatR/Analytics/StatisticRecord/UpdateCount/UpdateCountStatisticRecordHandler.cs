@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.Logging;
 using Microsoft.Extensions.Localization;
@@ -44,7 +43,7 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount
 
             _repositoryWrapper.StatisticRecordRepository.Update(statRecord);
 
-            var resultIsSuccess = _repositoryWrapper.SaveChanges() > 0;
+            var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
 
             if (!resultIsSuccess)
             {

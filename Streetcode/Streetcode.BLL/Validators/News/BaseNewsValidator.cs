@@ -1,5 +1,4 @@
 using FluentValidation;
-using FluentValidation.Validators;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.SharedResource;

@@ -249,6 +249,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} не повинна бути у минулому..
+        /// </summary>
+        internal static string MustNotBeInPast {
+            get {
+                return ResourceManager.GetString("MustNotBeInPast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Транслітероване посилання має містити тільки маленькі латинські літери, цифри та дефіс.
         /// </summary>
         internal static string TransliterationUrlFormat {

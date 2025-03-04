@@ -189,4 +189,7 @@
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>The image size can't exceed {0} MB</value>
   </data>
+  <data name="MustNotBeInPast" xml:space="preserve">
+    <value>{0} must not be in the past.</value>
+  </data>
 </root>

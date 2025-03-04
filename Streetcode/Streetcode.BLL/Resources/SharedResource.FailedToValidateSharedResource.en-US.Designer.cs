@@ -249,6 +249,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must not be in the past..
+        /// </summary>
+        internal static string MustNotBeInPast {
+            get {
+                return ResourceManager.GetString("MustNotBeInPast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transliteration url must consists of small latin characters, numbers and hyphen.
         /// </summary>
         internal static string TransliterationUrlFormat {

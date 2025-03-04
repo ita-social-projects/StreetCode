@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Claims;
 using System.Transactions;
 using AutoMapper;
 using FluentAssertions;
@@ -45,17 +46,30 @@ public class CreateStreetcodeHandlerTests
     private readonly MockFailedToCreateLocalizer _localizerFailedToCreateMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly CreateStreetcodeHandler _handler;
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
 
     public CreateStreetcodeHandlerTests()
     {
         _localizerValidationMock = new MockFailedToValidateLocalizer();
         _localizerFieldMock = new MockFieldNamesLocalizer();
         _repositoryMock = new Mock<IRepositoryWrapper>();
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
         _loggerMock = new Mock<ILoggerService>();
         _mapperMock = new Mock<IMapper>();
         _localizerFailedToCreateMock = new MockFailedToCreateLocalizer();
         var localizerErrorMock = new MockAnErrorOccurredLocalizer();
-        var httpAccessorMock = new Mock<IHttpContextAccessor>();
+
+        var claims = new List<Claim>
+        {
+            new (ClaimTypes.Email, "user@example.com"),
+            new (ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+        };
+
+        var identity = new ClaimsIdentity(claims, "TestAuthType");
+        var claimsPrincipal = new ClaimsPrincipal(identity);
+        var context = new DefaultHttpContext { User = claimsPrincipal };
+
+        _httpContextAccessorMock.Setup(_ => _.HttpContext).Returns(context);
 
         _handler = new CreateStreetcodeHandler(
             _mapperMock.Object,
@@ -65,7 +79,7 @@ public class CreateStreetcodeHandlerTests
             _localizerFailedToCreateMock,
             _localizerValidationMock,
             _localizerFieldMock,
-            httpAccessorMock.Object);
+            _httpContextAccessorMock.Object);
     }
 
     #region AddImagesDetails
@@ -1323,6 +1337,7 @@ public class CreateStreetcodeHandlerTests
                 Title = src.Title,
                 TransliterationUrl = src.TransliterationUrl,
                 EventStartOrPersonBirthDate = src.EventStartOrPersonBirthDate,
+                UserId = Guid.NewGuid().ToString(),
             });
 
         _repositoryMock.Setup(r => r.StreetcodeRepository.Create(It.IsAny<StreetcodeContent>()));

@@ -42,8 +42,8 @@ public class TeamPositionsControllerTests : BaseAuthorizationControllerTests<Tea
         int uniqueId = UniqueNumberGenerator.GenerateInt();
         this.testCreatePosition = TeamPositionsExtracter.Extract(uniqueId);
         this.testUpdatePosition = TeamPositionsExtracter.Extract(uniqueId);
-        this.testTeamMemberImage = ImageExtracter.Extract(1);
-        this.testTeamMember = TeamMemberExtracter.Extract(uniqueId);
+        this.testTeamMemberImage = ImageExtracter.Extract(uniqueId);
+        this.testTeamMember = TeamMemberExtracter.Extract(uniqueId, this.testTeamMemberImage.Id);
         this.testStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,

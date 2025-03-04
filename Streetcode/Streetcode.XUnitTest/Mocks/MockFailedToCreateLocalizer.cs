@@ -6,16 +6,22 @@ public class MockFailedToCreateLocalizer : BaseMockStringLocalizer<FailedToCreat
 {
     protected override Dictionary<int, List<string>> DefineGroupedErrors()
     {
-        return new Dictionary<int, List<string>>
+        var groupedErrors = new Dictionary<int, List<string>>()
         {
             {
-                0, new List<string>
+                0, new List<string>()
                 {
+                    "FailedToCreateFact",
+                    "FailedToCreateTerm",
+                    "FailedToMapCreatedTerm",
+                    "FailedToCreateTeam",
                     "FailedToCreateStreetcode",
                     "TheStreetcodesAreAlreadyLinked",
                     "FailedToCreateRelation",
                 }
             },
         };
+
+        return groupedErrors;
     }
 }

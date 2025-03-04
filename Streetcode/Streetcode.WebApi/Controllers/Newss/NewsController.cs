@@ -23,13 +23,6 @@ namespace Streetcode.WebApi.Controllers.Newss
             return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
-        public async Task<IActionResult> GetAllPublished([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
-        {
-            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize, DateTime.UtcNow)));
-        }
-
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
         public async Task<IActionResult> GetById(int id)

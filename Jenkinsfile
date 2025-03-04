@@ -11,7 +11,8 @@ pipeline {
         label 'stage' 
     }
      environment {
-        GH_TOKEN = credentials('GH_TOKEN')     
+        GH_TOKEN = credentials('GH_TOKEN')
+        DISCORD_WEBHOOK_URL = credentials('WEBHOOK_URL')     
     }
     options {
     skipDefaultCheckout true
@@ -45,7 +46,7 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage'
+                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
@@ -202,6 +203,8 @@ pipeline {
                     sleep 10
                     docker compose --env-file /etc/environment up -d"""
 
+                    sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+
                 }  
             }
      }    
@@ -234,6 +237,8 @@ pipeline {
                docker network prune -f
                sleep 10
                docker compose --env-file /etc/environment up -d"""
+
+               sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted and rolled back.')
                
             }
             
@@ -342,10 +347,49 @@ pipeline {
         }
     */
     }
+
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
+    success {
+        script {
+            sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
+        }
+    }
+    failure {
+        script {
+            sendDiscordNotification('FAILED', 'Deployment pipeline failed.')
+        }
+    }
+    aborted {
+        script {
+            sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
+        }
+    }
+
 }
+}
+
+def sendDiscordNotification(status, message) {
+    def jsonMessage = """
+    {
+        "content": "$status: $message",
+        "embeds": [
+            {
+                "title": "Deployment Status",
+                "fields": [
+                    {"name": "Environment", "value": "Stage", "inline": true},
+                    {"name": "Pipeline Name", "value": "$env.JOB_NAME", "inline": true},
+                    {"name": "Status", "value": "$status", "inline": true},
+                    {"name": "Deployment Tag", "value": "$env.CODE_VERSION", "inline": true},
+                    {"name": "Date and Time", "value": "${new Date().format('yyyy-MM-dd HH:mm:ss')}", "inline": true},
+                    {"name": "Pipeline Link", "value": "[Click here]($env.BUILD_URL)", "inline": true}
+                ]
+            }
+        ]
+    }
+    """
+    sh "curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' $DISCORD_WEBHOOK_URL"
 }

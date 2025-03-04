@@ -213,6 +213,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Не вдалося знайти жодного поля з такою назвою.
+        /// </summary>
+        internal static string CannotFindAnyPropertyWithThisName {
+            get {
+                return ResourceManager.GetString("CannotFindAnyPropertyWithThisName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Не вдалося знайти будь-які пов&apos;язані цифри за ідентифікатором стріткоду: {0}.
         /// </summary>
         internal static string CannotFindAnyRelatedFiguresByStreetcodeId {

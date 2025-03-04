@@ -45,8 +45,7 @@ public class TimelineItemValidatorTests
         // Arrange
         var validTimeline = GetValidTimelineItem();
         validTimeline.Title = new string('a', TimelineItemValidator.TitleMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength",
-            _mockNamesLocalizer["TimelineItemTitle"], TimelineItemValidator.TitleMaxLength];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TimelineItemTitle"], TimelineItemValidator.TitleMaxLength];
 
         // Act
         var result = _validator.TestValidate(validTimeline);
@@ -62,8 +61,7 @@ public class TimelineItemValidatorTests
         // Arrange
         var timeline = GetValidTimelineItem();
         timeline.Description = new string('a', TimelineItemValidator.DescriptionMaxLength + 1);
-        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TimelineItemDescription"],
-            TimelineItemValidator.DescriptionMaxLength];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TimelineItemDescription"], TimelineItemValidator.DescriptionMaxLength];
 
         // Act
         var result = _validator.TestValidate(timeline);

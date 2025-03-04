@@ -35,13 +35,6 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            if (request.StreetcodeId < 1)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtByTheStreetcodeId", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
             var arts = await _repositoryWrapper.ArtRepository
                 .GetAllAsync(
                 predicate: art => art.StreetcodeArts.Any(sArt => sArt.StreetcodeArtSlide!.StreetcodeId == request.StreetcodeId),

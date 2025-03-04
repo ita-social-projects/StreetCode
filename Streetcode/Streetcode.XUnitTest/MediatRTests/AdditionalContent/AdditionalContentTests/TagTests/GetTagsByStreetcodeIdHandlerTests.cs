@@ -121,23 +121,6 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
                 () => Assert.Empty(result.Value));
         }
 
-        [Fact]
-        public async Task Handler_Returns_Error()
-        {
-            // Arrange
-            var expectedError = $"Cannot find any tag by the streetcode id: {incorrect_streetcode_id}";
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyTagByTheStreetcodeId", incorrect_streetcode_id])
-                .Returns(new LocalizedString("CannotFindAnyTagByTheStreetcodeId", expectedError));
-
-            var handler = new GetTagByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-
-            // Act
-            var result = await handler.Handle(new GetTagByStreetcodeIdQuery(incorrect_streetcode_id), CancellationToken.None);
-
-            // Assert
-            Assert.Equal(expectedError, result.Errors.Single().Message);
-        }
-
         private void SetupRepository(List<StreetcodeTagIndex> returnList)
         {
             this.mockRepo.Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(

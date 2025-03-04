@@ -156,4 +156,7 @@
   <data name="TheStreetcodesAreAlreadyLinked" xml:space="preserve">
     <value>The streetcodes are already linked</value>
   </data>
+  <data name="FailedToCreatePartner" xml:space="preserve">
+    <value>Failed to create a partner</value>
+  </data>
 </root>

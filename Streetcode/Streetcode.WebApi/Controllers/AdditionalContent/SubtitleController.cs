@@ -3,6 +3,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.MediatR.AdditionalContent.GetById;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetAll;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.AdditionalContent;
 
@@ -23,6 +24,7 @@ public class SubtitleController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SubtitleDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

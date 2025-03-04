@@ -1,17 +1,19 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
 public class RelatedFigureController : BaseApiController
 {
     [HttpGet("{streetcodeId:int}")]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {

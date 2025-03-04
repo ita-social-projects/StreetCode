@@ -4,6 +4,7 @@ using Moq;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.XUnitTest.Mocks;
@@ -53,5 +54,14 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
                 It.IsAny<Func<IQueryable<SourceLinkCategory>, IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync((SourceLinkCategory)null!);
+    }
+
+    //This method will return existing streetcode ids
+    public static void SetupMockStreetcodeRepositoryFindAll(Mock<IRepositoryWrapper> mockRepositoryWrapper, List<int> streetcodeIds)
+    {
+        mockRepositoryWrapper.Setup(x => x.StreetcodeRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
+            .ReturnsAsync(streetcodeIds.Select(id => new StreetcodeContent { Id = id }).ToList());
     }
 }

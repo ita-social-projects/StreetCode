@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
+using Streetcode.BLL.Services.EntityAccessManager;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 
@@ -30,12 +32,16 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
 
     public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<DAL.Entities.AdditionalContent.Tag, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, t => t.Streetcodes);
+
         PaginationResponse<DAL.Entities.AdditionalContent.Tag> paginationResponse = _repositoryWrapper
             .TagRepository
             .GetAllPaginated(
-                request.page,
-                request.pageSize,
-                descendingSortKeySelector: tag => tag.Title);
+                request.Page,
+                request.PageSize,
+                descendingSortKeySelector: tag => tag.Title,
+                predicate: predicate);
 
         if (paginationResponse is null)
         {

@@ -23,6 +23,6 @@ public static class StatisticRecordExtracter
 
     public static void Remove(StatisticRecord entity)
     {
-        BaseExtracter.RemoveByPredicate<StatisticRecord>(strCont => strCont.Id == entity.Id);
+        BaseExtracter.RemoveById<StatisticRecord>(entity.Id);
     }
 }

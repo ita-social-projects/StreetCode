@@ -9,12 +9,8 @@ public static class ExpertiseExtracter
         var testExpertise = TestDataProvider.GetTestData<Expertise>();
 
         testExpertise.Id = expertiseId;
-        var extracter = BaseExtracter.Extract<Expertise>(testExpertise, e => e.Id == expertiseId);
-        return extracter;
-    }
+        var extracter = BaseExtracter.Extract(testExpertise, e => e.Id == expertiseId);
 
-    public static void Remove(Expertise entity)
-    {
-        BaseExtracter.RemoveByPredicate<Expertise>(e => e.Id == entity.Id);
+        return extracter;
     }
 }

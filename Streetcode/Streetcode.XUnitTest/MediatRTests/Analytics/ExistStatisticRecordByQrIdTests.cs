@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
-using MockQueryable;
 using Moq;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId;
 using Streetcode.DAL.Entities.Analytics;

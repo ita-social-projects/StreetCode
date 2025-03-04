@@ -16,21 +16,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 {
     public class GetAllTransactLinksHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
-        private readonly List<TransactionLink> transactions = new List<TransactionLink>()
+        private readonly List<TransactionLink> _transactions = new()
         {
-            new TransactionLink
+            new ()
             {
                 Id = 1,
                 Url = "URL",
                 UrlTitle = "Title",
                 StreetcodeId = 1,
             },
-            new TransactionLink
+            new ()
             {
                 Id = 2,
                 Url = "URL2",
@@ -39,16 +39,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             },
         };
 
-        private readonly List<TransactLinkDTO> transactionsDTOs = new List<TransactLinkDTO>()
+        private readonly List<TransactLinkDTO> _transactionsDTOs = new()
         {
-            new TransactLinkDTO
+            new ()
             {
                 Id = 1,
                 Url = "URL",
                 QrCodeUrl = "URL",
                 StreetcodeId = 1,
             },
-            new TransactLinkDTO
+            new ()
             {
                 Id = 2,
                 Url = "URL2",
@@ -59,20 +59,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
 
         public GetAllTransactLinksHandlerTests()
         {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockMapper = new Mock<IMapper>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task NotEmpty_List()
         {
             // Arrange
-            this.SetupRepository(this.transactions);
-            this.SetupMapper(this.transactionsDTOs);
+            this.SetupRepository(_transactions);
+            this.SetupMapper(_transactionsDTOs);
 
-            var handler = new GetAllTransactLinksHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
@@ -80,7 +80,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<List<TransactLinkDTO>>(result.Value),
-                () => Assert.True(result.Value.Count() == this.transactions.Count));
+                () => Assert.True(result.Value.Count() == _transactions.Count));
         }
 
         [Fact]
@@ -91,10 +91,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             this.SetupMapper(new List<TransactLinkDTO>());
 
             var expectedError = $"Cannot find any transaction link";
-            this.mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
+            _mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
                 .Returns(new LocalizedString("CannotFindAnyTransactionLink", expectedError));
 
-            var handler = new GetAllTransactLinksHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
@@ -103,16 +103,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             Assert.Equal(expectedError, result.Errors.Single().Message);
         }
 
-        private void SetupRepository(List<TransactionLink> returnList)
+        private void SetupRepository(List<TransactionLink>? returnList)
         {
-            this.mockRepo.Setup(repo => repo.TransactLinksRepository.GetAllAsync(
-                It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
-                IIncludableQueryable<TransactionLink, object>>>())).ReturnsAsync(returnList);
+            _mockRepo
+                .Setup(repo => repo.TransactLinksRepository.GetAllAsync(
+                    It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
+                    IIncludableQueryable<TransactionLink, object>>>()))
+                .ReturnsAsync(returnList!);
         }
 
         private void SetupMapper(List<TransactLinkDTO> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(It.IsAny<IEnumerable<object>>())).Returns(returnList);
+            _mockMapper
+                .Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(
+                    It.IsAny<IEnumerable<object>>()))
+                .Returns(returnList);
         }
     }
 }

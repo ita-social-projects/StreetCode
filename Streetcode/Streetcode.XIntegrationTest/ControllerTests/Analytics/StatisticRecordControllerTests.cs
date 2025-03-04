@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.DAL.Entities.Analytics;
-using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;

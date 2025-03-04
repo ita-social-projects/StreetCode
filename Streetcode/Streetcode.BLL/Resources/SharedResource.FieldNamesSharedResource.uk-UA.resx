@@ -142,7 +142,7 @@
     <value>Ім'я</value>
   </data>
   <data name="Position" xml:space="preserve">
-    <value>Вакансія</value>
+    <value>Позиція</value>
   </data>
   <data name="ImageId" xml:space="preserve">
     <value>Ідентифікатор картинки</value>
@@ -252,11 +252,11 @@
   <data name="LastName" xml:space="preserve">
     <value>Прізвище</value>
   </data>
-  <data name="Alias" xml:space="preserve">
-    <value>Псевдонім</value>
-  </data>
   <data name="Teaser" xml:space="preserve">
     <value>Тизер</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Псевдонім</value>
   </data>
   <data name="TransliterationUrl" xml:space="preserve">
     <value>Транслітероване посилання</value>

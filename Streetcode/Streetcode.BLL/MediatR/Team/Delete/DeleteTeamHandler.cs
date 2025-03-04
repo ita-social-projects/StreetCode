@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Team.Delete
                 _repositoryWrapper.TeamRepository.Delete(team);
                 try
                 {
-                    _repositoryWrapper.SaveChanges();
+                    await _repositoryWrapper.SaveChangesAsync();
                     return Result.Ok(_mapper.Map<TeamMemberDTO>(team));
                 }
                 catch (Exception ex)

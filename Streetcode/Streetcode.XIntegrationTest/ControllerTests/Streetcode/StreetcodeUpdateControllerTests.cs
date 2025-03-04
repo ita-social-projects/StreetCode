@@ -9,6 +9,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
@@ -163,16 +164,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             // Assert
             Assert.NotNull(response);
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                StreetcodeUpdateDTOExtracter.Remove(_testStreetcodeUpdateDto);
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

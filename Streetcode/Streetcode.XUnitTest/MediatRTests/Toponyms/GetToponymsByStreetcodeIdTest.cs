@@ -18,35 +18,35 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1413:UseTrailingCommasInMultiLineInitializers", Justification = "Reviewed.")]
     public class GetToponymsByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNo;
 
         public GetToponymsByStreetcodeIdTest()
         {
-            mockRepository = new Mock<IRepositoryWrapper>();
-            mockMapper = new Mock<IMapper>();
-            mockLogger = new Mock<ILoggerService>();
-            mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerNo = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Fact]
         public async Task ReturnsSuccessfully_NotEmpty()
         {
             // Arrange
-            this.mockRepository.Setup(x => x.ToponymRepository.GetAllAsync(
+            this._mockRepository.Setup(x => x.ToponymRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Toponym, bool>>>(),
                 It.IsAny<Func<IQueryable<Toponym>,
-                IIncludableQueryable<Toponym, object>>>()
-                )).ReturnsAsync(GetExistingToponymList());
+                IIncludableQueryable<Toponym, object>>>()))
+                .ReturnsAsync(GetExistingToponymList());
 
-            this.mockMapper.Setup(x => x
+            this._mockMapper.Setup(x => x
             .Map<IEnumerable<ToponymDTO>>(It.IsAny<IEnumerable<Toponym>>()))
             .Returns(GetToponymDTOList());
 
             int streetcodeId = 1;
-            var handler = new GetToponymsByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetToponymsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerNo.Object);
 
             // Act
             var result = await handler.Handle(new GetToponymsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -62,14 +62,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         public async Task ReturnsSuccessfully_Empty()
         {
             // Arrange
-            this.mockRepository.Setup(x => x.ToponymRepository.GetAllAsync(
+            this._mockRepository.Setup(x => x.ToponymRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Toponym, bool>>>(),
                 It.IsAny<Func<IQueryable<Toponym>,
-                IIncludableQueryable<Toponym, object>>>()
-                )).ReturnsAsync(GetEmptyToponymList());
+                IIncludableQueryable<Toponym, object>>>()))
+                .ReturnsAsync(GetEmptyToponymList());
 
             int streetcodeId = 1;
-            var handler = new GetToponymsByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+
+            this._mockLocalizerNo.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+               .Returns((string key, object[] args) =>
+               {
+                   if (args != null && args.Length > 0 && args[0] is int id)
+                   {
+                       return new LocalizedString(key, $"No toponym with such streetcode id: {id}");
+                   }
+
+                   return new LocalizedString(key, "Cannot find any toponym with unknown id");
+               });
+
+            var handler = new GetToponymsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object, this._mockLocalizerNo.Object);
 
             // Act
             var result = await handler.Handle(new GetToponymsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
@@ -81,10 +93,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
                () => Assert.Empty(result.Value));
         }
 
-        public static List<Toponym> GetExistingToponymList()
+        private static List<Toponym> GetExistingToponymList()
         {
-            return new List<Toponym>() {
-                new Toponym
+            return new List<Toponym>()
+            {
+                new ()
                 {
                     Id = 1,
                     Oblast = "Test oblast",
@@ -93,9 +106,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             };
         }
 
-        public static List<ToponymDTO> GetToponymDTOList() {
-            return new List<ToponymDTO> {
-                new ToponymDTO
+        private static List<ToponymDTO> GetToponymDTOList()
+        {
+            return new List<ToponymDTO>
+            {
+                new ()
                 {
                     Id = 1,
                     Oblast = "Test oblast",
@@ -103,7 +118,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
                 }
             };
         }
-        public static List<Toponym> GetEmptyToponymList()
+
+        private static List<Toponym> GetEmptyToponymList()
         {
             return new List<Toponym>();
         }

@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTO\Instagram\**" />
+    <EmbeddedResource Remove="DTO\Instagram\**" />
+    <None Remove="DTO\Instagram\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentResults" Version="3.15.1" />
@@ -42,13 +48,13 @@
 
   <ItemGroup>
     <Folder Include="Constants\MessageData\" />
+    <Folder Include="DTO\Authentication\GoogleLogin\" />
     <Folder Include="DTO\Users\Expertise\" />
     <Folder Include="Factories\MessageDataFactory\Concretes\" />
     <Folder Include="Mapping\Payment\" />
     <Folder Include="Mapping\Users\Expertises\" />
     <Folder Include="MediatR\AdditionalContent\Tag\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="DTO\Instagram\" />
     <Folder Include="MediatR\Expertises\GetAll\" />
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
     <Folder Include="MediatR\Users\UpdateForgotPassword\" />

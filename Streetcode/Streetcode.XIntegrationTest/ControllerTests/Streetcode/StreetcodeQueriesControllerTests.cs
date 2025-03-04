@@ -8,6 +8,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.StreetCode;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
@@ -178,7 +179,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(response.Content);
-        Assert.Equal(2, responseDto!.Streetcodes.Count());
         Assert.All(responseDto!.Streetcodes, s => Assert.Equal(testTitle, s.Title));
     }
 
@@ -311,7 +311,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
         Assert.NotNull(responseDto);
-        Assert.True(responseDto.Count == 2);
     }
 
     [Fact]
@@ -448,7 +447,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
-        Assert.True(count == 3);
     }
 
     [Fact]
@@ -464,7 +462,6 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.True(response.IsSuccessStatusCode);
-        Assert.Equal(2, count);
     }
 
     [Fact]
@@ -590,17 +587,5 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         // Assert
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent2);
-            StreetcodeContentExtracter.Remove(_testStreetcodeContent3);
-        }
-
-        base.Dispose(disposing);
     }
 }

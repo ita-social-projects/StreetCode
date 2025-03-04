@@ -159,4 +159,7 @@
   <data name="NoTeamWithSuchId" xml:space="preserve">
     <value>No team with such id</value>
   </data>
+  <data name="NoToponymWithSuchId" xml:space="preserve">
+    <value>No toponym with such streetcode id: {0}</value>
+  </data>
 </root>

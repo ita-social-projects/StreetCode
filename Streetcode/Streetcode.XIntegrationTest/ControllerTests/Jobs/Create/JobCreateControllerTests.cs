@@ -4,9 +4,9 @@ using Streetcode.DAL.Entities.Jobs;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Job;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentication;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Xunit;
 

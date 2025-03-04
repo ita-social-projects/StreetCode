@@ -1,11 +1,20 @@
-﻿using System.Net;
+﻿using System.Linq.Expressions;
+using System.Net;
+using Microsoft.Extensions.Localization;
+using Moq;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Timeline;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Timeline;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Timeline;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Timeline;
@@ -312,5 +321,35 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
+    {
+        int id = _testUpdateContext.Id;
+
+        var repositoryMock = new Mock<IHistoricalContextRepository>();
+        var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
+        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
+            .ReturnsAsync(_testUpdateContext);
+        repositoryMock.Setup(r => r.Delete(default!));
+
+        repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
+        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
+        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
+
+        var loggerMock = new Mock<ILoggerService>();
+
+        var handler = new DeleteHistoricalContextHandler(repositoryWrapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object);
+
+        var query = new DeleteHistoricalContextCommand(id);
+        var cancellationToken = CancellationToken.None;
+
+        // Act
+        var result = await handler.Handle(query, cancellationToken);
+
+        // Assert
+        Assert.False(result.IsSuccess);
     }
 }

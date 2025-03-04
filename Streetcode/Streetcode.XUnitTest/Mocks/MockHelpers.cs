@@ -6,6 +6,7 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.XUnitTest.Mocks;
@@ -57,13 +58,22 @@ public static class MockHelpers
             .ReturnsAsync((SourceLinkCategory)null!);
     }
 
-    //This method will return existing streetcode ids
+    // This method will return existing streetcode ids
     public static void SetupMockStreetcodeRepositoryFindAll(Mock<IRepositoryWrapper> mockRepositoryWrapper, List<int> streetcodeIds)
     {
         mockRepositoryWrapper.Setup(x => x.StreetcodeRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
             .ReturnsAsync(streetcodeIds.Select(id => new StreetcodeContent { Id = id }).ToList());
+    }
+
+    // This method will return existing user with email
+    public static void SetupMockUserRepositoryGetFirstOfDefaultAsync(Mock<IRepositoryWrapper> mockRepositoryWrapper, string email)
+    {
+        mockRepositoryWrapper.Setup(x => x.UserRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<User, bool>>>(),
+                It.IsAny<Func<IQueryable<User>, IIncludableQueryable<User, object>>>()))
+            .ReturnsAsync(new User { Email = email });
     }
 
     public static void SetupMockMapper<TDestination, TSource>(
@@ -76,3 +86,4 @@ public static class MockHelpers
             .Returns(mapperResult);
     }
 }
+

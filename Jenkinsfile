@@ -46,7 +46,7 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage'
+                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'

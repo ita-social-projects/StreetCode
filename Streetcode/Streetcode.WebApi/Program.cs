@@ -77,8 +77,6 @@ else
     app.UseHsts();
 }
 
-await app.ApplyMigrations();
-
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();
 app.UseCors();

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.DAL.Entities.Media.Images;
@@ -19,7 +20,7 @@ public static class MockHelpers
                 It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
             .ReturnsAsync(new Image { Id = imageId });
     }
-    
+
     public static void SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(Mock<IRepositoryWrapper> mockRepositoryWrapper)
     {
         // Returns null
@@ -63,5 +64,15 @@ public static class MockHelpers
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
             .ReturnsAsync(streetcodeIds.Select(id => new StreetcodeContent { Id = id }).ToList());
+    }
+
+    public static void SetupMockMapper<TDestination, TSource>(
+        Mock<IMapper> mockMapper,
+        TDestination mapperResult,
+        TSource mapperSource)
+    {
+        mockMapper
+            .Setup(x => x.Map<TDestination>(mapperSource))
+            .Returns(mapperResult);
     }
 }

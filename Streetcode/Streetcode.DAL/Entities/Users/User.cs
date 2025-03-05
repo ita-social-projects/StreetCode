@@ -10,7 +10,7 @@ namespace Streetcode.DAL.Entities.Users
     {
         [Required]
         [MinLength(2)]
-        [MaxLength(128)]
+        [MaxLength(50)]
         public new string UserName
         {
             get => base.UserName ?? string.Empty;
@@ -19,11 +19,11 @@ namespace Streetcode.DAL.Entities.Users
 
         [Required]
         [MinLength(2)]
-        [MaxLength(128)]
+        [MaxLength(50)]
         public string Name { get; set; } = null!;
         [Required]
         [MinLength(2)]
-        [MaxLength(128)]
+        [MaxLength(50)]
         public string Surname { get; set; } = null!;
         public string? RefreshToken { get; set; }
         [MaxLength(500)]

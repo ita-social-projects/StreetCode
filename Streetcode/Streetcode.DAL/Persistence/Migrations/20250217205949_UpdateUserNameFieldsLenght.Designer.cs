@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.DAL.Persistence;
 
@@ -11,9 +12,11 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    partial class StreetcodeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250217205949_UpdateUserNameFieldsLenght")]
+    partial class UpdateUserNameFieldsLenght
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -654,21 +657,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasIndex("StreetcodeId");
 
                     b.ToTable("streetcode_source_link_categories", "sources");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Favourites.Favourite", b =>
-                {
-                    b.Property<int>("StreetcodeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("StreetcodeId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("favourites", "streetcode");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>
@@ -1621,25 +1609,6 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("SourceLinkCategory");
 
                     b.Navigation("Streetcode");
-                });
-
-            modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Favourites.Favourite", b =>
-                {
-                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
-                        .WithMany()
-                        .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Streetcode");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.RelatedFigure", b =>

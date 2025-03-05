@@ -5,6 +5,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using FactEntity = Streetcode.DAL.Entities.Streetcode.TextContent.Fact;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Fact.Update;
 
@@ -32,27 +33,25 @@ public class UpdateFactHandler : IRequestHandler<UpdateFactCommand, Result<Unit>
 
     public async Task<Result<Unit>> Handle(UpdateFactCommand request, CancellationToken cancellationToken)
     {
-        var fact = _mapper.Map<DAL.Entities.Streetcode.TextContent.Fact>(request.Fact);
+        var fact = _mapper.Map<FactEntity>(request.Fact);
 
         if (fact is null)
         {
-            string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToFact"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var errorMessage = _stringLocalizerCannotConvert["CannotConvertNullToFact"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
         _repositoryWrapper.FactRepository.Update(fact);
-
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        if(resultIsSuccess)
+
+        if (!resultIsSuccess)
         {
-            return Result.Ok(Unit.Value);
+            var errorMessage = _stringLocalizerFailedToUpdate["FailedToUpdateFact"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateFact"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        return Result.Ok(Unit.Value);
     }
 }

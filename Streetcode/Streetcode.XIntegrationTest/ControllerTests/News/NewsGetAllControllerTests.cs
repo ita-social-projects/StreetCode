@@ -3,14 +3,13 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.News;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.News;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.News
 {
     [Collection("News")]
-    public class NewsGetAllControllerTests : BaseControllerTests<NewsClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class NewsGetAllControllerTests : BaseControllerTests<NewsClient>
     {
         private DAL.Entities.News.News testNews;
 

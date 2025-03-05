@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
+using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils
 {

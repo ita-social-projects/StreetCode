@@ -70,8 +70,9 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
             response.Body.Seek(0, SeekOrigin.Begin);
 
             var encoding = Encoding.UTF8;
+            using var streamReader = new StreamReader(response.Body, encoding, leaveOpen: true);
 
-            var text = await new StreamReader(response.Body, encoding).ReadToEndAsync();
+            var text = await streamReader.ReadToEndAsync();
 
             response.Body.Seek(0, SeekOrigin.Begin);
 

@@ -12,6 +12,7 @@ public class MockCannotSaveLocalizer : BaseMockStringLocalizer<CannotSaveSharedR
                 0, new List<string>()
                 {
                     "CannotSaveChangesInTheDatabaseAfterRelatedWordCreation",
+                    "CannotSaveTheData",
                 }
             },
         };

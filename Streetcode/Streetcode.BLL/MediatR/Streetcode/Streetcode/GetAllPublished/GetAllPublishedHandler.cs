@@ -1,36 +1,47 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Localization;
+using Microsoft.IdentityModel.Tokens;
 using Streetcode.BLL.DTO.Streetcode;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetAllPublished;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
+namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllPublished;
+
+public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
+    Result<IEnumerable<StreetcodeShortDTO>>>
 {
-    public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
-          Result<IEnumerable<StreetcodeShortDTO>>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+
+    public GetAllPublishedHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
+        _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+        _logger = logger;
+        _stringLocalizerNo = stringLocalizerNo;
+    }
 
-        public GetAllPublishedHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
+    {
+        var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
+            predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published);
+
+        if (streetcodes.IsNullOrEmpty())
         {
-          _repositoryWrapper = repositoryWrapper;
-          _mapper = mapper;
+            var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(errorMsg);
         }
 
-        public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
-        {
-            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
-                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published);
-
-            if (streetcodes is null)
-            {
-                // Logger
-                return Result.Fail("No streetcodes exist now");
-            }
-
-            return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
-        }
-   }
+        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
+    }
 }

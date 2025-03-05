@@ -15,6 +15,9 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                     "CannotFindAnyTerm",
                     "CannotFindAnyText",
                     "CannotFindStreetcodeInFavourites",
+                    "CannotFindAnyPropertyWithThisName",
+                    "CannotFindStreetcodeById",
+                    "CannotFindRecordWithQrId",
                 }
             },
             {
@@ -26,6 +29,14 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                     "CannotFindTextWithCorrespondingCategoryId",
                     "CannotFindAnyTextWithCorrespondingId",
                     "CannotFindTransactionLinkByStreetcodeIdBecause",
+                    "CannotFindHistoricalContextWithCorrespondingId",
+                    "CannotFindAnyStreetcodeWithCorrespondingId",
+                }
+            },
+            {
+                2, new List<string>()
+                {
+                    "CannotFindRelationBetweenStreetcodesWithCorrespondingIds",
                 }
             },
         };

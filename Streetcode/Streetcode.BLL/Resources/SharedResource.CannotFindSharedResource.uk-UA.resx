@@ -324,4 +324,7 @@
   <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
     <value>Не вдалося знайти історичний контекст з назвою '{0}'</value>
   </data>
+  <data name="CannotFindAnyPropertyWithThisName" xml:space="preserve">
+    <value>Не вдалося знайти жодного поля з такою назвою</value>
+  </data>
 </root>

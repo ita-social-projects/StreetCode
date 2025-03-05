@@ -165,4 +165,7 @@
   <data name="NoFavouritesWithId" xml:space="preserve">
     <value>No favourite streetcode with corresponding id: {0}</value>
   </data>
+  <data name="NoToponymWithSuchId" xml:space="preserve">
+    <value>No toponym with such streetcode id: {0}</value>
+  </data>
 </root>

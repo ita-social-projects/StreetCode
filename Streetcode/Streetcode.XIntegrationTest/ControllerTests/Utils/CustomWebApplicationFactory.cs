@@ -13,7 +13,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
     public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram>
         where TProgram : class
     {
-        public Mock<IEmailService> EmailServiceMock { get; private set; } = new Mock<IEmailService>(); 
+        public Mock<IEmailService> EmailServiceMock { get; private set; } = new Mock<IEmailService>();
 
         public Mock<IGoogleService> GoogleServiceMock { get; private set; } = new Mock<IGoogleService>();
 
@@ -42,7 +42,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         public void SetupMockEmailService(bool success = true)
         {
             EmailServiceMock.Setup(es => es.SendEmailAsync(It.IsAny<MessageData>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(success);
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

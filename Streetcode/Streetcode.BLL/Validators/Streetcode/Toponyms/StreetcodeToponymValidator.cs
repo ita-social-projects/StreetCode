@@ -1,5 +1,4 @@
 using FluentValidation;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.SharedResource;

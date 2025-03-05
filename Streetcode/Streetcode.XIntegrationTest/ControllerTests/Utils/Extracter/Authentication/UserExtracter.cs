@@ -23,7 +23,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
                 return (testUser, password);
             }
 
-            foreach (var roleName in roleNames)
+            for (var i = 0; i < roleNames.Length; i++)
             {
                 IdentityRole role = RoleExtracter.Extract(nameof(UserRole.User));
                 RoleExtracter.AddUserRole(testUser.Id, role.Id);
@@ -46,6 +46,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
         {
             var hasher = new PasswordHasher<User>();
             var hashedPassword = hasher.HashPassword(user, password);
+
             return hashedPassword;
         }
     }

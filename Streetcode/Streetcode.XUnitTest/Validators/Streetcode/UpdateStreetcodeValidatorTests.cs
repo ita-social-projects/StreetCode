@@ -18,7 +18,6 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.DTO.Streetcode.Update;
 using Streetcode.BLL.DTO.Timeline.Update;
 using Streetcode.BLL.DTO.Toponyms;
-using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Enums;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
@@ -43,68 +42,67 @@ namespace Streetcode.XUnitTest.Validators.Streetcode;
 
 public class UpdateStreetcodeValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly Mock<IRepositoryWrapper> repositoryWrapper;
-    private readonly Mock<BaseStreetcodeValidator> baseStreetcodeValidator;
-    private readonly Mock<BaseSubtitleValidator> baseSubtitleValidator;
-    private readonly Mock<BaseTextValidator> baseTextValidator;
-    private readonly Mock<BaseTagValidator> tagValidator;
-    private readonly Mock<BaseFactValidator> baseFactValidator;
-    private readonly Mock<BaseVideoValidator> videoValidator;
-    private readonly Mock<BaseCategoryContentValidator> categoryContentValidator;
-
-    private readonly UpdateStreetcodeValidator validator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly Mock<IRepositoryWrapper> _repositoryWrapper;
+    private readonly Mock<BaseStreetcodeValidator> _baseStreetcodeValidator;
+    private readonly Mock<BaseSubtitleValidator> _baseSubtitleValidator;
+    private readonly Mock<BaseTextValidator> _baseTextValidator;
+    private readonly Mock<BaseTagValidator> _tagValidator;
+    private readonly Mock<BaseFactValidator> _baseFactValidator;
+    private readonly Mock<BaseVideoValidator> _videoValidator;
+    private readonly Mock<BaseCategoryContentValidator> _categoryContentValidator;
+    private readonly UpdateStreetcodeValidator _validator;
 
     public UpdateStreetcodeValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.categoryContentValidator = new Mock<BaseCategoryContentValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.videoValidator = new Mock<BaseVideoValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.baseTextValidator = new Mock<BaseTextValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.baseFactValidator = new Mock<BaseFactValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.tagValidator = new Mock<BaseTagValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.baseSubtitleValidator = new Mock<BaseSubtitleValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.repositoryWrapper = new Mock<IRepositoryWrapper>();
-        var mockToponymValidator = new Mock<StreetcodeToponymValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var mockContextValidator = new Mock<HistoricalContextValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var mockTimelineItemValidator = new Mock<TimelineItemValidator>(mockContextValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var mockimageDetailsValidator = new Mock<ImageDetailsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer, this.repositoryWrapper.Object);
-        var mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _categoryContentValidator = new Mock<BaseCategoryContentValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _videoValidator = new Mock<BaseVideoValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _baseTextValidator = new Mock<BaseTextValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _baseFactValidator = new Mock<BaseFactValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _tagValidator = new Mock<BaseTagValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _baseSubtitleValidator = new Mock<BaseSubtitleValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _repositoryWrapper = new Mock<IRepositoryWrapper>();
+        var mockToponymValidator = new Mock<StreetcodeToponymValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        var mockContextValidator = new Mock<HistoricalContextValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        var mockTimelineItemValidator = new Mock<TimelineItemValidator>(mockContextValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer);
+        var mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        var mockimageDetailsValidator = new Mock<ImageDetailsValidator>(_mockValidationLocalizer, _mockNamesLocalizer, _repositoryWrapper.Object);
+        var mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
 
-        this.baseStreetcodeValidator = new Mock<BaseStreetcodeValidator>(
+        _baseStreetcodeValidator = new Mock<BaseStreetcodeValidator>(
             mockToponymValidator.Object,
             mockTimelineItemValidator.Object,
             mockimageDetailsValidator.Object,
             mockartSlideValidator.Object,
             mockArtValidator.Object,
-            this.mockValidationLocalizer,
-            this.mockNamesLocalizer);
+            _mockValidationLocalizer,
+            _mockNamesLocalizer);
 
-        this.validator = new UpdateStreetcodeValidator(
-            this.repositoryWrapper.Object,
-            this.baseStreetcodeValidator.Object,
-            this.baseTextValidator.Object,
-            this.baseSubtitleValidator.Object,
-            this.tagValidator.Object,
-            this.baseFactValidator.Object,
-            this.videoValidator.Object,
-            this.categoryContentValidator.Object,
-            this.mockValidationLocalizer,
-            this.mockNamesLocalizer);
+        _validator = new UpdateStreetcodeValidator(
+            _repositoryWrapper.Object,
+            _baseStreetcodeValidator.Object,
+            _baseTextValidator.Object,
+            _baseSubtitleValidator.Object,
+            _tagValidator.Object,
+            _baseFactValidator.Object,
+            _videoValidator.Object,
+            _categoryContentValidator.Object,
+            _mockValidationLocalizer,
+            _mockNamesLocalizer);
     }
 
     [Fact]
     public async Task ShouldReturnSuccessResult_WhenAllFieldsAreValid()
     {
         // Arrange
-        this.SetupRepositoryWrapperReturnsNull();
-        var command = this.GetValidCreateStreetcodeCommand();
+        SetupRepositoryWrapperReturnsNull();
+        var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await this.validator.ValidateAsync(command);
+        var result = await _validator.ValidateAsync(command);
 
         // Assert
         Assert.True(result.IsValid);
@@ -114,12 +112,12 @@ public class UpdateStreetcodeValidatorTests
     public async Task ShouldReturnError_WhenIndexIsNotUnique()
     {
         // Arrange
-        this.SetupRepositoryWrapper(1);
-        var expectedError = this.mockValidationLocalizer["MustBeUnique", this.mockNamesLocalizer["Index"]];
-        var command = this.GetValidCreateStreetcodeCommand();
+        SetupRepositoryWrapper(1);
+        var expectedError = _mockValidationLocalizer["MustBeUnique", _mockNamesLocalizer["Index"]];
+        var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Streetcode)
@@ -133,16 +131,16 @@ public class UpdateStreetcodeValidatorTests
     public async Task ShouldReturnError_WhenArUrlIsInvalid(string invalidUrl)
     {
         // Arrange
-        this.SetupRepositoryWrapperReturnsNull();
-        var expectedError = this.mockValidationLocalizer["ValidUrl", this.mockNamesLocalizer["ARBlockURL"]];
-        var command = this.GetValidCreateStreetcodeCommand();
-        command.Streetcode.ARBlockUrl = invalidUrl;
+        SetupRepositoryWrapperReturnsNull();
+        var expectedError = _mockValidationLocalizer["ValidUrl", _mockNamesLocalizer["ARBlockURL"]];
+        var command = GetValidCreateStreetcodeCommand();
+        command.Streetcode.ArBlockUrl = invalidUrl;
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ARBlockUrl)
+        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ArBlockUrl)
             .WithErrorMessage(expectedError);
     }
 
@@ -150,9 +148,9 @@ public class UpdateStreetcodeValidatorTests
     public async Task ShouldReturnError_WhenExistsVideosWithoutTitle()
     {
         // Arrange
-        this.SetupRepositoryWrapperReturnsNull();
-        var expectedError = this.mockValidationLocalizer["CannotBeEmptyWithCondition", this.mockNamesLocalizer["Title"], this.mockNamesLocalizer["Video"]];
-        var command = this.GetValidCreateStreetcodeCommand();
+        SetupRepositoryWrapperReturnsNull();
+        var expectedError = _mockValidationLocalizer["CannotBeEmptyWithCondition", _mockNamesLocalizer["Title"], _mockNamesLocalizer["Video"]];
+        var command = GetValidCreateStreetcodeCommand();
         command.Streetcode.Text = new TextUpdateDTO()
         {
             Title = string.Empty,
@@ -166,7 +164,7 @@ public class UpdateStreetcodeValidatorTests
         };
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Streetcode.Text!.Title)
@@ -177,45 +175,45 @@ public class UpdateStreetcodeValidatorTests
     public async Task ShouldCallBaseValidator_WhenValidated()
     {
         // Arrange
-        this.SetupRepositoryWrapperReturnsNull();
-        this.SetupValidatorMocks();
-        var command = this.GetValidCreateStreetcodeCommand();
+        SetupRepositoryWrapperReturnsNull();
+        SetupValidatorMocks();
+        var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
-        this.baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>(), default), Times.AtLeast(1));
+        _baseStreetcodeValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>(), default), Times.AtLeast(1));
     }
 
     [Fact]
     public async Task ShouldCallChildValidators_WhenValidated()
     {
         // Arrange
-        this.SetupRepositoryWrapperReturnsNull();
-        this.SetupValidatorMocks();
-        var command = this.GetValidCreateStreetcodeCommand();
+        SetupRepositoryWrapperReturnsNull();
+        SetupValidatorMocks();
+        var command = GetValidCreateStreetcodeCommand();
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        await _validator.TestValidateAsync(command);
 
         // Assert
-        this.categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>(), default), Times.AtLeast(1));
-        this.videoValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>(), default), Times.AtLeast(1));
-        this.baseTextValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<BaseTextDTO>>(), default), Times.AtLeast(1));
-        this.baseFactValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<FactUpdateCreateDto>>(), default), Times.AtLeast(1));
-        this.tagValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateTagDTO>>(), default), Times.AtLeast(1));
-        this.baseSubtitleValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>(), default), Times.AtLeast(1));
+        _categoryContentValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>(), default), Times.AtLeast(1));
+        _videoValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>(), default), Times.AtLeast(1));
+        _baseTextValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<BaseTextDTO>>(), default), Times.AtLeast(1));
+        _baseFactValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<FactUpdateCreateDto>>(), default), Times.AtLeast(1));
+        _tagValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<CreateUpdateTagDTO>>(), default), Times.AtLeast(1));
+        _baseSubtitleValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>(), default), Times.AtLeast(1));
     }
 
     [Fact]
     public async Task ShouldReturnError_WhenTryToUpdateTag_WithId_0()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["Id"]];
-        this.SetupRepositoryWrapperReturnsNull();
-        this.SetupValidatorMocks();
-        var command = this.GetValidCreateStreetcodeCommand();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["Id"]];
+        SetupRepositoryWrapperReturnsNull();
+        SetupValidatorMocks();
+        var command = GetValidCreateStreetcodeCommand();
         command.Streetcode.Tags = new List<StreetcodeTagUpdateDTO>()
         {
             new ()
@@ -228,7 +226,7 @@ public class UpdateStreetcodeValidatorTests
         };
 
         // Act
-        var result = await this.validator.TestValidateAsync(command);
+        var result = await _validator.TestValidateAsync(command);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Streetcode.Tags)
@@ -237,7 +235,7 @@ public class UpdateStreetcodeValidatorTests
 
     private void SetupRepositoryWrapperReturnsNull()
     {
-        this.repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
             .ReturnsAsync(null as StreetcodeContent);
@@ -245,7 +243,7 @@ public class UpdateStreetcodeValidatorTests
 
     private void SetupRepositoryWrapper(int id)
     {
-        this.repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
             .ReturnsAsync(new StreetcodeContent()
@@ -256,19 +254,19 @@ public class UpdateStreetcodeValidatorTests
 
     private void SetupValidatorMocks()
     {
-        this.baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>()))
+        _baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
-        this.categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>()))
+        _categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>()))
             .Returns(new ValidationResult());
-        this.videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>()))
+        _videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
-        this.baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDTO>>()))
+        _baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDTO>>()))
             .Returns(new ValidationResult());
-        this.baseFactValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<FactUpdateCreateDto>>()))
+        _baseFactValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<FactUpdateCreateDto>>()))
             .Returns(new ValidationResult());
-        this.tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
+        _tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
             .Returns(new ValidationResult());
-        this.baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>()))
+        _baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
     }
 
@@ -302,7 +300,7 @@ public class UpdateStreetcodeValidatorTests
             {
                 new (),
             },
-            ARBlockUrl = "http://streetcode.com.ua/taras-shevchenko",
+            ArBlockUrl = "http://streetcode.com.ua/taras-shevchenko",
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
             {
                 new (),

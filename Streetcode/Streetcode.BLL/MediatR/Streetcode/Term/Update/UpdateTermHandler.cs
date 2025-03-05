@@ -5,49 +5,53 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using TermEntity = Streetcode.DAL.Entities.Streetcode.TextContent.Term;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Term.Update
+namespace Streetcode.BLL.MediatR.Streetcode.Term.Update;
+
+public class UpdateTermHandler : IRequestHandler<UpdateTermCommand, Result<Unit>>
 {
-    public class UpdateTermHandler : IRequestHandler<UpdateTermCommand, Result<Unit>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repository;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvertNull;
+    private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+
+    public UpdateTermHandler(
+        IMapper mapper,
+        IRepositoryWrapper repository,
+        ILoggerService logger,
+        IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate,
+        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvertNull)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvertNull;
-        private readonly IStringLocalizer<FailedToUpdateSharedResource> _stringLocalizerFailedToUpdate;
+        _mapper = mapper;
+        _repository = repository;
+        _logger = logger;
+        _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
+        _stringLocalizerCannotConvertNull = stringLocalizerCannotConvertNull;
+    }
 
-        public UpdateTermHandler(IMapper mapper, IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<FailedToUpdateSharedResource> stringLocalizerFailedToUpdate, IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvertNull)
+    public async Task<Result<Unit>> Handle(UpdateTermCommand request, CancellationToken cancellationToken)
+    {
+        var term = _mapper.Map<TermEntity>(request.Term);
+
+        if (term is null)
         {
-            _mapper = mapper;
-            _repository = repository;
-            _logger = logger;
-            _stringLocalizerFailedToUpdate = stringLocalizerFailedToUpdate;
-            _stringLocalizerCannotConvertNull = stringLocalizerCannotConvertNull;
+            var errorMessage = _stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
-        public async Task<Result<Unit>> Handle(UpdateTermCommand request, CancellationToken cancellationToken)
+        _repository.TermRepository.Update(term);
+        var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
+
+        if (!resultIsSuccess)
         {
-            var term = _mapper.Map<DAL.Entities.Streetcode.TextContent.Term>(request.Term);
-            if (term is null)
-            {
-                string errorMsg = _stringLocalizerCannotConvertNull["CannotConvertNullToTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            _repository.TermRepository.Update(term);
-
-            var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            if (resultIsSuccess)
-            {
-                return Result.Ok(Unit.Value);
-            }
-            else
-            {
-                string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
+            var errorMessage = _stringLocalizerFailedToUpdate["FailedToUpdateTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
+
+        return Result.Ok(Unit.Value);
     }
 }

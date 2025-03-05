@@ -13,9 +13,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
             testUser.UserName = userName;
             testUser.NormalizedUserName = userName.ToUpper();
             testUser.PasswordHash = HashPassword(password, testUser);
-            testUser.Email += userId;
-            testUser.NormalizedEmail += userId.ToUpper();
-            BaseExtracter.Extract(testUser, user => user.Id == userId, false);
+            testUser.Email += RemoveIncorrectSymbolsFromEmail(userId);
+            testUser.NormalizedEmail += RemoveIncorrectSymbolsFromEmail(userId);
+            BaseExtracter.Extract<User>(testUser, user => user.Id == userId, false);
             if (roleNames.Length == 0)
             {
                 IdentityRole role = RoleExtracter.Extract(nameof(UserRole.User));
@@ -35,6 +35,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
         public static void Remove(User entity)
         {
             BaseExtracter.RemoveByPredicate<User>(user => user.Id == entity.Id);
+        }
+
+        private static string RemoveIncorrectSymbolsFromEmail(string email)
+        {
+            return string.Concat(email.Where(char.IsLetter))!;
         }
 
         private static string HashPassword(string password, User user)

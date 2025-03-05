@@ -11,6 +11,7 @@ public class MockNoSharedResourceLocalizer : BaseMockStringLocalizer<NoSharedRes
             {
                 0, new List<string>
                 {
+                    "NoFavouritesFound",
                     "NoStreetcodesExistNow",
                 }
             },
@@ -18,6 +19,8 @@ public class MockNoSharedResourceLocalizer : BaseMockStringLocalizer<NoSharedRes
                 1, new List<string>
                 {
                     "NoExistingStreetcodeWithId",
+                    "NoFavouritesFound",
+                    "NoFavouritesWithId",
                 }
             },
         };

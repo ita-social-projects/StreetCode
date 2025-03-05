@@ -6,14 +6,21 @@ public class MockAlreadyExistLocalizer : BaseMockStringLocalizer<AlreadyExistSha
 {
     protected override Dictionary<int, List<string>> DefineGroupedErrors()
     {
-        return new Dictionary<int, List<string>>
+        var groupedErrors = new Dictionary<int, List<string>>()
         {
             {
-                2, new List<string>
+                0, new List<string>()
+                {
+                    "FavouriteAlreadyExists",
+                }
+            },
+            {
+                2, new List<string>()
                 {
                     "PartnerWithFieldAlreadyExist",
                 }
             },
         };
+        return groupedErrors;
     }
 }

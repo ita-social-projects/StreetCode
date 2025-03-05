@@ -5,6 +5,7 @@ using Streetcode.DAL.Entities.Team;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Team;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Team;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;

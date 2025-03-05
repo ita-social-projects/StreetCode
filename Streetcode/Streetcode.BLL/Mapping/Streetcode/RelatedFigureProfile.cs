@@ -25,6 +25,8 @@ public class RelatedFigureProfile : Profile
 
         CreateMap<RelatedFigureUpdateDTO, RelatedFigure>();
         CreateMap<StreetcodeContent, RelatedFigureShortDTO>();
-        CreateMap<StreetcodeContent, RelatedFigureDTO>();
+        CreateMap<StreetcodeContent, RelatedFigureDTO>()
+            .ForPath(dto => dto.ImageId, conf => conf
+                .MapFrom(e => e.Images.Select(i => i.Id).LastOrDefault())).ReverseMap();
     }
 }

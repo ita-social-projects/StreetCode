@@ -1,14 +1,13 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.DTO.Users.Password;
 using Streetcode.BLL.MediatR.Users.Delete;
+using Streetcode.BLL.MediatR.Users.ExistWithUserName;
 using Streetcode.BLL.MediatR.Users.ForgotPassword;
-using Streetcode.BLL.MediatR.Users.GetAllUserName;
-using Streetcode.BLL.MediatR.Users.GetByName;
+using Streetcode.BLL.MediatR.Users.GetByEmail;
+using Streetcode.BLL.MediatR.Users.GetOtherUserByUserName;
 using Streetcode.BLL.MediatR.Users.Update;
-using Streetcode.BLL.MediatR.Users.GetByUserName;
 using Streetcode.BLL.MediatR.Users.UpdateForgotPassword;
 
 namespace Streetcode.WebApi.Controllers.Users
@@ -18,9 +17,9 @@ namespace Streetcode.WebApi.Controllers.Users
         [HttpGet]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByUserName()
+        public async Task<IActionResult> GetByEmail()
         {
-            return HandleResult(await Mediator.Send(new GetByUserNameQuery()));
+            return HandleResult(await Mediator.Send(new GetByEmailQuery()));
         }
 
         [HttpGet("{userName}")]

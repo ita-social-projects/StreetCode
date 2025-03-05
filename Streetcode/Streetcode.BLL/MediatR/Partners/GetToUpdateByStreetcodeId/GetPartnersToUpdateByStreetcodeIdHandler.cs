@@ -32,11 +32,12 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
                     predicate: p => p.Streetcodes.Any(sc => sc.Id == request.StreetcodeId),
                     include: p => p.Include(pl => pl.PartnerSourceLinks));
 
+            // even if there are no partners, we still want to return an empty enumerable
             if (!partners.Any())
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                string message = "Returning empty enumerable of partners to update";
+                _logger.LogInformation(message);
+                return Result.Ok(Enumerable.Empty<PartnerDTO>());
             }
 
             return Result.Ok(value: _mapper.Map<IEnumerable<PartnerDTO>>(partners));

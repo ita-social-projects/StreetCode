@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -17,14 +16,12 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
     {
         private readonly Mock<IRepositoryWrapper> repository;
         private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetAllTextsTest()
         {
             this.repository = new Mock<IRepositoryWrapper>();
             this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
@@ -55,7 +52,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
-            var handler = new GetAllTextsHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetAllTextsHandler(this.repository.Object, this.mockMapper.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 
@@ -88,7 +85,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
-            var handler = new GetAllTextsHandler(repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetAllTextsHandler(repository.Object, this.mockMapper.Object);
 
             var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
 

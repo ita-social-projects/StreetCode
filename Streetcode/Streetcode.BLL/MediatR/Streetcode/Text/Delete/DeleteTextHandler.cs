@@ -28,27 +28,25 @@ public class DeleteTextHandler : IRequestHandler<DeleteTextCommand, Result<Unit>
 
     public async Task<Result<Unit>> Handle(DeleteTextCommand request, CancellationToken cancellationToken)
     {
-        var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (text is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindTextWithCorrespondingCategoryId", request.Id].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var errorMessage = _stringLocalizerCannotFind["CannotFindTextWithCorrespondingCategoryId", request.Id].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
         _repositoryWrapper.TextRepository.Delete(text);
-
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-        if(resultIsSuccess)
+
+        if (!resultIsSuccess)
         {
-            return Result.Ok(Unit.Value);
+            var errorMessage = _stringLocalizerFailedToDelete["FailedToDeleteText"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteText"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        return Result.Ok(Unit.Value);
     }
 }

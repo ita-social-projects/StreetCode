@@ -4,7 +4,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetParsed;
+using Streetcode.BLL.MediatR.Streetcode.Text.UpdateParsed;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 

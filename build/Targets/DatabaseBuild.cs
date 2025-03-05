@@ -45,7 +45,9 @@ partial class Build
         {
             DotNetRun(s => s
             .SetProjectFile(DbUpdateDirectory)
-            .SetConfiguration(Configuration));
+            .SetConfiguration(Configuration)
+            .SetWarningLevel(0)
+            .SetProperty("SonarQubeExclude", "true"));
         });
 
     Target GenerateSQLScripts => _ => _

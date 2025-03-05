@@ -1,5 +1,4 @@
 ﻿using RestSharp;
-using RestSharp.Serializers;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
 {
@@ -10,18 +9,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
         public BaseClient(HttpClient client, string secondPartUrl = "")
         {
             this.client = new RestClient(client) { AcceptedContentTypes = ContentType.JsonAccept };
-            this.SecondPartUrl = secondPartUrl;
+            SecondPartUrl = secondPartUrl;
         }
 
         protected string SecondPartUrl { get; }
 
         protected async Task<RestResponse> SendQuery(string requestString, string authToken = "")
         {
-            var request = new RestRequest($"{this.SecondPartUrl}{requestString}");
+            var request = new RestRequest($"{SecondPartUrl}{requestString}");
             RestResponse response;
             try
             {
-                response = await this.SendRequest(request, authToken);
+                response = await SendRequest(request, authToken);
             }
             catch (Exception ex)
             {
@@ -32,15 +31,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
             return response;
         }
 
-        protected async Task<RestResponse> SendCommand<T>(string requestString, Method method, T requestDto, string authToken = "")
-            where T : class
+        protected async Task<RestResponse> SendCommand<T>(string requestString, Method method, T? requestDto = default, string authToken = "")
+            where T : class?
         {
-            var request = new RestRequest($"{this.SecondPartUrl}{requestString}", method);
-            request.AddJsonBody(requestDto);
+            var request = new RestRequest($"{SecondPartUrl}{requestString}", method);
+            if (requestDto is not null)
+            {
+                request.AddJsonBody(requestDto);
+            }
+
             RestResponse response;
             try
             {
-                response = await this.SendRequest(request, authToken);
+                response = await SendRequest(request, authToken);
             }
             catch (Exception ex)
             {
@@ -50,13 +53,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
             return response;
         }
 
+        protected async Task<RestResponse> SendCommand(string requestString, Method method, string authToken = "")
+        {
+            return await SendCommand<object>(requestString, method, null, authToken);
+        }
+
         private async Task<RestResponse> SendRequest(RestRequest request, string authToken)
         {
             request.OnBeforeDeserialization = resp => { resp.ContentType = "application/json"; };
             request.AddHeader("Authorization", $"Bearer {authToken}");
             request.AddHeader("Content-Type", "application/json");
 
-            var response = await this.client.ExecuteAsync(request);
+            var response = await client.ExecuteAsync(request);
             return response;
         }
     }

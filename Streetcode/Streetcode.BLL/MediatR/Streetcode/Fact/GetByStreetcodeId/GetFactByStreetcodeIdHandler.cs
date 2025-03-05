@@ -16,7 +16,11 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetFactByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetFactByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -26,16 +30,16 @@ public class GetFactByStreetcodeIdHandler : IRequestHandler<GetFactByStreetcodeI
 
     public async Task<Result<IEnumerable<FactDto>>> Handle(GetFactByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
-        var facts = await _repositoryWrapper.FactRepository
-            .GetAllAsync(f => f.StreetcodeId == request.StreetcodeId);
+        var facts = await _repositoryWrapper.FactRepository.GetAllAsync(x => x.StreetcodeId == request.StreetcodeId);
+        var factsList = facts.ToList();
 
-        if (!facts.Any())
+        if (!factsList.Any())
         {
-            string message = "Returning empty enumerable of facts";
-            _logger.LogInformation(message);
+            var infoMessage = _stringLocalizerCannotFind["CannotFindAnyFact"].Value;
+            _logger.LogInformation(infoMessage);
             return Result.Ok(Enumerable.Empty<FactDto>());
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<FactDto>>(facts.OrderBy(f => f.Index)));
+        return Result.Ok(_mapper.Map<IEnumerable<FactDto>>(factsList.OrderBy(f => f.Index)));
     }
 }

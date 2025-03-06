@@ -1,11 +1,15 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Transactions.TransactionLink.GetByStreetcodeId;
@@ -27,20 +31,20 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
 
     public async Task<Result<TransactLinkDTO>> Handle(GetTransactLinkByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? streetcodeBasePredicate = t => t.Id == request.StreetcodeId;
+        var streetcodePredicate = streetcodeBasePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: streetcodePredicate).AnyAsync(cancellationToken);
+
+        if (!isStreetcodeExists)
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var transactLink = await _repositoryWrapper.TransactLinksRepository
             .GetFirstOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
-
-        if (transactLink is null)
-        {
-            var streetcode = await _repositoryWrapper.StreetcodeRepository
-                .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId);
-            if (streetcode == null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-        }
 
         NullResult<TransactLinkDTO> result = new NullResult<TransactLinkDTO>();
         result.WithValue(_mapper.Map<TransactLinkDTO>(transactLink));

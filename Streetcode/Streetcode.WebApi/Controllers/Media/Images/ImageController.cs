@@ -27,7 +27,7 @@ public class ImageController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetImageByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{id:int}")]

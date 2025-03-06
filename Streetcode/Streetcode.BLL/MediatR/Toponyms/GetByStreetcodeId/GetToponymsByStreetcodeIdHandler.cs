@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -5,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Toponyms.GetByStreetcodeId;
@@ -27,6 +30,18 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetToponymsByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = str => str.Id == request.StreetcodeId;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate).AnyAsync(cancellationToken);
+
+        if (!isStreetcodeExists)
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var toponyms = await _repositoryWrapper
             .ToponymRepository
             .GetAllAsync(

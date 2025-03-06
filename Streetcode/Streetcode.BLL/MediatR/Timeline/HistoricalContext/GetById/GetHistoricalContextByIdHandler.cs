@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,11 +28,14 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetById
 
         public async Task<Result<HistoricalContextDTO>> Handle(GetHistoricalContextByIdQuery request, CancellationToken cancellationToken)
         {
-            var context = await _repository.HistoricalContextRepository.GetFirstOrDefaultAsync(j => j.Id == request.contextId);
+            Expression<Func<DAL.Entities.Timeline.HistoricalContext, bool>>? basePredicate = hc => hc.Id == request.ContextId;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, hc => hc.HistoricalContextTimelines, hctl => hctl.Timeline.Streetcode);
+
+            var context = await _repository.HistoricalContextRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
             if (context is null)
             {
-                string exceptionMessege = _localizer["CannotFindHistoricalContextWithCorrespondingId", request.contextId];
+                string exceptionMessege = _localizer["CannotFindHistoricalContextWithCorrespondingId", request.ContextId];
                 _loggerService.LogError(request, exceptionMessege);
                 return Result.Fail(exceptionMessege);
             }

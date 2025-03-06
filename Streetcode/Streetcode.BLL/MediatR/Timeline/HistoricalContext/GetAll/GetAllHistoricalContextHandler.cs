@@ -1,13 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
-using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -30,12 +29,16 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 
         public Task<Result<GetAllHistoricalContextDTO>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Timeline.HistoricalContext, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, hc => hc.HistoricalContextTimelines, hctl => hctl.Timeline.Streetcode);
+
             PaginationResponse<DAL.Entities.Timeline.HistoricalContext> paginationResponse = _repositoryWrapper
                 .HistoricalContextRepository
                 .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    descendingSortKeySelector: context => context.Title!);
+                    request.Page,
+                    request.PageSize,
+                    descendingSortKeySelector: context => context.Title!,
+                    predicate: predicate);
 
             if (paginationResponse is null)
             {

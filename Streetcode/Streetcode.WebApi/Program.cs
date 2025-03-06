@@ -78,6 +78,7 @@ else
 }
 
 await app.ApplyMigrations();
+await app.SeedDataAsync();
 
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();

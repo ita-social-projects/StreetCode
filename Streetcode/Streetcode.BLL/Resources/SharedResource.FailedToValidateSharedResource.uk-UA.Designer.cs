@@ -204,6 +204,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Мінімальна довжина поля &apos;{0}&apos; - {1}.
+        /// </summary>
+        internal static string MinLength {
+            get {
+                return ResourceManager.GetString("MinLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має бути між {1} і {2}.
         /// </summary>
         internal static string MustBeBetween {
@@ -249,6 +258,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; може містити щонайбільше три досвіди..
+        /// </summary>
+        internal static string MustContainAtMostThreeExpertises {
+            get {
+                return ResourceManager.GetString("MustContainAtMostThreeExpertises", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має містити рівно одне чорно-біле зображення..
         /// </summary>
         internal static string MustContainExactlyOneAlt1 {
@@ -258,11 +276,47 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} не повинна бути у минулому..
+        /// </summary>
+        internal static string MustNotBeInPast {
+            get {
+                return ResourceManager.GetString("MustNotBeInPast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ім&apos;я повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (&apos;)..
+        /// </summary>
+        internal static string NameFormat {
+            get {
+                return ResourceManager.GetString("NameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прізвище повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (&apos;)..
+        /// </summary>
+        internal static string SurnameFormat {
+            get {
+                return ResourceManager.GetString("SurnameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Транслітероване посилання має містити тільки маленькі латинські літери, цифри та дефіс.
         /// </summary>
         internal static string TransliterationUrlFormat {
             get {
                 return ResourceManager.GetString("TransliterationUrlFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нікнейм повинен складатися лише з літер латиниці (малих) та може містити лише символи дефіс (-), апостроф (&apos;) та підкреслення(_)..
+        /// </summary>
+        internal static string UserNameFormat {
+            get {
+                return ResourceManager.GetString("UserNameFormat", resourceCulture);
             }
         }
         

@@ -207,4 +207,7 @@
   <data name="InvalidPaginationParameters" xml:space="preserve">
     <value>Параметри пагінації повинні бути коректними</value>
   </data>
+  <data name="MustNotBeInPast" xml:space="preserve">
+    <value>{0} не повинна бути у минулому.</value>
+  </data>
 </root>

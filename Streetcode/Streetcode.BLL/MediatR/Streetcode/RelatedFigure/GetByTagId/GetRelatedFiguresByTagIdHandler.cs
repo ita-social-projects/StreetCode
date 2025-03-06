@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -6,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Enums;
 
@@ -31,10 +34,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
         public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = sc => sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId);
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
             var streetcodes = await _repositoryWrapper.StreetcodeRepository
                 .GetAllAsync(
-                predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published &&
-                  sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId),
+                predicate: predicate,
                 include: scl => scl
                     .Include(sc => sc.Images).ThenInclude(x => x.ImageDetails)
                     .Include(sc => sc.Tags));

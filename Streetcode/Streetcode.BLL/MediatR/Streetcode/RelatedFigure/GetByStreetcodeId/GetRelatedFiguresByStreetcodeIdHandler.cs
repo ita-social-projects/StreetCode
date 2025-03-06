@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -31,6 +33,20 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
     public async Task<Result<IEnumerable<RelatedFigureDTO>?>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? basePredicateForStreetcode = st => st.Id == request.StreetcodeId;
+        var predicate = basePredicateForStreetcode.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var streetcodeContent = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
+            predicate: predicate,
+            include: q => q.Include(s => s.Audio) !);
+
+        if (streetcodeContent == null)
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithTheCorrespondingStreetcodeId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
         if (!relatedFigureIds.Any())
@@ -41,9 +57,11 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         }
 
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
-          predicate: sc => relatedFigureIds.Any(id => id == sc.Id) && sc.Status == DAL.Enums.StreetcodeStatus.Published,
-          include: scl => scl.Include(sc => sc.Images).ThenInclude(img => img.ImageDetails)
-                             .Include(sc => sc.Tags));
+          predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
+          include: scl => scl
+              .Include(sc => sc.Images)
+                .ThenInclude(img => img.ImageDetails)
+              .Include(sc => sc.Tags));
 
         if (!relatedFigures.Any())
         {

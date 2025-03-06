@@ -15,8 +15,6 @@ namespace Streetcode.WebApi.Controllers.Newss
     public class NewsController : BaseApiController
     {
         [HttpGet]
-        [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {

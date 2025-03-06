@@ -36,8 +36,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetShortById
 
         public async Task<Result<StreetcodeShortDTO>> Handle(GetStreetcodeShortByIdQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.id;
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.Id;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcode = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate);
 

@@ -4,6 +4,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist
 {
-    public record StreetcodeWithUrlExistQuery(string url, UserRole? userRole)
+    public record StreetcodeWithUrlExistQuery(string Url, UserRole? UserRole)
         : IRequest<Result<bool>>;
 }

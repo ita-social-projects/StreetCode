@@ -32,7 +32,6 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
     public async Task<Result<IEnumerable<AudioDTO>>> Handle(GetAllAudiosQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Media.Audio, bool>>? basePredicate = null;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
 
         var audios = await _repositoryWrapper.AudioRepository.GetAllAsync(predicate: predicate);

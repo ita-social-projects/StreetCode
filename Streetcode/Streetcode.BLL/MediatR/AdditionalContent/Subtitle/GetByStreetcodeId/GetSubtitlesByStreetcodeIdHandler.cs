@@ -25,7 +25,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 
         public async Task<Result<SubtitleDTO>> Handle(GetSubtitlesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>> basePredicate = sub => sub.StreetcodeId == request.StreetcodeId;
+            Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>>? basePredicate = sub => sub.StreetcodeId == request.StreetcodeId;
             var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sub => sub.Streetcode);
 
             var subtitle = await _repositoryWrapper.SubtitleRepository

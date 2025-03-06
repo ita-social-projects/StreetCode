@@ -32,7 +32,6 @@ public class GetAudioByIdHandler : IRequestHandler<GetAudioByIdQuery, Result<Aud
     public async Task<Result<AudioDTO>> Handle(GetAudioByIdQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Media.Audio, bool>>? basePredicate = a => a.Id == request.Id;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
 
         var audio = await _repositoryWrapper.AudioRepository.GetFirstOrDefaultAsync(predicate: predicate);

@@ -31,8 +31,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort
         public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
         {
             Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
-            var predicate =
-                basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(predicate: predicate);
 

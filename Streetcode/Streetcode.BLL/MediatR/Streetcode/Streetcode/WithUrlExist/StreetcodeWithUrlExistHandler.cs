@@ -21,8 +21,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist
 
         public async Task<Result<bool>> Handle(StreetcodeWithUrlExistQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.TransliterationUrl == request.url;
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.TransliterationUrl == request.Url;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcodes = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
             return Result.Ok(streetcodes != null);

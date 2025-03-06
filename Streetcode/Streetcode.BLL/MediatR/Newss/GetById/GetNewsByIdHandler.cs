@@ -33,10 +33,9 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
 
         public async Task<Result<NewsDTO>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
         {
-            int id = request.id;
+            int id = request.Id;
             Expression<Func<News, bool>>? basePredicate = sc => sc.Id == id;
-
-            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.userRole);
+            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
 
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
                 predicate: predicate,

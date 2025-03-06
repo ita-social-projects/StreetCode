@@ -29,12 +29,12 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
         public async Task<Result<int>> Handle(GetStreetcodesCountQuery request, CancellationToken cancellationToken)
         {
             Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
-            if (request.onlyPublished)
+            if (request.OnlyPublished)
             {
                 basePredicate = s => s.Status == StreetcodeStatus.Published;
             }
 
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(predicate: predicate);
 

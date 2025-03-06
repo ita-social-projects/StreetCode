@@ -32,8 +32,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetPageMainPage
         public Task<Result<IEnumerable<StreetcodeMainPageDTO>>> Handle(GetPageOfStreetcodesMainPageQuery request, CancellationToken cancellationToken)
         {
             var streetcodes = _repositoryWrapper.StreetcodeRepository.GetAllPaginated(
-                request.page,
-                request.pageSize,
+                request.Page,
+                request.PageSize,
                 predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published,
                 include: src => src.Include(item => item.Text).Include(item => item.Images).ThenInclude(x => x.ImageDetails!),
                 descendingSortKeySelector: sc => sc.CreatedAt)

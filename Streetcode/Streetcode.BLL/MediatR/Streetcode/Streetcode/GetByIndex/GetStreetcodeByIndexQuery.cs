@@ -5,5 +5,5 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 
-public record GetStreetcodeByIndexQuery(int Index, UserRole? userRole)
+public record GetStreetcodeByIndexQuery(int Index, UserRole? UserRole)
     : IRequest<Result<StreetcodeDTO>>;

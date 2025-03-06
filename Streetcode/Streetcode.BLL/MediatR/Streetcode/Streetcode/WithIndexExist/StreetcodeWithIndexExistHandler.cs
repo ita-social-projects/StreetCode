@@ -24,8 +24,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist
 
         public async Task<Result<bool>> Handle(StreetcodeWithIndexExistQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<StreetcodeContent, bool>>? basePredicate = s => s.Index == request.index;
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = s => s.Index == request.Index;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(predicate);
             if (streetcode == null)

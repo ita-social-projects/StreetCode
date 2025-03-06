@@ -29,7 +29,7 @@ public class GetSubtitleByIdHandler : IRequestHandler<GetSubtitleByIdQuery, Resu
 
     public async Task<Result<SubtitleDTO>> Handle(GetSubtitleByIdQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>> basePredicate = sub => sub.Id == request.Id;
+        Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>>? basePredicate = sub => sub.Id == request.Id;
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sub => sub.Streetcode);
 
         var subtitle = await _repositoryWrapper.SubtitleRepository.GetFirstOrDefaultAsync(predicate: predicate);

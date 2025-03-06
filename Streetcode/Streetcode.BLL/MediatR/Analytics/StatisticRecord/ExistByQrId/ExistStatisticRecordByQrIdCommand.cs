@@ -4,6 +4,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
 {
-    public record ExistStatisticRecordByQrIdCommand(int qrId, UserRole? UserRole)
+    public record ExistStatisticRecordByQrIdCommand(int QrId, UserRole? UserRole)
         : IRequest<Result<bool>>;
 }

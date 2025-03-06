@@ -41,7 +41,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
                     streetcode.Images = streetcode.Images.Where(x => x.ImageDetails != null && x.ImageDetails.Alt!.Equals(keyNumOfImageToDisplay.ToString())).ToList();
                 }
 
-                var skipped = streetcodes.Skip((request.page - 1) * request.count).Take(request.count);
+                var skipped = streetcodes.Skip((request.Page - 1) * request.Count).Take(request.Count);
                 return Result.Ok(_mapper.Map<IEnumerable<CatalogItem>>(skipped));
             }
 

@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 {
-    public record GetStreetcodeByTransliterationUrlQuery(string url, UserRole? userRole)
+    public record GetStreetcodeByTransliterationUrlQuery(string Url, UserRole? UserRole)
         : IRequest<Result<StreetcodeDTO>>;
 }

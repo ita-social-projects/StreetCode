@@ -29,7 +29,6 @@ public class GetAllArtsHandler : IRequestHandler<GetAllArtsQuery, Result<IEnumer
     public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetAllArtsQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Media.Images.Art, bool>>? basePredicate = null;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
 
         var arts = await _repositoryWrapper.ArtRepository.GetAllAsync(predicate: predicate);

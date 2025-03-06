@@ -31,8 +31,8 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
         public async Task<Result<StreetcodeDTO>> Handle(GetStreetcodeByTransliterationUrlQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.TransliterationUrl == request.url;
-            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.TransliterationUrl == request.Url;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
             var streetcode = await _repository.StreetcodeRepository
                 .GetFirstOrDefaultAsync(
@@ -40,7 +40,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl
 
             if (streetcode == null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.url].Value;
+                string errorMsg = _stringLocalizerCannotFind["CannotFindStreetcodeByTransliterationUrl", request.Url].Value;
                 _logger.LogError(request, errorMsg);
                 return new Error(errorMsg);
             }

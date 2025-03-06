@@ -28,7 +28,6 @@ public class GetBaseAudioHandler : IRequestHandler<GetBaseAudioQuery, Result<Mem
     public async Task<Result<MemoryStream>> Handle(GetBaseAudioQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Media.Audio, bool>>? basePredicate = a => a.Id == request.Id;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
 
         var audio = await _repositoryWrapper.AudioRepository.GetFirstOrDefaultAsync(predicate: predicate);

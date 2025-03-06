@@ -4,6 +4,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.WithIndexExist
 {
-    public record StreetcodeWithIndexExistQuery(int index, UserRole? userRole)
+    public record StreetcodeWithIndexExistQuery(int Index, UserRole? UserRole)
         : IRequest<Result<bool>>;
 }

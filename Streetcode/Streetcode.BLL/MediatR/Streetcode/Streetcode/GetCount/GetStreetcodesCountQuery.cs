@@ -4,6 +4,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetCount
 {
-    public record GetStreetcodesCountQuery(bool onlyPublished, UserRole? userRole)
+    public record GetStreetcodesCountQuery(bool OnlyPublished, UserRole? UserRole)
         : IRequest<Result<int>>;
 }

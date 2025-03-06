@@ -29,7 +29,6 @@ public class GetAllFactsHandler : IRequestHandler<GetAllFactsQuery, Result<IEnum
     public async Task<Result<IEnumerable<FactDto>>> Handle(GetAllFactsQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>? basePredicate = null;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, f => f.Streetcode);
 
         var facts = await _repositoryWrapper.FactRepository.GetAllAsync(predicate: predicate);

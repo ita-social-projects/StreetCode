@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.Streetcode.CatalogItem;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllCatalog
 {
-    public record GetAllStreetcodesCatalogQuery(int page, int count)
+    public record GetAllStreetcodesCatalogQuery(int Page, int Count)
         : IRequest<Result<IEnumerable<CatalogItem>>>;
 }

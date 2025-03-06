@@ -28,7 +28,7 @@ public class GetAllSubtitlesHandler : IRequestHandler<GetAllSubtitlesQuery, Resu
 
     public async Task<Result<IEnumerable<SubtitleDTO>>> Handle(GetAllSubtitlesQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>> basePredicate = null;
+        Expression<Func<DAL.Entities.AdditionalContent.Subtitle, bool>>? basePredicate = null;
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sub => sub.Streetcode);
 
         var subtitles = await _repositoryWrapper.SubtitleRepository.GetAllAsync(predicate: predicate);

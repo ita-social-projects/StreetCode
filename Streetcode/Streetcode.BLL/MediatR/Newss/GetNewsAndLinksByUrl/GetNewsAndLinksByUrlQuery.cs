@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
-    public record GetNewsAndLinksByUrlQuery(string url, UserRole? userRole)
+    public record GetNewsAndLinksByUrlQuery(string Url, UserRole? UserRole)
         : IRequest<Result<NewsDTOWithURLs>>;
 }

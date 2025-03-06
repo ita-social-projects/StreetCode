@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Newss.GetById
 {
-    public record GetNewsByIdQuery(int id, UserRole? userRole)
+    public record GetNewsByIdQuery(int Id, UserRole? UserRole)
         : IRequest<Result<NewsDTO>>;
 }

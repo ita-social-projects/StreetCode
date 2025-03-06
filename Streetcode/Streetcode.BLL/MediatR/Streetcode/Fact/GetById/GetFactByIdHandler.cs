@@ -29,7 +29,6 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
     public async Task<Result<FactDto>> Handle(GetFactByIdQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>? basePredicate = f => f.Id == request.Id;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, f => f.Streetcode);
 
         var facts = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(predicate: predicate);

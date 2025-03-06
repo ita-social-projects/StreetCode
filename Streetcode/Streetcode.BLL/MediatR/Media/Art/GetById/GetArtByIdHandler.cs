@@ -29,14 +29,13 @@ public class GetArtByIdHandler : IRequestHandler<GetArtByIdQuery, Result<ArtDTO>
     public async Task<Result<ArtDTO>> Handle(GetArtByIdQuery request, CancellationToken cancellationToken)
     {
         Expression<Func<DAL.Entities.Media.Images.Art, bool>>? basePredicate = f => f.Id == request.Id;
-
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
 
         var art = await _repositoryWrapper.ArtRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if (art is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.Id].Value;
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnArtWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

@@ -22,13 +22,11 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
     public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery request, CancellationToken cancellationToken)
     {
-        var filterRequest = request.request;
+        var filterRequest = request.Request;
         Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
-        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.userRole);
-
-        var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll(predicate: predicate);
+        var streetcodes = _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate);
 
         if (filterRequest.Title is not null)
         {

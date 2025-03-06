@@ -18,27 +18,41 @@ public static class AccessPredicateExtender
             return basePredicate;
         }
 
-        Expression replaceBody = accessPredicate.Parameters[0];
-        var parameter = accessPredicate.Parameters[0];
+        ParameterExpression mainParameter = accessPredicate.Parameters[0];
+        Expression accessEntitySelectorWithValidParams = accessPredicate.Parameters[0];
         if (baseToAccessEntitySelector is not null)
         {
-            replaceBody = baseToAccessEntitySelector.Body;
-            parameter = baseToAccessEntitySelector.Parameters[0];
+            mainParameter = baseToAccessEntitySelector.Parameters[0];
         }
 
-        var rightVisitor = new ReplaceExpVisitor(replaceBody);
-        var right = rightVisitor.Visit(accessPredicate.Body);
+        if (basePredicate is not null)
+        {
+            mainParameter = basePredicate.Parameters[0];
+            accessEntitySelectorWithValidParams = basePredicate.Parameters[0];
+        }
+
+        if (baseToAccessEntitySelector is not null)
+        {
+            accessEntitySelectorWithValidParams = baseToAccessEntitySelector;
+
+            if (accessEntitySelectorWithValidParams != mainParameter)
+            {
+                var accessEntitySelectorVisitor = new ReplaceExpVisitor(mainParameter);
+                accessEntitySelectorWithValidParams = accessEntitySelectorVisitor.Visit(baseToAccessEntitySelector.Body);
+            }
+        }
+
+        var accessExpressionVisitor = new ReplaceExpVisitor(accessEntitySelectorWithValidParams);
+        var accessExpressionWithValidParams = accessExpressionVisitor.Visit(accessPredicate.Body);
 
         if (basePredicate is null)
         {
-            return Expression.Lambda<Func<TBaseEntity, bool>>(right, parameter);
+            return Expression.Lambda<Func<TBaseEntity, bool>>(accessExpressionWithValidParams, mainParameter);
         }
 
-        var leftVisitor = new ReplaceExpVisitor(parameter);
-        var left = leftVisitor.Visit(basePredicate.Body);
-        var body = Expression.AndAlso(left, right);
+        var resultBinaryExpression = Expression.AndAlso(basePredicate.Body, accessExpressionWithValidParams);
 
-        return Expression.Lambda<Func<TBaseEntity, bool>>(body, parameter);
+        return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
     }
 
     public static Expression<Func<TBaseEntity, bool>>? ExtendWithAccessPredicate<TBaseEntity, TCollectionEntity, TAccessEntity>(
@@ -48,48 +62,58 @@ public static class AccessPredicateExtender
         Expression<Func<TBaseEntity, IEnumerable<TCollectionEntity?>>> baseToCollectionSelector,
         Expression<Func<TCollectionEntity, TAccessEntity>>? collectionToAccessEntitySelector = null)
     {
-        var accessPredicate = accessManager.GetAccessPredicate(userRole);
-        if (accessPredicate is null)
+        try
         {
-            return basePredicate;
-        }
-
-        ParameterExpression mainParameter = baseToCollectionSelector.Parameters[0];
-        Expression collectionSelectorWithValidParams = baseToCollectionSelector;
-        if (basePredicate is not null)
-        {
-            mainParameter = basePredicate.Parameters[0];
-            if (mainParameter != baseToCollectionSelector.Parameters[0])
+            Expression<Func<TAccessEntity, bool>>? accessPredicate = accessManager.GetAccessPredicate(userRole);
+            if (accessPredicate is null)
             {
-                var collectionSelectorVisitor = new ReplaceExpVisitor(mainParameter);
-                collectionSelectorWithValidParams = collectionSelectorVisitor.Visit(baseToCollectionSelector.Body);
+                return basePredicate;
             }
-        }
 
-        Expression accessExpressionWithValidParams = accessPredicate;
-        if (collectionToAccessEntitySelector is not null)
+            ParameterExpression mainParameter = baseToCollectionSelector.Parameters[0];
+            Expression collectionSelectorWithValidParams = baseToCollectionSelector.Body;
+            if (basePredicate is not null)
+            {
+                mainParameter = basePredicate.Parameters[0];
+                if (mainParameter != baseToCollectionSelector.Parameters[0])
+                {
+                    var collectionSelectorVisitor = new ReplaceExpVisitor(mainParameter);
+                    collectionSelectorWithValidParams = collectionSelectorVisitor.Visit(baseToCollectionSelector.Body);
+                }
+            }
+
+            Expression accessExpressionWithValidParams = accessPredicate;
+            if (collectionToAccessEntitySelector is not null)
+            {
+                var accessExpressionVisitor = new ReplaceExpVisitor(collectionToAccessEntitySelector.Body);
+                accessExpressionWithValidParams = accessExpressionVisitor.Visit(accessPredicate.Body);
+
+                accessExpressionWithValidParams = Expression.Lambda<Func<TCollectionEntity, bool>>(accessExpressionWithValidParams, collectionToAccessEntitySelector.Parameters[0]);
+            }
+
+            var typeAnyMethod = typeof(Enumerable).GetMethods()
+                .First(m => m.Name == "Any" && m.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TCollectionEntity));
+
+            var typeAnyExpression = Expression.Call(
+                null, typeAnyMethod, collectionSelectorWithValidParams, accessExpressionWithValidParams);
+
+            var typeAnyPredicate = Expression.Lambda<Func<TBaseEntity, bool>>(typeAnyExpression, mainParameter);
+
+            if (basePredicate is null)
+            {
+                return typeAnyPredicate;
+            }
+
+            var resultBinaryExpression = Expression.AndAlso(basePredicate.Body, typeAnyPredicate.Body);
+
+            return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
+        }
+        catch (Exception e)
         {
-            var accessExpressionVisitor = new ReplaceExpVisitor(collectionToAccessEntitySelector.Body);
-            accessExpressionWithValidParams = accessExpressionVisitor.Visit(accessPredicate);
+            Console.WriteLine(e);
+            throw;
         }
-
-        var typeAnyMethod = typeof(Enumerable).GetMethods()
-            .First(m => m.Name == "Any" && m.GetParameters().Length == 2)
-            .MakeGenericMethod(typeof(TAccessEntity));
-
-        var typeAnyExpression = Expression.Call(
-            null, typeAnyMethod, collectionSelectorWithValidParams, accessExpressionWithValidParams);
-
-        var typeAnyPredicate = Expression.Lambda<Func<TBaseEntity, bool>>(typeAnyExpression, mainParameter);
-
-        if (basePredicate is null)
-        {
-            return typeAnyPredicate;
-        }
-
-        var resultBinaryExpression = Expression.AndAlso(basePredicate.Body, typeAnyPredicate.Body);
-
-        return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
     }
 }
 

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.MediatR.ResultVariations;
 using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
@@ -18,16 +17,19 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
-    private readonly ITextService _textService;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
     private readonly ICacheService _cacheService;
 
-    public GetTextByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ITextService textService, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind, ICacheService cacheService)
+    public GetTextByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
+        ICacheService cacheService)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
-        _textService = textService;
         _logger = logger;
         _stringLocalizerCannotFind = stringLocalizerCannotFind;
         _cacheService = cacheService;
@@ -46,19 +48,17 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
 
                     var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
-                    if (text is null)
+                    if (text is null && await _repositoryWrapper.StreetcodeRepository
+                            .GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId) is null)
                     {
-                        if (await _repositoryWrapper.StreetcodeRepository
-                             .GetFirstOrDefaultAsync(s => s.Id == request.StreetcodeId) == null)
-                        {
-                            string errorMsg = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
-                            _logger.LogError(request, errorMsg);
-                            return Result.Fail<TextDTO>(new Error(errorMsg));
-                        }
+                        var errorMessage = _stringLocalizerCannotFind["CannotFindTransactionLinkByStreetcodeIdBecause", request.StreetcodeId].Value;
+                        _logger.LogError(request, errorMessage);
+                        return Result.Fail<TextDTO>(new Error(errorMessage));
                     }
 
-                    NullResult<TextDTO> result = new NullResult<TextDTO>();
-                    if (text != null)
+                    var result = new NullResult<TextDTO>();
+
+                    if (text is not null)
                     {
                         result.WithValue(_mapper.Map<TextDTO>(text));
                     }

@@ -47,7 +47,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
                 return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
             }
 
-            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new GetAllHistoricalContextDTO
+            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new ()
             {
                 TotalAmount = paginationResponse.TotalItems,
                 HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginationResponse.Entities)

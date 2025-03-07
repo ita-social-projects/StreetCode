@@ -21,4 +21,7 @@
     <data name="PartnerWithFieldAlreadyExist" xml:space="preserve">
         <value>Партнер з полем '{0}' та його значенням  '{1}' вже існує</value>
     </data>
+    <data name="FavouriteAlreadyExists" xml:space="preserve">
+        <value>Стріткод уже додано в улюблені</value>
+    </data>
 </root>

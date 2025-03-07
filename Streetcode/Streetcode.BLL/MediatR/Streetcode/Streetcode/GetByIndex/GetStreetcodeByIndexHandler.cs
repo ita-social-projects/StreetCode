@@ -20,7 +20,11 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetStreetcodeByIndexHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetStreetcodeByIndexHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -39,7 +43,7 @@ public class GetStreetcodeByIndexHandler : IRequestHandler<GetStreetcodeByIndexQ
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingIndex", request.Index].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingIndex", request.Index].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }

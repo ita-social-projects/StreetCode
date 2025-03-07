@@ -21,7 +21,11 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetStreetcodeByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetStreetcodeByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -34,8 +38,7 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         Expression<Func<StreetcodeContent, bool>>? basePredicate = st => st.Id == request.Id;
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
-        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: predicate);
+        var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if (streetcode is null)
         {
@@ -45,9 +48,10 @@ public class GetStreetcodeByIdHandler : IRequestHandler<GetStreetcodeByIdQuery, 
         }
 
         var tagIndexed = await _repositoryWrapper.StreetcodeTagIndexRepository
-                                        .GetAllAsync(
-                                            t => t.StreetcodeId == request.Id,
-                                            include: q => q.Include(ti => ti.Tag!));
+            .GetAllAsync(
+                predicate: t => t.StreetcodeId == request.Id,
+                include: q => q.Include(ti => ti.Tag!));
+
         var streetcodeDto = _mapper.Map<StreetcodeDTO>(streetcode);
         streetcodeDto.Tags = _mapper.Map<List<StreetcodeTagDTO>>(tagIndexed);
 

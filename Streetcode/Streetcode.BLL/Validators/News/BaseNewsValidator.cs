@@ -35,7 +35,10 @@ public class BaseNewsValidator : AbstractValidator<CreateUpdateNewsDTO>
                 .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token)).WithMessage(x => localizer["ImageDoesntExist", x.ImageId]);
 
         RuleFor(x => x.CreationDate)
-                .NotEmpty().WithMessage(x => localizer["IsRequired", fieldLocalizer["CreationDate"]]);
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty().WithMessage(x => localizer["IsRequired", fieldLocalizer["CreationDate"]])
+                .Must(date => date.Date >= DateTime.UtcNow.Date)
+                .WithMessage(x => localizer["MustNotBeInPast", fieldLocalizer["CreationDate"]]);
 
         RuleFor(x => x.URL)
             .NotEmpty().WithMessage(x => localizer["CannotBeEmpty", fieldLocalizer["TargetUrl"]])

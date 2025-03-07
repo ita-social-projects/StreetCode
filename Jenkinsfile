@@ -45,7 +45,7 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage'
+                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
                     sh 'dotnet tool update --global dotnet-sonarscanner'
                     sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
                     sh 'docker image prune --force --all --filter "until=72h"'
@@ -84,10 +84,10 @@ pipeline {
           steps {
             parallel(
               Unit_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build'
               },
               Integration_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build'
               }
             )
           }
@@ -116,8 +116,8 @@ pipeline {
                                     /d:sonar.pullrequest.branch=$PR_BRANCH \
                                     /d:sonar.pullrequest.base=$PR_BASE
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         } else {
@@ -129,8 +129,8 @@ pipeline {
                                     /d:sonar.host.url="https://sonarcloud.io" \
                                     /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         }

@@ -18,14 +18,14 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+    private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
 
-    public GetToponymsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetToponymsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
+        _stringLocalizerNo = stringLocalizerNo;
     }
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetToponymsByStreetcodeIdQuery request, CancellationToken cancellationToken)
@@ -48,12 +48,12 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
                 predicate: sc => sc.Streetcodes.Any(s => s.Id == request.StreetcodeId),
                 include: scl => scl
                     .Include(sc => sc.Coordinate!));
-        toponyms.DistinctBy(x => x.StreetName);
+        toponyms = toponyms.DistinctBy(x => x.StreetName).ToList();
 
         if (!toponyms.Any())
         {
-            string message = "Returning empty enumerable of toponyms";
-            _logger.LogInformation(message);
+            string errorMsg = _stringLocalizerNo["NoToponymWithSuchId", request.StreetcodeId].Value;
+            _logger.LogInformation(errorMsg);
             return Result.Ok(Enumerable.Empty<ToponymDTO>());
         }
 

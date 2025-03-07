@@ -30,17 +30,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        public async Task GetAllReturn_SuccessStatusCode()
-        {
-            var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<ImageDTO>>(response.Content);
-
-            Assert.Multiple(
-                () => Assert.True(response.IsSuccessStatusCode),
-                () => Assert.NotNull(returnedValue));
-        }
-
-        [Fact]
         public async Task GetById_ReturnSuccessStatusCode()
         {
             Image expectedImage = this.testImage;

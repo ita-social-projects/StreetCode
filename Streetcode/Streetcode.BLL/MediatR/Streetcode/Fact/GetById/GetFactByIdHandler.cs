@@ -18,7 +18,11 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetFactByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetFactByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -35,9 +39,9 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
 
         if (facts is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindFactWithCorrespondingCategoryId", request.Id].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var errorMessage = _stringLocalizerCannotFind["CannotFindFactWithCorrespondingCategoryId", request.Id].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
         return Result.Ok(_mapper.Map<FactDto>(facts));

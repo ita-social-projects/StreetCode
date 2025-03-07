@@ -10,6 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.News;
 using Streetcode.DAL.Repositories.Interfaces.Partners;
 using Streetcode.DAL.Repositories.Interfaces.Source;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
+using Streetcode.DAL.Repositories.Interfaces.Streetcode.Favourites;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Team;
 using Streetcode.DAL.Repositories.Interfaces.Timeline;
@@ -114,12 +115,28 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IJobRepository? _jobRepository;
 
+    private IFavouritesRepository? _favouritesRepository;
+
     private IExpertiseRepository? _expertiseRepository;
+
     private IUserExpertiseRepository? _userExpertiseRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
+    }
+
+    public IFavouritesRepository FavouritesRepository
+    {
+        get
+        {
+            if (_favouritesRepository == null)
+            {
+                _favouritesRepository = new FavouritesRepository(_streetcodeDbContext);
+            }
+
+            return _favouritesRepository;
+        }
     }
 
     public INewsRepository NewsRepository
@@ -464,7 +481,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if(_relatedTermRepository is null)
+            if (_relatedTermRepository is null)
             {
                 _relatedTermRepository = new RelatedTermRepository(_streetcodeDbContext);
             }
@@ -503,7 +520,7 @@ public class RepositoryWrapper : IRepositoryWrapper
     {
         get
         {
-            if(_partnerStreetcodeRepository is null)
+            if (_partnerStreetcodeRepository is null)
             {
                 _partnerStreetcodeRepository = new PartnerStreetodeRepository(_streetcodeDbContext);
             }
@@ -538,7 +555,7 @@ public class RepositoryWrapper : IRepositoryWrapper
         }
     }
 
-    public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository??=new ImageDetailsRepository(_streetcodeDbContext);
+    public IImageDetailsRepository ImageDetailsRepository => _imageDetailsRepository ??= new ImageDetailsRepository(_streetcodeDbContext);
 
     public IHistoricalContextTimelineRepository HistoricalContextTimelineRepository
     {

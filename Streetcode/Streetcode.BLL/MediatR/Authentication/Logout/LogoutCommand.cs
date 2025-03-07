@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Streetcode.BLL.MediatR.Authentication.Logout;
 
-public record LogoutCommand(string UserId) : IRequest<Result>;
+public record LogoutCommand : IRequest<Result>;

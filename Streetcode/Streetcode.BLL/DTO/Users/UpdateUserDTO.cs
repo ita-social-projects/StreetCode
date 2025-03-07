@@ -11,7 +11,6 @@ public class UpdateUserDTO
     public string? AboutYourself { get; set; }
     public int? AvatarId { get; set; } = null!;
     public List<ExpertiseDTO> Expertises { get; set; } = new();
-    [Phone]
     public string PhoneNumber { get; set; } = null!;
     public string Email { get; set; } = null!;
 }

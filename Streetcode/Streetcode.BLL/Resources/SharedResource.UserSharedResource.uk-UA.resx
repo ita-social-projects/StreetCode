@@ -127,7 +127,7 @@
     <value>Користувача з такою поштою не знайдено</value>
   </data>
   <data name="UserWithSuchEmailExists" xml:space="preserve">
-    <value>Користувач з такою поштою вже зареєстрований</value>
+    <value>Ця електронна адреса вже використовується. Увійдіть в систему або вкажіть іншу адресу.</value>
   </data>
   <data name="UserWithSuchUsernameExists" xml:space="preserve">
     <value>Користувач з таким іменем вже зареєстрований</value>
@@ -143,5 +143,8 @@
   </data>
   <data name="UserNameOrTokenIsEmpty" xml:space="preserve">
     <value>Ім'я користувача або токен пустий</value>
+  </data>
+  <data name="IncorrectEmailOrPassword" xml:space="preserve">
+    <value>Електронна адреса або пароль невірні.</value>
   </data>
 </root>

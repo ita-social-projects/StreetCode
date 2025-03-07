@@ -127,7 +127,7 @@
     <value>User with such Email is not found</value>
   </data>
   <data name="UserWithSuchEmailExists" xml:space="preserve">
-    <value>User with such Email already exists in database</value>
+    <value>This email is already in use. Please log in or enter a different email.</value>
   </data>
   <data name="UserWithSuchUsernameExists" xml:space="preserve">
     <value>User with such Username already exists in database</value>
@@ -143,5 +143,8 @@
   </data>
   <data name="UserNameOrTokenIsEmpty" xml:space="preserve">
     <value>Username or token is empty</value>
+  </data>
+  <data name="IncorrectEmailOrPassword" xml:space="preserve">
+    <value>Email or password is incorrect.</value>
   </data>
 </root>

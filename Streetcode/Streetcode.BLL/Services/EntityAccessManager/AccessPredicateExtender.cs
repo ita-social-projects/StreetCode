@@ -62,58 +62,50 @@ public static class AccessPredicateExtender
         Expression<Func<TBaseEntity, IEnumerable<TCollectionEntity?>>> baseToCollectionSelector,
         Expression<Func<TCollectionEntity, TAccessEntity>>? collectionToAccessEntitySelector = null)
     {
-        try
+        Expression<Func<TAccessEntity, bool>>? accessPredicate = accessManager.GetAccessPredicate(userRole);
+        if (accessPredicate is null)
         {
-            Expression<Func<TAccessEntity, bool>>? accessPredicate = accessManager.GetAccessPredicate(userRole);
-            if (accessPredicate is null)
-            {
-                return basePredicate;
-            }
-
-            ParameterExpression mainParameter = baseToCollectionSelector.Parameters[0];
-            Expression collectionSelectorWithValidParams = baseToCollectionSelector.Body;
-            if (basePredicate is not null)
-            {
-                mainParameter = basePredicate.Parameters[0];
-                if (mainParameter != baseToCollectionSelector.Parameters[0])
-                {
-                    var collectionSelectorVisitor = new ReplaceExpVisitor(mainParameter);
-                    collectionSelectorWithValidParams = collectionSelectorVisitor.Visit(baseToCollectionSelector.Body);
-                }
-            }
-
-            Expression accessExpressionWithValidParams = accessPredicate;
-            if (collectionToAccessEntitySelector is not null)
-            {
-                var accessExpressionVisitor = new ReplaceExpVisitor(collectionToAccessEntitySelector.Body);
-                accessExpressionWithValidParams = accessExpressionVisitor.Visit(accessPredicate.Body);
-
-                accessExpressionWithValidParams = Expression.Lambda<Func<TCollectionEntity, bool>>(accessExpressionWithValidParams, collectionToAccessEntitySelector.Parameters[0]);
-            }
-
-            var typeAnyMethod = typeof(Enumerable).GetMethods()
-                .First(m => m.Name == "Any" && m.GetParameters().Length == 2)
-                .MakeGenericMethod(typeof(TCollectionEntity));
-
-            var typeAnyExpression = Expression.Call(
-                null, typeAnyMethod, collectionSelectorWithValidParams, accessExpressionWithValidParams);
-
-            var typeAnyPredicate = Expression.Lambda<Func<TBaseEntity, bool>>(typeAnyExpression, mainParameter);
-
-            if (basePredicate is null)
-            {
-                return typeAnyPredicate;
-            }
-
-            var resultBinaryExpression = Expression.AndAlso(basePredicate.Body, typeAnyPredicate.Body);
-
-            return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
+            return basePredicate;
         }
-        catch (Exception e)
+
+        ParameterExpression mainParameter = baseToCollectionSelector.Parameters[0];
+        Expression collectionSelectorWithValidParams = baseToCollectionSelector.Body;
+        if (basePredicate is not null)
         {
-            Console.WriteLine(e);
-            throw;
+            mainParameter = basePredicate.Parameters[0];
+            if (mainParameter != baseToCollectionSelector.Parameters[0])
+            {
+                var collectionSelectorVisitor = new ReplaceExpVisitor(mainParameter);
+                collectionSelectorWithValidParams = collectionSelectorVisitor.Visit(baseToCollectionSelector.Body);
+            }
         }
+
+        Expression accessExpressionWithValidParams = accessPredicate;
+        if (collectionToAccessEntitySelector is not null)
+        {
+            var accessExpressionVisitor = new ReplaceExpVisitor(collectionToAccessEntitySelector.Body);
+            accessExpressionWithValidParams = accessExpressionVisitor.Visit(accessPredicate.Body);
+
+            accessExpressionWithValidParams = Expression.Lambda<Func<TCollectionEntity, bool>>(accessExpressionWithValidParams, collectionToAccessEntitySelector.Parameters[0]);
+        }
+
+        var typeAnyMethod = typeof(Enumerable).GetMethods()
+            .First(m => m.Name == "Any" && m.GetParameters().Length == 2)
+            .MakeGenericMethod(typeof(TCollectionEntity));
+
+        var typeAnyExpression = Expression.Call(
+            null, typeAnyMethod, collectionSelectorWithValidParams, accessExpressionWithValidParams);
+
+        var typeAnyPredicate = Expression.Lambda<Func<TBaseEntity, bool>>(typeAnyExpression, mainParameter);
+
+        if (basePredicate is null)
+        {
+            return typeAnyPredicate;
+        }
+
+        var resultBinaryExpression = Expression.AndAlso(basePredicate.Body, typeAnyPredicate.Body);
+
+        return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
     }
 }
 

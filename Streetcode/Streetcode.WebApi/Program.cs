@@ -78,7 +78,10 @@ else
 }
 
 await app.ApplyMigrations();
-await app.SeedDataAsync();
+if (!builder.Environment.EnvironmentName.Equals("IntegrationTests"))
+{
+    await app.SeedDataAsync();
+}
 
 app.AddCleanAudiosJob();
 app.AddCleanImagesJob();

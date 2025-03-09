@@ -11,7 +11,11 @@
     <PackageReference Include="DbUp" Version="5.0.8" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -24,8 +28,24 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <ProjectReference Include="..\Streetcode.WebApi\Streetcode.WebApi.csproj" />
+    <None Remove="appsettings.Local.json" />
+    <Content Include="appsettings.Local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- <None Remove="appsettings.IntegrationTests.json" /> -->
+    <Content Include="appsettings.IntegrationTests.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+
+  <ItemGroup>
+  <!-- Include the files you want to copy from the other project -->
+  	<FilesToCopy Include="..\Streetcode.DAL\Persistence\ScriptsMigration\*.*" />
+  </ItemGroup>
+ 
+  <Target Name="CopyFiles" AfterTargets="Build">
+  	<Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(OutputPath)\ScriptsMigration\" />
+  </Target>
 	
   <PropertyGroup>
 	<SonarQubeExclude>true</SonarQubeExclude>

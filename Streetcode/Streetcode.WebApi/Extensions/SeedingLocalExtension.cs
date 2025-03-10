@@ -37,57 +37,81 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var blobService = new BlobService(blobOptions);
-                const string initialDataImagePath = "../Streetcode.XIntegrationTest/TestData/InitialData/images.json";
-                const string initialDataAudioPath = "../Streetcode.XIntegrationTest/TestData/InitialData/audios.json";
-                if (!dbContext.Images.Any())
-                {
-                    string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
-                    var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
 
-                    if (imgfromJson != null)
-                    {
-                        foreach (var img in imgfromJson)
-                        {
-                            string filePath = Path.Combine(blobPath, img.BlobName!);
-                            if (!File.Exists(filePath))
-                            {
-                                blobService.SaveFileInStorageBase64(img.Base64!, img.BlobName!.Split('.')[0], img.BlobName.Split('.')[1]);
-                            }
-                        }
-
-                        dbContext.Images.AddRange(imgfromJson);
-                    }
-
-                    await dbContext.SaveChangesAsync();
-
-                    if (!dbContext.ImageDetailses.Any())
-                    {
-                        dbContext.ImageDetailses.AddRange(new[]
-                        {
-                            new ImageDetails
-                            {
-                                ImageId = 1,
-                                Alt = "0"
-                            },
-                            new ImageDetails
-                            {
-                                ImageId = 2,
-                                Alt = "1"
-                            },
-                            new ImageDetails
-                            {
-                                ImageId = 3,
-                                Alt = "1"
-                            },
-                            new ImageDetails
-                            {
-                                ImageId = 4,
-                                Alt = "0"
-                            }
-                        });
-                        await dbContext.SaveChangesAsync();
-                    }
-                }
+                // Uncomment this part for image and audio seeding
+                // const string initialDataImagePath = "../Streetcode.XIntegrationTest/TestData/InitialData/images.json";
+                // const string initialDataAudioPath = "../Streetcode.XIntegrationTest/TestData/InitialData/audios.json";
+                // if (!dbContext.Images.Any())
+                // {
+                //     string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
+                //     var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
+                //
+                //     if (imgfromJson != null)
+                //     {
+                //         foreach (var img in imgfromJson)
+                //         {
+                //             string filePath = Path.Combine(blobPath, img.BlobName!);
+                //             if (!File.Exists(filePath))
+                //             {
+                //                 blobService.SaveFileInStorageBase64(img.Base64!, img.BlobName!.Split('.')[0], img.BlobName.Split('.')[1]);
+                //             }
+                //         }
+                //
+                //         dbContext.Images.AddRange(imgfromJson);
+                //     }
+                //
+                //     await dbContext.SaveChangesAsync();
+                //
+                //     if (!dbContext.ImageDetailses.Any())
+                //     {
+                //         dbContext.ImageDetailses.AddRange(new[]
+                //         {
+                //             new ImageDetails
+                //             {
+                //                 ImageId = 1,
+                //                 Alt = "0"
+                //             },
+                //             new ImageDetails
+                //             {
+                //                 ImageId = 2,
+                //                 Alt = "1"
+                //             },
+                //             new ImageDetails
+                //             {
+                //                 ImageId = 3,
+                //                 Alt = "1"
+                //             },
+                //             new ImageDetails
+                //             {
+                //                 ImageId = 4,
+                //                 Alt = "0"
+                //             }
+                //         });
+                //         await dbContext.SaveChangesAsync();
+                //     }
+                // }
+                //
+                // if (!dbContext.Audios.Any())
+                // {
+                //     string audiosJson = await File.ReadAllTextAsync(initialDataAudioPath, Encoding.UTF8);
+                //     var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
+                //
+                //     if (audiosfromJson != null)
+                //     {
+                //         foreach (var audio in audiosfromJson)
+                //         {
+                //             string filePath = Path.Combine(blobPath, audio.BlobName!);
+                //             if (!File.Exists(filePath))
+                //             {
+                //                 blobService.SaveFileInStorageBase64(audio.Base64!, audio.BlobName!.Split('.')[0], audio.BlobName.Split('.')[1]);
+                //             }
+                //         }
+                //
+                //         dbContext.Audios.AddRange(audiosfromJson);
+                //     }
+                //
+                //     await dbContext.SaveChangesAsync();
+                // }
 
                 if (!dbContext.Expertises.Any())
                 {
@@ -148,28 +172,6 @@ namespace Streetcode.WebApi.Extensions
                         {
                             Title = "Інше",
                         });
-                    await dbContext.SaveChangesAsync();
-                }
-
-                if (!dbContext.Audios.Any())
-                {
-                    string audiosJson = await File.ReadAllTextAsync(initialDataAudioPath, Encoding.UTF8);
-                    var audiosfromJson = JsonConvert.DeserializeObject<List<Audio>>(audiosJson);
-
-                    if (audiosfromJson != null)
-                    {
-                        foreach (var audio in audiosfromJson)
-                        {
-                            string filePath = Path.Combine(blobPath, audio.BlobName!);
-                            if (!File.Exists(filePath))
-                            {
-                                blobService.SaveFileInStorageBase64(audio.Base64!, audio.BlobName!.Split('.')[0], audio.BlobName.Split('.')[1]);
-                            }
-                        }
-
-                        dbContext.Audios.AddRange(audiosfromJson);
-                    }
-
                     await dbContext.SaveChangesAsync();
                 }
 

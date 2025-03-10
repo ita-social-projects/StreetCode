@@ -47,12 +47,27 @@ pipeline {
         stage('Setup dependencies') {
             steps {
                 script {
-                    sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
-                    sh 'dotnet tool update --global dotnet-sonarscanner'
-                    sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
+
+                    if (sh(script: 'dotnet tool list -g | grep -q "dotnet-coverage"', returnStatus: true) == 0) {
+                        sh 'dotnet tool update --global dotnet-coverage --version 17.13.1'
+                    } else {
+                        sh 'dotnet tool install --global dotnet-coverage --version 17.13.1'
+                    }
+
+                    if (sh(script: 'dotnet tool list -g | grep -q "dotnet-sonarscanner"', returnStatus: true) == 0) {
+                        sh 'dotnet tool update --global dotnet-sonarscanner'
+                    } else {
+                        sh 'dotnet tool install --global dotnet-sonarscanner'
+                    }
+
+                    if (sh(script: 'dotnet tool list -g | grep -q "GitVersion.Tool"', returnStatus: true) == 0) {
+                        sh 'dotnet tool update --global GitVersion.Tool --version 5.12.0'
+                    } else {
+                        sh 'dotnet tool install --global GitVersion.Tool --version 5.12.0'
+                    }
+
                     sh 'docker image prune --force --all --filter "until=72h"'
-                    sh 'docker system prune --force --all --filter "until=72h"'
-                 
+                    sh 'docker system prune --force --all --filter "until=72h"' 
                 }
             }
         }

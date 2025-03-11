@@ -12,7 +12,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Event;
 public class DeleteEventTests
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
-    private readonly Mock<ILoggerService> _mockEvent;
+    private readonly Mock<ILoggerService> _mockLogger;
     private readonly MockCannotFindLocalizer _mockCannotFindLocalizer;
     private readonly MockFailedToDeleteLocalizer _mockFailedToDeleteLocalizer;
     private readonly DeleteEventHandler _handler;
@@ -20,14 +20,14 @@ public class DeleteEventTests
     public DeleteEventTests()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
-        _mockEvent = new Mock<ILoggerService>();
+        _mockLogger = new Mock<ILoggerService>();
 
         _mockCannotFindLocalizer = new MockCannotFindLocalizer();
         _mockFailedToDeleteLocalizer = new MockFailedToDeleteLocalizer();
 
         _handler = new DeleteEventHandler(
             _mockRepository.Object,
-            _mockEvent.Object,
+            _mockLogger.Object,
             _mockCannotFindLocalizer,
             _mockFailedToDeleteLocalizer);
     }

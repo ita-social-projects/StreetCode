@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Event;
 using Streetcode.BLL.DTO.Event.CreateUpdate;

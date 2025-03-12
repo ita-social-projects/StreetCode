@@ -159,4 +159,7 @@
   <data name="FailedToCreateEvent" xml:space="preserve">
     <value>Не вдалося створити подію</value>
   </data>
+  <data name="FailedToCreatePartner" xml:space="preserve">
+    <value>Не вдалося створити партнера</value>
+  </data>
 </root>

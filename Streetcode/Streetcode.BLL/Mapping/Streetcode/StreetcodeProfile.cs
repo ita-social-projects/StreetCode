@@ -1,12 +1,11 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.Util.MappingResolvers;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Enums;
-using StringToDateTimeConverter = Streetcode.BLL.Mapping.Converters.StringToDateTimeConverter;
 
 namespace Streetcode.BLL.Mapping.Streetcode;
 
@@ -16,6 +15,7 @@ public class StreetcodeProfile : Profile
     {
         CreateMap<StreetcodeContent, StreetcodeDTO>()
             .ForMember(x => x.StreetcodeType, conf => conf.MapFrom(s => GetStreetcodeType(s)))
+            .ForMember(x => x.CreatedBy, conf => conf.MapFrom<UserNameResolver>())
             .ReverseMap();
         CreateMap<StreetcodeContent, StreetcodeShortDTO>().ReverseMap();
         CreateMap<StreetcodeContent, StreetcodeMainPageDTO>()
@@ -23,6 +23,12 @@ public class StreetcodeProfile : Profile
                 .MapFrom(e => e.Text!.Title))
              .ForPath(dto => dto.ImageId, conf => conf
                 .MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()));
+
+        CreateMap<StreetcodeContent, StreetcodeFavouriteDto>()
+            .ForMember(x => x.Type, conf => conf.MapFrom(s => GetStreetcodeType(s)))
+             .ForPath(dto => dto.ImageId, conf => conf
+                .MapFrom(e => e.Images.Select(i => i.Id).FirstOrDefault()))
+             .ReverseMap();
 
         CreateMap<StreetcodeCreateDTO, StreetcodeContent>()
                 .ForMember(x => x.Arts, conf => conf.Ignore())
@@ -47,7 +53,7 @@ public class StreetcodeProfile : Profile
             .ForMember(x => x.StatisticRecords, conf => conf.Ignore())
             .ForMember(x => x.StreetcodeArtSlides, conf => conf.Ignore())
             .ForMember(x => x.Facts, conf => conf.Ignore())
-            .ForPath(x => x.TransactionLink!.Url, conf => conf.MapFrom(x => x.ARBlockUrl))
+            .ForPath(x => x.TransactionLink!.Url, conf => conf.MapFrom(x => x.ArBlockUrl))
               .ReverseMap();
 
         CreateMap<StreetcodeUpdateDTO, PersonStreetcode>()
@@ -59,13 +65,10 @@ public class StreetcodeProfile : Profile
             .ReverseMap();
     }
 
-    private StreetcodeType GetStreetcodeType(StreetcodeContent streetcode)
-    {
-        if(streetcode is EventStreetcode)
+    private static StreetcodeType GetStreetcodeType(StreetcodeContent streetcode) =>
+        streetcode switch
         {
-            return StreetcodeType.Event;
-        }
-
-        return StreetcodeType.Person;
-    }
+            EventStreetcode => StreetcodeType.Event,
+            _ => StreetcodeType.Person
+        };
 }

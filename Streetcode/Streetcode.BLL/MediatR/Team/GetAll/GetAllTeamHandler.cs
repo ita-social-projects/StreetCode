@@ -2,56 +2,63 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Team;
-using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Entities.Team;
-using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Team.GetAll
+namespace Streetcode.BLL.MediatR.Team.GetAll;
+
+public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllTeamDTO>>
 {
-    public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllTeamDTO>>
+    private readonly IMapper _mapper;
+    private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IBlobService _blobService;
+
+    public GetAllTeamHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        IBlobService blobService)
     {
-        private readonly IMapper _mapper;
-        private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+        _repositoryWrapper = repositoryWrapper;
+        _mapper = mapper;
+        _blobService = blobService;
+    }
 
-        public GetAllTeamHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+    {
+        var paginationResponse = _repositoryWrapper
+            .TeamRepository
+            .GetAllPaginated(
+                request.page,
+                request.pageSize,
+                include: x => x
+                    .Include(x => x.Positions)
+                    .Include(x => x.TeamMemberLinks!)
+                    .Include(x => x.Image!));
+
+        var teamMemberDtos = MapToTeamMemberDtos(paginationResponse.Entities);
+        var getAllTeamDto = new GetAllTeamDTO()
         {
-            _repositoryWrapper = repositoryWrapper;
-            _mapper = mapper;
-            _logger = logger;
-            _stringLocalizerCannotFind = stringLocalizerCannotFind;
-        }
+            TotalAmount = paginationResponse.TotalItems,
+            TeamMembers = teamMemberDtos,
+        };
 
-        public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+        return Task.FromResult(Result.Ok(getAllTeamDto));
+    }
+
+    private IEnumerable<TeamMemberDTO> MapToTeamMemberDtos(IEnumerable<TeamMember> teamMemberEntities)
+    {
+        var teamMemberDtosList = _mapper.Map<IEnumerable<TeamMemberDTO>>(teamMemberEntities).ToList();
+
+        foreach (var teamMemberDto in teamMemberDtosList)
         {
-            PaginationResponse<TeamMember> paginationResponse = _repositoryWrapper
-                .TeamRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    include: x => x.Include(x => x.Positions).Include(x => x.TeamMemberLinks!));
-
-            if (paginationResponse is null)
+            if (teamMemberDto.Image is not null)
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTeam"].Value;
-                _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllTeamDTO>(new Error(errorMsg)));
+                teamMemberDto.Image.Base64 = _blobService.FindFileInStorageAsBase64(teamMemberDto.Image.BlobName);
             }
-
-            GetAllTeamDTO getAllTeamDTO = new GetAllTeamDTO()
-            {
-                TotalAmount = paginationResponse.TotalItems,
-                TeamMembers = _mapper.Map<IEnumerable<TeamMemberDTO>>(paginationResponse.Entities),
-            };
-
-            return Task.FromResult(Result.Ok(getAllTeamDTO));
         }
+
+        return teamMemberDtosList;
     }
 }

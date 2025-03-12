@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Analytics;
-using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Create;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.Delete;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll;
@@ -9,6 +8,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAllByStreetcodeId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.UpdateCount;
 using Streetcode.DAL.Enums;
+using Streetcode.WebApi.Attributes;
 
 namespace Streetcode.WebApi.Controllers.Analytics
 {
@@ -35,21 +35,12 @@ namespace Streetcode.WebApi.Controllers.Analytics
             return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id)));
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{streetcodeId:int}")]
+        [ValidateStreetcodeExistence]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
-        public async Task<IActionResult> GetAllByStreetcodeId(int id)
+        public async Task<IActionResult> GetAllByStreetcodeId(int streetcodeId)
         {
-            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(id)));
-        }
-
-        [HttpPost]
-        [Authorize(Roles = nameof(UserRole.Admin))]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordResponseDTO))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> Create(StatisticRecordDTO statisticRecordDto)
-        {
-            return HandleResult(await Mediator.Send(new CreateStatisticRecordCommand(statisticRecordDto)));
+            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(streetcodeId)));
         }
 
         [HttpPut("{id:int}")]

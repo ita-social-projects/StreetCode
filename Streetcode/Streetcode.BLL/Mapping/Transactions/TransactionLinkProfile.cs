@@ -10,8 +10,5 @@ public class TransactionLinkProfile : Profile
     {
         CreateMap<TransactionLink, TransactLinkDTO>()
            .ReverseMap();
-
-        CreateMap<TransactionLink, TransactionLinkUpdateDTO>()
-            .ReverseMap();
 	}
 }

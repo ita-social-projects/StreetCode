@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
+﻿using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.Mocks;
 
@@ -12,8 +11,9 @@ public class MockAnErrorOccurredLocalizer : BaseMockStringLocalizer<AnErrorOccur
             {
                 1, new List<string>
                 {
+                    "AnErrorOccurredWhileCreating",
                     "AnErrorOccurredWhileCreatingEvent",
-                    "AnErrorOccurredWhileUpdatingEvent"
+                    "AnErrorOccurredWhileUpdatingEvent",
                 }
             },
         };

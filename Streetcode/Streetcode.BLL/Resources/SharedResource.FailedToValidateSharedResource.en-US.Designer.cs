@@ -123,6 +123,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The image size can&apos;t exceed {0} MB.
+        /// </summary>
+        internal static string ImageSizeExceeded {
+            get {
+                return ResourceManager.GetString("ImageSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; is invalid.
         /// </summary>
         internal static string Invalid {
@@ -137,6 +146,15 @@ namespace Streetcode.BLL.Resources {
         internal static string InvalidNewsUrl {
             get {
                 return ResourceManager.GetString("InvalidNewsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagination parameters must be valid.
+        /// </summary>
+        internal static string InvalidPaginationParameters {
+            get {
+                return ResourceManager.GetString("InvalidPaginationParameters", resourceCulture);
             }
         }
         
@@ -168,7 +186,7 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Logo must match corresponding url.
+        ///   Looks up a localized string similar to The link does not match the selected social network.
         /// </summary>
         internal static string LogoMustMatchUrl {
             get {
@@ -182,6 +200,15 @@ namespace Streetcode.BLL.Resources {
         internal static string MaxLength {
             get {
                 return ResourceManager.GetString("MaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Максимальна length of field &apos;{0}&apos; is {1}.
+        /// </summary>
+        internal static string MinLength {
+            get {
+                return ResourceManager.GetString("MinLength", resourceCulture);
             }
         }
         
@@ -231,6 +258,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; may contain at most three expertises.
+        /// </summary>
+        internal static string MustContainAtMostThreeExpertises {
+            get {
+                return ResourceManager.GetString("MustContainAtMostThreeExpertises", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; must contain exactly one black and white image..
         /// </summary>
         internal static string MustContainExactlyOneAlt1 {
@@ -240,11 +276,47 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} must not be in the past..
+        /// </summary>
+        internal static string MustNotBeInPast {
+            get {
+                return ResourceManager.GetString("MustNotBeInPast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name must consist of Cyrillic or Latin characters (both uppercase and lowercase) and can only include hyphens (-) and apostrophes (&apos;)..
+        /// </summary>
+        internal static string NameFormat {
+            get {
+                return ResourceManager.GetString("NameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Surname must consist of Cyrillic or Latin characters (both uppercase and lowercase) and can only include hyphens (-) and apostrophes (&apos;)..
+        /// </summary>
+        internal static string SurnameFormat {
+            get {
+                return ResourceManager.GetString("SurnameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transliteration url must consists of small latin characters, numbers and hyphen.
         /// </summary>
         internal static string TransliterationUrlFormat {
             get {
                 return ResourceManager.GetString("TransliterationUrlFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Surname must consist of Latin characters (lowercase) and can only include hyphens (-), apostrophes (&apos;) and underscores(_)..
+        /// </summary>
+        internal static string UserNameFormat {
+            get {
+                return ResourceManager.GetString("UserNameFormat", resourceCulture);
             }
         }
         

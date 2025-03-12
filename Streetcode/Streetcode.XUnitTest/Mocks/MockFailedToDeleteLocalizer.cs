@@ -6,14 +6,22 @@ public class MockFailedToDeleteLocalizer : BaseMockStringLocalizer<FailedToDelet
 {
     protected override Dictionary<int, List<string>> DefineGroupedErrors()
     {
-        return new Dictionary<int, List<string>>
+        var groupedErrors = new Dictionary<int, List<string>>()
         {
             {
                 0, new List<string>()
                 {
-                    "FailedToDeleteEvent"
+                    "FailedToDeleteFact",
+                    "FailedToDeleteRelatedTerm",
+                    "FailedToDeleteTerm",
+                    "FailedToDeleteText",
+                    "FailedToDeleteStreetcode",
+                    "FailedToDeleteRelation",
+                    "FailedToDeleteEvent",
                 }
             },
         };
+
+        return groupedErrors;
     }
 }

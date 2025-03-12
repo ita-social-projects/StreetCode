@@ -8,10 +8,12 @@ using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode.Favourites;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Entities.Event;
 using Streetcode.DAL.Enums;
 
@@ -55,12 +57,16 @@ public class StreetcodeContent
 
     public DateTime UpdatedAt { get; set; }
 
+    public string UserId { get; set; }
+
     [Required]
     public DateTime EventStartOrPersonBirthDate { get; set; }
 
     public DateTime? EventEndOrPersonDeathDate { get; set; }
 
     public int? AudioId { get; set; }
+
+    public User? User { get; set; }
 
     public Text? Text { get; set; }
 
@@ -103,5 +109,8 @@ public class StreetcodeContent
     public List<StreetcodeCategoryContent> StreetcodeCategoryContents { get; set; } = new();
 
     public List<Art>? Arts { get; set; } = new();
+
+    public List<User>? UserFavourites { get; set; } = new();
+
     public List<EventStreetcodes>? EventStreetcodes { get; set; } = new();
 }

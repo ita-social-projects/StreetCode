@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using Streetcode.BLL.DTO.Timeline;
-using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Timeline.HistoricalContext;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -9,25 +8,25 @@ namespace Streetcode.XUnitTest.Validators.Timeline;
 
 public class HistoricalContextValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly BaseHistoricalContextValidator validator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly BaseHistoricalContextValidator _validator;
 
     public HistoricalContextValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.validator = new BaseHistoricalContextValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _validator = new BaseHistoricalContextValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenHistoricalContextIsValid()
     {
         // Arrange
-        var context = this.GetValidHistoricalContext();
+        var context = GetValidHistoricalContext();
 
         // Act
-        var result = this.validator.Validate(context);
+        var result = _validator.Validate(context);
 
         // Assert
         Assert.True(result.IsValid);
@@ -37,12 +36,12 @@ public class HistoricalContextValidatorTests
     public void ShouldReturnError_WhenTitleIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Title"]];
-        var context = this.GetValidHistoricalContext();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["Title"]];
+        var context = GetValidHistoricalContext();
         context.Title = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(context);
+        var result = _validator.TestValidate(context);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
@@ -53,19 +52,19 @@ public class HistoricalContextValidatorTests
     public void ShouldReturnError_WhenTitleLengthIsMoreThan50()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BaseHistoricalContextValidator.MaxTitleLength];
-        var context = this.GetValidHistoricalContext();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Title"], BaseHistoricalContextValidator.MaxTitleLength];
+        var context = GetValidHistoricalContext();
         context.Title = new string('*', BaseHistoricalContextValidator.MaxTitleLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(context);
+        var result = _validator.TestValidate(context);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
             .WithErrorMessage(expectedError);
     }
 
-    private HistoricalContextDTO GetValidHistoricalContext()
+    private static HistoricalContextDTO GetValidHistoricalContext()
     {
         return new HistoricalContextDTO()
         {

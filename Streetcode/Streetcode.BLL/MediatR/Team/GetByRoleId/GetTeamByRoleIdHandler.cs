@@ -29,22 +29,28 @@ namespace Streetcode.BLL.MediatR.Team.GetByRoleId
 			try
 			{
 				var teamDtoByRoleId = await _repositoryWrapper.TeamRepository.GetAllAsync(
-					predicate: t => t.Positions!.Where(p => p.Id == request.roleId).Count() > 0,
+					predicate: t => t.Positions!.Any(p => p.Id == request.roleId),
 					include: t =>
 						t.Include(tm => tm.TeamMemberLinks).Include(tm => tm.Image!));
+				teamDtoByRoleId = teamDtoByRoleId
+					.Select(team =>
+					{
+						if (team.Image != null)
+						{
+							team.Image.Base64 = _blob.FindFileInStorageAsBase64(team.Image.BlobName!);
+						}
 
-				foreach (var team in teamDtoByRoleId)
-				{
-					team.Image!.Base64 = _blob.FindFileInStorageAsBase64(team.Image.BlobName!);
-				}
-
+						return team;
+					})
+				.ToList();
 				var teamByRoleId = _mapper.Map<IEnumerable<TeamMemberDTO>>(teamDtoByRoleId);
 
 				return Result.Ok(teamByRoleId);
 			}
 			catch (Exception ex)
 			{
-				return Result.Fail(ex.Message);
+                _logger.LogError(request, ex.Message);
+                return Result.Fail(ex.Message);
 			}
 		}
 	}

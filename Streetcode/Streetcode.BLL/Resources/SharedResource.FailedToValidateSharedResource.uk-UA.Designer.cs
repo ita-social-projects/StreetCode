@@ -123,6 +123,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Розмір картинки не може перевищувати {0} MB.
+        /// </summary>
+        internal static string ImageSizeExceeded {
+            get {
+                return ResourceManager.GetString("ImageSizeExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має недійсне значення.
         /// </summary>
         internal static string Invalid {
@@ -137,6 +146,15 @@ namespace Streetcode.BLL.Resources {
         internal static string InvalidNewsUrl {
             get {
                 return ResourceManager.GetString("InvalidNewsUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Параметри пагінації повинні бути коректними.
+        /// </summary>
+        internal static string InvalidPaginationParameters {
+            get {
+                return ResourceManager.GetString("InvalidPaginationParameters", resourceCulture);
             }
         }
         
@@ -168,7 +186,7 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Логотип має відповідати посиланню.
+        ///   Looks up a localized string similar to Посилання не співпадає з обраною соціальною мережою.
         /// </summary>
         internal static string LogoMustMatchUrl {
             get {
@@ -182,6 +200,15 @@ namespace Streetcode.BLL.Resources {
         internal static string MaxLength {
             get {
                 return ResourceManager.GetString("MaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Мінімальна довжина поля &apos;{0}&apos; - {1}.
+        /// </summary>
+        internal static string MinLength {
+            get {
+                return ResourceManager.GetString("MinLength", resourceCulture);
             }
         }
         
@@ -231,6 +258,15 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; може містити щонайбільше три досвіди..
+        /// </summary>
+        internal static string MustContainAtMostThreeExpertises {
+            get {
+                return ResourceManager.GetString("MustContainAtMostThreeExpertises", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; має містити рівно одне чорно-біле зображення..
         /// </summary>
         internal static string MustContainExactlyOneAlt1 {
@@ -240,11 +276,47 @@ namespace Streetcode.BLL.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} не повинна бути у минулому..
+        /// </summary>
+        internal static string MustNotBeInPast {
+            get {
+                return ResourceManager.GetString("MustNotBeInPast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ім&apos;я повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (&apos;)..
+        /// </summary>
+        internal static string NameFormat {
+            get {
+                return ResourceManager.GetString("NameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Прізвище повинно складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише символи дефіс (-) і апостроф (&apos;)..
+        /// </summary>
+        internal static string SurnameFormat {
+            get {
+                return ResourceManager.GetString("SurnameFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Транслітероване посилання має містити тільки маленькі латинські літери, цифри та дефіс.
         /// </summary>
         internal static string TransliterationUrlFormat {
             get {
                 return ResourceManager.GetString("TransliterationUrlFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Нікнейм повинен складатися лише з літер латиниці (малих) та може містити лише символи дефіс (-), апостроф (&apos;) та підкреслення(_)..
+        /// </summary>
+        internal static string UserNameFormat {
+            get {
+                return ResourceManager.GetString("UserNameFormat", resourceCulture);
             }
         }
         

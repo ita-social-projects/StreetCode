@@ -41,7 +41,9 @@
   </ItemGroup>
   
   <ItemGroup>
+	<Folder Include="Entities\Users\Expertise\" />
 	<Folder Include="Persistence\Migrations\" />
+	<Folder Include="Persistence\ScriptsMigration\" />
   </ItemGroup>
 	
   <ItemGroup>

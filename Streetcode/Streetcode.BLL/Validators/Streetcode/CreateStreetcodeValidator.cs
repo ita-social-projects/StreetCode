@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Streetcode.Create;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.AdditionalContent.Tag;
@@ -33,8 +32,8 @@ public class CreateStreetcodeValidator : AbstractValidator<CreateStreetcodeComma
         RuleFor(c => c.Streetcode).SetValidator(baseStreetcodeValidator);
         RuleFor(c => c.Streetcode.Index)
             .MustAsync(BeUniqueIndex).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Index"]]);
-        RuleFor(c => c.Streetcode.ARBlockURL)
-            .MustBeValidUrl().When(c => c.Streetcode.ARBlockURL is not null)
+        RuleFor(c => c.Streetcode.ArBlockUrl)
+            .MustBeValidUrl().When(c => c.Streetcode.ArBlockUrl is not null)
             .WithMessage(localizer["ValidUrl", fieldLocalizer["ARBlockURL"]]);
 
         RuleFor(c => c.Streetcode.Text!.Title)

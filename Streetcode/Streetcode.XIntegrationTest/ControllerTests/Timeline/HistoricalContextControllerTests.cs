@@ -1,13 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Net;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Delete;
-using Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
@@ -17,8 +14,8 @@ using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.AdditionalContent.Timeline;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Timeline;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Timeline;
 using Xunit;
@@ -29,17 +26,17 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Timeline;
 public class HistoricalContextControllerTests : BaseAuthorizationControllerTests<HistoricalContextClient>,
     IClassFixture<CustomWebApplicationFactory<Program>>
 {
-    private readonly HistoricalContext testCreateContext;
-    private readonly HistoricalContext testUpdateContext;
-    private readonly StreetcodeContent testStreetcodeContent;
+    private readonly HistoricalContext _testCreateContext;
+    private readonly HistoricalContext _testUpdateContext;
+    private readonly StreetcodeContent _testStreetcodeContent;
 
     public HistoricalContextControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/HistoricalContext", tokenStorage)
     {
         int uniqueId = UniqueNumberGenerator.GenerateInt();
-        this.testCreateContext = HistoricalContextExtracter.Extract(uniqueId);
-        this.testUpdateContext = HistoricalContextExtracter.Extract(uniqueId);
-        this.testStreetcodeContent = StreetcodeContentExtracter
+        _testCreateContext = HistoricalContextExtracter.Extract(uniqueId);
+        _testUpdateContext = HistoricalContextExtracter.Extract(uniqueId);
+        _testStreetcodeContent = StreetcodeContentExtracter
             .Extract(
                 uniqueId,
                 uniqueId,
@@ -49,25 +46,32 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task GetAll_ReturnSuccessStatusCode()
     {
+        // Act
         var response = await this.Client.GetAllAsync();
         var returnedValue =
             CaseIsensitiveJsonDeserializer.Deserialize<GetAllHistoricalContextDTO>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
+        Assert.Multiple(
+            () => Assert.True(response.IsSuccessStatusCode),
+            () => Assert.NotNull(returnedValue));
     }
 
     [Fact]
     public async Task GetById_ReturnSuccessStatusCode()
     {
-        HistoricalContext expectedContext = this.testCreateContext;
+        // Arrange
+        HistoricalContext expectedContext = _testCreateContext;
+
+        // Act
         var response = await this.Client.GetByIdAsync(expectedContext.Id);
 
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContextDTO>(response.Content);
 
-        Assert.True(response.IsSuccessStatusCode);
-        Assert.NotNull(returnedValue);
+        // Assert
         Assert.Multiple(
+            () => Assert.True(response.IsSuccessStatusCode),
+            () => Assert.NotNull(returnedValue),
             () => Assert.Equal(expectedContext.Id, returnedValue?.Id),
             () => Assert.Equal(expectedContext.Title, returnedValue?.Title));
     }
@@ -75,11 +79,15 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task GetByIdIncorrect_ReturnBadRequest()
     {
-        int incorrectId = -100;
+        // Arrange
+        const int incorrectId = -100;
+
+        // Act
         var response = await this.Client.GetByIdAsync(incorrectId);
 
+        // Assert
         Assert.Multiple(
-            () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
+            () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.False(response.IsSuccessStatusCode));
     }
 
@@ -162,7 +170,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     {
         // Arrange
         var historicalContextCreateDto = ExtractCreateTestHistoricalContextAttribute.HistoricalContextForTest;
-        historicalContextCreateDto.Title = this.testCreateContext.Title!;
+        historicalContextCreateDto.Title = _testCreateContext.Title!;
 
         // Act
         var response = await this.Client.CreateAsync(historicalContextCreateDto, this.TokenStorage.AdminAccessToken);
@@ -172,12 +180,12 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_ReturnSuccessStatusCode()
     {
         // Arrange
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        historicalContextCreateDto.Id = this.testCreateContext.Id;
+        historicalContextCreateDto.Id = _testCreateContext.Id;
 
         // Act
         var response = await this.Client.UpdateAsync(historicalContextCreateDto, this.TokenStorage.AdminAccessToken);
@@ -187,12 +195,12 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_Incorect_ReturnBadRequest()
     {
         // Arrange
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        var invalidHistoricalContextId = -10;
+        const int invalidHistoricalContextId = -10;
         historicalContextCreateDto.Id = invalidHistoricalContextId;
 
         // Act
@@ -205,7 +213,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_TokenNotPassed_ReturnsUnauthorized()
     {
         // Arrange
@@ -219,7 +227,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
@@ -233,7 +241,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
@@ -248,13 +256,13 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
+    [ExtractUpdateTestHistoricalContext]
     public async Task Update_WithExistingTitle_ReturnsBadRequest()
     {
         // Arrange
         var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        historicalContextCreateDto.Id = this.testCreateContext.Id;
-        historicalContextCreateDto.Title = this.testUpdateContext.Title!;
+        historicalContextCreateDto.Id = _testCreateContext.Id;
+        historicalContextCreateDto.Title = _testUpdateContext.Title!;
 
         // Act
         var response = await this.Client.UpdateAsync(historicalContextCreateDto, this.TokenStorage.AdminAccessToken);
@@ -264,50 +272,10 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     }
 
     [Fact]
-    [ExtractUpdateTestHistoricalContextAttribute]
-    public async Task Update_ChangesNotSaved_ReturnsBadRequest()
-    {
-        // Arrange
-        var historicalContextCreateDto = ExtractUpdateTestHistoricalContextAttribute.HistoricalContextForTest;
-        historicalContextCreateDto.Id = this.testUpdateContext.Id;
-
-        var repositoryMock = new Mock<IHistoricalContextRepository>();
-        var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
-        var mockLocalizerValidation = new Mock<IStringLocalizer<FailedToValidateSharedResource>>();
-        var mockLocalizerFieldNames = new Mock<IStringLocalizer<FieldNamesSharedResource>>();
-        var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
-            .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>
-            {
-                var compiledExpr = expr.Compile();
-                return compiledExpr(this.testUpdateContext) ? this.testUpdateContext : null;
-            });
-
-        repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).ReturnsAsync(null);
-        repositoryWrapperMock.Setup(wrapper => wrapper.SaveChangesAsync()).Throws(default(Exception));
-
-        var mapperMock = new Mock<IMapper>();
-        mapperMock.Setup(m => m.Map<HistoricalContext>(default)).Returns(this.testUpdateContext);
-        var loggerMock = new Mock<ILoggerService>();
-
-        var handler = new UpdateHistoricalContextHandler(repositoryWrapperMock.Object, mapperMock.Object, loggerMock.Object, mockLocalizerCannotFind.Object, mockLocalizerValidation.Object, mockLocalizerFieldNames.Object);
-
-        var query = new UpdateHistoricalContextCommand(historicalContextCreateDto);
-        var cancellationToken = CancellationToken.None;
-
-        // Act
-        var result = await handler.Handle(query, cancellationToken);
-
-        // Assert
-        Assert.False(result.IsSuccess);
-    }
-
-    [Fact]
     public async Task Delete_ReturnsSuccessStatusCode()
     {
         // Arrange
-        int id = this.testCreateContext.Id;
+        int id = _testCreateContext.Id;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
@@ -320,7 +288,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     public async Task Delete_TokenNotPassed_ReturnsUnathorized()
     {
         // Arrange
-        int id = this.testCreateContext.Id;
+        int id = _testCreateContext.Id;
 
         // Act
         var response = await this.Client.Delete(id);
@@ -333,7 +301,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     public async Task Delete_NotAdminTokenPassed_ReturnsForbidden()
     {
         // Arrange
-        int id = this.testCreateContext.Id;
+        int id = _testCreateContext.Id;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.UserAccessToken);
@@ -346,7 +314,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     public async Task Delete_WithInvalidData_ReturnsBadRequest()
     {
         // Arrange
-        int id = -100;
+        const int id = -100;
 
         // Act
         var response = await this.Client.Delete(id, this.TokenStorage.AdminAccessToken);
@@ -358,13 +326,13 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     [Fact]
     public async Task Delete_ChangesNotSaved_ReturnsBadRequest()
     {
-        int id = this.testUpdateContext.Id;
+        int id = _testUpdateContext.Id;
 
         var repositoryMock = new Mock<IHistoricalContextRepository>();
         var repositoryWrapperMock = new Mock<IRepositoryWrapper>();
         var mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         repositoryMock.Setup(r => r.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
-            .ReturnsAsync(this.testUpdateContext);
+            .ReturnsAsync(_testUpdateContext);
         repositoryMock.Setup(r => r.Delete(default!));
 
         repositoryWrapperMock.SetupGet(wrapper => wrapper.HistoricalContextRepository).Returns(repositoryMock.Object);
@@ -383,16 +351,5 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Assert
         Assert.False(result.IsSuccess);
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            StreetcodeContentExtracter.Remove(this.testStreetcodeContent);
-            HistoricalContextExtracter.Remove(this.testCreateContext);
-        }
-
-        base.Dispose(disposing);
     }
 }

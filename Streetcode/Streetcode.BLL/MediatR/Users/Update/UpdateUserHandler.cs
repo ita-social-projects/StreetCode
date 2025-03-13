@@ -8,10 +8,12 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util.Extensions;
 using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Entities.Users.Expertise;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using System;
 
 namespace Streetcode.BLL.MediatR.Users.Update;
 
@@ -56,13 +58,20 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
                 return Result.Fail(errorMessage);
             }
 
+            if (user.Id != request.UserDto.Id)
+            {
+                string errorMessage = _localizer["InvalidUserId"];
+                _logger.LogError(request, errorMessage);
+                return Result.Fail(errorMessage);
+            }
+
             var toAddExpertises = await UpdateManyToManyUsersExpertises(request, user);
 
             user.Expertises.AddRange(toAddExpertises);
 
-            user.UserName = request.UserDto.UserName;
-            user.Name = request.UserDto.Name;
-            user.Surname = request.UserDto.Surname;
+            user.UserName = request.UserDto.UserName.RemoveWhiteSpaces();
+            user.Name = request.UserDto.Name.RemoveWhiteSpaces();
+            user.Surname = request.UserDto.Surname.RemoveWhiteSpaces();
             user.AvatarId = request.UserDto.AvatarId;
             user.AboutYourself = request.UserDto.AboutYourself;
             user.PhoneNumber = request.UserDto.PhoneNumber;

@@ -13,6 +13,7 @@ public class BaseRegisterValidator : AbstractValidator<RegisterRequestDTO>
     public const int MinLengthSurname = 2;
     public const int MaxLengthSurname = 50;
     public const int MinPasswordLength = 8;
+    public const int MaxPasswordLength = 20;
 
     public BaseRegisterValidator(
         IStringLocalizer<FailedToValidateSharedResource> localizer,
@@ -38,6 +39,7 @@ public class BaseRegisterValidator : AbstractValidator<RegisterRequestDTO>
         RuleFor(dto => dto.Password)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Password"]])
             .MinimumLength(MinPasswordLength).WithMessage(localizer["MinLength", fieldLocalizer["Password"], MinPasswordLength])
+            .MaximumLength(MaxPasswordLength).WithMessage(localizer["MaxLength", fieldLocalizer["Password"], MaxPasswordLength])
             .Must(password => !password.Contains(" ")).WithMessage(localizer["PasswordNoWhitespace"])
             .Must(password => Regex.IsMatch(password, "\\d")).WithMessage(localizer["PasswordMustContainDigit"])
             .Must(password => Regex.IsMatch(password, "[^a-zA-Z\\d]")).WithMessage(localizer["PasswordMustContainSpecial"])

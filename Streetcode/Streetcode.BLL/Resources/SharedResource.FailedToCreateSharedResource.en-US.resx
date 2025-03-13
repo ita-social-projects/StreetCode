@@ -126,6 +126,9 @@
   <data name="FailedToCreateCategory" xml:space="preserve">
     <value>Failed to create a category</value>
   </data>
+  <data name="FailedToCreateEvent" xml:space="preserve">
+    <value>Failed to create an event</value>
+  </data>
   <data name="FailedToCreateFact" xml:space="preserve">
     <value>Failed to create a fact</value>
   </data>

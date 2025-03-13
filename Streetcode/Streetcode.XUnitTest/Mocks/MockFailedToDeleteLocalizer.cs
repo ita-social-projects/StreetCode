@@ -17,6 +17,7 @@ public class MockFailedToDeleteLocalizer : BaseMockStringLocalizer<FailedToDelet
                     "FailedToDeleteText",
                     "FailedToDeleteStreetcode",
                     "FailedToDeleteRelation",
+                    "FailedToDeleteEvent",
                 }
             },
         };

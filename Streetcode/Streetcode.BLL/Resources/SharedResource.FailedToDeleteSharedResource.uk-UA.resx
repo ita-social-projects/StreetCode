@@ -123,6 +123,9 @@
   <data name="FailedToDeleteCategory" xml:space="preserve">
     <value>Не вдалося видалити категорію</value>
   </data>
+  <data name="FailedToDeleteEvent" xml:space="preserve">
+    <value>Не вдалося видалити подію</value>
+  </data>
   <data name="FailedToDeleteFact" xml:space="preserve">
     <value>Не вдалося видалити факт</value>
   </data>

@@ -324,4 +324,13 @@
   <data name="UserName" xml:space="preserve">
     <value>Нікнейм</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Локація</value>
+  </data>
+  <data name="Organizer" xml:space="preserve">
+    <value>Організатор</value>
+  </data>
 </root>

@@ -324,4 +324,13 @@
   <data name="UserName" xml:space="preserve">
     <value>UserName</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="Organizer" xml:space="preserve">
+    <value>Organizer</value>
+  </data>
 </root>

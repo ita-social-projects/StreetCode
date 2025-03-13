@@ -12,6 +12,8 @@ public class MockAnErrorOccurredLocalizer : BaseMockStringLocalizer<AnErrorOccur
                 1, new List<string>
                 {
                     "AnErrorOccurredWhileCreating",
+                    "AnErrorOccurredWhileCreatingEvent",
+                    "AnErrorOccurredWhileUpdatingEvent",
                 }
             },
         };

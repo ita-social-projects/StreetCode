@@ -126,6 +126,9 @@
   <data name="FailedToUpdateCategory" xml:space="preserve">
     <value>Failed to update a category</value>
   </data>
+  <data name="FailedToUpdateEvent" xml:space="preserve">
+    <value>Failed to update an event</value>
+  </data>
   <data name="FailedToUpdateFact" xml:space="preserve">
     <value>Failed to update a fact</value>
   </data>

@@ -74,6 +74,8 @@ partial class Build
                 .SetAssemblyVersion(GitVersion.AssemblySemVer)
                 .SetFileVersion(GitVersion.AssemblySemFileVer)
                 .SetInformationalVersion(GitVersion.InformationalVersion)
+                .SetWarningLevel(0)
+                .SetProperty("SonarQubeExclude", "true")
             );
         });
 

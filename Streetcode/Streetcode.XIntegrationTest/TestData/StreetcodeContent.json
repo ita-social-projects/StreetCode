@@ -10,5 +10,6 @@
   "CreatedAt": "2000-11-11 11:11:11.1111111",
   "UpdatedAt": "2001-11-11 11:11:11.1111111",
   "EventStartOrPersonBirthDate": "2000-11-11 11:11:11.1111111",
-  "EventEndOrPersonDeathDate": "2000-11-11 11:11:11.1111111"
+  "EventEndOrPersonDeathDate": "2000-11-11 11:11:11.1111111",
+  "UserId": "Test_User_Admin_qwe123456rty#"
 }

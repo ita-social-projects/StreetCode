@@ -127,6 +127,25 @@ public class NewsTests
     }
 
     [Fact]
+    public async Task ShouldReturnFail_NewsWithSameImageIdExists()
+    {
+        // Arrange
+        var news = GetValidNews();
+        MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, news.ImageId);
+        SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingImageId(news.ImageId);
+        var baseValidator = new Mock<BaseNewsValidator>(_mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
+        var createValidator = new CreateNewsValidator(baseValidator.Object, _mockValidationLocalizer, _mockFieldsLocalizer, _mockRepositoryWrapper.Object);
+        var expectedError = _mockValidationLocalizer["MustBeUnique", _mockFieldsLocalizer["ImageId"]];
+
+        // Act
+        var result = await createValidator.TestValidateAsync(new CreateNewsCommand(news));
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.newNews.ImageId)
+            .WithErrorMessage(expectedError);
+    }
+
+    [Fact]
     public async Task ShouldReturnFail_WhenImageDoesNotExist()
     {
         // Arrange
@@ -366,6 +385,22 @@ public class NewsTests
                 var newsList = new List<DAL.Entities.News.News>
                 {
                     new () { Text = text },
+                };
+
+                return newsList.FirstOrDefault();
+            });
+    }
+
+    private void SetupMockRepositoryGetSingleOrDefaultAsyncWithExistingImageId(int imageId)
+    {
+        _mockRepositoryWrapper.Setup(x => x.NewsRepository.GetSingleOrDefaultAsync(
+                It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
+                It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>>()))
+            .ReturnsAsync(() =>
+            {
+                var newsList = new List<DAL.Entities.News.News>
+                {
+                    new () { ImageId = imageId },
                 };
 
                 return newsList.FirstOrDefault();

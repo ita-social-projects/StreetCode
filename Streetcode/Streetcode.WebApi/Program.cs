@@ -93,12 +93,12 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
 app.UseIpRateLimiting();
 app.UseRateLimiter();
 
-BackgroundJob.Schedule<WebParsingUtils>(
-    wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
-RecurringJob.AddOrUpdate<WebParsingUtils>(
-    "ParseZipFileFromWebAsync",
-    wp => wp.ParseZipFileFromWebAsync(),
-    Cron.Monthly);
+// BackgroundJob.Schedule<WebParsingUtils>(
+//     wp => wp.ParseZipFileFromWebAsync(), TimeSpan.FromMinutes(1));
+// RecurringJob.AddOrUpdate<WebParsingUtils>(
+//     "ParseZipFileFromWebAsync",
+//     wp => wp.ParseZipFileFromWebAsync(),
+//     Cron.Monthly);
 
 app.MapControllers();
 app.UseMiddleware<CustomResponseCompressionMiddleware>();

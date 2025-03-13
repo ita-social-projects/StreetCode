@@ -30,6 +30,7 @@ public class FactController : BaseApiController
     }
 
     [HttpGet("{streetcodeId:int}")]
+    [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FactDto>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
@@ -51,7 +52,7 @@ public class FactController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] FactDto fact)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] StreetcodeFactUpdateDTO fact)
     {
         fact.Id = id;
         return HandleResult(await Mediator.Send(new UpdateFactCommand(fact)));

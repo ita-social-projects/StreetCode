@@ -118,8 +118,8 @@ pipeline {
                                     /d:sonar.pullrequest.branch=$PR_BRANCH \
                                     /d:sonar.pullrequest.base=$PR_BASE
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         } else {
@@ -131,8 +131,8 @@ pipeline {
                                     /d:sonar.host.url="https://sonarcloud.io" \
                                     /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         }

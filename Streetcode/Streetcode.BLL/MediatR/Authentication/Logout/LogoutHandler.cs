@@ -1,7 +1,7 @@
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Persistence;
+using Microsoft.AspNetCore.Http;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Authentication.Logout;
@@ -9,15 +9,20 @@ namespace Streetcode.BLL.MediatR.Authentication.Logout;
 public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
 {
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LogoutHandler(IRepositoryWrapper repositoryWrapper)
+    public LogoutHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IHttpContextAccessor httpContextAccessor)
     {
         _repositoryWrapper = repositoryWrapper;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<Result> Handle(LogoutCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.Id == request.UserId);
+        var userUserName = HttpContextHelper.GetCurrentUserName(_httpContextAccessor);
+        var user = await _repositoryWrapper.UserRepository.GetFirstOrDefaultAsync(u => u.UserName == userUserName);
 
         if (user == null)
         {
@@ -34,10 +39,8 @@ public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
         {
             return Result.Ok();
         }
-        else
-        {
-            string errorMsg = "Failed to logout";
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        string errorMsg = "Failed to logout";
+        return Result.Fail(new Error(errorMsg));
     }
 }

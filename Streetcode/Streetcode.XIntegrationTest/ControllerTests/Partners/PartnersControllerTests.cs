@@ -7,6 +7,7 @@ using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Partners;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;

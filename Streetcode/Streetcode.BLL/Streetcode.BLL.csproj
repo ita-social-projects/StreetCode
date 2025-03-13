@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTO\Instagram\**" />
+    <EmbeddedResource Remove="DTO\Instagram\**" />
+    <None Remove="DTO\Instagram\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentResults" Version="3.15.1" />
@@ -41,11 +47,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Constants\MessageData\" />
+    <Folder Include="DTO\Authentication\GoogleLogin\" />
+    <Folder Include="DTO\Users\Expertise\" />
+    <Folder Include="Factories\MessageDataFactory\Concretes\" />
     <Folder Include="Mapping\Payment\" />
+    <Folder Include="Mapping\Users\Expertises\" />
     <Folder Include="MediatR\AdditionalContent\Tag\" />
     <Folder Include="Exceptions\" />
-    <Folder Include="DTO\Instagram\" />
+    <Folder Include="MediatR\Expertises\GetAll\" />
     <Folder Include="MediatR\Media\StreetcodeArtSlide\" />
+    <Folder Include="MediatR\Users\UpdateForgotPassword\" />
+    <Folder Include="Util\Helpers\" />
+    <Folder Include="Util\MappingResolvers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -226,6 +240,17 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SharedResource.FieldNamesSharedResource.uk-UA.resx</DependentUpon>
     </Compile>
+    <Compile Remove="Resources\SharedResource.AlreadyExist.uk-UA.Designer.cs" />
+    <Compile Update="Resources\SharedResource.AlreadyExistSharedResource.en-US.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.AlreadyExistSharedResource.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\SharedResource.AlreadyExistSharedResource.uk-UA.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResource.AlreadyExistSharedResource.uk-UA.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -248,6 +273,15 @@
     <EmbeddedResource Update="Resources\SharedResource.FieldNamesSharedResource.uk-UA.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>FieldNamesSharedResource.uk-UA.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Remove="Resources\SharedResource.AlreadyExist.uk-UA.resx" />
+    <EmbeddedResource Update="Resources\SharedResource.AlreadyExistSharedResource.en-US.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.AlreadyExistSharedResource.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SharedResource.AlreadyExistSharedResource.uk-UA.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResource.AlreadyExistSharedResource.uk-UA.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

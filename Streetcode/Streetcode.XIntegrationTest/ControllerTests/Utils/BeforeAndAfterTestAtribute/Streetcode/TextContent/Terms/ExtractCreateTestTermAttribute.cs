@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Xunit.Sdk;
@@ -9,11 +9,11 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractCreateTestTermAttribute : BeforeAfterTestAttribute
 {
-    public static TermCreateDTO TermCreateDtoForTest { get; private set; } = null!;
+    public static TermCreateDto TermCreateDtoForTest { get; private set; } = null!;
 
     public override void Before(MethodInfo methodUnderTest)
     {
-        TermCreateDtoForTest = new TermCreateDTO()
+        TermCreateDtoForTest = new TermCreateDto()
         {
             Title = "TermCreateDto for create test",
             Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit",

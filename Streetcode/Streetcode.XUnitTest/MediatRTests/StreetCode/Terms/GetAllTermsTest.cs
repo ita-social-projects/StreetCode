@@ -3,9 +3,10 @@ using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.MediatR.Streetcode.Term.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -29,107 +30,173 @@ public class GetAllTermsTest
     public async Task ShouldGetAllSuccessfully_WhenTermsExist()
     {
         // Arrange
-        var (termsList, termDtoList) = GetTermObjectsLists();
+        const int objectsNumber = 2;
+        var (termsPaginated, termDtoList) = GetTermObjects(objectsNumber);
         var request = GetRequest();
 
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper<IEnumerable<TermDTO>, List<Term>>(_mockMapper, termDtoList, termsList);
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, termsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<TermDto>, IEnumerable<Term>>(
+            _mockMapper,
+            termDtoList,
+            termsPaginated.Entities);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
+        var initialTermsList = termsPaginated.Entities.ToList();
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().SatisfyRespectively(
-            first => first.Id.Should().Be(termsList[0].Id),
-            second => second.Id.Should().Be(termsList[1].Id));
-        result.Value.Should().HaveCount(2);
-        VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
+        result.Value.Terms.Should().SatisfyRespectively(
+            first => first.Id.Should().Be(initialTermsList[0].Id),
+            second => second.Id.Should().Be(initialTermsList[1].Id));
+        result.Value.TotalAmount.Should().Be(objectsNumber);
+        VerifyGetAllPaginatedAndMockingOperationsExecution(termsPaginated.Entities);
     }
 
     [Fact]
     public async Task ShouldGetAllSuccessfully_WithCorrectDataType()
     {
         // Arrange
-        var (termsList, termDtoList) = GetTermObjectsLists();
+        const int objectsNumber = 2;
+        var (termsPaginated, termDtoList) = GetTermObjects(objectsNumber);
         var request = GetRequest();
 
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper<IEnumerable<TermDTO>, List<Term>>(_mockMapper, termDtoList, termsList);
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, termsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<TermDto>, IEnumerable<Term>>(
+            _mockMapper,
+            termDtoList,
+            termsPaginated.Entities);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.ValueOrDefault.Should().BeOfType<List<TermDTO>>();
+        result.ValueOrDefault.Should().BeOfType<GetAllTermsDto>();
     }
 
     [Fact]
     public async Task ShouldGetAllSuccessfully_WhenTermsNotExist()
     {
         // Arrange
-        var (termsList, termDtoList) = GetEmptyTermObjectsLists();
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyTermObjects();
         var request = GetRequest();
 
-        MockHelpers.SetupMockTermRepositoryGetAllAsync(_mockRepository, termsList);
-        MockHelpers.SetupMockMapper(_mockMapper, termDtoList, termsList);
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEmpty();
-        result.ValueOrDefault.Should().BeAssignableTo<IEnumerable<TermDTO>>();
-        VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
+        result.Value.Terms.Should().BeEmpty();
+        result.ValueOrDefault.Should().BeAssignableTo<GetAllTermsDto>();
+        VerifyGetAllPaginatedAndMockingOperationsExecution(emptyTermsPaginated.Entities);
     }
 
-    private static (List<Term>, List<TermDTO>) GetTermObjectsLists()
+    [Fact]
+    public async Task ShouldGetAllSuccessfully_WithCorrectPageSize()
     {
-        var termsList = new List<Term>()
-        {
-            new Term()
-            {
-                Id = 1,
-            },
-            new Term()
-            {
-                Id = 2,
-            },
-        };
-        var termDtoList = new List<TermDTO>()
-        {
-            new TermDTO()
-            {
-                Id = termsList[0].Id,
-            },
-            new TermDTO()
-            {
-                Id = termsList[1].Id,
-            },
-        };
+        // Arrange
+        const ushort pageNumber = 1;
+        const ushort pageSize = 2;
+        var (termsPaginated, termDtoList) = GetTermObjects(pageSize);
+        var request = GetRequest(pageNumber, pageSize);
 
-        return (termsList, termDtoList);
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, termsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<TermDto>, IEnumerable<Term>>(
+            _mockMapper,
+            termDtoList,
+            termsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().NotBeEmpty();
+        result.Value.TotalAmount.Should().Be(pageSize);
     }
 
-    private static (List<Term>, List<TermDTO>) GetEmptyTermObjectsLists()
+    [Fact]
+    public async Task ShouldGetAllPaginatedSuccessfully_WhenPageNumberIsTooBig()
     {
-        return (new List<Term>(), new List<TermDTO>());
+        // Arrange
+        const ushort pageNumber = 99;
+        const ushort pageSize = 2;
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyTermObjects();
+        var request = GetRequest(pageNumber, pageSize);
+
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().BeEmpty();
     }
 
-    private static GetAllTermsQuery GetRequest()
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(1, 0)]
+    public async Task ShouldGetAllPaginatedSuccessfully_WhenPageNumberOrSizeIsZero(ushort pageNumber, ushort pageSize)
     {
-        return new GetAllTermsQuery();
+        // Arrange
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyTermObjects();
+        var request = GetRequest(pageNumber, pageSize);
+
+        MockHelpers.SetupMockTermRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Terms.Should().BeEmpty();
     }
 
-    private void VerifyGetAllAsyncAndMockingOperationsExecution(List<Term> termsList)
+    private static (PaginationResponse<Term>, List<TermDto>) GetTermObjects(int count)
+    {
+        var termsList = Enumerable
+            .Range(0, count)
+            .Select(i => new Term() { Id = i })
+            .ToList();
+        var termsPaginated = PaginationResponse<Term>.Create(termsList.AsQueryable());
+
+        var termDtoList = Enumerable
+            .Range(0, count)
+            .Select(i => new TermDto() { Id = termsList[i].Id })
+            .ToList();
+
+        return (termsPaginated, termDtoList);
+    }
+
+    private static (PaginationResponse<Term>, List<TermDto>) GetEmptyTermObjects()
+    {
+        return (PaginationResponse<Term>.Create(new List<Term>().AsQueryable()), new List<TermDto>());
+    }
+
+    private static GetAllTermsQuery GetRequest(ushort? page = null, ushort? pageSize = null)
+    {
+        return new GetAllTermsQuery(page, pageSize);
+    }
+
+    private void VerifyGetAllPaginatedAndMockingOperationsExecution(IEnumerable<Term> termsList)
     {
         _mockRepository.Verify(
-            x => x.TermRepository.GetAllAsync(
-                It.IsAny<Expression<Func<Term, bool>>>(),
-                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()),
+            x => x.TermRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<Term, Term>>?>(),
+                It.IsAny<Expression<Func<Term, bool>>?>(),
+                It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>?>(),
+                It.IsAny<Expression<Func<Term, object>>?>(),
+                It.IsAny<Expression<Func<Term, object>>?>()),
             Times.Once);
-        _mockMapper.Verify(x => x.Map<IEnumerable<TermDTO>>(termsList), Times.Once);
+        _mockMapper.Verify(x => x.Map<IEnumerable<TermDto>>(termsList), Times.Once);
     }
 }

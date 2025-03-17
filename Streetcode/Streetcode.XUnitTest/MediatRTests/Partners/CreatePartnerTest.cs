@@ -137,11 +137,11 @@ public class CreatePartnerTest
             LogoId = 100,
             IsKeyPartner = false,
             IsVisibleEverywhere = true,
-            Streetcodes = new List<StreetcodeShortDTO>
+            Streetcodes = new List<StreetcodeShortDto>
             {
-                new StreetcodeShortDTO { Id = 1 },
-                new StreetcodeShortDTO { Id = 2 },
-                new StreetcodeShortDTO { Id = 3 },
+                new StreetcodeShortDto { Id = 1 },
+                new StreetcodeShortDto { Id = 2 },
+                new StreetcodeShortDto { Id = 3 },
             },
         };
     }

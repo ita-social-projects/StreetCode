@@ -207,7 +207,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeShortDTO>>(response.Content);
+        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeShortDto>>(response.Content);
         Assert.NotNull(streetcodes);
         Assert.NotEmpty(streetcodes);
     }
@@ -222,9 +222,9 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeShortDTO>>(response.Content);
+        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<GetAllStreetcodesShortDto>(response.Content);
         Assert.NotNull(streetcodes);
-        Assert.NotEmpty(streetcodes);
+        Assert.NotEmpty(streetcodes.StreetcodesShort);
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
         Assert.NotNull(response);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeShortDTO>>(response.Content);
+        var streetcodes = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeShortDto>>(response.Content);
         Assert.NotNull(streetcodes);
         Assert.NotEmpty(streetcodes);
     }
@@ -271,7 +271,7 @@ public class StreetcodeQueriesControllerTests : BaseAuthorizationControllerTests
 
         // Act
         var response = await Client.GetShortByIdAsync(id);
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeShortDTO>(response.Content);
+        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeShortDto>(response.Content);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);

@@ -1,9 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -12,88 +16,202 @@ namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode;
 
 public class GetAllStreetcodesShortHandlerTests
 {
-    private readonly Mock<IRepositoryWrapper> _repositoryMock;
-    private readonly Mock<IMapper> _mapperMock;
-    private readonly Mock<ILoggerService> _loggerMock;
-    private readonly MockNoSharedResourceLocalizer _mockLocalizer;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly MockNoSharedResourceLocalizer _mockNoSharedResourceLocalizer;
     private readonly GetAllStreetcodesShortHandler _handler;
 
     public GetAllStreetcodesShortHandlerTests()
     {
-        _repositoryMock = new Mock<IRepositoryWrapper>();
-        _mapperMock = new Mock<IMapper>();
-        _loggerMock = new Mock<ILoggerService>();
-        _mockLocalizer = new MockNoSharedResourceLocalizer();
-
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockNoSharedResourceLocalizer = new MockNoSharedResourceLocalizer();
         _handler = new GetAllStreetcodesShortHandler(
-            _repositoryMock.Object,
-            _mapperMock.Object,
-            _loggerMock.Object,
-            _mockLocalizer);
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockLogger.Object,
+            _mockNoSharedResourceLocalizer);
     }
 
     [Fact]
-    public async Task Handle_WhenStreetcodesExist_ReturnsStreetcodeShortDTOs()
+    public async Task ShouldGetAllSuccessfully_WhenStreetcodesExist()
     {
         // Arrange
-        var testStreetcodes = GetTestStreetcodes(3);
+        const int objectsNumber = 2;
+        var (streetcodeContentsPaginated, streetcodeShortDtoList) = GetStreetcodeObjects(objectsNumber);
+        var request = GetRequest();
 
-        SetupRepositoryMock(testStreetcodes);
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, streetcodeContentsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<StreetcodeShortDto>, IEnumerable<StreetcodeContent>>(
+            _mockMapper,
+            streetcodeShortDtoList,
+            streetcodeContentsPaginated.Entities);
 
         // Act
-        var result = await _handler.Handle(new GetAllStreetcodesShortQuery(), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.True(result.IsSuccess);
-            Assert.Equal(testStreetcodes.Count, result.Value.Count());
-            _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(null, null), Times.Once);
-            _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
-        });
+        var initialTermsList = streetcodeContentsPaginated.Entities.ToList();
+        result.IsSuccess.Should().BeTrue();
+        result.Value.StreetcodesShort.Should().SatisfyRespectively(
+            first => first.Id.Should().Be(initialTermsList[0].Id),
+            second => second.Id.Should().Be(initialTermsList[1].Id));
+        result.Value.TotalAmount.Should().Be(objectsNumber);
+        VerifyGetAllPaginatedAndMockingOperationsExecution(streetcodeContentsPaginated.Entities);
     }
 
     [Fact]
-    public async Task Handle_WhenNoStreetcodesExist_ReturnsError()
+    public async Task ShouldGetAllSuccessfully_WithCorrectDataType()
     {
         // Arrange
-        const string expectedErrorKey = "NoStreetcodesExistNow";
-        string expectedErrorValue = _mockLocalizer[expectedErrorKey];
-        var query = new GetAllStreetcodesShortQuery();
+        const int objectsNumber = 2;
+        var (termsPaginated, termDtoList) = GetStreetcodeObjects(objectsNumber);
+        var request = GetRequest();
 
-        SetupRepositoryMock(new List<StreetcodeContent>());
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, termsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<StreetcodeShortDto>, IEnumerable<StreetcodeContent>>(
+            _mockMapper,
+            termDtoList,
+            termsPaginated.Entities);
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.False(result.IsSuccess);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-            _loggerMock.Verify(logger => logger.LogError(query, expectedErrorValue), Times.Once);
-        });
+        result.IsSuccess.Should().BeTrue();
+        result.ValueOrDefault.Should().BeOfType<GetAllStreetcodesShortDto>();
     }
 
-    private static List<StreetcodeContent> GetTestStreetcodes(int count)
+    [Fact]
+    public async Task ShouldGetAllFailingly_WhenStreetcodesNotExist()
     {
-        return Enumerable.Range(1, count)
-            .Select(i => new StreetcodeContent { Id = i })
+        // Arrange
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyStreetcodeObjects();
+        var request = GetRequest();
+        var expectedErrorMessage = _mockNoSharedResourceLocalizer["NoStreetcodesExistNow"].Value;
+
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
+    }
+
+    [Fact]
+    public async Task ShouldGetAllSuccessfully_WithCorrectPageSize()
+    {
+        // Arrange
+        const ushort pageNumber = 1;
+        const ushort pageSize = 2;
+        var (termsPaginated, termDtoList) = GetStreetcodeObjects(pageSize);
+        var request = GetRequest(pageNumber, pageSize);
+
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, termsPaginated);
+        MockHelpers.SetupMockMapper<IEnumerable<StreetcodeShortDto>, IEnumerable<StreetcodeContent>>(
+            _mockMapper,
+            termDtoList,
+            termsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.StreetcodesShort.Should().NotBeEmpty();
+        result.Value.TotalAmount.Should().Be(pageSize);
+    }
+
+    [Fact]
+    public async Task ShouldGetAllPaginatedFailingly_WhenPageNumberIsTooBig()
+    {
+        // Arrange
+        const ushort pageNumber = 99;
+        const ushort pageSize = 2;
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyStreetcodeObjects();
+        var request = GetRequest(pageNumber, pageSize);
+        var expectedErrorMessage = _mockNoSharedResourceLocalizer["NoStreetcodesExistNow"].Value;
+
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(0, 1)]
+    [InlineData(1, 0)]
+    public async Task ShouldGetAllPaginatedFailingly_WhenPageNumberOrSizeIsZero(ushort pageNumber, ushort pageSize)
+    {
+        // Arrange
+        var (emptyTermsPaginated, emptyTermDtoList) = GetEmptyStreetcodeObjects();
+        var request = GetRequest(pageNumber, pageSize);
+        var expectedErrorMessage = _mockNoSharedResourceLocalizer["NoStreetcodesExistNow"].Value;
+
+        MockHelpers.SetupMockStreetcodeRepositoryGetAllPaginated(_mockRepository, emptyTermsPaginated);
+        MockHelpers.SetupMockMapper(_mockMapper, emptyTermDtoList, emptyTermsPaginated.Entities);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
+    }
+
+    private static (PaginationResponse<StreetcodeContent>, List<StreetcodeShortDto>) GetStreetcodeObjects(int count)
+    {
+        var streetcodeContentsList = Enumerable
+            .Range(0, count)
+            .Select(i => new StreetcodeContent() { Id = i })
             .ToList();
+        var streetcodeContentPaginated = PaginationResponse<StreetcodeContent>.Create(streetcodeContentsList.AsQueryable());
+
+        var streetcodeShortDtoList = Enumerable
+            .Range(0, count)
+            .Select(i => new StreetcodeShortDto() { Id = streetcodeContentsList[i].Id })
+            .ToList();
+
+        return (streetcodeContentPaginated, streetcodeShortDtoList);
     }
 
-    private void SetupRepositoryMock(List<StreetcodeContent>? streetcodes)
+    private static (PaginationResponse<StreetcodeContent>, List<StreetcodeShortDto>) GetEmptyStreetcodeObjects()
     {
-        _repositoryMock
-            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(null, null))
-            .ReturnsAsync(streetcodes!);
+        return (
+            PaginationResponse<StreetcodeContent>.Create(new List<StreetcodeContent>().AsQueryable()),
+            new List<StreetcodeShortDto>());
+    }
 
-        _mapperMock
-            .Setup(m => m.Map<IEnumerable<StreetcodeShortDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()))
-            .Returns((IEnumerable<StreetcodeContent> src) =>
-                src.Select(s => new StreetcodeShortDTO()
-                {
-                    Id = s.Id,
-                }).ToList());
+    private static GetAllStreetcodesShortQuery GetRequest(ushort? page = null, ushort? pageSize = null)
+    {
+        return new GetAllStreetcodesShortQuery(page, pageSize);
+    }
+
+    private void VerifyGetAllPaginatedAndMockingOperationsExecution(IEnumerable<StreetcodeContent> streetcodeContentList)
+    {
+        _mockRepository.Verify(
+            x => x.StreetcodeRepository.GetAllPaginated(
+                It.IsAny<ushort?>(),
+                It.IsAny<ushort?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, StreetcodeContent>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, object>>?>(),
+                It.IsAny<Expression<Func<StreetcodeContent, object>>?>()),
+            Times.Once);
+        _mockMapper.Verify(x => x.Map<IEnumerable<StreetcodeShortDto>>(streetcodeContentList), Times.Once);
     }
 }

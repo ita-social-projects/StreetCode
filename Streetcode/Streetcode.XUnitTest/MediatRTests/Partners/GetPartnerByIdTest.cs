@@ -8,7 +8,6 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Partners.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Partners;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -44,7 +43,7 @@ public class GetPartnerByIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<PartnerDTO>(It.IsAny<Partner>()))
+            .Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
         var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -84,7 +83,7 @@ public class GetPartnerByIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<PartnerDTO?>(It.IsAny<Partner>()))
+            .Map<PartnerDto?>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTOWithNotExistingId());
 
         var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -113,7 +112,7 @@ public class GetPartnerByIdTest
 
         this.mockMapper
             .Setup(x => x
-            .Map<PartnerDTO>(It.IsAny<Partner>()))
+            .Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDTO());
 
         var handler = new GetPartnerByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
@@ -124,7 +123,7 @@ public class GetPartnerByIdTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result.ValueOrDefault),
-            () => Assert.IsType<PartnerDTO>(result.ValueOrDefault));
+            () => Assert.IsType<PartnerDto>(result.ValueOrDefault));
     }
 
     private static Partner GetPartner()
@@ -140,15 +139,15 @@ public class GetPartnerByIdTest
         return null;
     }
 
-    private static PartnerDTO GetPartnerDTO()
+    private static PartnerDto GetPartnerDTO()
     {
-        return new PartnerDTO
+        return new PartnerDto
         {
             Id = 1,
         };
     }
 
-    private static PartnerDTO? GetPartnerDTOWithNotExistingId()
+    private static PartnerDto? GetPartnerDTOWithNotExistingId()
     {
         return null;
     }

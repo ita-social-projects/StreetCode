@@ -43,7 +43,7 @@ public class CreatePartnerTest
 
         this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
         this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
@@ -62,7 +62,7 @@ public class CreatePartnerTest
         var result = await handler.Handle(new CreatePartnerQuery(GetCreatePartnerDto()), CancellationToken.None);
 
         // Assert
-        Assert.IsType<PartnerDTO>(result.Value);
+        Assert.IsType<PartnerDto>(result.Value);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class CreatePartnerTest
 
         this.mockMapper.Setup(x => x.Map<Partner>(It.IsAny<CreatePartnerDTO>()))
             .Returns(testPartner);
-        this.mockMapper.Setup(x => x.Map<PartnerDTO>(It.IsAny<Partner>()))
+        this.mockMapper.Setup(x => x.Map<PartnerDto>(It.IsAny<Partner>()))
             .Returns(GetPartnerDto());
 
         this.mockRepository.Setup(x => x.PartnersRepository.CreateAsync(It.Is<Partner>(y => y.Id == testPartner.Id)))
@@ -118,9 +118,9 @@ public class CreatePartnerTest
         };
     }
 
-    private static PartnerDTO GetPartnerDto()
+    private static PartnerDto GetPartnerDto()
     {
-        return new PartnerDTO
+        return new PartnerDto
         {
             Title = "New Partner",
             LogoId = 100,

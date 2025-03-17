@@ -1,9 +1,10 @@
 using Streetcode.BLL.DTO.AdditionalContent;
+using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Partners;
 
-public class PartnerDTO
+public class PartnerDto
 {
     public int Id { get; set; }
 
@@ -22,4 +23,6 @@ public class PartnerDTO
     public List<PartnerSourceLinkDTO> PartnerSourceLinks { get; set; } = new List<PartnerSourceLinkDTO>();
 
     public List<StreetcodeShortDto> Streetcodes { get; set; } = new List<StreetcodeShortDto>();
+
+    public ImageDTO? Logo { get; set; }
 }

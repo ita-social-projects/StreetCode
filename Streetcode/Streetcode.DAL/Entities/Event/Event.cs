@@ -25,7 +25,7 @@ namespace Streetcode.DAL.Entities.Event
         [MaxLength(100)]
         public string? Title { get; set; }
 
-        [MaxLength(600)]
+        [MaxLength(500)]
         public string? Description { get; set; }
 
         [Required]

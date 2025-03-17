@@ -1137,7 +1137,7 @@ namespace Streetcode.WebApi.Extensions
                         }
                     }
 
-                if (!dbContext.Events.Any())
+                    if (!dbContext.Events.Any())
                 {
                     dbContext.Events.AddRange(
                         new CustomEvent
@@ -1170,19 +1170,19 @@ namespace Streetcode.WebApi.Extensions
                     await dbContext.SaveChangesAsync();
                 }
 
-                if (!dbContext.TransactionLinks.Any())
-                {
-                    dbContext.TransactionLinks.AddRange(
-                        new TransactionLink
-                        {
-                            Url = "https://streetcode/1",
-                            StreetcodeId = 1
-                        },
-                        new TransactionLink
-                        {
-                            Url = "https://streetcode/2",
-                            StreetcodeId = 2
-                        });
+                    if (!dbContext.TransactionLinks.Any())
+                    {
+                        dbContext.TransactionLinks.AddRange(
+                            new TransactionLink
+                            {
+                                Url = "https://streetcode/1",
+                                StreetcodeId = 1
+                            },
+                            new TransactionLink
+                            {
+                                Url = "https://streetcode/2",
+                                StreetcodeId = 2
+                            });
 
                         await dbContext.SaveChangesAsync();
                     }

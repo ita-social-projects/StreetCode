@@ -45,17 +45,17 @@ public class StreetcodeController : BaseApiController
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDto>))]
     public async Task<IActionResult> GetAllPublished()
     {
         return HandleResult(await Mediator.Send(new GetAllPublishedQuery()));
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDTO>))]
-    public async Task<IActionResult> GetAllShort()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StreetcodeShortDto>))]
+    public async Task<IActionResult> GetAllShort([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
     {
-        return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery()));
+        return HandleResult(await Mediator.Send(new GetAllStreetcodesShortQuery(page, pageSize)));
     }
 
     [HttpGet]
@@ -74,7 +74,7 @@ public class StreetcodeController : BaseApiController
 
     [HttpGet("{streetcodeId:int}")]
     [ValidateStreetcodeExistence]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDTO))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StreetcodeShortDto))]
     public async Task<IActionResult> GetShortById(int streetcodeId)
     {
         return HandleResult(await Mediator.Send(new GetStreetcodeShortByIdQuery(streetcodeId)));

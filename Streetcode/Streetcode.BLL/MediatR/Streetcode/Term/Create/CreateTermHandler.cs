@@ -2,7 +2,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -10,7 +10,7 @@ using TermEntity = Streetcode.DAL.Entities.Streetcode.TextContent.Term;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.Create;
 
-public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDTO>>
+public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repository;
@@ -32,7 +32,7 @@ public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermD
         _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
     }
 
-    public async Task<Result<TermDTO>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TermDto>> Handle(CreateTermCommand request, CancellationToken cancellationToken)
     {
         var term = _mapper.Map<TermEntity>(request.Term);
 
@@ -53,7 +53,7 @@ public class CreateTermHandler : IRequestHandler<CreateTermCommand, Result<TermD
             return Result.Fail(new Error(errorMessage));
         }
 
-        var createdTermDto = _mapper.Map<TermDTO>(createdTerm);
+        var createdTermDto = _mapper.Map<TermDto>(createdTerm);
 
         if (createdTermDto is null)
         {

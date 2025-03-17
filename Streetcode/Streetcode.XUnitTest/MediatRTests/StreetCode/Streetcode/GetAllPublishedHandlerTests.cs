@@ -56,7 +56,7 @@ public class GetAllPublishedHandlerTests
             Assert.True(result.IsSuccess);
             Assert.Equal(testStreetcodes.Count, result.Value.Count());
             _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(sc => sc.Status == StreetcodeStatus.Published, null), Times.Once);
-            _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
+            _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDto>>(testStreetcodes), Times.Once);
         });
     }
 
@@ -97,9 +97,9 @@ public class GetAllPublishedHandlerTests
             .ReturnsAsync(streetcodes!);
 
         _mapperMock
-            .Setup(m => m.Map<IEnumerable<StreetcodeShortDTO>>(It.IsAny<IEnumerable<StreetcodeContent>>()))
+            .Setup(m => m.Map<IEnumerable<StreetcodeShortDto>>(It.IsAny<IEnumerable<StreetcodeContent>>()))
             .Returns((IEnumerable<StreetcodeContent> src) =>
-                src.Select(s => new StreetcodeShortDTO()
+                src.Select(s => new StreetcodeShortDto()
                 {
                     Id = s.Id,
                 }).ToList());

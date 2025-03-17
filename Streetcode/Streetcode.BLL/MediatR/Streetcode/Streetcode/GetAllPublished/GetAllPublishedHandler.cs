@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllPublished;
 
 public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
-    Result<IEnumerable<StreetcodeShortDTO>>>
+    Result<IEnumerable<StreetcodeShortDto>>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -30,7 +30,7 @@ public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
         _stringLocalizerNo = stringLocalizerNo;
     }
 
-    public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<StreetcodeShortDto>>> Handle(GetAllPublishedQuery request, CancellationToken cancellationToken)
     {
         var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
             predicate: sc => sc.Status == DAL.Enums.StreetcodeStatus.Published);
@@ -42,6 +42,6 @@ public class GetAllPublishedHandler : IRequestHandler<GetAllPublishedQuery,
             return Result.Fail(errorMsg);
         }
 
-        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
+        return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDto>>(streetcodes));
     }
 }

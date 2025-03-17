@@ -39,7 +39,7 @@ public class GetStreetcodeShortByIdHandlerTests
         // Arrange
         var request = new GetStreetcodeShortByIdQuery(Id: 1);
         var testStreetcode = new StreetcodeContent { Id = request.Id };
-        var expectedDto = new StreetcodeShortDTO { Id = request.Id };
+        var expectedDto = new StreetcodeShortDto { Id = request.Id };
 
         SetupRepositoryMock(testStreetcode);
         SetupMapperMock();
@@ -65,7 +65,7 @@ public class GetStreetcodeShortByIdHandlerTests
         string expectedErrorValue = _mockCannotMapLocalizer[expectedErrorKey];
 
         SetupRepositoryMock(testStreetcode);
-        _mapperMock.Setup(m => m.Map<StreetcodeShortDTO>(It.IsAny<StreetcodeContent>())).Returns((StreetcodeShortDTO)null!);
+        _mapperMock.Setup(m => m.Map<StreetcodeShortDto>(It.IsAny<StreetcodeContent>())).Returns((StreetcodeShortDto)null!);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -89,7 +89,7 @@ public class GetStreetcodeShortByIdHandlerTests
     private void SetupMapperMock()
     {
         _mapperMock
-            .Setup(m => m.Map<StreetcodeShortDTO>(It.IsAny<StreetcodeContent>()))
-            .Returns((StreetcodeContent src) => new StreetcodeShortDTO { Id = src.Id });
+            .Setup(m => m.Map<StreetcodeShortDto>(It.IsAny<StreetcodeContent>()))
+            .Returns((StreetcodeContent src) => new StreetcodeShortDto { Id = src.Id });
     }
 }

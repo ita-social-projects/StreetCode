@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Create;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -54,7 +54,7 @@ public class CreateTermTest
         result.Value.Title.Should().Be(termCreateDto.Title);
         _mockRepository.Verify(x => x.TermRepository.CreateAsync(term), Times.Once);
         _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
-        _mockMapper.Verify(x => x.Map<TermDTO>(term), Times.Once);
+        _mockMapper.Verify(x => x.Map<TermDto>(term), Times.Once);
     }
 
     [Fact]
@@ -73,11 +73,11 @@ public class CreateTermTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeOfType<TermDTO>();
+        result.Value.Should().BeOfType<TermDto>();
     }
 
     [Fact]
-    public async Task ShouldCreateSuccessfully_WhenSaveChangesAsyncFailed()
+    public async Task ShouldCreateFailingly_WhenSaveChangesAsyncFailed()
     {
         // Arrange
         var (termCreateDto, term, _) = GetTermObjects();
@@ -104,7 +104,7 @@ public class CreateTermTest
         var request = GetRequest(termCreateDto);
         var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToTerm"].Value;
 
-        MockHelpers.SetupMockMapper<Term?, TermCreateDTO>(_mockMapper, null, request.Term);
+        MockHelpers.SetupMockMapper<Term?, TermCreateDto>(_mockMapper, null, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -136,11 +136,11 @@ public class CreateTermTest
         _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static (TermCreateDTO, Term, TermDTO) GetTermObjects()
+    private static (TermCreateDto, Term, TermDto) GetTermObjects()
     {
         const string title = "qwerty";
 
-        var termCreateDto = new TermCreateDTO()
+        var termCreateDto = new TermCreateDto()
         {
             Title = title,
         };
@@ -148,7 +148,7 @@ public class CreateTermTest
         {
             Title = title,
         };
-        var termDto = new TermDTO()
+        var termDto = new TermDto()
         {
             Title = title,
         };
@@ -156,7 +156,7 @@ public class CreateTermTest
         return (termCreateDto, term, termDto);
     }
 
-    private static CreateTermCommand GetRequest(TermCreateDTO termCreateDto)
+    private static CreateTermCommand GetRequest(TermCreateDto termCreateDto)
     {
         return new CreateTermCommand(termCreateDto);
     }

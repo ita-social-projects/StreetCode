@@ -10,7 +10,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetById;
 
-public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result<PartnerDTO>>
+public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result<PartnerDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -25,7 +25,7 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
         _stringLocalizer = stringLocalizer;
     }
 
-    public async Task<Result<PartnerDTO>> Handle(GetPartnerByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PartnerDto>> Handle(GetPartnerByIdQuery request, CancellationToken cancellationToken)
     {
         var partner = await _repositoryWrapper
             .PartnersRepository
@@ -41,6 +41,6 @@ public class GetPartnerByIdHandler : IRequestHandler<GetPartnerByIdQuery, Result
             return Result.Fail(new Error(errorMsg));
         }
 
-        return Result.Ok(_mapper.Map<PartnerDTO>(partner));
+        return Result.Ok(_mapper.Map<PartnerDto>(partner));
     }
 }

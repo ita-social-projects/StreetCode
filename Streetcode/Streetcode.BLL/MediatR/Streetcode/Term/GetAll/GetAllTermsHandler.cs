@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll;
 
-public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<IEnumerable<TermDTO>>>
+public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<GetAllTermsDto>>
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
@@ -17,10 +17,15 @@ public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<IEnum
         _mapper = mapper;
     }
 
-    public async Task<Result<IEnumerable<TermDTO>>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
+    public Task<Result<GetAllTermsDto>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
     {
-        var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
+        var paginatedTerms = _repositoryWrapper.TermRepository.GetAllPaginated(request.page, request.pageSize);
+        var getAllTermsDto = new GetAllTermsDto()
+        {
+            TotalAmount = paginatedTerms.TotalItems,
+            Terms = _mapper.Map<IEnumerable<TermDto>>(paginatedTerms.Entities),
+        };
 
-        return Result.Ok(_mapper.Map<IEnumerable<TermDTO>>(terms));
+        return Task.FromResult(Result.Ok(getAllTermsDto));
     }
 }

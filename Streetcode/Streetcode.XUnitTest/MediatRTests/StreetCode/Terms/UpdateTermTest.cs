@@ -2,7 +2,7 @@
 using FluentAssertions;
 using MediatR;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.Update;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -81,7 +81,7 @@ public class UpdateTermTest
         var request = GetRequest(termDto);
         var expectedErrorMessage = _mockCannotConvertNullLocalizer["CannotConvertNullToTerm"].Value;
 
-        MockHelpers.SetupMockMapper<Term?, TermDTO>(_mockMapper, null, request.Term);
+        MockHelpers.SetupMockMapper<Term?, TermDto>(_mockMapper, null, request.Term);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -112,15 +112,15 @@ public class UpdateTermTest
         _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static (Term, TermDTO) GetTermObjects()
+    private static (Term, TermDto) GetTermObjects()
     {
         var term = new Term();
-        var termDto = new TermDTO();
+        var termDto = new TermDto();
 
         return (term, termDto);
     }
 
-    private static UpdateTermCommand GetRequest(TermDTO termDto)
+    private static UpdateTermCommand GetRequest(TermDto termDto)
     {
         return new UpdateTermCommand(termDto);
     }

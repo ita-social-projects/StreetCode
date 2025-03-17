@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Term;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Term.GetById;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
@@ -55,7 +55,7 @@ public class GetTermByIdTest
                 t => t.Id == request.Id,
                 It.IsAny<Func<IQueryable<Term>, IIncludableQueryable<Term, object>>>()),
             Times.Once);
-        _mockMapper.Verify(x => x.Map<TermDTO>(term), Times.Once);
+        _mockMapper.Verify(x => x.Map<TermDto>(term), Times.Once);
     }
 
     [Theory]
@@ -74,7 +74,7 @@ public class GetTermByIdTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.ValueOrDefault.Should().BeOfType<TermDTO>();
+        result.ValueOrDefault.Should().BeOfType<TermDto>();
     }
 
     [Theory]
@@ -96,13 +96,13 @@ public class GetTermByIdTest
         _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
     }
 
-    private static (Term, TermDTO) GetTermObjects(int termId)
+    private static (Term, TermDto) GetTermObjects(int termId)
     {
         var term = new Term()
         {
             Id = termId,
         };
-        var termDto = new TermDTO()
+        var termDto = new TermDto()
         {
             Id = term.Id,
         };

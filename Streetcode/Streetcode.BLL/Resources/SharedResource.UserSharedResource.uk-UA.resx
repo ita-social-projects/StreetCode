@@ -129,9 +129,6 @@
   <data name="UserWithSuchEmailExists" xml:space="preserve">
     <value>Ця електронна адреса вже використовується. Увійдіть в систему або вкажіть іншу адресу.</value>
   </data>
-  <data name="UserWithSuchUsernameExists" xml:space="preserve">
-    <value>Користувач з таким іменем вже зареєстрований</value>
-  </data>
   <data name="UserManagerError" xml:space="preserve">
     <value>Помилка в User Manager</value>
   </data>
@@ -146,5 +143,11 @@
   </data>
   <data name="IncorrectEmailOrPassword" xml:space="preserve">
     <value>Електронна адреса або пароль невірні.</value>
+  </data>
+  <data name="InvalidUserId" xml:space="preserve">
+    <value>Введений ідентифікатор користувача не дорівнює ідентифікатору, який зберігається в базі даних</value>
+  </data>
+  <data name="UserWithSuchUsernameExists" xml:space="preserve">
+    <value>Користувач з таким іменем вже зареєстрований</value>
   </data>
 </root>

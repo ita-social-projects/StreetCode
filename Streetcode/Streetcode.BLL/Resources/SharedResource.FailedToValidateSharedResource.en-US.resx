@@ -234,7 +234,4 @@
   <data name="PasswordConfirmationNotEqual" xml:space="preserve">
     <value>Password and confirmation password must be the same</value>
   </data>
-  <data name="InvalidUserId" xml:space="preserve">
-    <value>Entered user id not equals id stored in database</value>
-  </data>
 </root>

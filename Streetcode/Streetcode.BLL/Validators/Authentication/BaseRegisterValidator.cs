@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Register;
 using Streetcode.BLL.SharedResource;
-using System.Text.RegularExpressions;
 
 namespace Streetcode.BLL.Validators.Authentication;
 

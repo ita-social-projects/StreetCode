@@ -13,7 +13,6 @@ using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Entities.Users.Expertise;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
 
 namespace Streetcode.BLL.MediatR.Users.Update;
 

@@ -42,14 +42,13 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
             UserName = $"Updated_{testUserName}",
             AboutYourself = "Updated description",
             PhoneNumber = "+380735004490",
-            Email = testEmail,
         };
     }
 
     public override void After(MethodInfo methodUnderTest)
     {
         var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-        var user = sqlDbHelper.GetExistItem<User>(u => u.Email == UserForTest.Email);
+        var user = sqlDbHelper.GetExistItem<User>(u => u.Id == UserForTest.Id);
         if (user != null)
         {
             sqlDbHelper.DeleteItem(user);

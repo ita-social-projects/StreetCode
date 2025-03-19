@@ -16,7 +16,8 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
     public UpdateUserValidator(
         BaseUserValidator baseUserValidator,
         IRepositoryWrapper repositoryWrapper,
-        IStringLocalizer<UserSharedResource> localizer,
+        IStringLocalizer<UserSharedResource> userLocalizer,
+        IStringLocalizer<FailedToValidateSharedResource> localizer,
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         _repositoryWrapper = repositoryWrapper;
@@ -24,12 +25,12 @@ public class UpdateUserValidator : AbstractValidator<UpdateUserCommand>
 
         RuleFor(dto => dto.UserDto.Id)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Id"]])
-            .MustAsync(UserExists).WithMessage(localizer["UserNotFound"]);
+            .MustAsync(UserExists).WithMessage(userLocalizer["UserNotFound"]);
 
         RuleFor(dto => dto.UserDto)
             .MustAsync(BeUniqueUserName)
             .WhenAsync((dto, cancellation) => UserExists(dto.UserDto.Id, cancellation))
-            .WithMessage(localizer["UserWithSuchUsernameExists"]);
+            .WithMessage(userLocalizer["UserWithSuchUsernameExists"]);
     }
 
     private async Task<bool> UserExists(string userId, CancellationToken cancellationToken)

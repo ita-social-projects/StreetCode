@@ -21,6 +21,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "NameFormat",
                     "SurnameFormat",
                     "InvalidPaginationParameters",
+                    "PhoneFormat",
                 }
             },
             {

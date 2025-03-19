@@ -129,9 +129,6 @@
   <data name="UserWithSuchEmailExists" xml:space="preserve">
     <value>This email is already in use. Please log in or enter a different email.</value>
   </data>
-  <data name="UserWithSuchUsernameExists" xml:space="preserve">
-    <value>User with such Username already exists in database</value>
-  </data>
   <data name="UserManagerError" xml:space="preserve">
     <value>Error in User Manager</value>
   </data>
@@ -146,5 +143,11 @@
   </data>
   <data name="IncorrectEmailOrPassword" xml:space="preserve">
     <value>Email or password is incorrect.</value>
+  </data>
+  <data name="InvalidUserId" xml:space="preserve">
+    <value>Entered user id not equals id stored in database</value>
+  </data>
+  <data name="UserWithSuchUsernameExists" xml:space="preserve">
+    <value>User with such Username already exists in database</value>
   </data>
 </root>

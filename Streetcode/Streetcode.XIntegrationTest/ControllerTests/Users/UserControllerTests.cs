@@ -34,6 +34,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     {
         _factory = factory;
         var serviceProvider = _factory.Services.CreateScope().ServiceProvider;
+        _factory.EmailServiceMock.Reset();
 
         _userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 

@@ -45,17 +45,6 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
         };
     }
 
-    // public override void After(MethodInfo methodUnderTest)
-    // {
-    //     var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-    //     var user = sqlDbHelper.GetExistItem<User>(u => u.Id == UserForTest.Id);
-    //     if (user != null)
-    //     {
-    //         sqlDbHelper.DeleteItem(user);
-    //         sqlDbHelper.SaveChanges();
-    //     }
-    // }
-
     private string GenerateTestPassword()
     {
         string guid = Guid.NewGuid().ToString();

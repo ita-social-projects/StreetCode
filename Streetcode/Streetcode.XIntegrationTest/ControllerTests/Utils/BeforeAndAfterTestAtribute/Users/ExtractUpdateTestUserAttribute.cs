@@ -40,22 +40,21 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
             Id = "Test_User_User_qwe123456rty#",
             Name = "UpdatedName",
             Surname = "UpdatedSurname",
-            UserName = $"Updated_{testUserName}",
             AboutYourself = "Updated description",
             PhoneNumber = "+380735004490",
         };
     }
 
-    public override void After(MethodInfo methodUnderTest)
-    {
-        var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-        var user = sqlDbHelper.GetExistItem<User>(u => u.Id == UserForTest.Id);
-        if (user != null)
-        {
-            sqlDbHelper.DeleteItem(user);
-            sqlDbHelper.SaveChanges();
-        }
-    }
+    // public override void After(MethodInfo methodUnderTest)
+    // {
+    //     var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
+    //     var user = sqlDbHelper.GetExistItem<User>(u => u.Id == UserForTest.Id);
+    //     if (user != null)
+    //     {
+    //         sqlDbHelper.DeleteItem(user);
+    //         sqlDbHelper.SaveChanges();
+    //     }
+    // }
 
     private string GenerateTestPassword()
     {

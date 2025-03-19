@@ -11,11 +11,6 @@ namespace Streetcode.DAL.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_news_images_ImageId",
-                schema: "news",
-                table: "news");
-
             migrationBuilder.EnsureSchema(
                 name: "events");
 
@@ -28,10 +23,10 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 600, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(600)", maxLength: 500, nullable: true),
                     EventType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Organizer = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Organizer = table.Column<string>(type: "nvarchar(100)", maxLength: 200, nullable: true),
                     DateString = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     TimelineItemId = table.Column<int>(type: "int", nullable: true)
                 },

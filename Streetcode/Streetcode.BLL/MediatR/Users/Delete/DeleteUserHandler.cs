@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
@@ -18,19 +20,25 @@ public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, Result<Unit>
     private readonly UserManager<User> _userManager;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IStringLocalizer<UserSharedResource> _localizer;
+    private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
+    private readonly IEmailService _emailService;
 
     public DeleteUserHandler(
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         UserManager<User> userManager,
         IHttpContextAccessor httpContextAccessor,
-        IStringLocalizer<UserSharedResource> localizer)
+        IStringLocalizer<UserSharedResource> localizer,
+        IMessageDataAbstractFactory messageDataAbstractFactory,
+        IEmailService emailService)
     {
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
         _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
         _localizer = localizer;
+        _messageDataAbstractFactory = messageDataAbstractFactory;
+        _emailService = emailService;
     }
 
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -55,6 +63,10 @@ public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, Result<Unit>
 
             _repositoryWrapper.UserRepository.Delete(user);
             await _repositoryWrapper.SaveChangesAsync();
+
+            var messageData = _messageDataAbstractFactory.CreateDeleteConfirmationMessageData(new[] { user.Email });
+            await _emailService.SendEmailAsync(messageData);
+
             return Result.Ok(Unit.Value);
         }
         catch (Exception ex)

@@ -26,6 +26,7 @@ public class UpdateUserValidatorTests
         _mockValidationLocalizer = new MockFailedToValidateLocalizer();
         _mockUserSharedResourceLocalizer = new MockUserSharedResourceLocalizer();
         _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
+
         _mockBaseValidator = new Mock<BaseUserValidator>(_mockValidationLocalizer, _mockNamesLocalizer, _mockRepositoryWrapper.Object);
         _mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<UpdateUserDTO>>()))
             .Returns(new ValidationResult());
@@ -35,7 +36,7 @@ public class UpdateUserValidatorTests
     public async Task Validate_WhenCalled_ShouldCallBaseValidator()
     {
         // Arrange
-        var createValidator = new UpdateUserValidator(_mockBaseValidator.Object, _mockRepositoryWrapper.Object, _mockUserSharedResourceLocalizer);
+        var createValidator = new UpdateUserValidator(_mockBaseValidator.Object, _mockRepositoryWrapper.Object, _mockUserSharedResourceLocalizer, _mockValidationLocalizer, _mockNamesLocalizer);
         var user = GetValidUser();
         var createCommand = new UpdateUserCommand(user);
         MockHelpers.SetupMockUserRepositoryGetFirstOfDefaultAsync(_mockRepositoryWrapper, user.UserName);
@@ -75,7 +76,7 @@ public class UpdateUserValidatorTests
                 },
             },
             PhoneNumber = null!,
-            Email = "testemail",
+            Id = "FD97D98B-B4B3-45D3-990C-87C41DC28FC0",
         };
     }
 }

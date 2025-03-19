@@ -156,7 +156,7 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
         {
             if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
             {
-                property.Remove();
+                property.Value = "******";
             }
 
             var valueAsString = property.Value.ToString();

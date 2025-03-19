@@ -9,7 +9,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
 public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
 {
-    private static User? _testUserEntity;
+    public static User? TestUserEntity { get; private set; }
 
     public static UpdateUserDTO UserForTest { get; private set; } = null!;
 
@@ -21,7 +21,7 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
         string testUserName = $"testuser_{uniqueId.Substring(0, 8)}".ToLower();
         string testEmail = $"test_{uniqueId.Substring(0, 8)}@example.com";
 
-        _testUserEntity = new User
+        TestUserEntity = new User
         {
             Name = "testname",
             Surname = "testsurname",
@@ -32,11 +32,12 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
             PasswordHash = GenerateTestPassword(),
         };
 
-        sqlDbHelper.AddNewItem(_testUserEntity);
+        sqlDbHelper.AddNewItem(TestUserEntity);
         sqlDbHelper.SaveChanges();
 
         UserForTest = new UpdateUserDTO
         {
+            Id = "Test_User_User_qwe123456rty#",
             Name = "UpdatedName",
             Surname = "UpdatedSurname",
             UserName = $"Updated_{testUserName}",

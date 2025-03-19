@@ -105,6 +105,7 @@ namespace Streetcode.BLL.MediatR.Event.Update
             }
             else if (eventToUpdate is CustomEvent customEvent)
             {
+                customEvent.DateString = null;
                 customEvent.Location = null;
                 customEvent.Organizer = null;
             }
@@ -124,6 +125,7 @@ namespace Streetcode.BLL.MediatR.Event.Update
             }
             else if (eventToUpdate is CustomEvent customEvent)
             {
+                customEvent.DateString = request.Event.DateString;
                 customEvent.Location = request.Event.Location;
                 customEvent.Organizer = request.Event.Organizer;
             }

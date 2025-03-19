@@ -80,6 +80,7 @@ namespace Streetcode.BLL.MediatR.Event.Create
             }
             else if (eventToCreate is CustomEvent customEvent)
             {
+                customEvent.DateString = request.Event.DateString;
                 customEvent.Location = request.Event.Location;
                 customEvent.Organizer = request.Event.Organizer;
             }

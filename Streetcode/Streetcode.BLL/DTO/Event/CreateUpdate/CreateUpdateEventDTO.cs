@@ -12,5 +12,6 @@ namespace Streetcode.BLL.DTO.Event.CreateUpdate
         public string? Location { get; set; }
         public string? Organizer { get; set; }
         public int? TimelineItemId { get; set; }
+        public string? DateString { get; set; }
     }
 }

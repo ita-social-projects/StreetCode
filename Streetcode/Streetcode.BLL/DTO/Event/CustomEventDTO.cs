@@ -8,6 +8,7 @@ namespace Streetcode.BLL.DTO.Event
 {
     public class CustomEventDTO : EventDTO
     {
+        public string DateString { get; set; }
         public string? Location { get; set; }
         public string? Organizer { get; set; }
     }

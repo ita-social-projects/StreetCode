@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
+using MockQueryable.Moq;
 using Moq;
 using Streetcode.BLL.DTO.AdditionalContent.Coordinates.Types;
 using Streetcode.BLL.Interfaces.Logging;
@@ -9,112 +10,145 @@ using Streetcode.BLL.MediatR.AdditionalContent.Coordinate.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.CoordinateTests
 {
     public class GetCoordinatesByStreetcodeIdHandlerTests
     {
-        private const int streetcode_id = 1;
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private const int StreetcodeId = 1;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly MockCannotFindLocalizer _mockLocalizer;
 
-        private readonly List<StreetcodeCoordinate> coordinates = new List<StreetcodeCoordinate>
+        private readonly List<StreetcodeCoordinate> _coordinates = new List<StreetcodeCoordinate>
         {
             new StreetcodeCoordinate
             {
                 Id = 1,
-                StreetcodeId = streetcode_id,
+                StreetcodeId = StreetcodeId,
             },
             new StreetcodeCoordinate
             {
                 Id = 2,
-                StreetcodeId = streetcode_id,
+                StreetcodeId = StreetcodeId,
             },
         };
 
-        private readonly List<StreetcodeCoordinateDTO> coordinateDTOs = new List<StreetcodeCoordinateDTO>
+        private readonly List<StreetcodeCoordinateDTO> _coordinateDtOs = new List<StreetcodeCoordinateDTO>
         {
             new StreetcodeCoordinateDTO
             {
                 Id = 1,
-                StreetcodeId = streetcode_id,
+                StreetcodeId = StreetcodeId,
             },
             new StreetcodeCoordinateDTO
             {
                 Id = 2,
-                StreetcodeId = streetcode_id,
+                StreetcodeId = StreetcodeId,
+            },
+        };
+
+        private readonly List<StreetcodeContent> _streetcodesUserHaveAccessTo = new List<StreetcodeContent>()
+        {
+            new StreetcodeContent
+            {
+                Id = StreetcodeId,
             },
         };
 
         public GetCoordinatesByStreetcodeIdHandlerTests()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new MockCannotFindLocalizer();
         }
 
         [Fact]
         public async Task Handler_Returns_NotEmpty_List()
         {
             // Arrange
-            this.SetupRepository(this.coordinates, new StreetcodeContent());
-            this.SetupMapper(this.coordinateDTOs);
+            SetupRepository(_coordinates, new StreetcodeContent(),  _streetcodesUserHaveAccessTo);
+            SetupMapper(_coordinateDtOs);
 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer);
 
             // Act
-            var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(StreetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<List<StreetcodeCoordinateDTO>>(result.Value),
-                () => Assert.True(result.Value.All(co => co.StreetcodeId.Equals(streetcode_id))));
+                () => Assert.True(result.Value.All(co => co.StreetcodeId.Equals(StreetcodeId))));
         }
 
         [Fact]
-        public async Task Handler_Returns_Error()
+        public async Task Handler_NoCoordinatesForStreetcode_ReturnsErrorNoCoordinates()
         {
             // Arrange
-            this.SetupRepository(new List<StreetcodeCoordinate>(), new StreetcodeContent());
-            this.SetupMapper(new List<StreetcodeCoordinateDTO>());
+            SetupRepository(new List<StreetcodeCoordinate>(), new StreetcodeContent(), _streetcodesUserHaveAccessTo);
+            SetupMapper(new List<StreetcodeCoordinateDTO>());
 
-            var expectedError = $"Cannot find coordinates by streetcodeId: {streetcode_id}";
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindCoordinatesByStreetcodeId", streetcode_id])
-                .Returns(new LocalizedString("CannotFindCoordinatesByStreetcodeId", expectedError));
+            var expectedError = _mockLocalizer["CannotFindCoordinatesByStreetcodeId", StreetcodeId].Value;
 
-            var handler = new GetCoordinatesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer);
 
             // Act
-            var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(StreetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);
         }
 
-        private void SetupRepository(List<StreetcodeCoordinate> returnList, StreetcodeContent streetcode)
+        [Fact]
+        public async Task Handler_NoAccessToStreetcode_ReturnsErrorNoStreetcode()
         {
-            this.mockRepo.Setup(repo => repo.StreetcodeCoordinateRepository.GetAllAsync(
+            // Arrange
+            SetupRepository(_coordinates, new StreetcodeContent(), new List<StreetcodeContent>());
+            SetupMapper(new List<StreetcodeCoordinateDTO>());
+
+            var expectedError = _mockLocalizer["CannotFindAnyStreetcodeWithCorrespondingId", StreetcodeId].Value;
+
+            var handler = new GetCoordinatesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer);
+
+            // Act
+            var result = await handler.Handle(new GetCoordinatesByStreetcodeIdQuery(StreetcodeId, UserRole.User), CancellationToken.None);
+
+            // Assert
+            Assert.Equal(expectedError, result.Errors.Single().Message);
+        }
+
+        private void SetupRepository(List<StreetcodeCoordinate> returnList, StreetcodeContent streetcode, List<StreetcodeContent> streetcodeListUserCanAccess)
+        {
+            _mockRepo.Setup(repo => repo.StreetcodeCoordinateRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StreetcodeCoordinate, bool>>>(),
                 It.IsAny<Func<IQueryable<StreetcodeCoordinate>,
                 IIncludableQueryable<StreetcodeCoordinate, object>>>()))
                 .ReturnsAsync(returnList);
 
-            this.mockRepo.Setup(x => x.StreetcodeRepository
+            _mockRepo.Setup(x => x.StreetcodeRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
                     It.IsAny<Func<IQueryable<StreetcodeContent>,
                     IIncludableQueryable<StreetcodeContent, object>>>()))
                 .ReturnsAsync(streetcode);
+
+            _mockRepo.Setup(repo => repo.StreetcodeRepository
+                    .FindAll(
+                        It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                        It.IsAny<Func<IQueryable<StreetcodeContent>,
+                            IIncludableQueryable<StreetcodeContent, object>>>()))
+                .Returns(streetcodeListUserCanAccess.AsQueryable().BuildMockDbSet().Object);
         }
 
         private void SetupMapper(List<StreetcodeCoordinateDTO> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeCoordinateDTO>>(It.IsAny<IEnumerable<object>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeCoordinateDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

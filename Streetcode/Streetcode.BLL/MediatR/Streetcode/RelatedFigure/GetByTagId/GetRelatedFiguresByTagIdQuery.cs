@@ -7,4 +7,3 @@ namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
 
 public record GetRelatedFiguresByTagIdQuery(int TagId, UserRole? UserRole)
     : IRequest<Result<IEnumerable<RelatedFigureDTO>>>;
-

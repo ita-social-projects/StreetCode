@@ -4,6 +4,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.ResultVariations;
@@ -46,8 +47,13 @@ public class GetTransactLinkByStreetcodeIdHandler : IRequestHandler<GetTransactL
         var transactLink = await _repositoryWrapper.TransactLinksRepository
             .GetFirstOrDefaultAsync(f => f.StreetcodeId == request.StreetcodeId);
 
-        NullResult<TransactLinkDTO> result = new NullResult<TransactLinkDTO>();
-        result.WithValue(_mapper.Map<TransactLinkDTO>(transactLink));
-        return result;
+        if (transactLink is null)
+        {
+            var infoMessage = _stringLocalizerCannotFind["CannotFindAnyTransactionLink"].Value;
+            _logger.LogInformation(infoMessage);
+            return Result.Ok();
+        }
+
+        return Result.Ok(_mapper.Map<TransactLinkDTO>(transactLink));
     }
 }

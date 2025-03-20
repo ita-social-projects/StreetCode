@@ -40,11 +40,9 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         Expression<Func<StreetcodeContent, bool>>? basePredicateForStreetcode = st => st.Id == request.StreetcodeId;
         var predicate = basePredicateForStreetcode.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
-        var streetcodeContent = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
-            predicate: predicate,
-            include: q => q.Include(s => s.Audio) !);
+        var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate).AnyAsync(cancellationToken);
 
-        if (streetcodeContent == null)
+        if (!isStreetcodeExists)
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithTheCorrespondingStreetcodeId", request.StreetcodeId].Value;
             _logger.LogError(request, errorMsg);

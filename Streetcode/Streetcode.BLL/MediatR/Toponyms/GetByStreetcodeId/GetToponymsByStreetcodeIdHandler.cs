@@ -19,13 +19,20 @@ public class GetToponymsByStreetcodeIdHandler : IRequestHandler<GetToponymsByStr
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetToponymsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
+    public GetToponymsByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<NoSharedResource> stringLocalizerNo,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
         _stringLocalizerNo = stringLocalizerNo;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<ToponymDTO>>> Handle(GetToponymsByStreetcodeIdQuery request, CancellationToken cancellationToken)

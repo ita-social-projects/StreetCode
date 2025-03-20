@@ -108,18 +108,3 @@ public static class AccessPredicateExtender
         return Expression.Lambda<Func<TBaseEntity, bool>>(resultBinaryExpression, mainParameter);
     }
 }
-
-public class ReplaceExpVisitor : ExpressionVisitor
-{
-    private readonly Expression _newExpression;
-
-    public ReplaceExpVisitor(Expression newExpression)
-    {
-        _newExpression = newExpression;
-    }
-
-    protected override Expression VisitParameter(ParameterExpression node)
-    {
-        return _newExpression;
-    }
-}

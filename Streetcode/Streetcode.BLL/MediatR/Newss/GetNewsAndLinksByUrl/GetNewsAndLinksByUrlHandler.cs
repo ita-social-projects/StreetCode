@@ -77,12 +77,12 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
             if(newsIndex != 0)
             {
-                prevNewsLink = news[newsIndex - 1].URL;
+                nextNewsLink = news[newsIndex - 1].URL;
             }
 
             if(newsIndex != news.Count - 1)
             {
-                nextNewsLink = news[newsIndex + 1].URL;
+                prevNewsLink = news[newsIndex + 1].URL;
             }
 
             RandomNewsDTO? randomNewsDTO = null;

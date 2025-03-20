@@ -16,6 +16,8 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
     public class GetNewsAndLinksByUrlHandler : IRequestHandler<GetNewsAndLinksByUrlQuery, Result<NewsDTOWithURLs>>
     {
+        private const int MinNumberOfNews = 10;
+        private const int NumberOfMonthsBackForRelevantNews = 6;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
@@ -34,7 +36,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
         public async Task<Result<NewsDTOWithURLs>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
         {
             string url = request.Url;
-            Expression<Func<News, bool>>? basePredicate = sc => sc.URL == url;
+            Expression<Func<News, bool>>? basePredicate = nw => nw.URL == url;
             var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
 
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
@@ -54,7 +56,21 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                 newsDTO.Image.Base64 = _blobService.FindFileInStorageAsBase64(newsDTO.Image.BlobName);
             }
 
-            var news = (await _repositoryWrapper.NewsRepository.GetAllAsync()).ToList();
+            DateTime sixMonthsAgo = DateTime.UtcNow.AddMonths(-NumberOfMonthsBackForRelevantNews);
+            basePredicate = nw => nw.CreationDate > sixMonthsAgo;
+            predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
+
+            var newsCount = await _repositoryWrapper.NewsRepository.FindAll(predicate: predicate).CountAsync(cancellationToken);
+            List<News> news;
+            if (newsCount >= MinNumberOfNews)
+            {
+                news = (await _repositoryWrapper.NewsRepository.GetAllAsync(predicate: predicate)).OrderByDescending(nw => nw.CreationDate).ToList();
+            }
+            else
+            {
+                news = _repositoryWrapper.NewsRepository.GetAllPaginated(1, MinNumberOfNews, predicate: predicate, descendingSortKeySelector: nw => nw.CreationDate).Entities.ToList();
+            }
+
             var newsIndex = news.FindIndex(x => x.Id == newsDTO.Id);
             string? prevNewsLink = null;
             string? nextNewsLink = null;

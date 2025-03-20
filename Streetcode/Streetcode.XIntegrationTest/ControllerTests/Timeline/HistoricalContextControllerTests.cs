@@ -29,6 +29,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     private readonly HistoricalContext _testCreateContext;
     private readonly HistoricalContext _testUpdateContext;
     private readonly StreetcodeContent _testStreetcodeContent;
+    private readonly TimelineItem _testTimelineItem;
 
     public HistoricalContextControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
         : base(factory, "/api/HistoricalContext", tokenStorage)
@@ -41,6 +42,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
+        _testTimelineItem = TimelineItemExtracter.Extract(uniqueId, uniqueId);
     }
 
     [Fact]
@@ -62,6 +64,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
     {
         // Arrange
         HistoricalContext expectedContext = _testCreateContext;
+        HistoricalContextExtracter.AddHistoricalContextTimeline(_testCreateContext.Id, _testTimelineItem.StreetcodeId);
 
         // Act
         var response = await this.Client.GetByIdAsync(expectedContext.Id);
@@ -142,7 +145,7 @@ public class HistoricalContextControllerTests : BaseAuthorizationControllerTests
 
         // Act
         await this.Client.CreateAsync(historicalContextCreateDto, this.TokenStorage.AdminAccessToken);
-        var getResponse = await this.Client.GetByTitle(historicalContextCreateDto.Title);
+        var getResponse = await this.Client.GetByTitle(historicalContextCreateDto.Title, this.TokenStorage.AdminAccessToken);
         var fetchedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<HistoricalContext>(getResponse.Content);
 
         // Assert

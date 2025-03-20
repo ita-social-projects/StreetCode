@@ -16,5 +16,15 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Toponyms
         {
             BaseExtracter.RemoveByPredicate<Toponym>(t => t.Id == toponym.Id);
         }
+
+        public static void AddStreetcodeToponym(int toponymId, int streetcodeId)
+        {
+            var streetcodeToponym = new StreetcodeToponym()
+            {
+                ToponymId = toponymId,
+                StreetcodeId = streetcodeId,
+            };
+            BaseExtracter.Extract<StreetcodeToponym>(streetcodeToponym, t => t.ToponymId == toponymId, hasIdentity: false);
+        }
     }
 }

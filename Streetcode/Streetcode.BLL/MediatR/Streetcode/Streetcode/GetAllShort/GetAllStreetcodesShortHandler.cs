@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
@@ -30,16 +33,19 @@ public class GetAllStreetcodesShortHandler : IRequestHandler<GetAllStreetcodesSh
     }
 
     public async Task<Result<IEnumerable<StreetcodeShortDTO>>> Handle(GetAllStreetcodesShortQuery request, CancellationToken cancellationToken)
-    {
-        var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync();
-
-        if (streetcodes.Any())
         {
-            return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
-        }
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
-        var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
-        _logger.LogError(request, errorMsg);
-        return Result.Fail(errorMsg);
+            var streetcodes = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(predicate: predicate);
+
+            if (streetcodes.Any())
+            {
+                return Result.Ok(_mapper.Map<IEnumerable<StreetcodeShortDTO>>(streetcodes));
+            }
+
+            var errorMsg = _stringLocalizerNo["NoStreetcodesExistNow"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(errorMsg);
     }
 }

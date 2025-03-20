@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -7,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.DTO.Media.Art;
 using Microsoft.Extensions.Localization;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
@@ -35,6 +38,18 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<ArtDTO>>> Handle(GetArtsByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = str => str.Id == request.StreetcodeId;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+            var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate).AnyAsync(cancellationToken);
+
+            if (!isStreetcodeExists)
+            {
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyArtWithCorrespondingStreetcodeId", request.StreetcodeId].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
             var arts = await _repositoryWrapper.ArtRepository
                 .GetAllAsync(
                 predicate: art => art.StreetcodeArts.Any(sArt => sArt.StreetcodeArtSlide!.StreetcodeId == request.StreetcodeId),

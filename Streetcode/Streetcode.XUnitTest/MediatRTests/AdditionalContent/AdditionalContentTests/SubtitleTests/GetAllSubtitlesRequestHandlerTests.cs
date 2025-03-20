@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -56,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
-        [Fact]
+        [Fact] 
         public async Task Handler_Returns_NotEmpty_List()
         {
             // Arrange
@@ -66,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetAllSubtitlesHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllSubtitlesQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -88,7 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetAllSubtitlesHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllSubtitlesQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);

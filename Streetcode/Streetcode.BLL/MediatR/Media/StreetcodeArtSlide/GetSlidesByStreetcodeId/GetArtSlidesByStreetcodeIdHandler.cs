@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Media.Art;
+using Streetcode.BLL.Services.EntityAccessManager;
 
 namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 {
@@ -26,9 +28,12 @@ namespace Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId
 
         public async Task<Result<IEnumerable<StreetcodeArtSlideDTO>>> Handle(GetArtSlidesByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Streetcode.StreetcodeArtSlide, bool>>? basePredicate = sArtSlide => sArtSlide.StreetcodeId == request.StreetcodeId;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sArtSlide => sArtSlide.Streetcode);
+
             var query = _repositoryWrapper.StreetcodeArtSlideRepository
                 .FindAll(
-                    predicate: sArtSlide => sArtSlide.StreetcodeId == request.StreetcodeId,
+                    predicate: predicate,
                     include: sArtSlide => sArtSlide
                         .Include(sArtSlide => sArtSlide.StreetcodeArts!)
                         .ThenInclude(sArt => sArt.Art)

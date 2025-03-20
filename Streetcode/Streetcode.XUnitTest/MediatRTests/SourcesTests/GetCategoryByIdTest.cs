@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoryById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -54,7 +55,7 @@ public class GetCategoryByIdTest
             this.mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetCategoryByIdQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -96,7 +97,7 @@ public class GetCategoryByIdTest
         });
 
         // Act
-        var result = await handler.Handle(new GetCategoryByIdQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetCategoryByIdQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedError, result.Errors[0].Message);

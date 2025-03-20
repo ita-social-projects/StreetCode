@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -75,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTransactLinksQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -97,7 +98,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTransactLinksQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);

@@ -22,12 +22,12 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Timeline
             : base(factory, "api/TimelineItem")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            _timelineItem = TimelineItemExtracter.Extract(uniqueId);
             _testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                 uniqueId,
                 uniqueId,
                 Guid.NewGuid().ToString());
+            _timelineItem = TimelineItemExtracter.Extract(uniqueId, uniqueId);
         }
 
         [Fact]

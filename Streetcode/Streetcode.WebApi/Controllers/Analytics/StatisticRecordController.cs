@@ -18,21 +18,21 @@ namespace Streetcode.WebApi.Controllers.Analytics
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
         public async Task<IActionResult> GetAll()
         {
-            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsQuery()));
+            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsQuery(GetUserRole())));
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StatisticRecordDTO))]
         public async Task<IActionResult> GetByQrId(int id)
         {
-            return HandleResult(await Mediator.Send(new GetStatisticRecordByQrIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetStatisticRecordByQrIdQuery(id, GetUserRole())));
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> ExistByQrId(int id)
         {
-            return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id)));
+            return HandleResult(await Mediator.Send(new ExistStatisticRecordByQrIdCommand(id, GetUserRole())));
         }
 
         [HttpGet("{streetcodeId:int}")]
@@ -40,7 +40,7 @@ namespace Streetcode.WebApi.Controllers.Analytics
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<StatisticRecordDTO>))]
         public async Task<IActionResult> GetAllByStreetcodeId(int streetcodeId)
         {
-            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(streetcodeId)));
+            return HandleResult(await Mediator.Send(new GetAllStatisticRecordsByStreetcodeIdQuery(streetcodeId, GetUserRole())));
         }
 
         [HttpPut("{id:int}")]

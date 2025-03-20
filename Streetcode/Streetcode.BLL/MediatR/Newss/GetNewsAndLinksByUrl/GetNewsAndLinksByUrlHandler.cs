@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,18 +7,23 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 {
     public class GetNewsAndLinksByUrlHandler : IRequestHandler<GetNewsAndLinksByUrlQuery, Result<NewsDTOWithURLs>>
     {
+        private const int MinNumberOfNews = 10;
+        private const int NumberOfMonthsBackForRelevantNews = 6;
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+
         public GetNewsAndLinksByUrlHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
@@ -29,9 +35,12 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
 
         public async Task<Result<NewsDTOWithURLs>> Handle(GetNewsAndLinksByUrlQuery request, CancellationToken cancellationToken)
         {
-            string url = request.url;
+            string url = request.Url;
+            Expression<Func<News, bool>>? basePredicate = nw => nw.URL == url;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
+
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
-                predicate: sc => sc.URL == url,
+                predicate: predicate,
                 include: scl => scl
                     .Include(sc => sc.Image!)));
 
@@ -47,19 +56,33 @@ namespace Streetcode.BLL.MediatR.Newss.GetNewsAndLinksByUrl
                 newsDTO.Image.Base64 = _blobService.FindFileInStorageAsBase64(newsDTO.Image.BlobName);
             }
 
-            var news = (await _repositoryWrapper.NewsRepository.GetAllAsync()).ToList();
+            DateTime sixMonthsAgo = DateTime.UtcNow.AddMonths(-NumberOfMonthsBackForRelevantNews);
+            basePredicate = nw => nw.CreationDate > sixMonthsAgo;
+            predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
+
+            var newsCount = await _repositoryWrapper.NewsRepository.FindAll(predicate: predicate).CountAsync(cancellationToken);
+            List<News> news;
+            if (newsCount >= MinNumberOfNews)
+            {
+                news = (await _repositoryWrapper.NewsRepository.GetAllAsync(predicate: predicate)).OrderByDescending(nw => nw.CreationDate).ToList();
+            }
+            else
+            {
+                news = _repositoryWrapper.NewsRepository.GetAllPaginated(1, MinNumberOfNews, predicate: predicate, descendingSortKeySelector: nw => nw.CreationDate).Entities.ToList();
+            }
+
             var newsIndex = news.FindIndex(x => x.Id == newsDTO.Id);
             string? prevNewsLink = null;
             string? nextNewsLink = null;
 
             if(newsIndex != 0)
             {
-                prevNewsLink = news[newsIndex - 1].URL;
+                nextNewsLink = news[newsIndex - 1].URL;
             }
 
             if(newsIndex != news.Count - 1)
             {
-                nextNewsLink = news[newsIndex + 1].URL;
+                prevNewsLink = news[newsIndex + 1].URL;
             }
 
             RandomNewsDTO? randomNewsDTO = null;

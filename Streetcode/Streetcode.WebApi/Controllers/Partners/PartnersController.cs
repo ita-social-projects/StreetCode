@@ -51,7 +51,7 @@ public class PartnersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetPartnersByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetPartnersByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -59,7 +59,7 @@ public class PartnersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<PartnerDTO>))]
     public async Task<IActionResult> GetPartnersToUpdateByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetPartnersToUpdateByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetPartnersToUpdateByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpPost]

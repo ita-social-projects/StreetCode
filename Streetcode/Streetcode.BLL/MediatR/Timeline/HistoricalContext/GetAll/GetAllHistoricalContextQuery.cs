@@ -1,9 +1,10 @@
 ﻿using FluentResults;
 using MediatR;
 using Streetcode.BLL.DTO.Timeline;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 {
-    public record GetAllHistoricalContextQuery(ushort? page = null, ushort? pageSize = null)
+    public record GetAllHistoricalContextQuery(UserRole? UserRole, ushort? PageSize = null, ushort? Page = null)
         : IRequest<Result<GetAllHistoricalContextDTO>>;
 }

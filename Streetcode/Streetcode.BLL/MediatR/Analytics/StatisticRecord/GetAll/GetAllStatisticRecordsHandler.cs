@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Analytics;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -34,8 +36,11 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll
 
         public async Task<Result<IEnumerable<StatisticRecordDTO>>> Handle(GetAllStatisticRecordsQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Analytics.StatisticRecord, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sr => sr.Streetcode);
+
             var statisticRecords = await _repositoryWrapper.StatisticRecordRepository
-                .GetAllAsync(include: sr => sr.Include(sr => sr.StreetcodeCoordinate));
+                .GetAllAsync(predicate: predicate, include: sr => sr.Include(sr => sr.StreetcodeCoordinate));
 
             if(statisticRecords is null)
             {

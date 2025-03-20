@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Video.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -49,7 +50,7 @@ public class GetVideoByIdTest
 
         // Act
         var result = await handler.Handle(
-            new GetVideoByIdQuery(id),
+            new GetVideoByIdQuery(id, UserRole.User),
             CancellationToken.None);
 
         // Assert
@@ -85,7 +86,7 @@ public class GetVideoByIdTest
         var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         var result = await handler.Handle(
-            new GetVideoByIdQuery(id),
+            new GetVideoByIdQuery(id, UserRole.User),
             CancellationToken.None);
 
         // Assert
@@ -115,7 +116,7 @@ public class GetVideoByIdTest
         var handler = new GetVideoByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
         var result = await handler.Handle(
-            new GetVideoByIdQuery(id),
+            new GetVideoByIdQuery(id, UserRole.User),
             CancellationToken.None);
 
         // Assert

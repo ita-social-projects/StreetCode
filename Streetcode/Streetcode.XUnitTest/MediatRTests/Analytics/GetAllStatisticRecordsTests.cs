@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -53,7 +54,7 @@ public class GetAllStatisticRecordsTests
         _mapperMock.Setup(mapper => mapper.Map<IEnumerable<StatisticRecordDTO>>(It.IsAny<IEnumerable<StatisticRecord>>()))
             .Returns(statisticRecordDTOs);
 
-        var request = new GetAllStatisticRecordsQuery();
+        var request = new GetAllStatisticRecordsQuery(UserRole.User);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -83,7 +84,7 @@ public class GetAllStatisticRecordsTests
         _stringLocalizerCannotGetMock.Setup(localizer => localizer["CannotGetRecords"])
             .Returns(new LocalizedString("CannotGetRecords", "Cannot get statistic records"));
 
-        var request = new GetAllStatisticRecordsQuery();
+        var request = new GetAllStatisticRecordsQuery(UserRole.User);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -111,7 +112,7 @@ public class GetAllStatisticRecordsTests
         _stringLocalizerCannotMapMock.Setup(localizer => localizer["CannotMapRecords"])
             .Returns(new LocalizedString("CannotMapRecords", "Cannot map statistic records"));
 
-        var request = new GetAllStatisticRecordsQuery();
+        var request = new GetAllStatisticRecordsQuery(UserRole.User);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);

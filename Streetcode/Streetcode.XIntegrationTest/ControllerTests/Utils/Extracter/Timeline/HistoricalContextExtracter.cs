@@ -17,4 +17,14 @@ public class HistoricalContextExtracter
     {
         BaseExtracter.RemoveByPredicate<HistoricalContext>(context => context.Id == entity.Id);
     }
+
+    public static void AddHistoricalContextTimeline(int timeLineId, int historicalContextId)
+    {
+        var historicalContextTimeline = new HistoricalContextTimeline()
+        {
+            HistoricalContextId = historicalContextId,
+            TimelineId = timeLineId,
+        };
+        BaseExtracter.Extract(historicalContextTimeline, context => context.TimelineId == timeLineId, hasIdentity: false);
+    }
 }

@@ -47,6 +47,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Toponyms
         {
             // Arrange
             Toponym expectedToponym = _toponym;
+            ToponymExtracter.AddStreetcodeToponym(expectedToponym.Id, _testStreetcodeContent.Id);
 
             // Act
             var response = await this.Client.GetByIdAsync(expectedToponym.Id);

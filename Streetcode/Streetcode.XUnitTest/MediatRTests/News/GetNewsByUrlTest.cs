@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetByUrl;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using NewsModel = Streetcode.DAL.Entities.News.News;
@@ -47,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByUrlHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByUrlQuery(url, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -72,7 +73,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByUrlHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByUrlQuery(url, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -102,7 +103,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByUrlHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByUrlQuery(url, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -125,7 +126,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByUrlHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByUrlQuery(url), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByUrlQuery(url, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

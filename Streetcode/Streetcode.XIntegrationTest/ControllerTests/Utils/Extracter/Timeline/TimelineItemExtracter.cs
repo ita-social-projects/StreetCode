@@ -6,14 +6,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Timeline
 {
     public static class TimelineItemExtracter
     {
-        public static TimelineItem Extract(int timelineId)
+        public static TimelineItem Extract(int timelineId, int streetCodeId)
         {
             TimelineItem item = TestDataProvider.GetTestData<TimelineItem>();
-            StreetcodeContent testStreetcodeContent = StreetcodeContentExtracter.Extract(
-                timelineId,
-                timelineId,
-                Guid.NewGuid().ToString());
-            item.StreetcodeId = testStreetcodeContent.Id;
+            item.StreetcodeId = streetCodeId;
             item.Id = timelineId;
 
             return BaseExtracter.Extract(item, t => t.Id == timelineId);

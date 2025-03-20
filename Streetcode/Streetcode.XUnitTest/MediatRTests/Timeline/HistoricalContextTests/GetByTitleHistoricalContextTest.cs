@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetByTitle;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -51,7 +52,7 @@ public class GetByTitleHistoricalContextTest
         var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -69,7 +70,7 @@ public class GetByTitleHistoricalContextTest
         var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(

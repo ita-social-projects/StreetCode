@@ -52,7 +52,7 @@ public class StreetcodeDeleteControllerTests : BaseAuthorizationControllerTests<
         Assert.NotNull(deleteResponse);
         Assert.True(deleteResponse.IsSuccessStatusCode);
 
-        var response = await Client.GetByIdAsync(command.Id);
+        var response = await Client.GetByIdAsync(command.Id, TokenStorage.AdminAccessToken);
         var streetcodeDto = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeDTO>(response.Content);
         Assert.NotNull(streetcodeDto);
         Assert.Equal(StreetcodeStatus.Deleted, streetcodeDto.Status);

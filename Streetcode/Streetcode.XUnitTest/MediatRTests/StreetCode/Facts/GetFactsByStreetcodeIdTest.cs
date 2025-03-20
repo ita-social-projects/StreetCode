@@ -5,7 +5,9 @@ using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetByStreetcodeId;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -42,6 +44,7 @@ public class GetFactsByStreetcodeIdTest
         var request = GetRequest(streetcodeId);
 
         MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, factsList);
+        MockHelpers.SetupMockStreetcodeRepositoryFindAll(_mockRepository, GetStreetcodeList());
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -59,6 +62,27 @@ public class GetFactsByStreetcodeIdTest
 
     [Theory]
     [InlineData(1)]
+    public async Task ShouldGetError_WhenIdExistsButUserDoesNotHaveAccess(int streetcodeId)
+    {
+        // Arrange
+        var (factsList, factDtoList) = GetFactObjectsLists(streetcodeId);
+        var request = GetRequest(streetcodeId);
+
+        MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, factsList);
+        MockHelpers.SetupMockStreetcodeRepositoryFindAll(_mockRepository, new List<StreetcodeContent>());
+        MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
+
+        var expectedError = _mockCannotFindLocalizer["CannotFindAnyFactByTheStreetcodeId", streetcodeId].Value;
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        Assert.Equal(expectedError, result.Errors.Single().Message);
+    }
+
+    [Theory]
+    [InlineData(1)]
     public async Task ShouldGetByStreetcodeIdSuccessfully_WithCorrectDataType(int streetcodeId)
     {
         // Arrange
@@ -66,6 +90,7 @@ public class GetFactsByStreetcodeIdTest
         var request = GetRequest(streetcodeId);
 
         MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, factsList);
+        MockHelpers.SetupMockStreetcodeRepositoryFindAll(_mockRepository, GetStreetcodeList());
         MockHelpers.SetupMockMapper<IEnumerable<FactDto>, List<Fact>>(_mockMapper, factDtoList, factsList);
 
         // Act
@@ -85,6 +110,7 @@ public class GetFactsByStreetcodeIdTest
         var request = GetRequest(streetcodeId);
 
         MockHelpers.SetupMockFactRepositoryGetAllAsync(_mockRepository, emptyFactsList);
+        MockHelpers.SetupMockStreetcodeRepositoryFindAll(_mockRepository, GetStreetcodeList());
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -126,6 +152,17 @@ public class GetFactsByStreetcodeIdTest
         return (factsList, factDtoList);
     }
 
+    private static List<StreetcodeContent> GetStreetcodeList()
+    {
+        return new List<StreetcodeContent>
+        {
+            new StreetcodeContent
+            {
+                Id = 1,
+            },
+        };
+    }
+
     private static List<Fact> GetEmptyFactsList()
     {
         return new List<Fact>();
@@ -133,7 +170,7 @@ public class GetFactsByStreetcodeIdTest
 
     private static GetFactByStreetcodeIdQuery GetRequest(int streetcodeId)
     {
-        return new GetFactByStreetcodeIdQuery(streetcodeId);
+        return new GetFactByStreetcodeIdQuery(streetcodeId, UserRole.User);
     }
 
     private void VerifyGetAllAsyncOperationExecution(GetFactByStreetcodeIdQuery request)

@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
             });
             var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-            var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTextByIdQuery(id, UserRole.User), CancellationToken.None);
 
             Assert.NotNull(result);
             Assert.Equal(id, result.Value.StreetcodeId);
@@ -75,7 +76,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             var handler = new GetTextByIdHandler(this.repository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
-            var result = await handler.Handle(new GetTextByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTextByIdQuery(id, UserRole.User), CancellationToken.None);
 
             Assert.NotNull(result);
             Assert.IsType<TextDTO>(result.ValueOrDefault);

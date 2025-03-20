@@ -1,9 +1,11 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Transactions;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,7 +28,10 @@ public class GetAllTransactLinksHandler : IRequestHandler<GetAllTransactLinksQue
 
     public async Task<Result<IEnumerable<TransactLinkDTO>>> Handle(GetAllTransactLinksQuery request, CancellationToken cancellationToken)
     {
-        var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync();
+        Expression<Func<DAL.Entities.Transactions.TransactionLink, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, t => t.Streetcode);
+
+        var transactLinks = await _repositoryWrapper.TransactLinksRepository.GetAllAsync(predicate: predicate);
 
         if (transactLinks is null)
         {

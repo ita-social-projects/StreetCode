@@ -37,7 +37,7 @@ public class GetRelatedFiguresByTagIdHandlerTests
     public async Task Handle_WhenStreetcodesExist_ReturnsMappedResults()
     {
         // Arrange
-        var request = new GetRelatedFiguresByTagIdQuery(1);
+        var request = new GetRelatedFiguresByTagIdQuery(1, UserRole.User);
         var testStreetcodes = GetTestStreetcodes(3, request.TagId);
 
         SetupMocksForStreetcodes(testStreetcodes);
@@ -62,7 +62,7 @@ public class GetRelatedFiguresByTagIdHandlerTests
     public async Task Handle_WhenNoStreetcodesExist_ReturnsEmptyResult()
     {
         // Arrange
-        var request = new GetRelatedFiguresByTagIdQuery(99);
+        var request = new GetRelatedFiguresByTagIdQuery(99, UserRole.User);
         SetupMocksForStreetcodes(new List<StreetcodeContent>());
 
         // Act
@@ -81,7 +81,7 @@ public class GetRelatedFiguresByTagIdHandlerTests
     public async Task Handle_WhenFilteringImages_OnlyBlackAndWhiteAreKept()
     {
         // Arrange
-        var request = new GetRelatedFiguresByTagIdQuery(1);
+        var request = new GetRelatedFiguresByTagIdQuery(1, UserRole.User);
         var testStreetcodes = GetTestStreetcodes(3, request.TagId);
 
         SetupMocksForStreetcodes(testStreetcodes);

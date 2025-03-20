@@ -49,7 +49,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             StreetcodeUpdateDTO updateStreetCodeDto = _testStreetcodeUpdateDto;
             await Client.UpdateAsync(updateStreetCodeDto, TokenStorage.AdminAccessToken);
 
-            var responseGetByIdUpdated = await Client.GetByIdAsync(updateStreetCodeDto.Id);
+            var responseGetByIdUpdated = await Client.GetByIdAsync(updateStreetCodeDto.Id, TokenStorage.AdminAccessToken);
             var streetCodeContent = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeContent>(responseGetByIdUpdated.Content);
             Assert.Multiple(() =>
             {
@@ -118,7 +118,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             Assert.NotNull(response);
             Assert.True(response.IsSuccessStatusCode);
 
-            var updatedResponse = await Client.GetByIdAsync(request.Id);
+            var updatedResponse = await Client.GetByIdAsync(request.Id, TokenStorage.AdminAccessToken);
             var updatedStreetcode = CaseIsensitiveJsonDeserializer.Deserialize<StreetcodeDTO>(updatedResponse.Content);
             Assert.NotNull(updatedStreetcode);
             Assert.Equal(request.Status, updatedStreetcode.Status);

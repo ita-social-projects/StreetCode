@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Art.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -38,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetArtByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(id, result.Value.Id);
@@ -54,7 +55,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetArtByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.IsType<Result<ArtDTO>>(result);
@@ -70,7 +71,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var expectedError = $"Cannot find an art with corresponding id: {id}";
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);

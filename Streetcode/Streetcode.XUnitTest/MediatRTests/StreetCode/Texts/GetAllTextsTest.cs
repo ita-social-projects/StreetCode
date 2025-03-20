@@ -2,10 +2,14 @@
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -16,13 +20,17 @@ public class GetAllTextsTest
 {
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
     private readonly GetAllTextsHandler _handler;
 
     public GetAllTextsTest()
     {
         _mockRepository = new Mock<IRepositoryWrapper>();
         _mockMapper = new Mock<IMapper>();
-        _handler = new GetAllTextsHandler(_mockRepository.Object, _mockMapper.Object);
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _handler = new GetAllTextsHandler(_mockRepository.Object, _mockMapper.Object,  _mockLogger.Object, _mockLocalizerCannotFind.Object);
     }
 
     [Fact]
@@ -120,7 +128,7 @@ public class GetAllTextsTest
 
     private static GetAllTextsQuery GetRequest()
     {
-        return new GetAllTextsQuery();
+        return new GetAllTextsQuery(UserRole.User);
     }
 
     private void VerifyGetAllAsyncAndMockingOperationsExecution(List<Text> textsList)

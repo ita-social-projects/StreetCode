@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -38,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTimelineItemsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTimelineItemsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -56,7 +57,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTimelineItemsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTimelineItemsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -76,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTimelineItemsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTimelineItemsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

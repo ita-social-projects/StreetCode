@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.GetAll;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Media.Audio;
@@ -53,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllAudiosQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.NotEmpty(result.Value);
@@ -74,7 +75,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllAudiosQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);

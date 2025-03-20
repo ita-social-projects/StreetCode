@@ -2,6 +2,7 @@
 using Moq;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -24,7 +25,7 @@ public class StreetcodeWithUrlExistHandlerTests
     public async Task Handle_WhenStreetcodeExists_ReturnsTrue()
     {
         // Arrange
-        var request = new StreetcodeWithUrlExistQuery(Url: "existing-url");
+        var request = new StreetcodeWithUrlExistQuery(Url: "existing-url", UserRole.User);
         var testStreetcode = new StreetcodeContent { TransliterationUrl = "existing-url" };
 
         _repositoryMock.Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(
@@ -46,7 +47,7 @@ public class StreetcodeWithUrlExistHandlerTests
     public async Task Handle_WhenStreetcodeDoesNotExist_ReturnsFalse()
     {
         // Arrange
-        var request = new StreetcodeWithUrlExistQuery(Url: "non-existing-url");
+        var request = new StreetcodeWithUrlExistQuery(Url: "non-existing-url", UserRole.User);
 
         _repositoryMock.Setup(repo => repo.StreetcodeRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null))

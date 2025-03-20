@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Toponyms;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Toponyms.GetById;
@@ -26,8 +29,10 @@ public class GetToponymByIdHandler : IRequestHandler<GetToponymByIdQuery, Result
 
     public async Task<Result<ToponymDTO>> Handle(GetToponymByIdQuery request, CancellationToken cancellationToken)
     {
-        var toponym = await _repositoryWrapper.ToponymRepository
-            .GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        Expression<Func<Toponym, bool>>? basePredicate = t => t.Id == request.Id;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, t => t.Streetcodes);
+
+        var toponym = await _repositoryWrapper.ToponymRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if (toponym is null)
         {

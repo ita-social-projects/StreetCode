@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Jobs;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -29,11 +29,15 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 		{
 			try
 			{
+				Expression<Func<Job, bool>>? basePredicate = null;
+				var predicate = basePredicate.ExtendWithAccessPredicate(new JobAccessManager(), request.UserRole);
+
 				PaginationResponse<Job> paginationResponse = _repositoryWrapper
 					.JobRepository
 					.GetAllPaginated(
-						request.page,
-						request.pageSize);
+						request.Page,
+						request.PageSize,
+						predicate: predicate);
 
 				GetAllJobsDTO getAllJobsDTO = new GetAllJobsDTO()
 				{

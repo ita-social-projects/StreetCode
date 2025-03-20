@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -89,7 +90,7 @@ public class GetTextByStreetcodeIdTest
 
     private static GetTextByStreetcodeIdQuery GetRequest(int streetcodeId)
     {
-        return new GetTextByStreetcodeIdQuery(streetcodeId);
+        return new GetTextByStreetcodeIdQuery(streetcodeId, UserRole.User);
     }
 
     private void SetupMockCacheService(string cacheKey, Result<TextDTO> resultTextDto)

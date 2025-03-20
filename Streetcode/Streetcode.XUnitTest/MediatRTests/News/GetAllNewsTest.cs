@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Newss.GetAll;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -42,7 +43,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = this.GetHandler();
 
             // Act.
-            var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber, UserRole.User), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -60,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber, UserRole.User), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -78,7 +79,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber, UserRole.User), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -93,7 +94,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                     It.IsAny<ushort>(),
                     It.IsAny<ushort>(),
                     null,
-                    null,
+                    It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.News.News>, IIncludableQueryable<DAL.Entities.News.News, object>>?>(),
                     null,
                     It.IsAny<Expression<Func<DAL.Entities.News.News, object>>?>()))

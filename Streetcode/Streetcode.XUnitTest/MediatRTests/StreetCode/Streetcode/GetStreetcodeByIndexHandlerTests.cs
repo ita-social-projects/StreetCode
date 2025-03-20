@@ -8,6 +8,7 @@ using Streetcode.BLL.DTO.Streetcode.Types;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByIndex;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Streetcode.StreetcodeContent;
@@ -59,7 +60,7 @@ public class GetStreetcodeByIndexHandlerTests
         var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
@@ -79,7 +80,7 @@ public class GetStreetcodeByIndexHandlerTests
         var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedErrorMessage, result.Errors.Single().Message);
@@ -98,7 +99,7 @@ public class GetStreetcodeByIndexHandlerTests
         var handler = new GetStreetcodeByIndexHandler(_repository.Object, _mapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByIndexQuery(id, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.IsAssignableFrom<StreetcodeDTO>(result.Value);

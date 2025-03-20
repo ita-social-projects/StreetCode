@@ -11,6 +11,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -60,7 +61,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -82,7 +83,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -101,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(page: 1, pageSize: pageSize), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User, Page: 1, PageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

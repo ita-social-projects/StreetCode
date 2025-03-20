@@ -17,14 +17,14 @@ public class RelatedFigureController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{tagId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByTagId([FromRoute] int tagId)
     {
-        return HandleResult(await Mediator.Send(new GetRelatedFiguresByTagIdQuery(tagId)));
+        return HandleResult(await Mediator.Send(new GetRelatedFiguresByTagIdQuery(tagId, GetUserRole())));
     }
 
     [HttpPost("{observerId:int}&{targetId:int}")]

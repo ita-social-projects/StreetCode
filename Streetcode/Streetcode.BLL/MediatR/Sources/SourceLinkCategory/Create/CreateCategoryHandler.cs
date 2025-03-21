@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.Create
                 return Result.Fail(new Error(errorMsg));
             }
 
-            _ = _repositoryWrapper.SourceCategoryRepository.Create(category);
+            await _repositoryWrapper.SourceCategoryRepository.CreateAsync(category);
             var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
             var returnCategory = _mapper.Map<CreateSourceLinkCategoryDTO>(category);
             if (resultIsSuccess)

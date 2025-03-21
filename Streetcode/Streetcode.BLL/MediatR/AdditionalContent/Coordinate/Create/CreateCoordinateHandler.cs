@@ -36,7 +36,7 @@ public class CreateCoordinateHandler : IRequestHandler<CreateCoordinateCommand, 
             return Result.Fail(new Error(_stringLocalizer?["CannotConvertNullToStreetcodeCoordinate"].Value));
         }
 
-        _repositoryWrapper.StreetcodeCoordinateRepository.Create(streetcodeCoordinate);
+        await _repositoryWrapper.StreetcodeCoordinateRepository.CreateAsync(streetcodeCoordinate);
 
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
         return resultIsSuccess ? Result.Ok(Unit.Value) : Result.Fail(new Error(_stringLocalizerFaild?["FailedToCreateStreetcodeCoordinate"].Value));

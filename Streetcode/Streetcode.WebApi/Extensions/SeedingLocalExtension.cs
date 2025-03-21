@@ -42,7 +42,7 @@ namespace Streetcode.WebApi.Extensions
                 {
                     if (!dbContext.Images.Any())
                     {
-                        string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
+                        string imageJson = await File.ReadAllTextAsync(initialDataImagePath, Encoding.UTF8);
                         var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
 
                         if (imgfromJson != null)

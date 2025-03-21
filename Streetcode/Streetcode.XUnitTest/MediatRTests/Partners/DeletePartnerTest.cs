@@ -50,7 +50,7 @@ public class DeletePartnerTest
             () => Assert.True(result.IsSuccess));
 
         _mockRepository.Verify(x => x.PartnersRepository.Delete(It.Is<Partner>(x => x.Id == testPartner.Id)), Times.Once);
-        _mockRepository.Verify(x => x.SaveChanges(), Times.Once);
+        _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class DeletePartnerTest
 
         _mockRepository.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Partner, bool>>>(), null))
             .ReturnsAsync(testPartner);
-        _mockRepository.Setup(x => x.SaveChanges())
+        _mockRepository.Setup(x => x.SaveChangesAsync())
             .Throws(new Exception(expectedError));
 
         // Act

@@ -34,8 +34,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task Handle_ReturnsTimelineItem(int id)
         {
             // Arrange
-            this.SetupRepository(GetTimelineItem());
-            this.SetupMapper(GetTimelineDTO());
+            SetupRepository(GetTimelineItem());
+            SetupMapper(GetTimelineDto());
 
             var handler = new GetTimelineItemByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -51,8 +51,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task Handle_ReturnsCorrectType(int id)
         {
             // Arrange
-            this.SetupRepository(GetTimelineItem());
-            this.SetupMapper(GetTimelineDTO());
+            SetupRepository(GetTimelineItem());
+            SetupMapper(GetTimelineDto());
 
             var handler = new GetTimelineItemByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -68,10 +68,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task Handle_WithNonExistentId_ReturnsError(int id)
         {
             // Arrange
-            this.SetupRepository(null);
+            SetupRepository(null);
 
             string expectedError = $"Cannot find a timeline item with corresponding id: {id}";
-            this.SetupLocalizer(expectedError);
+            SetupLocalizer(expectedError);
 
             var handler = new GetTimelineItemByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -90,7 +90,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             };
         }
 
-        private static TimelineItemDTO GetTimelineDTO()
+        private static TimelineItemDTO GetTimelineDto()
         {
             return new TimelineItemDTO
             {

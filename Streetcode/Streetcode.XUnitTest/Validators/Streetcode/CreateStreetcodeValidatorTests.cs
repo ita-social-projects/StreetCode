@@ -247,54 +247,7 @@ public class CreateStreetcodeValidatorTests
         _baseSubtitleValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>(), default), Times.AtLeast(1));
     }
 
-    private void SetupRepositoryWrapperReturnsNull()
-    {
-        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
-                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
-            .ReturnsAsync(null as StreetcodeContent);
-
-        _repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Image, bool>>>(),
-                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-            .ReturnsAsync(new Image { Id = 8 });
-    }
-
-    private void SetupRepositoryWrapper(int id)
-    {
-        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
-            .ReturnsAsync(new StreetcodeContent()
-            {
-                Id = id,
-            });
-
-        _repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
-                It.IsAny<Expression<Func<Image, bool>>>(),
-                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
-            .ReturnsAsync(new Image { Id = id });
-    }
-
-    private void SetupValidatorMocks()
-    {
-        _baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>()))
-            .Returns(new ValidationResult());
-        _categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>()))
-            .Returns(new ValidationResult());
-        _videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>()))
-            .Returns(new ValidationResult());
-        _baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDTO>>()))
-            .Returns(new ValidationResult());
-        _baseFactValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<FactUpdateCreateDto>>()))
-            .Returns(new ValidationResult());
-        _tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
-            .Returns(new ValidationResult());
-        _baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>()))
-            .Returns(new ValidationResult());
-    }
-
-    private CreateStreetcodeCommand GetValidCreateStreetcodeCommand()
+    private static CreateStreetcodeCommand GetValidCreateStreetcodeCommand()
     {
         return new CreateStreetcodeCommand(new StreetcodeCreateDTO()
         {
@@ -364,5 +317,52 @@ public class CreateStreetcodeValidatorTests
                 new (),
             },
         });
+    }
+
+    private void SetupRepositoryWrapperReturnsNull()
+    {
+        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>?>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>?>()))
+            .ReturnsAsync(null as StreetcodeContent);
+
+        _repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Image, bool>>>(),
+                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = 8 });
+    }
+
+    private void SetupRepositoryWrapper(int id)
+    {
+        _repositoryWrapper.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>, IIncludableQueryable<StreetcodeContent, object>>>()))
+            .ReturnsAsync(new StreetcodeContent()
+            {
+                Id = id,
+            });
+
+        _repositoryWrapper.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<Image, bool>>>(),
+                It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
+            .ReturnsAsync(new Image { Id = id });
+    }
+
+    private void SetupValidatorMocks()
+    {
+        _baseStreetcodeValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCreateUpdateDTO>>()))
+            .Returns(new ValidationResult());
+        _categoryContentValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeCategoryContentDTO>>()))
+            .Returns(new ValidationResult());
+        _videoValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<VideoCreateUpdateDTO>>()))
+            .Returns(new ValidationResult());
+        _baseTextValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<BaseTextDTO>>()))
+            .Returns(new ValidationResult());
+        _baseFactValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<FactUpdateCreateDto>>()))
+            .Returns(new ValidationResult());
+        _tagValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateTagDTO>>()))
+            .Returns(new ValidationResult());
+        _baseSubtitleValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<SubtitleCreateUpdateDTO>>()))
+            .Returns(new ValidationResult());
     }
 }

@@ -39,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             },
         };
 
-        private readonly List<TransactLinkDTO> _transactionsDTOs = new()
+        private readonly List<TransactLinkDTO> _transactionsDtOs = new()
         {
             new ()
             {
@@ -69,8 +69,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         public async Task NotEmpty_List()
         {
             // Arrange
-            this.SetupRepository(_transactions);
-            this.SetupMapper(_transactionsDTOs);
+            SetupRepository(_transactions);
+            SetupMapper(_transactionsDtOs);
 
             var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -87,8 +87,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
         public async Task Error()
         {
             // Arrange
-            this.SetupRepository(null);
-            this.SetupMapper(new List<TransactLinkDTO>());
+            SetupRepository(null);
+            SetupMapper(new List<TransactLinkDTO>());
 
             var expectedError = $"Cannot find any transaction link";
             _mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])

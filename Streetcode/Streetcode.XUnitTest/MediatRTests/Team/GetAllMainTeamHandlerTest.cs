@@ -6,7 +6,6 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetAll;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -15,25 +14,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
 {
     public class GetAllMainTeamHandlerTest
     {
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockStringLocalizerCannotFind;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockStringLocalizerCannotFind;
 
         public GetAllMainTeamHandlerTest()
         {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockStringLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockMapper = new Mock<IMapper>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockStringLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handle_ReturnsSuccess()
         {
             // Arrange
-            this.SetupMocks(GetTeamList(), GetListTeamDTO());
-            var handler = new GetAllMainTeamHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockStringLocalizerCannotFind.Object);
+            SetupMocks(GetTeamList(), GetListTeamDto());
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetAllMainTeamQuery(), CancellationToken.None);
@@ -47,10 +46,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
         public async Task Handle_ReturnsError()
         {
             // Arrange
-            this.SetupMocks(null, new List<TeamMemberDTO>());
-            var handler = new GetAllMainTeamHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockStringLocalizerCannotFind.Object);
+            SetupMocks(null, new List<TeamMemberDTO>());
+            var handler = new GetAllMainTeamHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
             var expectedError = "Cannot find any team";
-            this.mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
+            _mockStringLocalizerCannotFind.Setup(x => x["CannotFindAnyTeam"])
                 .Returns(new LocalizedString("CannotFindAnyTeam", expectedError));
 
             // Act
@@ -83,9 +82,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
             return teamMembers;
         }
 
-        private static List<TeamMemberDTO> GetListTeamDTO()
+        private static List<TeamMemberDTO> GetListTeamDto()
         {
-            var teamMembersDTO = new List<TeamMemberDTO>
+            var teamMembersDto = new List<TeamMemberDTO>
             {
                 new TeamMemberDTO
                 {
@@ -102,12 +101,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
                     TeamMemberLinks = { },
                 },
             };
-            return teamMembersDTO;
+            return teamMembersDto;
         }
 
-        private void SetupMocks(IEnumerable<TeamMember> teamMembers, IEnumerable<TeamMemberDTO> teamMemberDTOs)
+        private void SetupMocks(IEnumerable<TeamMember> teamMembers, IEnumerable<TeamMemberDTO> teamMemberDtOs)
         {
-            this.mockRepo
+            _mockRepo
                 .Setup(r => r.TeamRepository
                     .GetAllAsync(
                         null,
@@ -115,9 +114,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Teams
                         IIncludableQueryable<TeamMember, object>>?>()))
                 .ReturnsAsync(teamMembers);
 
-            this.mockMapper.Setup(r => r.Map<IEnumerable<TeamMemberDTO>>(
+            _mockMapper.Setup(r => r.Map<IEnumerable<TeamMemberDTO>>(
                 It.IsAny<IEnumerable<TeamMember>>()))
-                .Returns(teamMemberDTOs);
+                .Returns(teamMemberDtOs);
         }
     }
 }

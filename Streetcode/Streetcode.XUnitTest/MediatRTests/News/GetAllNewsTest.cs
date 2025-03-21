@@ -3,11 +3,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
-using Newtonsoft.Json;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Newss.GetAll;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -16,19 +14,19 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class GetAllNewsTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IBlobService> blobService;
-        private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
-        private readonly GetAllNewsHandler handler;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+        private readonly GetAllNewsHandler _handler;
 
         public GetAllNewsTest()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.blobService = new Mock<IBlobService>();
-            this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.handler = this.GetHandler();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
+            _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+            _handler = GetHandler();
         }
 
         [Fact]
@@ -38,8 +36,8 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             ushort pageSize = 2;
             ushort pageNumber = 1;
 
-            this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(pageSize), GetEmptyHTTPHeaders());
-            var handler = this.GetHandler();
+            SetupMockObjects(pageNumber, pageSize, GetNewsDtOs(pageSize), GetEmptyHttpHeaders());
+            var handler = GetHandler();
 
             // Act.
             var result = await handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
@@ -57,10 +55,10 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             ushort pageSize = 2;
             ushort pageNumber = 99;
 
-            this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
+            SetupMockObjects(pageNumber, pageSize, GetNewsDtOs(0), GetEmptyHttpHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -75,10 +73,10 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             ushort pageSize = 0;
             ushort pageNumber = 1;
 
-            this.SetupMockObjects(pageNumber, pageSize, GetNewsDTOs(0), GetEmptyHTTPHeaders());
+            SetupMockObjects(pageNumber, pageSize, GetNewsDtOs(0), GetEmptyHttpHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllNewsQuery(pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -88,7 +86,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private void SetupMockRepositoryGetAllPaginatedAsync(ushort pageNumber, ushort pageSize)
         {
-            this.mockRepository
+            _mockRepository
                 .Setup(x => x.NewsRepository.GetAllPaginated(
                     It.IsAny<ushort>(),
                     It.IsAny<ushort>(),
@@ -125,30 +123,30 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             return PaginationResponse<DAL.Entities.News.News>.Create(news.AsQueryable(), pageNumber, pageSize);
         }
 
-        private static IEnumerable<NewsDTO> GetNewsDTOs(ushort count)
+        private static IEnumerable<NewsDTO> GetNewsDtOs(ushort count)
         {
-            var newsDTO = Enumerable
+            var newsDto = Enumerable
                 .Range(0, count)
                 .Select((news, index) => new NewsDTO() { Id = index });
 
-            return newsDTO;
+            return newsDto;
         }
 
-        private static IHeaderDictionary GetEmptyHTTPHeaders()
+        private static IHeaderDictionary GetEmptyHttpHeaders()
         {
             return new HeaderDictionary();
         }
 
         private void SetupMockMapper(IEnumerable<NewsDTO> mapperReturnCollection)
         {
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x.Map<IEnumerable<NewsDTO>>(It.IsAny<IEnumerable<DAL.Entities.News.News>>()))
                 .Returns(mapperReturnCollection);
         }
 
         private void SetupMockHttpAccessorToReturnHeadersCollection(IHeaderDictionary headersCollection)
         {
-            this.mockHttpContextAccessor
+            _mockHttpContextAccessor
                 .Setup(accessor => accessor.HttpContext!.Response.Headers)
                 .Returns(headersCollection);
         }
@@ -159,30 +157,16 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             IEnumerable<NewsDTO> mapperReturnCollection,
             IHeaderDictionary headersCollection)
         {
-            this.SetupMockMapper(mapperReturnCollection);
-            this.SetupMockHttpAccessorToReturnHeadersCollection(headersCollection);
-            this.SetupMockRepositoryGetAllPaginatedAsync(pageNumber, pageSize);
-        }
-
-        private string GetPaginationHeaderInJSON(ushort pageSize, ushort currentPage, ushort totalItems)
-        {
-            ushort totalPages = totalItems % pageSize == 0 ? (ushort)(totalItems / pageSize) : (ushort)((totalItems / pageSize) + 1);
-            var metadata = new
-            {
-                CurrentPage = currentPage,
-                TotalPages = totalPages,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-            };
-
-            return JsonConvert.SerializeObject(metadata);
+            SetupMockMapper(mapperReturnCollection);
+            SetupMockHttpAccessorToReturnHeadersCollection(headersCollection);
+            SetupMockRepositoryGetAllPaginatedAsync(pageNumber, pageSize);
         }
 
         private GetAllNewsHandler GetHandler() =>
             new GetAllNewsHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.blobService.Object,
-                this.mockHttpContextAccessor.Object);
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockHttpContextAccessor.Object);
     }
 }

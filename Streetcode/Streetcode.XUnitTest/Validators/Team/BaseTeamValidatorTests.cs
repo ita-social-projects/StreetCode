@@ -11,25 +11,25 @@ namespace Streetcode.XUnitTest.Validators.Team;
 
 public class BaseTeamValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly BaseTeamValidator validator;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly BaseTeamValidator _validator;
 
     public BaseTeamValidatorTests()
     {
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.validator = new BaseTeamValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _validator = new BaseTeamValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenAllFieldsAreValid()
     {
         // Arrange
-        var member = this.GetValidTeamMember();
+        var member = GetValidTeamMember();
 
         // Act
-        var result = this.validator.Validate(member);
+        var result = _validator.Validate(member);
 
         // Assert
         Assert.True(result.IsValid);
@@ -39,12 +39,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenNameIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Name"]];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Name"]];
+        var member = GetValidTeamMember();
         member.Name = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -55,12 +55,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenNameLengthIsMoreThan41()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Name"], BaseTeamValidator.NameMaxLength];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Name"], BaseTeamValidator.NameMaxLength];
+        var member = GetValidTeamMember();
         member.Name = new string('*', BaseTeamValidator.NameMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -71,12 +71,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenImageIdIsNull()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["ImageId"]];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["ImageId"]];
+        var member = GetValidTeamMember();
         member.ImageId = null;
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ImageId)
@@ -87,12 +87,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenImageIdIs0()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["ImageId"]];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["ImageId"]];
+        var member = GetValidTeamMember();
         member.ImageId = 0;
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ImageId)
@@ -103,12 +103,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenDescriptionLengthIsMoreThan70()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Description"], BaseTeamValidator.DescriptionMaxLength];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Description"], BaseTeamValidator.DescriptionMaxLength];
+        var member = GetValidTeamMember();
         member.Description = new string('*', BaseTeamValidator.DescriptionMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Description)
@@ -119,12 +119,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenIsMainIsNull()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["IsMain"]];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["IsMain"]];
+        var member = GetValidTeamMember();
         member.IsMain = null;
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.IsMain)
@@ -135,12 +135,12 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenPositionIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Position"]];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Position"]];
+        var member = GetValidTeamMember();
         member.Positions![0].Position = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor("Positions[0].Position")
@@ -151,19 +151,19 @@ public class BaseTeamValidatorTests
     public void ShouldReturnError_WhenPositionLengthIsMoreThan50()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Position"], BasePositionValidator.MaxPositionLength];
-        var member = this.GetValidTeamMember();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Position"], BasePositionValidator.MaxPositionLength];
+        var member = GetValidTeamMember();
         member.Positions![0].Position = new string('p', BasePositionValidator.MaxPositionLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(member);
+        var result = _validator.TestValidate(member);
 
         // Assert
         result.ShouldHaveValidationErrorFor("Positions[0].Position")
             .WithErrorMessage(expectedError);
     }
 
-    private TeamMemberCreateUpdateDTO GetValidTeamMember()
+    private static TeamMemberCreateUpdateDTO GetValidTeamMember()
     {
         return new TeamMemberCreateDTO()
         {

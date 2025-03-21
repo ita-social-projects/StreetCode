@@ -13,39 +13,39 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
 {
     public class CreateImageTests
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IBlobService> mockBlobService;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFail;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IBlobService> _mockBlobService;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public CreateImageTests()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockBlobService = new Mock<IBlobService>();
-            this.mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockBlobService = new Mock<IBlobService>();
+            _mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
         public async Task ShouldReturnSuccessfully_WhenCreated()
         {
             // Arrange
-            var testCreateImageDTO = GetCreateImageDTO();
-            var testImageDTO = GetImageDTO();
+            var testCreateImageDto = GetCreateImageDto();
+            var testImageDto = GetImageDto();
             var testImage = GetImage();
 
-            this.SetupCreateRepository(1);
-            this.SetupBlobService();
-            this.SetupMapper(testImage, testImageDTO);
+            SetupCreateRepository(1);
+            SetupBlobService();
+            SetupMapper(testImage, testImageDto);
 
-            var handler = new CreateImageHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
+            var result = await handler.Handle(new CreateImageCommand(testCreateImageDto), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -56,21 +56,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
         {
             // Arrange
             var expectedError = "Failed to create an image";
-            this.mockLocalizerFail.Setup(x => x["FailedToCreateAnImage"])
+            _mockLocalizerFail.Setup(x => x["FailedToCreateAnImage"])
             .Returns(new LocalizedString("FailedToCreateAnImage", expectedError));
 
-            var testCreateImageDTO = GetCreateImageDTO();
-            var testImageDTO = GetImageDTO();
+            var testCreateImageDto = GetCreateImageDto();
+            var testImageDto = GetImageDto();
             var testImage = GetImage();
 
-            this.SetupCreateRepository(-1);
-            this.SetupBlobService();
-            this.SetupMapper(testImage, testImageDTO);
+            SetupCreateRepository(-1);
+            SetupBlobService();
+            SetupMapper(testImage, testImageDto);
 
-            var handler = new CreateImageHandler(this.mockBlobService.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockMapper.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
+            var result = await handler.Handle(new CreateImageCommand(testCreateImageDto), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailed);
@@ -89,7 +89,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             };
         }
 
-        private static ImageDTO GetImageDTO()
+        private static ImageDTO GetImageDto()
         {
             return new ImageDTO()
             {
@@ -101,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             };
         }
 
-        private static ImageFileBaseCreateDTO GetCreateImageDTO()
+        private static ImageFileBaseCreateDTO GetCreateImageDto()
         {
             return new ImageFileBaseCreateDTO()
             {
@@ -115,26 +115,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
 
         private void SetupCreateRepository(int returnNumber)
         {
-            this.mockRepository.Setup(x => x.ImageRepository.Create(It.IsAny<DAL.Entities.Media.Images.Image>()));
-            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+            _mockRepository.Setup(x => x.ImageRepository.Create(It.IsAny<DAL.Entities.Media.Images.Image>()));
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Media.Images.Image testImage, ImageDTO testImageDTO)
+        private void SetupMapper(DAL.Entities.Media.Images.Image testImage, ImageDTO testImageDto)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.Media.Images.Image>(It.IsAny<ImageFileBaseCreateDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Media.Images.Image>(It.IsAny<ImageFileBaseCreateDTO>()))
                 .Returns(testImage);
-            this.mockMapper.Setup(x => x.Map<ImageDTO>(It.IsAny<DAL.Entities.Media.Images.Image>()))
-                .Returns(testImageDTO);
+            _mockMapper.Setup(x => x.Map<ImageDTO>(It.IsAny<DAL.Entities.Media.Images.Image>()))
+                .Returns(testImageDto);
         }
 
         private void SetupBlobService()
         {
-            this.mockBlobService.Setup(service => service.SaveFileInStorage(
+            _mockBlobService.Setup(service => service.SaveFileInStorage(
                 It.IsAny<string>(),
                 It.IsAny<string>(),
                 It.IsAny<string>()))
                 .Returns("fake_blob_name");
-            this.mockBlobService.Setup(service => service.FindFileInStorageAsBase64(
+            _mockBlobService.Setup(service => service.FindFileInStorageAsBase64(
                 It.IsAny<string>()))
                 .Returns("fake_base64_string");
         }

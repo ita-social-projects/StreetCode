@@ -6,7 +6,7 @@ using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Users;
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
 public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
 {
     private static User? _testUserEntity;
@@ -57,9 +57,9 @@ public class ExtractUpdateTestUserAttribute : BeforeAfterTestAttribute
         }
     }
 
-    private string GenerateTestPassword()
+    private static string GenerateTestPassword()
     {
-        string guid = Guid.NewGuid().ToString();
+        var guid = Guid.NewGuid().ToString();
         return $"TestPass123_{guid.Substring(0, 10)}";
     }
 }

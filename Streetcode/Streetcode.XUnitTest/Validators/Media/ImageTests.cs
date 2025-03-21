@@ -1,16 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.TestHelper;
-using Microsoft.Extensions.Localization;
 using Moq;
-using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.MediatR.Media.Audio.Update;
 using Streetcode.BLL.MediatR.Media.Image.Create;
 using Streetcode.BLL.MediatR.Media.Image.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Common;
-using Streetcode.BLL.Validators.Media.Audio;
 using Streetcode.BLL.Validators.Media.Image;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -19,21 +14,21 @@ namespace Streetcode.XUnitTest.Validators.Media;
 
 public class ImageTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
 
     public ImageTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
     }
 
     [Fact]
     public void ShouldReturnSuccesResult_WhenImageIsValid()
     {
         // Arange
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidImageFile();
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidImageFile();
 
         // Act
         var result = validator.Validate(audio);
@@ -46,9 +41,9 @@ public class ImageTests
     public void ShouldReturnError_WhenTitleIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Title"]];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["Title"]];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidImageFile();
         audio.Title = string.Empty;
 
         // Act
@@ -58,14 +53,14 @@ public class ImageTests
         result.ShouldHaveValidationErrorFor(x => x.Title)
             .WithErrorMessage(expectedError);
     }
-    
+
     [Fact]
     public void ShouldReturnError_WhenExtensionIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Extension"]];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["Extension"]];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.Extension = string.Empty;
 
         // Act
@@ -80,9 +75,9 @@ public class ImageTests
     public void ShouldReturnError_WhenMimeTypeIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["MimeType"]];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["MimeType"]];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.MimeType = string.Empty;
 
         // Act
@@ -97,9 +92,9 @@ public class ImageTests
     public void ShouldReturnError_WhenBaseFormatIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["BaseFormat"]];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["BaseFormat"]];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.BaseFormat = string.Empty;
 
         // Act
@@ -114,9 +109,9 @@ public class ImageTests
     public void ShouldReturnError_WhenTitleLengthIsOutOfRange()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BaseImageValidator.MaxTitleLength];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Title"], BaseImageValidator.MaxTitleLength];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.Title = new string('a', BaseImageValidator.MaxTitleLength + 5);
 
         // Act
@@ -131,9 +126,9 @@ public class ImageTests
     public void ShouldReturnError_WhenAltLengthIsOutOfRange()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Alt"], BaseImageValidator.MaxAltLength];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Alt"], BaseImageValidator.MaxAltLength];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.Alt = new string('a', BaseImageValidator.MaxAltLength + 5);
 
         // Act
@@ -148,9 +143,9 @@ public class ImageTests
     public void ShouldReturnError_WhenMimeTypeLengthIsOutOfRange()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["MimeType"], BaseImageValidator.MaxMimeTypeLength];
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var image = this.GetValidImageFile();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["MimeType"], BaseImageValidator.MaxMimeTypeLength];
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var image = GetValidImageFile();
         image.MimeType = new string('m', BaseImageValidator.MaxMimeTypeLength + 2);
 
         // Act
@@ -165,9 +160,9 @@ public class ImageTests
     public void ShouldReturnError_WhenMimeTypeIsIncorrect()
     {
         // Arange
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var expectedError = this.mockValidationLocalizer["MustBeOneOf", this.mockNamesLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(validator.MimeTypes)];
-        var image = this.GetValidImageFile();
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(validator.MimeTypes)];
+        var image = GetValidImageFile();
         image.MimeType = "video/mp4";
 
         // Act
@@ -182,9 +177,9 @@ public class ImageTests
     public void ShouldReturnError_WhenExtensionIsIncorrect()
     {
         // Arange
-        var validator = new BaseImageValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var expectedError = this.mockValidationLocalizer["MustBeOneOf", this.mockNamesLocalizer["Extension"], ValidationExtentions.ConcatWithComma(validator.Extensions)];
-        var image = this.GetValidImageFile();
+        var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["Extension"], ValidationExtentions.ConcatWithComma(validator.Extensions)];
+        var image = GetValidImageFile();
         image.Extension = "mp4";
 
         // Act
@@ -200,11 +195,11 @@ public class ImageTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseImageValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseImageValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var updateValidator = new CreateImageValidator(baseValidator.Object);
-        var updateCommand = new CreateImageCommand(this.GetValidImageFile());
+        var updateCommand = new CreateImageCommand(GetValidImageFile());
 
         // Act
         updateValidator.TestValidate(updateCommand);
@@ -218,7 +213,7 @@ public class ImageTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseImageValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseImageValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateImageValidator(baseValidator.Object);
@@ -239,7 +234,7 @@ public class ImageTests
         baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageFileBaseCreateDTO>>()), Times.Once);
     }
 
-    private ImageFileBaseCreateDTO GetValidImageFile()
+    private static ImageFileBaseCreateDTO GetValidImageFile()
     {
         return new ImageFileBaseCreateDTO()
         {

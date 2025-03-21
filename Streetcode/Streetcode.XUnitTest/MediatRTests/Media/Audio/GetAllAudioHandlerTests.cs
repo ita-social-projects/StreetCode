@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 {
     public class GetAllAudioHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> repository;
-        private readonly Mock<IMapper> mapper;
-        private readonly Mock<IBlobService> blob;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<IMapper> _mapper;
+        private readonly Mock<IBlobService> _blob;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetAllAudioHandlerTests()
         {
-            this.repository = new Mock<IRepositoryWrapper>();
-            this.mapper = new Mock<IMapper>();
-            this.blob = new Mock<IBlobService>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _repository = new Mock<IRepositoryWrapper>();
+            _mapper = new Mock<IMapper>();
+            _blob = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -40,17 +40,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             {
                 new Model { Id = id },
             };
-            var testAudioListDTO = new List<AudioDTO>()
+            var testAudioListDto = new List<AudioDTO>()
             {
                 new AudioDTO() { Id = id },
             };
             var testAudio = new Model() { Id = id };
 
-            this.RepositorySetup(testAudio, testAudioList);
-            this.MapperSetup(testAudioListDTO);
-            this.BlobSetup(expectedBase64);
+            RepositorySetup(testAudio, testAudioList);
+            MapperSetup(testAudioListDto);
+            BlobSetup(expectedBase64);
 
-            var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
@@ -64,14 +64,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
         {
             // Arrange
             string expectedErrorMessage = "Cannot find any audios";
-            this.RepositorySetup(null, null);
-            this.MapperSetup(new List<AudioDTO>());
-            this.BlobSetup(null);
+            RepositorySetup(null, null);
+            MapperSetup(new List<AudioDTO>());
+            BlobSetup(null);
 
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
+            _mockLocalizer.Setup(localizer => localizer["CannotFindAnyAudios"])
                 .Returns(new LocalizedString("CannotFindAnyAudios", expectedErrorMessage));
 
-            var handler = new GetAllAudiosHandler(this.repository.Object, this.mapper.Object, this.blob.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetAllAudiosHandler(_repository.Object, _mapper.Object, _blob.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllAudiosQuery(), CancellationToken.None);
@@ -82,24 +82,24 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
 
         private void RepositorySetup(Model? audio, List<Model> audios)
         {
-            this.repository.Setup(repo => repo.AudioRepository
+            _repository.Setup(repo => repo.AudioRepository
              .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Model, bool>>>(), It.IsAny<Func<IQueryable<Model>, IIncludableQueryable<Model, Model>>?>()))
              .ReturnsAsync(audio);
 
-            this.repository.Setup(repo => repo.AudioRepository
+            _repository.Setup(repo => repo.AudioRepository
                 .GetAllAsync(It.IsAny<Expression<Func<Model, bool>>>(), It.IsAny<Func<IQueryable<Model>, IIncludableQueryable<Model, object>>>()))
                 .ReturnsAsync(audios);
         }
 
-        private void MapperSetup(List<AudioDTO> audioDTOs)
+        private void MapperSetup(List<AudioDTO> audioDtOs)
         {
-            this.mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(audioDTOs);
+            _mapper.Setup(x => x.Map<IEnumerable<AudioDTO>>(It.IsAny<IEnumerable<object>>()))
+                .Returns(audioDtOs);
         }
 
         private void BlobSetup(string? expectedBase64)
         {
-            this.blob
+            this._blob
                 .Setup(blob => blob.FindFileInStorageAsBase64(It.IsAny<string>()))
                 .Returns(expectedBase64!);
         }

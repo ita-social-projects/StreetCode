@@ -10,32 +10,32 @@ using Xunit;
 
 namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
 {
-    public class GenerateJWTTokenTest
+    public class GenerateJwtTokenTest
     {
-        private readonly string jwtKey = "s_dkcLEWRlcksdmcQWE_124";
-        private readonly string jwtIssuer = "Jwt_Issuer";
-        private readonly string jwtAudience = "Jwt_Audience";
-        private readonly string accessTokenLifetimeInMinutes = "15";
-        private readonly Mock<StreetcodeDbContext> mockDbContext;
-        private readonly IConfiguration fakeConfiguration;
+        private const string JwtKey = "s_dkcLEWRlcksdmcQWE_124";
+        private const string JwtIssuer = "Jwt_Issuer";
+        private const string JwtAudience = "Jwt_Audience";
+        private const string AccessTokenLifetimeInMinutes = "15";
+        private readonly Mock<StreetcodeDbContext> _mockDbContext;
+        private readonly IConfiguration _fakeConfiguration;
         private readonly TokenService _tokenService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerateJWTTokenTest"/> class.
+        /// Initializes a new instance of the <see cref="GenerateJwtTokenTest"/> class.
         /// </summary>
-        public GenerateJWTTokenTest()
+        public GenerateJwtTokenTest()
         {
-            this.mockDbContext = new Mock<StreetcodeDbContext>();
-            this.fakeConfiguration = this.GetFakeConfiguration();
+            _mockDbContext = new Mock<StreetcodeDbContext>();
+            _fakeConfiguration = GetFakeConfiguration();
 
-            this._tokenService = this.GetTokenService();
+            _tokenService = GetTokenService();
         }
 
         [Fact]
         public void ShouldThrowException_InputParameterIsNull()
         {
             // Arrange.
-            var exceptionAction = this._tokenService.GenerateAccessTokenAsync;
+            var exceptionAction = _tokenService.GenerateAccessTokenAsync;
 
             // Act.
 
@@ -47,12 +47,12 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public async Task ShouldReturnNotNullToken_InputUserIsValid()
         {
             // Arrange.
-            this.SetupMockDbContextGetRoles();
-            this.SetupMockDbContextGetUserRoles();
-            User user = this.GetUser();
+            SetupMockDbContextGetRoles();
+            SetupMockDbContextGetUserRoles();
+            User user = GetUser();
 
             // Act.
-            var token = await this._tokenService.GenerateAccessTokenAsync(user);
+            var token = await _tokenService.GenerateAccessTokenAsync(user);
 
             // Assert.
             Assert.NotNull(token);
@@ -62,13 +62,13 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
         public async Task ShouldReturnCorrectData_InputUserIsValid()
         {
             // Arrange.
-            User expectedUser = this.GetUser();
+            User expectedUser = GetUser();
             string expectedRole = "Admin";
-            this.SetupMockDbContextGetRoles();
-            this.SetupMockDbContextGetUserRoles();
+            SetupMockDbContextGetRoles();
+            SetupMockDbContextGetUserRoles();
 
             // Act.
-            var token = await this._tokenService.GenerateAccessTokenAsync(expectedUser);
+            var token = await _tokenService.GenerateAccessTokenAsync(expectedUser);
 
             // Assert.
             Assert.Equal(expectedUser.Email, token.Claims.First(claim => claim.Type == "email").Value);
@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             return roles.AsQueryable();
         }
 
-        private User GetUser()
+        private static User GetUser()
         {
             return new User()
             {
@@ -107,39 +107,23 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             };
         }
 
-        private void SetupMockDbContextGetUserRoles()
-        {
-            var mockDbSet = this.GetConfiguredMockDbSet(GetUserRoles());
-            this.mockDbContext
-                .Setup(context => context.UserRoles)
-                .Returns(mockDbSet.Object);
-        }
-
-        private void SetupMockDbContextGetRoles()
-        {
-            var mockDbSet = this.GetConfiguredMockDbSet(GetRoles());
-            this.mockDbContext
-                .Setup(context => context.Roles)
-                .Returns(mockDbSet.Object);
-        }
-
-        private IConfiguration GetFakeConfiguration()
+        private static IConfiguration GetFakeConfiguration()
         {
             var appSettingsStub = new Dictionary<string, string?>
             {
-                { "Jwt:Key", this.jwtKey },
-                { "Jwt:Issuer", this.jwtIssuer },
-                { "Jwt:Audience", this.jwtAudience },
-                { "Jwt:AccessTokenLifetimeInMinutes", this.accessTokenLifetimeInMinutes },
+                { "Jwt:Key", JwtKey },
+                { "Jwt:Issuer", JwtIssuer },
+                { "Jwt:Audience", JwtAudience },
+                { "Jwt:AccessTokenLifetimeInMinutes", AccessTokenLifetimeInMinutes },
             };
             var fakeConfiguration = new ConfigurationBuilder()
-            .AddInMemoryCollection(appSettingsStub)
-            .Build();
+                .AddInMemoryCollection(appSettingsStub)
+                .Build();
 
             return fakeConfiguration;
         }
 
-        private Mock<DbSet<T>> GetConfiguredMockDbSet<T>(IEnumerable<T> entities)
+        private static Mock<DbSet<T>> GetConfiguredMockDbSet<T>(IEnumerable<T> entities)
             where T : class
         {
             var dbSet = new Mock<DbSet<T>>();
@@ -153,11 +137,27 @@ namespace Streetcode.XUnitTest.Services.Authentication.TokenServiceTest
             return dbSet;
         }
 
+        private void SetupMockDbContextGetUserRoles()
+        {
+            var mockDbSet = GetConfiguredMockDbSet(GetUserRoles());
+            _mockDbContext
+                .Setup(context => context.UserRoles)
+                .Returns(mockDbSet.Object);
+        }
+
+        private void SetupMockDbContextGetRoles()
+        {
+            var mockDbSet = GetConfiguredMockDbSet(GetRoles());
+            _mockDbContext
+                .Setup(context => context.Roles)
+                .Returns(mockDbSet.Object);
+        }
+
         private TokenService GetTokenService()
         {
             return new TokenService(
-                this.fakeConfiguration,
-                this.mockDbContext.Object);
+                _fakeConfiguration,
+                _mockDbContext.Object);
         }
     }
 }

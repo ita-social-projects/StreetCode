@@ -35,8 +35,8 @@ public class UpdateHistoricalContextTest
     public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
     {
         // Arrange
-        this.SetupRepo(new HistoricalContext(), null, new HistoricalContext(), true);
-        this.SetupMapper(new HistoricalContextDTO());
+        SetupRepo(new HistoricalContext(), null, new HistoricalContext(), true);
+        SetupMapper(new HistoricalContextDTO());
 
         var handler = new UpdateHistoricalContextHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind, _mockLocalizerValidation, _mockLocalizerFieldNames);
 
@@ -53,7 +53,7 @@ public class UpdateHistoricalContextTest
     public async Task ShouldReturnBadRequest_ChangesNotSaved()
     {
         // Arrange
-        this.SetupRepo(new HistoricalContext(), null, new HistoricalContext(), false);
+        SetupRepo(new HistoricalContext(), null, new HistoricalContext(), false);
 
         var handler = new UpdateHistoricalContextHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind, _mockLocalizerValidation, _mockLocalizerFieldNames);
 

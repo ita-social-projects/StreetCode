@@ -8,7 +8,6 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -16,19 +15,19 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class CreateNewsTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFail;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public CreateNewsTest()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -36,15 +35,15 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             var testNews = GetNews(1, "test");
-            this.SetupMockMapping(testNews);
-            this.SetupMockRepositoryCreate(testNews);
-            this.SetupMockRepositorySaveChangesReturns(1);
-            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
+            SetupMockMapping(testNews);
+            SetupMockRepositoryCreate(testNews);
+            SetupMockRepositorySaveChangesReturns(1);
+            SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
-            var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDto()), CancellationToken.None);
 
             // Assert
             Assert.IsType<NewsDTO>(result.Value);
@@ -55,14 +54,14 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             var expectedError = "Cannot convert null to news";
-            this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
+            _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToNews"])
             .Returns(new LocalizedString("CannotConvertNullToNews", expectedError));
-            this.SetupMapperWithNullNews();
+            SetupMapperWithNullNews();
 
-            var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsDTOWithNotExistId() !), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsDtoWithNotExistId() !), CancellationToken.None);
 
             // Assert
             Assert.False(result.IsSuccess);
@@ -74,15 +73,15 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             var testNews = GetNews(1, "test");
-            this.SetupMockMapping(testNews);
-            this.SetupMockRepositoryCreate(testNews);
-            this.SetupMockRepositorySaveChangesReturns(1);
-            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
+            SetupMockMapping(testNews);
+            SetupMockRepositoryCreate(testNews);
+            SetupMockRepositorySaveChangesReturns(1);
+            SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
-            var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDto()), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -94,16 +93,16 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Arrange
             var testNews = GetNews(1, "test");
             var expectedError = "Failed to create a news";
-            this.mockLocalizerFail.Setup(x => x["FailedToCreateNews"]).Returns(new LocalizedString("FailedToCreateNews", expectedError));
-            this.SetupMockMapping(testNews);
-            this.SetupMockRepositoryCreate(testNews);
-            this.SetupMockRepositorySaveChangesException(expectedError);
-            this.SetupMockImageRepositoryGetFirstOrDefaultAsync();
+            _mockLocalizerFail.Setup(x => x["FailedToCreateNews"]).Returns(new LocalizedString("FailedToCreateNews", expectedError));
+            SetupMockMapping(testNews);
+            SetupMockRepositoryCreate(testNews);
+            SetupMockRepositorySaveChangesException(expectedError);
+            SetupMockImageRepositoryGetFirstOrDefaultAsync();
 
-            var handler = new CreateNewsHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerFail.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateNewsHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateNewsCommand(GetNewsCreateDto()), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
@@ -111,7 +110,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private void SetupMockImageRepositoryGetFirstOrDefaultAsync()
         {
-            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+            _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Image, bool>>>(),
                     It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image { Id = 1 });
@@ -130,7 +129,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsCreateDTO GetNewsCreateDTO()
+        private static NewsCreateDTO GetNewsCreateDto()
         {
             return new NewsCreateDTO()
             {
@@ -142,7 +141,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             };
         }
 
-        private static NewsDTO GetNewsDTO()
+        private static NewsDTO GetNewsDto()
         {
             return new NewsDTO()
             {
@@ -157,36 +156,36 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private static DAL.Entities.News.News? GetNewsWithNotExistId() => null;
 
-        private static NewsCreateDTO? GetNewsDTOWithNotExistId() => null;
+        private static NewsCreateDTO? GetNewsDtoWithNotExistId() => null;
 
         private void SetupMockMapping(DAL.Entities.News.News testNews)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsCreateDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News>(It.IsAny<NewsCreateDTO>()))
                 .Returns(testNews);
-            this.mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
-                .Returns(GetNewsDTO());
+            _mockMapper.Setup(x => x.Map<NewsDTO>(It.IsAny<DAL.Entities.News.News>()))
+                .Returns(GetNewsDto());
         }
 
         private void SetupMapperWithNullNews()
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.News.News?>(It.IsAny<NewsDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.News.News?>(It.IsAny<NewsDTO>()))
                 .Returns(GetNewsWithNotExistId());
         }
 
         private void SetupMockRepositoryCreate(DAL.Entities.News.News testNews)
         {
-            this.mockRepository.Setup(x => x.NewsRepository.Create(It.Is<DAL.Entities.News.News>(y => y.Id == testNews.Id)))
+            _mockRepository.Setup(x => x.NewsRepository.Create(It.Is<DAL.Entities.News.News>(y => y.Id == testNews.Id)))
                 .Returns(testNews);
         }
 
         private void SetupMockRepositorySaveChangesException(string expectedError)
         {
-            this.mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
+            _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
         }
 
         private void SetupMockRepositorySaveChangesReturns(int number)
         {
-            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
         }
     }
 }

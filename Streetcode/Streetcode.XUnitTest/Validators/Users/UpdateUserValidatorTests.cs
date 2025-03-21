@@ -47,7 +47,7 @@ public class UpdateUserValidatorTests
         _mockBaseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<UpdateUserDTO>>(), CancellationToken.None), Times.Once);
     }
 
-    private UpdateUserDTO GetValidUser()
+    private static UpdateUserDTO GetValidUser()
     {
         return new UpdateUserDTO
         {

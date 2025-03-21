@@ -2,14 +2,12 @@
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.Art;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
 using Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Streetcode.Toponyms;
 using Streetcode.DAL.Enums;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
@@ -115,17 +113,12 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .SetValidator(artCreateUpdateDtoValidator);
     }
 
-    private int CountNewLines(string text)
+    private static int CountNewLines(string text)
     {
-        if (string.IsNullOrEmpty(text))
-        {
-            return 0;
-        }
-
-        return text.Count(c => c == '\n');
+        return string.IsNullOrEmpty(text) ? 0 : text.Count(c => c == '\n');
     }
 
-    private bool AdjustedLengthIsValid(string teaser)
+    private static bool AdjustedLengthIsValid(string teaser)
     {
         int newLineCount = CountNewLines(teaser);
 

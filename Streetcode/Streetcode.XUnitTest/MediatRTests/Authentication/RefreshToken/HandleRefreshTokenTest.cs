@@ -11,31 +11,31 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
 {
     public class HandleRefreshTokenTest
     {
-        private readonly Mock<ITokenService> mockTokenService;
-        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<ITokenService> _mockTokenService;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleRefreshTokenTest"/> class.
         /// </summary>
         public HandleRefreshTokenTest()
         {
-            this.mockTokenService = new Mock<ITokenService>();
-            this.mockLogger = new Mock<ILoggerService>();
+            _mockTokenService = new Mock<ITokenService>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
         public async Task ShouldReturnCorrectData_ValidInputToken()
         {
             // Arrange.
-            JwtSecurityToken expectedToken = this.GenerateToken();
+            JwtSecurityToken expectedToken = GenerateToken();
             string expectedTokenString = new JwtSecurityTokenHandler().WriteToken(expectedToken);
-            this.mockTokenService
+            _mockTokenService
                 .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(expectedToken);
-            var handler = this.GetRefreshTokenHandler();
+            var handler = GetRefreshTokenHandler();
 
             // Act.
-            var result = await handler.Handle(new RefreshTokenQuery(this.GetRefreshTokenRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RefreshTokenQuery(GetRefreshTokenRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.Equal(expectedTokenString, result.Value.AccessToken);
@@ -45,13 +45,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         public async Task ShouldReturnFail_InvalidInputTokenData()
         {
             // Arrange.
-            this.mockTokenService
+            _mockTokenService
                 .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws<SecurityTokenValidationException>();
-            var handler = this.GetRefreshTokenHandler();
+            var handler = GetRefreshTokenHandler();
 
             // Act.
-            var result = await handler.Handle(new RefreshTokenQuery(this.GetRefreshTokenRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RefreshTokenQuery(GetRefreshTokenRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -61,31 +61,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
         public async Task ShouldReturnFail_InvalidInputToken()
         {
             // Arrange.
-            this.mockTokenService
+            _mockTokenService
                 .Setup(service => service.RefreshToken(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws<Exception>();
-            var handler = this.GetRefreshTokenHandler();
+            var handler = GetRefreshTokenHandler();
 
             // Act.
-            var result = await handler.Handle(new RefreshTokenQuery(this.GetRefreshTokenRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RefreshTokenQuery(GetRefreshTokenRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
         }
 
-        private RefreshTokenRequestDTO GetRefreshTokenRequestDTO()
-        {
-            return new RefreshTokenRequestDTO();
-        }
-
-        private RefreshTokenHandler GetRefreshTokenHandler()
-        {
-            return new RefreshTokenHandler(
-                this.mockTokenService.Object,
-                this.mockLogger.Object);
-        }
-
-        private JwtSecurityToken GenerateToken()
+        private static JwtSecurityToken GenerateToken()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor()
@@ -95,6 +83,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.RefreshToken
             };
 
             return tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+        }
+
+        private static RefreshTokenRequestDTO GetRefreshTokenRequestDto()
+        {
+            return new RefreshTokenRequestDTO();
+        }
+
+        private RefreshTokenHandler GetRefreshTokenHandler()
+        {
+            return new RefreshTokenHandler(
+                _mockTokenService.Object,
+                _mockLogger.Object);
         }
     }
 }

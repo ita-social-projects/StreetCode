@@ -15,12 +15,12 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 {
     public class GetAllSubtitlesRequestHandlerTests
     {
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
-        private readonly List<Subtitle> subtitles = new List<Subtitle>
+        private readonly List<Subtitle> _subtitles = new List<Subtitle>
         {
             new Subtitle
             {
@@ -34,7 +34,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             },
         };
 
-        private readonly List<SubtitleDTO> subtitleDTOs = new List<SubtitleDTO>
+        private readonly List<SubtitleDTO> _subtitleDtOs = new List<SubtitleDTO>
         {
             new SubtitleDTO
             {
@@ -50,20 +50,20 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         public GetAllSubtitlesRequestHandlerTests()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_NotEmpty_List()
         {
             // Arrange
-            this.SetupRepository(this.subtitles);
-            this.SetupMapper(this.subtitleDTOs);
+            SetupRepository(_subtitles);
+            SetupMapper(_subtitleDtOs);
 
-            var handler = new GetAllSubtitlesHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
@@ -71,21 +71,21 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<List<SubtitleDTO>>(result.Value),
-                () => Assert.True(result.Value.Count().Equals(this.subtitles.Count)));
+                () => Assert.True(result.Value.Count().Equals(_subtitles.Count)));
         }
 
         [Fact]
         public async Task Handler_Returns_Error()
         {
             // Arrange
-            this.SetupRepository(null);
-            this.SetupMapper(new List<SubtitleDTO>());
+            SetupRepository(null);
+            SetupMapper(new List<SubtitleDTO>());
 
             var expectedError = $"Cannot find any subtitles";
-            this.mockLocalizer.Setup(localizer => localizer["CannotFindAnySubtitles"])
+            _mockLocalizer.Setup(localizer => localizer["CannotFindAnySubtitles"])
                 .Returns(new LocalizedString("CannotFindAnySubtitles", expectedError));
 
-            var handler = new GetAllSubtitlesHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
@@ -96,7 +96,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupRepository(List<Subtitle> returnList)
         {
-            this.mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
+            _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
@@ -105,7 +105,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupMapper(List<SubtitleDTO> returnList)
         {
-            this.mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(returnList);
         }
     }

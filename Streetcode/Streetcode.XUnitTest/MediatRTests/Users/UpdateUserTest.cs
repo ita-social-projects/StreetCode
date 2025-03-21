@@ -180,7 +180,7 @@ public class UpdateUserHandlerTests
         Assert.False(result.IsSuccess);
     }
 
-    private UpdateUserCommand GetUpdateUserCommand()
+    private static UpdateUserCommand GetUpdateUserCommand()
     {
         return new UpdateUserCommand(
             new UpdateUserDTO
@@ -198,7 +198,7 @@ public class UpdateUserHandlerTests
             });
     }
 
-    private User GetExistingUser()
+    private static User GetExistingUser()
     {
         return new User
         {
@@ -214,7 +214,7 @@ public class UpdateUserHandlerTests
         };
     }
 
-    private UserDTO GetUserDto(User user)
+    private static UserDTO GetUserDto(User user)
     {
         return new UserDTO
         {

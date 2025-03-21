@@ -33,8 +33,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             var testTeam = GetTeam();
 
-            this.SetupMapTeamMember(testTeam);
-            this.SetupGetFirstOrDefaultAsync(testTeam);
+            SetupMapTeamMember(testTeam);
+            SetupGetFirstOrDefaultAsync(testTeam);
 
             var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
 
@@ -56,10 +56,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             var testTeam = GetTeam();
             var expectedError = "No team with such id";
-            this._mockLocalizerNo.Setup(x => x["NoTeamWithSuchId"])
+            _mockLocalizerNo.Setup(x => x["NoTeamWithSuchId"])
                 .Returns(new LocalizedString("NoTeamWithSuchId", expectedError));
 
-            this.SetupGetFirstOrDefaultAsync(null);
+            SetupGetFirstOrDefaultAsync(null);
 
             var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
 
@@ -79,9 +79,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             var testTeam = GetTeam();
             var expectedError = "The team wasn't added";
 
-            this.SetupMapTeamMember(testTeam);
-            this.SetupGetFirstOrDefaultAsync(testTeam);
-            this.SetupSaveChangesException(expectedError);
+            SetupMapTeamMember(testTeam);
+            SetupGetFirstOrDefaultAsync(testTeam);
+            SetupSaveChangesException(expectedError);
 
             var handler = new DeleteTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerNo.Object);
 
@@ -100,7 +100,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static TeamMemberDTO GetTeamDTO()
+        private static TeamMemberDTO GetTeamDto()
         {
             return new TeamMemberDTO();
         }
@@ -108,7 +108,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         private void SetupMapTeamMember(TeamMember teamMember)
         {
             _mockMapper.Setup(x => x.Map<TeamMemberDTO>(teamMember))
-                .Returns(GetTeamDTO());
+                .Returns(GetTeamDto());
         }
 
         private void SetupGetFirstOrDefaultAsync(TeamMember? teamMember)

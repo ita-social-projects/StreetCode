@@ -11,17 +11,17 @@ namespace Streetcode.XUnitTest.Validators.Users;
 
 public class BaseUserValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
     private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
-    private readonly BaseUserValidator validator;
+    private readonly BaseUserValidator _validator;
 
     public BaseUserValidatorTests()
     {
-        mockNamesLocalizer = new MockFieldNamesLocalizer();
-        mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
         _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-        validator = new BaseUserValidator(mockValidationLocalizer, mockNamesLocalizer, _mockRepositoryWrapper.Object);
+        _validator = new BaseUserValidator(_mockValidationLocalizer, _mockNamesLocalizer, _mockRepositoryWrapper.Object);
     }
 
     [Fact]
@@ -31,7 +31,7 @@ public class BaseUserValidatorTests
         var user = GetValidUser();
 
         // Act
-        var result = validator.Validate(user);
+        var result = _validator.Validate(user);
 
         // Assert
         Assert.True(result.IsValid);
@@ -41,7 +41,7 @@ public class BaseUserValidatorTests
     public void Validate_ExpertisesCountIsMoreThan3_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MustContainAtMostThreeExpertises", mockNamesLocalizer["Expertises"]];
+        var expectedError = _mockValidationLocalizer["MustContainAtMostThreeExpertises", _mockNamesLocalizer["Expertises"]];
         var user = GetValidUser();
         user.Expertises.Add(new ExpertiseDTO
         {
@@ -50,7 +50,7 @@ public class BaseUserValidatorTests
         });
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Expertises)
@@ -61,12 +61,12 @@ public class BaseUserValidatorTests
     public void Validate_AboutYourselfLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["AboutYourself"], BaseUserValidator.MaxLengthAboutYourself];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["AboutYourself"], BaseUserValidator.MaxLengthAboutYourself];
         var user = GetValidUser();
         user.AboutYourself = new string('a', BaseUserValidator.MaxLengthAboutYourself + 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.AboutYourself)
@@ -78,12 +78,12 @@ public class BaseUserValidatorTests
     public void Validate_UserNameIsInvalid_ShouldReturnError(string userName)
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["UserNameFormat"];
+        var expectedError = _mockValidationLocalizer["UserNameFormat"];
         var user = GetValidUser();
         user.UserName = userName;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -94,12 +94,12 @@ public class BaseUserValidatorTests
     public void Validate_UserNameIsEmpty_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["UserName"]];
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["UserName"]];
         var user = GetValidUser();
         user.UserName = string.Empty;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -110,12 +110,12 @@ public class BaseUserValidatorTests
     public void Validate_UserNameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["UserName"], BaseUserValidator.MaxLengthUserName];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["UserName"], BaseUserValidator.MaxLengthUserName];
         var user = GetValidUser();
         user.UserName = new string('a', BaseUserValidator.MaxLengthUserName + 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -126,12 +126,12 @@ public class BaseUserValidatorTests
     public void Validate_UserNameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["UserName"], BaseUserValidator.MinLengthUserName];
+        var expectedError = _mockValidationLocalizer["MinLength", _mockNamesLocalizer["UserName"], BaseUserValidator.MinLengthUserName];
         var user = GetValidUser();
         user.UserName = new string('a', BaseUserValidator.MinLengthUserName - 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.UserName)
@@ -145,12 +145,12 @@ public class BaseUserValidatorTests
     public void Validate_NameIsInvalid_ShouldReturnError(string name)
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["NameFormat"];
+        var expectedError = _mockValidationLocalizer["NameFormat"];
         var user = GetValidUser();
         user.Name = name;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -161,12 +161,12 @@ public class BaseUserValidatorTests
     public void Validate_NameIsEmpty_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Name"]];
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Name"]];
         var user = GetValidUser();
         user.Name = string.Empty;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -177,12 +177,12 @@ public class BaseUserValidatorTests
     public void Validate_NameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Name"], BaseUserValidator.MaxLengthName];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Name"], BaseUserValidator.MaxLengthName];
         var user = GetValidUser();
         user.Name = new string('a', BaseUserValidator.MaxLengthName + 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -193,12 +193,12 @@ public class BaseUserValidatorTests
     public void Validate_NameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["Name"], BaseUserValidator.MinLengthName];
+        var expectedError = _mockValidationLocalizer["MinLength", _mockNamesLocalizer["Name"], BaseUserValidator.MinLengthName];
         var user = GetValidUser();
         user.Name = new string('a', BaseUserValidator.MinLengthName - 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Name)
@@ -212,12 +212,12 @@ public class BaseUserValidatorTests
     public void Validate_SurnameIsInvalid_ShouldReturnError(string surname)
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["SurnameFormat"];
+        var expectedError = _mockValidationLocalizer["SurnameFormat"];
         var user = GetValidUser();
         user.Surname = surname;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Surname)
@@ -228,12 +228,12 @@ public class BaseUserValidatorTests
     public void Validate_SurnameIsEmpty_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["CannotBeEmpty", mockNamesLocalizer["Surname"]];
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Surname"]];
         var user = GetValidUser();
         user.Surname = string.Empty;
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Surname)
@@ -244,12 +244,12 @@ public class BaseUserValidatorTests
     public void Validate_SurnameLengthIsMoreThanMaximum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MaxLength", mockNamesLocalizer["Surname"], BaseUserValidator.MaxLengthSurname];
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Surname"], BaseUserValidator.MaxLengthSurname];
         var user = GetValidUser();
         user.Surname = new string('a', BaseUserValidator.MaxLengthSurname + 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Surname)
@@ -260,12 +260,12 @@ public class BaseUserValidatorTests
     public void Validate_SurnameLengthIsLessThanMinimum_ShouldReturnError()
     {
         // Arrange
-        var expectedError = mockValidationLocalizer["MinLength", mockNamesLocalizer["Surname"], BaseUserValidator.MinLengthSurname];
+        var expectedError = _mockValidationLocalizer["MinLength", _mockNamesLocalizer["Surname"], BaseUserValidator.MinLengthSurname];
         var user = GetValidUser();
         user.Surname = new string('a', BaseUserValidator.MinLengthSurname - 1);
 
         // Act
-        var result = validator.TestValidate(user);
+        var result = _validator.TestValidate(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Surname)
@@ -278,18 +278,18 @@ public class BaseUserValidatorTests
         // Arrange
         var user = GetValidUser();
         user.AvatarId = 1;
-        var expectedError = mockValidationLocalizer["ImageDoesntExist", user.AvatarId];
+        var expectedError = _mockValidationLocalizer["ImageDoesntExist", user.AvatarId];
         MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(_mockRepositoryWrapper);
 
         // Act
-        var result = await validator.TestValidateAsync(user);
+        var result = await _validator.TestValidateAsync(user);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.AvatarId)
             .WithErrorMessage(expectedError);
     }
 
-    private UpdateUserDTO GetValidUser()
+    private static UpdateUserDTO GetValidUser()
     {
         return new UpdateUserDTO
         {

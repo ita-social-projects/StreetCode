@@ -78,16 +78,16 @@ public class HangfireAuthorizationFilterTests
 
     public class MockHangfireDashboardAuthorizationFilter : HangfireDashboardAuthorizationFilter
     {
-        private readonly string userRole;
+        private readonly string _userRole;
 
         public MockHangfireDashboardAuthorizationFilter(string userRole)
         {
-            this.userRole = userRole;
+            this._userRole = userRole;
         }
 
         protected override ClaimsPrincipal GetUser(DashboardContext context)
         {
-            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, this.userRole) }));
+            return new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.Role, _userRole) }));
         }
     }
 

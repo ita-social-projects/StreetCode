@@ -22,40 +22,40 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
     public class HandleRegisterTest
     {
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IRepositoryWrapper> mockRepositoryWrapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<UserManager<User>> mockUserManager;
-        private readonly Mock<IStringLocalizer<UserSharedResource>> mockLocalizer;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<UserManager<User>> _mockUserManager;
+        private readonly Mock<IStringLocalizer<UserSharedResource>> _mockLocalizer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HandleRegisterTest"/> class.
         /// </summary>
         public HandleRegisterTest()
         {
-            this.mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
+            _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
 
             var store = new Mock<IUserStore<User>>();
-            this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            this.mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
+            _mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+            _mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
 
-            this.mockLocalizer.Setup(x => x["UserWithSuchEmailExists"]).Returns(new LocalizedString("UserWithSuchEmailExists", "UserWithSuchEmailExists"));
-            this.mockLocalizer.Setup(x => x["UserWithSuchUsernameExists"]).Returns(new LocalizedString("UserWithSuchUsernameExists", "UserWithSuchUsernameExists"));
-            this.mockLocalizer.Setup(x => x["UserManagerError"]).Returns(new LocalizedString("UserManagerError", "UserManagerError"));
+            _mockLocalizer.Setup(x => x["UserWithSuchEmailExists"]).Returns(new LocalizedString("UserWithSuchEmailExists", "UserWithSuchEmailExists"));
+            _mockLocalizer.Setup(x => x["UserWithSuchUsernameExists"]).Returns(new LocalizedString("UserWithSuchUsernameExists", "UserWithSuchUsernameExists"));
+            _mockLocalizer.Setup(x => x["UserManagerError"]).Returns(new LocalizedString("UserManagerError", "UserManagerError"));
         }
 
         [Fact]
         public async Task ShouldReturnSuccess_NewUser()
         {
             // Arrange.
-            this.SetupServicesForSuccess();
-            this.SetupMockMapper();
-            var handler = this.GetRegisterHandler();
+            SetupServicesForSuccess();
+            SetupMockMapper();
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetSampleRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsSuccess);
@@ -65,14 +65,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         public async Task ShouldReturnRegisterResponseDTOWithCorrectData_NewUser()
         {
             // Arrange.
-            User expectedUser = this.GetSampleUser();
+            User expectedUser = GetSampleUser();
             string expectedRole = nameof(UserRole.User);
-            this.SetupServicesForSuccess();
-            this.SetupMockMapper(expectedUser);
-            var handler = this.GetRegisterHandler();
+            SetupServicesForSuccess();
+            SetupMockMapper(expectedUser);
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetSampleRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -89,12 +89,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             // Arrange.
             string expectedErrorMessage = "UserWithSuchEmailExists";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
-            this.SetupMockMapper(isEmailExists: true);
-            var handler = this.GetRegisterHandler();
+            SetupMockRepositoryGetFirstOrDefault(isExists: true);
+            SetupMockMapper(isEmailExists: true);
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetRegisterRequestWithExistingEmail()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetRegisterRequestWithExistingEmail()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -106,12 +106,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             // Arrange.
             string expectedErrorMessage = "UserWithSuchUsernameExists";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: true);
-            this.SetupMockMapper();
-            var handler = this.GetRegisterHandler();
+            SetupMockRepositoryGetFirstOrDefault(isExists: true);
+            SetupMockMapper();
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetRegisterRequestWithExistingUserName()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetRegisterRequestWithExistingUserName()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -123,13 +123,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             // Arrange.
             string expectedErrorMessage = "UserManagerError";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
-            this.SetupMockUserManagerCreate(isSuccess: false);
+            SetupMockRepositoryGetFirstOrDefault(isExists: false);
+            SetupMockUserManagerCreate(isSuccess: false);
             SetupMockMapper();
-            var handler = this.GetRegisterHandler();
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetSampleRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -141,13 +141,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             // Arrange.
             string expectedErrorMessage = "Exception is thrown from UserManager while creating user";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
-            this.SetupMockUserManagerCreateThrowsException(expectedErrorMessage);
+            SetupMockRepositoryGetFirstOrDefault(isExists: false);
+            SetupMockUserManagerCreateThrowsException(expectedErrorMessage);
             SetupMockMapper();
-            var handler = this.GetRegisterHandler();
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetSampleRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -159,14 +159,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         {
             // Arrange.
             string expectedErrorMessage = "Exception is thrown from UserManager while assigning role to user";
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
-            this.SetupMockUserManagerCreate(isSuccess: true);
-            this.SetupMockUserManagerAddToRoleThrowsException(expectedErrorMessage);
+            SetupMockRepositoryGetFirstOrDefault(isExists: false);
+            SetupMockUserManagerCreate(isSuccess: true);
+            SetupMockUserManagerAddToRoleThrowsException(expectedErrorMessage);
             SetupMockMapper();
-            var handler = this.GetRegisterHandler();
+            var handler = GetRegisterHandler();
 
             // Act.
-            var result = await handler.Handle(new RegisterQuery(this.GetSampleRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new RegisterQuery(GetSampleRequestDto()), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -185,7 +185,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             };
         }
 
-        private RegisterRequestDTO GetSampleRequestDTO()
+        private static RegisterRequestDTO GetSampleRequestDto()
         {
             return new RegisterRequestDTO()
             {
@@ -193,7 +193,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             };
         }
 
-        private RegisterRequestDTO GetRegisterRequestWithExistingEmail()
+        private static RegisterRequestDTO GetRegisterRequestWithExistingEmail()
         {
             return new RegisterRequestDTO()
             {
@@ -201,7 +201,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             };
         }
 
-        private RegisterRequestDTO GetRegisterRequestWithExistingUserName()
+        private static RegisterRequestDTO GetRegisterRequestWithExistingUserName()
         {
             return new RegisterRequestDTO()
             {
@@ -211,19 +211,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupServicesForSuccess()
         {
-            this.SetupMockRepositoryGetFirstOrDefault(isExists: false);
-            this.SetupMockUserManagerCreate(isSuccess: true);
+            SetupMockRepositoryGetFirstOrDefault(isExists: false);
+            SetupMockUserManagerCreate(isSuccess: true);
         }
 
         private void SetupMockRepositoryGetFirstOrDefault(bool isExists)
         {
-            this.mockRepositoryWrapper
+            _mockRepositoryWrapper
                 .Setup(wrapper => wrapper.UserRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<User, bool>>>(),
                         It.IsAny<Func<IQueryable<User>,
                         IIncludableQueryable<User, object>>>()))
-                .ReturnsAsync(isExists ? this.GetSampleUser() : null);
+                .ReturnsAsync(isExists ? GetSampleUser() : null);
         }
 
         private void SetupMockMapper(User? user = null, bool isEmailExists = false)
@@ -241,12 +241,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 };
             }
 
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x
                 .Map<RegisterResponseDTO>(It.IsAny<User>()))
                 .Returns(registerResponseToReturnFromMapper);
 
-            User sampleUser = this.GetSampleUser();
+            User sampleUser = GetSampleUser();
             if (isEmailExists)
             {
                 sampleUser.UserName = string.Empty;
@@ -256,7 +256,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
                 sampleUser.Email = string.Empty;
             }
 
-            this.mockMapper
+            _mockMapper
                .Setup(x => x
                .Map<User>(It.IsAny<RegisterRequestDTO>()))
                .Returns(sampleUser);
@@ -264,7 +264,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerCreate(bool isSuccess)
         {
-            this.mockUserManager
+            _mockUserManager
                 .Setup(manager => manager
                     .CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(isSuccess ? IdentityResult.Success : IdentityResult.Failed());
@@ -272,7 +272,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerCreateThrowsException(string message)
         {
-            this.mockUserManager
+            _mockUserManager
                 .Setup(manager => manager
                     .CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception(message));
@@ -280,7 +280,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
 
         private void SetupMockUserManagerAddToRoleThrowsException(string message)
         {
-            this.mockUserManager
+            _mockUserManager
                 .Setup(manager => manager
                     .AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ThrowsAsync(new Exception(message));
@@ -289,11 +289,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
         private RegisterHandler GetRegisterHandler()
         {
             return new RegisterHandler(
-                this.mockRepositoryWrapper.Object,
-                this.mockLogger.Object,
-                this.mockMapper.Object,
-                this.mockUserManager.Object,
-                this.mockLocalizer.Object);
+                _mockRepositoryWrapper.Object,
+                _mockLogger.Object,
+                _mockMapper.Object,
+                _mockUserManager.Object,
+                _mockLocalizer.Object);
         }
     }
 }

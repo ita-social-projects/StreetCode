@@ -33,7 +33,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllFavourites
 
         public async Task<Result<IEnumerable<StreetcodeFavouriteDto>>> Handle(GetAllStreetcodeFavouritesQuery request, CancellationToken cancellationToken)
         {
-            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor)!;
+            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
 
             var favourites = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
                     predicate: fv => fv.UserFavourites.Any(u => u.Id == userId),

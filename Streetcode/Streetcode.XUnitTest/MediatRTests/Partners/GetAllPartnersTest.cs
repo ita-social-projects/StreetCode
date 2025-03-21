@@ -44,8 +44,7 @@ public class GetAllPartnersTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners)
-        );
+            () => Assert.IsType<List<PartnerDTO>>(result.Value.Partners));
     }
 
     [Fact]
@@ -63,8 +62,7 @@ public class GetAllPartnersTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.Equal(GetPartnerList().Count(), result.Value.Partners.Count())
-        );
+            () => Assert.Equal(GetPartnerList().Count(), result.Value.Partners.Count()));
     }
 
     [Fact]

@@ -44,8 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault.Positions)
-            );
+                () => Assert.IsType<List<PositionDTO>>(result.ValueOrDefault.Positions));
         }
 
         [Fact]
@@ -63,8 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position
             // Assert
             Assert.Multiple(
                 () => Assert.NotNull(result),
-                () => Assert.Equal(GetPositionsList().Count(), result.Value.Positions.Count())
-            );
+                () => Assert.Equal(GetPositionsList().Count(), result.Value.Positions.Count()));
         }
 
         [Fact]

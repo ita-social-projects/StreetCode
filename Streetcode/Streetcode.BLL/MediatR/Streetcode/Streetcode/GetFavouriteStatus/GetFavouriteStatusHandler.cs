@@ -20,7 +20,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetFavouriteStatus
 
         public async Task<Result<bool>> Handle(GetFavouriteStatusQuery request, CancellationToken cancellationToken)
         {
-            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor)!;
+            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
 
             var favourite = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(
                 fv => fv.UserFavourites.Any(u => u.Id == userId) && fv.Id == request.StreetcodeId);

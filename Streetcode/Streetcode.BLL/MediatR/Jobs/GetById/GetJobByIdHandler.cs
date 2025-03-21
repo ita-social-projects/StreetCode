@@ -26,11 +26,11 @@ namespace Streetcode.BLL.MediatR.Jobs.GetById
 
         public async Task<Result<JobDto>> Handle(GetJobByIdQuery request, CancellationToken cancellationToken)
         {
-            var job = await _reppository.JobRepository.GetFirstOrDefaultAsync(j => j.Id == request.jobId);
+            var job = await _reppository.JobRepository.GetFirstOrDefaultAsync(j => j.Id == request.JobId);
 
             if (job is null)
             {
-                string exceptionMessege = _stringLocalizer["CannotFindJobWithCorrespondingId", request.jobId];
+                string exceptionMessege = _stringLocalizer["CannotFindJobWithCorrespondingId", request.JobId];
                 _loggerService.LogError(request, exceptionMessege);
                 return Result.Fail(exceptionMessege);
             }

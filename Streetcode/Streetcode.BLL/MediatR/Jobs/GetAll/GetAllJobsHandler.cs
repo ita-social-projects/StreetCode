@@ -32,8 +32,8 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 				PaginationResponse<Job> paginationResponse = _repositoryWrapper
 					.JobRepository
 					.GetAllPaginated(
-						request.page,
-						request.pageSize);
+						request.Page,
+						request.PageSize);
 
 				GetAllJobsDTO getAllJobsDTO = new GetAllJobsDTO()
 				{

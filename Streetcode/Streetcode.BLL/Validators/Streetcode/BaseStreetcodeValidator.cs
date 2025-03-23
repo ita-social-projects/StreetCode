@@ -22,7 +22,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int TransliterationUrlMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
-    public const int NewLineLenght = 65;
+    private const int NewLineLenght = 65;
 
     public BaseStreetcodeValidator(
         StreetcodeToponymValidator streetcodeToponymValidator,
@@ -34,25 +34,25 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.FirstName)
-            .MaximumLength(FirstNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["FirstName"], FirstNameMaxLength]);
+            .MaximumLength(FirstNameMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["FirstName"], FirstNameMaxLength]);
 
         RuleFor(dto => dto.LastName)
-            .MaximumLength(LastNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["LastName"], LastNameMaxLength]);
+            .MaximumLength(LastNameMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["LastName"], LastNameMaxLength]);
 
         RuleFor(dto => dto.Alias)
-            .MaximumLength(AliasMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alias"], AliasMaxLength]);
+            .MaximumLength(AliasMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Alias"], AliasMaxLength]);
 
         RuleFor(dto => dto.Teaser)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Teaser"]])
-            .Must(AdjustedLengthIsValid).WithMessage(localizer["MaxLength", fieldLocalizer["Teaser"], TeaserMaxLength]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Teaser"]])
+            .Must(AdjustedLengthIsValid).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Teaser"], TeaserMaxLength]);
 
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
-            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Title"]])
+            .MaximumLength(TitleMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(dto => dto.TransliterationUrl)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TransliterationUrl"]])
-            .MaximumLength(TransliterationUrlMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TransliterationUrl"], TransliterationUrlMaxLength])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["TransliterationUrl"]])
+            .MaximumLength(TransliterationUrlMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["TransliterationUrl"], TransliterationUrlMaxLength])
             .Matches(@"^[a-z0-9-]*$")
             .WithMessage(localizer["TransliterationUrlFormat"]);
 
@@ -61,8 +61,8 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue]);
 
         RuleFor(dto => dto.DateString)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["DateString"]])
-            .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["DateString"]])
+            .MaximumLength(DateStringMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["DateString"], DateStringMaxLength])
             .Matches(@"^[А-Яа-яЁёЇїІіЄєҐґ0-9\s\(\)\-\–]+$") // Cyrillic letters, digits, parentheses, hyphen
             .WithMessage(localizer["DateStringFormat"]);
 
@@ -86,7 +86,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .SetValidator(timelineItemValidator);
 
         RuleFor(dto => dto.ImagesDetails)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["ImagesDetails"]]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["ImagesDetails"]]);
 
         RuleForEach(dto => dto.ImagesDetails)
             .SetValidator(imageDetailsValidator);

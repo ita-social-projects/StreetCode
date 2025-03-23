@@ -13,14 +13,14 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
     public const int MaxTitleLength = 100;
     public const int MaxAltLength = 300;
     public const int MaxMimeTypeLength = 10;
-    public const int MaxImageSizeInMb = 3;
+    private const int MaxImageSizeInMb = 3;
+    private readonly List<string> _extensions = new() { "png", "jpeg", "jpg", "webp" };
+    private readonly List<string> _mimeTypes = new() { "image/jpeg", "image/png", "image/webp" };
 
-    public readonly List<string> Extensions = new() { "png", "jpeg", "jpg", "webp" };
-    public readonly List<string> MimeTypes = new() { "image/jpeg", "image/png", "image/webp" };
     public BaseImageValidator(IStringLocalizer<FailedToValidateSharedResource> localizer, IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Title"]])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.IsRequired, fieldLocalizer["Title"]])
             .MaximumLength(MaxTitleLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], MaxTitleLength]);
 
         RuleFor(dto => dto.Alt)
@@ -32,22 +32,22 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
             .WithMessage(localizer["MaxLength", fieldLocalizer["Alt"], MaxAltLength]);
 
         RuleFor(dto => dto.BaseFormat)
-            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["BaseFormat"]])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.IsRequired, fieldLocalizer["BaseFormat"]])
             .Must(IsImageSizeValid).WithMessage(localizer["ImageSizeExceeded", MaxImageSizeInMb]);
 
         RuleFor(dto => dto.MimeType)
-            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["MimeType"]])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.IsRequired, fieldLocalizer["MimeType"]])
             .MaximumLength(MaxMimeTypeLength)
             .WithMessage(localizer["MaxLength", fieldLocalizer["MimeType"], MaxMimeTypeLength])
-            .Must(x => MimeTypes.Contains(x.ToLower())).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(MimeTypes)]);
+            .Must(x => _mimeTypes.Contains(x.ToLower())).WithMessage(localizer["MustBeOneOf", fieldLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(_mimeTypes)]);
 
         RuleFor(dto => dto.Extension)
-            .NotEmpty().WithMessage(localizer["IsRequired", fieldLocalizer["Extension"]])
-            .Must(x => Extensions.Contains(x.ToLower()))
-            .WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], ValidationExtentions.ConcatWithComma(Extensions)]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.IsRequired, fieldLocalizer["Extension"]])
+            .Must(x => _extensions.Contains(x.ToLower()))
+            .WithMessage(localizer["MustBeOneOf", fieldLocalizer["Extension"], ValidationExtentions.ConcatWithComma(_extensions)]);
     }
 
-    private bool IsImageSizeValid(string baseFormat)
+    private static bool IsImageSizeValid(string baseFormat)
     {
         int paddingCount = baseFormat.EndsWith("==") ? 2 :
             baseFormat.EndsWith("=") ? 1 : 0;

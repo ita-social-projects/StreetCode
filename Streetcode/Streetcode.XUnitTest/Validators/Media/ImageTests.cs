@@ -16,6 +16,8 @@ public class ImageTests
 {
     private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
     private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly List<string> _extensions = new () { "png", "jpeg", "jpg", "webp" };
+    private readonly List<string> _mimeTypes = new () { "image/jpeg", "image/png", "image/webp" };
 
     public ImageTests()
     {
@@ -161,7 +163,7 @@ public class ImageTests
     {
         // Arange
         var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
-        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(validator.MimeTypes)];
+        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["MimeType"], ValidationExtentions.ConcatWithComma(_mimeTypes)];
         var image = GetValidImageFile();
         image.MimeType = "video/mp4";
 
@@ -178,7 +180,7 @@ public class ImageTests
     {
         // Arange
         var validator = new BaseImageValidator(_mockValidationLocalizer, _mockNamesLocalizer);
-        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["Extension"], ValidationExtentions.ConcatWithComma(validator.Extensions)];
+        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["Extension"], ValidationExtentions.ConcatWithComma(_extensions)];
         var image = GetValidImageFile();
         image.Extension = "mp4";
 

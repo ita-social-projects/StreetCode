@@ -173,7 +173,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Register
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
-        private User GetSampleUser()
+        private static User GetSampleUser()
         {
             return new User()
             {

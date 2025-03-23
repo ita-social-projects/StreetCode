@@ -1,7 +1,5 @@
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.Extensions.Localization;
-using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -23,16 +21,16 @@ public class CreateNewsValidator : AbstractValidator<CreateNewsCommand>
         RuleFor(n => n.newNews).SetValidator(baseNewsValidator);
 
         RuleFor(n => n.newNews.Title)
-            .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]]);
+            .MustAsync(BeUniqueTitle).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["Title"]]);
 
         RuleFor(n => n.newNews.Text)
-            .MustAsync(BeUniqueText).WithMessage(localizer["MustBeUnique", fieldLocalizer["Text"]]);
+            .MustAsync(BeUniqueText).WithMessage(localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["Text"]]);
 
         RuleFor(n => n.newNews.URL)
-            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]]);
+            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["TargetUrl"]]);
 
         RuleFor(n => n.newNews.ImageId)
-            .MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
+            .MustAsync(BeUniqueImageId).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["ImageId"]]);
     }
 
     private async Task<bool> BeUniqueTitle(string title, CancellationToken cancellationToken)

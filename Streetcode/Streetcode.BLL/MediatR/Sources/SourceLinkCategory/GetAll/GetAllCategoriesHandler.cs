@@ -7,7 +7,6 @@ using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -29,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
+        public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<DAL.Entities.Sources.SourceLinkCategory> paginationResponse = _repositoryWrapper.SourceCategoryRepository
                 .GetAllPaginated(

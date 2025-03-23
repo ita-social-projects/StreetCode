@@ -25,7 +25,7 @@ public class BaseCategoryValidatorTests
     public async void ShouldReturnSuccessResult_WhenCategoryIsValid()
     {
         // Arrange
-        var validator = new BaseCategoryValidator( _mockRepositoryWrapper.Object, _mockValidationLocalizer, _mockFieldsLocalizer);
+        var validator = new BaseCategoryValidator(_mockRepositoryWrapper.Object, _mockValidationLocalizer, _mockFieldsLocalizer);
         var validCategory = GetValidCategory();
         MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, validCategory.ImageId);
 
@@ -92,7 +92,7 @@ public class BaseCategoryValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    public static SourceLinkCreateUpdateCategoryDTO GetValidCategory()
+    private static SourceLinkCreateUpdateCategoryDTO GetValidCategory()
     {
         return new SourceLinkCategoryCreateDTO()
         {

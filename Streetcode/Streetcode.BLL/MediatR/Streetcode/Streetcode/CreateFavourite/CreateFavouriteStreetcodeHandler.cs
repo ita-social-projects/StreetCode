@@ -29,7 +29,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.CreateFavourite
 
         public async Task<Result<Unit>> Handle(CreateFavouriteStreetcodeCommand request, CancellationToken cancellationToken)
         {
-            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor)!;
+            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
 
             if (await _repositoryWrapper.FavouritesRepository.GetFirstOrDefaultAsync(
                  f => f.UserId == userId && f.StreetcodeId == request.StreetcodeId) is not null)

@@ -42,11 +42,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         public async Task ShouldReturnSuccessfully_EmailIsCorrect()
         {
             // arrange
-            var reCaptchaResponseDto = GetReCaptchaResponseDTO(true);
-            var emailDto = GetEmailDTO();
+            var reCaptchaResponseDto = GetReCaptchaResponseDto(true);
+            var emailDto = GetEmailDto();
 
-            SetupMockHttpMessageHandlerReturnsOK(reCaptchaResponseDto);
-            SetupMockEmailServiceReturnsOK();
+            SetupMockHttpMessageHandlerReturnsOk(reCaptchaResponseDto);
+            SetupMockEmailServiceReturnsOk();
             SetupMockIHttpClientFactory();
 
             var handler = new SendEmailHandler(_mockEmailService.Object, _mockLogger.Object, _mockStringLocalizer.Object, _mockHttpClientFactory.Object, _mockConfiguration.Object, _mockMessageDataAbstractFactory.Object);
@@ -62,11 +62,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         public async Task ShouldReturnFail_WhenHttpClientRequestFailed()
         {
             // arrange
-            var emailDto = GetEmailDTO();
+            var emailDto = GetEmailDto();
             var expectedErrorMessage = "RecaptchaRequestFailed";
 
             SetupMockHttpMessageHandlerReturnsFail();
-            SetupMockEmailServiceReturnsOK();
+            SetupMockEmailServiceReturnsOk();
             SetupMockIHttpClientFactory();
 
             var handler = new SendEmailHandler(_mockEmailService.Object, _mockLogger.Object, _mockStringLocalizer.Object, _mockHttpClientFactory.Object, _mockConfiguration.Object, _mockMessageDataAbstractFactory.Object);
@@ -83,12 +83,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         public async Task ShouldReturnFail_WhenTokenIsIncorrect()
         {
             // arrange
-            var reCaptchaResponseDto = GetReCaptchaResponseDTO(false);
-            var emailDto = GetEmailDTO();
+            var reCaptchaResponseDto = GetReCaptchaResponseDto(false);
+            var emailDto = GetEmailDto();
             var expectedErrorMessage = "InvalidCaptcha";
 
-            SetupMockHttpMessageHandlerReturnsOK(reCaptchaResponseDto);
-            SetupMockEmailServiceReturnsOK();
+            SetupMockHttpMessageHandlerReturnsOk(reCaptchaResponseDto);
+            SetupMockEmailServiceReturnsOk();
             SetupMockIHttpClientFactory();
 
             var handler = new SendEmailHandler(_mockEmailService.Object, _mockLogger.Object, _mockStringLocalizer.Object, _mockHttpClientFactory.Object, _mockConfiguration.Object, _mockMessageDataAbstractFactory.Object);
@@ -105,11 +105,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         public async Task ShouldReturnFail_WhenEmailWasNotSent()
         {
             // arrange
-            var reCaptchaResponseDto = GetReCaptchaResponseDTO(true);
-            var emailDto = GetEmailDTO();
+            var reCaptchaResponseDto = GetReCaptchaResponseDto(true);
+            var emailDto = GetEmailDto();
             var expectedErrorMessage = "FailedToSendEmailMessage";
 
-            SetupMockHttpMessageHandlerReturnsOK(reCaptchaResponseDto);
+            SetupMockHttpMessageHandlerReturnsOk(reCaptchaResponseDto);
             SetupMockEmailServiceReturnsFalse();
             SetupMockStringLocalizer(expectedErrorMessage);
             SetupMockIHttpClientFactory();
@@ -124,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
         }
 
-        private static ReCaptchaResponseDto GetReCaptchaResponseDTO(bool success)
+        private static ReCaptchaResponseDto GetReCaptchaResponseDto(bool success)
         {
             return new ReCaptchaResponseDto()
             {
@@ -132,7 +132,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             };
         }
 
-        private static EmailDTO GetEmailDTO()
+        private static EmailDTO GetEmailDto()
         {
             return new EmailDTO()
             {
@@ -142,7 +142,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
             };
         }
 
-        private void SetupMockHttpMessageHandlerReturnsOK(ReCaptchaResponseDto reCaptchaResponseDto)
+        private void SetupMockHttpMessageHandlerReturnsOk(ReCaptchaResponseDto reCaptchaResponseDto)
         {
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
@@ -156,7 +156,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
                 .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.BadRequest });
         }
 
-        private void SetupMockEmailServiceReturnsOK()
+        private void SetupMockEmailServiceReturnsOk()
         {
             _mockEmailService
                 .Setup<Task<bool>>(service => service.SendEmailAsync(It.IsAny<MessageData>()))

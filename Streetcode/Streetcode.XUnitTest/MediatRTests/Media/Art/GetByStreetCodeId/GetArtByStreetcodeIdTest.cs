@@ -4,7 +4,6 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
-using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.DTO.Media.Images;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -15,124 +14,127 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
+namespace Streetcode.XUnitTest.MediatRTests.Media.Arts;
+
+public class GetArtByStreetcodeIdTest
 {
-    public class GetArtByStreetcodeIdTest
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IBlobService> _blobService;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+    private readonly GetArtsByStreetcodeIdHandler _handler;
+
+    public GetArtByStreetcodeIdTest()
     {
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IBlobService> blobService;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _blobService = new Mock<IBlobService>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _handler = new GetArtsByStreetcodeIdHandler(
+            _mockRepo.Object,
+            _mockMapper.Object,
+            _blobService.Object,
+            _mockLogger.Object);
+    }
 
-        public GetArtByStreetcodeIdTest()
+    [Theory]
+    [InlineData(1)]
+
+    public async Task Handle_ReturnsArt(int streetcodeId)
+    {
+        // Arrange
+        MockRepositoryAndMapper(GetArtsList(), GetArtsDtoList());
+
+        // Act
+        var result = await _handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(streetcodeId, result.Value.First().Id);
+    }
+
+    [Theory]
+    [InlineData(1)]
+
+    public async Task Handle_ReturnsEmptyArray(int streetcodeId)
+    {
+        // Arrange
+        MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
+
+        // Act
+        var result = await _handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+
+        // Assert
+        Assert.Multiple(
+            () => Assert.IsType<Result<IEnumerable<ArtDTO>>>(result),
+            () => Assert.IsAssignableFrom<IEnumerable<ArtDTO>>(result.Value),
+            () => Assert.Empty(result.Value));
+    }
+
+    [Theory]
+    [InlineData(1)]
+
+    public async Task Handle_ReturnsType(int streetcodeId)
+    {
+        // Arrange
+        MockRepositoryAndMapper(GetArtsList(), GetArtsDtoList());
+
+        // Act
+        var result = await _handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+
+        // Assert
+        Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
+    }
+
+    private static List<Art> GetArtsList()
+    {
+        return new List<Art>()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.blobService = new Mock<IBlobService>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
-
-        [Theory]
-        [InlineData(1)]
-
-        public async Task Handle_ReturnsArt(int streetcodeId)
-        {
-            // Arrange
-            this.MockRepositoryAndMapper(this.GetArtsList(), this.GetArtsDTOList());
-            var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-
-            // Act
-            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
-
-            // Assert
-            Assert.Equal(streetcodeId, result.Value.First().Id);
-        }
-
-        [Theory]
-        [InlineData(1)]
-
-        public async Task Handle_ReturnsEmptyArray(int streetcodeId)
-        {
-            // Arrange
-            this.MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>());
-            var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-
-            // Act
-            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
-
-            // Assert
-            Assert.Multiple(
-                () => Assert.IsType<Result<IEnumerable<ArtDTO>>>(result),
-                () => Assert.IsAssignableFrom<IEnumerable<ArtDTO>>(result.Value),
-                () => Assert.Empty(result.Value));
-        }
-
-        [Theory]
-        [InlineData(1)]
-
-        public async Task Handle_ReturnsType(int streetcodeId)
-        {
-            // Arrange
-            this.MockRepositoryAndMapper(this.GetArtsList(), this.GetArtsDTOList());
-            var handler = new GetArtsByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
-
-            // Act
-            var result = await handler.Handle(new GetArtsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
-
-            // Assert
-            Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);
-        }
-
-        private List<Art> GetArtsList()
-        {
-            return new List<Art>()
+            new Art()
             {
-                new Art()
-                {
-                    Id = 1,
-                    Image = new DAL.Entities.Media.Images.Image(),
-                },
-                new Art()
-                {
-                    Id = 2,
-                    Image = new DAL.Entities.Media.Images.Image(),
-                },
-            };
-        }
-
-        private List<ArtDTO> GetArtsDTOList()
-        {
-            return new List<ArtDTO>()
+                Id = 1,
+                Image = new DAL.Entities.Media.Images.Image(),
+            },
+            new Art()
             {
-                new ArtDTO
-                {
-                    Id = 1,
-                    Image = new ImageDTO(),
-                },
-                new ArtDTO
-                {
-                    Id = 2,
-                    Image = new ImageDTO(),
-                },
-            };
-        }
+                Id = 2,
+                Image = new DAL.Entities.Media.Images.Image(),
+            },
+        };
+    }
 
-        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO)
+    private static List<ArtDTO> GetArtsDtoList()
+    {
+        return new List<ArtDTO>()
         {
-            this.mockRepo
-                .Setup(r => r.ArtRepository
-                    .GetAllAsync(
-                        It.IsAny<Expression<Func<Art, bool>>>(),
-                        It.IsAny<Func<IQueryable<Art>,
+            new ArtDTO
+            {
+                Id = 1,
+                Image = new ImageDTO(),
+            },
+            new ArtDTO
+            {
+                Id = 2,
+                Image = new ImageDTO(),
+            },
+        };
+    }
+
+    private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDto)
+    {
+        _mockRepo
+            .Setup(r => r.ArtRepository
+                .GetAllAsync(
+                    It.IsAny<Expression<Func<Art, bool>>>(),
+                    It.IsAny<Func<IQueryable<Art>,
                         IIncludableQueryable<Art, object>>>()))
-                .ReturnsAsync(artList);
+            .ReturnsAsync(artList);
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
-            .Returns(artListDTO);
+        _mockMapper.Setup(x => x.Map<IEnumerable<ArtDTO>>(It.IsAny<IEnumerable<object>>()))
+            .Returns(artListDto);
 
-            this.mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+        _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
             .Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int streetcodeId)
@@ -142,6 +144,5 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 
                 return new LocalizedString(key, "Cannot find any art with corresponding streetcode id");
             });
-        }
     }
 }

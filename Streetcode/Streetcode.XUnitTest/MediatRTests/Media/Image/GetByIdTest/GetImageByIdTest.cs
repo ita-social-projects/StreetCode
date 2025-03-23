@@ -16,19 +16,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
 {
     public class GetImageByIdTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IBlobService> blobService;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetImageByIdTest()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.blobService = new Mock<IBlobService>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -36,8 +36,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsImage(int id)
         {
             // Arrange
-            this.GetMockRepositoryAndMapper(this.GetImage(), this.GetImageDTO());
-            var handler = new GetImageByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            GetMockRepositoryAndMapper(GetImage(), GetImageDto());
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByIdQuery(id), CancellationToken.None);
@@ -52,8 +52,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_ReturnsType(int id)
         {
             // Arrange
-            this.GetMockRepositoryAndMapper(this.GetImage(), this.GetImageDTO());
-            var handler = new GetImageByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            GetMockRepositoryAndMapper(GetImage(), GetImageDto());
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetImageByIdQuery(id), CancellationToken.None);
@@ -67,8 +67,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
         public async Task Handle_WithNonExistentId_ReturnsError(int id)
         {
             // Arrange
-            this.GetMockRepositoryAndMapper(null, null);
-            var handler = new GetImageByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            GetMockRepositoryAndMapper(null, null);
+            var handler = new GetImageByIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
             var expectedError = $"Cannot find a image with corresponding id: {id}";
 
             // Act
@@ -78,7 +78,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             Assert.Equal(expectedError, result.Errors[0].Message);
         }
 
-        private DAL.Entities.Media.Images.Image GetImage()
+        private static DAL.Entities.Media.Images.Image GetImage()
         {
             return new DAL.Entities.Media.Images.Image()
             {
@@ -88,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private ImageDTO GetImageDTO()
+        private static ImageDTO GetImageDto()
         {
             return new ImageDTO
             {
@@ -96,20 +96,20 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Images
             };
         }
 
-        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Image? image, ImageDTO? imageDTO)
+        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Image? image, ImageDTO? imageDto)
         {
-            this.mockRepo
+            _mockRepo
                 .Setup(r => r.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<DAL.Entities.Media.Images.Image, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Image>,
                     IIncludableQueryable<DAL.Entities.Media.Images.Image, object>>>()))
                 .ReturnsAsync(image);
 
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x.Map<ImageDTO?>(It.IsAny<object>()))
-                .Returns(imageDTO);
+                .Returns(imageDto);
 
-            this.mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            _mockLocalizer.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
             .Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)

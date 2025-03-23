@@ -28,8 +28,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         {
             // Arrange
             var testContexts = DeleteContext();
-            this.SetupMockRepositoryGetFirstOrDefault(testContexts);
-            this.SetupMockRepositorySaveChangesReturns(1);
+            SetupMockRepositoryGetFirstOrDefault(testContexts);
+            SetupMockRepositorySaveChangesReturns(1);
 
             var handler = new DeleteHistoricalContextHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
 
@@ -55,7 +55,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var expectedError = "CannotFindHistoricalContextWithCorrespondingId";
             _mockLocalizer.Setup(x => x[expectedError, It.IsAny<object[]>()]).Returns(
                 new LocalizedString(expectedError, expectedError));
-            this.SetupMockRepositoryGetFirstOrDefault(null);
+            SetupMockRepositoryGetFirstOrDefault(null);
 
             var handler = new DeleteHistoricalContextHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
 

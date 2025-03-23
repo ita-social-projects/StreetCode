@@ -23,7 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
         public async Task ShouldReturnSuccess()
         {
             // Arrange
-            this.SetupGetAllAsync(GetPositionsList());
+            SetupGetAllAsync(GetPositionsList());
 
             var handler = new GetTickerStringHandler(_mockRepository.Object, _mockLogger.Object);
 
@@ -40,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TickerString
         public async Task Handle_EmptyPositionsList_ReturnsEmptyString()
         {
             // Arrange
-            this.SetupGetAllAsync(new List<Positions>());
+            SetupGetAllAsync(new List<Positions>());
             var handler = new GetTickerStringHandler(_mockRepository.Object, _mockLogger.Object);
 
             // Act

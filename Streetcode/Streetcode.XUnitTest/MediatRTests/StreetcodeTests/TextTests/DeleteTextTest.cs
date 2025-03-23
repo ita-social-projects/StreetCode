@@ -13,24 +13,24 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
     public class DeleteTextTest
     {
-        private readonly Mock<IRepositoryWrapper> repository;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> mockLocalizerFailedToDelete;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailedToDelete;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public DeleteTextTest()
         {
-            this.repository = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-            this.mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+            _repository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockLocalizerFailedToDelete = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
         }
 
         [Theory]
         [InlineData(1)]
         public async Task DeleteTextSuccessfull(int id)
         {
-            this.repository
+            _repository
                 .Setup(x => x.TextRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<Text, bool>>>(),
@@ -38,11 +38,11 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, object>>>()))
                 .ReturnsAsync(GetText(id));
 
-            this.repository.Setup(x => x.TextRepository.Delete(GetText(id)));
+            _repository.Setup(x => x.TextRepository.Delete(GetText(id)));
 
-            this.repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
+            _repository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(1);
 
-            var handler = new DeleteTextHandler(this.repository.Object, this.mockLogger.Object, this.mockLocalizerFailedToDelete.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new DeleteTextHandler(_repository.Object, _mockLogger.Object, _mockLocalizerFailedToDelete.Object, _mockLocalizerCannotFind.Object);
 
             var result = await handler.Handle(new DeleteTextCommand(id), CancellationToken.None);
 

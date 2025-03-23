@@ -45,7 +45,7 @@ namespace Streetcode.WebApi.Controllers.Authentication
 
             if (result.IsFailed)
             {
-                return BadRequest(result.Errors.First().Message);
+                return BadRequest(result.Errors[0].Message);
             }
 
             return Ok("Logout successful. Refresh token invalidated.");

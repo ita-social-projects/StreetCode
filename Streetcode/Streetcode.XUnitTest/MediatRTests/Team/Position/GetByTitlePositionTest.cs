@@ -15,61 +15,61 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position;
 
 public class GetByTitlePositionTest
 {
-    private const string title = "test_title";
-    private readonly Mock<IRepositoryWrapper> mockRepo;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+    private const string Title = "test_title";
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
-    private readonly Positions context = new Positions
+    private readonly Positions _context = new Positions
     {
         Id = 1,
-        Position = title,
+        Position = Title,
     };
 
-    private readonly PositionDTO contextDto = new PositionDTO
+    private readonly PositionDTO _contextDto = new PositionDTO
     {
         Id = 1,
-        Position = title,
+        Position = Title,
     };
 
     public GetByTitlePositionTest()
     {
-        this.mockRepo = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task Handler_Returns_Matching_Element()
     {
         // Arrange
-        this.SetupRepository(this.context);
-        this.SetupMapper(this.contextDto);
+        SetupRepository(_context);
+        SetupMapper(_contextDto);
 
-        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetByTitleTeamPositionHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetByTitleTeamPositionQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetByTitleTeamPositionQuery(Title), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
             () => Assert.IsType<PositionDTO>(result.Value),
-            () => Assert.Equal(title, result.Value.Position));
+            () => Assert.Equal(Title, result.Value.Position));
     }
 
     [Fact]
     public async Task Handler_Returns_NoMatching_Element()
     {
         // Arrange
-        this.SetupRepository(new Positions());
-        this.SetupMapper(new PositionDTO());
+        SetupRepository(new Positions());
+        SetupMapper(new PositionDTO());
 
-        var handler = new GetByTitleTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetByTitleTeamPositionHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetByTitleTeamPositionQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetByTitleTeamPositionQuery(Title), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -79,7 +79,7 @@ public class GetByTitlePositionTest
 
     private void SetupRepository(Positions positions)
     {
-        this.mockRepo
+        _mockRepo
             .Setup(repo => repo.PositionRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Positions, bool>>>(),
@@ -90,7 +90,7 @@ public class GetByTitlePositionTest
 
     private void SetupMapper(PositionDTO positionsDto)
     {
-        this.mockMapper
+        _mockMapper
             .Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
             .Returns(positionsDto);
     }

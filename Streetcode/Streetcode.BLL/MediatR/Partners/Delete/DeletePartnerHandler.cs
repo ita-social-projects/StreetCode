@@ -38,7 +38,7 @@ namespace Streetcode.BLL.MediatR.Partners.Delete
                 _repositoryWrapper.PartnersRepository.Delete(partner);
                 try
                 {
-                    _repositoryWrapper.SaveChanges();
+                    await _repositoryWrapper.SaveChangesAsync();
                     return Result.Ok(_mapper.Map<PartnerDTO>(partner));
                 }
                 catch(Exception ex)

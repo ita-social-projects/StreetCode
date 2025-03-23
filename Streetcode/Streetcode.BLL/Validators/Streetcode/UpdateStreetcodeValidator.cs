@@ -47,7 +47,7 @@ public class UpdateStreetcodeValidator : AbstractValidator<UpdateStreetcodeComma
         RuleForEach(c => c.Streetcode.Videos)
             .SetValidator(videoValidator);
 
-        RuleFor(c => c.Streetcode.Text).SetValidator(baseTextValidator);
+        RuleFor(c => c.Streetcode.Text).SetValidator(baseTextValidator !);
 
         RuleForEach(c => c.Streetcode.Tags).SetValidator(tagValidator);
 

@@ -39,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             var statisticRecord = GetStatisticRecord(qrId);
 
             _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<System.Linq.Expressions.Expression<System.Func<StatisticRecord, bool>>>(),
+                    It.IsAny<System.Linq.Expressions.Expression<Func<StatisticRecord, bool>>>(),
                     null))
                 .ReturnsAsync(statisticRecord);
 
@@ -66,7 +66,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             var qrId = 1;
 
             _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<System.Linq.Expressions.Expression<System.Func<StatisticRecord, bool>>>(),
+                    It.IsAny<System.Linq.Expressions.Expression<Func<StatisticRecord, bool>>>(),
                     null))
                 .ReturnsAsync((StatisticRecord)null!);
 
@@ -92,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             var statisticRecord = GetStatisticRecord(qrId);
 
             _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<System.Linq.Expressions.Expression<System.Func<StatisticRecord, bool>>>(),
+                    It.IsAny<System.Linq.Expressions.Expression<Func<StatisticRecord, bool>>>(),
                     null))
                 .ReturnsAsync(statisticRecord);
 
@@ -114,7 +114,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             _loggerMock.Verify(logger => logger.LogError(request, "Cannot save the data"), Times.Once);
         }
 
-        private StatisticRecord GetStatisticRecord(int qrId)
+        private static StatisticRecord GetStatisticRecord(int qrId)
         {
             return new StatisticRecord
             {

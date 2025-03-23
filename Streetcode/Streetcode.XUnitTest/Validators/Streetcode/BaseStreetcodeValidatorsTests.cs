@@ -433,7 +433,7 @@ public class BaseStreetcodeValidatorsTests
         _mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>()), Times.AtLeast(1));
     }
 
-    private StreetcodeCreateUpdateDTO GetValidStreetcodeDto()
+    private static StreetcodeCreateUpdateDTO GetValidStreetcodeDto()
     {
         return new StreetcodeCreateDTO()
         {

@@ -13,35 +13,35 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 {
     public class GetSubtitlesByStreetcodeIdRequestHandlerTests
     {
-        private const int streetcode_id = 1;
-        private const int subtitle_id = 2;
+        private const int StreetcodeId = 1;
+        private const int SubtitleId = 2;
 
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IRepositoryWrapper> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
-        private readonly Subtitle subtitle = new Subtitle { Id = subtitle_id, StreetcodeId = streetcode_id };
+        private readonly Subtitle _subtitle = new Subtitle { Id = SubtitleId, StreetcodeId = StreetcodeId };
 
-        private readonly SubtitleDTO subtitleDTO = new SubtitleDTO { Id = subtitle_id, StreetcodeId = streetcode_id };
+        private readonly SubtitleDTO _subtitleDto = new SubtitleDTO { Id = SubtitleId, StreetcodeId = StreetcodeId };
 
         public GetSubtitlesByStreetcodeIdRequestHandlerTests()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
+            _mockRepo = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
         public async Task Handler_Returns_NotEmpty_Value()
         {
             // Arrange
-            this.SetupRepository(this.subtitle);
-            this.SetupMapper(this.subtitleDTO);
+            SetupRepository(_subtitle);
+            SetupMapper(_subtitleDto);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(StreetcodeId), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -53,21 +53,21 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         public async Task Handler_Returns_corectValue()
         {
             // Arrange
-            this.SetupRepository(this.subtitle);
-            this.SetupMapper(this.subtitleDTO);
+            SetupRepository(_subtitle);
+            SetupMapper(_subtitleDto);
 
-            var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
+            var handler = new GetSubtitlesByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(StreetcodeId), CancellationToken.None);
 
             // Assert
-            Assert.True(result.Value.StreetcodeId == streetcode_id);
+            Assert.True(result.Value.StreetcodeId == StreetcodeId);
         }
 
         private void SetupRepository(Subtitle returnElement)
         {
-            this.mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+            _mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
@@ -76,7 +76,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupMapper(SubtitleDTO returnElement)
         {
-            this.mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+            _mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
                 .Returns(returnElement);
         }
     }

@@ -15,21 +15,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
 {
     public class CreateTeamMembersLinkTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> mockLocalizerCannotCreate;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotCreateSharedResource>> _mockLocalizerCannotCreate;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
 
         public CreateTeamMembersLinkTest()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
-            this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotCreate = new Mock<IStringLocalizer<CannotCreateSharedResource>>();
+            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
@@ -38,14 +38,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            this.SetupMapMethod(testTeamMemberLink);
-            this.SetupCreateMethod(testTeamMemberLink);
-            this.SetupSaveChangesMethod();
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDto()), CancellationToken.None);
 
             // Assert
             Assert.IsType<TeamMemberLinkDTO>(result.Value);
@@ -57,14 +57,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            this.SetupMapMethod(testTeamMemberLink);
-            this.SetupCreateMethod(testTeamMemberLink);
-            this.SetupSaveChangesMethod();
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethod();
 
-            var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
-            var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDTO()), CancellationToken.None);
+            var result = await handler.Handle(new CreateTeamLinkQuery(GetTeamMemberLinkDto()), CancellationToken.None);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -74,17 +74,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
         public async Task ShouldThrowException_WhenSaveChangesIsNotSuccessful()
         {
             string expectedErrorMessage = "Failed to create a team";
-            this.mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateTeam"])
+            _mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateTeam"])
                 .Returns(new LocalizedString("FailedToCreateTeam", expectedErrorMessage));
 
             // Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            this.SetupMapMethod(testTeamMemberLink);
-            this.SetupCreateMethod(testTeamMemberLink);
-            this.SetupSaveChangesMethodWithErrorThrow(expectedErrorMessage);
+            SetupMapMethod(testTeamMemberLink);
+            SetupCreateMethod(testTeamMemberLink);
+            SetupSaveChangesMethodWithErrorThrow(expectedErrorMessage);
 
-            var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null!), CancellationToken.None);
@@ -92,26 +92,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Assert
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
 
-            this.mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
+            _mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
         }
 
         [Fact]
         public async Task ShouldThrowException_WhenCreateNotSuccessful()
         {
             string expectedErrorMessage = "Cannot create team link";
-            this.mockLocalizerCannotCreate.Setup(x => x["CannotCreateTeamLink"])
+            _mockLocalizerCannotCreate.Setup(x => x["CannotCreateTeamLink"])
                 .Returns(new LocalizedString("CannotCreateTeamLink", expectedErrorMessage));
 
             // Arrange
             var testTeamMemberLink = GetTeamMemberLink();
 
-            this.SetupMapMethod(testTeamMemberLink);
+            SetupMapMethod(testTeamMemberLink);
 
             // The specific setup of the 'Create' method returned null, causing an error.
-            this.mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
+            _mockRepository.Setup(x => x.TeamLinkRepository.Create(It.Is<TeamMemberLink>(y => y.Id == testTeamMemberLink.Id)))
                 .Returns((TeamMemberLink)null!);
 
-            var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null!), CancellationToken.None);
@@ -119,22 +119,22 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Assert
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
 
-            this.mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
+            _mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
         }
 
         [Fact]
         public async Task ShouldThrowException_WhenMapNotSuccessful()
         {
             string expectedErrorMessage = "Cannot convert null to team link";
-            this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToTeamLink"])
+            _mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToTeamLink"])
                 .Returns(new LocalizedString("CannotConvertNullToTeamLink", expectedErrorMessage));
 
             // Arrange
             // The specific setup of the 'Map' method returned null, causing an error.
-            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
+            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
                 .Returns((TeamMemberLink)null!);
 
-            var handler = new CreateTeamLinkHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockLogger.Object, this.mockLocalizerCannotCreate.Object, this.mockLocalizerFailedToCreate.Object, this.mockLocalizerConvertNull.Object);
+            var handler = new CreateTeamLinkHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotCreate.Object, _mockLocalizerFailedToCreate.Object, _mockLocalizerConvertNull.Object);
 
             // Act
             var result = await handler.Handle(new CreateTeamLinkQuery(null!), CancellationToken.None);
@@ -142,7 +142,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             // Assert
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
 
-            this.mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
+            _mockRepository.Verify(x => x.StreetcodeRepository.GetAllAsync(It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), null), Times.Never);
         }
 
         private static TeamMemberLink GetTeamMemberLink()
@@ -153,34 +153,34 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.TeamLink
             };
         }
 
-        private static TeamMemberLinkCreateDTO GetTeamMemberLinkDTO()
+        private static TeamMemberLinkCreateDTO GetTeamMemberLinkDto()
         {
             return new TeamMemberLinkCreateDTO();
         }
 
         private void SetupMapMethod(TeamMemberLink teamMemberLink)
         {
-            this.mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
+            _mockMapper.Setup(x => x.Map<TeamMemberLink>(It.IsAny<TeamMemberLinkCreateDTO>()))
                 .Returns(teamMemberLink);
-            this.mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
+            _mockMapper.Setup(x => x.Map<TeamMemberLinkDTO>(It.IsAny<TeamMemberLink>()))
                 .Returns(new TeamMemberLinkDTO());
         }
 
         private void SetupCreateMethod(TeamMemberLink teamMemberLink)
         {
-            this.mockRepository.Setup(x => x.TeamLinkRepository.CreateAsync(It.Is<TeamMemberLink>(y => y.Id == teamMemberLink.Id)))
+            _mockRepository.Setup(x => x.TeamLinkRepository.CreateAsync(It.Is<TeamMemberLink>(y => y.Id == teamMemberLink.Id)))
                 .ReturnsAsync(teamMemberLink);
         }
 
         private void SetupSaveChangesMethod()
         {
-            this.mockRepository.Setup(x => x.SaveChangesAsync())
+            _mockRepository.Setup(x => x.SaveChangesAsync())
                 .ReturnsAsync(1);
         }
 
         private void SetupSaveChangesMethodWithErrorThrow(string expectedError)
         {
-            this.mockRepository.Setup(x => x.SaveChanges())
+            _mockRepository.Setup(x => x.SaveChanges())
                 .Throws(new Exception(expectedError));
         }
     }

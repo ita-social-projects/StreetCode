@@ -46,41 +46,41 @@ public class ImageService : IImageService
 
     public async Task CleanUnusedImagesAsync()
     {
-        var imagesFromArts = _artRepository
+        var imagesFromArts = await _artRepository
             .FindAll()
             .Select(art => art.ImageId)
-            .ToList();
+            .ToListAsync();
 
         var imagesFromNews = await _newsRepository
             .FindAll()
             .Select(news => news.ImageId)
             .ToListAsync();
 
-        var imagesFromSourceCategory = _sourceCategoryRepository
+        var imagesFromSourceCategory = await _sourceCategoryRepository
             .FindAll()
             .Select(sourceCategory => sourceCategory.ImageId)
-            .ToList();
+            .ToListAsync();
 
-        var imagesFromFacts = _factRepository
+        var imagesFromFacts = await _factRepository
             .FindAll()
             .Where(fact => fact.ImageId.HasValue)
             .Select(fact => fact.ImageId!.Value)
-            .ToList();
+            .ToListAsync();
 
-        var imageFormStreetcodeImage = _streetcodeImageRepository
+        var imageFormStreetcodeImage = await _streetcodeImageRepository
             .FindAll()
             .Select(streetcodeImage => streetcodeImage.ImageId)
-            .ToList();
+            .ToListAsync();
 
-        var imagesFromTeam = _teamRepository
+        var imagesFromTeam = await _teamRepository
             .FindAll()
             .Select(team => team.ImageId)
-            .ToList();
+            .ToListAsync();
 
-        var imagesFromPartners = _partnersRepository
+        var imagesFromPartners = await _partnersRepository
             .FindAll()
             .Select(partner => partner.LogoId)
-            .ToList();
+            .ToListAsync();
 
         var referencedImageIds = imagesFromArts
             .Concat(imagesFromNews)

@@ -7,7 +7,8 @@ namespace Streetcode.DAL.Repositories.Realizations.Users.Expertise;
 
 public class UserExpertiseRepository : RepositoryBase<UserExpertise>, IUserExpertiseRepository
 {
-    public UserExpertiseRepository(StreetcodeDbContext context) : base(context)
+    public UserExpertiseRepository(StreetcodeDbContext context)
+        : base(context)
     {
     }
 }

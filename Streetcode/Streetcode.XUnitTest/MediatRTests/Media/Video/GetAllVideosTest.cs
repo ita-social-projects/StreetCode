@@ -15,19 +15,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Videos;
 
 public class GetAllVideosTest
 {
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
-    private Mock<IRepositoryWrapper> mockRepository;
-    private Mock<IMapper> mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+    private Mock<IRepositoryWrapper> _mockRepository;
+    private Mock<IMapper> _mockMapper;
 
     public GetAllVideosTest()
     {
-        this.mockRepository = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
 
-        this.mockLocalizer
+        _mockLocalizer
                 .Setup(x => x["CannotFindAnyVideos"])
                 .Returns(new LocalizedString("CannotFindAnyVideos", "Cannot find any videos"));
     }
@@ -36,8 +36,8 @@ public class GetAllVideosTest
     public async Task ShouldReturnSuccessfully_Type()
     {
         // Arrange
-        (this.mockRepository, this.mockMapper) = MockRepoAndMapper(this.mockRepository, this.mockMapper);
-        var handler = new GetAllVideosHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -52,8 +52,8 @@ public class GetAllVideosTest
     public async Task ShouldReturnSuccessfully_CountMatch()
     {
         // Arrange
-        (this.mockRepository, this.mockMapper) = MockRepoAndMapper(this.mockRepository, this.mockMapper);
-        var handler = new GetAllVideosHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        (_mockRepository, _mockMapper) = MockRepoAndMapper(_mockRepository, _mockMapper);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -61,27 +61,27 @@ public class GetAllVideosTest
         // Assert
         Assert.Multiple(
             () => Assert.NotNull(result),
-            () => Assert.Equal(GetListVideosDTO().Count, result.Value.Count()));
+            () => Assert.Equal(GetListVideosDto().Count, result.Value.Count()));
     }
 
     [Fact]
     public async Task ShouldThrowExeption_ReppoReturnNull()
     {
         // Arrange
-        this.mockRepository.Setup(x => x.VideoRepository
+        _mockRepository.Setup(x => x.VideoRepository
             .GetAllAsync(
                 It.IsAny<Expression<Func<Video, bool>>>(),
                 It.IsAny<Func<IQueryable<Video>,
                 IIncludableQueryable<Video, object>>>()))
             .ReturnsAsync(GetVideosWithNotExistingId());
 
-        this.mockMapper
+        _mockMapper
             .Setup(x => x
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
-            .Returns(GetVideosDTOWithNotExistingId());
+            .Returns(GetVideosDtoWithNotExistingId());
 
         var expectedError = "Cannot find any videos";
-        var handler = new GetAllVideosHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
@@ -104,7 +104,7 @@ public class GetAllVideosTest
         mockMapper
             .Setup(x => x
             .Map<IEnumerable<VideoDTO>>(It.IsAny<IEnumerable<Video>>()))
-            .Returns(GetListVideosDTO());
+            .Returns(GetListVideosDto());
 
         return (mockRepository, mockMapper);
     }
@@ -126,9 +126,9 @@ public class GetAllVideosTest
         return videos.AsQueryable();
     }
 
-    private static List<VideoDTO> GetListVideosDTO()
+    private static List<VideoDTO> GetListVideosDto()
     {
-        var videosDTO = new List<VideoDTO>
+        var videosDto = new List<VideoDTO>
         {
             new VideoDTO
             {
@@ -140,7 +140,7 @@ public class GetAllVideosTest
             },
         };
 
-        return videosDTO;
+        return videosDto;
     }
 
     private static List<Video> GetVideosWithNotExistingId()
@@ -148,7 +148,7 @@ public class GetAllVideosTest
         return null;
     }
 
-    private static List<VideoDTO> GetVideosDTOWithNotExistingId()
+    private static List<VideoDTO> GetVideosDtoWithNotExistingId()
     {
         return null;
     }

@@ -34,8 +34,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         public async Task ShouldReturnSuccessfully_CorrectType()
         {
             // Arrange
-            this.SetupPaginatedRepository(GetListHistoricalContext());
-            this.SetupMapper(GetListHistoricalContextDTO());
+            SetupPaginatedRepository(GetListHistoricalContext());
+            SetupMapper(GetListHistoricalContextDto());
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
@@ -51,8 +51,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         public async Task ShouldReturnSuccessfully_CountMatch()
         {
             // Arrange
-            this.SetupPaginatedRepository(GetListHistoricalContext());
-            this.SetupMapper(GetListHistoricalContextDTO());
+            SetupPaginatedRepository(GetListHistoricalContext());
+            SetupMapper(GetListHistoricalContextDto());
 
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -70,8 +70,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         {
             // Arrange
             ushort pageSize = 3;
-            this.SetupPaginatedRepository(GetListHistoricalContext().Take(pageSize));
-            this.SetupMapper(GetListHistoricalContextDTO().Take(pageSize).ToList());
+            SetupPaginatedRepository(GetListHistoricalContext().Take(pageSize));
+            SetupMapper(GetListHistoricalContextDto().Take(pageSize).ToList());
 
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
@@ -98,9 +98,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             return historicalContexts.AsQueryable();
         }
 
-        private static IEnumerable<HistoricalContextDTO> GetListHistoricalContextDTO()
+        private static IEnumerable<HistoricalContextDTO> GetListHistoricalContextDto()
         {
-            var historicalContextsDTO = new List<HistoricalContextDTO>
+            var historicalContextsDto = new List<HistoricalContextDTO>
             {
                 new () { Id = 1, Title = "HistoricalContext1" },
                 new () { Id = 2, Title = "HistoricalContext2" },
@@ -109,7 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
                 new () { Id = 5, Title = "HistoricalContext5" },
             };
 
-            return historicalContextsDTO;
+            return historicalContextsDto;
         }
 
         private void SetupPaginatedRepository(IEnumerable<HistoricalContext> returnList)

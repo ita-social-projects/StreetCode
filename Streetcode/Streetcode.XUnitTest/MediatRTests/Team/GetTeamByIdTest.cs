@@ -7,7 +7,6 @@ using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Team.GetById;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
@@ -16,17 +15,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
 {
     public class GetTeamByIdTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
 
         public GetTeamByIdTest()
         {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockMapper = new Mock<IMapper>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
@@ -34,12 +33,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var testTeam = GetTeam();
-            var teamDTO = GetTeamDTO();
+            var teamDto = GetTeamDto();
 
-            this.SetupGetTeamById(testTeam);
-            this.SetupMapTeamMember(teamDTO);
+            SetupGetTeamById(testTeam);
+            SetupMapTeamMember(teamDto);
 
-            var handler = new GetByIdTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetByIdTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetByIdTeamQuery(testTeam.Id), CancellationToken.None);
@@ -57,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             // Arrange
             var testTeam = GetTeam();
             var expectedError = $"Cannot find any team with corresponding id: {testTeam.Id}";
-            this._mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
                .Returns((string key, object[] args) =>
                {
                    if (args != null && args.Length > 0 && args[0] is int)
@@ -68,12 +67,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
                    return new LocalizedString(key, "Cannot find any team with unknown Id");
                });
 
-            var teamDTOWithNotExistingId = GetTeamDTOWithNotExistingId();
+            var teamDtoWithNotExistingId = GetTeamDtoWithNotExistingId();
 
-            this.SetupGetTeamById(GetTeamWithNotExistingId());
-            this.SetupMapTeamMember(teamDTOWithNotExistingId);
+            SetupGetTeamById(GetTeamWithNotExistingId());
+            SetupMapTeamMember(teamDtoWithNotExistingId);
 
-            var handler = new GetByIdTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetByIdTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetByIdTeamQuery(testTeam.Id), CancellationToken.None);
@@ -89,11 +88,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
         {
             // Arrange
             var testTeam = GetTeam();
-            var teamDTO = GetTeamDTO();
-            this.SetupGetTeamById(testTeam);
-            this.SetupMapTeamMember(teamDTO);
+            var teamDto = GetTeamDto();
+            SetupGetTeamById(testTeam);
+            SetupMapTeamMember(teamDto);
 
-            var handler = new GetByIdTeamHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this._mockLocalizerCannotFind.Object);
+            var handler = new GetByIdTeamHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
             var result = await handler.Handle(new GetByIdTeamQuery(testTeam.Id), CancellationToken.None);
@@ -117,7 +116,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             return null;
         }
 
-        private static TeamMemberDTO GetTeamDTO()
+        private static TeamMemberDTO GetTeamDto()
         {
             return new TeamMemberDTO
             {
@@ -125,25 +124,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Team
             };
         }
 
-        private static TeamMemberDTO? GetTeamDTOWithNotExistingId()
+        private static TeamMemberDTO? GetTeamDtoWithNotExistingId()
         {
             return null;
         }
 
         private void SetupGetTeamById(TeamMember? testTeam)
         {
-            this.mockRepository.Setup(x => x.TeamRepository
+            _mockRepository.Setup(x => x.TeamRepository
                 .GetSingleOrDefaultAsync(
                     It.IsAny<Expression<Func<TeamMember, bool>>>(),
                     It.IsAny<Func<IQueryable<TeamMember>, IIncludableQueryable<TeamMember, object>>>()))
                 .ReturnsAsync(testTeam);
         }
 
-        private void SetupMapTeamMember(TeamMemberDTO? teamMemberDTO)
+        private void SetupMapTeamMember(TeamMemberDTO? teamMemberDto)
         {
-            this.mockMapper.Setup(x => x
+            _mockMapper.Setup(x => x
                 .Map<TeamMemberDTO?>(It.IsAny<TeamMember>()))
-                .Returns(teamMemberDTO);
+                .Returns(teamMemberDto);
         }
     }
 }

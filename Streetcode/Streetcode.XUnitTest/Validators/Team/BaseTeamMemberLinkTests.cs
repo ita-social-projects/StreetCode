@@ -1,9 +1,7 @@
 ﻿using FluentValidation.TestHelper;
 using Streetcode.BLL.DTO.Team;
 using Streetcode.BLL.DTO.Team.Abstractions;
-using Streetcode.BLL.Validators.TeamMember;
 using Streetcode.BLL.Validators.TeamMember.TeamMemberLInk;
-using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Enums;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -12,25 +10,25 @@ namespace Streetcode.XUnitTest.Validators.Team;
 
 public class BaseTeamMemberLinkTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly BaseTeamMemberLinkValidator validator;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly BaseTeamMemberLinkValidator _validator;
 
     public BaseTeamMemberLinkTests()
     {
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.validator = new BaseTeamMemberLinkValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _validator = new BaseTeamMemberLinkValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccess_WhenAllFieldsAreValid()
     {
         // Arrange
-        var link = this.GetValidTeamMemberLink();
+        var link = GetValidTeamMemberLink();
 
         // Act
-        var result = this.validator.Validate(link);
+        var result = _validator.Validate(link);
 
         // Assert
         Assert.True(result.IsValid);
@@ -40,12 +38,12 @@ public class BaseTeamMemberLinkTests
     public void ShouldReturnError_WhenLogotypeIsInvalid()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["LogoType"]];
-        var link = this.GetValidTeamMemberLink();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["LogoType"]];
+        var link = GetValidTeamMemberLink();
         link.LogoType = (LogoType)99;
 
         // Act
-        var result = this.validator.TestValidate(link);
+        var result = _validator.TestValidate(link);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.LogoType)
@@ -56,12 +54,12 @@ public class BaseTeamMemberLinkTests
     public void ShouldReturnError_WhenTargetUrlIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["SourceLinkUrl"]];
-        var link = this.GetValidTeamMemberLink();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["SourceLinkUrl"]];
+        var link = GetValidTeamMemberLink();
         link.TargetUrl = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(link);
+        var result = _validator.TestValidate(link);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -72,12 +70,12 @@ public class BaseTeamMemberLinkTests
     public void ShouldReturnError_WhenTargetUrlIsMoreThan255Characters()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["SourceLinkUrl"], BaseTeamMemberLinkValidator.MaxTeamMemberLinkLength];
-        var link = this.GetValidTeamMemberLink();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["SourceLinkUrl"], BaseTeamMemberLinkValidator.MaxTeamMemberLinkLength];
+        var link = GetValidTeamMemberLink();
         link.TargetUrl = new string('x', BaseTeamMemberLinkValidator.MaxTeamMemberLinkLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(link);
+        var result = _validator.TestValidate(link);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -92,12 +90,12 @@ public class BaseTeamMemberLinkTests
     public void ShouldReturnError_WhenTargetUrlIsInvalidUrl(string invalidUrl)
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["ValidUrl_UrlDisplayed", this.mockNamesLocalizer["SourceLinkUrl"], invalidUrl];
-        var link = this.GetValidTeamMemberLink();
+        var expectedError = _mockValidationLocalizer["ValidUrl_UrlDisplayed", _mockNamesLocalizer["SourceLinkUrl"], invalidUrl];
+        var link = GetValidTeamMemberLink();
         link.TargetUrl = invalidUrl;
 
         // Act
-        var result = this.validator.TestValidate(link);
+        var result = _validator.TestValidate(link);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TargetUrl)
@@ -108,20 +106,20 @@ public class BaseTeamMemberLinkTests
     public void ShouldReturnError_WhenLogotypeDoesntMatchUrl()
     {
         // Assert
-        var expectedError = this.mockValidationLocalizer["LogoMustMatchUrl"];
-        var link = this.GetValidTeamMemberLink();
+        var expectedError = _mockValidationLocalizer["LogoMustMatchUrl"];
+        var link = GetValidTeamMemberLink();
         link.TargetUrl = "https://www.instagram.com/";
         link.LogoType = LogoType.Facebook;
 
         // Act
-        var result = this.validator.TestValidate(link);
+        var result = _validator.TestValidate(link);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
             .WithErrorMessage(expectedError);
     }
 
-    private TeamMemberLinkCreateUpdateDTO GetValidTeamMemberLink()
+    private static TeamMemberLinkCreateUpdateDTO GetValidTeamMemberLink()
     {
         return new TeamMemberLinkDTO()
         {

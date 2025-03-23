@@ -32,7 +32,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Base
         }
 
         protected async Task<RestResponse> SendCommand<T>(string requestString, Method method, T? requestDto = default, string authToken = "")
-            where T : class?
+            where T : class
         {
             var request = new RestRequest($"{SecondPartUrl}{requestString}", method);
             if (requestDto is not null)

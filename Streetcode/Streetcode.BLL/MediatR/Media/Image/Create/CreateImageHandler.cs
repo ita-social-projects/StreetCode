@@ -17,22 +17,19 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizer;
-    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
 
     public CreateImageHandler(
         IBlobService blobService,
         IRepositoryWrapper repositoryWrapper,
         ILoggerService logger,
         IMapper mapper,
-        IStringLocalizer<FailedToCreateSharedResource> stringLocalizer,
-        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot)
+        IStringLocalizer<FailedToCreateSharedResource> stringLocalizer)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
         _stringLocalizer = stringLocalizer;
-        _stringLocalizerCannot = stringLocalizerCannot;
     }
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
@@ -57,11 +54,9 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         {
             return Result.Ok(createdImage);
         }
-        else
-        {
-            string errorMsg = _stringLocalizer["FailedToCreateAnImage"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        string errorMsg = _stringLocalizer["FailedToCreateAnImage"].Value;
+        _logger.LogError(request, errorMsg);
+        return Result.Fail(new Error(errorMsg));
     }
 }

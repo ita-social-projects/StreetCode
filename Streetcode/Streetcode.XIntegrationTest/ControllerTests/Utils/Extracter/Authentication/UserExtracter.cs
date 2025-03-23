@@ -39,7 +39,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
 
         private static string RemoveIncorrectSymbolsFromEmail(string email)
         {
-            return string.Concat(email.Where(char.IsLetter))!;
+            return string.Concat(email.Where(char.IsLetter));
         }
 
         private static string HashPassword(string password, User user)

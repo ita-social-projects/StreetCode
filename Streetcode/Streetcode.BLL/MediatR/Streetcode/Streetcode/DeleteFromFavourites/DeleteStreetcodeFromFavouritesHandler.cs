@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.DeleteFromFavourites
 
         public async Task<Result<Unit>> Handle(DeleteStreetcodeFromFavouritesCommand request, CancellationToken cancellationToken)
         {
-            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor)!;
+            var userId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor);
 
             var favourite = await _repositoryWrapper.FavouritesRepository.GetFirstOrDefaultAsync(
                  f => f.UserId == userId && f.StreetcodeId == request.StreetcodeId);

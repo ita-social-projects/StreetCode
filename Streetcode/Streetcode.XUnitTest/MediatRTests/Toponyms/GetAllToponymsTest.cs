@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Toponyms;
@@ -6,7 +7,6 @@ using Streetcode.BLL.MediatR.Toponyms.GetAll;
 using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Toponyms
@@ -26,10 +26,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         public async Task ReturnsSuccessfully_CorrectType()
         {
             // Arrange
-            this.SetupPaginatedRepository(GetToponymList());
-            this.SetupMapper(GetListToponymDTO());
+            SetupPaginatedRepository(GetToponymList());
+            SetupMapper(GetListToponymDto());
 
-            var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
+            var handler = new GetAllToponymsHandler(_mockRepository.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO()), CancellationToken.None);
@@ -44,10 +44,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         public async Task ReturnsSuccessfully_CountMatch()
         {
             // Arrange
-            this.SetupPaginatedRepository(GetToponymList());
-            this.SetupMapper(GetListToponymDTO());
+            SetupPaginatedRepository(GetToponymList());
+            SetupMapper(GetListToponymDto());
 
-            var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
+            var handler = new GetAllToponymsHandler(_mockRepository.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO()), CancellationToken.None);
@@ -63,10 +63,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         {
             // Arrange
             ushort pageSize = 1;
-            this.SetupPaginatedRepository(GetToponymList().Take(pageSize));
-            this.SetupMapper(GetListToponymDTO().Take(pageSize));
+            SetupPaginatedRepository(GetToponymList().Take(pageSize));
+            SetupMapper(GetListToponymDto().Take(pageSize));
 
-            var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
+            var handler = new GetAllToponymsHandler(_mockRepository.Object, _mockMapper.Object);
 
             // Act
             var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO { Amount = pageSize }), CancellationToken.None);
@@ -82,8 +82,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
         public async Task ReturnsEmptyResponse_EmptyToponymList()
         {
             // Arrange
-            this.SetupPaginatedRepository(new List<Toponym>());
-            this.SetupMapper(new List<ToponymDTO>());
+            SetupPaginatedRepository(new List<Toponym>());
+            SetupMapper(new List<ToponymDTO>());
             var handler = new GetAllToponymsHandler(_mockRepository.Object, _mockMapper.Object);
 
             // Act
@@ -107,16 +107,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             return toponyms;
         }
 
-        private static List<ToponymDTO> GetListToponymDTO()
+        private static List<ToponymDTO> GetListToponymDto()
         {
-            var toponymsDTO = new List<ToponymDTO>
+            var toponymsDto = new List<ToponymDTO>
             {
                 new () { Id = 1 },
                 new () { Id = 2 },
                 new () { Id = 3 },
             };
 
-            return toponymsDTO;
+            return toponymsDto;
         }
 
         private void SetupPaginatedRepository(IEnumerable<Toponym> returnList)

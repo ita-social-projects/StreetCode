@@ -10,28 +10,28 @@ using Xunit.Sdk;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Team
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method, Inherited = false)]
     public class ExtractDeleteTeamMemberAttribute : BeforeAfterTestAttribute
     {
         public static UpdateTeamMemberDTO TeamMemberForTest { get; set; } = null!;
 
-        private TeamMember _teamMember { get; set; } = null!;
+        private TeamMember TeamMember { get; set; } = null!;
 
-        private Image _image { get; set; } = null!;
+        private Image Image { get; set; } = null!;
 
         public override void Before(MethodInfo methodUnderTest)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            _image = ImageExtracter.Extract(uniqueId);
-            _teamMember = TeamMemberExtracter.Extract(uniqueId, _image.Id);
+            Image = ImageExtracter.Extract(uniqueId);
+            TeamMember = TeamMemberExtracter.Extract(uniqueId, Image.Id);
 
             TeamMemberForTest = new UpdateTeamMemberDTO
             {
-                Id = _teamMember.Id,
+                Id = TeamMember.Id,
                 Name = "test",
                 Description = "test description",
                 IsMain = false,
-                ImageId = _image.Id,
+                ImageId = Image.Id,
             };
         }
 
@@ -45,14 +45,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAt
                 sqlDbHelper.SaveChanges();
             }
 
-            var image = sqlDbHelper.GetExistItem<Image>(t => t.Id == _image.Id);
+            var image = sqlDbHelper.GetExistItem<Image>(t => t.Id == Image.Id);
             if (image != null)
             {
                 sqlDbHelper.DeleteItem(image);
                 sqlDbHelper.SaveChanges();
             }
 
-            var teamMember = sqlDbHelper.GetExistItem<TeamMember>(t => t.Id == _teamMember.Id);
+            var teamMember = sqlDbHelper.GetExistItem<TeamMember>(t => t.Id == TeamMember.Id);
             if (teamMember != null)
             {
                 sqlDbHelper.DeleteItem(teamMember);

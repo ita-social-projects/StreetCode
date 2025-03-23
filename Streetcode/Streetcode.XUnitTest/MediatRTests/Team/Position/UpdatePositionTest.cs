@@ -15,25 +15,25 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position;
 
 public class UpdatePositionTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepo;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
     public UpdatePositionTest()
     {
-        this.mockRepo = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task ShouldReturnSuccessfully_IsCorrectAndSuccess()
     {
         // Arrange
-        this.mockRepo.Setup(repo => repo.PositionRepository.Update(new Positions()));
-        this.mockRepo.Setup(repo =>
+        _mockRepo.Setup(repo => repo.PositionRepository.Update(new Positions()));
+        _mockRepo.Setup(repo =>
                 repo.PositionRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Positions, bool>>>(), default))
             .ReturnsAsync((Expression<Func<Positions, bool>> expr, IIncludableQueryable<Positions, bool> include) =>
             {
@@ -42,10 +42,10 @@ public class UpdatePositionTest
                 return member.Member.Name == "Id" ? new Positions() : null;
             });
 
-        this.mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
-        this.mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
+        _mockRepo.Setup(repo => repo.SaveChangesAsync()).ReturnsAsync(1);
+        _mockMapper.Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>())).Returns(new PositionDTO());
 
-        var handler = new UpdateTeamPositionHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new UpdateTeamPositionHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
         var result = await handler.Handle(new UpdateTeamPositionCommand(new PositionDTO()), CancellationToken.None);

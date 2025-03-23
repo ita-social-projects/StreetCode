@@ -21,10 +21,10 @@ public class UpdateNewsValidator : AbstractValidator<UpdateNewsCommand>
         _repositoryWrapper = repositoryWrapper;
         RuleFor(n => n.news).SetValidator(baseNewsValidator);
         RuleFor(c => c.news)
-            .MustAsync(BeUniqueTitle).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["Title"]])
-            .MustAsync(BeUniqueText).WithMessage(localizer["MustBeUnique", fieldLocalizer["Text"]])
-            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["TargetUrl"]])
-            .MustAsync(BeUniqueImageId).WithMessage(x => localizer["MustBeUnique", fieldLocalizer["ImageId"]]);
+            .MustAsync(BeUniqueTitle).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["Title"]])
+            .MustAsync(BeUniqueText).WithMessage(localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["Text"]])
+            .MustAsync(BeUniqueUrl!).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["TargetUrl"]])
+            .MustAsync(BeUniqueImageId).WithMessage(x => localizer[ValidationMessageConstants.MustBeUnique, fieldLocalizer["ImageId"]]);
     }
 
     private async Task<bool> BeUniqueTitle(UpdateNewsDTO dto, CancellationToken cancellationToken)

@@ -15,7 +15,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 {
     public class GetByIdHistoricalContextTest
     {
-        private const int id = 1;
+        private const int Id = 1;
         private readonly Mock<IRepositoryWrapper> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<ILoggerService> _mockLogger;
@@ -23,13 +23,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
 
         private readonly HistoricalContext _context = new ()
         {
-            Id = id,
+            Id = Id,
             Title = "some title 1",
         };
 
         private readonly HistoricalContextDTO _contextDto = new ()
         {
-            Id = id,
+            Id = Id,
             Title = "some title 1",
         };
 
@@ -45,36 +45,36 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
         public async Task Handler_Returns_Matching_Element()
         {
             // Arrange
-            this.SetupRepository(_context);
-            this.SetupMapper(_contextDto);
+            SetupRepository(_context);
+            SetupMapper(_contextDto);
 
             var handler = new GetHistoricalContextByIdHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetHistoricalContextByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetHistoricalContextByIdQuery(Id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<HistoricalContextDTO>(result.Value),
-                () => Assert.True(result.Value.Id.Equals(id)));
+                () => Assert.True(result.Value.Id.Equals(Id)));
         }
 
         [Fact]
         public async Task Handler_Returns_NoMatching_Element()
         {
             // Arrange
-            this.SetupRepository(new HistoricalContext());
-            this.SetupMapper(new HistoricalContextDTO());
+            SetupRepository(new HistoricalContext());
+            SetupMapper(new HistoricalContextDTO());
 
             var handler = new GetHistoricalContextByIdHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetHistoricalContextByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetHistoricalContextByIdQuery(Id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<HistoricalContextDTO>(result.Value),
-                () => Assert.False(result.Value.Id.Equals(id)));
+                () => Assert.False(result.Value.Id.Equals(Id)));
         }
 
         private void SetupRepository(HistoricalContext context)

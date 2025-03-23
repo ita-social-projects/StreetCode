@@ -15,72 +15,72 @@ namespace Streetcode.XUnitTest.MediatRTests.Team.Position;
 
 public class GetByIdPositionTest
 {
-    private const int id = 1;
-    private const string title = "some title 1";
-    private readonly Mock<IRepositoryWrapper> mockRepo;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+    private const int Id = 1;
+    private const string Title = "some title 1";
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
-    private readonly Positions position = new Positions()
+    private readonly Positions _position = new Positions()
     {
-        Id = id,
-        Position = title,
+        Id = Id,
+        Position = Title,
     };
 
-    private readonly PositionDTO positionDto = new PositionDTO
+    private readonly PositionDTO _positionDto = new PositionDTO
     {
-        Id = id,
-        Position = title,
+        Id = Id,
+        Position = Title,
     };
 
     public GetByIdPositionTest()
     {
-        this.mockRepo = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task Handler_Returns_Matching_Element()
     {
         // Arrange
-        this.SetupRepository(this.position);
-        this.SetupMapper(this.positionDto);
+        SetupRepository(_position);
+        SetupMapper(_positionDto);
 
-        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetByIdTeamPositionHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetByIdTeamPositionQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetByIdTeamPositionQuery(Id), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
             () => Assert.IsType<PositionDTO>(result.Value),
-            () => Assert.True(result.Value.Id.Equals(id)));
+            () => Assert.True(result.Value.Id.Equals(Id)));
     }
 
     [Fact]
     public async Task Handler_Returns_NoMatching_Element()
     {
         // Arrange
-        this.SetupRepository(new Positions());
-        this.SetupMapper(new PositionDTO());
+        SetupRepository(new Positions());
+        SetupMapper(new PositionDTO());
 
-        var handler = new GetByIdTeamPositionHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetByIdTeamPositionHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetByIdTeamPositionQuery(id), CancellationToken.None);
+        var result = await handler.Handle(new GetByIdTeamPositionQuery(Id), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
             () => Assert.IsType<PositionDTO>(result.Value),
-            () => Assert.False(result.Value.Id.Equals(id)));
+            () => Assert.False(result.Value.Id.Equals(Id)));
     }
 
     private void SetupRepository(Positions positions)
     {
-        this.mockRepo
+        _mockRepo
             .Setup(repo => repo.PositionRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Positions, bool>>>(),
@@ -91,7 +91,7 @@ public class GetByIdPositionTest
 
     private void SetupMapper(PositionDTO positionsDto)
     {
-        this.mockMapper
+        _mockMapper
             .Setup(x => x.Map<PositionDTO>(It.IsAny<Positions>()))
             .Returns(positionsDto);
     }

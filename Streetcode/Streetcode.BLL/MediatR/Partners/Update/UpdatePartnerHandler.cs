@@ -42,7 +42,7 @@ namespace Streetcode.BLL.MediatR.Partners.Update
 
                 partner.Streetcodes.Clear();
                 _repositoryWrapper.PartnersRepository.Update(partner);
-                _repositoryWrapper.SaveChanges();
+                await _repositoryWrapper.SaveChangesAsync();
                 var newStreetcodeIds = request.Partner.Streetcodes.Select(s => s.Id).ToList();
                 var oldStreetcodes = await _repositoryWrapper.PartnerStreetcodeRepository
                     .GetAllAsync(ps => ps.PartnerId == partner.Id);
@@ -59,12 +59,11 @@ namespace Streetcode.BLL.MediatR.Partners.Update
                 {
                     if (oldStreetcodes.FirstOrDefault(x => x.StreetcodeId == newCodeId) == null)
                     {
-                        _repositoryWrapper.PartnerStreetcodeRepository.Create(
-                            new StreetcodePartner() { PartnerId = partner.Id, StreetcodeId = newCodeId });
+                        await _repositoryWrapper.PartnerStreetcodeRepository.CreateAsync(new StreetcodePartner() { PartnerId = partner.Id, StreetcodeId = newCodeId });
                     }
                 }
 
-                _repositoryWrapper.SaveChanges();
+                await _repositoryWrapper.SaveChangesAsync();
                 var dbo = _mapper.Map<PartnerDTO>(partner);
                 dbo.Streetcodes = request.Partner.Streetcodes;
                 return Result.Ok(dbo);

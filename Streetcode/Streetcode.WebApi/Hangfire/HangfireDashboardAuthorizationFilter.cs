@@ -14,7 +14,7 @@ public class HangfireDashboardAuthorizationFilter : IDashboardAuthorizationFilte
 		return isAdmin;
 	}
 
-	public static bool IsAdmin(ClaimsPrincipal user)
+	public bool IsAdmin(ClaimsPrincipal user)
 	{
 		return user.IsInRole(nameof(UserRole.Admin));
 	}

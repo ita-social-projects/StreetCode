@@ -22,6 +22,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly GetCategoriesByStreetcodeIdHandler _handler;
 
         public GetCategoriesByStreetcodeIdTest()
         {
@@ -30,6 +31,11 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
             _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object);
         }
 
         [Theory]
@@ -47,15 +53,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDtOs());
 
-            var handler = new GetCategoriesByStreetcodeIdHandler(
-                _mockRepository.Object,
-                _mockMapper.Object,
-                _blobService.Object,
-                _mockLogger.Object,
-                _mockLocalizerCannotFind.Object);
-
             // Act
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await _handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -75,16 +74,8 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 IIncludableQueryable<SourceLinkCategory, object>>>()))
             .ReturnsAsync(GetSourceLinkCategoriesNotExists());
 
-
-            var handler = new GetCategoriesByStreetcodeIdHandler(
-                _mockRepository.Object,
-                _mockMapper.Object,
-                _blobService.Object,
-                _mockLogger.Object,
-                _mockLocalizerCannotFind.Object);
-
             // Act
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await _handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

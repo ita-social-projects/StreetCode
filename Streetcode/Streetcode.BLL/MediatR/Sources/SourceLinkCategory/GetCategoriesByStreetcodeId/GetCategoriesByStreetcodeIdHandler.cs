@@ -2,11 +2,9 @@
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
@@ -17,15 +15,17 @@ public class GetCategoriesByStreetcodeIdHandler : IRequestHandler<GetCategoriesB
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly IBlobService _blobService;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetCategoriesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetCategoriesByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        IBlobService blobService,
+        ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _blobService = blobService;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<SourceLinkCategoryDTO>>> Handle(GetCategoriesByStreetcodeIdQuery request, CancellationToken cancellationToken)

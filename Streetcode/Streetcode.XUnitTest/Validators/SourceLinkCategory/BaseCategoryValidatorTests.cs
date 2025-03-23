@@ -92,7 +92,7 @@ public class BaseCategoryValidatorTests
             .WithErrorMessage(expectedError);
     }
 
-    public static SourceLinkCreateUpdateCategoryDTO GetValidCategory()
+    private static SourceLinkCreateUpdateCategoryDTO GetValidCategory()
     {
         return new SourceLinkCategoryCreateDTO()
         {

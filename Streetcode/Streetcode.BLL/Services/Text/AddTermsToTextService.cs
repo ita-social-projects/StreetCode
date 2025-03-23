@@ -107,7 +107,7 @@ namespace Streetcode.BLL.Services.Text
 
         private static (string _clearedWord, string _extras) CleanWord(string word)
         {
-            var clearedWord = word.Split('.', ',').First();
+            var clearedWord = word.Split('.', ',')[0];
 
             var extras = string.Empty;
 

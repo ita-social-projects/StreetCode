@@ -34,14 +34,19 @@ public class CreatePartnersValidatorTests
         _mockAlreadyExistLocalizer = new MockAlreadyExistLocalizer();
         _mockLocalizerFieldNames = new MockFieldNamesLocalizer();
         _mockLocalizerNoShared = new MockNoSharedResourceLocalizer();
-        
         _mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(_mockNamesLocalizer, _mockValidationLocalizer);
         _mockBasePartnerValidator = new Mock<BasePartnersValidator>(_mockPartnerSourceLinkValidator.Object, _mockNamesLocalizer, _mockValidationLocalizer, _mockLocalizerNoShared, _mockRepositoryWrapper.Object);
-        
         _mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
             .Returns(new ValidationResult());
         _mockBasePartnerValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>()))
             .Returns(new ValidationResult());
+        _validator = new CreatePartnerValidator(
+            _mockBasePartnerValidator.Object,
+            _mockValidationLocalizer,
+            _mockNamesLocalizer,
+            _mockAlreadyExistLocalizer,
+            _mockLocalizerFieldNames,
+            _mockRepositoryWrapper.Object);
     }
 
     [Fact]
@@ -49,11 +54,10 @@ public class CreatePartnersValidatorTests
     {
         // Arrange
         var query = new CreatePartnerQuery(new CreatePartnerDTO());
-        var createValidator = new CreatePartnerValidator(_mockBasePartnerValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
         MockHelpers.SetupMockPartnersRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, query.newPartner.LogoId);
 
         // Act
-        await createValidator.ValidateAsync(query);
+        await _validator.ValidateAsync(query);
 
         // Assert
         _mockBasePartnerValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>(), CancellationToken.None), Times.Once);
@@ -69,10 +73,8 @@ public class CreatePartnersValidatorTests
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner() { Title = "NonUniqueTitle" });
 
-        var validator = new CreatePartnerValidator(_mockBasePartnerValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
-
         // Assert
-        var result = await validator.TestValidateAsync(query);
+        var result = await _validator.TestValidateAsync(query);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.newPartner.Title)
@@ -87,12 +89,10 @@ public class CreatePartnersValidatorTests
         query.newPartner.Title = "UniqueTitle";
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
-            .ReturnsAsync((DAL.Entities.Partners.Partner)null);
-
-        var validator = new CreatePartnerValidator(_mockBasePartnerValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
+            .ReturnsAsync((DAL.Entities.Partners.Partner)null!);
 
         // Assert
-        var result = await validator.TestValidateAsync(query);
+        var result = await _validator.TestValidateAsync(query);
 
         // Assert
         Assert.True(result.IsValid);
@@ -108,10 +108,8 @@ public class CreatePartnersValidatorTests
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner() { LogoId = 2 });
 
-        var validator = new CreatePartnerValidator(_mockBasePartnerValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
-
-        // Assert
-        var result = await validator.TestValidateAsync(query);
+        // Act
+        var result = await _validator.TestValidateAsync(query);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.newPartner.LogoId)
@@ -126,12 +124,10 @@ public class CreatePartnersValidatorTests
         query.newPartner.LogoId = 2;
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(
                 It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
-            .ReturnsAsync((DAL.Entities.Partners.Partner)null);
-
-        var validator = new CreatePartnerValidator(_mockBasePartnerValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer, _mockAlreadyExistLocalizer, _mockLocalizerFieldNames, _mockRepositoryWrapper.Object);
+            .ReturnsAsync((DAL.Entities.Partners.Partner)null!);
 
         // Assert
-        var result = await validator.TestValidateAsync(query);
+        var result = await _validator.TestValidateAsync(query);
 
         // Assert
         Assert.True(result.IsValid);

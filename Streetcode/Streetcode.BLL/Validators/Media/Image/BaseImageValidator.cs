@@ -50,7 +50,7 @@ public class BaseImageValidator : AbstractValidator<ImageFileBaseCreateDTO>
     private static bool IsImageSizeValid(string baseFormat)
     {
         int paddingCount = baseFormat.EndsWith("==") ? 2 :
-            baseFormat.EndsWith("=") ? 1 : 0;
+            baseFormat.EndsWith('=') ? 1 : 0;
         int sizeInBytes = (baseFormat.Length * 3 / 4) - paddingCount;
         int maxFileSizeInBytes = MaxImageSizeInMb * 1024 * 1024;
         return sizeInBytes <= maxFileSizeInBytes;

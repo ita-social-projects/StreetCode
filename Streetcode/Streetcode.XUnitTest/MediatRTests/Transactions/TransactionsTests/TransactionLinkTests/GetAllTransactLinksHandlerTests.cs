@@ -12,112 +12,111 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.TransactionLinkTests
+namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.TransactionLinkTests;
+
+public class GetAllTransactLinksHandlerTests
 {
-    public class GetAllTransactLinksHandlerTests
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+
+    private readonly List<TransactionLink> _transactions = new ()
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-
-        private readonly List<TransactionLink> _transactions = new()
+        new ()
         {
-            new ()
-            {
-                Id = 1,
-                Url = "URL",
-                UrlTitle = "Title",
-                StreetcodeId = 1,
-            },
-            new ()
-            {
-                Id = 2,
-                Url = "URL2",
-                UrlTitle = "Title2",
-                StreetcodeId = 2,
-            },
-        };
-
-        private readonly List<TransactLinkDTO> _transactionsDtOs = new()
+            Id = 1,
+            Url = "URL",
+            UrlTitle = "Title",
+            StreetcodeId = 1,
+        },
+        new ()
         {
-            new ()
-            {
-                Id = 1,
-                Url = "URL",
-                QrCodeUrl = "URL",
-                StreetcodeId = 1,
-            },
-            new ()
-            {
-                Id = 2,
-                Url = "URL2",
-                QrCodeUrl = "URL2",
-                StreetcodeId = 2,
-            },
-        };
+            Id = 2,
+            Url = "URL2",
+            UrlTitle = "Title2",
+            StreetcodeId = 2,
+        },
+    };
 
-        public GetAllTransactLinksHandlerTests()
+    private readonly List<TransactLinkDTO> _transactionsDtOs = new ()
+    {
+        new ()
         {
-            _mockMapper = new Mock<IMapper>();
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
-
-        [Fact]
-        public async Task NotEmpty_List()
+            Id = 1,
+            Url = "URL",
+            QrCodeUrl = "URL",
+            StreetcodeId = 1,
+        },
+        new ()
         {
-            // Arrange
-            SetupRepository(_transactions);
-            SetupMapper(_transactionsDtOs);
+            Id = 2,
+            Url = "URL2",
+            QrCodeUrl = "URL2",
+            StreetcodeId = 2,
+        },
+    };
 
-            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+    public GetAllTransactLinksHandlerTests()
+    {
+        _mockMapper = new Mock<IMapper>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+    }
 
-            // Act
-            var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
+    [Fact]
+    public async Task NotEmpty_List()
+    {
+        // Arrange
+        SetupRepository(_transactions);
+        SetupMapper(_transactionsDtOs);
 
-            // Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<TransactLinkDTO>>(result.Value),
-                () => Assert.True(result.Value.Count() == _transactions.Count));
-        }
+        var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-        [Fact]
-        public async Task Error()
-        {
-            // Arrange
-            SetupRepository(null);
-            SetupMapper(new List<TransactLinkDTO>());
+        // Act
+        var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
 
-            var expectedError = $"Cannot find any transaction link";
-            _mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
-                .Returns(new LocalizedString("CannotFindAnyTransactionLink", expectedError));
+        // Assert
+        Assert.Multiple(
+            () => Assert.IsType<List<TransactLinkDTO>>(result.Value),
+            () => Assert.True(result.Value.Count() == _transactions.Count));
+    }
 
-            var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+    [Fact]
+    public async Task Error()
+    {
+        // Arrange
+        SetupRepository(null);
+        SetupMapper(new List<TransactLinkDTO>());
 
-            // Act
-            var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
+        var expectedError = $"Cannot find any transaction link";
+        _mockLocalizerCannotFind.Setup(localizer => localizer["CannotFindAnyTransactionLink"])
+            .Returns(new LocalizedString("CannotFindAnyTransactionLink", expectedError));
 
-            // Assert
-            Assert.Equal(expectedError, result.Errors.Single().Message);
-        }
+        var handler = new GetAllTransactLinksHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-        private void SetupRepository(List<TransactionLink>? returnList)
-        {
-            _mockRepo
-                .Setup(repo => repo.TransactLinksRepository.GetAllAsync(
-                    It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
+        // Act
+        var result = await handler.Handle(new GetAllTransactLinksQuery(), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(expectedError, result.Errors.Single().Message);
+    }
+
+    private void SetupRepository(List<TransactionLink>? returnList)
+    {
+        _mockRepo
+            .Setup(repo => repo.TransactLinksRepository.GetAllAsync(
+                It.IsAny<Expression<Func<TransactionLink, bool>>>(), It.IsAny<Func<IQueryable<TransactionLink>,
                     IIncludableQueryable<TransactionLink, object>>>()))
-                .ReturnsAsync(returnList!);
-        }
+            .ReturnsAsync(returnList!);
+    }
 
-        private void SetupMapper(List<TransactLinkDTO> returnList)
-        {
-            _mockMapper
-                .Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(
-                    It.IsAny<IEnumerable<object>>()))
-                .Returns(returnList);
-        }
+    private void SetupMapper(List<TransactLinkDTO> returnList)
+    {
+        _mockMapper
+            .Setup(x => x.Map<IEnumerable<TransactLinkDTO>>(
+                It.IsAny<IEnumerable<object>>()))
+            .Returns(returnList);
     }
 }

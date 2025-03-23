@@ -176,7 +176,7 @@ public class BaseTeamValidatorTests
                 new ()
                 {
                     Id = 5,
-                    Position = "CEO"
+                    Position = "CEO",
                 },
             },
             TeamMemberLinks = new List<TeamMemberLinkCreateDTO>()
@@ -185,7 +185,7 @@ public class BaseTeamValidatorTests
                 {
                     TeamMemberId = 5,
                     LogoType = LogoType.Instagram,
-                    TargetUrl = "https://www.instagram.com/"
+                    TargetUrl = "https://www.instagram.com/",
                 },
             },
         };

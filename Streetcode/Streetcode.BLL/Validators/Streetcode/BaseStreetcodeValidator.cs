@@ -44,7 +44,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
 
         RuleFor(dto => dto.Teaser)
             .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Teaser"]])
-            .Must(AdjustedLengthIsValid).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Teaser"], TeaserMaxLength]);
+            .Must(AdjustedLengthIsValid!).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Teaser"], TeaserMaxLength]);
 
         RuleFor(dto => dto.Title)
             .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Title"]])

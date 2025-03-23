@@ -18,7 +18,7 @@ public static class MockHelpers
 {
     public static void SetupMockHttpContextAccessor(Mock<IHttpContextAccessor> mockContextAccessor, string userId)
     {
-        var claims = new List<Claim> { new(ClaimTypes.NameIdentifier, userId) };
+        var claims = new List<Claim> { new (ClaimTypes.NameIdentifier, userId) };
         var identity = new ClaimsIdentity(claims, "TestAuthType");
         var claimsPrincipal = new ClaimsPrincipal(identity);
 

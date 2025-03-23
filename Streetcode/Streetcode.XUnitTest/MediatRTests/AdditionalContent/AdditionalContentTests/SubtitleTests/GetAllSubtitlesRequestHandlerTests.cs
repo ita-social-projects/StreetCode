@@ -11,102 +11,101 @@ using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
+namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests;
+
+public class GetAllSubtitlesRequestHandlerTests
 {
-    public class GetAllSubtitlesRequestHandlerTests
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
+
+    private readonly List<Subtitle> _subtitles = new List<Subtitle>
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
-
-        private readonly List<Subtitle> _subtitles = new List<Subtitle>
+        new Subtitle
         {
-            new Subtitle
-            {
-                Id = 1,
-                StreetcodeId = 1,
-            },
-            new Subtitle
-            {
-                Id = 2,
-                StreetcodeId = 1,
-            },
-        };
-
-        private readonly List<SubtitleDTO> _subtitleDtOs = new List<SubtitleDTO>
+            Id = 1,
+            StreetcodeId = 1,
+        },
+        new Subtitle
         {
-            new SubtitleDTO
-            {
-                Id = 1,
-                StreetcodeId = 1,
-            },
-            new SubtitleDTO
-            {
-                Id = 2,
-                StreetcodeId = 1,
-            },
-        };
+            Id = 2,
+            StreetcodeId = 1,
+        },
+    };
 
-        public GetAllSubtitlesRequestHandlerTests()
+    private readonly List<SubtitleDTO> _subtitleDtOs = new List<SubtitleDTO>
+    {
+        new SubtitleDTO
         {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
-
-        [Fact]
-        public async Task Handler_Returns_NotEmpty_List()
+            Id = 1,
+            StreetcodeId = 1,
+        },
+        new SubtitleDTO
         {
-            // Arrange
-            SetupRepository(_subtitles);
-            SetupMapper(_subtitleDtOs);
+            Id = 2,
+            StreetcodeId = 1,
+        },
+    };
 
-            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+    public GetAllSubtitlesRequestHandlerTests()
+    {
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+    }
 
-            // Act
-            var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
+    [Fact]
+    public async Task Handler_Returns_NotEmpty_List()
+    {
+        // Arrange
+        SetupRepository(_subtitles);
+        SetupMapper(_subtitleDtOs);
 
-            // Assert
-            Assert.Multiple(
-                () => Assert.IsType<List<SubtitleDTO>>(result.Value),
-                () => Assert.True(result.Value.Count().Equals(_subtitles.Count)));
-        }
+        var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
-        [Fact]
-        public async Task Handler_Returns_Error()
-        {
-            // Arrange
-            SetupRepository(null);
-            SetupMapper(new List<SubtitleDTO>());
+        // Act
+        var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
 
-            var expectedError = $"Cannot find any subtitles";
-            _mockLocalizer.Setup(localizer => localizer["CannotFindAnySubtitles"])
-                .Returns(new LocalizedString("CannotFindAnySubtitles", expectedError));
+        // Assert
+        Assert.Multiple(
+            () => Assert.IsType<List<SubtitleDTO>>(result.Value),
+            () => Assert.True(result.Value.Count().Equals(_subtitles.Count)));
+    }
 
-            var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
+    [Fact]
+    public async Task Handler_Returns_Error()
+    {
+        // Arrange
+        SetupRepository(null!);
+        SetupMapper(new List<SubtitleDTO>());
 
-            // Act
-            var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
+        var expectedError = $"Cannot find any subtitles";
+        _mockLocalizer.Setup(localizer => localizer["CannotFindAnySubtitles"])
+            .Returns(new LocalizedString("CannotFindAnySubtitles", expectedError));
 
-            // Assert
-            Assert.Equal(expectedError, result.Errors.Single().Message);
-        }
+        var handler = new GetAllSubtitlesHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
-        private void SetupRepository(List<Subtitle> returnList)
-        {
-            _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
+        // Act
+        var result = await handler.Handle(new GetAllSubtitlesQuery(), CancellationToken.None);
+
+        // Assert
+        Assert.Equal(expectedError, result.Errors.Single().Message);
+    }
+
+    private void SetupRepository(List<Subtitle> returnList)
+    {
+        _mockRepo.Setup(repo => repo.SubtitleRepository.GetAllAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
-                IIncludableQueryable<Subtitle, object>>>()))
-                .ReturnsAsync(returnList);
-        }
+                    IIncludableQueryable<Subtitle, object>>>()))
+            .ReturnsAsync(returnList);
+    }
 
-        private void SetupMapper(List<SubtitleDTO> returnList)
-        {
-            _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
-                .Returns(returnList);
-        }
+    private void SetupMapper(List<SubtitleDTO> returnList)
+    {
+        _mockMapper.Setup(x => x.Map<IEnumerable<SubtitleDTO>>(It.IsAny<IEnumerable<object>>()))
+            .Returns(returnList);
     }
 }

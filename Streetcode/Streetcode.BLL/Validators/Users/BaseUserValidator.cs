@@ -52,6 +52,6 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
         RuleFor(x => x.AvatarId)
             .MustAsync((imageId, token) => ValidationExtentions.HasExistingImage(_repositoryWrapper, imageId, token))
             .When(x => x.AvatarId is not null)
-            .WithMessage((dto, imgId) => localizer["ImageDoesntExist", imgId]);
+            .WithMessage((dto, imgId) => localizer["ImageDoesntExist", imgId!]);
     }
 }

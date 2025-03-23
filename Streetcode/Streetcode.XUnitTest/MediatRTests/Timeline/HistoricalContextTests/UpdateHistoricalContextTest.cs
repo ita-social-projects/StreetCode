@@ -66,7 +66,7 @@ public class UpdateHistoricalContextTest
 
     private void SetupRepo(HistoricalContext? getValue, HistoricalContext? getRepeatValue, HistoricalContext? updateValue, bool saveValue)
     {
-        _mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(updateValue));
+        _mockRepo.Setup(repo => repo.HistoricalContextRepository.Update(updateValue!));
         _mockRepo.Setup(repo =>
                 repo.HistoricalContextRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<HistoricalContext, bool>>>(), default))
             .ReturnsAsync((Expression<Func<HistoricalContext, bool>> expr, IIncludableQueryable<HistoricalContext, bool> include) =>

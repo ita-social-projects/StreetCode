@@ -30,10 +30,10 @@ namespace Streetcode.WebApi.Extensions
             using (var scope = app.Services.CreateScope())
             {
                 Console.WriteLine("Seeding data...");
-                Directory.CreateDirectory(app.Configuration.GetValue<string>("Blob:BlobStorePath"));
+                Directory.CreateDirectory(app.Configuration.GetValue<string>("Blob:BlobStorePath") !);
                 var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
-                string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
+                string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath") !;
                 var blobService = new BlobService(blobOptions);
                 string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
                 string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));

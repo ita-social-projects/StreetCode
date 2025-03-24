@@ -25,5 +25,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images
         {
             return await this.SendCommand("/update", Method.Put, image, authToken);
         }
+
+        public async Task<RestResponse> DeleteAsync(int id, string authToken = "")
+        {
+            return await this.SendCommand($"/delete/{id}", Method.Delete, authToken);
+        }
     }
 }

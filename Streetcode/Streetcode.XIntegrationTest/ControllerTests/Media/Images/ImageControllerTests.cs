@@ -148,6 +148,39 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Fact]
+        [ExtractCreateTestImage]
+        public async Task Update_IncorrectId_ReturnBadRequest()
+        {
+            var imageUpdateDto = ExtractCreateTestImageAttribute.ImageFileUpdateForTest;
+            int nonExistentId = -100;
+            imageUpdateDto.Id = nonExistentId;
+
+            var response = await this.Client.UpdateAsync(imageUpdateDto, this.TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnSuccessStatusCode()
+        {
+            Image expectedImageToDelete = this.testImage;
+
+            var response = await this.Client.DeleteAsync(expectedImageToDelete.Id, this.TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_IncorrectId_ReturnBadRequest()
+        {
+            int nonExistentId = -100;
+
+            var response = await this.Client.DeleteAsync(nonExistentId, this.TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

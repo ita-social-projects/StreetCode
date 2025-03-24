@@ -4,7 +4,6 @@ WORKDIR /app
 # copy dependencies
 COPY ./Streetcode/DbUpdate/DbUpdate.csproj ./DbUpdate/
 COPY ./Streetcode/DbUpdate/*.cs ./DbUpdate/
-COPY ./Streetcode/DbUpdate/appsettings.Local.json ./DbUpdate/
 COPY ./Streetcode/DbUpdate/appsettings.IntegrationTests.json ./DbUpdate/
 COPY ./Streetcode/Streetcode.WebApi/appsettings.Staging.json ./DbUpdate/
 COPY ./Streetcode ./Streetcode/

@@ -28,10 +28,6 @@
   </ItemGroup>  
 
   <ItemGroup>
-    <None Remove="appsettings.Local.json" />
-    <Content Include="appsettings.Local.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <!-- <None Remove="appsettings.IntegrationTests.json" /> -->
     <Content Include="appsettings.IntegrationTests.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

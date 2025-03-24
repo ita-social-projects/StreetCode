@@ -55,9 +55,8 @@ public class Program
             Console.WriteLine(ex.InnerException);
             Console.WriteLine(ex.Message);
             Console.WriteLine(ex.StackTrace);
+            return -1;
         }
-
-        return 0;
     }
 
     private static string GetRootFolderPath()

@@ -23,29 +23,40 @@ public class Program
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
         Console.WriteLine($"Connection string: {connectionString}");
-        var upgrader =
-            DeployChanges.To
-                .SqlDatabase(connectionString)
-                .WithScriptsFromFileSystem(pathToSqlScripts)
-                .LogToConsole()
-                .Build();
-
-        var result = upgrader.PerformUpgrade();
-
-        if (!result.Successful)
+        try
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(result.Error);
-            Console.ResetColor();
+            var upgrader =
+                DeployChanges.To
+                    .SqlDatabase(connectionString)
+                    .WithScriptsFromFileSystem(pathToSqlScripts)
+                    .LogToConsole()
+                    .Build();
+
+            var result = upgrader.PerformUpgrade();
+
+            if (!result.Successful)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(result.Error);
+                Console.ResetColor();
 #if DEBUG
-            Console.ReadLine();
+                Console.ReadLine();
 #endif
-            return -1;
+                return -1;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Success!");
+            Console.ResetColor();
+            return 0;
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
         }
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Success!");
-        Console.ResetColor();
         return 0;
     }
 

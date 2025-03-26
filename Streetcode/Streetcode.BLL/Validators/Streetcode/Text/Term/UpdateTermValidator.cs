@@ -15,7 +15,6 @@ namespace Streetcode.BLL.Validators.Streetcode.Text.Term
 
         public UpdateTermValidator(
             IRepositoryWrapper repositoryWrapper,
-            BaseTermValidator baseTermValidator,
             IStringLocalizer<FailedToValidateSharedResource> localizer,
             IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
         {

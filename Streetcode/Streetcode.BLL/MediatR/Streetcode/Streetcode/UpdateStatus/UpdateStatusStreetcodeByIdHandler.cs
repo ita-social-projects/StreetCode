@@ -33,7 +33,7 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
 
         if (streetcode is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
+            var errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.Id].Value;
             _logger.LogError(request, errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
@@ -49,11 +49,9 @@ public class UpdateStatusStreetcodeByIdHandler : IRequestHandler<UpdateStatusStr
         {
             return Result.Ok(Unit.Value);
         }
-        else
-        {
-            string errorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        var finalErrorMsg = _stringLocalizerFailedToUpdate["FailedToUpdateStatusOfStreetcode"].Value;
+        _logger.LogError(request, finalErrorMsg);
+        return Result.Fail(new Error(finalErrorMsg));
     }
 }

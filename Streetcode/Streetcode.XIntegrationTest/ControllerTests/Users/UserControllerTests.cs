@@ -26,7 +26,6 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 {
     private readonly User _testUser;
     private readonly Expertise _testExpertise;
-    private readonly string _testPassword;
     private readonly UserManager<User> _userManager;
     private readonly CustomWebApplicationFactory<Program> _factory;
 
@@ -44,7 +43,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
 
         _testExpertise = ExpertiseExtracter.Extract(uniqueExpertiseId);
 
-        (_testUser, _testPassword) = UserExtracter.Extract(
+        (_testUser, _) = UserExtracter.Extract(
             userId: Guid.NewGuid().ToString(),
             userName: Guid.NewGuid().ToString(),
             password: GenerateTestPassword(),

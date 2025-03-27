@@ -40,9 +40,4 @@ public class AnalyticsClient : BaseClient
     {
         return await SendCommand($"/Delete/{id}", Method.Delete, authToken);
     }
-
-    public async Task<RestResponse> Create(StatisticRecordDTO statisticRecordDto, string authToken = "")
-    {
-        return await SendCommand($"/Create", Method.Post, statisticRecordDto, authToken);
-    }
 }

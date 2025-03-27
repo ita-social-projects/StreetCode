@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using HistoricalContextClass = Streetcode.DAL.Entities.Timeline.HistoricalContext;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
 {
@@ -62,9 +63,7 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.Update
 
             try
             {
-                /* have some shitty code right here, if you delete the DAL.Entities.Timeline. part it will show error
-                even if you have using Streetcode.DAL.Entities.Timeline; so sad :( */
-                var contextToUpdate = _mapper.Map<DAL.Entities.Timeline.HistoricalContext>(request.HistoricalContext);
+                var contextToUpdate = _mapper.Map<HistoricalContextClass>(request.HistoricalContext);
                 _repositoryWrapper.HistoricalContextRepository.Update(contextToUpdate);
                 await _repositoryWrapper.SaveChangesAsync();
                 return Result.Ok(_mapper.Map<HistoricalContextDTO>(contextToUpdate));

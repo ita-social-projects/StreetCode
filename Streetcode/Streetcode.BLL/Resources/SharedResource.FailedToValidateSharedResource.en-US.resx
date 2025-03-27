@@ -206,5 +206,10 @@
   </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Invalid Token</value>
+  <data name="InvalidPaginationParameters" xml:space="preserve">
+    <value>Pagination parameters must be valid</value>
+  </data>
+  <data name="MustNotBeInPast" xml:space="preserve">
+    <value>{0} must not be in the past.</value>
   </data>
 </root>

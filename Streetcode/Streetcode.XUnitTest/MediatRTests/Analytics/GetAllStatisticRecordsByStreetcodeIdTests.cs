@@ -43,15 +43,12 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
         // Arrange
         int streetcodeId = 1;
         var statisticRecords = GetStatisticRecords(streetcodeId);
-        var statisticRecordDTOs = GetStatisticRecordDTOs();
+        var statisticRecordDtos = GetStatisticRecordDtos();
 
-        _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetAllAsync(
-                It.IsAny<Expression<Func<StatisticRecord, bool>>>(),
-                It.IsAny<Func<IQueryable<StatisticRecord>, IIncludableQueryable<StatisticRecord, object>>>()))
-            .ReturnsAsync(statisticRecords);
+        SetupMockRepository(statisticRecords);
 
         _mapperMock.Setup(mapper => mapper.Map<IEnumerable<StatisticRecordDTO>>(It.IsAny<IEnumerable<StatisticRecord>>()))
-            .Returns(statisticRecordDTOs);
+            .Returns(statisticRecordDtos);
 
         var request = new GetAllStatisticRecordsByStreetcodeIdQuery(streetcodeId);
 
@@ -77,10 +74,7 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
         // Arrange
         int streetcodeId = 2;
 
-        _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetAllAsync(
-                It.IsAny<Expression<Func<StatisticRecord, bool>>>(),
-                It.IsAny<Func<IQueryable<StatisticRecord>, IIncludableQueryable<StatisticRecord, object>>>()))
-            .ReturnsAsync(Enumerable.Empty<StatisticRecord>().AsQueryable().BuildMock());
+        SetupMockRepository(Enumerable.Empty<StatisticRecord>().AsQueryable().BuildMock());
 
         _stringLocalizerCannotFindMock.Setup(localizer => localizer["CannotFindRecordWithStreetcodeId", streetcodeId])
             .Returns(new LocalizedString("CannotFindRecordWithStreetcodeId", $"Cannot find records with StreetcodeId {streetcodeId}"));
@@ -94,6 +88,23 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
         Assert.True(result.IsFailed);
         Assert.Equal($"Cannot find records with StreetcodeId {streetcodeId}", result.Errors[0].Message);
         _loggerMock.Verify(logger => logger.LogError(request, $"Cannot find records with StreetcodeId {streetcodeId}"), Times.Once);
+    }
+
+    private void SetupMockRepository(IEnumerable<StatisticRecord> returns)
+    {
+        _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StatisticRecord, bool>>>(),
+                It.IsAny<Func<IQueryable<StatisticRecord>, IIncludableQueryable<StatisticRecord, object>>>()))
+            .ReturnsAsync(returns);
+    }
+
+    private static List<StatisticRecordDTO> GetStatisticRecordDtos()
+    {
+        return new List<StatisticRecordDTO>
+        {
+            new () { QrId = 1, Count = 10 },
+            new () { QrId = 2, Count = 15 },
+        };
     }
 
     private List<StatisticRecord> GetStatisticRecords(int streetcodeId)
@@ -110,15 +121,6 @@ public class GetAllStatisticRecordsByStreetcodeIdTests
                 Id = 2, QrId = 2, Count = 15,
                 StreetcodeCoordinate = new StreetcodeCoordinate { StreetcodeId = streetcodeId },
             },
-        };
-    }
-
-    private List<StatisticRecordDTO> GetStatisticRecordDTOs()
-    {
-        return new List<StatisticRecordDTO>
-        {
-            new () { QrId = 1, Count = 10 },
-            new () { QrId = 2, Count = 15 },
         };
     }
 }

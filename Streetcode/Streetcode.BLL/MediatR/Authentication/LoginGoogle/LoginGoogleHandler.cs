@@ -24,7 +24,6 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
     private readonly IGoogleService _googleService;
 
     public LoginGoogleHandler(
-        IConfiguration configuration,
         IMapper mapper,
         ITokenService tokenService,
         ILoggerService logger,

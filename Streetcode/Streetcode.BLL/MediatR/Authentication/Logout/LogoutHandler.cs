@@ -1,9 +1,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.Util.Helpers;
-using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Authentication.Logout;
@@ -41,10 +39,8 @@ public class LogoutHandler : IRequestHandler<LogoutCommand, Result>
         {
             return Result.Ok();
         }
-        else
-        {
-            string errorMsg = "Failed to logout";
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        string errorMsg = "Failed to logout";
+        return Result.Fail(new Error(errorMsg));
     }
 }

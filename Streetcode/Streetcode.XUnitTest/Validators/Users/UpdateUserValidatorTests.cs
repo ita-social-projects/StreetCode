@@ -14,20 +14,20 @@ namespace Streetcode.XUnitTest.Validators.Users;
 
 public class UpdateUserValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockUserSharedResourceLocalizer mockUserSharedResourceLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockUserSharedResourceLocalizer _mockUserSharedResourceLocalizer;
     private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
-    private readonly Mock<BaseUserValidator> mockBaseValidator;
+    private readonly Mock<BaseUserValidator> _mockBaseValidator;
 
     public UpdateUserValidatorTests()
     {
-        mockNamesLocalizer = new MockFieldNamesLocalizer();
-        mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        mockUserSharedResourceLocalizer = new MockUserSharedResourceLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockUserSharedResourceLocalizer = new MockUserSharedResourceLocalizer();
         _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-        mockBaseValidator = new Mock<BaseUserValidator>(mockValidationLocalizer, mockNamesLocalizer, _mockRepositoryWrapper.Object);
-        mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<UpdateUserDTO>>()))
+        _mockBaseValidator = new Mock<BaseUserValidator>(_mockValidationLocalizer, _mockNamesLocalizer, _mockRepositoryWrapper.Object);
+        _mockBaseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<UpdateUserDTO>>()))
             .Returns(new ValidationResult());
     }
 
@@ -35,7 +35,7 @@ public class UpdateUserValidatorTests
     public async Task Validate_WhenCalled_ShouldCallBaseValidator()
     {
         // Arrange
-        var createValidator = new UpdateUserValidator(mockBaseValidator.Object, _mockRepositoryWrapper.Object, mockUserSharedResourceLocalizer);
+        var createValidator = new UpdateUserValidator(_mockBaseValidator.Object, _mockRepositoryWrapper.Object, _mockUserSharedResourceLocalizer);
         var user = GetValidUser();
         var createCommand = new UpdateUserCommand(user);
         MockHelpers.SetupMockUserRepositoryGetFirstOfDefaultAsync(_mockRepositoryWrapper, user.UserName);
@@ -44,7 +44,7 @@ public class UpdateUserValidatorTests
         await createValidator.TestValidateAsync(createCommand);
 
         // Assert
-        mockBaseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<UpdateUserDTO>>(), CancellationToken.None), Times.Once);
+        _mockBaseValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<UpdateUserDTO>>(), CancellationToken.None), Times.Once);
     }
 
     private UpdateUserDTO GetValidUser()

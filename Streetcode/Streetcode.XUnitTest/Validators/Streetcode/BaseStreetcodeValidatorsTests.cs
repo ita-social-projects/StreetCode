@@ -25,45 +25,45 @@ namespace Streetcode.XUnitTest.Validators.Streetcode;
 
 public class BaseStreetcodeValidatorsTests
 {
-    private readonly Mock<StreetcodeToponymValidator> mockToponymValidator;
-    private readonly Mock<TimelineItemValidator> mockTimelineItemValidator;
-    private readonly Mock<ImageDetailsValidator> mockimageDetailsValidator;
-    private readonly Mock<StreetcodeArtSlideValidator> mockartSlideValidator;
-    private readonly Mock<ArtCreateUpdateDTOValidator> mockArtValidator;
-    private MockFailedToValidateLocalizer mockValidationLocalizer;
-    private MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly BaseStreetcodeValidator validator;
+    private readonly Mock<StreetcodeToponymValidator> _mockToponymValidator;
+    private readonly Mock<TimelineItemValidator> _mockTimelineItemValidator;
+    private readonly Mock<ImageDetailsValidator> _mockimageDetailsValidator;
+    private readonly Mock<StreetcodeArtSlideValidator> _mockartSlideValidator;
+    private readonly Mock<ArtCreateUpdateDTOValidator> _mockArtValidator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly BaseStreetcodeValidator _validator;
 
     public BaseStreetcodeValidatorsTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockToponymValidator = new Mock<StreetcodeToponymValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var mockContextValidator = new Mock<HistoricalContextValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.mockTimelineItemValidator = new Mock<TimelineItemValidator>(mockContextValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
-        this.mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockToponymValidator = new Mock<StreetcodeToponymValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        var mockContextValidator = new Mock<HistoricalContextValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
+        _mockTimelineItemValidator = new Mock<TimelineItemValidator>(mockContextValidator.Object, _mockValidationLocalizer, _mockNamesLocalizer);
+        _mockartSlideValidator = new Mock<StreetcodeArtSlideValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         var mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-        this.mockimageDetailsValidator = new Mock<ImageDetailsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer, mockRepositoryWrapper.Object);
-        this.mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockimageDetailsValidator = new Mock<ImageDetailsValidator>(_mockValidationLocalizer, _mockNamesLocalizer, mockRepositoryWrapper.Object);
+        _mockArtValidator = new Mock<ArtCreateUpdateDTOValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
 
-        this.validator = new BaseStreetcodeValidator(
-            this.mockToponymValidator.Object,
-            this.mockTimelineItemValidator.Object,
-            this.mockimageDetailsValidator.Object,
-            this.mockartSlideValidator.Object,
-            this.mockArtValidator.Object,
-            this.mockValidationLocalizer,
-            this.mockNamesLocalizer);
+        _validator = new BaseStreetcodeValidator(
+            _mockToponymValidator.Object,
+            _mockTimelineItemValidator.Object,
+            _mockimageDetailsValidator.Object,
+            _mockartSlideValidator.Object,
+            _mockArtValidator.Object,
+            _mockValidationLocalizer,
+            _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenAllFieldsAreValid()
     {
         // Arrange
-        var streetcode = this.GetValidStreetcodeDto();
+        var streetcode = GetValidStreetcodeDto();
 
         // Act
-        var result = this.validator.Validate(streetcode);
+        var result = _validator.Validate(streetcode);
 
         // Assert
         Assert.True(result.IsValid);
@@ -73,12 +73,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenFirstNameLengthIsMoreThan50()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["FirstName"], BaseStreetcodeValidator.FirstNameMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["FirstName"], BaseStreetcodeValidator.FirstNameMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.FirstName = new string('*', BaseStreetcodeValidator.FirstNameMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.FirstName)
@@ -89,12 +89,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenLastNameLengthIsMoreThan50()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["LastName"], BaseStreetcodeValidator.LastNameMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["LastName"], BaseStreetcodeValidator.LastNameMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.LastName = new string('*', BaseStreetcodeValidator.LastNameMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.LastName)
@@ -105,12 +105,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTitleLengthIsMoreThan100()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BaseStreetcodeValidator.TitleMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Title"], BaseStreetcodeValidator.TitleMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Title = new string('*', BaseStreetcodeValidator.TitleMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Title)
@@ -121,12 +121,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenAliasLengthIsMoreThan33()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Alias"], BaseStreetcodeValidator.AliasMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Alias"], BaseStreetcodeValidator.AliasMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Alias = new string('*', BaseStreetcodeValidator.AliasMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Alias)
@@ -137,12 +137,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTeaserIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["Teaser"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Teaser"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Teaser = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Teaser)
@@ -153,12 +153,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTeaserLengthIsMoreThan520()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Teaser"], BaseStreetcodeValidator.TeaserMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Teaser"], BaseStreetcodeValidator.TeaserMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Teaser = new string('*', BaseStreetcodeValidator.TeaserMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Teaser)
@@ -169,12 +169,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenEventStreetcodeHasNotEmpty_FirstNameAndLastName()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["EventStreetcodeCannotHasFirstName"];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["EventStreetcodeCannotHasFirstName"];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.StreetcodeType = StreetcodeType.Event;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
@@ -185,12 +185,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTransliterationUrlIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["TransliterationUrl"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["TransliterationUrl"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.TransliterationUrl = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TransliterationUrl)
@@ -201,12 +201,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTransliterationUrlLengthIsMoreThan100()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["TransliterationUrl"], BaseStreetcodeValidator.TransliterationUrlMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["TransliterationUrl"], BaseStreetcodeValidator.TransliterationUrlMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.TransliterationUrl = new string('*', BaseStreetcodeValidator.TransliterationUrlMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TransliterationUrl)
@@ -221,12 +221,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenTransliterationUrlIsInvalid(string transliterationUrl)
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["TransliterationUrlFormat"];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["TransliterationUrlFormat"];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.TransliterationUrl = transliterationUrl;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.TransliterationUrl)
@@ -239,12 +239,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenIndexIsOutOfBounds(int index)
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MustBeBetween", this.mockNamesLocalizer["Index"], BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMaxValue];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MustBeBetween", _mockNamesLocalizer["Index"], BaseStreetcodeValidator.IndexMinValue, BaseStreetcodeValidator.IndexMaxValue];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Index = index;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Index)
@@ -255,12 +255,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenDateStringIsEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["DateString"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["DateString"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.DateString = string.Empty;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.DateString)
@@ -271,12 +271,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenDateStringLengthIsMoreThan100()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["DateString"], BaseStreetcodeValidator.DateStringMaxLength];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["DateString"], BaseStreetcodeValidator.DateStringMaxLength];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.DateString = new string('*', BaseStreetcodeValidator.DateStringMaxLength + 1);
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.DateString)
@@ -290,12 +290,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenDateStringIsInvalid(string invalidDateString)
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["DateStringFormat"];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["DateStringFormat"];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.DateString = invalidDateString;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.DateString)
@@ -306,12 +306,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenStreetcodeTypeIsInvalid()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["StreetcodeType"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["StreetcodeType"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.StreetcodeType = (StreetcodeType)8;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.StreetcodeType)
@@ -322,12 +322,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenStatusIsInvalid()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["Status"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["Status"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.Status = (StreetcodeStatus)50;
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Status)
@@ -338,12 +338,12 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenBlackAndWhiteImageDoesntExist()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MustContainExactlyOneAlt1", this.mockNamesLocalizer["Alt"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MustContainExactlyOneAlt1", _mockNamesLocalizer["Alt"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.ImagesDetails = new List<ImageDetailsDto>();
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ImagesDetails)
@@ -354,8 +354,8 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenThereAreTwoColoredImages()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MustContainAtMostOneAlt0", this.mockNamesLocalizer["Alt"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MustContainAtMostOneAlt0", _mockNamesLocalizer["Alt"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.ImagesDetails = new List<ImageDetailsDto>()
         {
             new ImageDetailsDto()
@@ -373,7 +373,7 @@ public class BaseStreetcodeValidatorsTests
         };
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ImagesDetails)
@@ -384,8 +384,8 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldReturnError_WhenThereAreTwoOptionalImages()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["MustContainAtMostOneAlt2", this.mockNamesLocalizer["Alt"]];
-        var streetcode = this.GetValidStreetcodeDto();
+        var expectedError = _mockValidationLocalizer["MustContainAtMostOneAlt2", _mockNamesLocalizer["Alt"]];
+        var streetcode = GetValidStreetcodeDto();
         streetcode.ImagesDetails = new List<ImageDetailsDto>()
         {
             new ImageDetailsDto()
@@ -403,7 +403,7 @@ public class BaseStreetcodeValidatorsTests
         };
 
         // Act
-        var result = this.validator.TestValidate(streetcode);
+        var result = _validator.TestValidate(streetcode);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.ImagesDetails)
@@ -414,23 +414,23 @@ public class BaseStreetcodeValidatorsTests
     public void ShouldCallChildValidators_WhenValidated()
     {
         // Arrange
-        this.mockToponymValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>())).Returns(new ValidationResult());
-        this.mockimageDetailsValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>())).Returns(new ValidationResult());
-        this.mockTimelineItemValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>())).Returns(new ValidationResult());
-        this.mockartSlideValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>())).Returns(new ValidationResult());
-        this.mockArtValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>())).Returns(new ValidationResult());
+        _mockToponymValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>())).Returns(new ValidationResult());
+        _mockimageDetailsValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>())).Returns(new ValidationResult());
+        _mockTimelineItemValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>())).Returns(new ValidationResult());
+        _mockartSlideValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>())).Returns(new ValidationResult());
+        _mockArtValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>())).Returns(new ValidationResult());
 
-        var streetcode = this.GetValidStreetcodeDto();
+        var streetcode = GetValidStreetcodeDto();
 
         // Act
-        this.validator.TestValidate(streetcode);
+        _validator.TestValidate(streetcode);
 
         // Assert
-        this.mockToponymValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>()), Times.AtLeast(1));
-        this.mockimageDetailsValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>()), Times.AtLeast(1));
-        this.mockTimelineItemValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>()), Times.AtLeast(1));
-        this.mockartSlideValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>()), Times.AtLeast(1));
-        this.mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>()), Times.AtLeast(1));
+        _mockToponymValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeToponymCreateUpdateDTO>>()), Times.AtLeast(1));
+        _mockimageDetailsValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ImageDetailsDto>>()), Times.AtLeast(1));
+        _mockTimelineItemValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TimelineItemCreateUpdateDTO>>()), Times.AtLeast(1));
+        _mockartSlideValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<StreetcodeArtSlideCreateUpdateDTO>>()), Times.AtLeast(1));
+        _mockArtValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<ArtCreateUpdateDTO>>()), Times.AtLeast(1));
     }
 
     private StreetcodeCreateUpdateDTO GetValidStreetcodeDto()

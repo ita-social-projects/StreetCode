@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Media.Images;
-using Streetcode.BLL.MediatR.Media.Image.GetAll;
 using Streetcode.BLL.MediatR.Media.Image.GetBaseImage;
 using Streetcode.BLL.MediatR.Media.Image.GetById;
 using Streetcode.BLL.MediatR.Media.Image.GetByStreetcodeId;
@@ -15,13 +14,6 @@ namespace Streetcode.WebApi.Controllers.Media.Images;
 
 public class ImageController : BaseApiController
 {
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]
-    public async Task<IActionResult> GetAll()
-    {
-        return HandleResult(await Mediator.Send(new GetAllImagesQuery()));
-    }
-
     [HttpGet("{streetcodeId:int}")]
     [ValidateStreetcodeExistence]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ImageDTO>))]

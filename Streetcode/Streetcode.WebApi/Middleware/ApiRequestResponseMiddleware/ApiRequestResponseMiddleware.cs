@@ -70,8 +70,9 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
             response.Body.Seek(0, SeekOrigin.Begin);
 
             var encoding = Encoding.UTF8;
+            using var streamReader = new StreamReader(response.Body, encoding, leaveOpen: true);
 
-            var text = await new StreamReader(response.Body, encoding).ReadToEndAsync();
+            var text = await streamReader.ReadToEndAsync();
 
             response.Body.Seek(0, SeekOrigin.Begin);
 
@@ -120,29 +121,49 @@ namespace Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware
 
         private void TruncateProperties(JToken token)
         {
-            foreach (var property in token.Children<JProperty>().ToList())
+            switch (token)
             {
-                if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
+                case JObject obj:
                 {
-                    property.Remove();
-                    continue;
+                    foreach (var property in obj.Properties())
+                    {
+                        if (property.Value is JValue)
+                        {
+                            TruncateValue(property);
+                        }
+                        else
+                        {
+                            TruncateProperties(property.Value);
+                        }
+                    }
+
+                    break;
                 }
 
-                var valueType = property.Value.Type;
-
-                if (valueType == JTokenType.Object || valueType == JTokenType.Array)
+                case JArray array:
                 {
-                    TruncateProperties(property.Value);
-                    continue;
-                }
+                    foreach (var item in array)
+                    {
+                        TruncateProperties(item);
+                    }
 
-                var valueAsString = property.Value.ToString();
-                var valueLength = valueAsString.Length;
-
-                if (valueLength > _options.MaxResponseLength)
-                {
-                    property.Value = new JValue(valueAsString.Substring(0, _options.MaxResponseLength) + "...");
+                    break;
                 }
+            }
+        }
+
+        private void TruncateValue(JProperty property)
+        {
+            if (_options.PropertiesToIgnore.Contains(property.Name.ToLower()))
+            {
+                property.Remove();
+            }
+
+            var valueAsString = property.Value.ToString();
+            if (valueAsString.Length > _options.MaxResponseLength)
+            {
+                var shortenedLog = new JValue(valueAsString.Substring(0, _options.MaxResponseLength));
+                property.Value = $"{shortenedLog}...";
             }
         }
     }

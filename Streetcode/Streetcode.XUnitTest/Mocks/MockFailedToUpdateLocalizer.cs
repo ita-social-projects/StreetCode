@@ -15,6 +15,7 @@ public class MockFailedToUpdateLocalizer : BaseMockStringLocalizer<FailedToUpdat
                     "FailedToUpdateTerm",
                     "FailedToUpdateStatusOfStreetcode",
                     "FailedToChangeStatusOfStreetcodeToDeleted",
+                    "FailedToUpdateEvent",
                 }
             },
         };

@@ -210,4 +210,10 @@
   <data name="MustNotBeInPast" xml:space="preserve">
     <value>{0} must not be in the past.</value>
   </data>
+  <data name="LengthBetween" xml:space="preserve">
+    <value>The field must be between '{0}' and '{1}'characters.</value>
+  </data>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Title must consist of Cyrillic or Latin characters (both uppercase and lowercase) and can only include numbers, hyphens (-), apostrophes (') and spaces.</value>
+  </data>
 </root>

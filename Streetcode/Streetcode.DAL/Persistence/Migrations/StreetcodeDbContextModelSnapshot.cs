@@ -279,6 +279,54 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.ToTable("qr_coordinates", "coordinates");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.Event", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("event", "events");
+
+                    b.HasDiscriminator<string>("EventType").HasValue("Event");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StreetcodeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventId", "StreetcodeId");
+
+                    b.HasIndex("StreetcodeId");
+
+                    b.ToTable("EventStreetcodes");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Feedback.Response", b =>
                 {
                     b.Property<int>("Id")
@@ -1352,6 +1400,41 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasDiscriminator().HasValue("coordinate_toponym");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.CustomEvent", b =>
+                {
+                    b.HasBaseType("Streetcode.DAL.Entities.Event.Event");
+
+                    b.Property<string>("DateString")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Organizer")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.ToTable("event", "events");
+
+                    b.HasDiscriminator().HasValue("Custom");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.HistoricalEvent", b =>
+                {
+                    b.HasBaseType("Streetcode.DAL.Entities.Event.Event");
+
+                    b.Property<int?>("TimelineItemId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("TimelineItemId");
+
+                    b.ToTable("event", "events");
+
+                    b.HasDiscriminator().HasValue("Historical");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.Streetcode.Types.EventStreetcode", b =>
                 {
                     b.HasBaseType("Streetcode.DAL.Entities.Streetcode.StreetcodeContent");
@@ -1480,6 +1563,25 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Streetcode");
 
                     b.Navigation("StreetcodeCoordinate");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.EventStreetcodes", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Event.Event", "Event")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "StreetcodeContent")
+                        .WithMany("EventStreetcodes")
+                        .HasForeignKey("StreetcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("StreetcodeContent");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Images.Art", b =>
@@ -1628,7 +1730,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany()
                         .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Streetcode.DAL.Entities.Users.User", "User")
@@ -1906,9 +2008,24 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Toponym");
                 });
 
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.HistoricalEvent", b =>
+                {
+                    b.HasOne("Streetcode.DAL.Entities.Timeline.TimelineItem", "TimelineItem")
+                        .WithMany()
+                        .HasForeignKey("TimelineItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("TimelineItem");
+                });
+
             modelBuilder.Entity("Streetcode.DAL.Entities.AdditionalContent.Tag", b =>
                 {
                     b.Navigation("StreetcodeTagIndices");
+                });
+
+            modelBuilder.Entity("Streetcode.DAL.Entities.Event.Event", b =>
+                {
+                    b.Navigation("EventStreetcodes");
                 });
 
             modelBuilder.Entity("Streetcode.DAL.Entities.Media.Audio", b =>
@@ -1960,6 +2077,8 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.Navigation("Arts");
 
                     b.Navigation("Coordinates");
+
+                    b.Navigation("EventStreetcodes");
 
                     b.Navigation("Facts");
 

@@ -327,6 +327,12 @@
   <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
     <value>Cannot find historical context with title '{0}'</value>
   </data>
+  <data name="CannotFindEventWithCorrespondingId" xml:space="preserve">
+    <value>Cannot find an event with corresponding id: {0}</value>
+  </data>
+  <data name="CannotFindAnyEvents" xml:space="preserve">
+    <value>Cannot find any event</value>
+  </data>
   <data name="CannotFindAnyPropertyWithThisName" xml:space="preserve">
     <value>Cannot find any field with this name</value>
   </data>

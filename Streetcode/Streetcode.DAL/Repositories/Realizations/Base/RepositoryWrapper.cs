@@ -4,6 +4,7 @@ using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.AdditionalContent;
 using Streetcode.DAL.Repositories.Interfaces.Analytics;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.DAL.Repositories.Interfaces.Event;
 using Streetcode.DAL.Repositories.Interfaces.Jobs;
 using Streetcode.DAL.Repositories.Interfaces.Media.Images;
 using Streetcode.DAL.Repositories.Interfaces.News;
@@ -20,6 +21,7 @@ using Streetcode.DAL.Repositories.Interfaces.Users;
 using Streetcode.DAL.Repositories.Interfaces.Users.Expertise;
 using Streetcode.DAL.Repositories.Realizations.AdditionalContent;
 using Streetcode.DAL.Repositories.Realizations.Analytics;
+using Streetcode.DAL.Repositories.Realizations.Event;
 using Streetcode.DAL.Repositories.Realizations.Jobs;
 using Streetcode.DAL.Repositories.Realizations.Media;
 using Streetcode.DAL.Repositories.Realizations.Media.Images;
@@ -120,6 +122,10 @@ public class RepositoryWrapper : IRepositoryWrapper
     private IExpertiseRepository? _expertiseRepository;
 
     private IUserExpertiseRepository? _userExpertiseRepository;
+
+    private IEventRepository? _eventRepository;
+
+    private IEventStreetcodesRepository? _eventStreetcodesRepository;
 
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
@@ -632,6 +638,32 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _userExpertiseRepository;
+        }
+    }
+
+    public IEventRepository EventRepository
+    {
+        get
+        {
+            if (_eventRepository is null)
+            {
+                _eventRepository = new EventRepository(_streetcodeDbContext);
+            }
+
+            return _eventRepository;
+        }
+    }
+
+    public IEventStreetcodesRepository EventStreetcodesRepository
+    {
+        get
+        {
+            if (_eventStreetcodesRepository is null)
+            {
+                _eventStreetcodesRepository = new EventStreetcodesRepository(_streetcodeDbContext);
+            }
+
+            return _eventStreetcodesRepository;
         }
     }
 

@@ -210,4 +210,10 @@
   <data name="MustNotBeInPast" xml:space="preserve">
     <value>{0} не повинна бути у минулому.</value>
   </data>
+  <data name="LengthBetween" xml:space="preserve">
+    <value>Поле повинно містити від '{0}' до '{1}' символів.</value>
+  </data>
+  <data name="TitleFormat" xml:space="preserve">
+    <value>Назва повинна складатися лише з літер латиниці або кирилиці (великих і малих) та може містити лише цифри, пробіли, символи дефіс (-) і апостроф (').</value>
+  </data>
 </root>

@@ -156,6 +156,9 @@
   <data name="FailedToMapCreatedTeamLink" xml:space="preserve">
     <value>Не вдалося зіставити створене посилання команди</value>
   </data>
+  <data name="FailedToCreateEvent" xml:space="preserve">
+    <value>Не вдалося створити подію</value>
+  </data>
   <data name="FailedToCreatePartner" xml:space="preserve">
     <value>Не вдалося створити партнера</value>
   </data>

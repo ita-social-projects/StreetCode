@@ -71,7 +71,7 @@ namespace Streetcode.WebApi.Controllers.Authentication
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDTO confirmEmailDto)
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
         {
             return HandleResult(await Mediator.Send(new ConfirmEmailCommand(confirmEmailDto)));
         }

@@ -37,8 +37,8 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var blobService = new BlobService(blobOptions);
-                string initialDataImagePath = "../Streetcode.DAL/InitialData/images.json";
-                string initialDataAudioPath = "../Streetcode.DAL/InitialData/audios.json";
+                string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
+                string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));
 
                 if (File.Exists(initialDataImagePath))
                 {

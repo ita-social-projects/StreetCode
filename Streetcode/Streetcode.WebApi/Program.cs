@@ -78,7 +78,6 @@ else
 }
 
 await app.ApplyMigrations();
-
 if (!builder.Environment.EnvironmentName.Equals("IntegrationTests"))
 {
     await app.SeedDataAsync();

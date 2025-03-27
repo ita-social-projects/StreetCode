@@ -13,7 +13,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
     [Collection("Authorization")]
     public class EventControllerTests : BaseControllerTests<EventClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
-        private readonly EventDTO _testEvent;
+        private readonly EventDto _testEvent;
         private readonly TokenStorage _tokenStorage;
 
         public EventControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
@@ -21,7 +21,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         {
             _tokenStorage = tokenStorage;
             int uniqueId = UniqueNumberGenerator.GenerateInt();
-            _testEvent = new EventDTO
+            _testEvent = new EventDto
             {
                 Id = uniqueId,
                 Title = $"Test Event {uniqueId}",
@@ -33,7 +33,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         public async Task GetAll_ReturnsSuccess()
         {
             var response = await this.Client.GetAllAsync();
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllEventsResponseDTO>(response.Content);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllEventsResponseDto>(response.Content);
 
             Assert.Multiple(() =>
             {
@@ -46,7 +46,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         [Fact]
         public async Task GetById_ReturnsSuccess()
         {
-            var createResponse = await this.Client.CreateAsync(new CreateUpdateEventDTO
+            var createResponse = await this.Client.CreateAsync(new CreateUpdateEventDto
             {
                 Title = _testEvent.Title,
                 EventType = _testEvent.EventType
@@ -75,7 +75,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
                 Assert.Fail("GetById response content is empty.");
             }
 
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<EventDTO>(responseContent);
+            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<EventDto>(responseContent);
             if (returnedValue == null)
             {
                 Assert.Fail($"Failed to deserialize GetById response. Content: {responseContent}");
@@ -87,7 +87,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         [Fact]
         public async Task Create_ReturnsSuccess_WithAdminToken()
         {
-            var createDto = new CreateUpdateEventDTO { Title = "New Event", EventType = "Custom" };
+            var createDto = new CreateUpdateEventDto { Title = "New Event", EventType = "Custom" };
             var response = await this.Client.CreateAsync(createDto, _tokenStorage.AdminAccessToken);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -96,7 +96,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         [Fact]
         public async Task Create_ReturnsUnauthorized_WithoutToken()
         {
-            var createDto = new CreateUpdateEventDTO { Title = "New Event", EventType = "Custom" };
+            var createDto = new CreateUpdateEventDto { Title = "New Event", EventType = "Custom" };
             var response = await this.Client.CreateAsync(createDto);
 
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -105,7 +105,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Event
         [Fact]
         public async Task Delete_ReturnsSuccess_WithAdminToken()
         {
-            var createResponse = await this.Client.CreateAsync(new CreateUpdateEventDTO
+            var createResponse = await this.Client.CreateAsync(new CreateUpdateEventDto
             {
                 Title = _testEvent.Title,
                 EventType = _testEvent.EventType

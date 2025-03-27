@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Event.CreateUpdate
 {
-    public class CreateUpdateEventDTO
+    public class CreateUpdateEventDto
     {
         public string Title { get; set; } = null!;
         public DateTime Date { get; set; }

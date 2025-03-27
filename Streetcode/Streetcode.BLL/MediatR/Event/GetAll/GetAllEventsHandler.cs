@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.GetAll
 {
-    public class GetAllEventsHandler : IRequestHandler<GetAllEventsQuery, Result<GetAllEventsResponseDTO>>
+    public class GetAllEventsHandler : IRequestHandler<GetAllEventsQuery, Result<GetAllEventsResponseDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -32,7 +32,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
             _stringLocalizeCannotFind = stringLocalizeCannotFind;
         }
 
-        public Task<Result<GetAllEventsResponseDTO>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllEventsResponseDto>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
         {
             PaginationResponse<DAL.Entities.Event.Event> paginationResponse = _repositoryWrapper
                     .EventRepository
@@ -50,7 +50,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
             {
                 string errorMsg = _stringLocalizeCannotFind["CannotFindAnyEvents"].Value;
                 _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllEventsResponseDTO>(new Error(errorMsg)));
+                return Task.FromResult(Result.Fail<GetAllEventsResponseDto>(new Error(errorMsg)));
             }
 
             IEnumerable<DAL.Entities.Event.Event> filteredEvents = paginationResponse.Entities;
@@ -60,9 +60,9 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
                {
                    var eventDto = e switch
                    {
-                       HistoricalEvent historicalEvent => _mapper.Map<HistoricalEventDTO>(historicalEvent),
-                       CustomEvent customEvent => _mapper.Map<CustomEventDTO>(customEvent),
-                       _ => _mapper.Map<EventDTO>(e)
+                       HistoricalEvent historicalEvent => _mapper.Map<HistoricalEventDto>(historicalEvent),
+                       CustomEvent customEvent => _mapper.Map<CustomEventDto>(customEvent),
+                       _ => _mapper.Map<EventDto>(e)
                    };
 
                    if(e.EventStreetcodes != null)
@@ -84,7 +84,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
                    return eventDto;
                });
 
-            GetAllEventsResponseDTO getAllEventsResponseDTO = new GetAllEventsResponseDTO()
+            GetAllEventsResponseDto getAllEventsResponseDTO = new GetAllEventsResponseDto()
             {
                 TotalAmount = paginationResponse.TotalItems,
                 Events = mappedEvents,

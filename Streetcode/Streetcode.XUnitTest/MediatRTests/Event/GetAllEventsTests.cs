@@ -107,7 +107,7 @@ public class GetAllEventsTests
             {
                 if (source is HistoricalEvent historicalEvent)
                 {
-                    return new HistoricalEventDTO
+                    return new HistoricalEventDto
                     {
                         Id = historicalEvent.Id,
                         EventType = historicalEvent.EventType,
@@ -116,7 +116,7 @@ public class GetAllEventsTests
                 }
                 else if (source is CustomEvent customEvent)
                 {
-                    return new CustomEventDTO
+                    return new CustomEventDto
                     {
                         Id = customEvent.Id,
                         EventType = customEvent.EventType,
@@ -125,7 +125,7 @@ public class GetAllEventsTests
                 }
                 else if (source is EventEntity @event)
                 {
-                    return new EventDTO
+                    return new EventDto
                     {
                         Id = @event.Id,
                         EventType = @event.EventType,

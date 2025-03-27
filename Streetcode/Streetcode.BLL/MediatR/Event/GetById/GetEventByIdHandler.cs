@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.GetById
 {
-    public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, Result<EventDTO>>
+    public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, Result<EventDto>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Event.GetById
             _stringLocalizer = stringLocalizer;
         }
 
-        public async Task<Result<EventDTO>> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<EventDto>> Handle(GetEventByIdQuery request, CancellationToken cancellationToken)
         {
             var eventEntity = await _repositoryWrapper.EventRepository
                 .GetFirstOrDefaultAsync(
@@ -45,18 +45,18 @@ namespace Streetcode.BLL.MediatR.Event.GetById
                 return Result.Fail(errorMsg);
             }
 
-            EventDTO mappedEvent;
+            EventDto mappedEvent;
 
             switch (eventEntity.EventType)
             {
                 case "Historical":
-                    mappedEvent = _mapper.Map<HistoricalEventDTO>(eventEntity);
+                    mappedEvent = _mapper.Map<HistoricalEventDto>(eventEntity);
                     break;
                 case "Custom":
-                    mappedEvent = _mapper.Map<CustomEventDTO>(eventEntity);
+                    mappedEvent = _mapper.Map<CustomEventDto>(eventEntity);
                     break;
                 default:
-                    mappedEvent = _mapper.Map<EventDTO>(eventEntity);
+                    mappedEvent = _mapper.Map<EventDto>(eventEntity);
                     break;
             }
 

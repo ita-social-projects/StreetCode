@@ -9,27 +9,27 @@ namespace Streetcode.BLL.Mapping.Event
     {
         public EventProfile()
         {
-            CreateMap<DAL.Entities.Event.Event, EventDTO>().ReverseMap();
-            CreateMap<DAL.Entities.Event.Event, EventShortDTO>().ReverseMap();
+            CreateMap<DAL.Entities.Event.Event, EventDto>().ReverseMap();
+            CreateMap<DAL.Entities.Event.Event, EventShortDto>().ReverseMap();
 
-            CreateMap<HistoricalEvent, HistoricalEventDTO>()
+            CreateMap<HistoricalEvent, HistoricalEventDto>()
                 .ReverseMap();
 
-            CreateMap<CustomEvent, CustomEventDTO>().ReverseMap()
+            CreateMap<CustomEvent, CustomEventDto>().ReverseMap()
                 .ReverseMap();
 
-            CreateMap<DAL.Entities.Event.Event, CreateUpdateEventDTO>().ReverseMap();
+            CreateMap<DAL.Entities.Event.Event, CreateUpdateEventDto>().ReverseMap();
 
-            CreateMap<UpdateEventDTO, DAL.Entities.Event.Event>()
+            CreateMap<UpdateEventDto, DAL.Entities.Event.Event>()
                 .ForMember(dest => dest.EventType, opt => opt.MapFrom(src => src.EventType.ToString()))
-                .Include<UpdateEventDTO, HistoricalEvent>()
-                .Include<UpdateEventDTO, CustomEvent>();
+                .Include<UpdateEventDto, HistoricalEvent>()
+                .Include<UpdateEventDto, CustomEvent>();
 
-            CreateMap<UpdateEventDTO, CustomEvent>()
+            CreateMap<UpdateEventDto, CustomEvent>()
                 .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
                 .ForMember(dest => dest.Organizer, opt => opt.MapFrom(src => src.Organizer));
 
-            CreateMap<UpdateEventDTO, HistoricalEvent>()
+            CreateMap<UpdateEventDto, HistoricalEvent>()
                 .ForMember(dest => dest.TimelineItemId, opt => opt.MapFrom(src => src.TimelineItemId));
         }
     }

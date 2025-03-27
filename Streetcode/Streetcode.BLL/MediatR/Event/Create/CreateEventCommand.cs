@@ -4,6 +4,6 @@ using Streetcode.BLL.DTO.Event.CreateUpdate;
 
 namespace Streetcode.BLL.MediatR.Event.Create
 {
-    public record CreateEventCommand(CreateUpdateEventDTO Event)
+    public record CreateEventCommand(CreateUpdateEventDto Event)
         : IRequest<Result<int>>;
 }

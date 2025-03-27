@@ -13,7 +13,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Event.GetAll
 {
-    public class GetAllEventsShortHandler : IRequestHandler<GetAllEventsShortQuery, Result<IEnumerable<EventShortDTO>>>
+    public class GetAllEventsShortHandler : IRequestHandler<GetAllEventsShortQuery, Result<IEnumerable<EventShortDto>>>
     {
         private readonly IMapper _mapper;
         private readonly IRepositoryWrapper _repositoryWrapper;
@@ -28,7 +28,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
             _stringLocalizeCannotFind = stringLocalizeCannotFind;
         }
 
-        public async Task<Result<IEnumerable<EventShortDTO>>> Handle(GetAllEventsShortQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<EventShortDto>>> Handle(GetAllEventsShortQuery request, CancellationToken cancellationToken)
         {
             var events = await _repositoryWrapper.EventRepository.GetAllAsync();
 
@@ -39,7 +39,7 @@ namespace Streetcode.BLL.MediatR.Event.GetAll
                 return Result.Fail(new Error(errorMsg));
             }
 
-            return Result.Ok(_mapper.Map<IEnumerable<EventShortDTO>>(events));
+            return Result.Ok(_mapper.Map<IEnumerable<EventShortDto>>(events));
         }
     }
 }

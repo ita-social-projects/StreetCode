@@ -4,5 +4,5 @@ using Streetcode.BLL.DTO.Event;
 
 namespace Streetcode.BLL.MediatR.Event.GetAllShort
 {
-    public record GetAllEventsShortQuery : IRequest<Result<IEnumerable<EventShortDTO>>>;
+    public record GetAllEventsShortQuery : IRequest<Result<IEnumerable<EventShortDto>>>;
 }

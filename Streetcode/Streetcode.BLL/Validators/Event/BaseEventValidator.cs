@@ -5,7 +5,7 @@ using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.BLL.Validators.Event;
 
-public class BaseEventValidator : AbstractValidator<CreateUpdateEventDTO>
+public class BaseEventValidator : AbstractValidator<CreateUpdateEventDto>
 {
     public const int TitleMinLength = 2;
     public const int TitleMaxLength = 100;
@@ -17,8 +17,7 @@ public class BaseEventValidator : AbstractValidator<CreateUpdateEventDTO>
     {
         RuleFor(e => e.Title)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
-            .Length(TitleMinLength, TitleMaxLength).WithMessage(localizer["LengthBetween", TitleMinLength, TitleMaxLength])
-            .Matches(@"^[A-Za-zА-Яа-яІіЇїЄєҐґ0-9{L}\d\s\-'-]+$").WithMessage(localizer["TitleFormat"]);
+            .Length(TitleMinLength, TitleMaxLength).WithMessage(localizer["LengthBetween", TitleMinLength, TitleMaxLength]);
 
         RuleFor(e => e.Date)
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Date"]]);

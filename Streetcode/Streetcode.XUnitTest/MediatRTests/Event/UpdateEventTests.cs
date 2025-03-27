@@ -48,7 +48,7 @@ public class UpdateEventTests
     public async Task Handle_ShouldReturnEventId_WhenEventUpdatedSuccessfully()
     {
         // Arrange
-        var request = new UpdateEventCommand(new UpdateEventDTO { Id = 1, EventType = "Historical", TimelineItemId = 10 });
+        var request = new UpdateEventCommand(new UpdateEventDto { Id = 1, EventType = "Historical", TimelineItemId = 10 });
         var eventEntity = new HistoricalEvent { Id = 1, EventType = "Historical", TimelineItemId = 5 };
         SetupRepositoryMock(eventEntity, saveSuccess: true);
 
@@ -68,7 +68,7 @@ public class UpdateEventTests
     {
         // Arrange
         var eventId = 99;
-        var request = new UpdateEventCommand(new UpdateEventDTO { Id = eventId });
+        var request = new UpdateEventCommand(new UpdateEventDto { Id = eventId });
         string expectedErrorKey = "CannotFindEventWithCorrespondingId";
         string expectedErrorValue = _mockCanFindLocalizer[expectedErrorKey, eventId];
 
@@ -90,7 +90,7 @@ public class UpdateEventTests
     public async Task Handle_ShouldReturnFail_WhenEventTypeChangeFails()
     {
         // Arrange
-        var request = new UpdateEventCommand(new UpdateEventDTO { Id = 1, EventType = "Custom" });
+        var request = new UpdateEventCommand(new UpdateEventDto { Id = 1, EventType = "Custom" });
         var eventEntity = new HistoricalEvent { Id = 1, EventType = "Historical" };
         string expectedErrorKey = "AnErrorOccurredWhileUpdatingEvent";
         string expectedException = "Failed to map event";
@@ -98,7 +98,7 @@ public class UpdateEventTests
 
         SetupRepositoryMock(eventEntity, saveSuccess: true);
 
-        _mockMapper.Setup(m => m.Map(It.IsAny<UpdateEventDTO>(), It.IsAny<EventEntity>()))
+        _mockMapper.Setup(m => m.Map(It.IsAny<UpdateEventDto>(), It.IsAny<EventEntity>()))
                    .Throws(new Exception(expectedException));
 
         // Act
@@ -116,7 +116,7 @@ public class UpdateEventTests
     public async Task Handle_ShouldReturnFail_WhenStreetcodeUpdateFails()
     {
         // Arrange
-        var request = new UpdateEventCommand(new UpdateEventDTO { Id = 1, EventType = "Historical", StreetcodeIds = new List<int> { 1, 2 } });
+        var request = new UpdateEventCommand(new UpdateEventDto { Id = 1, EventType = "Historical", StreetcodeIds = new List<int> { 1, 2 } });
         var eventEntity = new HistoricalEvent { Id = 1, EventType = "Historical", EventStreetcodes = new List<EventStreetcodes>() };
         string expectedErrorKey = "AnErrorOccurredWhileUpdatingEvent";
         string expectedException = "Database error";

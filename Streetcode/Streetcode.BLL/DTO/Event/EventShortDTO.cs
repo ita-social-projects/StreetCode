@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Event
 {
-    public class EventShortDTO
+    public class EventShortDto
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public string? Title { get; set; }
+        public string EventType { get; set; }
     }
 }

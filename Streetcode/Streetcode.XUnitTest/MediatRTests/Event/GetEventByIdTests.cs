@@ -42,12 +42,12 @@ public class GetEventByIdTests
     {
         // Arrange
         var testEvent = new HistoricalEvent { Id = 1, EventType = "Historical" };
-        var testEventDto = new HistoricalEventDTO { Id = 1, EventType = "Historical" };
+        var testEventDto = new HistoricalEventDto { Id = 1, EventType = "Historical" };
         var request = new GetEventByIdQuery(id);
 
         SetupRepositoryMock(testEvent);
 
-        _mockMapper.Setup(m => m.Map<HistoricalEventDTO>(It.IsAny<EventEntity>()))
+        _mockMapper.Setup(m => m.Map<HistoricalEventDto>(It.IsAny<EventEntity>()))
             .Returns(testEventDto);
 
         // Act

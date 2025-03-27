@@ -42,7 +42,7 @@ public class CreateEventTests
     public async Task Handle_ShouldCreateHistoricalEventSuccessfully()
     {
         // Arrange
-        var request = new CreateEventCommand(new CreateUpdateEventDTO { EventType = "Historical", TimelineItemId = 1 });
+        var request = new CreateEventCommand(new CreateUpdateEventDto { EventType = "Historical", TimelineItemId = 1 });
         var historicalEvent = new HistoricalEvent();
 
         SetupRepositoryMock(saveSuccess: true);
@@ -64,7 +64,7 @@ public class CreateEventTests
     public async Task Handle_ShouldReturnError_WhenEventCreationFails()
     {
         // Arrange
-        var request = new CreateEventCommand(new CreateUpdateEventDTO { EventType = "Custom" });
+        var request = new CreateEventCommand(new CreateUpdateEventDto { EventType = "Custom" });
         string expectedErrorKey = "FailedToCreateEvent";
         string expectedErrorValue = _mockFailedToCreateLocalize[expectedErrorKey];
 
@@ -86,7 +86,7 @@ public class CreateEventTests
     public async Task Handle_ShouldReturnError_WhenExceptionOccurs()
     {
         // Arrange
-        var request = new CreateEventCommand(new CreateUpdateEventDTO { EventType = "Historical" });
+        var request = new CreateEventCommand(new CreateUpdateEventDto { EventType = "Historical" });
         string expectedErrorKey = "AnErrorOccurredWhileCreatingEvent";
         string expectedException = "Database error";
         string expectedErrorValue = _mockAnErrorOccurredLocalizer[expectedErrorKey, expectedException];

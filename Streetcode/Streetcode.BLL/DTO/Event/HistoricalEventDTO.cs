@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Event
 {
-    public class HistoricalEventDTO : EventDTO
+    public class HistoricalEventDto : EventDto
     {
         public int TimelineItemId { get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace Streetcode.BLL.DTO.Event
 {
-    public class UpdateEventDTO : CreateUpdateEventDTO
+    public class UpdateEventDto : CreateUpdateEventDto
     {
         public int Id { get; set; }
     }

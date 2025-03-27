@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Streetcode.BLL.DTO.Event
 {
-    public class CustomEventDTO : EventDTO
+    public class CustomEventDto : EventDto
     {
         public string DateString { get; set; }
         public string? Location { get; set; }

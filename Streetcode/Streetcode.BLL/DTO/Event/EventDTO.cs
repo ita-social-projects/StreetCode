@@ -3,7 +3,7 @@ using Streetcode.BLL.DTO.Streetcode;
 
 namespace Streetcode.BLL.DTO.Event
 {
-    public class EventDTO
+    public class EventDto
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }

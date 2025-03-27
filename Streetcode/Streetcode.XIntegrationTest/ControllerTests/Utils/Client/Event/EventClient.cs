@@ -15,7 +15,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Event
 
         public async Task<RestResponse> GetByIdAsync(int id) => await this.SendQuery($"/GetById/{id}");
 
-        public async Task<RestResponse> CreateAsync(CreateUpdateEventDTO eventDto, string authToken = "")
+        public async Task<RestResponse> CreateAsync(CreateUpdateEventDto eventDto, string authToken = "")
             => await this.SendCommand($"/Create", Method.Post, eventDto, authToken);
 
         public async Task<RestResponse> DeleteAsync(int id, string authToken = "")

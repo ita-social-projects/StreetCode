@@ -189,6 +189,9 @@
   <data name="CannotFindAnyStreetcodeWithCorrespondingTagId" xml:space="preserve">
     <value>Не вдалося знайти жодний стріткод з відповідним TagId: {0}</value>
   </data>
+  <data name="CannotFindStreetcodeInFavourites" xml:space="preserve">
+    <value>Не вдалося знайти стріткод в улюблених</value>
+  </data>
   <data name="CannotFindAnySubtitleByTheStreetcodeId" xml:space="preserve">
     <value>Не вдалося знайти жодного субтитра за ідентифікатором стріткоду: {0}</value>
   </data>
@@ -320,5 +323,8 @@
   </data>
   <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
     <value>Не вдалося знайти історичний контекст з назвою '{0}'</value>
+  </data>
+  <data name="CannotFindAnyPropertyWithThisName" xml:space="preserve">
+    <value>Не вдалося знайти жодного поля з такою назвою</value>
   </data>
 </root>

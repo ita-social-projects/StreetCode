@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Buffers;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -33,18 +34,13 @@ public class BlobService : IBlobService
 
     public string FindFileInStorageAsBase64(string name)
     {
-        string[] splitedName = name.Split('.');
-
-        byte[] decodedBytes = DecryptFile(splitedName[0], splitedName[1]);
-
-        string base64 = Convert.ToBase64String(decodedBytes);
-
-        return base64;
+        using var stream = FindFileInStorageAsMemoryStream(name);
+        return Convert.ToBase64String(stream.ToArray());
     }
 
     public string SaveFileInStorage(string base64, string name, string extension)
     {
-        byte[] imageBytes = Convert.FromBase64String(base64);
+        byte[] imageBytes = ConvertBase64ToBytes(base64);
         string createdFileName = $"{DateTime.Now}{name}"
             .Replace(" ", "_")
             .Replace(".", "_")
@@ -60,7 +56,7 @@ public class BlobService : IBlobService
 
     public void SaveFileInStorageBase64(string base64, string name, string extension)
     {
-        byte[] imageBytes = Convert.FromBase64String(base64.Trim());
+        byte[] imageBytes = ConvertBase64ToBytes(base64.Trim());
         Directory.CreateDirectory(_blobPath);
         EncryptFile(imageBytes, extension, name);
     }
@@ -90,67 +86,102 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
-    private IEnumerable<string> GetAllBlobNames()
+    private byte[] ConvertBase64ToBytes(string base64)
     {
-        var paths = Directory.EnumerateFiles(_blobPath);
+        int byteCount = (base64.Length * 3) / 4;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(byteCount);
+        try
+        {
+            if (!Convert.TryFromBase64String(base64, buffer, out int bytesWritten))
+            {
+                throw new FormatException("Invalid Base64 string.");
+            }
 
-        return paths.Select(p => Path.GetFileName(p));
+            return buffer[..bytesWritten];
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     private string HashFunction(string createdFileName)
     {
-        using (var hash = SHA256.Create())
-        {
-            Encoding enc = Encoding.UTF8;
-            byte[] result = hash.ComputeHash(enc.GetBytes(createdFileName));
-            return Convert.ToBase64String(result).Replace('/', '_');
-        }
+        using var hash = SHA256.Create();
+        byte[] result = hash.ComputeHash(Encoding.UTF8.GetBytes(createdFileName));
+        return BitConverter.ToString(result).Replace("-", "").ToLower();
     }
 
     private void EncryptFile(byte[] imageBytes, string type, string name)
     {
+        string filePath = Path.Combine(_blobPath, $"{name}.{type}");
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
-        byte[] iv = new byte[16];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(iv);
-        }
+        using var aes = Aes.Create();
+        aes.KeySize = 256;
+        aes.Key = keyBytes;
+        aes.GenerateIV();
 
-        byte[] encryptedBytes;
-        using (Aes aes = Aes.Create())
-        {
-            aes.KeySize = 256;
-            aes.Key = keyBytes;
-            aes.IV = iv;
-            ICryptoTransform encryptor = aes.CreateEncryptor();
-            encryptedBytes = encryptor.TransformFinalBlock(imageBytes, 0, imageBytes.Length);
-        }
+        using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+        fileStream.Write(aes.IV, 0, aes.IV.Length);
 
-        byte[] encryptedData = new byte[encryptedBytes.Length + iv.Length];
-        Buffer.BlockCopy(iv, 0, encryptedData, 0, iv.Length);
-        Buffer.BlockCopy(encryptedBytes, 0, encryptedData, iv.Length, encryptedBytes.Length);
-        File.WriteAllBytes($"{_blobPath}{name}.{type}", encryptedData);
+        using var cryptoStream = new CryptoStream(fileStream, aes.CreateEncryptor(), CryptoStreamMode.Write);
+
+        int bufferSize = 4096;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+
+        try
+        {
+            using var memoryStream = new MemoryStream(imageBytes);
+            int bytesRead;
+            while ((bytesRead = memoryStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                cryptoStream.Write(buffer, 0, bytesRead);
+            }
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     private byte[] DecryptFile(string fileName, string type)
     {
-        byte[] encryptedData = File.ReadAllBytes($"{_blobPath}{fileName}.{type}");
+        string filePath = Path.Combine(_blobPath, $"{fileName}.{type}");
+
+        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
         byte[] keyBytes = Encoding.UTF8.GetBytes(_keyCrypt);
 
         byte[] iv = new byte[16];
-        Buffer.BlockCopy(encryptedData, 0, iv, 0, iv.Length);
-
-        byte[] decryptedBytes;
-        using (Aes aes = Aes.Create())
+        if (fileStream.Read(iv, 0, iv.Length) != iv.Length)
         {
-            aes.KeySize = 256;
-            aes.Key = keyBytes;
-            aes.IV = iv;
-            ICryptoTransform decryptor = aes.CreateDecryptor();
-            decryptedBytes = decryptor.TransformFinalBlock(encryptedData, iv.Length, encryptedData.Length - iv.Length);
+            throw new IOException("Invalid IV length");
         }
 
-        return decryptedBytes;
+        using var aes = Aes.Create();
+        aes.KeySize = 256;
+        aes.Key = keyBytes;
+        aes.IV = iv;
+
+        using var cryptoStream = new CryptoStream(fileStream, aes.CreateDecryptor(), CryptoStreamMode.Read);
+        using var memoryStream = new MemoryStream();
+
+        int bufferSize = 4096;
+        byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+
+        try
+        {
+            int bytesRead;
+            while ((bytesRead = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                memoryStream.Write(buffer, 0, bytesRead);
+            }
+
+            return memoryStream.ToArray();
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 }

@@ -9,7 +9,7 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.News
 {
     [Collection("News")]
-    public class NewsGetAllControllerTests : BaseControllerTests<NewsClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class NewsGetAllControllerTests : BaseControllerTests<NewsClient>
     {
         private DAL.Entities.News.News testNews;
 

@@ -3,8 +3,6 @@ using Moq;
 using Streetcode.BLL.DTO.Authentication.GoogleLogin;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
-using Streetcode.BLL.MediatR.Authentication.LoginGoogle;
-using Streetcode.BLL.Models.Email.Messages.Base;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Enums;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
@@ -18,7 +16,7 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
 {
     [Collection("Authorization")]
-    public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class AuthControllerTests : BaseAuthorizationControllerTests<AuthenticationClient>
     {
         private readonly User _testUser;
         private readonly string _testPassword;

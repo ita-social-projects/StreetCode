@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Streetcode.DAL.Entities.Users;
+﻿using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.Util.Helpers;
 

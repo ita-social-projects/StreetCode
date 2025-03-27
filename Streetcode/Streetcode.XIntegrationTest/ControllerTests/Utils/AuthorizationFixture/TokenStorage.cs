@@ -60,7 +60,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture
             {
                 if (disposing)
                 {
-                    _streetcodeDbContext?.Dispose();
+                    _streetcodeDbContext.Dispose();
                 }
 
                 disposed = true;

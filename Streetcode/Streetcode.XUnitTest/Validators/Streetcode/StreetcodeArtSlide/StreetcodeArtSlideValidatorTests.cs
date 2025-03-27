@@ -10,25 +10,25 @@ namespace Streetcode.XUnitTest.Validators.Streetcode.StreetcodeArtSlide;
 
 public class StreetcodeArtSlideValidatorTests
 {
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly StreetcodeArtSlideValidator validator;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly StreetcodeArtSlideValidator _validator;
 
     public StreetcodeArtSlideValidatorTests()
     {
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.validator = new StreetcodeArtSlideValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _validator = new StreetcodeArtSlideValidator(_mockValidationLocalizer, _mockNamesLocalizer);
     }
 
     [Fact]
     public void ShouldReturnSuccessResult_WhenAllFieldsAreValid()
     {
         // Arrange
-        var slide = this.GetArtSlideDto();
+        var slide = GetArtSlideDto();
 
         // Act
-        var result = this.validator.Validate(slide);
+        var result = _validator.Validate(slide);
 
         // Assert
         Assert.True(result.IsValid);
@@ -38,12 +38,12 @@ public class StreetcodeArtSlideValidatorTests
     public void ShouldReturnError_WhenArtsAreEmpty()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["CannotBeEmpty", this.mockNamesLocalizer["StreetcodeArts"]];
-        var slide = this.GetArtSlideDto();
+        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["StreetcodeArts"]];
+        var slide = GetArtSlideDto();
         slide.StreetcodeArts = new List<StreetcodeArtCreateUpdateDTO>();
 
         // Act
-        var result = this.validator.TestValidate(slide);
+        var result = _validator.TestValidate(slide);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.StreetcodeArts)
@@ -54,19 +54,19 @@ public class StreetcodeArtSlideValidatorTests
     public void ShouldReturnError_WhenTemplateIsInvalid()
     {
         // Arrange
-        var expectedError = this.mockValidationLocalizer["Invalid", this.mockNamesLocalizer["Template"]];
-        var slide = this.GetArtSlideDto();
+        var expectedError = _mockValidationLocalizer["Invalid", _mockNamesLocalizer["Template"]];
+        var slide = GetArtSlideDto();
         slide.Template = (StreetcodeArtSlideTemplate)100;
 
         // Act
-        var result = this.validator.TestValidate(slide);
+        var result = _validator.TestValidate(slide);
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x.Template)
             .WithErrorMessage(expectedError);
     }
 
-    private StreetcodeArtSlideCreateUpdateDTO GetArtSlideDto()
+    private static StreetcodeArtSlideCreateUpdateDTO GetArtSlideDto()
     {
         return new StreetcodeArtSlideCreateUpdateDTO()
         {

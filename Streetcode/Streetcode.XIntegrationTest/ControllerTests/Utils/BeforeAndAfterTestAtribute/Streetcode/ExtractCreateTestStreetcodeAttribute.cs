@@ -20,64 +20,63 @@ using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Xunit.Sdk;
 using static Streetcode.XIntegrationTest.Constants.ControllerTests.StreetcodeConstants;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode
+namespace Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Streetcode;
+
+[AttributeUsage(AttributeTargets.Method, Inherited = false)]
+public class ExtractCreateTestStreetcodeAttribute : BeforeAfterTestAttribute
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ExtractCreateTestStreetcodeAttribute : BeforeAfterTestAttribute
+    public static StreetcodeCreateDTO StreetcodeForTest { get; set; } = null!;
+
+    public override void Before(MethodInfo methodUnderTest)
     {
-        public static StreetcodeCreateDTO StreetcodeForTest { get; set; } = null!;
-
-        public override void Before(MethodInfo methodUnderTest)
+        StreetcodeForTest = new StreetcodeCreateDTO
         {
-            StreetcodeForTest = new StreetcodeCreateDTO
+            Index = STREETCODE_CREATE_INDEX,
+            FirstName = "TestFirstName",
+            LastName = "TestLastName",
+            Title = "TestTitle",
+            DateString = "20 травня 2023",
+            Alias = "TestAlias",
+            TransliterationUrl = Guid.NewGuid().ToString(),
+            ArBlockUrl = "test-arblock-url",
+            StreetcodeType = StreetcodeType.Event,
+            Status = StreetcodeStatus.Published,
+            EventStartOrPersonBirthDate = DateTime.Now,
+            EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
+            ViewCount = 1,
+            Teaser = "Test Teaser",
+            Text = new TextCreateDTO
             {
-                Index = STREETCODE_CREATE_INDEX,
-                FirstName = "TestFirstName",
-                LastName = "TestLastName",
-                Title = "TestTitle",
-                DateString = "20 травня 2023",
-                Alias = "TestAlias",
-                TransliterationUrl = Guid.NewGuid().ToString(),
-                ARBlockURL = "test-arblock-url",
-                StreetcodeType = StreetcodeType.Event,
-                Status = StreetcodeStatus.Published,
-                EventStartOrPersonBirthDate = DateTime.Now,
-                EventEndOrPersonDeathDate = DateTime.Now.AddDays(1),
-                ViewCount = 1,
-                Teaser = "Test Teaser",
-                Text = new TextCreateDTO
-                {
-                    Title = "TestTextTitle",
-                    TextContent = "TestTextContent",
-                    AdditionalText = "TestAdditionalText",
-                },
-                Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
-                ImagesIds = new List<int>(),
-                Tags = new List<StreetcodeTagDTO>(),
-                Subtitles = new List<SubtitleCreateDTO>(),
-                Facts = new List<StreetcodeFactCreateDTO>(),
-                Videos = new List<VideoCreateDTO>(),
-                Partners = new List<int>(),
-                Arts = new List<ArtCreateUpdateDTO>(),
-                StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
-                StatisticRecords = new List<StatisticRecordDTO>(),
-                StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
-                Coordinates = new List<StreetcodeCoordinateDTO>(),
-                ImagesDetails = new List<ImageDetailsDto>(),
-                TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
-                RelatedFigures = new List<RelatedFigureShortDTO>(),
-            };
-        }
+                Title = "TestTextTitle",
+                TextContent = "TestTextContent",
+                AdditionalText = "TestAdditionalText",
+            },
+            Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
+            ImagesIds = new List<int>(),
+            Tags = new List<StreetcodeTagDTO>(),
+            Subtitles = new List<SubtitleCreateDTO>(),
+            Facts = new List<StreetcodeFactCreateDTO>(),
+            Videos = new List<VideoCreateDTO>(),
+            Partners = new List<int>(),
+            Arts = new List<ArtCreateUpdateDTO>(),
+            StreetcodeArtSlides = new List<StreetcodeArtSlideCreateUpdateDTO>(),
+            StatisticRecords = new List<StatisticRecordDTO>(),
+            StreetcodeCategoryContents = new List<CategoryContentCreateDTO>(),
+            Coordinates = new List<StreetcodeCoordinateDTO>(),
+            ImagesDetails = new List<ImageDetailsDto>(),
+            TimelineItems = new List<TimelineItemCreateUpdateDTO>(),
+            RelatedFigures = new List<RelatedFigureShortDTO>(),
+        };
+    }
 
-        public override void After(MethodInfo methodUnderTest)
+    public override void After(MethodInfo methodUnderTest)
+    {
+        var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
+        var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>(p => p.Index == StreetcodeForTest.Index);
+        if (streetcodeContent != null)
         {
-            var sqlDbHelper = BaseControllerTests.GetSqlDbHelper();
-            var streetcodeContent = sqlDbHelper.GetExistItem<StreetcodeContent>(p => p.Index == StreetcodeForTest.Index);
-            if (streetcodeContent != null)
-            {
-                sqlDbHelper.DeleteItem(streetcodeContent);
-                sqlDbHelper.SaveChanges();
-            }
+            sqlDbHelper.DeleteItem(streetcodeContent);
+            sqlDbHelper.SaveChanges();
         }
     }
 }

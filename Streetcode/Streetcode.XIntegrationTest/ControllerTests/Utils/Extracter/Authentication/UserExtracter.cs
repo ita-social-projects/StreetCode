@@ -6,7 +6,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
 {
     public class UserExtracter
     {
-        public static (User user, string password) Extract(string userId, string userName, string password, params string[] roleNames)
+        public static (User user, string password) Extract(string userId, string userName, string password, bool isEmailConfirmed, params string[] roleNames)
         {
             User testUser = TestDataProvider.GetTestData<User>();
             testUser.Id = userId;
@@ -15,6 +15,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Authentica
             testUser.PasswordHash = HashPassword(password, testUser);
             testUser.Email += RemoveIncorrectSymbolsFromEmail(userId);
             testUser.NormalizedEmail += RemoveIncorrectSymbolsFromEmail(userId);
+            testUser.EmailConfirmed = isEmailConfirmed;
             BaseExtracter.Extract<User>(testUser, user => user.Id == userId, false);
             if (roleNames.Length == 0)
             {

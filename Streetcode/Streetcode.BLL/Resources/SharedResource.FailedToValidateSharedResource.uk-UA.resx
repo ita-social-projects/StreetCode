@@ -206,6 +206,7 @@
   </data>
   <data name="InvalidToken" xml:space="preserve">
     <value>Некоректний токен</value>
+	</data>
   <data name="InvalidPaginationParameters" xml:space="preserve">
     <value>Параметри пагінації повинні бути коректними</value>
   </data>

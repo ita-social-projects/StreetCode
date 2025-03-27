@@ -1,14 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Streetcode.BLL.DTO.Authentication.ConfirmEmail;
 using Streetcode.BLL.DTO.Authentication.GoogleLogin;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Authentication.RefreshToken;
 using Streetcode.BLL.DTO.Authentication.Register;
+using Streetcode.BLL.DTO.Authentication.ValidateToken;
+using Streetcode.BLL.MediatR.Authentication.ConfirmEmail;
 using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.BLL.MediatR.Authentication.LoginGoogle;
 using Streetcode.BLL.MediatR.Authentication.Logout;
 using Streetcode.BLL.MediatR.Authentication.RefreshToken;
 using Streetcode.BLL.MediatR.Authentication.Register;
+using Streetcode.BLL.MediatR.Authentication.ValidateToken;
 
 namespace Streetcode.WebApi.Controllers.Authentication
 {
@@ -63,6 +67,18 @@ namespace Streetcode.WebApi.Controllers.Authentication
             }
 
             return Unauthorized(new { message = result.Errors.FirstOrDefault()?.Message });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
+        {
+            return HandleResult(await Mediator.Send(new ConfirmEmailCommand(confirmEmailDto)));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ValidateToken(ValidateTokenDto confirmEmailDto)
+        {
+            return HandleResult(await Mediator.Send(new ValidateTokenCommand(confirmEmailDto)));
         }
     }
 }

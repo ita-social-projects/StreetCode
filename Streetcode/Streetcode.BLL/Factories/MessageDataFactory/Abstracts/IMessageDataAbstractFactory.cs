@@ -6,4 +6,5 @@ public interface IMessageDataAbstractFactory
 {
     MessageData CreateFeedbackMessageData(string from, string source, string content);
     MessageData CreateForgotPasswordMessageData(string[] to, string token, string username, string currentDomain);
+    MessageData CreateConfirmEmailMessageData(string[] to, string token, string username, string currentDomain);
 }

@@ -38,4 +38,16 @@ public class MessageDataConcreteFactory : IMessageDataAbstractFactory
             CurrentDomain = currentDomain
         };
     }
+
+    public MessageData CreateConfirmEmailMessageData(string[] to, string token, string username, string currentDomain)
+    {
+        return new ConfirmEmailMessageData()
+        {
+            From = _configuration.From,
+            To = to,
+            Token = token,
+            Username = username,
+            CurrentDomain = currentDomain
+        };
+    }
 }

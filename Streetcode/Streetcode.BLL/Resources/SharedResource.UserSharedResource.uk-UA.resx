@@ -144,4 +144,7 @@
   <data name="UserNameOrTokenIsEmpty" xml:space="preserve">
     <value>Ім'я користувача або токен пустий</value>
   </data>
+  <data name="EmailNotConfirmed" xml:space="preserve">
+    <value>Електронна адреса не підтверджена. Ми повторно надіслали вам електронну адресу</value>
+  </data>
 </root>

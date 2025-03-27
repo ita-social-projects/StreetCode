@@ -38,6 +38,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "MustContainAtMostOneAlt2",
                     "ImageSizeExceeded",
                     "MustContainAtMostThreeExpertises",
+                    "CannotFindAnyTermWithCorrespondingId",
                 }
             },
             {

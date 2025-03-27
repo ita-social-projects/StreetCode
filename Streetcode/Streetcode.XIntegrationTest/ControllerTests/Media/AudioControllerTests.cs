@@ -133,6 +133,38 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
+        [Fact]
+        [ExtractTestAudio]
+        public async Task Update_IncorrectId_ReturnBadRequest()
+        {
+            var audioUpdateDto = ExtractTestAudioAttribute.AudioUpdateDtoForTest;
+            audioUpdateDto.Id = -1;
+
+            var response = await Client.UpdateAudio(audioUpdateDto, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnSuccessStatusCode()
+        {
+            int existentId = testAudio.Id;
+
+            var response = await Client.DeleteAudio(existentId, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_IncorrectId_ReturnBadRequest()
+        {
+            int nonExistentId = -1;
+
+            var response = await Client.DeleteAudio(nonExistentId, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -25,5 +25,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media
         {
             return await SendCommand("/update", Method.Put, audioUpdateDto, authToken);
         }
+
+        public async Task<RestResponse> DeleteAudio(int id, string authToken = "")
+        {
+            return await SendCommand($"/delete/{id}", Method.Delete, authToken);
+        }
     }
 }

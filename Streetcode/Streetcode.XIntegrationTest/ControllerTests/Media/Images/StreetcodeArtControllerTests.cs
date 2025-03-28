@@ -1,4 +1,5 @@
-﻿using Streetcode.BLL.DTO.Media.Art;
+﻿using System.Net;
+using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.Base;
@@ -51,6 +52,18 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        [Fact]
+        public async Task GetPageByStreetcodeId_ReturnSuccessStatusCode()
+        {
+            uint validStreetcodeId = (uint)testStreetcodeContent.Id;
+            ushort validPage = 1;
+            ushort validPageSize = 5;
+
+            var response = await Client.GetPageByStreetcodeId(validStreetcodeId, validPage, validPageSize);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         protected override void Dispose(bool disposing)

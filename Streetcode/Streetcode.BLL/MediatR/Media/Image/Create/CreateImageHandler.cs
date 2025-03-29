@@ -42,46 +42,29 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
         ulong imageHash = _imageComparatorService.SetImageHash(request.Image.BaseFormat);
+
         var existingImage = await TryFindExistingImage(imageHash);
 
         if (existingImage != null)
         {
-            var existingImageDto = _mapper.Map<ImageDTO>(existingImage);
-
-            existingImageDto.Base64 = _blobService.FindFileInStorageAsBase64(existingImageDto.BlobName);
-            existingImageDto.ImageHash = imageHash;
-
+            var existingImageDto = MakeImageDto(existingImage);
             return Result.Ok(existingImageDto);
         }
 
-        string hashBlobStorageName = _blobService.SaveFileInStorage(
-            request.Image.BaseFormat,
-            request.Image.Title,
-            request.Image.Extension);
+        var newImage = MakeNewImage(request.Image, imageHash);
 
-        var image = _mapper.Map<DAL.Entities.Media.Images.Image>(request.Image);
-
-        image.BlobName = $"{hashBlobStorageName}.{request.Image.Extension}";
-        image.ImageHash = imageHash;
-
-        await _repositoryWrapper.ImageRepository.CreateAsync(image);
+        await _repositoryWrapper.ImageRepository.CreateAsync(newImage);
         var resultIsSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
-
-        var createdImage = _mapper.Map<ImageDTO>(image);
-
-        createdImage.Base64 = _blobService.FindFileInStorageAsBase64(createdImage.BlobName);
-        createdImage.ImageHash = imageHash;
 
         if(resultIsSuccess)
         {
+            var createdImage = MakeImageDto(newImage);
             return Result.Ok(createdImage);
         }
-        else
-        {
-            string errorMsg = _stringLocalizer["FailedToCreateAnImage"].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
-        }
+
+        string errorMsg = _stringLocalizer["FailedToCreateAnImage"].Value;
+        _logger.LogError(request, errorMsg);
+        return Result.Fail(new Error(errorMsg));
     }
 
     private async Task<DAL.Entities.Media.Images.Image?> TryFindExistingImage(ulong imageHash)
@@ -97,5 +80,30 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         }
 
         return null;
+    }
+
+    private ImageDTO MakeImageDto(DAL.Entities.Media.Images.Image image)
+    {
+        var imageDto = _mapper.Map<ImageDTO>(image);
+
+        imageDto.Base64 = _blobService.FindFileInStorageAsBase64(imageDto.BlobName);
+        imageDto.ImageHash = image.ImageHash;
+
+        return imageDto;
+    }
+
+    private DAL.Entities.Media.Images.Image MakeNewImage(ImageFileBaseCreateDTO imageCreateDto, ulong imageHash)
+    {
+        string hashBlobStorageName = _blobService.SaveFileInStorage(
+            imageCreateDto.BaseFormat,
+            imageCreateDto.Title,
+            imageCreateDto.Extension);
+
+        var image = _mapper.Map<DAL.Entities.Media.Images.Image>(imageCreateDto);
+
+        image.BlobName = $"{hashBlobStorageName}.{imageCreateDto.Extension}";
+        image.ImageHash = imageHash;
+
+        return image;
     }
 }

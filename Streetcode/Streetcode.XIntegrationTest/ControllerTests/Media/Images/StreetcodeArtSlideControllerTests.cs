@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Streetcode;
@@ -14,12 +14,12 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     [Collection("StreetcodeArt")]
-    public class StreetcodeArtControllerTests : BaseControllerTests<StreetcodeArtClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class StreetcodeArtSlideControllerTests: BaseControllerTests<StreetcodeArtSlideClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Art testArt;
         private readonly StreetcodeContent testStreetcodeContent;
 
-        public StreetcodeArtControllerTests(CustomWebApplicationFactory<Program> factory)
+        public StreetcodeArtSlideControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/StreetcodeArt")
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
@@ -32,40 +32,56 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         }
 
         [Fact]
-        public async Task GetByStreetcodeId_ReturnSuccessStatusCode()
+        public async Task GetPageByStreetcodeId_ReturnSuccessStatusCode()
         {
-            ArtExtracter.AddStreetcodeArt(this.testStreetcodeContent.Id, this.testArt.Id);
-            int streetcodeId = this.testStreetcodeContent.Id;
-            var response = await this.Client.GetByStreetcodeId(streetcodeId);
-            var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<StreetcodeArtDTO>>(response.Content);
+            int StreetCodeId = (int)testStreetcodeContent.Id;
 
-            Assert.True(response.IsSuccessStatusCode);
-            Assert.NotNull(returnedValue);
+            ushort fromSlide = 1;
+            ushort AmountOfSlides = 2;
+            
+            var response = await Client.GetPageByStreetcodeId(StreetCodeId, fromSlide, AmountOfSlides);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task GetByStreetcodeId_Incorrect_ReturnBadRequest()
+        
+        public async Task GetPageByStreetcodeId_WithInvalidData_ReturnsBadRequest()
         {
-            int streetcodeId = -100;
-            var response = await this.Client.GetByStreetcodeId(streetcodeId);
-
+            int StreetCodeId = -1;
+            ushort fromSlide = (ushort?)ushort.MaxValue ?? 0;
+            ushort AmountOfSlides = (ushort?)ushort.MaxValue ?? 0;
+            
+            var response = await Client.GetPageByStreetcodeId(StreetCodeId, fromSlide, AmountOfSlides);
+            
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
         }
 
         [Fact]
-        public async Task GetPageByStreetcodeId_ReturnSuccessStatusCode()
+        public async Task GetAllCountByStreetcodeId_ReturnSuccessStatusCode()
         {
-            uint validStreetcodeId = (uint)testStreetcodeContent.Id;
-            ushort validPage = 1;
-            ushort validPageSize = 5;
+            uint streetCodeId = (uint)testStreetcodeContent.Id; 
 
-            var response = await Client.GetPageByStreetcodeId(validStreetcodeId, validPage, validPageSize);
+            var response = await Client.GetAllCountByStreetcodeId(streetCodeId);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
         }
 
+        
+        [Fact]
+        public async Task GetAllCountByStreetcodeId_ReturnBadRequestStatusCode()
+        {
+            uint streetCodeId = 0;  
+
+            var response = await Client.GetAllCountByStreetcodeId(streetCodeId);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -76,5 +92,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             base.Dispose(disposing);
         }
+    
     }
+    
 }

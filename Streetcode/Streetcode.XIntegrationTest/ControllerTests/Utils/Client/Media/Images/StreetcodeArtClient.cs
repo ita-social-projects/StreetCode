@@ -14,5 +14,10 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media.Images
         {
             return await this.SendQuery($"/GetByStreetcodeId/{id}", authToken);
         }
+
+        public async Task<RestResponse> GetPageByStreetcodeId(uint streetcodeId, ushort page, ushort pageSize, string authToken = "")
+        {
+            return await this.SendQuery($"/GetPageByStreetcodeId/{streetcodeId}?page={page}&pageSize={pageSize}", authToken);
+        }
     }
 }

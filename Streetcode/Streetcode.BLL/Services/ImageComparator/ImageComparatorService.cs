@@ -7,13 +7,8 @@ namespace Streetcode.BLL.Services.ImageComparator;
 
 public class ImageComparatorService : IImageComparatorService
 {
-    public bool CompareImages(string? img1Base64, string? img2Base64, int acceptedHammingDistance = 5)
-    {
-        ulong hash1 = SetImageHash(img1Base64);
-        ulong hash2 = SetImageHash(img2Base64);
-
-        return hash1 == hash2;
-    }
+    private const int FixedWidth = 9;
+    private const int FixedHeight = 8;
 
     public ulong SetImageHash(string? imgBase64)
     {
@@ -25,43 +20,41 @@ public class ImageComparatorService : IImageComparatorService
         byte[] imageBytes = Convert.FromBase64String(imgBase64);
         using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
 
-        image.Mutate(x => x.Resize(8, 8));
+        image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
         byte[] grayscaledImage = GrayscaleImage(image);
-        int averageValue = (int)grayscaledImage.Average(x => x);
 
-        return GenerateHash(grayscaledImage, averageValue);
+        return GenerateHash(grayscaledImage);
     }
 
-    private int CalculateHammingDistance(ulong hash1, ulong hash2)
+    private byte[] GrayscaleImage(Image<Rgba32> imagePixels)
     {
-        ulong res = hash1 ^ hash2;
-        return Convert.ToString((long)res, 2).Count(c => c == '1');
-    }
-
-    private byte[] GrayscaleImage(Image<Rgba32> imagePixels, int size = 8)
-    {
-        byte[] result = new byte[size * size];
-        for (int i = 0; i < size; i++)
+        byte[] result = new byte[FixedWidth * FixedHeight];
+        for (int y = 0; y < FixedHeight; y++)
         {
-            for (int j = 0; j < size; j++)
+            for (int x = 0; x < FixedWidth; x++)
             {
-                int step = size * i;
-                result[step + j] = (byte)((imagePixels[j, i].R + imagePixels[j, i].G + imagePixels[j, i].B) / 3);
+                int step = 9 * y;
+                result[step + x] = (byte)((imagePixels[x, y].R + imagePixels[x, y].G + imagePixels[x, y].B) / 3);
             }
         }
 
         return result;
     }
 
-    private ulong GenerateHash(byte[] pixels, int averageGrayscaleValue)
+    private ulong GenerateHash(byte[] pixels)
     {
         ulong hash = 0;
 
-        for (int i = 0; i < pixels.Length; i++)
+        for (int y = 0; y < FixedHeight; y++)
         {
-            if (pixels[i] > averageGrayscaleValue)
+            for (int x = 0; x < FixedWidth - 1; x++)
             {
-                hash |= 1ul << i;
+                int step = 9 * y;
+
+                if (pixels[x + step] > pixels[x + step + 1])
+                {
+                    hash |= 1ul << (x + (8 * y));
+                }
             }
         }
 

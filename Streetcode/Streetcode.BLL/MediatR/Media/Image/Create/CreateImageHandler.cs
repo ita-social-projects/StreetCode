@@ -19,7 +19,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<FailedToCreateSharedResource> _stringLocalizer;
     private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannot;
-    private readonly IImageComparatorService _imageComparatorService;
+    private readonly IImageHashGeneratorService _imageHashGeneratorService;
 
     public CreateImageHandler(
         IBlobService blobService,
@@ -28,7 +28,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         IMapper mapper,
         IStringLocalizer<FailedToCreateSharedResource> stringLocalizer,
         IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannot,
-        IImageComparatorService imageComparatorService)
+        IImageHashGeneratorService imageHashGeneratorService)
     {
         _blobService = blobService;
         _repositoryWrapper = repositoryWrapper;
@@ -36,12 +36,12 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
         _logger = logger;
         _stringLocalizer = stringLocalizer;
         _stringLocalizerCannot = stringLocalizerCannot;
-        _imageComparatorService = imageComparatorService;
+        _imageHashGeneratorService = imageHashGeneratorService;
     }
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
-        ulong imageHash = _imageComparatorService.SetImageHash(request.Image.BaseFormat);
+        ulong imageHash = _imageHashGeneratorService.SetImageHash(request.Image.BaseFormat);
 
         var existingImage = await TryFindExistingImage(imageHash);
 

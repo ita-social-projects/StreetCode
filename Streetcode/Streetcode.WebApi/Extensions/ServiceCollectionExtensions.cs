@@ -68,7 +68,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IImageService, ImageService>();
-        services.AddScoped<IImageComparatorService, ImageComparatorService>();
+        services.AddScoped<IImageHashGeneratorService, ImageHashGeneratorService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICaptchaService, CaptchaService>();
         services.AddScoped<IGoogleService, GoogleService>();

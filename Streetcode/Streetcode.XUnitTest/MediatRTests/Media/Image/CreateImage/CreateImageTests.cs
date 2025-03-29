@@ -20,7 +20,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
         private readonly Mock<IBlobService> _mockBlobService;
         private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
-        private readonly Mock<IImageComparatorService> _mockImageComparatorService; 
+        private readonly Mock<IImageHashGeneratorService> _mockImageComparatorService; 
 
         public CreateImageTests()
         {
@@ -30,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             _mockBlobService = new Mock<IBlobService>();
             _mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
             _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            _mockImageComparatorService = new Mock<IImageComparatorService>();
+            _mockImageComparatorService = new Mock<IImageHashGeneratorService>();
         }
 
         [Fact]

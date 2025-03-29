@@ -5,7 +5,7 @@ using Streetcode.BLL.Interfaces.ImageComparator;
 
 namespace Streetcode.BLL.Services.ImageComparator;
 
-public class ImageComparatorService : IImageComparatorService
+public class ImageHashGeneratorService : IImageHashGeneratorService
 {
     private const int FixedWidth = 9;
     private const int FixedHeight = 8;

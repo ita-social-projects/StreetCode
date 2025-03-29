@@ -1,6 +1,6 @@
 namespace Streetcode.BLL.Interfaces.ImageComparator;
 
-public interface IImageComparatorService
+public interface IImageHashGeneratorService
 {
     ulong SetImageHash(string? imgBase64);
 }

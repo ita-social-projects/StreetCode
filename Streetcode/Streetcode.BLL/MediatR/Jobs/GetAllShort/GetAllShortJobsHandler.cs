@@ -7,7 +7,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
 {
-    internal class GetAllShortJobsHandler
+    public class GetAllShortJobsHandler
 		: IRequestHandler<GetAllShortJobsQuery, Result<IEnumerable<JobShortDto>>>
 	{
 		private readonly IRepositoryWrapper _repositoryWrapper;

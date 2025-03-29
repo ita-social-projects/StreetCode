@@ -1,27 +1,21 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using Streetcode.BLL.Interfaces.ImageComparator;
 
 namespace Streetcode.BLL.Services.ImageComparator;
 
 public class ImageComparatorService : IImageComparatorService
 {
-    public bool CompareImages(string? img1Base64, string? img2Base64, int acceptedHammingDistance = 10)
+    public bool CompareImages(string? img1Base64, string? img2Base64, int acceptedHammingDistance = 5)
     {
-        ulong hash1 = GetImageHash(img1Base64);
-        ulong hash2 = GetImageHash(img2Base64);
-        int hammingDistance = CalculateHammingDistance(hash1, hash2);
+        ulong hash1 = SetImageHash(img1Base64);
+        ulong hash2 = SetImageHash(img2Base64);
 
-        return hammingDistance <= acceptedHammingDistance;
+        return hash1 == hash2;
     }
 
-    private int CalculateHammingDistance(ulong hash1, ulong hash2)
-    {
-        ulong res = hash1 ^ hash2;
-        return Convert.ToString((long)res, 2).Count(c => c == '1');
-    }
-
-    private ulong GetImageHash(string? imgBase64)
+    public ulong SetImageHash(string? imgBase64)
     {
         if (string.IsNullOrEmpty(imgBase64))
         {
@@ -31,10 +25,17 @@ public class ImageComparatorService : IImageComparatorService
         byte[] imageBytes = Convert.FromBase64String(imgBase64);
         using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
 
+        image.Mutate(x => x.Resize(8, 8));
         byte[] grayscaledImage = GrayscaleImage(image);
         int averageValue = (int)grayscaledImage.Average(x => x);
 
         return GenerateHash(grayscaledImage, averageValue);
+    }
+
+    private int CalculateHammingDistance(ulong hash1, ulong hash2)
+    {
+        ulong res = hash1 ^ hash2;
+        return Convert.ToString((long)res, 2).Count(c => c == '1');
     }
 
     private byte[] GrayscaleImage(Image<Rgba32> imagePixels, int size = 8)

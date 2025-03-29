@@ -10,7 +10,7 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
     private const int FixedWidth = 9;
     private const int FixedHeight = 8;
 
-    public ulong SetImageHash(string? imgBase64)
+    public ulong GenerateImageHash(string? imgBase64)
     {
         if (string.IsNullOrEmpty(imgBase64))
         {

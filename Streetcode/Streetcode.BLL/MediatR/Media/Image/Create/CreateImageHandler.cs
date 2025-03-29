@@ -41,7 +41,7 @@ public class CreateImageHandler : IRequestHandler<CreateImageCommand, Result<Ima
 
     public async Task<Result<ImageDTO>> Handle(CreateImageCommand request, CancellationToken cancellationToken)
     {
-        ulong imageHash = _imageHashGeneratorService.SetImageHash(request.Image.BaseFormat);
+        ulong imageHash = _imageHashGeneratorService.GenerateImageHash(request.Image.BaseFormat);
 
         var existingImage = await TryFindExistingImage(imageHash);
 

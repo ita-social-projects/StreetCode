@@ -21,43 +21,44 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
         using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
 
         image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
-        byte[] grayscaledImage = GrayscaleImage(image);
 
-        return GenerateHash(grayscaledImage);
+        return GenerateHash(image);
     }
 
-    private byte[] GrayscaleImage(Image<Rgba32> imagePixels)
+    private ulong GenerateHash(Image<Rgba32> image)
     {
-        byte[] result = new byte[FixedWidth * FixedHeight];
-        for (int y = 0; y < FixedHeight; y++)
-        {
-            for (int x = 0; x < FixedWidth; x++)
-            {
-                int step = 9 * y;
-                result[step + x] = (byte)((imagePixels[x, y].R + imagePixels[x, y].G + imagePixels[x, y].B) / 3);
-            }
-        }
-
-        return result;
-    }
-
-    private ulong GenerateHash(byte[] pixels)
-    {
-        ulong hash = 0;
+        ulong rHash = 0;
+        ulong gHash = 0;
+        ulong bHash = 0;
 
         for (int y = 0; y < FixedHeight; y++)
         {
             for (int x = 0; x < FixedWidth - 1; x++)
             {
-                int step = 9 * y;
-
-                if (pixels[x + step] > pixels[x + step + 1])
+                if (image[x, y].R > image[x + 1, y].R)
                 {
-                    hash |= 1ul << (x + (8 * y));
+                    rHash |= 1ul << (x + (8 * y));
+                }
+
+                if (image[x, y].G > image[x + 1, y].G)
+                {
+                    gHash |= 1ul << (x + (8 * y));
+                }
+
+                if (image[x, y].B > image[x + 1, y].B)
+                {
+                    bHash |= 1ul << (x + (8 * y));
                 }
             }
         }
 
-        return hash;
+        ulong resultHash = rHash ^ RotateHashLeft(gHash, 21) ^ RotateHashLeft(bHash, 42);
+
+        return resultHash;
+    }
+
+    private ulong RotateHashLeft(ulong hashToRotate, int shift)
+    {
+        return (hashToRotate << shift) | (hashToRotate >> (64 - shift));
     }
 }

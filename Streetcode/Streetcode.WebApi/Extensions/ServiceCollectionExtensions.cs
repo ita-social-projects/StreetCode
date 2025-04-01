@@ -41,6 +41,8 @@ using Streetcode.BLL.Validators.SourceLinkCategory;
 using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.BLL.Services.Email;
+using Streetcode.WebApi.Utils.TokenProviders.EmailConfirmation;
+using Streetcode.WebApi.Utils.TokenProviders.ResetPassword;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -98,10 +100,26 @@ public static class ServiceCollectionExtensions
             });
         });
 
-        services.AddIdentity<User, IdentityRole>()
+        services.AddIdentity<User, IdentityRole>(options =>
+            {
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+                options.Tokens.PasswordResetTokenProvider = "CustomResetPassword";
+            })
             .AddEntityFrameworkStores<StreetcodeDbContext>()
             .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !)
+            .AddTokenProvider<CustomEmailConfirmationTokenProvider<User>>("CustomEmailConfirmation")
+            .AddTokenProvider<CustomPasswordResetTokenProvider<User>>("CustomResetPassword")
             .AddDefaultTokenProviders();
+
+        services.Configure<CustomEmailConfirmationTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromMinutes(15);
+        });
+
+        services.Configure<CustomPasswordResetTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromMinutes(15);
+        });
 
         services.Configure<IdentityOptions>(options =>
         {

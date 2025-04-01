@@ -2,13 +2,17 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Authentication.Login;
 using Streetcode.BLL.DTO.Users;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Interfaces.Authentication;
+using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 
 namespace Streetcode.BLL.MediatR.Authentication.Login
@@ -21,6 +25,9 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         private readonly UserManager<User> _userManager;
         private readonly IStringLocalizer<UserSharedResource> _localizer;
         private readonly ICaptchaService _captchaService;
+        private readonly IEmailService _emailService;
+        private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public LoginHandler(
             IMapper mapper,
@@ -28,7 +35,10 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
             ILoggerService logger,
             UserManager<User> userManager,
             ICaptchaService captchaService,
-            IStringLocalizer<UserSharedResource> localizer)
+            IStringLocalizer<UserSharedResource> localizer,
+            IEmailService emailService,
+            IMessageDataAbstractFactory messageDataAbstractFactory,
+            IHttpContextAccessor httpContextAccessor)
         {
             _mapper = mapper;
             _tokenService = tokenService;
@@ -36,6 +46,9 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
             _userManager = userManager;
             _captchaService = captchaService;
             _localizer = localizer;
+            _messageDataAbstractFactory = messageDataAbstractFactory;
+            _httpContextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
 
         public async Task<Result<LoginResponseDTO>> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -51,34 +64,60 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                 }
 
                 var user = await _userManager.FindByEmailAsync(request.UserLogin.Login);
-                bool isUserNull = user is null;
-
-                bool isValid = isUserNull ? false : await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);
-                if (isValid)
+                if (user is null)
                 {
-                    string refreshToken = _tokenService.SetNewRefreshTokenForUser(user!);
-
-                    var token = await _tokenService.GenerateAccessTokenAsync(user!);
-                    var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-                    var userDTO = _mapper.Map<UserDTO>(user);
-                    string? userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
-                    userDTO.Role = userRole ?? "User";
-
-                    var response = new LoginResponseDTO()
-                    {
-                        User = userDTO,
-                        AccessToken = stringToken,
-                        RefreshToken = refreshToken,
-                    };
-                    return Result.Ok(response);
+                    var errorMessage = _localizer["UserWithSuchEmailNotFound"];
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(errorMessage);
                 }
 
-                string errorMessage = isUserNull ?
-                    _localizer["UserWithSuchEmailNotFound"] :
-                    _localizer["IncorrectPassword"];
-                _logger.LogError(request, errorMessage);
-                return Result.Fail(errorMessage);
+                bool isPasswordValid = await _userManager.CheckPasswordAsync(user!, request.UserLogin.Password);
+                if (!isPasswordValid)
+                {
+                    var errorMessage = _localizer["IncorrectPassword"];
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(errorMessage);
+                }
+
+                var isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+                if (!isEmailConfirmed)
+                {
+                    var emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    var currentDomain = HttpContextHelper.GetCurrentDomain(_httpContextAccessor) !;
+
+                    var escapedToken = Uri.EscapeDataString(emailToken);
+                    var escapedUsername = Uri.EscapeDataString(user.UserName);
+
+                    var messageData = _messageDataAbstractFactory.CreateConfirmEmailMessageData(
+                        new[] { user.Email! },
+                        escapedToken,
+                        escapedUsername,
+                        currentDomain);
+
+                    await _emailService.SendEmailAsync(messageData);
+
+                    var errorMessage = _localizer["EmailNotConfirmed"];
+                    _logger.LogError(request, errorMessage);
+                    return Result.Fail(errorMessage);
+                }
+
+                string refreshToken = _tokenService.SetNewRefreshTokenForUser(user!);
+
+                var token = await _tokenService.GenerateAccessTokenAsync(user!);
+                var stringToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                var userDTO = _mapper.Map<UserDTO>(user);
+                string? userRole = (await _userManager.GetRolesAsync(user !)).FirstOrDefault();
+                userDTO.Role = userRole ?? "User";
+
+                var response = new LoginResponseDTO()
+                {
+                    User = userDTO,
+                    AccessToken = stringToken,
+                    RefreshToken = refreshToken,
+                };
+                return Result.Ok(response);
             }
             catch (Exception e)
             {

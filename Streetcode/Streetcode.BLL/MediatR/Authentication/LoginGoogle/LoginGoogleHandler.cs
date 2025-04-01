@@ -50,7 +50,8 @@ public class LoginGoogleHandler : IRequestHandler<LoginGoogleQuery, Result<Login
                 {
                     Email = payload.Email,
                     Name = payload.GivenName,
-                    Surname = payload.FamilyName
+                    Surname = payload.FamilyName,
+                    EmailConfirmed = true
                 };
 
                 var uniqueUserName = UserHelper.EmailToUserNameConverter(user);

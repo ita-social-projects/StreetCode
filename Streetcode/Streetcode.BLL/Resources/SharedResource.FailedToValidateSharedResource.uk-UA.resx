@@ -204,6 +204,9 @@
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>Розмір картинки не може перевищувати {0} MB</value>
   </data>
+  <data name="InvalidToken" xml:space="preserve">
+    <value>Некоректний токен</value>
+	</data>
   <data name="InvalidPaginationParameters" xml:space="preserve">
     <value>Параметри пагінації повинні бути коректними</value>
   </data>

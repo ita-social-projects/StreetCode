@@ -47,6 +47,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
             userId: Guid.NewGuid().ToString(),
             userName: Guid.NewGuid().ToString(),
             password: GenerateTestPassword(),
+            isEmailConfirmed: true,
             nameof(UserRole.User),
             nameof(UserRole.Admin));
     }

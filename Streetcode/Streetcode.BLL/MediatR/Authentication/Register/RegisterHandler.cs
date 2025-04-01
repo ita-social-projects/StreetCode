@@ -1,9 +1,13 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using Newtonsoft.Json.Linq;
 using Streetcode.BLL.DTO.Authentication.Register;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Util.Helpers;
@@ -20,14 +24,28 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
         private readonly IRepositoryWrapper _repositoryWrapper;
         private readonly UserManager<User> _userManager;
         private readonly IStringLocalizer<UserSharedResource> _localizer;
+        private readonly IEmailService _emailService;
+        private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RegisterHandler(IRepositoryWrapper repositoryWrapper, ILoggerService logger, IMapper mapper, UserManager<User> userManager, IStringLocalizer<UserSharedResource> localizer)
+        public RegisterHandler(
+            IRepositoryWrapper repositoryWrapper,
+            ILoggerService logger,
+            IMapper mapper,
+            UserManager<User> userManager,
+            IStringLocalizer<UserSharedResource> localizer,
+            IEmailService emailService,
+            IMessageDataAbstractFactory messageDataAbstractFactory,
+            IHttpContextAccessor httpContextAccessor)
         {
             _repositoryWrapper = repositoryWrapper;
             _logger = logger;
             _mapper = mapper;
             _userManager = userManager;
             _localizer = localizer;
+            _emailService = emailService;
+            _messageDataAbstractFactory = messageDataAbstractFactory;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Result<RegisterResponseDTO>> Handle(RegisterQuery request, CancellationToken cancellationToken)
@@ -47,6 +65,21 @@ namespace Streetcode.BLL.MediatR.Authentication.Register
             {
                 return Result.Fail(registerResponse.Errors);
             }
+
+            var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var currentDomain = HttpContextHelper.GetCurrentDomain(_httpContextAccessor);
+
+            var endcodedToken = Uri.EscapeDataString(emailConfirmationToken);
+            var encodedUserName = Uri.EscapeDataString(user.UserName);
+
+            var emailConfrimationMessageData = _messageDataAbstractFactory.CreateConfirmEmailMessageData(
+                new string[] { request.registerRequestDTO.Email },
+                endcodedToken,
+                encodedUserName,
+                currentDomain);
+
+            await _emailService.SendEmailAsync(emailConfrimationMessageData);
 
             var responseDTO = _mapper.Map<RegisterResponseDTO>(user);
             responseDTO.Password = password;

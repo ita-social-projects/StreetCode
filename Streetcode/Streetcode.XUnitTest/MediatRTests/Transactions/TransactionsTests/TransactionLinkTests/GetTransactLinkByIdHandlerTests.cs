@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Transactions.TransactionLink.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Transactions;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -41,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             var handler = new GetTransactLinkByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTransactLinkByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -76,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             var handler = new GetTransactLinkByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTransactLinkByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -96,7 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Transactions.TransactionsTests.Trans
             var handler = new GetTransactLinkByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetTransactLinkByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTransactLinkByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

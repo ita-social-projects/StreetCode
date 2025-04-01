@@ -13,14 +13,14 @@ public class ArtController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDTO>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllArtsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllArtsQuery(GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArtDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-            return HandleResult(await Mediator.Send(new GetArtByIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetArtByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -28,6 +28,6 @@ public class ArtController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ArtDTO>))]
     public async Task<IActionResult> GetArtsByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetArtsByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 }

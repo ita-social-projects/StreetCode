@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +7,8 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -31,10 +32,14 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 
         public Task<Result<GetAllCategoriesResponseDTO>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationtoken)
         {
+            Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sl => sl.Streetcodes);
+
             PaginationResponse<DAL.Entities.Sources.SourceLinkCategory> paginationResponse = _repositoryWrapper.SourceCategoryRepository
                 .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
+                    request.Page,
+                    request.PageSize,
+                    predicate: predicate,
                     include: cat => cat.Include(img => img.Image) !,
                     descendingSortKeySelector: cat => cat.Title!);
 

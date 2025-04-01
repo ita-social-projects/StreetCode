@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -30,7 +32,10 @@ public class GetFactByIdHandler : IRequestHandler<GetFactByIdQuery, Result<FactD
 
     public async Task<Result<FactDto>> Handle(GetFactByIdQuery request, CancellationToken cancellationToken)
     {
-        var facts = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
+        Expression<Func<DAL.Entities.Streetcode.TextContent.Fact, bool>>? basePredicate = f => f.Id == request.Id;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, f => f.Streetcode);
+
+        var facts = await _repositoryWrapper.FactRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if (facts is null)
         {

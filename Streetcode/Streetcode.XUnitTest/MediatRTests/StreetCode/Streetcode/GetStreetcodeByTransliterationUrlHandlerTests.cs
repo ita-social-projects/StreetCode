@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -42,7 +43,7 @@ public class GetStreetcodeByTransliterationUrlHandlerTests
         var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -77,7 +78,7 @@ public class GetStreetcodeByTransliterationUrlHandlerTests
         var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -97,7 +98,7 @@ public class GetStreetcodeByTransliterationUrlHandlerTests
         var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
         // Act
-        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(

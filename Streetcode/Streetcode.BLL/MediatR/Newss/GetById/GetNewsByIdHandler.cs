@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Newss.GetById
@@ -18,6 +21,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
         private readonly IBlobService _blobService;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<NoSharedResource> _stringLocalizerNo;
+
         public GetNewsByIdHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper, IBlobService blobService, ILoggerService logger, IStringLocalizer<NoSharedResource> stringLocalizerNo)
         {
             _mapper = mapper;
@@ -29,12 +33,16 @@ namespace Streetcode.BLL.MediatR.Newss.GetById
 
         public async Task<Result<NewsDTO>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
         {
-            int id = request.id;
+            int id = request.Id;
+            Expression<Func<News, bool>>? basePredicate = sc => sc.Id == id;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
+
             var newsDTO = _mapper.Map<NewsDTO>(await _repositoryWrapper.NewsRepository.GetFirstOrDefaultAsync(
-                predicate: sc => sc.Id == id,
+                predicate: predicate,
                 include: scl => scl
                     .Include(sc => sc.Image!)));
-            if(newsDTO is null)
+
+            if(newsDTO is null )
             {
                 string errorMsg = _stringLocalizerNo["NoNewsByEnteredId", id].Value;
                 _logger.LogError(request, errorMsg);

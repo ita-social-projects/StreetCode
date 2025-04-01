@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -34,7 +35,7 @@ public class ExistStatisticRecordByQrIdTests
                 It.IsAny<Func<IQueryable<StatisticRecord>, IIncludableQueryable<StatisticRecord, object>>>()))
             .ReturnsAsync(statisticRecords[0]);
 
-        var request = new ExistStatisticRecordByQrIdCommand(qrId);
+        var request = new ExistStatisticRecordByQrIdCommand(qrId, UserRole.User);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);
@@ -60,7 +61,7 @@ public class ExistStatisticRecordByQrIdTests
                 It.IsAny<Func<IQueryable<StatisticRecord>, IIncludableQueryable<StatisticRecord, object>>>()))
             .ReturnsAsync((StatisticRecord)null!);
 
-        var request = new ExistStatisticRecordByQrIdCommand(qrId);
+        var request = new ExistStatisticRecordByQrIdCommand(qrId, UserRole.User);
 
         // Act
         var result = await _handler.Handle(request, CancellationToken.None);

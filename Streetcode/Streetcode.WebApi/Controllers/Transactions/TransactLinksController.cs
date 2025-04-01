@@ -13,7 +13,7 @@ public class TransactLinksController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TransactLinkDTO>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllTransactLinksQuery()));
+        return HandleResult(await Mediator.Send(new GetAllTransactLinksQuery(GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -21,7 +21,7 @@ public class TransactLinksController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TransactLinkDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        var res = await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId));
+        var res = await Mediator.Send(new GetTransactLinkByStreetcodeIdQuery(streetcodeId, GetUserRole()));
         return HandleResult(res);
     }
 
@@ -29,6 +29,6 @@ public class TransactLinksController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TransactLinkDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetTransactLinkByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetTransactLinkByIdQuery(id, GetUserRole())));
     }
 }

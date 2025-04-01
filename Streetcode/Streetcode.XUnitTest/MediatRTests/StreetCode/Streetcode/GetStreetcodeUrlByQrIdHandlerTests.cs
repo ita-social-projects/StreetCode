@@ -6,6 +6,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetUrlByQrId;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -35,7 +36,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenRecordExists_ReturnsStreetcodeUrl()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10, UserRole.User);
         var testStatisticRecord = new StatisticRecord
         {
             QrId = request.QrId,
@@ -64,7 +65,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenRecordDoesNotExist_ReturnsError()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10, UserRole.User);
         const string expectedErrorKey = "CannotFindRecordWithQrId";
         string expectedErrorValue = _mockCannotFindLocalizer[expectedErrorKey];
 
@@ -86,7 +87,7 @@ public class GetStreetcodeUrlByQrIdHandlerTests
     public async Task Handle_WhenStreetcodeDoesNotExist_ReturnsError()
     {
         // Arrange
-        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10);
+        var request = new GetStreetcodeUrlByQrIdQuery(QrId: 10, UserRole.User);
         var testStatisticRecord = new StatisticRecord
         {
             QrId = request.QrId,

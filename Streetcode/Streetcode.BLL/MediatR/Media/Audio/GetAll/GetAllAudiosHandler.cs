@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -29,7 +31,10 @@ public class GetAllAudiosHandler : IRequestHandler<GetAllAudiosQuery, Result<IEn
 
     public async Task<Result<IEnumerable<AudioDTO>>> Handle(GetAllAudiosQuery request, CancellationToken cancellationToken)
     {
-        var audios = await _repositoryWrapper.AudioRepository.GetAllAsync();
+        Expression<Func<DAL.Entities.Media.Audio, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, a => a.Streetcode);
+
+        var audios = await _repositoryWrapper.AudioRepository.GetAllAsync(predicate: predicate);
 
         if (audios is null)
         {

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Moq;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Factories.MessageDataFactory.Concretes;
+using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Users.Delete;
 using Streetcode.BLL.SharedResource;
@@ -19,6 +22,8 @@ public class DeleteUserHandlerTests
     private readonly Mock<UserManager<User>> _userManagerMock;
     private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
     private readonly Mock<IStringLocalizer<UserSharedResource>> _localizerMock;
+    private readonly Mock<IMessageDataAbstractFactory> _messageDataAbstractFactoryMock;
+    private readonly Mock<IEmailService> _emailServiceMock;
     private readonly DeleteUserHandler _handler;
 
     public DeleteUserHandlerTests()
@@ -27,6 +32,9 @@ public class DeleteUserHandlerTests
         _loggerMock = new Mock<ILoggerService>();
         _localizerMock = new Mock<IStringLocalizer<UserSharedResource>>();
         _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+        _messageDataAbstractFactoryMock = new Mock<IMessageDataAbstractFactory>();
+        _emailServiceMock = new Mock<IEmailService>();
+
         var userStoreMock = new Mock<IUserStore<User>>();
         _userManagerMock = new Mock<UserManager<User>>(
             userStoreMock.Object, null, null, null, null, null, null, null, null);
@@ -47,7 +55,9 @@ public class DeleteUserHandlerTests
             _loggerMock.Object,
             _userManagerMock.Object,
             _httpContextAccessorMock.Object,
-            _localizerMock.Object);
+            _localizerMock.Object,
+            _messageDataAbstractFactoryMock.Object,
+            _emailServiceMock.Object);
     }
 
     [Fact]

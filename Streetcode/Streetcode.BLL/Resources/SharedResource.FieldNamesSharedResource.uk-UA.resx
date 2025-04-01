@@ -252,11 +252,11 @@
   <data name="LastName" xml:space="preserve">
     <value>Прізвище</value>
   </data>
-  <data name="Teaser" xml:space="preserve">
-    <value>Тизер</value>
-  </data>
   <data name="Alias" xml:space="preserve">
     <value>Псевдонім</value>
+  </data>
+  <data name="Teaser" xml:space="preserve">
+    <value>Тизер</value>
   </data>
   <data name="TransliterationUrl" xml:space="preserve">
     <value>Транслітероване посилання</value>
@@ -323,5 +323,8 @@
   </data>
   <data name="UserName" xml:space="preserve">
     <value>Нікнейм</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Пароль</value>
   </data>
 </root>

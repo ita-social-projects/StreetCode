@@ -38,4 +38,13 @@ public class MessageDataConcreteFactory : IMessageDataAbstractFactory
             CurrentDomain = currentDomain
         };
     }
+
+    public MessageData CreateDeleteConfirmationMessageData(string[] to)
+    {
+        return new DeleteConfirmationMessageData
+        {
+            From = _configuration.From,
+            To = to,
+        };
+    }
 }

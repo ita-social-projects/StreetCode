@@ -74,9 +74,7 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
                     return Result.Ok(response);
                 }
 
-                string errorMessage = isUserNull ?
-                    _localizer["UserWithSuchEmailNotFound"] :
-                    _localizer["IncorrectPassword"];
+                string errorMessage = _localizer["IncorrectEmailOrPassword"];
                 _logger.LogError(request, errorMessage);
                 return Result.Fail(errorMessage);
             }

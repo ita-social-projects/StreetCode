@@ -10,8 +10,11 @@
 
   <ItemGroup>
     <Compile Remove="DTO\Instagram\**" />
+    <Compile Remove="Validators\Authentication\NewFolder\**" />
     <EmbeddedResource Remove="DTO\Instagram\**" />
+    <EmbeddedResource Remove="Validators\Authentication\NewFolder\**" />
     <None Remove="DTO\Instagram\**" />
+    <None Remove="Validators\Authentication\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>

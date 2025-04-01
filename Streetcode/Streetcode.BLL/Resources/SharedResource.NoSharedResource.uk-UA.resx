@@ -162,7 +162,7 @@
   <data name="NoFavouritesFound" xml:space="preserve">
     <value>Жодний стріткод не додано до улюблених</value>
   </data>
-	<data name="NoFavouritesWithId" xml:space="preserve">
+  <data name="NoFavouritesWithId" xml:space="preserve">
     <value>Жодного улюбленого стріткоду з ідентифікатором: {0}</value>
   </data>
   <data name="NoToponymWithSuchId" xml:space="preserve">

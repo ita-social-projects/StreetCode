@@ -20,6 +20,7 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
         byte[] imageBytes = Convert.FromBase64String(imgBase64);
         using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
 
+        image.Mutate(x => x.AutoOrient());
         image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
 
         return GenerateHash(image);

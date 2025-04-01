@@ -33,9 +33,7 @@ public class GetRelatedFiguresByTagIdHandler : IRequestHandler<GetRelatedFigures
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
     public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFiguresByTagIdQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<StreetcodeContent, bool>>? basePredicate = sc => sc.Tags
-                                                                            .Select(t => t.Id)
-                                                                            .Any(tag => tag == request.TagId);
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = sc => sc.Tags.Select(t => t.Id).Any(tag => tag == request.TagId);
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
         var streetcodes = await _repositoryWrapper.StreetcodeRepository

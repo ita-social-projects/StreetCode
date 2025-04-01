@@ -9,7 +9,7 @@ public class StreetcodeAccessManager : IEntityAccessManager<StreetcodeContent>
 {
     public Expression<Func<StreetcodeContent, bool>>? GetAccessPredicate(UserRole? userRole)
     {
-        if(userRole is null or UserRole.User)
+        if (userRole is null or UserRole.User)
         {
             return stc => stc.Status == StreetcodeStatus.Published;
         }

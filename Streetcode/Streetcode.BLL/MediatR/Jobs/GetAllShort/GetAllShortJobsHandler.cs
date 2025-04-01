@@ -32,6 +32,7 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 			var jobs = await _repositoryWrapper.JobRepository.GetAllAsync(predicate: predicate);
 
 			var jobsDto = _mapper.Map<IEnumerable<JobShortDto>>(jobs);
+
 			return Result.Ok(jobsDto);
 		}
 	}

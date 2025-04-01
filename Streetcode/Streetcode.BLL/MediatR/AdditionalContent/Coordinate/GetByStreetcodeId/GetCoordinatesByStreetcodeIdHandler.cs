@@ -20,8 +20,12 @@ public class GetCoordinatesByStreetcodeIdHandler : IRequestHandler<GetCoordinate
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetCoordinatesByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
-       {
+    public GetCoordinatesByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;

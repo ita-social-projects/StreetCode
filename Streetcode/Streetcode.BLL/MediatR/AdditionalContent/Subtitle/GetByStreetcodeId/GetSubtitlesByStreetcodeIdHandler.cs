@@ -33,6 +33,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId
 
             NullResult<SubtitleDTO> result = new NullResult<SubtitleDTO>();
             result.WithValue(_mapper.Map<SubtitleDTO>(subtitle));
+
             return result;
         }
     }

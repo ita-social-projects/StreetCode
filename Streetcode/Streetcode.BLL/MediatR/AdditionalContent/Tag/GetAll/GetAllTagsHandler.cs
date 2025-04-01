@@ -7,8 +7,6 @@ using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Microsoft.EntityFrameworkCore;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.BLL.DTO.AdditionalContent.Tag;
 using Streetcode.BLL.Services.EntityAccessManager;

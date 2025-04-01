@@ -69,8 +69,7 @@ public class GetParnerByStreetcodeIdTest
         var expectedError = _mockLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", testStreetcodeContent.Id].Value;
 
         _mockMapper
-            .Setup(x => x
-                .Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
+            .Setup(x => x.Map<IEnumerable<PartnerDTO>>(It.IsAny<IEnumerable<Partner>>()))
             .Returns(GetPartnerDTOList());
 
         var handler = new GetPartnersByStreetcodeIdHandler(_mockMapper.Object, _mockRepository.Object, _mockLogger.Object, _mockLocalizerCannotFind);

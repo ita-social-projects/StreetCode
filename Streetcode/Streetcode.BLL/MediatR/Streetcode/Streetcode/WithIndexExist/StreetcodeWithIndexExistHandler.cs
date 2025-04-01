@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
-using AutoMapper;
 using FluentResults;
 using MediatR;
-using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -24,6 +22,7 @@ public class StreetcodeWithIndexExistHandler : IRequestHandler<StreetcodeWithInd
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
         var streetcode = await _repositoryWrapper.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
+
         return Result.Ok(streetcode != null);
     }
 }

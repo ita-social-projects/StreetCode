@@ -9,7 +9,7 @@ public class JobAccessManager : IEntityAccessManager<Job>
 {
     public Expression<Func<Job, bool>>? GetAccessPredicate(UserRole? userRole)
     {
-        if(userRole is null or UserRole.User)
+        if (userRole is null or UserRole.User)
         {
             return job => job.Status == true;
         }

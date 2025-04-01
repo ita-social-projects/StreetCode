@@ -9,7 +9,7 @@ public class NewsAccessManager : IEntityAccessManager<News>
 {
     public Expression<Func<News, bool>>? GetAccessPredicate(UserRole? userRole)
     {
-        if(userRole is null or UserRole.User)
+        if (userRole is null or UserRole.User)
         {
             return news => news.CreationDate < DateTime.UtcNow;
         }

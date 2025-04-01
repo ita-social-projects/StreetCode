@@ -22,6 +22,7 @@ public class StreetcodeWithUrlExistHandler : IRequestHandler<StreetcodeWithUrlEx
         var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
 
         var streetcodes = await _repository.StreetcodeRepository.GetFirstOrDefaultAsync(predicate: predicate);
+
         return Result.Ok(streetcodes != null);
     }
 }

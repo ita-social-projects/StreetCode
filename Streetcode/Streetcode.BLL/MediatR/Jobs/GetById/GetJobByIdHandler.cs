@@ -36,9 +36,9 @@ namespace Streetcode.BLL.MediatR.Jobs.GetById
 
             if (job is null)
             {
-                string exceptionMessege = _stringLocalizer["CannotFindJobWithCorrespondingId", request.JobId];
-                _loggerService.LogError(request, exceptionMessege);
-                return Result.Fail(exceptionMessege);
+                string exceptionMessage = _stringLocalizer["CannotFindJobWithCorrespondingId", request.JobId];
+                _loggerService.LogError(request, exceptionMessage);
+                return Result.Fail(exceptionMessage);
             }
 
             try

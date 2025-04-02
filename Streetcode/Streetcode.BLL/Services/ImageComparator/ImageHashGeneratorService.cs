@@ -23,10 +23,25 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
         image.Mutate(x => x.AutoOrient());
         image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
 
-        return GenerateHash(image);
+        return GenerateHash(image, FindAveragePixelsRgbValue(image));
     }
 
-    private ulong GenerateHash(Image<Rgba32> image)
+    private int FindAveragePixelsRgbValue(Image<Rgba32> image)
+    {
+        int sum = 0;
+
+        for (int i = 0; i < image.Width; i++)
+        {
+            for (int j = 0; j < image.Height; j++)
+            {
+                sum += (image[i, j].R + image[i, j].G + image[i, j].B) / 3;
+            }
+        }
+
+        return sum / (image.Width * image.Height);
+    }
+
+    private ulong GenerateHash(Image<Rgba32> image, int leftShift)
     {
         ulong rHash = 0;
         ulong gHash = 0;
@@ -53,7 +68,7 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
             }
         }
 
-        ulong resultHash = rHash ^ RotateHashLeft(gHash, 21) ^ RotateHashLeft(bHash, 42);
+        ulong resultHash = rHash ^ RotateHashLeft(gHash, leftShift) ^ RotateHashLeft(bHash, 63 - leftShift);
 
         return resultHash;
     }

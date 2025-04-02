@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Newss.GetById;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -47,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -71,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -101,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -123,7 +124,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             var handler = new GetNewsByIdHandler(this.mockMapper.Object, this.mockRepository.Object, this.mockBlobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetNewsByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetNewsByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

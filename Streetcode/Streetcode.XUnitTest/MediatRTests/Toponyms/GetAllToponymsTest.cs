@@ -7,6 +7,7 @@ using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
+using Streetcode.DAL.Enums;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Toponyms
@@ -32,7 +33,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO(), UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -50,7 +51,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO(), UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -69,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetAllToponymsHandler(this._mockRepository.Object, this._mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO { Amount = pageSize }), CancellationToken.None);
+            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO { Amount = pageSize }, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -87,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetAllToponymsHandler(_mockRepository.Object, _mockMapper.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO()), CancellationToken.None);
+            var result = await handler.Handle(new GetAllToponymsQuery(new GetAllToponymsRequestDTO(), UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

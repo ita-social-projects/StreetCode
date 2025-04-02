@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,11 +28,14 @@ public class GetHistoricalContextByTitleHandler : IRequestHandler<GetHistoricalC
 
     public async Task<Result<HistoricalContextDTO>> Handle(GetHistoricalContextByTitleQuery request, CancellationToken cancellationToken)
     {
-        var context = await _repository.HistoricalContextRepository.GetFirstOrDefaultAsync(j => j.Title == request.title);
+        Expression<Func<DAL.Entities.Timeline.HistoricalContext, bool>>? basePredicate = hc => hc.Title == request.Title;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, hc => hc.HistoricalContextTimelines, hctl => hctl.Timeline.Streetcode);
+
+        var context = await _repository.HistoricalContextRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
         if (context is null)
         {
-            string exceptionMessege = _localizer["CannotFindHistoricalContextWithTitle", request.title];
+            string exceptionMessege = _localizer["CannotFindHistoricalContextWithTitle", request.Title];
             _loggerService.LogError(request, exceptionMessege);
             return Result.Fail(exceptionMessege);
         }

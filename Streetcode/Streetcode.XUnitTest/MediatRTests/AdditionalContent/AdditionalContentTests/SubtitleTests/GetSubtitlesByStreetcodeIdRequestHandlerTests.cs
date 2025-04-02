@@ -6,6 +6,7 @@ using Streetcode.BLL.DTO.AdditionalContent.Subtitles;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetByStreetcodeId;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -41,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -59,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetSubtitlesByStreetcodeIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitlesByStreetcodeIdQuery(streetcode_id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.True(result.Value.StreetcodeId == streetcode_id);

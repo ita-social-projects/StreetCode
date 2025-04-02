@@ -18,28 +18,28 @@ namespace Streetcode.WebApi.Controllers.Newss
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
         public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
         {
-            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize, GetUserRole())));
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
         public async Task<IActionResult> GetById(int id)
         {
-            return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetNewsByIdQuery(id, GetUserRole())));
         }
 
         [HttpGet("{url}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTO))]
         public async Task<IActionResult> GetByUrl(string url)
         {
-            return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url)));
+            return HandleResult(await Mediator.Send(new GetNewsByUrlQuery(url, GetUserRole())));
         }
 
         [HttpGet("{url}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NewsDTOWithURLs))]
         public async Task<IActionResult> GetNewsAndLinksByUrl(string url)
         {
-            return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url)));
+            return HandleResult(await Mediator.Send(new GetNewsAndLinksByUrlQuery(url, GetUserRole())));
         }
 
         [HttpPost]

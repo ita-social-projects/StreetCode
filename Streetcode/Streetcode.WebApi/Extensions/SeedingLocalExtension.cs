@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Streetcode.BLL.Interfaces.ImageComparator;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -40,6 +41,8 @@ namespace Streetcode.WebApi.Extensions
                 string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
                 string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));
 
+                var imageHashGeneratorService = scope.ServiceProvider.GetRequiredService<IImageHashGeneratorService>();
+
                 if (File.Exists(initialDataImagePath))
                 {
                     if (!dbContext.Images.Any())
@@ -56,6 +59,8 @@ namespace Streetcode.WebApi.Extensions
                                 {
                                     blobService.SaveFileInStorageBase64(img.Base64!, img.BlobName!.Split('.')[0], img.BlobName.Split('.')[1]);
                                 }
+
+                                img.ImageHash = imageHashGeneratorService.GenerateImageHash(img.Base64);
                             }
 
                             dbContext.Images.AddRange(imgfromJson);

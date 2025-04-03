@@ -27,6 +27,9 @@ public class Image
     [MaxLength(10)]
     public string? MimeType { get; set; }
 
+    [Required]
+    public ulong ImageHash { get; set; }
+
     public ImageDetails? ImageDetails { get; set; }
 
     public List<StreetcodeContent> Streetcodes { get; set; } = new ();

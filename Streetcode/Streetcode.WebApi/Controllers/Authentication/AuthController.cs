@@ -17,9 +17,9 @@ namespace Streetcode.WebApi.Controllers.Authentication
     {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponseDTO))]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginDTO, [FromQuery] bool captcha = false)
         {
-            return HandleResult(await Mediator.Send(new LoginQuery(loginDTO)));
+            return HandleResult(await Mediator.Send(new LoginQuery(loginDTO, captcha)));
         }
 
         [HttpPost]

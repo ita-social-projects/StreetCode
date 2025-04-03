@@ -68,7 +68,7 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
             }
         }
 
-        ulong resultHash = rHash ^ RotateHashLeft(gHash, leftShift) ^ RotateHashLeft(bHash, 63 - leftShift);
+        ulong resultHash = rHash ^ RotateHashLeft(gHash, leftShift % 64) ^ RotateHashLeft(bHash, 63 - (leftShift % 64));
 
         return resultHash;
     }

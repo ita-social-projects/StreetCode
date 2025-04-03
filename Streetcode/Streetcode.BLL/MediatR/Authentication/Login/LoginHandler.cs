@@ -42,12 +42,16 @@ namespace Streetcode.BLL.MediatR.Authentication.Login
         {
             try
             {
-                var reCaptchaValidationResult = await _captchaService.ValidateReCaptchaAsync(request.UserLogin.CaptchaToken, cancellationToken);
-                if (reCaptchaValidationResult.IsFailed)
+                if (request.IsCaptchaEnabled)
                 {
-                    string captchaErrorMessage = reCaptchaValidationResult.Errors[0].Message;
-                    _logger.LogError(request, captchaErrorMessage);
-                    return Result.Fail(new Error(captchaErrorMessage));
+                    var reCaptchaValidationResult =
+                        await _captchaService.ValidateReCaptchaAsync(request.UserLogin.CaptchaToken, cancellationToken);
+                    if (reCaptchaValidationResult.IsFailed)
+                    {
+                        string captchaErrorMessage = reCaptchaValidationResult.Errors[0].Message;
+                        _logger.LogError(request, captchaErrorMessage);
+                        return Result.Fail(new Error(captchaErrorMessage));
+                    }
                 }
 
                 var user = await _userManager.FindByEmailAsync(request.UserLogin.Login);

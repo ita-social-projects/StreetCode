@@ -72,7 +72,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
                 await _repositoryWrapper.StreetcodeRepository.CreateAsync(streetcode);
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
-                await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
+                await AddImagesAsync(streetcode, request.Streetcode.ImagesDetails.Select(x => x.ImageId).ToList());
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 await AddArtGallery(streetcode, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                 await AddTags(streetcode, request.Streetcode.Tags);

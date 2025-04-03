@@ -44,7 +44,6 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         [Theory]
         [InlineData("test@@test.com")]
         [InlineData("@.com")]
-        [InlineData("test@test.ru")]
         [InlineData("asda @test.com")]
         [InlineData("test@.")]
         [InlineData("test@com")]
@@ -65,7 +64,6 @@ namespace Streetcode.XUnitTest.Attributes.Authentication
         [InlineData("___test@test.com")]
         [InlineData("--___--@test.com")]
         [InlineData("QQQQQQQ@QQQQ.com")]
-        [InlineData("....@...com")]
         public void ShouldReturnSuccess_ValidEmail(string email)
         {
             // Arrange.

@@ -6,12 +6,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Imag
 {
     public static class ArtExtracter
     {
-        public static Art Extract(int artId)
+        public static Art Extract(int artId, int strId)
         {
             DAL.Entities.Media.Images.Image testImage = ImageExtracter.Extract(artId);
             Art testArt = TestDataProvider.GetTestData<Art>();
             testArt.Id = artId;
             testArt.ImageId = testImage.Id;
+            testArt.StreetcodeId = strId;
 
             return BaseExtracter.Extract<Art>(testArt, art => art.Id == artId);
         }

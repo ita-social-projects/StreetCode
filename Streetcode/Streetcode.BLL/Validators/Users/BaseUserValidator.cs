@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Users;
 using Streetcode.BLL.SharedResource;
@@ -33,7 +32,7 @@ public class BaseUserValidator : AbstractValidator<UpdateUserDTO>
             .MaximumLength(MaxLengthAboutYourself).WithMessage(localizer["MaxLength", fieldLocalizer["AboutYourself"], MaxLengthAboutYourself]);
 
         RuleFor(dto => dto.UserName)
-            .Matches(@"^[a-z0-9'\-_]+$").WithMessage(localizer["UserNameFormat"])
+            .Matches(@"^[a-zA-Z0-9'\-_]+$").WithMessage(localizer["UserNameFormat"])
             .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["UserName"]])
             .MinimumLength(MinLengthName).WithMessage(localizer["MinLength", fieldLocalizer["UserName"], MinLengthUserName])
             .MaximumLength(MaxLengthName).WithMessage(localizer["MaxLength", fieldLocalizer["UserName"], MaxLengthUserName]);

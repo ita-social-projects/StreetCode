@@ -54,12 +54,10 @@ namespace Streetcode.BLL.MediatR.Email
             {
                 return Result.Ok(Unit.Value);
             }
-            else
-            {
-                string errorMsg = _stringLocalizer["FailedToSendEmailMessage"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
+
+            string errorMsg = _stringLocalizer["FailedToSendEmailMessage"].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
         }
     }
 }

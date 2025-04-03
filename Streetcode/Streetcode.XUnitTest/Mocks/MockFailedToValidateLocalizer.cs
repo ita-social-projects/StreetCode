@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Localization;
-using Streetcode.BLL.SharedResource;
+﻿using Streetcode.BLL.SharedResource;
 
 namespace Streetcode.XUnitTest.Mocks;
 
@@ -21,6 +20,7 @@ public class MockFailedToValidateLocalizer : BaseMockStringLocalizer<FailedToVal
                     "UserNameFormat",
                     "NameFormat",
                     "SurnameFormat",
+                    "InvalidPaginationParameters",
                 }
             },
             {

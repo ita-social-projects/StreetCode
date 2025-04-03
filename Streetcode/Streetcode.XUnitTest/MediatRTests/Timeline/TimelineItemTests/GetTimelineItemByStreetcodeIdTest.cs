@@ -3,15 +3,14 @@ using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -20,39 +19,30 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1413:UseTrailingCommasInMultiLineInitializers", Justification = "Reviewed.")]
     public class GetTimelineItemByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
 
         public GetTimelineItemByStreetcodeIdTest()
         {
-            mockRepository = new Mock<IRepositoryWrapper>();
-            mockMapper = new Mock<IMapper>();
-            mockLogger = new Mock<ILoggerService>();
-            mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
         }
 
         [Fact]
         public async Task ReturnsSuccessfully_NotEmpty()
         {
             // Arrange
-            this.mockRepository.Setup(x => x.TimelineRepository.GetAllAsync(
-                It.IsAny<Expression<Func<TimelineItem, bool>>>(),
-                It.IsAny<Func<IQueryable<TimelineItem>,
-                IIncludableQueryable<TimelineItem, object>>>()))
-                .ReturnsAsync(GetExistingTimelineList());
+            this.SetupRepository(GetExistingTimelineList());
 
-            this.mockMapper
-            .Setup(x => x
-            .Map<IEnumerable<TimelineItemDTO>>(It.IsAny<IEnumerable<TimelineItem>>()))
-            .Returns(GetTimelineItemDTOList());
+            this.SetupMapper(GetTimelineItemDTOList());
 
-            var handler = new GetTimelineItemsByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetTimelineItemsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
             int streetcodeId = 1;
 
             // Act
-            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -65,17 +55,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsSuccessfully_Empty()
         {
             // Arrange
-            this.mockRepository.Setup(x => x.TimelineRepository.GetAllAsync(
-                It.IsAny<Expression<Func<TimelineItem, bool>>>(),
-                It.IsAny<Func<IQueryable<TimelineItem>,
-                IIncludableQueryable<TimelineItem, object>>>()))
-                .ReturnsAsync(GetEmptyTimelineList());
+            this.SetupRepository(GetEmptyTimelineList());
 
-            var handler = new GetTimelineItemsByStreetcodeIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+            var handler = new GetTimelineItemsByStreetcodeIdHandler(this._mockRepository.Object, this._mockMapper.Object, this._mockLogger.Object);
             int streetcodeId = 1;
 
             // Act
-            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -84,10 +70,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
                 () => Assert.Empty(result.Value));
         }
 
-        public static List<TimelineItem> GetExistingTimelineList()
+        private static List<TimelineItem> GetExistingTimelineList()
         {
-            return new List<TimelineItem> {
-                new TimelineItem
+            return new List<TimelineItem>
+            {
+                new ()
                 {
                     Id = 1,
                     Date = DateTime.Now,
@@ -100,22 +87,39 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             };
         }
 
-        public static List<TimelineItem> GetEmptyTimelineList()
+        private static List<TimelineItem> GetEmptyTimelineList()
         {
             return new List<TimelineItem>();
         }
 
-        public static List<TimelineItemDTO> GetTimelineItemDTOList()
+        private static List<TimelineItemDTO> GetTimelineItemDTOList()
         {
             return new List<TimelineItemDTO>
             {
-                new TimelineItemDTO
+                new ()
                 {
                     Id = 1,
                     Date = DateTime.Now,
                     DateViewPattern = DAL.Enums.DateViewPattern.DateMonthYear,
                 }
             };
+        }
+
+        private void SetupRepository(List<TimelineItem> returnedList)
+        {
+            _mockRepository.Setup(x => x.TimelineRepository.GetAllAsync(
+               It.IsAny<Expression<Func<TimelineItem, bool>>>(),
+               It.IsAny<Func<IQueryable<TimelineItem>,
+               IIncludableQueryable<TimelineItem, object>>>()))
+               .ReturnsAsync(returnedList);
+        }
+
+        private void SetupMapper(List<TimelineItemDTO> returnedList)
+        {
+            _mockMapper
+            .Setup(x => x
+            .Map<IEnumerable<TimelineItemDTO>>(It.IsAny<IEnumerable<TimelineItem>>()))
+            .Returns(returnedList);
         }
     }
 }

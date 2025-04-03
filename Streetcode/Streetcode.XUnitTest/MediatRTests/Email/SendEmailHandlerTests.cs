@@ -125,7 +125,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Email
         {
             _mockHttpMessageHandler.Protected()
                 .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = JsonContent.Create<ReCaptchaResponseDto>(reCaptchaResponseDto) });
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.OK, Content = JsonContent.Create(reCaptchaResponseDto) });
         }
 
         private void SetupMockHttpMessageHandlerReturnsFail()

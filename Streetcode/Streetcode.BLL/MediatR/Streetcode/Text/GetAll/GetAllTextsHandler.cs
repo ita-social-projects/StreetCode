@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,7 +28,10 @@ public class GetAllTextsHandler : IRequestHandler<GetAllTextsQuery, Result<IEnum
 
     public async Task<Result<IEnumerable<TextDTO>>> Handle(GetAllTextsQuery request, CancellationToken cancellationToken)
     {
-        var texts = await _repositoryWrapper.TextRepository.GetAllAsync();
+        Expression<Func<DAL.Entities.Streetcode.TextContent.Text, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, t => t.Streetcode);
+
+        var texts = await _repositoryWrapper.TextRepository.GetAllAsync(predicate: predicate);
 
         if (texts is null)
         {

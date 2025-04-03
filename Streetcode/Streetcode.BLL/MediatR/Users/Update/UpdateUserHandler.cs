@@ -78,7 +78,8 @@ public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Result<UserD
             await _repositoryWrapper.SaveChangesAsync();
 
             var userDto = _mapper.Map<UserDTO>(user);
-            userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() !;
+            var roles = await _userManager.GetRolesAsync(user);
+            userDto.Role = roles.FirstOrDefault() ?? throw new InvalidOperationException("User must have at least one role assigned");
 
             return Result.Ok(userDto);
         }

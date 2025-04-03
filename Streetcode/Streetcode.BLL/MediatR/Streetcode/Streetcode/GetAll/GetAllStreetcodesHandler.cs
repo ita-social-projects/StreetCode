@@ -2,8 +2,12 @@
 using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -13,19 +17,34 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 {
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
+    private readonly IStringLocalizer<FailedToValidateSharedResource> _stringLocalizerFailedToValidate;
 
-    public GetAllStreetcodesHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public GetAllStreetcodesHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind,
+        IStringLocalizer<FailedToValidateSharedResource> stringLocalizerFailedToValidate)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
+        _logger = logger;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
+        _stringLocalizerFailedToValidate = stringLocalizerFailedToValidate;
     }
 
     public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
-        var filterRequest = query.request;
+        var filterRequest = query.Request;
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), query.UserRole);
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll();
+            .FindAll(predicate: predicate)
+            .Include(s => s.Tags)
+            .AsQueryable();
 
         if (filterRequest.Title is not null)
         {
@@ -34,18 +53,37 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         if (filterRequest.Sort is not null)
         {
-            FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
+            var sortedResult = FindSortedStreetcodes(ref streetcodes, filterRequest.Sort);
+            if (sortedResult.IsFailed)
+            {
+                var errorMsg = _stringLocalizerCannotFind[sortedResult.Errors[0].Message].Value;
+                _logger.LogError(query, errorMsg);
+                return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
+            }
         }
 
         if (filterRequest.Filter is not null)
         {
-            FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
+            var filterResult = FindFilteredStreetcodes(ref streetcodes, filterRequest.Filter);
+            if (filterResult.IsFailed)
+            {
+                var errorMsg = _stringLocalizerCannotFind[filterResult.Errors[0].Message].Value;
+                _logger.LogError(query, errorMsg);
+                return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
+            }
         }
 
         var totalAmount = streetcodes.Count();
 
         if (filterRequest.Amount is not null && filterRequest.Page is not null)
         {
+            if (filterRequest.Page <= 0 || filterRequest.Amount <= 0)
+            {
+               var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
+               _logger.LogError(query, errorMsg);
+               return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
+            }
+
             ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);
         }
 
@@ -60,7 +98,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         return Task.FromResult(Result.Ok(response));
     }
 
-    private void FindStreetcodesWithMatchTitle(
+    private static void FindStreetcodesWithMatchTitle(
         ref IQueryable<StreetcodeContent> streetcodes,
         string title)
     {
@@ -71,7 +109,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             .ToString() == title);
     }
 
-    private void FindFilteredStreetcodes(
+    private static Result FindFilteredStreetcodes(
         ref IQueryable<StreetcodeContent> streetcodes,
         string filter)
     {
@@ -79,13 +117,23 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         var filterColumn = filterParams[0];
         var filterValue = filterParams[1];
 
+        var type = typeof(StreetcodeContent);
+        var property = type.GetProperty(filterColumn);
+
+        if (property is null)
+        {
+            return Result.Fail(new Error("CannotFindAnyPropertyWithThisName"));
+        }
+
         streetcodes = streetcodes
             .AsEnumerable()
-            .Where(s => filterValue.Contains(s.Status.ToString()))
+            .Where(s => property.GetValue(s)?.ToString()?.Contains(filterValue, StringComparison.OrdinalIgnoreCase) ?? false)
             .AsQueryable();
+
+        return Result.Ok();
     }
 
-    private void FindSortedStreetcodes(
+    private static Result FindSortedStreetcodes(
         ref IQueryable<StreetcodeContent> streetcodes,
         string sort)
     {
@@ -94,16 +142,22 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         var sortColumn = sort.Trim();
         var sortDirection = "asc";
 
-        if (sortColumn.StartsWith("-"))
+        if (sortColumn.StartsWith('-'))
         {
             sortDirection = "desc";
             sortColumn = sortColumn.Substring(1);
         }
 
         var type = typeof(StreetcodeContent);
+        var property = type.GetProperty(sortColumn);
+        if (property is null)
+        {
+            return Result.Fail(new Error("CannotFindAnyPropertyWithThisName"));
+        }
+
         var parameter = Expression.Parameter(type, "p");
-        var property = Expression.Property(parameter, sortColumn);
-        var lambda = Expression.Lambda(property, parameter);
+        var memberExpression = Expression.Property(parameter, sortColumn);
+        var lambda = Expression.Lambda(memberExpression, parameter);
 
         streetcodes = sortDirection switch
         {
@@ -111,9 +165,11 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
             "desc" => Queryable.OrderByDescending(sortedRecords, (dynamic)lambda),
             _ => sortedRecords,
         };
+
+        return Result.Ok();
     }
 
-    private void ApplyPagination(
+    private static void ApplyPagination(
         ref IQueryable<StreetcodeContent> streetcodes,
         int amount,
         int page)

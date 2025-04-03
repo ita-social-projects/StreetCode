@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Authentication.Logout;
-using Streetcode.BLL.Util.Helpers;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Users;
@@ -27,9 +26,13 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Logout
 
             _repositoryWrapperMock.Setup(r => r.UserRepository).Returns(_userRepositoryMock.Object);
             var fakeEmail = "test@example.com";
+            var fakeUserName = "test_username";
+            var fakeUserId = Guid.NewGuid().ToString();
             var claims = new List<Claim>
             {
-                new (ClaimTypes.NameIdentifier, fakeEmail),
+                new (ClaimTypes.NameIdentifier, fakeUserId),
+                new (ClaimTypes.Name, fakeUserName),
+                new (ClaimTypes.Email, fakeEmail),
             };
 
             var identity = new ClaimsIdentity(claims, "TestAuthType");

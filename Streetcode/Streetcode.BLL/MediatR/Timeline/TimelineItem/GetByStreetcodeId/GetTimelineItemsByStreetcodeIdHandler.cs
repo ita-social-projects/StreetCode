@@ -1,11 +1,11 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
@@ -15,21 +15,25 @@ public class GetTimelineItemsByStreetcodeIdHandler : IRequestHandler<GetTimeline
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
-    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetTimelineItemsByStreetcodeIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetTimelineItemsByStreetcodeIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public async Task<Result<IEnumerable<TimelineItemDTO>>> Handle(GetTimelineItemsByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<DAL.Entities.Timeline.TimelineItem, bool>>? basePredicate = tl => tl.StreetcodeId == request.StreetcodeId;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, tl => tl.Streetcode);
+
         var timelineItems = await _repositoryWrapper.TimelineRepository
             .GetAllAsync(
-                predicate: f => f.StreetcodeId == request.StreetcodeId,
+                predicate: predicate,
                 include: ti => ti
                     .Include(til => til.HistoricalContextTimelines)
                         .ThenInclude(x => x.HistoricalContext) !);

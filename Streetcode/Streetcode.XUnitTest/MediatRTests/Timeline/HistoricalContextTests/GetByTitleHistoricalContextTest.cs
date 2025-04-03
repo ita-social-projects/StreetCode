@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetByTitle;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -16,18 +17,18 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests;
 public class GetByTitleHistoricalContextTest
 {
     private const string title = "test_title";
-    private readonly Mock<IRepositoryWrapper> mockRepo;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
-    private readonly HistoricalContext context = new HistoricalContext
+    private readonly HistoricalContext _context = new ()
     {
         Id = 1,
         Title = title,
     };
 
-    private readonly HistoricalContextDTO contextDto = new HistoricalContextDTO
+    private readonly HistoricalContextDTO _contextDto = new ()
     {
         Id = 1,
         Title = title,
@@ -35,23 +36,23 @@ public class GetByTitleHistoricalContextTest
 
     public GetByTitleHistoricalContextTest()
     {
-        this.mockRepo = new Mock<IRepositoryWrapper>();
-        this.mockMapper = new Mock<IMapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
     }
 
     [Fact]
     public async Task Handler_Returns_Matching_Element()
     {
         // Arrange
-        this.SetupRepository(this.context);
-        this.SetupMapper(this.contextDto);
+        this.SetupRepository(_context);
+        this.SetupMapper(_contextDto);
 
-        var handler = new GetHistoricalContextByTitleHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -66,10 +67,10 @@ public class GetByTitleHistoricalContextTest
         this.SetupRepository(new HistoricalContext());
         this.SetupMapper(new HistoricalContextDTO());
 
-        var handler = new GetHistoricalContextByTitleHandler(this.mockMapper.Object, this.mockRepo.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+        var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -79,7 +80,7 @@ public class GetByTitleHistoricalContextTest
 
     private void SetupRepository(HistoricalContext context)
     {
-        this.mockRepo
+        _mockRepo
             .Setup(repo => repo.HistoricalContextRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<HistoricalContext, bool>>>(),
@@ -90,7 +91,7 @@ public class GetByTitleHistoricalContextTest
 
     private void SetupMapper(HistoricalContextDTO contextDto)
     {
-        this.mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>()))
+        _mockMapper.Setup(x => x.Map<HistoricalContextDTO>(It.IsAny<HistoricalContext>()))
             .Returns(contextDto);
     }
 }

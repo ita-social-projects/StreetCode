@@ -1,155 +1,113 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Fact;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Fact.GetById;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Facts;
 
 public class GetFactByIdTest
 {
-    private readonly Mock<IRepositoryWrapper> mockRepository;
-    private readonly Mock<IMapper> mockMapper;
-    private readonly Mock<ILoggerService> mockLogger;
-    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+    private readonly Mock<IRepositoryWrapper> _mockRepository;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly MockCannotFindLocalizer _mockCannotFindLocalizer;
+    private readonly GetFactByIdHandler _handler;
 
     public GetFactByIdTest()
     {
-        this.mockMapper = new Mock<IMapper>();
-        this.mockRepository = new Mock<IRepositoryWrapper>();
-        this.mockLogger = new Mock<ILoggerService>();
-        this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+        _mockMapper = new Mock<IMapper>();
+        _mockRepository = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockCannotFindLocalizer = new MockCannotFindLocalizer();
+        _handler = new GetFactByIdHandler(
+            _mockRepository.Object,
+            _mockMapper.Object,
+            _mockLogger.Object,
+            _mockCannotFindLocalizer);
     }
 
     [Theory]
     [InlineData(1)]
-    public async Task ShouldReturnSuccessfully_ExistingId(int id)
+    public async Task ShouldGetByIdSuccessfully_WhenIdExists(int factId)
     {
         // Arrange
-        this.mockRepository
-            .Setup(x => x.FactRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-                    IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(GetFact(id));
+        var (fact, factDto) = GetFactObjects(factId);
+        var request = GetRequest(factId);
 
-        this.mockMapper
-            .Setup(x => x
-            .Map<FactDto>(It.IsAny<Fact>()))
-            .Returns(GetFactDTO(id));
-
-        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
+        MockHelpers.SetupMockMapper(_mockMapper, factDto, fact);
 
         // Act
-        var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
+        var result = await _handler.Handle(request, CancellationToken.None);
 
         // Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.True(result.IsSuccess),
-            () => Assert.Equal(result.Value.Id, id));
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Id.Should().Be(factId);
+        _mockMapper.Verify(x => x.Map<FactDto>(fact), Times.Once);
     }
 
     [Theory]
     [InlineData(1)]
-    public async Task ShouldReturnSuccessfully_NotExistingId(int id)
+    public async Task ShouldGetByIdSuccessfully_WithCorrectDataType(int factId)
     {
         // Arrange
-        this.mockRepository
-            .Setup(x => x.FactRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-                    IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(GetFactWithNotExistingId());
+        var (fact, factDto) = GetFactObjects(factId);
+        var request = GetRequest(factId);
 
-        this.mockMapper
-            .Setup(x => x.Map<FactDto?>(It.IsAny<Fact>()))
-            .Returns(GetFactDTOWithNotExistingId());
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, fact);
+        MockHelpers.SetupMockMapper(_mockMapper, factDto, fact);
 
-        var expectedError = $"Cannot find any fact with corresponding id: {id}";
-        this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.ValueOrDefault.Should().BeOfType<FactDto>();
+    }
+
+    [Theory]
+    [InlineData(1)]
+    public async Task ShouldGetByIdFailingly_WhenFactNotFound(int factId)
+    {
+        // Arrange
+        var request = GetRequest(factId);
+        var expectedErrorMessage = _mockCannotFindLocalizer["CannotFindFactWithCorrespondingCategoryId", factId].Value;
+
+        MockHelpers.SetupMockFactRepositoryGetFirstOrDefaultAsync(_mockRepository, null);
+
+        // Act
+        var result = await _handler.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors[0].Message.Should().Be(expectedErrorMessage);
+        _mockLogger.Verify(x => x.LogError(request, expectedErrorMessage), Times.Once);
+    }
+
+    private static (Fact, FactDto) GetFactObjects(int factId)
+    {
+        var fact = new Fact()
         {
-            if (args != null && args.Length > 0 && args[0] is int id)
-            {
-                return new LocalizedString(key, $"Cannot find any fact with corresponding id: {id}");
-            }
-
-            return new LocalizedString(key, "Cannot find any fact with unknown categoryId");
-        });
-
-        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
-
-        // Act
-        var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
-
-        // Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.True(result.IsFailed),
-            () => Assert.Equal(expectedError, result.Errors[0].Message));
-    }
-
-    [Theory]
-    [InlineData(1)]
-    public async Task ShouldReturnSuccessfully_CorrectType(int id)
-    {
-        // Arrange
-        this.mockRepository
-            .Setup(x => x.FactRepository
-                .GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Fact, bool>>>(),
-                    It.IsAny<Func<IQueryable<Fact>,
-                    IIncludableQueryable<Fact, object>>>()))
-            .ReturnsAsync(GetFact(id));
-
-        this.mockMapper
-            .Setup(x => x
-            .Map<FactDto>(It.IsAny<Fact>()))
-            .Returns(GetFactDTO(id));
-
-        var handler = new GetFactByIdHandler(this.mockRepository.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
-
-        // Act
-        var result = await handler.Handle(new GetFactByIdQuery(id), CancellationToken.None);
-
-        // Assert
-        Assert.Multiple(
-            () => Assert.NotNull(result.ValueOrDefault),
-            () => Assert.IsType<FactDto>(result.ValueOrDefault));
-    }
-
-    private static Fact GetFact(int id)
-    {
-        return new Fact
-        {
-            Id = id,
+            Id = factId,
         };
-    }
-
-    private static Fact? GetFactWithNotExistingId()
-    {
-        return null;
-    }
-
-    private static FactDto GetFactDTO(int id)
-    {
-        return new FactDto
+        var factDto = new FactDto()
         {
-            Id = id,
+            Id = fact.Id,
         };
+
+        return (fact, factDto);
     }
 
-    private static FactDto? GetFactDTOWithNotExistingId()
+    private static GetFactByIdQuery GetRequest(int factId)
     {
-        return null;
+        return new GetFactByIdQuery(factId, UserRole.User);
     }
 }

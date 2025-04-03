@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.AdditionalContent.GetById;
 using Streetcode.BLL.MediatR.AdditionalContent.Subtitle.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -43,7 +44,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetSubtitleByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitleByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitleByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -61,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
             var handler = new GetSubtitleByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetSubtitleByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetSubtitleByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

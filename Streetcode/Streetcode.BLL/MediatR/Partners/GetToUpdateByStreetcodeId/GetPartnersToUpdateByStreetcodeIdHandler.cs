@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
@@ -5,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
@@ -27,16 +30,29 @@ namespace Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate
 
         public async Task<Result<IEnumerable<PartnerDTO>>> Handle(GetPartnersToUpdateByStreetcodeIdQuery request, CancellationToken cancellationToken)
         {
+            Expression<Func<StreetcodeContent, bool>>? basePredicate = str => str.Id == request.StreetcodeId;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+            var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate).AnyAsync(cancellationToken);
+
+            if (!isStreetcodeExists)
+            {
+                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", request.StreetcodeId].Value;
+                _logger.LogError(request, errorMsg);
+                return Result.Fail(new Error(errorMsg));
+            }
+
             var partners = await _repositoryWrapper.PartnersRepository
                 .GetAllAsync(
                     predicate: p => p.Streetcodes.Any(sc => sc.Id == request.StreetcodeId),
                     include: p => p.Include(pl => pl.PartnerSourceLinks));
 
+            // even if there are no partners, we still want to return an empty enumerable
             if (!partners.Any())
             {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindPartnersByStreetcodeId", request.StreetcodeId].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
+                string message = "Returning empty enumerable of partners to update";
+                _logger.LogInformation(message);
+                return Result.Ok(Enumerable.Empty<PartnerDTO>());
             }
 
             return Result.Ok(value: _mapper.Map<IEnumerable<PartnerDTO>>(partners));

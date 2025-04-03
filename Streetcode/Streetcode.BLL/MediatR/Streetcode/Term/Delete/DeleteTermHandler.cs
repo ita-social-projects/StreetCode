@@ -5,47 +5,48 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete
+namespace Streetcode.BLL.MediatR.Streetcode.Term.Delete;
+
+public class DeleteTermHandler : IRequestHandler<DeleteTermCommand, Result<Unit>>
 {
-    public class DeleteTermHandler : IRequestHandler<DeleteTermCommand, Result<Unit>>
+    private readonly IRepositoryWrapper _repository;
+    private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
+    private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
+
+    public DeleteTermHandler(
+        IRepositoryWrapper repository,
+        ILoggerService logger,
+        IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete,
+        IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
     {
-        private readonly IRepositoryWrapper _repository;
-        private readonly ILoggerService _logger;
-        private readonly IStringLocalizer<CannotConvertNullSharedResource> _stringLocalizerCannotConvert;
-        private readonly IStringLocalizer<FailedToDeleteSharedResource> _stringLocalizerFailedToDelete;
+        _repository = repository;
+        _logger = logger;
+        _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
+        _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
+    }
 
-        public DeleteTermHandler(IRepositoryWrapper repository, ILoggerService logger, IStringLocalizer<FailedToDeleteSharedResource> stringLocalizerFailedToDelete, IStringLocalizer<CannotConvertNullSharedResource> stringLocalizerCannotConvert)
+    public async Task<Result<Unit>> Handle(DeleteTermCommand request, CancellationToken cancellationToken)
+    {
+        var term = await _repository.TermRepository.GetFirstOrDefaultAsync(x => x.Id == request.id);
+
+        if (term is null)
         {
-            _repository = repository;
-            _logger = logger;
-            _stringLocalizerFailedToDelete = stringLocalizerFailedToDelete;
-            _stringLocalizerCannotConvert = stringLocalizerCannotConvert;
+            var errorMessage = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
-        public async Task<Result<Unit>> Handle(DeleteTermCommand request, CancellationToken cancellationToken)
+        _repository.TermRepository.Delete(term);
+        var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
+
+        if (!resultIsSuccess)
         {
-            var term = await _repository.TermRepository.GetFirstOrDefaultAsync((term) => term.Id == request.id);
-
-            if (term is null)
-            {
-                string errorMsg = _stringLocalizerCannotConvert["CannotConvertNullToTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
-
-            _repository.TermRepository.Delete(term);
-
-            var resultIsSuccess = await _repository.SaveChangesAsync() > 0;
-            if(resultIsSuccess)
-            {
-                return Result.Ok(Unit.Value);
-            }
-            else
-            {
-                string errorMsg = _stringLocalizerFailedToDelete["FailedToDeleteTerm"].Value;
-                _logger.LogError(request, errorMsg);
-                return Result.Fail(new Error(errorMsg));
-            }
+            var errorMessage = _stringLocalizerFailedToDelete["FailedToDeleteTerm"].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
+
+        return Result.Ok(Unit.Value);
     }
 }

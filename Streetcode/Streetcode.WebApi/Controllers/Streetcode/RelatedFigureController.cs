@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
-using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Delete;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByTagId;
+using Streetcode.BLL.MediatR.Streetcode.RelatedFigure.Create;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
@@ -17,14 +17,14 @@ public class RelatedFigureController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetRelatedFigureByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{tagId:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RelatedFigureDTO>))]
     public async Task<IActionResult> GetByTagId([FromRoute] int tagId)
     {
-        return HandleResult(await Mediator.Send(new GetRelatedFiguresByTagIdQuery(tagId)));
+        return HandleResult(await Mediator.Send(new GetRelatedFiguresByTagIdQuery(tagId, GetUserRole())));
     }
 
     [HttpPost("{observerId:int}&{targetId:int}")]

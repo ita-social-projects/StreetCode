@@ -159,4 +159,13 @@
   <data name="NoTeamWithSuchId" xml:space="preserve">
     <value>Жодної команди з таким ідентифікатором</value>
   </data>
+  <data name="NoFavouritesFound" xml:space="preserve">
+    <value>Жодний стріткод не додано до улюблених</value>
+  </data>
+	<data name="NoFavouritesWithId" xml:space="preserve">
+    <value>Жодного улюбленого стріткоду з ідентифікатором: {0}</value>
+  </data>
+  <data name="NoToponymWithSuchId" xml:space="preserve">
+    <value>Жодного топоніма з таким ідентифікатором стріткоду: {0}</value>
+  </data>
 </root>

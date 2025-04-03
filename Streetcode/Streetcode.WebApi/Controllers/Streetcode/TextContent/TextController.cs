@@ -4,7 +4,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetById;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetByStreetcodeId;
-using Streetcode.BLL.MediatR.Streetcode.Text.GetParsed;
+using Streetcode.BLL.MediatR.Streetcode.Text.UpdateParsed;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
@@ -16,14 +16,14 @@ public class TextController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TextDTO>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllTextsQuery()));
+        return HandleResult(await Mediator.Send(new GetAllTextsQuery(GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TextDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-         return HandleResult(await Mediator.Send(new GetTextByIdQuery(id)));
+         return HandleResult(await Mediator.Send(new GetTextByIdQuery(id, GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -32,7 +32,7 @@ public class TextController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TextDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-       return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId)));
+       return HandleResult(await Mediator.Send(new GetTextByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpPost]

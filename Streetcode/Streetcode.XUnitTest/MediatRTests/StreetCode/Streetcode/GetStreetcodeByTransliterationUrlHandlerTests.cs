@@ -9,121 +9,121 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetByTransliterationUrl;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode
+namespace Streetcode.XUnitTest.MediatRTests.StreetCode.Streetcode;
+
+public class GetStreetcodeByTransliterationUrlHandlerTests
 {
-    public class GetStreetcodeByTransliterationUrlHandlerTests
+    private readonly Mock<IRepositoryWrapper> _mockRepo;
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly StreetcodeContent? _nullValue = null;
+    private readonly StreetcodeDTO? _nullValueDto = null;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+
+    public GetStreetcodeByTransliterationUrlHandlerTests()
     {
-        private readonly Mock<IRepositoryWrapper> mockRepo;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly StreetcodeContent? nullValue = null;
-        private readonly StreetcodeDTO? nullValueDTO = null;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        _mockMapper = new Mock<IMapper>();
+        _mockRepo = new Mock<IRepositoryWrapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+    }
 
-        public GetStreetcodeByTransliterationUrlHandlerTests()
-        {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-        }
+    [Theory]
+    [InlineData("some")]
+    public async Task ExistingUrl(string url)
+    {
+        // Arrange
+        SetupMapper(url);
+        SetupRepository(url);
 
-        [Theory]
-        [InlineData("some")]
-        public async Task ExistingUrl(string url)
-        {
-            // Arrange
-            this.SetupMapper(url);
-            this.SetupRepository(url);
+        var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        // Act
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
-            // Act
-            var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        // Assert
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsSuccess),
+            () => Assert.Equal(result.Value.TransliterationUrl, url));
+    }
 
-            // Assert
-            Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.True(result.IsSuccess),
-                () => Assert.Equal(result.Value.TransliterationUrl, url));
-        }
+    [Theory]
+    [InlineData("some")]
+    public async Task NotExistingId(string url)
+    {
+        // Arrange
+        _mockRepo.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+            It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
+                IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(_nullValue);
 
-        [Theory]
-        [InlineData("some")]
-        public async Task NotExistingId(string url)
-        {
-            // Arrange
-            this.mockRepo.Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
-              It.IsAny<Expression<Func<StreetcodeContent, bool>>>(), It.IsAny<Func<IQueryable<StreetcodeContent>,
-               IIncludableQueryable<StreetcodeContent, object>>>())).ReturnsAsync(this.nullValue);
+        _mockMapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<StreetcodeContent>())).Returns(_nullValueDto);
 
-            this.mockMapper.Setup(x => x.Map<StreetcodeDTO?>(It.IsAny<StreetcodeContent>())).Returns(this.nullValueDTO);
+        var expectedError = $"Cannot find streetcode by transliteration url: {url}";
+        _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            .Returns((string key, object[] args) =>
+            {
+                if (args != null && args.Length > 0 && args[0] is string url)
+                {
+                    return new LocalizedString(key, $"Cannot find streetcode by transliteration url: {url}");
+                }
 
-            var expectedError = $"Cannot find streetcode by transliteration url: {url}";
-            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
-               .Returns((string key, object[] args) =>
-               {
-                   if (args != null && args.Length > 0 && args[0] is string url)
-                   {
-                       return new LocalizedString(key, $"Cannot find streetcode by transliteration url: {url}");
-                   }
+                return new LocalizedString(key, "Cannot find any streetcode with unknown transliteration url");
+            });
 
-                   return new LocalizedString(key, "Cannot find any streetcode with unknown transliteration url");
-               });
+        var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        // Act
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
-            // Act
-            var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        // Assert
+        Assert.Multiple(
+            () => Assert.NotNull(result),
+            () => Assert.True(result.IsFailed),
+            () => Assert.Equal(expectedError, result.Errors[0].Message));
+    }
 
-            // Assert
-            Assert.Multiple(
-                () => Assert.NotNull(result),
-                () => Assert.True(result.IsFailed),
-                () => Assert.Equal(expectedError, result.Errors[0].Message));
-        }
+    [Theory]
+    [InlineData("some")]
+    public async Task CorrectType(string url)
+    {
+        // Arrange
+        SetupMapper(url);
+        SetupRepository(url);
 
-        [Theory]
-        [InlineData("some")]
-        public async Task CorrectType(string url)
-        {
-            // Arrange
-            this.SetupMapper(url);
-            this.SetupRepository(url);
+        var handler = new GetStreetcodeByTransliterationUrlHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
-            var handler = new GetStreetcodeByTransliterationUrlHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
+        // Act
+        var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url, UserRole.User), CancellationToken.None);
 
-            // Act
-            var result = await handler.Handle(new GetStreetcodeByTransliterationUrlQuery(url), CancellationToken.None);
+        // Assert
+        Assert.Multiple(
+            () => Assert.NotNull(result.ValueOrDefault),
+            () => Assert.IsType<StreetcodeDTO>(result.ValueOrDefault));
+    }
 
-            // Assert
-            Assert.Multiple(
-                () => Assert.NotNull(result.ValueOrDefault),
-                () => Assert.IsType<StreetcodeDTO>(result.ValueOrDefault));
-        }
-
-        private void SetupRepository(string url)
-        {
-            this.mockRepo
-                .Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
-                    It.IsAny<Func<IQueryable<StreetcodeContent>,
+    private void SetupRepository(string url)
+    {
+        _mockRepo
+            .Setup(x => x.StreetcodeRepository.GetFirstOrDefaultAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>,
                     IIncludableQueryable<StreetcodeContent, object>>>()))
-                .ReturnsAsync(new StreetcodeContent() { TransliterationUrl = url });
-            this.mockRepo
-                .Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
-                    It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
-                    It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
+            .ReturnsAsync(new StreetcodeContent() { TransliterationUrl = url });
+        _mockRepo
+            .Setup(repo => repo.StreetcodeTagIndexRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeTagIndex, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeTagIndex>,
                     IIncludableQueryable<StreetcodeTagIndex, object>>>()))
-                .ReturnsAsync(new List<StreetcodeTagIndex>());
-        }
+            .ReturnsAsync(new List<StreetcodeTagIndex>());
+    }
 
-        private void SetupMapper(string url)
-        {
-            this.mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(new StreetcodeDTO() { TransliterationUrl = url });
-        }
+    private void SetupMapper(string url)
+    {
+        _mockMapper.Setup(x => x.Map<StreetcodeDTO>(It.IsAny<StreetcodeContent>())).Returns(new StreetcodeDTO() { TransliterationUrl = url });
     }
 }

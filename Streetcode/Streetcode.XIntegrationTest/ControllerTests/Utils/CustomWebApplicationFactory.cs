@@ -59,7 +59,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils
         public void SetupMockEmailService(bool success = true)
         {
             EmailServiceMock.Setup(es => es.SendEmailAsync(It.IsAny<MessageData>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(success);
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)

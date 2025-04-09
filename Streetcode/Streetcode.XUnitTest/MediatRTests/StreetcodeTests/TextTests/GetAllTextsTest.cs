@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
+using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Text.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -14,15 +16,19 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 {
     public class GetAllTextsTest
     {
-        private readonly Mock<IRepositoryWrapper> repository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly GetAllTextsHandler _handler;
 
         public GetAllTextsTest()
         {
-            this.repository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _handler = new GetAllTextsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
         }
 
         [Fact]
@@ -40,21 +46,19 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
 
             var testTexts = new Text() { Id = 1 };
 
-            this.repository.Setup(repo => repo.TextRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Text, bool>>>(), It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, Text>>?>()))
+            _mockRepository.Setup(repo => repo.TextRepository.GetFirstOrDefaultAsync(It.IsAny<Expression<Func<Text, bool>>>(), It.IsAny<Func<IQueryable<Text>, IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(testTexts);
 
-            this.repository.Setup(repo => repo.TextRepository.GetAllAsync(null, null)).ReturnsAsync(testTextsList);
+            _mockRepository.Setup(repo => repo.TextRepository.GetAllAsync(null, null)).ReturnsAsync(testTextsList);
 
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(testTextslistDTO);
-            this.mockLocalizerCannotFind
+            _mockLocalizerCannotFind
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
-            var handler = new GetAllTextsHandler(this.repository.Object, this.mockMapper.Object);
-
-            var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllTextsQuery(UserRole.User), CancellationToken.None);
 
             Assert.Multiple(
             () => Assert.NotNull(result),
@@ -64,9 +68,7 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
         [Fact]
         public async Task GetAllTextsReturnError()
         {
-            var repository = new Mock<IRepositoryWrapper>();
-
-            repository
+            _mockRepository
                 .Setup(repo => repo.TextRepository
                     .GetFirstOrDefaultAsync(
                         It.IsAny<Expression<Func<Text, bool>>>(),
@@ -74,20 +76,20 @@ namespace Streetcode.XUnitTest.StreetcodeTest.TextTest
                         IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync((Text?)null);
 
-            repository
-                .Setup(repo => repo.TextRepository.GetAllAsync(null, null))
+            _mockRepository
+                .Setup(repo => repo.TextRepository.GetAllAsync(It.IsAny<Expression<Func<Text, bool>>>(),
+                        It.IsAny<Func<IQueryable<Text>,
+                        IIncludableQueryable<Text, Text>>?>()))
                 .ReturnsAsync(new List<Text>());
 
-            this.mockMapper
+            _mockMapper
                 .Setup(x => x.Map<IEnumerable<TextDTO>>(It.IsAny<IEnumerable<object>>()))
                 .Returns(new List<TextDTO>() { new TextDTO() { Id = 1 } });
-            this.mockLocalizerCannotFind
+            _mockLocalizerCannotFind
                 .Setup(x => x["CannotFindAnyText"])
                 .Returns(new LocalizedString("CannotFindAnyText", "Cannot find any text"));
 
-            var handler = new GetAllTextsHandler(repository.Object, this.mockMapper.Object);
-
-            var result = await handler.Handle(new GetAllTextsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllTextsQuery(UserRole.User), CancellationToken.None);
 
             Assert.NotNull(result);
         }

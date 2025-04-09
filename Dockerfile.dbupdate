@@ -7,10 +7,11 @@ COPY ./Streetcode/DbUpdate/*.cs ./DbUpdate/
 COPY ./Streetcode/DbUpdate/appsettings.IntegrationTests.json ./DbUpdate/
 COPY ./Streetcode/Streetcode.WebApi/appsettings.Staging.json ./DbUpdate/
 COPY ./Streetcode ./Streetcode/
-COPY ./Streetcode/Streetcode.DAL/Persistence/ScriptsMigration ./Streetcode.DAL/Persistence/ScriptsMigration/
+#COPY ./Streetcode/Streetcode.DAL/Persistence/ScriptsMigration /Streetcode.DAL/Persistence/ScriptsMigration/
+COPY ./Streetcode/Streetcode.DAL/Persistence/ScriptsMigration /app/ScriptsMigration/
+#RUN  ls -la /tmp/ScriptsMigration
 
 RUN dotnet restore ./DbUpdate/DbUpdate.csproj
-
 
 # build
 RUN dotnet build ./DbUpdate/DbUpdate.csproj -c Release -o /app/build
@@ -22,5 +23,8 @@ RUN dotnet publish ./DbUpdate/DbUpdate.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/runtime:7.0 AS runtime
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Copy the ScriptsMigration folder from the build stage to the runtime image
+COPY --from=build /app/ScriptsMigration /app/ScriptsMigration/
 
 CMD ["dotnet", "DbUpdate.dll"]

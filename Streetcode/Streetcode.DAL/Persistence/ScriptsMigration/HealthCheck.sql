@@ -1,11 +1,12 @@
-﻿BEGIN
-    IF EXISTS (SELECT 1 FROM [AspNetUsers] WHERE Email = 'admin@admin.com')
-    BEGIN
-        SELECT * FROM [AspNetUsers] WHERE Email = 'admin@admin.com';
-    END
-    ELSE
-    BEGIN
-        SELECT 1 FROM [AspNetUsers];
-    END
+BEGIN
+    CREATE TABLE TestTable (
+        Id INT PRIMARY KEY,
+        Name NVARCHAR(100)
+    );
+END;
+GO
+
+BEGIN
+    DROP TABLE TestTable;
 END;
 GO

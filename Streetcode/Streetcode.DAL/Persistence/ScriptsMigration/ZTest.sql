@@ -1,4 +1,4 @@
 ﻿BEGIN
-    SELECT 1 FROM [StreetcodeDb].[dbo].[AspNetRoles];
+    SELECT 1 FROM [AspNetUsers];
 END;
 GO

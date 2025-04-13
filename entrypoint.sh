@@ -52,8 +52,8 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_PRINT_TELEMETRY_MESSAGE=false
 export DOTNET_EnableDiagnostics=1
 
-echo "Mock failure in dbupdate..."
-exit 1
+#echo "Mock failure in dbupdate..."
+#exit 1
 
 echo "========== [RUNNING DBUPDATE] =========="
 

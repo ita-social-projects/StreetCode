@@ -16,9 +16,9 @@ namespace Streetcode.WebApi.Controllers.Newss
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<NewsDTO>))]
-        public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10)
+        public async Task<IActionResult> GetAll([FromQuery] ushort page = 1, [FromQuery] ushort pageSize = 10, [FromQuery] string? title = null)
         {
-            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllNewsQuery(page, pageSize, title)));
         }
 
         [HttpGet("{id:int}")]

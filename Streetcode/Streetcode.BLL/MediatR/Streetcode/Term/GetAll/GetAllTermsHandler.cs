@@ -20,7 +20,12 @@ public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<IEnum
     public async Task<Result<IEnumerable<TermDTO>>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
     {
         var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
+        if (!string.IsNullOrWhiteSpace(request.title))
+        {
+            terms = terms.Where(t => t.Title != null && t.Title.Contains(request.title, StringComparison.OrdinalIgnoreCase));
+        }
 
-        return Result.Ok(_mapper.Map<IEnumerable<TermDTO>>(terms));
+        var termDTOs = _mapper.Map<IEnumerable<TermDTO>>(terms);
+        return Result.Ok(termDTOs);
     }
 }

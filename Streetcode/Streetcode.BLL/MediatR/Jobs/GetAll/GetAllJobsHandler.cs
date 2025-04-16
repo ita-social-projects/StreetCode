@@ -1,4 +1,8 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,21 +33,41 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 		{
 			try
 			{
-				PaginationResponse<Job> paginationResponse = _repositoryWrapper
+				var allJobs = await _repositoryWrapper
 					.JobRepository
-					.GetAllPaginated(
-						request.page,
-						request.pageSize);
+					.FindAll()
+					.ToListAsync(cancellationToken);
 
-				GetAllJobsDTO getAllJobsDTO = new GetAllJobsDTO()
+				var filteredJobs = string.IsNullOrWhiteSpace(request.title)
+					? allJobs
+					: allJobs
+						.Where(p =>
+						{
+							_logger.LogInformation($"request.title: '{request.title}', p.Title: '{p.Title}'");
+							string trimmedTitle = p.Title?.Trim().ToLower();
+							string searchTitle = request.title?.Trim().ToLower();
+							return !string.IsNullOrWhiteSpace(trimmedTitle) &&
+								   trimmedTitle.Contains(searchTitle);
+						})
+						.ToList();
+
+				int page = request.page ?? 1;
+				int pageSize = request.pageSize ?? 10;
+
+				var pagedJobs = filteredJobs
+					.Skip((page - 1) * pageSize)
+					.Take(pageSize)
+					.ToList();
+
+				var getAllJobsDTO = new GetAllJobsDTO
 				{
-					TotalAmount = paginationResponse.TotalItems,
-					Jobs = _mapper.Map<IEnumerable<JobDto>>(paginationResponse.Entities),
+					TotalAmount = filteredJobs.Count(),
+					Jobs = _mapper.Map<IEnumerable<JobDto>>(pagedJobs),
 				};
 
 				return Task.FromResult(Result.Ok(getAllJobsDTO));
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
 				_logger.LogError(request, ex.Message);
 				return Task.FromResult(Result.Fail<GetAllJobsDTO>(ex.Message));

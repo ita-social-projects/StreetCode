@@ -21,7 +21,11 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizeCannotFind;
 
-    public GetAllPartnersHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
+    public GetAllPartnersHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizeCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -31,26 +35,54 @@ public class GetAllPartnersHandler : IRequestHandler<GetAllPartnersQuery, Result
 
     public Task<Result<GetAllPartnersResponseDTO>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
     {
-        PaginationResponse<Partner> paginationResponse = _repositoryWrapper
-                .PartnersRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    include: partnersCollection => partnersCollection
-                        .Include(pl => pl.PartnerSourceLinks)
-                        .Include(p => p.Streetcodes));
+        var allPartnersQuery = _repositoryWrapper
+            .PartnersRepository
+            .FindAll(include: partnersCollection => partnersCollection
+                .Include(pl => pl.PartnerSourceLinks)
+                .Include(p => p.Streetcodes));
 
-        if (paginationResponse is null)
+        if (!await allPartnersQuery.AnyAsync(cancellationToken))
         {
             string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
             _logger.LogError(request, errorMsg);
             return Task.FromResult(Result.Fail<GetAllPartnersResponseDTO>(new Error(errorMsg)));
         }
 
-        GetAllPartnersResponseDTO getAllPartnersResponseDTO = new GetAllPartnersResponseDTO()
+        if (!string.IsNullOrWhiteSpace(request.title))
         {
-            TotalAmount = paginationResponse.TotalItems,
-            Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginationResponse.Entities),
+            allPartnersQuery = allPartnersQuery.Where(p => p.Title.ToLower().Contains(request.title.ToLower()));
+        }
+
+        if (request.IsKeyPartner.HasValue)
+        {
+            allPartnersQuery = allPartnersQuery.Where(p => p.IsKeyPartner == request.IsKeyPartner.Value);
+        }
+
+        var totalCount = await allPartnersQuery.CountAsync(cancellationToken);
+
+        if (totalCount == 0)
+        {
+            var emptyResponse = new GetAllPartnersResponseDTO
+            {
+                TotalAmount = 0,
+                Partners = new List<PartnerDTO>()
+            };
+
+            return Result.Ok(emptyResponse);
+        }
+
+        var page = request.page ?? 1;
+        var pageSize = request.pageSize ?? 10;
+
+        var paginatedPartners = await allPartnersQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        var getAllPartnersResponseDTO = new GetAllPartnersResponseDTO()
+        {
+            TotalAmount = totalCount,
+            Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginatedPartners),
         };
 
         return Task.FromResult(Result.Ok(getAllPartnersResponseDTO));

@@ -9,7 +9,6 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using Streetcode.DAL.Entities.Users; // Додаємо необхідний using для доступу до User
 
 namespace Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 
@@ -39,10 +38,6 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
     {
         var filterRequest = query.Request;
 
-        var users = _repositoryWrapper.UserRepository
-            .FindAll()
-            .AsQueryable();
-
         var streetcodes = _repositoryWrapper.StreetcodeRepository
             .FindAll()
             .Include(s => s.Tags)
@@ -50,7 +45,7 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
 
         if (filterRequest.Title is not null)
         {
-            FindStreetcodesWithMatchTitle(ref streetcodes, filterRequest.Title, users);
+            FindStreetcodesWithMatchTitle(ref streetcodes, filterRequest.Title);
         }
 
         if (filterRequest.Sort is not null)
@@ -101,24 +96,14 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
     }
 
     private static void FindStreetcodesWithMatchTitle(
-    ref IQueryable<StreetcodeContent> streetcodes,
-    string title,
-    IQueryable<User> users) 
+        ref IQueryable<StreetcodeContent> streetcodes,
+        string title)
     {
-        streetcodes = streetcodes
-        .Join(users, streetcode => streetcode.UserId, user => user.Id, (streetcode, user) => new { streetcode, user }) 
-        .Where(sc => sc.streetcode.Title!.ToLower().Contains(title.ToLower())
-             || sc.streetcode.Index.ToString() == title
-             || (sc.user != null && sc.user.UserName.ToLower().Contains(title.ToLower()))) 
-        .Select(sc => sc.streetcode); 
-
-        var resultList = streetcodes.ToList();
-
-        foreach (var streetcode in resultList)
-        {
-            var user = users.FirstOrDefault(u => u.Id == streetcode.UserId); 
-            Console.WriteLine($"Title: {streetcode.Title}, Author (User Name): {user?.UserName ?? "Unknown"}");
-        }
+        streetcodes = streetcodes.Where(s => s.Title!
+            .ToLower()
+            .Contains(title
+            .ToLower()) || s.Index
+            .ToString() == title);
     }
 
     private static Result FindFilteredStreetcodes(

@@ -20,7 +20,11 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetAllTagsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> CannotFindSharedResource)
+    public GetAllTagsHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -30,24 +34,34 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
 
     public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
     {
-        PaginationResponse<DAL.Entities.AdditionalContent.Tag> paginationResponse = _repositoryWrapper
+        var allTags = _repositoryWrapper
             .TagRepository
-            .GetAllPaginated(
-                request.page,
-                request.pageSize,
-                descendingSortKeySelector: tag => tag.Title);
+            .FindAll()
+            .ToList();
 
-        if (paginationResponse is null)
+        if (allTags == null || !allTags.Any())
         {
             string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
             _logger.LogError(request, errorMsg);
             return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg)));
         }
 
-        GetAllTagsResponseDTO getAllTagsResponseDTO = new GetAllTagsResponseDTO
+        var filteredTags = string.IsNullOrWhiteSpace(request.title)
+            ? allTags
+            : allTags.Where(t => t.Title.ToLower().Contains(request.title.ToLower()));
+
+        var page = request.page ?? 1;
+        var pageSize = request.pageSize ?? 10;
+
+        var paginatedTags = filteredTags
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var getAllTagsResponseDTO = new GetAllTagsResponseDTO
         {
-            TotalAmount = paginationResponse.TotalItems,
-            Tags = _mapper.Map<IEnumerable<TagDTO>>(paginationResponse.Entities),
+            TotalAmount = filteredTags.Count(),
+            Tags = _mapper.Map<IEnumerable<TagDTO>>(paginatedTags),
         };
 
         return Task.FromResult(Result.Ok(getAllTagsResponseDTO));

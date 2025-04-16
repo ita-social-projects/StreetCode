@@ -32,20 +32,39 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
 
         public Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
-            PaginationResponse<News> paginationResponse = _repositoryWrapper
+            var searchTitle = request.title?.Trim().ToLower();
+
+            var allNews = await _repositoryWrapper
                 .NewsRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    include: newsCollection => newsCollection.Include(news => news.Image!),
-                    descendingSortKeySelector: news => news.CreationDate);
+                .GetAllAsync(
+                    predicate: x => true,
+                    include: x => x.Include(news => news.Image));
 
-            var newsDTOs = MapToNewsDTOs(paginationResponse.Entities);
+            var filteredNews = string.IsNullOrWhiteSpace(searchTitle)
+                ? allNews
+                : allNews
+                    .Where(news =>
+                        !string.IsNullOrWhiteSpace(news.Title) &&
+                        news.Title.ToLower().Contains(searchTitle))
+                    .ToList();
 
-            GetAllNewsResponseDTO getAllNewsResponseDTO = new GetAllNewsResponseDTO()
+            int page = request.page ?? 1;
+            int pageSize = request.pageSize ?? 10;
+
+            int totalItems = filteredNews.Count();
+
+            var paginatedNews = filteredNews
+                .OrderByDescending(news => news.CreationDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var newsDTOs = MapToNewsDTOs(paginatedNews);
+
+            var getAllNewsResponseDTO = new GetAllNewsResponseDTO
             {
-                TotalAmount = paginationResponse.TotalItems,
-                News = newsDTOs,
+                TotalAmount = totalItems,
+                News = newsDTOs
             };
 
             return Task.FromResult(Result.Ok(getAllNewsResponseDTO));

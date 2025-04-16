@@ -10,8 +10,6 @@ using Streetcode.WebApi.Middleware;
 using Streetcode.WebApi.Middleware.ApiRequestResponseMiddleware;
 using Streetcode.WebApi.Utils;
 
-Environment.SetEnvironmentVariable("ADMIN_PASSWORD", "na.290909");
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureApplication(builder);
@@ -107,7 +105,7 @@ app.UseRateLimiter();
 //     "ParseZipFileFromWebAsync",
 //     wp => wp.ParseZipFileFromWebAsync(),
 //     Cron.Monthly);
-await app.SeedDataAsync();
+
 app.MapControllers();
 app.UseMiddleware<CustomResponseCompressionMiddleware>();
 

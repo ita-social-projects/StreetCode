@@ -10,7 +10,7 @@ using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Job;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Job;
 using Xunit;
 
-namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
+namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Update
 {
 
     [Collection("Authorization")]
@@ -28,19 +28,19 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
         }
 
         [Fact]
-        [ExtractUpdateJobAttribute] 
+        [ExtractUpdateJobAttribute]
         public async Task Update_ReturnsSuccessStatusCode()
         {
             // Arrange
-            var jobUpdateDto = ExtractUpdateJobAttribute.JobForTest; 
+            var jobUpdateDto = ExtractUpdateJobAttribute.JobForTest;
 
             // Act
             var response = await this.Client.UpdateAsync(jobUpdateDto, this.TokenStorage.AdminAccessToken);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode); 
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [Fact]
         [ExtractUpdateJobAttribute]
         public async Task Update_WithInvalidData_ReturnsBadRequest()
@@ -52,13 +52,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
 
             // Act
             var response = await this.Client.UpdateAsync(jobUpdateDto, this.TokenStorage.AdminAccessToken);
-            
+
             // Assert
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
         }
-        
+
         [Fact]
         [ExtractUpdateJobAttribute]
         public async Task Update_TokenNotPassed_ReturnsUnauthorized()
@@ -72,7 +72,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
-        
+
         [Fact]
         [ExtractUpdateJobAttribute]
         public async Task Update_NotAdminTokenPassed_ReturnsForbidden()
@@ -86,25 +86,25 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         }
-        
+
         [Fact]
-        [ExtractUpdateJobAttribute] 
+        [ExtractUpdateJobAttribute]
         public async Task UpdateJobStatus_ReturnsSuccessStatusCode()
         {
             // Arrange
             var jobChangeStatusDto = new JobChangeStatusDto
             {
-                Id = ExtractUpdateJobAttribute.JobForTest.Id,  
-                Status = true 
+                Id = ExtractUpdateJobAttribute.JobForTest.Id,
+                Status = true
             };
-            
+
             // Act
             var response = await this.Client.ChangeJobStatusAsync(jobChangeStatusDto, this.TokenStorage.AdminAccessToken);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [Fact]
         [ExtractUpdateJobAttribute]
         public async Task UpdateJobStatus_TokenNotPassed_ReturnsUnauthorized()
@@ -112,8 +112,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             // Arrange
             var jobChangeStatusDto = new JobChangeStatusDto
             {
-                Id = ExtractUpdateJobAttribute.JobForTest.Id,  
-                Status = true  
+                Id = ExtractUpdateJobAttribute.JobForTest.Id,
+                Status = true
             };
 
             // Act
@@ -122,7 +122,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
-        
+
         [Fact]
         [ExtractUpdateJobAttribute]
         public async Task UpdateJobStatus_NotAdminTokenPassed_ReturnsForbidden()
@@ -130,8 +130,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             // Arrange
             var jobChangeStatusDto = new JobChangeStatusDto
             {
-                Id = ExtractUpdateJobAttribute.JobForTest.Id, 
-                Status = true 
+                Id = ExtractUpdateJobAttribute.JobForTest.Id,
+                Status = true
             };
 
             // Act

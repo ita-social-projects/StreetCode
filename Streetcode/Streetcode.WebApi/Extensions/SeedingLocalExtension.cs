@@ -37,8 +37,8 @@ namespace Streetcode.WebApi.Extensions
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
                 string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
                 var blobService = new BlobService(blobOptions);
-                string initialDataImagePath = @"D:\SoftServe\StreetCode.Back\StreetCode\Streetcode\Streetcode.XIntegrationTest\TestData\InitialData\images.json";
-                string initialDataAudioPath = @"D:\SoftServe\StreetCode.Back\StreetCode\Streetcode\Streetcode.XIntegrationTest\TestData\InitialData\audios.json";
+                string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
+                string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));
 
                 if (File.Exists(initialDataImagePath))
                 {
@@ -51,7 +51,6 @@ namespace Streetcode.WebApi.Extensions
                         {
                             foreach (var img in imgfromJson)
                             {
-                                Console.WriteLine($"Adding Image: {img.Id}, BlobName: {img.BlobName}");
                                 string filePath = Path.Combine(blobPath, img.BlobName!);
                                 if (!File.Exists(filePath))
                                 {
@@ -489,7 +488,7 @@ namespace Streetcode.WebApi.Extensions
                         Title = "Тарас Шевченко",
                         Alias = "Кобзар",
                         AudioId = 1,
-                        UserId = "Test_User_Admin_qwe123456rty#",
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
                         Status = StreetcodeStatus.Published
                     },
                     new PersonStreetcode
@@ -507,7 +506,7 @@ namespace Streetcode.WebApi.Extensions
                         Title = "Роман Ратушний (Сенека)",
                         Alias = "Сенека",
                         AudioId = 2,
-                        UserId = "Test_User_Admin_qwe123456rty#",
+                        UserId = "FFEF6F7A-5054-44B7-B5FC-4AEA42803F0B",
                         Status = StreetcodeStatus.Published,
                     });
 

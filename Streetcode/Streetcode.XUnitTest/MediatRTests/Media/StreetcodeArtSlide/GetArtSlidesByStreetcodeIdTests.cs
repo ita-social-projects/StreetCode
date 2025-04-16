@@ -33,32 +33,12 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             _mockMapper = new Mock<IMapper>();
         }
 
+        [Fact]
         public async Task Handle_ShouldReturnSlides_WhenStreetcodeIdExists()
         {
             // Arrange
             uint streetcodeId = 1;
             var artSlides = GetMockArtSlides(streetcodeId);
-            SetupRepositoryWrapper(artSlides);
-            SetupMapper();
-            SetupBlobService();
-
-            var handler = new GetArtSlidesByStreetcodeIdHandler(
-                _mockRepositoryWrapper.Object, 
-                _mockMapper.Object, 
-                _mockBlobService.Object);
-
-            // Act
-            var response = await handler.Handle(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5), CancellationToken.None);
-
-            // Assert
-            response.IsSuccess.Should().BeTrue();
-            response.Value.Should().HaveCount(2); 
-        }
-        public async Task Handle_ShouldReturnFailure_WhenStreetcodeIdDoesNotExist()
-        {
-            // Arrange
-            uint streetcodeId = 999; 
-            var artSlides = new List<StreetcodeArtSlide>();  
             SetupRepositoryWrapper(artSlides);
             SetupMapper();
             SetupBlobService();
@@ -72,11 +52,34 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             var response = await handler.Handle(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5), CancellationToken.None);
 
             // Assert
-            response.IsSuccess.Should().BeFalse();  
+            response.IsSuccess.Should().BeTrue();
+            response.Value.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task Handle_ShouldReturnFailure_WhenStreetcodeIdDoesNotExist()
+        {
+            // Arrange
+            uint streetcodeId = 999;
+            var artSlides = new List<StreetcodeArtSlide>();
+            SetupRepositoryWrapper(artSlides);
+            SetupMapper();
+            SetupBlobService();
+
+            var handler = new GetArtSlidesByStreetcodeIdHandler(
+                _mockRepositoryWrapper.Object,
+                _mockMapper.Object,
+                _mockBlobService.Object);
+
+            // Act
+            var response = await handler.Handle(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5), CancellationToken.None);
+
+            // Assert
+            response.IsSuccess.Should().BeFalse();
             response.Value.Should().BeNull();
         }
 
-
+        [Fact]
         private void SetupRepositoryWrapper(IEnumerable<StreetcodeArtSlide> artSlides)
         {
             var mockDbSet = artSlides.AsQueryable();

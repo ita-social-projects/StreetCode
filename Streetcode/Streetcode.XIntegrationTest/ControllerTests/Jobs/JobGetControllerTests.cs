@@ -38,6 +38,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             Assert.NotNull(returnedValue);
         }
 
+        [Fact]
         public async Task GetAll_PageNumberTooBig_ReturnFailureStatusCode()
         {
             // Arrange
@@ -95,33 +96,33 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
       {
           // Arrange
           Job expected = this.testJob;
-      
+
           // Act
           var response = await this.Client.GetByIdAsync(expected.Id);
-      
+
           // Assert
           Assert.True(response.IsSuccessStatusCode);
-          
-          string content = response.Content;  
+
+          string content = response.Content;
           Assert.False(string.IsNullOrWhiteSpace(content));
-      
+
           var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<JobDto>(content);
-      
+
           Assert.NotNull(returnedValue);
           Assert.Equal(expected.Id, returnedValue.Id);
       }
-       
+
       [Fact]
               public async Task GetById_Incorrect_ReturnBadRequest()
               {
                   int id = -100;
                   var response = await this.Client.GetByIdAsync(id);
-      
+
                   Assert.Multiple(
                       () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                       () => Assert.False(response.IsSuccessStatusCode));
               }
-       
+
 
     }
 

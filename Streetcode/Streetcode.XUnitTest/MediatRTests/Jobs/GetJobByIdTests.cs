@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Localization;
@@ -27,7 +28,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
     private readonly Mock<IMapper> mockMapper;
     private readonly Mock<ILoggerService> mockLogger;
     private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
-    
+
     private readonly Job _job = new Job
     {
         Id = id,
@@ -57,18 +58,19 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
         // Arrange
         this.SetupRepository(_job);
         this.SetupMapper(_jobDto);
-        
+
         var handler = new GetJobByIdHandler(mockMapper.Object, mockRepository.Object, mockLogger.Object, mockLocalizer.Object);
-        
+
         // Act
         var result = await handler.Handle(new GetJobByIdQuery(id), CancellationToken.None);
-        
+
         // Assert
         result.Value.Should().NotBeNull();
         result.Value.Should().BeOfType<JobDto>();
         result.Value.Id.Should().Be(id);
     }
-    
+
+    [Fact]
     public async Task Handler_Returns_NoMatching_Element()
     {
         // Arrange
@@ -99,7 +101,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
         mockMapper
             .Setup(x => x.Map<JobDto>(It.IsAny<Job>()))
             .Returns(jobDto);
-    } 
+    }
 }
 
 }

@@ -48,8 +48,9 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllJobsDTO>(response.Content);
 
             // Assert
-            Assert.False(response.IsSuccessStatusCode);
-            Assert.Null(returnedValue);
+            Assert.True(response.IsSuccessStatusCode);
+            Assert.NotNull(returnedValue);
+            Assert.Empty(returnedValue.Jobs);
         }
 
         [Fact]

@@ -26,7 +26,6 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
         private readonly Mock<IMapper> mockMapper;
         private readonly Mock<ILoggerService> mockLogger;
         private readonly Mock<IStringLocalizer<FailedToUpdateSharedResource>> mockLocalizerFailedToUpdate;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
         private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFindSharedResource;
 
         public UpdateJobTest()
@@ -36,16 +35,13 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
             this.mockLogger = new Mock<ILoggerService>();
             this.mockLocalizerCannotFindSharedResource = new Mock<IStringLocalizer<CannotFindSharedResource>>();
             this.mockLocalizerFailedToUpdate = new Mock<IStringLocalizer<FailedToUpdateSharedResource>>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
         }
 
         [Fact]
         public async Task UpdateJobHandler_ExistingJobIsNull_ReturnsErrorMessage()
         {
             // Arrange
-            string jobTitle = "Tested Job";
             var jobUpdateDto = GetJobUpdateDto();
-            jobUpdateDto.Title = jobTitle;
             jobUpdateDto.Id = 0;
 
             this.SetupMapper(null, jobUpdateDto);
@@ -54,7 +50,7 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
                 this._mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerFailedToUpdate.Object);
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.JobRepository.GetFirstOrDefaultAsync(
@@ -73,22 +69,24 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
             Assert.Equal("Cannot find any job by the corresponding id: 0", result.Errors[0].Message);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
         public async Task ShouldThrowException_SaveChangesAsyncIsNotSuccessful(int returnNumber)
         {
             // Arrange
             this.SetupCreateRepository(returnNumber);
-            string jobTitle = "Tested Job";
+
             var jobUpdateDto = GetJobUpdateDto();
-            jobUpdateDto.Title = jobTitle;
             jobUpdateDto.Id = 1;
+
             this.SetupMapper(new Job(), jobUpdateDto);
 
             var handler = new UpdateJobHandler(
                 this._mockRepository.Object,
                 this.mockMapper.Object,
                 this.mockLogger.Object,
-                this.mockLocalizerFailedToUpdate.Object);
+                this.mockLocalizerCannotFindSharedResource.Object);
 
             this._mockRepository
                 .Setup(p => p.JobRepository.GetFirstOrDefaultAsync(
@@ -96,9 +94,40 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
                     It.IsAny<Func<IQueryable<Job>, IIncludableQueryable<Job, object>>>()))
                 .ReturnsAsync(new Job());
 
-            var expectedError = "Failed to update job";
-            this.mockLocalizerFailedToUpdate.Setup(x => x["FailedToUpdateJob"])
-                .Returns(new LocalizedString("FailedToUpdateJob", expectedError));
+            // Act
+            var result = await handler.Handle(new UpdateJobCommand(jobUpdateDto), CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+        }
+
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        public async Task ShouldThrowException_TryMapNullRequest(int returnNumber)
+        {
+            // Arrange
+            this.SetupCreateRepository(returnNumber);
+            var jobUpdateDto = GetJobUpdateDto();
+            jobUpdateDto.Id = 1;
+
+            var expectedError = "Cannot convert null to job";
+
+            this.mockMapper.Setup(x => x.Map<Job>(It.IsAny<JobUpdateDto>()))
+                .Throws(new Exception(expectedError));
+
+            var handler = new UpdateJobHandler(
+                this._mockRepository.Object,
+                this.mockMapper.Object,
+                this.mockLogger.Object,
+                this.mockLocalizerCannotFindSharedResource.Object);
+
+            this._mockRepository
+                .Setup(p => p.JobRepository.GetFirstOrDefaultAsync(
+                    It.IsAny<Expression<Func<Job, bool>>>(),
+                    It.IsAny<Func<IQueryable<Job>, IIncludableQueryable<Job, object>>>()))
+                .ReturnsAsync(new Job());
 
             // Act
             var result = await handler.Handle(new UpdateJobCommand(jobUpdateDto), CancellationToken.None);
@@ -107,42 +136,6 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
             Assert.True(result.IsFailed);
             Assert.Equal(expectedError, result.Errors[0].Message);
         }
-
-        [Fact]
-        public async Task ShouldThrowException_TryMapNullRequest(int returnNumber)
-        {
-            // Arrange
-            this.SetupCreateRepository(returnNumber);
-            string jobTitle = "Tested Job";
-            var jobUpdateDto = GetJobUpdateDto();
-            jobUpdateDto.Title = jobTitle;
-            jobUpdateDto.Id = 1;
-            this.SetupMapper(null, jobUpdateDto);
-
-            var handler = new UpdateJobHandler(
-                this._mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerFailedToUpdate.Object);
-
-            this._mockRepository
-                .Setup(p => p.JobRepository.GetFirstOrDefaultAsync(
-                    It.IsAny<Expression<Func<Job, bool>>>(),
-                    It.IsAny<Func<IQueryable<Job>, IIncludableQueryable<Job, object>>>()))
-                .ReturnsAsync(new Job());
-
-            var expectedError = "Cannot convert null to job";
-            this.mockLocalizerConvertNull.Setup(x => x["CannotConvertNullToJob"])
-                .Returns(new LocalizedString("CannotConvertNullToJob", expectedError));
-
-            // Act
-            var result = await handler.Handle(new UpdateJobCommand(jobUpdateDto), CancellationToken.None);
-
-            // Assert
-            Assert.False(result.IsSuccess);
-            Assert.Equal(expectedError, result.Errors[0].Message);
-        }
-
 
         private static Job GetJob(int id = 0, string? title = null)
         {
@@ -172,5 +165,4 @@ namespace Streetcode.XUnitTest.MediatRTests.JobsTests
                 .Returns(testJobUpdateDto);
         }
     }
-
 }

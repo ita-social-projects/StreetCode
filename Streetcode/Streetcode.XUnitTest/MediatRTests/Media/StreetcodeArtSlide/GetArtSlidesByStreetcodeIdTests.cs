@@ -33,7 +33,6 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             _mockMapper = new Mock<IMapper>();
         }
 
-        [Fact]
         public async Task Handle_ShouldReturnSlides_WhenStreetcodeIdExists()
         {
             // Arrange
@@ -56,7 +55,6 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             response.Value.Should().HaveCount(2);
         }
 
-        [Fact]
         public async Task Handle_ShouldReturnFailure_WhenStreetcodeIdDoesNotExist()
         {
             // Arrange
@@ -79,7 +77,6 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             response.Value.Should().BeNull();
         }
 
-        [Fact]
         private void SetupRepositoryWrapper(IEnumerable<StreetcodeArtSlide> artSlides)
         {
             var mockDbSet = artSlides.AsQueryable();

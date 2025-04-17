@@ -102,7 +102,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
         Assert.Null(returnedValue);
     }
 
@@ -166,7 +166,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var response = await this.Client.Update(factUpdateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
     }
 
     [Fact]
@@ -182,7 +182,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var response = await this.Client.Update(factUpdateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
     }
 
     [Fact]

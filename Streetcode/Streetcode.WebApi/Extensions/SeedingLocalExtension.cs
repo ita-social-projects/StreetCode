@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Streetcode.BLL.Interfaces.ImageComparator;
@@ -26,6 +27,7 @@ using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.WebApi.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SeedingLocalExtension
     {
         public static async Task SeedDataAsync(this WebApplication app)

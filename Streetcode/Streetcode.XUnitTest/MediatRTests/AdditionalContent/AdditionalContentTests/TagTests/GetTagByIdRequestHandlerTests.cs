@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.AdditionalContent.Tag.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -51,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetTagByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -69,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetTagByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetTagByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetTagByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

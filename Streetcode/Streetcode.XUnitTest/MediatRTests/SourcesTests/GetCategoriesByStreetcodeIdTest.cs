@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Localization;
+using MockQueryable.Moq;
 using Moq;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
@@ -11,52 +12,50 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 {
     public class GetCategoriesByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IBlobService> blobService;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly MockCannotFindLocalizer _mockLocalizerCannotFind;
 
         public GetCategoriesByStreetcodeIdTest()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.blobService = new Mock<IBlobService>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerCannotFind = new MockCannotFindLocalizer();
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnSuccesfully(int id)
+        public async Task Handler_CategoriesExistsAndUserHasAccess_ReturnSuccesfully(int id)
         {
             // Arrange
-            this.mockRepository.Setup(x => x.SourceCategoryRepository
-            .GetAllAsync(
-                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkCategory>,
-                IIncludableQueryable<SourceLinkCategory, object>>>()))
-            .ReturnsAsync(GetSourceLinkCategories());
+            SetupRepositoryMock(GetSourceLinkCategories(), GetStreetcodeList());
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
                 .Returns(GetSourceDTOs());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.blobService.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerCannotFind.Object);
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
 
             // Act
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -66,32 +65,69 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnEmptyArray_NotExistingId(int id)
+        public async Task Handler_CategoriesNotExistsAndUserHasAccess_ReturnEmptyArray(int id)
         {
             // Arrange
-            this.mockRepository.Setup(x => x.SourceCategoryRepository
-            .GetAllAsync(
-                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkCategory>,
-                IIncludableQueryable<SourceLinkCategory, object>>>()))
-            .ReturnsAsync(this.GetSourceLinkCategoriesNotExists());
-
+            SetupRepositoryMock(GetSourceLinkCategoriesNotExists(), GetStreetcodeList());
 
             var handler = new GetCategoriesByStreetcodeIdHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.blobService.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerCannotFind.Object);
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
 
             // Act
-            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
                 () => Assert.IsType<Result<IEnumerable<SourceLinkCategoryDTO>>>(result),
                 () => Assert.IsAssignableFrom<IEnumerable<SourceLinkCategoryDTO>>(result.Value),
                 () => Assert.Empty(result.Value));
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async Task Handler_CategoriesExistsButUserDoesNotHaveAccess_ReturnSuccesfully(int id)
+        {
+            // Arrange
+            SetupRepositoryMock(GetSourceLinkCategories(), new List<StreetcodeContent>());
+
+            var expectedError = _mockLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", id].Value;
+
+            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+                .Returns(GetSourceDTOs());
+
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
+
+            // Act
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
+
+            // Assert
+            Assert.Equal(expectedError, result.Errors.Single().Message);
+        }
+
+        private void SetupRepositoryMock(List<SourceLinkCategory> sourceLinkCategories, List<StreetcodeContent> streetcodeListUserCanAccess)
+        {
+            _mockRepository.Setup(x => x.SourceCategoryRepository
+                    .GetAllAsync(
+                        It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+                        It.IsAny<Func<IQueryable<SourceLinkCategory>,
+                            IIncludableQueryable<SourceLinkCategory, object>>>()))
+                .ReturnsAsync(sourceLinkCategories);
+
+            _mockRepository.Setup(repo => repo.StreetcodeRepository
+                    .FindAll(
+                        It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                        It.IsAny<Func<IQueryable<StreetcodeContent>,
+                            IIncludableQueryable<StreetcodeContent, object>>>()))
+                .Returns(streetcodeListUserCanAccess.AsQueryable().BuildMockDbSet().Object);
         }
 
         private static List<SourceLinkCategory> GetSourceLinkCategories()
@@ -131,6 +167,17 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private List<SourceLinkCategory> GetSourceLinkCategoriesNotExists()
         {
             return new List<SourceLinkCategory>();
+        }
+
+        private static List<StreetcodeContent> GetStreetcodeList()
+        {
+            return new List<StreetcodeContent>
+            {
+                new StreetcodeContent
+                {
+                    Id = 1,
+                },
+            };
         }
     }
 }

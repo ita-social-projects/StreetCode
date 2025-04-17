@@ -31,6 +31,11 @@ public class MockCannotFindLocalizer : BaseMockStringLocalizer<CannotFindSharedR
                     "CannotFindTransactionLinkByStreetcodeIdBecause",
                     "CannotFindHistoricalContextWithCorrespondingId",
                     "CannotFindAnyStreetcodeWithCorrespondingId",
+                    "CannotFindCoordinatesByStreetcodeId",
+                    "CannotFindAnImageWithTheCorrespondingStreetcodeId",
+                    "CannotFindAnyArtWithCorrespondingStreetcodeId",
+                    "CannotFindAnAudioWithTheCorrespondingStreetcodeId",
+                    "CannotFindAnyFactByTheStreetcodeId",
                 }
             },
             {

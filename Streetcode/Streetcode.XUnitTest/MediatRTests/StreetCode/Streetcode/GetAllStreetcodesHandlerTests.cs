@@ -1,11 +1,14 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using AutoMapper;
 using FluentResults;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAll;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Interfaces.Streetcode;
 using Streetcode.XUnitTest.Mocks;
@@ -44,7 +47,7 @@ public class GetAllStreetcodesHandlerTests
         };
 
         var request = new GetAllStreetcodesRequestDTO();
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
         var handler = SetupMockObjectsAndGetHandler(mockStreetcodes);
 
         // Act
@@ -73,7 +76,7 @@ public class GetAllStreetcodesHandlerTests
         };
 
         var request = new GetAllStreetcodesRequestDTO { Page = 1, Amount = 1 };
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var handler = SetupMockObjectsAndGetHandler(mockStreetcodes);
 
@@ -99,7 +102,7 @@ public class GetAllStreetcodesHandlerTests
     {
         // Arrange
         var request = new GetAllStreetcodesRequestDTO { Page = 1, Amount = 5 };
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
         var handler = SetupMockObjectsAndGetHandler();
 
         // Act
@@ -130,7 +133,7 @@ public class GetAllStreetcodesHandlerTests
         };
 
         var request = new GetAllStreetcodesRequestDTO { Page = 2, Amount = 2 };
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
         var handler = SetupMockObjectsAndGetHandler(mockStreetcodes);
 
         // Act
@@ -158,7 +161,7 @@ public class GetAllStreetcodesHandlerTests
             Title = "Some Title",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -194,7 +197,7 @@ public class GetAllStreetcodesHandlerTests
             Title = "Some Title",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -227,7 +230,7 @@ public class GetAllStreetcodesHandlerTests
             Sort = "-Title",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -267,7 +270,7 @@ public class GetAllStreetcodesHandlerTests
             Sort = "-IncorrectSortColumn",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -428,7 +431,7 @@ public class GetAllStreetcodesHandlerTests
             Filter = "Teaser:Teaser",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -464,7 +467,7 @@ public class GetAllStreetcodesHandlerTests
             Filter = "IncorrectTeaser:Teaser",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -493,7 +496,7 @@ public class GetAllStreetcodesHandlerTests
             Filter = "Teaser:NonExistingFilterValue",
         };
 
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
 
         var mockStreetcodes = new List<StreetcodeContent>
         {
@@ -530,7 +533,7 @@ public class GetAllStreetcodesHandlerTests
             Amount = amount,
         };
         var expectedErrorMessage = _mockFailedToValidateLocalizer["InvalidPaginationParameters"];
-        var query = new GetAllStreetcodesQuery(request);
+        var query = new GetAllStreetcodesQuery(request, UserRole.User);
         var handler = SetupMockObjectsAndGetHandler();
 
         // Act
@@ -550,7 +553,10 @@ public class GetAllStreetcodesHandlerTests
         mockStreetcodes ??= new List<StreetcodeContent>();
 
         _streetcodeRepositoryMock
-            .Setup(repo => repo.FindAll(null, null))
+            .Setup(repo => repo.FindAll(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>,
+                    IIncludableQueryable<StreetcodeContent, object>>>()))
             .Returns(mockStreetcodes.AsQueryable());
 
         _repositoryWrapperMock

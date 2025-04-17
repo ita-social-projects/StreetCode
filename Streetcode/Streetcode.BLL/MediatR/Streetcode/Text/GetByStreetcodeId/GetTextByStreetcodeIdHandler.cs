@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
@@ -6,6 +7,7 @@ using Streetcode.BLL.DTO.Streetcode.TextContent.Text;
 using Streetcode.BLL.Interfaces.Cache;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -41,8 +43,10 @@ public class GetTextByStreetcodeIdHandler : IRequestHandler<GetTextByStreetcodeI
                 cacheKey,
                 async () =>
                 {
-                    var text = await _repositoryWrapper.TextRepository
-                        .GetFirstOrDefaultAsync(x => x.StreetcodeId == request.StreetcodeId);
+                    Expression<Func<DAL.Entities.Streetcode.TextContent.Text, bool>>? basePredicate = text => text.StreetcodeId == request.StreetcodeId;
+                    var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, t => t.Streetcode);
+
+                    var text = await _repositoryWrapper.TextRepository.GetFirstOrDefaultAsync(predicate: predicate);
 
                     if (text is null && await _repositoryWrapper.StreetcodeRepository
                             .GetFirstOrDefaultAsync(x => x.Id == request.StreetcodeId) is null)

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.ReCaptchaResponseDTO;
 using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.Interfaces.Logging;
 
@@ -15,46 +16,31 @@ namespace Streetcode.BLL.MediatR.Email
         private readonly IEmailService _emailService;
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<SendEmailHandler> _stringLocalizer;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration;
         private readonly IMessageDataAbstractFactory _messageDataAbstractFactory;
+        private readonly ICaptchaService _captchaService;
 
         public SendEmailHandler(
             IEmailService emailService,
             ILoggerService logger,
             IStringLocalizer<SendEmailHandler> stringLocalizer,
-            IHttpClientFactory httpClientFactory,
-            IConfiguration configuration,
-            IMessageDataAbstractFactory messageDataAbstractFactory)
+            IMessageDataAbstractFactory messageDataAbstractFactory,
+            ICaptchaService captchaService)
         {
             _emailService = emailService;
             _logger = logger;
             _stringLocalizer = stringLocalizer;
-            _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
             _messageDataAbstractFactory = messageDataAbstractFactory;
+            _captchaService = captchaService;
         }
 
         public async Task<Result<Unit>> Handle(SendEmailCommand request, CancellationToken cancellationToken)
         {
-            var httpClient = _httpClientFactory.CreateClient();
-            var reCaptchaResponse = await httpClient.PostAsync($"https://www.google.com/recaptcha/api/siteverify?secret={_configuration["ReCaptcha:SecretKey"]}&response={request.Email.Token}", null, cancellationToken);
-
-            if (!reCaptchaResponse.IsSuccessStatusCode)
+            var reCaptchaValidationResult = await _captchaService.ValidateReCaptchaAsync(request.Email.Token, cancellationToken);
+            if (reCaptchaValidationResult.IsFailed)
             {
-                string errorMessage = _stringLocalizer["RecaptchaRequestFailed"];
-                _logger.LogError(request, errorMessage);
-                return Result.Fail(new Error(errorMessage));
-            }
-
-            var reCaptchaResponseResult = await reCaptchaResponse.Content.ReadFromJsonAsync<ReCaptchaResponseDto>(cancellationToken: cancellationToken);
-
-            reCaptchaResponseResult ??= new();
-            if (!reCaptchaResponseResult.Success)
-            {
-                string errorMessage = _stringLocalizer["InvalidCaptcha"];
-                _logger.LogError(request, errorMessage);
-                return Result.Fail(new Error(errorMessage));
+                string captchaErrorMessage = reCaptchaValidationResult.Errors[0].Message;
+                _logger.LogError(request, captchaErrorMessage);
+                return Result.Fail(new Error(captchaErrorMessage));
             }
 
             var message = _messageDataAbstractFactory.CreateFeedbackMessageData(

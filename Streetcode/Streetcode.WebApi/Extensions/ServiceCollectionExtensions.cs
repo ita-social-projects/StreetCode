@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Identity;
 using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
 using Streetcode.BLL.Factories.MessageDataFactory.Concretes;
 using Streetcode.BLL.Interfaces.Email;
+using Streetcode.BLL.Interfaces.ImageComparator;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Update;
 using Streetcode.BLL.Models.Email;
@@ -41,6 +42,7 @@ using Streetcode.BLL.Validators.SourceLinkCategory;
 using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
 using Streetcode.BLL.Services.Email;
+using Streetcode.BLL.Services.ImageComparator;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -66,6 +68,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IAudioService, AudioService>();
         services.AddScoped<IImageService, ImageService>();
+        services.AddScoped<IImageHashGeneratorService, ImageHashGeneratorService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICaptchaService, CaptchaService>();
         services.AddScoped<IGoogleService, GoogleService>();

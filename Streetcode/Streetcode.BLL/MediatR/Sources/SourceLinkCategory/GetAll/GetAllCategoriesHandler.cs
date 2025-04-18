@@ -36,16 +36,16 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             _stringLocalizerNo = stringLocalizerNo;
         }
 
-        public Task<Result<GetAllCategoriesResponseDTO>> Handle(
+        public async Task<Result<GetAllCategoriesResponseDTO>> Handle(
             GetAllCategoriesQuery request,
             CancellationToken cancellationToken)
         {
-            var allCategories = _repositoryWrapper.SourceCategoryRepository
+            var allCategories = await _repositoryWrapper.SourceCategoryRepository
                 .FindAll(
                     include: cat => cat.Include(img => img.Image)!,
                     predicate: cat => string.IsNullOrWhiteSpace(request.title) ||
                                       cat.Title.ToLower().Contains(request.title.ToLower()))
-                .ToList();
+                .ToListAsync(cancellationToken);
 
             var page = request.page ?? 1;
             var pageSize = request.pageSize ?? 10;

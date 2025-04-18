@@ -29,7 +29,7 @@ public class GetAllTagsHandler : IRequestHandler<GetAllTagsQuery, Result<GetAllT
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
         _logger = logger;
-        _stringLocalizerCannotFind = CannotFindSharedResource;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)

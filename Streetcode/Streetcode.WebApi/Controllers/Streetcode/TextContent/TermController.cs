@@ -14,9 +14,9 @@ public class TermController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TermDTO>))]
-    public async Task<IActionResult> GetAll([FromQuery] string? title = null)
+    public async Task<IActionResult> GetAll([FromQuery] string? title = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        return HandleResult(await Mediator.Send(new GetAllTermsQuery(title)));
+        return HandleResult(await Mediator.Send(new GetAllTermsQuery(title, page, pageSize)));
     }
 
     [HttpGet("{id:int}")]

@@ -30,7 +30,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
             var searchTitle = request.title?.Trim().ToLower();
 
@@ -67,7 +67,7 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
                 News = newsDTOs
             };
 
-            return Task.FromResult(Result.Ok(getAllNewsResponseDTO));
+            return Result.Ok(getAllNewsResponseDTO);
         }
 
         private IEnumerable<NewsDTO> MapToNewsDTOs(IEnumerable<News> entities)

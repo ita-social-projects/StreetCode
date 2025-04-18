@@ -1,31 +1,49 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
-namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll;
-
-public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<IEnumerable<TermDTO>>>
+namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
 {
-    private readonly IMapper _mapper;
-    private readonly IRepositoryWrapper _repositoryWrapper;
-
-    public GetAllTermsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
+    public class GetAllTermsHandler : IRequestHandler<GetAllTermsQuery, Result<GetAllTermsResponseDto>>
     {
-        _repositoryWrapper = repositoryWrapper;
-        _mapper = mapper;
-    }
+        private readonly IMapper _mapper;
+        private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public async Task<Result<IEnumerable<TermDTO>>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
-    {
-        var terms = await _repositoryWrapper.TermRepository.GetAllAsync();
-        if (!string.IsNullOrWhiteSpace(request.title))
+        public GetAllTermsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper)
         {
-            terms = terms.Where(t => t.Title != null && t.Title.Contains(request.title, StringComparison.OrdinalIgnoreCase));
+            _repositoryWrapper = repositoryWrapper;
+            _mapper = mapper;
         }
 
-        var termDTOs = _mapper.Map<IEnumerable<TermDTO>>(terms);
-        return Result.Ok(termDTOs);
+        public async Task<Result<GetAllTermsResponseDto>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
+        {
+            var termsQuery = _repositoryWrapper.TermRepository.FindAll();
+
+            if (!string.IsNullOrWhiteSpace(request.title))
+            {
+                termsQuery = termsQuery.Where(t => t.Title != null && t.Title.ToLower().Contains(request.title.Trim().ToLower()));
+            }
+
+            var totalAmount = await termsQuery.CountAsync(cancellationToken);
+
+            var paginatedTerms = await termsQuery
+                .Skip((request.page - 1) * request.pageSize)
+                .Take(request.pageSize)
+                .ToListAsync(cancellationToken);
+
+            var termDTOs = _mapper.Map<IEnumerable<TermDTO>>(paginatedTerms);
+
+            var response = new GetAllTermsResponseDto
+            {
+                TotalAmount = totalAmount,
+                Terms = termDTOs
+            };
+
+            return Result.Ok(response);
+        }
     }
 }

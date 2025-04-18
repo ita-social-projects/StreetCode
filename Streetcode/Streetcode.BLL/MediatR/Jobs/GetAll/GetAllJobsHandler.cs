@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -33,10 +33,10 @@ namespace Streetcode.BLL.MediatR.Jobs.GetAll
 		{
 			try
 			{
-				var allJobs = await _repositoryWrapper
+				var allJobs = _repositoryWrapper
 					.JobRepository
 					.FindAll()
-					.ToListAsync(cancellationToken);
+					.ToList();
 
 				var filteredJobs = string.IsNullOrWhiteSpace(request.title)
 					? allJobs

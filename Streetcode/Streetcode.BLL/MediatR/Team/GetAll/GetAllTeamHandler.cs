@@ -25,7 +25,7 @@ public class GetAllTeamHandler : IRequestHandler<GetAllTeamQuery, Result<GetAllT
         _blobService = blobService;
     }
 
-    public Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllTeamDTO>> Handle(GetAllTeamQuery request, CancellationToken cancellationToken)
     {
         var searchTitle = request.title?.Trim().ToLower();
 

@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Media.Video;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -26,7 +28,10 @@ public class GetAllVideosHandler : IRequestHandler<GetAllVideosQuery, Result<IEn
 
     public async Task<Result<IEnumerable<VideoDTO>>> Handle(GetAllVideosQuery request, CancellationToken cancellationToken)
     {
-        var videos = await _repositoryWrapper.VideoRepository.GetAllAsync();
+        Expression<Func<DAL.Entities.Media.Video, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, v => v.Streetcode);
+
+        var videos = await _repositoryWrapper.VideoRepository.GetAllAsync(predicate: predicate);
 
         if (videos is null)
         {

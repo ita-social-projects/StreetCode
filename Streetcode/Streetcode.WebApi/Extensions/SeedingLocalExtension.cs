@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Streetcode.BLL.Interfaces.ImageComparator;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.DAL.Entities.AdditionalContent;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
@@ -25,6 +27,7 @@ using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.WebApi.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class SeedingLocalExtension
     {
         public static async Task SeedDataAsync(this WebApplication app)
@@ -39,6 +42,8 @@ namespace Streetcode.WebApi.Extensions
                 var blobService = new BlobService(blobOptions);
                 string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
                 string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));
+
+                var imageHashGeneratorService = scope.ServiceProvider.GetRequiredService<IImageHashGeneratorService>();
 
                 if (File.Exists(initialDataImagePath))
                 {
@@ -56,6 +61,8 @@ namespace Streetcode.WebApi.Extensions
                                 {
                                     blobService.SaveFileInStorageBase64(img.Base64!, img.BlobName!.Split('.')[0], img.BlobName.Split('.')[1]);
                                 }
+
+                                img.ImageHash = imageHashGeneratorService.GenerateImageHash(img.Base64);
                             }
 
                             dbContext.Images.AddRange(imgfromJson);

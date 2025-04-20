@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,14 +7,13 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 {
-
     public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<GetAllCategoriesResponseDTO>>
     {
         private readonly IMapper _mapper;
@@ -40,11 +40,14 @@ namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
             GetAllCategoriesQuery request,
             CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>? basePredicate = null;
+            var predicate = basePredicate?.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sl => sl.Streetcodes);
+
             var allCategories = await _repositoryWrapper.SourceCategoryRepository
                 .FindAll(
-                    include: cat => cat.Include(img => img.Image)!,
-                    predicate: cat => string.IsNullOrWhiteSpace(request.title) ||
-                                      cat.Title.ToLower().Contains(request.title.ToLower()))
+                    predicate: predicate ?? (cat => string.IsNullOrWhiteSpace(request.title) ||
+                                                      cat.Title.ToLower().Contains(request.title.ToLower())),
+                    include: cat => cat.Include(img => img.Image)!)
                 .ToListAsync(cancellationToken);
 
             var page = request.page ?? 1;

@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Timeline;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -30,20 +32,16 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
         }
 
         public Task<Result<GetAllHistoricalContextDTO>> Handle(
-            GetAllHistoricalContextQuery request,
-            CancellationToken cancellationToken)
+    GetAllHistoricalContextQuery request,
+    CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Timeline.HistoricalContext, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, hc => hc.HistoricalContextTimelines, hctl => hctl.Timeline.Streetcode);
+
             var allContext = _repositoryWrapper
                 .HistoricalContextRepository
-                .FindAll()
+                .FindAll(predicate)
                 .ToList();
-
-            if (allContext == null || !allContext.Any())
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
-                _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
-            }
 
             var filteredContext = string.IsNullOrWhiteSpace(request.title)
                 ? allContext

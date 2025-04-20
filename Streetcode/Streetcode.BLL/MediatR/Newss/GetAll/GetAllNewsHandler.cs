@@ -1,10 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.News;
 using Streetcode.BLL.Interfaces.BlobStorage;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
@@ -33,12 +35,14 @@ namespace Streetcode.BLL.MediatR.Newss.GetAll
         public async Task<Result<GetAllNewsResponseDTO>> Handle(GetAllNewsQuery request, CancellationToken cancellationToken)
         {
             var searchTitle = request.title?.Trim().ToLower();
+            Expression<Func<News, bool>>? basePredicate = null;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new NewsAccessManager(), request.UserRole);
 
             var allNews = await _repositoryWrapper
                 .NewsRepository
                 .GetAllAsync(
-                    predicate: x => true,
-                    include: x => x.Include(news => news.Image));
+                    predicate: predicate,
+                    include: newsCollection => newsCollection.Include(news => news.Image!));
 
             var filteredNews = string.IsNullOrWhiteSpace(searchTitle)
                 ? allNews

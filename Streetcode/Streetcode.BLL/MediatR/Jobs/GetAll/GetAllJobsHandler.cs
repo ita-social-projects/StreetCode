@@ -11,7 +11,7 @@ using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Jobs.GetAll
 {
-    internal class GetAllJobsHandler
+    public class GetAllJobsHandler
         : IRequestHandler<GetAllJobsQuery, Result<GetAllJobsDTO>>
     {
         private readonly IRepositoryWrapper _repositoryWrapper;

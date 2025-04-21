@@ -1,17 +1,14 @@
-using AutoMapper;
-using Moq;
-using Microsoft.AspNetCore.Http;
-using Streetcode.BLL.Interfaces.Logging;
-using Microsoft.EntityFrameworkCore.Query;
-using Streetcode.BLL.DTO.Jobs;
-using Streetcode.BLL.Interfaces.BlobStorage;
-using Streetcode.DAL.Entities.Jobs;
-using Streetcode.DAL.Helpers;
-using Streetcode.BLL.MediatR.Jobs.GetAll;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Query;
+using Moq;
+using Streetcode.BLL.DTO.Jobs;
+using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.MediatR.Jobs.GetAll;
 using Streetcode.DAL.Enums;
+using Streetcode.DAL.Helpers;
+using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Jobs

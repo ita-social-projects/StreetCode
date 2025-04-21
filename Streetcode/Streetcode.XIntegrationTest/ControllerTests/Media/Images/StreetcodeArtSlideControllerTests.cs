@@ -14,7 +14,8 @@ using Xunit;
 namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 {
     [Collection("StreetcodeArt")]
-    public class StreetcodeArtSlideControllerTests: BaseControllerTests<StreetcodeArtSlideClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    public class StreetcodeArtSlideControllerTests : BaseControllerTests<StreetcodeArtSlideClient>,
+        IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Art testArt;
         private readonly StreetcodeContent testStreetcodeContent;
@@ -22,12 +23,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         public StreetcodeArtSlideControllerTests(CustomWebApplicationFactory<Program> factory)
             : base(factory, "/api/StreetcodeArt")
         {
-            int uniqueId = UniqueNumberGenerator.GenerateInt();
-            this.testArt = ArtExtracter.Extract(uniqueId);
+            int uniqueArtId = UniqueNumberGenerator.GenerateInt();
+            int uniqeStreetcodeId = UniqueNumberGenerator.GenerateInt();
+
+            this.testArt = ArtExtracter.Extract(uniqueArtId, uniqeStreetcodeId);
             this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
-                    uniqueId,
-                    uniqueId,
+                    uniqueArtId,
+                    uniqueArtId,
                     Guid.NewGuid().ToString());
         }
 
@@ -38,22 +41,21 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             ushort fromSlide = 1;
             ushort AmountOfSlides = 2;
-            
+
             var response = await Client.GetPageByStreetcodeId(StreetCodeId, fromSlide, AmountOfSlides);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        
         public async Task GetPageByStreetcodeId_WithInvalidData_ReturnsBadRequest()
         {
             int StreetCodeId = -1;
             ushort fromSlide = (ushort?)ushort.MaxValue ?? 0;
             ushort AmountOfSlides = (ushort?)ushort.MaxValue ?? 0;
-            
+
             var response = await Client.GetPageByStreetcodeId(StreetCodeId, fromSlide, AmountOfSlides);
-            
+
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
@@ -62,26 +64,23 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
         [Fact]
         public async Task GetAllCountByStreetcodeId_ReturnSuccessStatusCode()
         {
-            uint streetCodeId = (uint)testStreetcodeContent.Id; 
+            uint streetCodeId = (uint)testStreetcodeContent.Id;
 
             var response = await Client.GetAllCountByStreetcodeId(streetCodeId);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
         }
 
-        
         [Fact]
         public async Task GetAllCountByStreetcodeId_ReturnBadRequestStatusCode()
         {
-            uint streetCodeId = 0;  
+            uint streetCodeId = 0;
 
             var response = await Client.GetAllCountByStreetcodeId(streetCodeId);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
-        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -92,7 +91,5 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
 
             base.Dispose(disposing);
         }
-    
     }
-    
 }

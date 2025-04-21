@@ -6,6 +6,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.GetBaseAudio;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -35,8 +36,9 @@ public class GetBaseAudioTests
         SetupBlobService(expectedStream);
         SetupRepositoryWrapper(testAudio.Id);
 
-        var handler = new GetBaseAudioHandler(_mockBlobService.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object, _mockStringLocalizerCannotFind.Object);
-        var response = await handler.Handle(new GetBaseAudioQuery(testAudio.Id), CancellationToken.None);
+        var handler = new GetBaseAudioHandler(_mockBlobService.Object, _mockRepositoryWrapper.Object,
+            _mockLoggerService.Object, _mockStringLocalizerCannotFind.Object);
+        var response = await handler.Handle(new GetBaseAudioQuery(testAudio.Id, UserRole.Admin), CancellationToken.None);
 
         Assert.True(response.IsSuccess);
         Assert.Equal(expectedStream, response.Value);
@@ -51,8 +53,9 @@ public class GetBaseAudioTests
         SetupRepositoryWrapper(invalidId);
         SetupBlobService(expectedStream);
 
-        var handler = new GetBaseAudioHandler(_mockBlobService.Object, _mockRepositoryWrapper.Object, _mockLoggerService.Object, _mockStringLocalizerCannotFind.Object);
-        var response = await handler.Handle(new GetBaseAudioQuery(invalidId), CancellationToken.None);
+        var handler = new GetBaseAudioHandler(_mockBlobService.Object, _mockRepositoryWrapper.Object,
+            _mockLoggerService.Object, _mockStringLocalizerCannotFind.Object);
+        var response = await handler.Handle(new GetBaseAudioQuery(invalidId, UserRole.Admin), CancellationToken.None);
 
         Assert.Null(response.Value);
     }

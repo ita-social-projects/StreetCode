@@ -11,6 +11,7 @@ using Streetcode.BLL.MediatR.Jobs.GetAll;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Streetcode.DAL.Enums;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.Jobs
@@ -24,7 +25,6 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
 
         public GetAllJobsTests()
         {
-
             this.mockRepository = new Mock<IRepositoryWrapper>();
             this.mockMapper = new Mock<IMapper>();
             this.mockLogger = new Mock<ILoggerService>();
@@ -32,7 +32,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             this.handler = new GetAllJobsHandler(
                 mockRepository.Object,
                 mockMapper.Object,
-                mockLogger.Object);  
+                mockLogger.Object);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             this.SetupMockObjects(pageNumber, pageSize, GetJobsDTOs(pageSize), GetEmptyHTTPHeaders());
 
             // Act
-            var result = await handler.Handle(new GetAllJobsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await handler.Handle(new GetAllJobsQuery(UserRole.Admin, pageSize, pageNumber), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -53,7 +53,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
                 () => Assert.Equal(pageSize, result.Value.Jobs.Count()));
         }
 
-		[Fact]
+        [Fact]
         public async Task ShouldReturnEmptyCollection_PageNumberTooBig()
         {
             // Arrange.
@@ -63,15 +63,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             this.SetupMockObjects(pageNumber, pageSize, GetJobsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllJobsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllJobsQuery(UserRole.Admin, pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
                 () => Assert.NotNull(result),
                 () => Assert.Empty(result.Value.Jobs));
         }
-		
-		[Fact]
+
+        [Fact]
         public async Task ShouldReturnEmptyCollection_PageSizeIsZero()
         {
             // Arrange.
@@ -81,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             this.SetupMockObjects(pageNumber, pageSize, GetJobsDTOs(0), GetEmptyHTTPHeaders());
 
             // Act.
-            var result = await this.handler.Handle(new GetAllJobsQuery(pageSize, pageNumber), CancellationToken.None);
+            var result = await this.handler.Handle(new GetAllJobsQuery(UserRole.Admin, pageSize, pageNumber), CancellationToken.None);
 
             // Assert.
             Assert.Multiple(
@@ -114,13 +114,15 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
                     It.IsAny<ushort>(),
                     null,
                     null,
-                    It.IsAny<Func<IQueryable<DAL.Entities.Jobs.Job>, IIncludableQueryable<DAL.Entities.Jobs.Job, object>>?>(),
+                    It.IsAny<Func<IQueryable<DAL.Entities.Jobs.Job>,
+                        IIncludableQueryable<DAL.Entities.Jobs.Job, object>>?>(),
                     null,
                     It.IsAny<Expression<Func<DAL.Entities.Jobs.Job, object>>?>()))
                 .Returns(GetPaginationResponse(pageNumber, pageSize));
         }
 
-        private static PaginationResponse<DAL.Entities.Jobs.Job> GetPaginationResponse(ushort pageNumber, ushort pageSize)
+        private static PaginationResponse<DAL.Entities.Jobs.Job> GetPaginationResponse(ushort pageNumber,
+            ushort pageSize)
         {
             var jobs = new List<DAL.Entities.Jobs.Job>
             {

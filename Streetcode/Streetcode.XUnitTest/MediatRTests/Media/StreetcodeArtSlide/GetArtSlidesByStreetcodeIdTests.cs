@@ -1,22 +1,14 @@
+using System.Linq.Expressions;
 using AutoMapper;
-using FluentResults;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
-using FluentAssertions;
-using MockQueryable.Moq;
-using Microsoft.EntityFrameworkCore.Query;
-
 
 namespace Streetcode.BLL.Tests.MediatR.Media.Art
 {
@@ -48,7 +40,9 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                 _mockBlobService.Object);
 
             // Act
-            var response = await handler.Handle(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5), CancellationToken.None);
+            var response = await handler.Handle(
+                new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5, UserRole.Admin),
+                CancellationToken.None);
 
             // Assert
             response.IsSuccess.Should().BeTrue();
@@ -70,7 +64,9 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                 _mockBlobService.Object);
 
             // Act
-            var response = await handler.Handle(new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5), CancellationToken.None);
+            var response = await handler.Handle(
+                new GetArtSlidesByStreetcodeIdQuery(streetcodeId, 1, 5, UserRole.Admin),
+                CancellationToken.None);
 
             // Assert
             response.IsSuccess.Should().BeFalse();
@@ -88,13 +84,16 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             mock.As<IQueryable<StreetcodeArtSlide>>().Setup(m => m.GetEnumerator()).Returns(mockDbSet.GetEnumerator());
 
             _mockRepositoryWrapper.Setup(repo => repo.StreetcodeArtSlideRepository
-                    .GetAllAsync(It.IsAny<Expression<Func<StreetcodeArtSlide, bool>>>(),
+                    .GetAllAsync(
+                        It.IsAny<Expression<Func<StreetcodeArtSlide, bool>>>(),
                         It.IsAny<Func<IQueryable<StreetcodeArtSlide>, IIncludableQueryable<StreetcodeArtSlide, object>>?>()))
                 .ReturnsAsync(mock.Object.ToList());
         }
+
         private void SetupMapper()
         {
-            _mockMapper.Setup(mapper => mapper.Map<IEnumerable<StreetcodeArtSlideDTO>>(It.IsAny<IEnumerable<StreetcodeArtSlide>>()))
+            _mockMapper.Setup(mapper =>
+                    mapper.Map<IEnumerable<StreetcodeArtSlideDTO>>(It.IsAny<IEnumerable<StreetcodeArtSlide>>()))
                 .Returns(new List<StreetcodeArtSlideDTO>());
         }
 
@@ -117,10 +116,11 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                         {
                             Art = new Streetcode.DAL.Entities.Media.Images.Art
                             {
-                                Image = new Streetcode.DAL.Entities.Media.Images.Image { BlobName = "image1", MimeType = "image/png" }
-                            }
-                        }
-                    }
+                                Image = new Streetcode.DAL.Entities.Media.Images.Image
+                                    { BlobName = "image1", MimeType = "image/png" },
+                            },
+                        },
+                    },
                 },
                 new StreetcodeArtSlide
                 {
@@ -131,11 +131,12 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                         {
                             Art = new Streetcode.DAL.Entities.Media.Images.Art
                             {
-                                Image = new Streetcode.DAL.Entities.Media.Images.Image { BlobName = "image2", MimeType = "image/png" }
-                            }
-                        }
-                    }
-                }
+                                Image = new Streetcode.DAL.Entities.Media.Images.Image
+                                    { BlobName = "image2", MimeType = "image/png" },
+                            },
+                        },
+                    },
+                },
             };
         }
     }

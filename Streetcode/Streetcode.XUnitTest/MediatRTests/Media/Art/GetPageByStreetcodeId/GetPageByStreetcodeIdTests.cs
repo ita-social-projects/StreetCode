@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -43,7 +44,7 @@ public class GetPageByStreetcodeIdTests
         var handler = new GetStreetcodeArtByStreetcodeIdHandler(_mockRepositoryWrapper.Object, _mockMapper.Object,
             _mockBlobService.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
 
-        var response = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(1), CancellationToken.None);
+        var response = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(1, UserRole.Admin), CancellationToken.None);
 
         Assert.True(response.IsSuccess);
     }
@@ -61,7 +62,7 @@ public class GetPageByStreetcodeIdTests
         var handler = new GetStreetcodeArtByStreetcodeIdHandler(_mockRepositoryWrapper.Object, _mockMapper.Object,
             _mockBlobService.Object, _mockLogger.Object, _mockStringLocalizerCannotFind.Object);
 
-        var response = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(invalidId), CancellationToken.None);
+        var response = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(invalidId, UserRole.Admin), CancellationToken.None);
 
         Assert.True(response.IsFailed);
     }
@@ -78,20 +79,21 @@ public class GetPageByStreetcodeIdTests
     private void SetupMapper()
     {
         _mockMapper.Setup(mapper => mapper
-            .Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<StreetcodeArt>?>()))
+                .Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<StreetcodeArt>?>()))
             .Returns(new List<StreetcodeArtDTO>());
     }
 
     private void SetupBlobService()
     {
         _mockBlobService.Setup(blobService => blobService
-            .FindFileInStorageAsBase64(It.IsAny<string>()))
+                .FindFileInStorageAsBase64(It.IsAny<string>()))
             .Returns(It.IsAny<string>());
     }
 
     private void SetupStringLocalizer(int id, string errorMsg)
     {
-        _mockStringLocalizerCannotFind.Setup(stringLocalizer => stringLocalizer["CannotFindAnyArtWithCorrespondingStreetcodeId", id])
+        _mockStringLocalizerCannotFind.Setup(stringLocalizer =>
+                stringLocalizer["CannotFindAnyArtWithCorrespondingStreetcodeId", id])
             .Returns(new LocalizedString("CannotFindAnyArtWithCorrespondingStreetcodeId", errorMsg));
     }
 }

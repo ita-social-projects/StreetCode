@@ -12,6 +12,7 @@ using Streetcode.BLL.DTO.Jobs;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Jobs.GetAll;
 using Streetcode.DAL.Entities.Jobs;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -47,7 +48,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             SetupMockMapper(jobShortDtos);
 
             // Act
-            var result = await _handler.Handle(new GetAllShortJobsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllShortJobsQuery(UserRole.Admin), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
@@ -63,7 +64,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Jobs
             SetupMockMapper(new List<JobShortDto>());
 
             // Act
-            var result = await _handler.Handle(new GetAllShortJobsQuery(), CancellationToken.None);
+            var result = await _handler.Handle(new GetAllShortJobsQuery(UserRole.Admin), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();

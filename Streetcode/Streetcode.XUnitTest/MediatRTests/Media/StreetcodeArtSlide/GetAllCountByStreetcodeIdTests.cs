@@ -1,13 +1,10 @@
-using FluentResults;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.MediatR.Media.Art.StreetcodeArtSlide.GetAllCountByStreetcodeId;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
-using System.Linq.Expressions;
 using Xunit;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
 
 namespace Streetcode.XUnitTest.MediatRTests.Media.StreetcodeArtSlide
 {
@@ -21,34 +18,37 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.StreetcodeArtSlide
         }
 
         [Theory]
-        [InlineData(1, 5)]  
+        [InlineData(1, 5)]
         public async Task Handle_ReturnsCorrectCount(uint streetcodeId, int expectedCount)
         {
             this.MockRepositoryAndMapper(streetcodeId, expectedCount);
 
             var handler = new GetAllCountByStreetcodeIdHandler(this.mockRepo.Object);
 
-            var result = await handler.Handle(new GetAllCountByStreetcodeIdQuerry(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetAllCountByStreetcodeIdQuerry(streetcodeId, UserRole.Admin),
+                CancellationToken.None);
 
             Assert.Equal(expectedCount, result.Value);
         }
 
         [Theory]
-        [InlineData(0)]  
+        [InlineData(0)]
         public async Task ShouldReturnFailure_WhenStreetcodeIdNotFound(uint streetcodeId)
         {
             this.mockRepo
                 .Setup(r => r.StreetcodeArtSlideRepository
                     .FindAll(It.IsAny<Expression<Func<DAL.Entities.Streetcode.StreetcodeArtSlide, bool>>>(),
-                        It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>, IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>>>()))
+                        It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>,
+                            IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>>>()))
                 .Returns(Enumerable.Empty<DAL.Entities.Streetcode.StreetcodeArtSlide>().AsQueryable());
 
             var handler = new GetAllCountByStreetcodeIdHandler(this.mockRepo.Object);
 
-            var result = await handler.Handle(new GetAllCountByStreetcodeIdQuerry(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetAllCountByStreetcodeIdQuerry(streetcodeId, UserRole.Admin),
+                CancellationToken.None);
 
             Assert.True(result.IsSuccess);
-            Assert.Equal(0, result.Value);  
+            Assert.Equal(0, result.Value);
         }
 
 
@@ -57,9 +57,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.StreetcodeArtSlide
             this.mockRepo
                 .Setup(r => r.StreetcodeArtSlideRepository
                     .FindAll(It.IsAny<Expression<Func<DAL.Entities.Streetcode.StreetcodeArtSlide, bool>>>(),
-                        It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>, IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>>>()))
+                        It.IsAny<Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>,
+                            IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>>>()))
                 .Returns((Expression<Func<DAL.Entities.Streetcode.StreetcodeArtSlide, bool>> predicate,
-                          Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>, IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>> include) =>
+                    Func<IQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide>,
+                        IIncludableQueryable<DAL.Entities.Streetcode.StreetcodeArtSlide, object>> include) =>
                 {
                     var slides = new List<DAL.Entities.Streetcode.StreetcodeArtSlide>();
 

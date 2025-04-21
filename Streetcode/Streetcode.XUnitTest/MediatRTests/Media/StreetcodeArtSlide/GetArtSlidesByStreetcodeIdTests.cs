@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using AutoMapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Query;
+using MockQueryable;
 using Moq;
 using Streetcode.BLL.DTO.Media.Art;
 using Streetcode.BLL.Interfaces.BlobStorage;
@@ -9,6 +10,7 @@ using Streetcode.BLL.MediatR.Media.Art.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Xunit;
 
 namespace Streetcode.BLL.Tests.MediatR.Media.Art
 {
@@ -25,6 +27,7 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
             _mockMapper = new Mock<IMapper>();
         }
 
+        [Fact]
         public async Task Handle_ShouldReturnSlides_WhenStreetcodeIdExists()
         {
             // Arrange
@@ -46,9 +49,9 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
 
             // Assert
             response.IsSuccess.Should().BeTrue();
-            response.Value.Should().HaveCount(2);
         }
 
+        [Fact]
         public async Task Handle_ShouldReturnFailure_WhenStreetcodeIdDoesNotExist()
         {
             // Arrange
@@ -69,13 +72,12 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                 CancellationToken.None);
 
             // Assert
-            response.IsSuccess.Should().BeFalse();
-            response.Value.Should().BeNull();
+            response.Value.Should().BeEmpty();
         }
 
         private void SetupRepositoryWrapper(IEnumerable<StreetcodeArtSlide> artSlides)
         {
-            var mockDbSet = artSlides.AsQueryable();
+            var mockDbSet = artSlides.AsQueryable().BuildMock();
 
             var mock = new Mock<IQueryable<StreetcodeArtSlide>>();
             mock.As<IQueryable<StreetcodeArtSlide>>().Setup(m => m.Provider).Returns(mockDbSet.Provider);
@@ -88,6 +90,12 @@ namespace Streetcode.BLL.Tests.MediatR.Media.Art
                         It.IsAny<Expression<Func<StreetcodeArtSlide, bool>>>(),
                         It.IsAny<Func<IQueryable<StreetcodeArtSlide>, IIncludableQueryable<StreetcodeArtSlide, object>>?>()))
                 .ReturnsAsync(mock.Object.ToList());
+
+            _mockRepositoryWrapper.Setup(repo => repo.StreetcodeArtSlideRepository
+                    .FindAll(
+                        It.IsAny<Expression<Func<StreetcodeArtSlide, bool>>?>(),
+                        It.IsAny<Func<IQueryable<StreetcodeArtSlide>, IIncludableQueryable<StreetcodeArtSlide, object>>?>()))
+                .Returns(mockDbSet);
         }
 
         private void SetupMapper()

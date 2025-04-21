@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
@@ -21,19 +22,25 @@ namespace Streetcode.BLL.MediatR.Streetcode.Term.GetAll
 
         public async Task<Result<GetAllTermsResponseDto>> Handle(GetAllTermsQuery request, CancellationToken cancellationToken)
         {
-            var termsQuery = _repositoryWrapper.TermRepository.FindAll();
+            var allTerms = await _repositoryWrapper.TermRepository.GetAllAsync(
+                predicate: null,
+                include: null);
+
+            var filteredTerms = allTerms.ToList();
 
             if (!string.IsNullOrWhiteSpace(request.title))
             {
-                termsQuery = termsQuery.Where(t => t.Title != null && t.Title.ToLower().Contains(request.title.Trim().ToLower()));
+                filteredTerms = filteredTerms
+                    .Where(t => t.Title != null && t.Title.ToLower().Contains(request.title.Trim().ToLower()))
+                    .ToList();
             }
 
-            var totalAmount = await termsQuery.CountAsync(cancellationToken);
+            var totalAmount = filteredTerms.Count;
 
-            var paginatedTerms = await termsQuery
+            var paginatedTerms = filteredTerms
                 .Skip((request.page - 1) * request.pageSize)
                 .Take(request.pageSize)
-                .ToListAsync(cancellationToken);
+                .ToList();
 
             var termDTOs = _mapper.Map<IEnumerable<TermDTO>>(paginatedTerms);
 

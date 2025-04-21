@@ -3,6 +3,7 @@ using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Localization;
+using Microsoft.EntityFrameworkCore;
 using Streetcode.BLL.DTO.AdditionalContent;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
@@ -32,7 +33,7 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<GetAllTagsResponseDTO>> Handle(GetAllTagsQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -48,16 +49,16 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll
                     predicate = basePredicate;
                 }
 
-                var allTags = _repositoryWrapper
+                var allTags = await _repositoryWrapper
                     .TagRepository
-                    .FindAll(predicate)
-                    .ToList();
-
+                    .GetAllAsync(
+                        predicate: predicate,
+                        include: tags => tags.Include(t => t.Streetcodes));
                 if (!allTags.Any())
                 {
                     string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTags"].Value;
                     _logger.LogError(request, errorMsg);
-                    return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg)));
+                    return Result.Fail<GetAllTagsResponseDTO>(new Error(errorMsg));
                 }
 
                 var filteredTags = string.IsNullOrWhiteSpace(request.title)
@@ -77,17 +78,17 @@ namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll
 
                 var getAllTagsResponseDTO = new GetAllTagsResponseDTO
                 {
-                    TotalAmount = filteredTags.Count,
+                    TotalAmount = filteredTags.Count(),
                     Tags = _mapper.Map<IEnumerable<TagDTO>>(paginatedTags),
                 };
 
-                return Task.FromResult(Result.Ok(getAllTagsResponseDTO));
+                return Result.Ok(getAllTagsResponseDTO);
             }
             catch (Exception ex)
             {
                 _logger.LogError(request, $"Unhandled exception in GetAllTagsHandler: {ex}");
-                return Task.FromResult(Result.Fail<GetAllTagsResponseDTO>(
-                    new Error("Internal server error occurred while getting tags.")));
+                return Result.Fail<GetAllTagsResponseDTO>(
+                    new Error("Internal server error occurred while getting tags."));
             }
         }
     }

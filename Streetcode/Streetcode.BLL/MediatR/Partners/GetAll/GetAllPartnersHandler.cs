@@ -11,6 +11,7 @@ using Streetcode.DAL.Entities.News;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.BLL.DTO.News;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Streetcode.BLL.MediatR.Partners.GetAll
 {
@@ -35,13 +36,19 @@ namespace Streetcode.BLL.MediatR.Partners.GetAll
 
         public async Task<Result<GetAllPartnersResponseDTO>> Handle(GetAllPartnersQuery request, CancellationToken cancellationToken)
         {
-            var allPartnersQuery = _repositoryWrapper
-                .PartnersRepository
-                .FindAll(include: partnersCollection => partnersCollection
-                    .Include(pl => pl.PartnerSourceLinks)
-                    .Include(p => p.Streetcodes));
+            if (request == null)
+            {
+                return Result.Fail<GetAllPartnersResponseDTO>(new Error("Request is null"));
+            }
 
-            if (!await allPartnersQuery.AnyAsync(cancellationToken))
+            var allPartners = await _repositoryWrapper.PartnersRepository.GetAllAsync(
+                predicate: null,
+                include: (Func<IQueryable<Partner>, IIncludableQueryable<Partner, object>>?)(partnersCollection =>
+                partnersCollection
+                    .Include(pl => pl.PartnerSourceLinks)
+                    .Include(p => p.Streetcodes)));
+
+            if (allPartners == null || !allPartners.Any())
             {
                 string errorMsg = _stringLocalizeCannotFind["CannotFindAnyPartners"].Value;
                 _logger.LogError(request, errorMsg);
@@ -50,15 +57,19 @@ namespace Streetcode.BLL.MediatR.Partners.GetAll
 
             if (!string.IsNullOrWhiteSpace(request.title))
             {
-                allPartnersQuery = allPartnersQuery.Where(p => p.Title.ToLower().Contains(request.title.ToLower()));
+                allPartners = allPartners
+                    .Where(p => p.Title != null && p.Title.ToLower().Contains(request.title.ToLower()))
+                    .ToList();
             }
 
             if (request.IsKeyPartner.HasValue)
             {
-                allPartnersQuery = allPartnersQuery.Where(p => p.IsKeyPartner == request.IsKeyPartner.Value);
+                allPartners = allPartners
+                    .Where(p => p.IsKeyPartner == request.IsKeyPartner.Value)
+                    .ToList();
             }
 
-            var totalCount = await allPartnersQuery.CountAsync(cancellationToken);
+            var totalCount = allPartners.Count();
 
             if (totalCount == 0)
             {
@@ -67,22 +78,21 @@ namespace Streetcode.BLL.MediatR.Partners.GetAll
                     TotalAmount = 0,
                     Partners = new List<PartnerDTO>()
                 };
-
                 return Result.Ok(emptyResponse);
             }
 
             var page = request.page ?? 1;
             var pageSize = request.pageSize ?? 10;
 
-            var paginatedPartners = await allPartnersQuery
+            var paginatedPartners = allPartners
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync(cancellationToken);
+                .ToList();
 
-            var getAllPartnersResponseDTO = new GetAllPartnersResponseDTO()
+            var getAllPartnersResponseDTO = new GetAllPartnersResponseDTO
             {
                 TotalAmount = totalCount,
-                Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginatedPartners),
+                Partners = _mapper.Map<IEnumerable<PartnerDTO>>(paginatedPartners)
             };
 
             return Result.Ok(getAllPartnersResponseDTO);

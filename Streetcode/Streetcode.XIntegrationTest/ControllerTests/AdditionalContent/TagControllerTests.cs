@@ -50,6 +50,8 @@ namespace Streetcode.XIntegrationTest.ControllerTests.AdditionalContent.Tag
         [Fact]
         public async Task GetAll_ReturnSuccessStatusCode()
         {
+            TagEntity tag = this.testCreateTag;
+            TagExtracter.AddStreetcodeTagIndex(this.testStreetcodeContent.Id, tag.Id);
             var response = await this.Client.GetAllAsync();
             var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<GetAllTagsResponseDTO>(response.Content);
 

@@ -24,14 +24,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media.Images
             : base(factory, "/api/StreetcodeArt")
         {
             int uniqueArtId = UniqueNumberGenerator.GenerateInt();
-            int uniqeStreetcodeId = UniqueNumberGenerator.GenerateInt();
-
-            this.testArt = ArtExtracter.Extract(uniqueArtId, uniqeStreetcodeId);
             this.testStreetcodeContent = StreetcodeContentExtracter
                 .Extract(
                     uniqueArtId,
                     uniqueArtId,
                     Guid.NewGuid().ToString());
+
+            int uniqeStreetcodeId = testStreetcodeContent.Id;
+            this.testArt = ArtExtracter.Extract(uniqueArtId, uniqeStreetcodeId);
         }
 
         [Fact]

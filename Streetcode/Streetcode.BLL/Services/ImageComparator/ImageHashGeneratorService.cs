@@ -17,13 +17,21 @@ public class ImageHashGeneratorService : IImageHashGeneratorService
             return 0;
         }
 
-        byte[] imageBytes = Convert.FromBase64String(imgBase64);
-        using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
+        try
+        {
+            byte[] imageBytes = Convert.FromBase64String(imgBase64);
+            using Image<Rgba32> image = Image.Load<Rgba32>(imageBytes);
 
-        image.Mutate(x => x.AutoOrient());
-        image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
+            image.Mutate(x => x.AutoOrient());
+            image.Mutate(x => x.Resize(FixedWidth, FixedHeight));
 
-        return GenerateHash(image, FindAveragePixelsRgbValue(image));
+            return GenerateHash(image, FindAveragePixelsRgbValue(image));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return 0;
+        }
     }
 
     private int FindAveragePixelsRgbValue(Image<Rgba32> image)

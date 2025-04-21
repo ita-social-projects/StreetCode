@@ -16,40 +16,40 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Job
             return await this.SendCommand("/Create", Method.Post, createJobDTO, authToken);
         }
 
-         public async Task<RestResponse> GetAllAsync(ushort? page, ushort? pageSize, string authToken = "")
+        public async Task<RestResponse> GetAllAsync(ushort? page, ushort? pageSize, string authToken = "")
         {
             return await this.SendQuery($"/GetAll?page={page}&pageSize={pageSize}", authToken);
         }
 
-         public async Task<RestResponse> GetAllShortAsync(string authToken = "")
+        public async Task<RestResponse> GetAllShortAsync(string authToken = "")
         {
             return await this.SendQuery("/GetAllShort", authToken);
         }
 
-         public async Task<RestResponse> GetActiveJobsAsync(string authToken = "")
+        public async Task<RestResponse> GetActiveJobsAsync(string authToken = "")
         {
             return await this.SendQuery("/GetActiveJobs", authToken);
         }
-         
+
         public async Task<RestResponse> GetByIdAsync(int id, string authToken = "")
         {
             return await this.SendQuery($"/GetById/{id}", authToken);
         }
-        
+
         public async Task<RestResponse> DeleteAsync(int id, string authToken = "")
-		{
-   			return await this.SendCommand($"/Delete/{id}", RestSharp.Method.Delete, authToken);
-		}
+        {
+            return await this.SendCommand($"/Delete/{id}", RestSharp.Method.Delete, authToken);
+        }
 
-		public async Task<RestResponse> UpdateAsync(JobUpdateDto createJobDTO, string authToken = "")
-		{
-    		return await this.SendCommand("/Update", Method.Put, createJobDTO, authToken);
-		}
-		
-		public async Task<RestResponse> ChangeJobStatusAsync(JobChangeStatusDto jobChangeStatusDto, string authToken = "")
-		{
-    		return await this.SendCommand("/ChangeJobStatus", RestSharp.Method.Put, jobChangeStatusDto, authToken);
-		}
+        public async Task<RestResponse> UpdateAsync(JobUpdateDto createJobDTO, string authToken = "")
+        {
+            return await this.SendCommand("/Update", Method.Put, createJobDTO, authToken);
+        }
 
+        public async Task<RestResponse> ChangeJobStatusAsync(JobChangeStatusDto jobChangeStatusDto,
+            string authToken = "")
+        {
+            return await this.SendCommand("/ChangeJobStatus", RestSharp.Method.Put, jobChangeStatusDto, authToken);
+        }
     }
 }

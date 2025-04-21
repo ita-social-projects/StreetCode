@@ -25,7 +25,7 @@ public class ExtractCreateTestImageAttribute : BeforeAfterTestAttribute
         ImageFileCreateForTest = new ImageFileBaseCreateDTO
         {
             Title = "TestName",
-            BaseFormat = "TestBase",
+            BaseFormat = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAADklEQVR4nGNgGAWDEwAAAZoAAR2CVqgAAAAASUVORK5CYII=",
             MimeType = "image/png",
             Extension = "png",
             Alt = "0",
@@ -34,7 +34,7 @@ public class ExtractCreateTestImageAttribute : BeforeAfterTestAttribute
         ImageFileUpdateForTest = new ImageFileBaseUpdateDTO
         {
             Title = "UpdatedName",
-            BaseFormat = "TestBase",
+            BaseFormat = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAADklEQVR4nGNgGAWDEwAAAZoAAR2CVqgAAAAASUVORK5CYII=",
             MimeType = "image/png",
             Extension = "png",
             Alt = "0",

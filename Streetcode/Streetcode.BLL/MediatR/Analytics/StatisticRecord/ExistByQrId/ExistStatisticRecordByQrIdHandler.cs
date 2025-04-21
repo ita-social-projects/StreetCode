@@ -1,5 +1,7 @@
-﻿using FluentResults;
+﻿using System.Linq.Expressions;
+using FluentResults;
 using MediatR;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
@@ -15,8 +17,11 @@ namespace Streetcode.BLL.MediatR.Analytics.StatisticRecord.ExistByQrId
 
         public async Task<Result<bool>> Handle(ExistStatisticRecordByQrIdCommand request, CancellationToken cancellationToken)
         {
+            Expression<Func<DAL.Entities.Analytics.StatisticRecord, bool>>? basePredicate = sr => sr.QrId == request.QrId;
+            var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sr => sr.Streetcode);
+
             var statRecord = await _repository.StatisticRecordRepository
-                .GetFirstOrDefaultAsync(predicate: (sr) => sr.QrId == request.qrId);
+                .GetFirstOrDefaultAsync(predicate: predicate);
 
             return statRecord is null ? Result.Ok(false) : Result.Ok(true);
         }

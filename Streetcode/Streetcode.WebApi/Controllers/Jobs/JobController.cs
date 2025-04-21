@@ -18,14 +18,14 @@ namespace Streetcode.WebApi.Controllers.Jobs
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllJobsDTO))]
 		public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
 		{
-			return HandleResult(await Mediator.Send(new GetAllJobsQuery(page, pageSize)));
+			return HandleResult(await Mediator.Send(new GetAllJobsQuery(GetUserRole(), page, pageSize)));
 		}
 
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<JobShortDto>))]
 		public async Task<IActionResult> GetAllShort()
 		{
-			return HandleResult(await Mediator.Send(new GetAllShortJobsQuery()));
+			return HandleResult(await Mediator.Send(new GetAllShortJobsQuery(GetUserRole())));
 		}
 
 		[HttpGet]
@@ -39,7 +39,7 @@ namespace Streetcode.WebApi.Controllers.Jobs
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDto))]
 		public async Task<IActionResult> GetById(int id)
 		{
-            return HandleResult(await Mediator.Send(new GetJobByIdQuery(id)));
+            return HandleResult(await Mediator.Send(new GetJobByIdQuery(id, GetUserRole())));
         }
 
 		[HttpPost]

@@ -408,6 +408,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<decimal>("ImageHash")
+                        .HasColumnType("decimal(20,0)");
+
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -1628,7 +1631,7 @@ namespace Streetcode.DAL.Persistence.Migrations
                     b.HasOne("Streetcode.DAL.Entities.Streetcode.StreetcodeContent", "Streetcode")
                         .WithMany()
                         .HasForeignKey("StreetcodeId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Streetcode.DAL.Entities.Users.User", "User")

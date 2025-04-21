@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Art.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -38,7 +39,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.Equal(this.GetArtsList().Count, result.Value.Count());
@@ -55,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.Equal(expectedError, result.Errors.Single().Message);
@@ -69,7 +70,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             var handler = new GetAllArtsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllArtsQuery(), default);
+            var result = await handler.Handle(new GetAllArtsQuery(UserRole.User), default);
 
             // Assert
             Assert.IsType<Result<IEnumerable<ArtDTO>>>(result);

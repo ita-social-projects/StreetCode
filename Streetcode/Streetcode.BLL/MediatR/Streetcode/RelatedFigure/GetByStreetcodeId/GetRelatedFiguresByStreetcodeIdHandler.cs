@@ -1,11 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode.RelatedFigure;
+using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
-using Streetcode.DAL.Enums;
+using Streetcode.BLL.Services.EntityAccessManager;
+using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.MediatR.Streetcode.RelatedFigure.GetByStreetcodeId;
@@ -15,21 +19,36 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
     private readonly ILoggerService _logger;
+    private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
     public GetRelatedFiguresByStreetcodeIdHandler(
         IMapper mapper,
         IRepositoryWrapper repositoryWrapper,
-        ILoggerService logger)
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
         _logger = logger;
+        _stringLocalizerCannotFind = stringLocalizerCannotFind;
     }
 
     // If you use Rider instead of Visual Studio, for example, "SuppressMessage" attribute suppresses PossibleMultipleEnumeration warning
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration", Justification = "Here is no sense to do materialization of query because of nested ToListAsync method in GetAllAsync method")]
     public async Task<Result<IEnumerable<RelatedFigureDTO>>> Handle(GetRelatedFigureByStreetcodeIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<StreetcodeContent, bool>>? basePredicateForStreetcode = st => st.Id == request.StreetcodeId;
+        var predicate = basePredicateForStreetcode.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole);
+
+        var isStreetcodeExists = await _repositoryWrapper.StreetcodeRepository.FindAll(predicate: predicate).AnyAsync(cancellationToken);
+
+        if (!isStreetcodeExists)
+        {
+            string errorMsg = _stringLocalizerCannotFind["CannotFindAnAudioWithTheCorrespondingStreetcodeId", request.StreetcodeId].Value;
+            _logger.LogError(request, errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
+
         var relatedFigureIds = GetRelatedFigureIdsByStreetcodeId(request.StreetcodeId);
 
         if (!relatedFigureIds.Any())
@@ -40,7 +59,7 @@ public class GetRelatedFiguresByStreetcodeIdHandler : IRequestHandler<GetRelated
         }
 
         var relatedFigures = await _repositoryWrapper.StreetcodeRepository.GetAllAsync(
-          predicate: sc => relatedFigureIds.Any(id => id == sc.Id) && sc.Status == StreetcodeStatus.Published,
+          predicate: sc => relatedFigureIds.Any(id => id == sc.Id),
           include: scl => scl
               .Include(sc => sc.Images)
                   .ThenInclude(img => img.ImageDetails)

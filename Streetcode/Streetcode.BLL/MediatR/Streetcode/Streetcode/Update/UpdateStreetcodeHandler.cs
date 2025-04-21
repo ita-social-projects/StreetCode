@@ -130,16 +130,16 @@ public class UpdateStreetcodeHandler : IRequestHandler<UpdateStreetcodeCommand, 
     {
         var imageDetailsList = imageDetails?.ToList();
 
-        if (imageDetailsList is null or { Count: 0 })
+        if (imageDetailsList is null || imageDetailsList.Count == 0)
         {
             return;
         }
 
         _repositoryWrapper.ImageDetailsRepository
-            .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetailsList.Where(f => f.Alt == "" && f.Id != 0)));
+            .DeleteRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetailsList.Where(f => f.Alt == string.Empty && f.Id != 0)));
 
         _repositoryWrapper.ImageDetailsRepository
-            .UpdateRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetailsList.Where(f => f.Alt != "")));
+            .UpdateRange(_mapper.Map<IEnumerable<ImageDetails>>(imageDetailsList.Where(f => f.Alt != string.Empty)));
 
         await _repositoryWrapper.SaveChangesAsync();
     }

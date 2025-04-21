@@ -1,9 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllShort;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
@@ -41,14 +44,13 @@ public class GetAllStreetcodesShortHandlerTests
         SetupRepositoryMock(testStreetcodes);
 
         // Act
-        var result = await _handler.Handle(new GetAllStreetcodesShortQuery(), CancellationToken.None);
+        var result = await _handler.Handle(new GetAllStreetcodesShortQuery(UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.True(result.IsSuccess);
             Assert.Equal(testStreetcodes.Count, result.Value.Count());
-            _repositoryMock.Verify(repo => repo.StreetcodeRepository.GetAllAsync(null, null), Times.Once);
             _mapperMock.Verify(m => m.Map<IEnumerable<StreetcodeShortDTO>>(testStreetcodes), Times.Once);
         });
     }
@@ -59,7 +61,7 @@ public class GetAllStreetcodesShortHandlerTests
         // Arrange
         const string expectedErrorKey = "NoStreetcodesExistNow";
         string expectedErrorValue = _mockLocalizer[expectedErrorKey];
-        var query = new GetAllStreetcodesShortQuery();
+        var query = new GetAllStreetcodesShortQuery(UserRole.User);
 
         SetupRepositoryMock(new List<StreetcodeContent>());
 
@@ -85,7 +87,10 @@ public class GetAllStreetcodesShortHandlerTests
     private void SetupRepositoryMock(List<StreetcodeContent>? streetcodes)
     {
         _repositoryMock
-            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(null, null))
+            .Setup(repo => repo.StreetcodeRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeContent>,
+                    IIncludableQueryable<StreetcodeContent, object>>>()))
             .ReturnsAsync(streetcodes!);
 
         _mapperMock

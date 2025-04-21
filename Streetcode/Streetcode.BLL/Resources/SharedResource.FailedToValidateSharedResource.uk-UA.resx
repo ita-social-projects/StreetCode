@@ -210,4 +210,33 @@
   <data name="MustNotBeInPast" xml:space="preserve">
     <value>{0} не повинна бути у минулому.</value>
   </data>
+  <data name="PhoneFormat" xml:space="preserve">
+    <value>Недопустимий формат номера телефону: +XXXXXXXXXXXX</value>
+  </data>
+  <data name="PasswordNoWhitespace" xml:space="preserve">
+    <value>Пароль не може містити пробіли
+</value>
+  </data>
+  <data name="PasswordMustContainDigit" xml:space="preserve">
+    <value>Пароль має містити хоча б одну цифру
+</value>
+  </data>
+  <data name="PasswordMustContainSpecial" xml:space="preserve">
+    <value>Пароль має містити принаймні один небуквено-цифровий символ
+</value>
+  </data>
+  <data name="PasswordNoPercent" xml:space="preserve">
+    <value>Пароль не може містити '%'</value>
+  </data>
+  <data name="PasswordMustContainUpper" xml:space="preserve">
+    <value>Пароль повинен містити хоча б одну ВЕЛИКУ літеру
+</value>
+  </data>
+  <data name="PasswordMustContainLower" xml:space="preserve">
+    <value>Пароль має містити принаймні одну малу літеру</value>
+  </data>
+  <data name="PasswordConfirmationNotEqual" xml:space="preserve">
+    <value>Пароль і пароль підтвердження мають бути однаковими
+</value>
+  </data>
 </root>

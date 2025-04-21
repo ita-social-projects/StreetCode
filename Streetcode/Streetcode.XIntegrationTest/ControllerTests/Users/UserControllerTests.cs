@@ -34,6 +34,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     {
         _factory = factory;
         var serviceProvider = _factory.Services.CreateScope().ServiceProvider;
+        _factory.EmailServiceMock.Reset();
 
         _userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
@@ -195,7 +196,7 @@ public class UserControllerTests : BaseAuthorizationControllerTests<UserClient>,
     {
         // Arrange
         var userToUpdate = ExtractUpdateTestUserAttribute.UserForTest;
-        userToUpdate.Email = "invalid_email";
+        userToUpdate.Id = "invalid_email";
 
         // Act
         var response = await Client.Delete(_testUser.Email!, TokenStorage.UserAccessToken);

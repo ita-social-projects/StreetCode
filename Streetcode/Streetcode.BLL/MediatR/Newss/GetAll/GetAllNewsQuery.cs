@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Newss.GetAll
 {
-    public record GetAllNewsQuery(ushort? Page, ushort? PageSize, UserRole? UserRole)
+    public record GetAllNewsQuery(ushort? page, ushort? pageSize, UserRole? UserRole, string? title = null)
         : IRequest<Result<GetAllNewsResponseDTO>>;
 }

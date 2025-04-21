@@ -17,9 +17,9 @@ public class TagController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllTagsResponseDTO))]
-    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
     {
-        return HandleResult(await Mediator.Send(new GetAllTagsQuery(GetUserRole(), page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetAllTagsQuery(GetUserRole(), page, pageSize, title)));
     }
 
     [HttpGet("{id:int}")]

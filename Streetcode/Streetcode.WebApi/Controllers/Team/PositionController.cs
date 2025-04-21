@@ -17,9 +17,9 @@ namespace Streetcode.WebApi.Controllers.Team
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPositionsDTO))]
-        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
         {
-            return HandleResult(await Mediator.Send(new GetAllPositionsQuery(page, pageSize)));
+            return HandleResult(await Mediator.Send(new GetAllPositionsQuery(page, pageSize, title)));
         }
 
         [HttpGet]

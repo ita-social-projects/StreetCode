@@ -79,9 +79,9 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         {
             if (filterRequest.Page <= 0 || filterRequest.Amount <= 0)
             {
-               var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
-               _logger.LogError(query, errorMsg);
-               return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
+                var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
+                _logger.LogError(query, errorMsg);
+                return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
 
             ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);

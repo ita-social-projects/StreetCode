@@ -102,7 +102,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.TagTests
             var handler = new GetAllTagsHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User, Page: 1, PageSize: pageSize), CancellationToken.None);
+            var result = await handler.Handle(new GetAllTagsQuery(UserRole.User, page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

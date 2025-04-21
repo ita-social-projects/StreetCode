@@ -40,10 +40,15 @@ public class GetAllTermsTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().SatisfyRespectively(
+
+        var value = result.Value.Should().BeAssignableTo<IEnumerable<TermDTO>>().Which;
+
+        value.Should().SatisfyRespectively(
             first => first.Id.Should().Be(termsList[0].Id),
             second => second.Id.Should().Be(termsList[1].Id));
-        result.Value.Should().HaveCount(2);
+
+        value.Should().HaveCount(2);
+
         VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
     }
 
@@ -80,8 +85,13 @@ public class GetAllTermsTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEmpty();
+
+        var value = result.Value.Should().BeAssignableTo<IEnumerable<TermDTO>>().Which;
+
+        value.Should().BeEmpty();
+
         result.ValueOrDefault.Should().BeAssignableTo<IEnumerable<TermDTO>>();
+
         VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
     }
 

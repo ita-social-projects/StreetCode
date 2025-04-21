@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Sources.SourceLinkCategory.GetAll
 {
-    public record GetAllCategoriesQuery(UserRole? UserRole, ushort? Page, ushort? PageSize)
+    public record GetAllCategoriesQuery(UserRole? UserRole, ushort? page, ushort? pageSize, string? title = null)
         : IRequest<Result<GetAllCategoriesResponseDTO>>;
 }

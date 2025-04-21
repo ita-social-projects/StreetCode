@@ -6,5 +6,5 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.AdditionalContent.Tag.GetAll;
 
-public record GetAllTagsQuery(UserRole? UserRole, ushort? Page = null, ushort? PageSize = null)
+public record GetAllTagsQuery(UserRole? UserRole, ushort? page = null, ushort? pageSize = null, string? title = null)
     : IRequest<Result<GetAllTagsResponseDTO>>;

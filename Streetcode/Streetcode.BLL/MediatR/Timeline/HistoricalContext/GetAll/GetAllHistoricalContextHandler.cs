@@ -19,7 +19,11 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetAllHistoricalContextHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetAllHistoricalContextHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -27,33 +31,39 @@ namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
             _stringLocalizerCannotFind = stringLocalizerCannotFind;
         }
 
-        public Task<Result<GetAllHistoricalContextDTO>> Handle(GetAllHistoricalContextQuery request, CancellationToken cancellationToken)
+        public Task<Result<GetAllHistoricalContextDTO>> Handle(
+    GetAllHistoricalContextQuery request,
+    CancellationToken cancellationToken)
         {
             Expression<Func<DAL.Entities.Timeline.HistoricalContext, bool>>? basePredicate = null;
             var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, hc => hc.HistoricalContextTimelines, hctl => hctl.Timeline.Streetcode);
 
-            PaginationResponse<DAL.Entities.Timeline.HistoricalContext> paginationResponse = _repositoryWrapper
+            var allContext = _repositoryWrapper
                 .HistoricalContextRepository
-                .GetAllPaginated(
-                    request.Page,
-                    request.PageSize,
-                    descendingSortKeySelector: context => context.Title!,
-                    predicate: predicate);
+                .FindAll(predicate)
+                .ToList();
 
-            if (paginationResponse is null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyHistoricalContexts"].Value;
-                _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllHistoricalContextDTO>(new Error(errorMsg)));
-            }
+            var filteredContext = string.IsNullOrWhiteSpace(request.title)
+                ? allContext
+                : allContext.Where(t => t.Title.ToLower().Contains(request.title.ToLower())).ToList();
 
-            GetAllHistoricalContextDTO getAllHistoricalContextDTO = new ()
+            var totalCount = filteredContext.Count;
+
+            var page = request.page ?? 1;
+            var pageSize = request.pageSize ?? 10;
+
+            var paginatedContext = filteredContext
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var resultDto = new GetAllHistoricalContextDTO
             {
-                TotalAmount = paginationResponse.TotalItems,
-                HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginationResponse.Entities)
+                TotalAmount = totalCount,
+                HistoricalContexts = _mapper.Map<IEnumerable<HistoricalContextDTO>>(paginatedContext)
             };
 
-            return Task.FromResult(Result.Ok(getAllHistoricalContextDTO));
+            return Task.FromResult(Result.Ok(resultDto));
         }
     }
 }

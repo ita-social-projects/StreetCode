@@ -20,7 +20,11 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
         private readonly ILoggerService _logger;
         private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-        public GetAllPositionsHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+        public GetAllPositionsHandler(
+            IRepositoryWrapper repositoryWrapper,
+            IMapper mapper,
+            ILoggerService logger,
+            IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
         {
             _repositoryWrapper = repositoryWrapper;
             _mapper = mapper;
@@ -30,24 +34,29 @@ namespace Streetcode.BLL.MediatR.Team.Position.GetAll
 
         public Task<Result<GetAllPositionsDTO>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
         {
-            PaginationResponse<Positions> paginationResponse = _repositoryWrapper
+            var allPositions = _repositoryWrapper
                 .PositionRepository
-                .GetAllPaginated(
-                    request.page,
-                    request.pageSize,
-                    ascendingSortKeySelector: position => position.Position!);
+                .FindAll()
+                .ToList();
 
-            if (paginationResponse is null)
-            {
-                string errorMsg = _stringLocalizerCannotFind["CannotFindAnyPositions"].Value;
-                _logger.LogError(request, errorMsg);
-                return Task.FromResult(Result.Fail<GetAllPositionsDTO>(new Error(errorMsg)));
-            }
+            var filteredPositions = string.IsNullOrWhiteSpace(request.title)
+                ? allPositions
+                : allPositions
+                    .Where(p => p.Position.Contains(request.title, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
 
-            GetAllPositionsDTO getAllPositionsDTO = new GetAllPositionsDTO()
+            var page = request.page ?? 1;
+            var pageSize = request.pageSize ?? 10;
+
+            var paginatedPositions = filteredPositions
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var getAllPositionsDTO = new GetAllPositionsDTO
             {
-                TotalAmount = paginationResponse.TotalItems,
-                Positions = _mapper.Map<IEnumerable<PositionDTO>>(paginationResponse.Entities),
+                TotalAmount = filteredPositions.Count,
+                Positions = _mapper.Map<IEnumerable<PositionDTO>>(paginatedPositions),
             };
 
             return Task.FromResult(Result.Ok(getAllPositionsDTO));

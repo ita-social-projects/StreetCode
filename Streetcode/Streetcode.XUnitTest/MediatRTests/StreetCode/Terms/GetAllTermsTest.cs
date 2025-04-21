@@ -40,10 +40,17 @@ public class GetAllTermsTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().SatisfyRespectively(
+
+        var value = result.Value.Should().BeAssignableTo<GetAllTermsResponseDto>().Which;
+
+        var terms = value.Terms;
+
+        terms.Should().SatisfyRespectively(
             first => first.Id.Should().Be(termsList[0].Id),
             second => second.Id.Should().Be(termsList[1].Id));
-        result.Value.Should().HaveCount(2);
+
+        terms.Should().HaveCount(2);
+
         VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
     }
 
@@ -62,7 +69,8 @@ public class GetAllTermsTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.ValueOrDefault.Should().BeOfType<List<TermDTO>>();
+        result.ValueOrDefault.Should().BeOfType<GetAllTermsResponseDto>();
+        result.ValueOrDefault.Terms.Should().BeAssignableTo<List<TermDTO>>();
     }
 
     [Fact]
@@ -80,8 +88,13 @@ public class GetAllTermsTest
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().BeEmpty();
-        result.ValueOrDefault.Should().BeAssignableTo<IEnumerable<TermDTO>>();
+
+        var value = result.Value.Should().BeAssignableTo<GetAllTermsResponseDto>().Which;
+
+        value.Terms.Should().BeEmpty();
+
+        result.ValueOrDefault.Should().BeAssignableTo<GetAllTermsResponseDto>();
+
         VerifyGetAllAsyncAndMockingOperationsExecution(termsList);
     }
 

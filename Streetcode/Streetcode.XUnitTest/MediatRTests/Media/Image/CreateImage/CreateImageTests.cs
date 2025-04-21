@@ -20,7 +20,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
         private readonly Mock<IBlobService> _mockBlobService;
         private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFail;
         private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
-        private readonly Mock<IImageHashGeneratorService> _mockImageComparatorService; 
+        private readonly Mock<IImageHashGeneratorService> _mockImageHashGeneratorService;
 
         public CreateImageTests()
         {
@@ -30,7 +30,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             _mockBlobService = new Mock<IBlobService>();
             _mockLocalizerFail = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
             _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            _mockImageComparatorService = new Mock<IImageHashGeneratorService>();
+            _mockImageHashGeneratorService = new Mock<IImageHashGeneratorService>();
         }
 
         [Fact]
@@ -41,11 +41,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             var testImageDTO = GetImageDTO();
             var testImage = GetImage();
 
+            SetupImageHashGeneratorService();
             SetupCreateRepository(1);
             SetupBlobService();
             SetupMapper(testImage, testImageDTO);
 
-            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object, _mockImageComparatorService.Object);
+            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object, _mockImageHashGeneratorService.Object);
 
             // Act
             var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
@@ -66,11 +67,12 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
             var testImageDTO = GetImageDTO();
             var testImage = GetImage();
 
+            SetupImageHashGeneratorService();
             SetupCreateRepository(-1);
             SetupBlobService();
             SetupMapper(testImage, testImageDTO);
 
-            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object, _mockImageComparatorService.Object);
+            var handler = new CreateImageHandler(_mockBlobService.Object, _mockRepository.Object, _mockLogger.Object, _mockMapper.Object, _mockLocalizerFail.Object, _mockLocalizerConvertNull.Object, _mockImageHashGeneratorService.Object);
 
             // Act
             var result = await handler.Handle(new CreateImageCommand(testCreateImageDTO), CancellationToken.None);
@@ -114,6 +116,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Image.CreateImage
                 Extension = "string",
                 Alt = "String",
             };
+        }
+
+        private void SetupImageHashGeneratorService()
+        {
+            _mockImageHashGeneratorService.Setup(x => x.GenerateImageHash(It.IsAny<string>()));
         }
 
         private void SetupCreateRepository(int returnNumber)

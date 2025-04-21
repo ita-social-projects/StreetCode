@@ -12,13 +12,13 @@ using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
 {
-    [Collection("Job")]
-    public class JobGetControllerTests : BaseControllerTests<JobClient>
+    [Collection("Authorization")]
+    public class JobGetControllerTests : BaseAuthorizationControllerTests<JobClient>
     {
         private readonly Job testJob;
 
-        public JobGetControllerTests(CustomWebApplicationFactory<Program> factory)
-            : base(factory, "/api/Job")
+        public JobGetControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
+            : base(factory, "/api/Job", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testJob = JobExtracter.Extract(uniqueId);
@@ -99,7 +99,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             Job expected = this.testJob;
 
             // Act
-            var response = await this.Client.GetByIdAsync(expected.Id);
+            var response = await this.Client.GetByIdAsync(expected.Id, TokenStorage.AdminAccessToken);
 
             // Assert
             Assert.True(response.IsSuccessStatusCode);
@@ -122,6 +122,16 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Jobs.Get
             Assert.Multiple(
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.False(response.IsSuccessStatusCode));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                JobExtracter.Remove(this.testJob);
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

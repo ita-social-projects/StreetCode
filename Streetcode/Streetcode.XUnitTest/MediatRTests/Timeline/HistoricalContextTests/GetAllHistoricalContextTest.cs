@@ -77,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllHistoricalContextQuery(UserRole.User, Page: 1, PageSize: pageSize), CancellationToken.None);
+            var result = await handler.Handle(new GetAllHistoricalContextQuery(UserRole.User, page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

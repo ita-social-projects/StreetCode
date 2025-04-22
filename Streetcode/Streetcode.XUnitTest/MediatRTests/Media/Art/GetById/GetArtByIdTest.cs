@@ -77,9 +77,9 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             Assert.Equal(expectedError, result.Errors[0].Message);
         }
 
-        private Art GetArt()
+        private DAL.Entities.Media.Images.Art GetArt()
         {
-            return new Art
+            return new DAL.Entities.Media.Images.Art
             {
                 Id = 1,
             };
@@ -93,14 +93,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private void GetMockRepositoryAndMapper(Art? art, ArtDTO? artDTO)
+        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Art? art, ArtDTO? artDTO)
         {
             this.mockRepo
                 .Setup(r => r.ArtRepository
                     .GetFirstOrDefaultAsync(
-                        It.IsAny<Expression<Func<Art, bool>>>(),
-                        It.IsAny<Func<IQueryable<Art>,
-                        IIncludableQueryable<Art, object>>>()))
+                        It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
+                        It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
+                        IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
                 .ReturnsAsync(art);
 
             this.mockMapper

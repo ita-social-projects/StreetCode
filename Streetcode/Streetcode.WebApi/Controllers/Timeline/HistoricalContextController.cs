@@ -15,9 +15,9 @@ namespace Streetcode.WebApi.Controllers.Timeline
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllHistoricalContextDTO))]
-        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+        public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
         {
-            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(GetUserRole(), PageSize: pageSize, Page: page)));
+            return HandleResult(await Mediator.Send(new GetAllHistoricalContextQuery(GetUserRole(), page, pageSize, title)));
         }
 
         [HttpGet("{id:int}")]

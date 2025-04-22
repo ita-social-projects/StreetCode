@@ -66,13 +66,18 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             try
             {
                 var streetcode = StreetcodeFactory.CreateStreetcode(request.Streetcode.StreetcodeType);
+
                 _mapper.Map(request.Streetcode, streetcode);
+
                 streetcode.CreatedAt = streetcode.UpdatedAt = DateTime.UtcNow;
                 streetcode.UserId = HttpContextHelper.GetCurrentUserId(_httpContextAccessor) !;
+
                 await _repositoryWrapper.StreetcodeRepository.CreateAsync(streetcode);
+
                 var isResultSuccess = await _repositoryWrapper.SaveChangesAsync() > 0;
+
                 await AddTimelineItems(streetcode, request.Streetcode.TimelineItems);
-                await AddImagesAsync(streetcode, request.Streetcode.ImagesIds);
+                await AddImagesAsync(streetcode, request.Streetcode.ImagesDetails.Select(x => x.ImageId).ToList());
                 AddAudio(streetcode, request.Streetcode.AudioId);
                 await AddArtGallery(streetcode, request.Streetcode.StreetcodeArtSlides, request.Streetcode.Arts);
                 await AddTags(streetcode, request.Streetcode.Tags);

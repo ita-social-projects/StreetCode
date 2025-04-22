@@ -324,4 +324,7 @@
   <data name="UserName" xml:space="preserve">
     <value>UserName</value>
   </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
 </root>

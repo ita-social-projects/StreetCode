@@ -1,25 +1,27 @@
-﻿using Streetcode.BLL.DTO.Media.Audio;
+﻿using System.Net;
+using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.XIntegrationTest.Base;
 using Streetcode.XIntegrationTest.ControllerTests.BaseController;
 using Streetcode.XIntegrationTest.ControllerTests.Utils;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.AuthorizationFixture;
+using Streetcode.XIntegrationTest.ControllerTests.Utils.BeforeAndAfterTestAtribute.Media;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Media;
-using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.AdditionalContent;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.Media.Audio;
 using Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter.StreetcodeExtracter;
 using Xunit;
 
 namespace Streetcode.XIntegrationTest.ControllerTests.Media
 {
-    [Collection("Audio")]
-    public class AudioControllerTests : BaseControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
+    [Collection("Authorization")]
+    public class AudioControllerTests : BaseAuthorizationControllerTests<AudioClient>, IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly Audio testAudio;
         private readonly StreetcodeContent testStreetcodeContent;
 
-        public AudioControllerTests(CustomWebApplicationFactory<Program> factory)
-            : base(factory, "/api/Audio")
+        public AudioControllerTests(CustomWebApplicationFactory<Program> factory, TokenStorage tokenStorage)
+            : base(factory, "/api/Audio", tokenStorage)
         {
             int uniqueId = UniqueNumberGenerator.GenerateInt();
             this.testAudio = AudioExtracter.Extract(uniqueId);
@@ -86,6 +88,81 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Media
             Assert.Multiple(
                 () => Assert.False(response.IsSuccessStatusCode),
                 () => Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode));
+        }
+
+        [Fact]
+        public async Task GetBaseAudio_ReturnSuccessStatusCode()
+        {
+            int existentId = testAudio.Id;
+
+            var response = await Client.GetBaseAudio(existentId);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetBaseAudio_Incorrect_ReturnBadRequest()
+        {
+            int nonExistentId = -100;
+
+            var response = await Client.GetBaseAudio(nonExistentId);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractTestAudio]
+        public async Task Create_ReturnSuccessStatusCode()
+        {
+            var audioCreateDto = ExtractTestAudioAttribute.AudioCreateDtoForTest;
+
+            var response = await Client.CreateAudio(audioCreateDto, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractTestAudio]
+        public async Task Update_ReturnSuccessStatusCode()
+        {
+            var audioUpdateDto = ExtractTestAudioAttribute.AudioUpdateDtoForTest;
+            audioUpdateDto.Id = this.testAudio.Id;
+
+            var response = await Client.UpdateAudio(audioUpdateDto, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        [ExtractTestAudio]
+        public async Task Update_IncorrectId_ReturnBadRequest()
+        {
+            var audioUpdateDto = ExtractTestAudioAttribute.AudioUpdateDtoForTest;
+            audioUpdateDto.Id = -1;
+
+            var response = await Client.UpdateAudio(audioUpdateDto, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_ReturnSuccessStatusCode()
+        {
+            int existentId = testAudio.Id;
+
+            var response = await Client.DeleteAudio(existentId, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Delete_IncorrectId_ReturnBadRequest()
+        {
+            int nonExistentId = -1;
+
+            var response = await Client.DeleteAudio(nonExistentId, TokenStorage.AdminAccessToken);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         protected override void Dispose(bool disposing)

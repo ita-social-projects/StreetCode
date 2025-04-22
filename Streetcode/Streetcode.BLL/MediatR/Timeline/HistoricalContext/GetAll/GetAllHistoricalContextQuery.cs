@@ -5,6 +5,6 @@ using Streetcode.DAL.Enums;
 
 namespace Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll
 {
-    public record GetAllHistoricalContextQuery(UserRole? UserRole, ushort? PageSize = null, ushort? Page = null)
+    public record GetAllHistoricalContextQuery(UserRole? UserRole, ushort? page = null, ushort? pageSize = null, string? title = null)
         : IRequest<Result<GetAllHistoricalContextDTO>>;
 }

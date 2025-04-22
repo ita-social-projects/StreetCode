@@ -60,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_ReturnsEmptyArray(int streetcodeId)
         {
             // Arrange
-            MockRepositoryAndMapper(new List<Art>(), new List<ArtDTO>(), new List<StreetcodeContent>() { new StreetcodeContent() { Id = streetcodeId } });
+            MockRepositoryAndMapper(new List<DAL.Entities.Media.Images.Art>(), new List<ArtDTO>(), new List<StreetcodeContent>() { new StreetcodeContent() { Id = streetcodeId } });
             var handler = new GetArtsByStreetcodeIdHandler(_mockRepo.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer);
 
             // Act
@@ -108,16 +108,16 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             Assert.Equal(expectedError, result.Errors.Single().Message);
         }
 
-        private List<Art> GetArtsList()
+        private List<DAL.Entities.Media.Images.Art> GetArtsList()
         {
-            return new List<Art>()
+            return new List<DAL.Entities.Media.Images.Art>()
             {
-                new Art()
+                new ()
                 {
                     Id = 1,
                     Image = new DAL.Entities.Media.Images.Image(),
                 },
-                new Art()
+                new ()
                 {
                     Id = 2,
                     Image = new DAL.Entities.Media.Images.Image(),
@@ -142,14 +142,14 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private void MockRepositoryAndMapper(List<Art> artList, List<ArtDTO> artListDTO, List<StreetcodeContent> streetcodeListUserCanAccess)
+        private void MockRepositoryAndMapper(List<DAL.Entities.Media.Images.Art> artList, List<ArtDTO> artListDTO, List<StreetcodeContent> streetcodeListUserCanAccess)
         {
             _mockRepo
                 .Setup(r => r.ArtRepository
                     .GetAllAsync(
-                        It.IsAny<Expression<Func<Art, bool>>>(),
-                        It.IsAny<Func<IQueryable<Art>,
-                        IIncludableQueryable<Art, object>>>()))
+                        It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
+                        It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
+                        IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
                 .ReturnsAsync(artList);
 
             _mockRepo.Setup(repo => repo.StreetcodeRepository

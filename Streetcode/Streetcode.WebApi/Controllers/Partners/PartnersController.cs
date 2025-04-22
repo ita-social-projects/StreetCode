@@ -20,9 +20,9 @@ public class PartnersController : BaseApiController
 {
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllPartnersResponseDTO))]
-    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+    public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title, [FromQuery] bool? IsKeyPartner)
     {
-        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetAllPartnersQuery(page, pageSize, title, IsKeyPartner)));
     }
 
     [HttpGet]

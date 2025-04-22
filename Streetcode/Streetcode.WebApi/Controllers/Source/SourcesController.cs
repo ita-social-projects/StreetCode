@@ -24,9 +24,9 @@ public class SourcesController : BaseApiController
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllCategoriesResponseDTO))]
-    public async Task<IActionResult> GetAllCategories([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+    public async Task<IActionResult> GetAllCategories([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
     {
-        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery(GetUserRole(), page, pageSize)));
+        return HandleResult(await Mediator.Send(new GetAllCategoriesQuery(GetUserRole(), page, pageSize, title)));
     }
 
     [HttpGet("{id:int}")]

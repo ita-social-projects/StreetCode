@@ -52,7 +52,6 @@ public class ExtractCreateTestStreetcodeAttribute : BeforeAfterTestAttribute
                 AdditionalText = "TestAdditionalText",
             },
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>(),
-            ImagesIds = new List<int>(),
             Tags = new List<StreetcodeTagDTO>(),
             Subtitles = new List<SubtitleCreateDTO>(),
             Facts = new List<StreetcodeFactCreateDTO>(),

@@ -199,7 +199,7 @@
     <value>Surname must consist of Cyrillic or Latin characters (both uppercase and lowercase) and can only include hyphens (-) and apostrophes (').</value>
   </data>
   <data name="UserNameFormat" xml:space="preserve">
-    <value>Surname must consist of Latin characters (lowercase) and can only include hyphens (-), apostrophes (') and underscores(_).</value>
+    <value>Username must consist of Latin characters (lowercase) and can only include hyphens (-), apostrophes (') and underscores(_).</value>
   </data>
   <data name="ImageSizeExceeded" xml:space="preserve">
     <value>The image size can't exceed {0} MB</value>
@@ -209,5 +209,29 @@
   </data>
   <data name="MustNotBeInPast" xml:space="preserve">
     <value>{0} must not be in the past.</value>
+  </data>
+  <data name="PhoneFormat" xml:space="preserve">
+    <value>Invalid phone number format: +XXXXXXXXXXXX</value>
+  </data>
+  <data name="PasswordNoWhitespace" xml:space="preserve">
+    <value>Password cannot contain whitespaces</value>
+  </data>
+  <data name="PasswordMustContainDigit" xml:space="preserve">
+    <value>Password must contain at least one digit</value>
+  </data>
+  <data name="PasswordMustContainSpecial" xml:space="preserve">
+    <value>Password must contain at least one non-alphanumeric symbol</value>
+  </data>
+  <data name="PasswordNoPercent" xml:space="preserve">
+    <value>Password cannot contain '%'</value>
+  </data>
+  <data name="PasswordMustContainUpper" xml:space="preserve">
+    <value>Password must contain at least one UPPERCASE letter</value>
+  </data>
+  <data name="PasswordMustContainLower" xml:space="preserve">
+    <value>Password must contain at least one lowercase letter</value>
+  </data>
+  <data name="PasswordConfirmationNotEqual" xml:space="preserve">
+    <value>Password and confirmation password must be the same</value>
   </data>
 </root>

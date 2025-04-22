@@ -279,6 +279,9 @@
   <data name="CannotFindStreetcodeById" xml:space="preserve">
     <value>Cannot find streetcode by id</value>
   </data>
+  <data name="CannotFindStreetcodeInFavourites" xml:space="preserve">
+    <value>Cannot find streetcode in favourites</value>
+  </data>
   <data name="CannotFindStreetcodeByTransliterationUrl" xml:space="preserve">
     <value>Cannot find streetcode by transliteration url: {0}</value>
   </data>
@@ -323,5 +326,8 @@
   </data>
   <data name="CannotFindHistoricalContextWithTitle" xml:space="preserve">
     <value>Cannot find historical context with title '{0}'</value>
+  </data>
+  <data name="CannotFindAnyPropertyWithThisName" xml:space="preserve">
+    <value>Cannot find any field with this name</value>
   </data>
 </root>

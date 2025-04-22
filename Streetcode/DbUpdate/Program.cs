@@ -1,4 +1,5 @@
-﻿using DbUp;
+﻿using System.Reflection;
+using DbUp;
 using Microsoft.Extensions.Configuration;
 
 public class Program
@@ -8,58 +9,66 @@ public class Program
         string rootDirectory = GetRootFolderPath();
         string pathToSqlScripts = Path.Combine(
             rootDirectory,
-            "Streetcode",
-            "Streetcode.DAL",
-            "Persistence",
             "ScriptsMigration");
 
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(rootDirectory, "Streetcode", "Streetcode.WebApi"))
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .SetBasePath(rootDirectory)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
             .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables("STREETCODE_")
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-        var upgrader =
-            DeployChanges.To
-                .SqlDatabase(connectionString)
-                .WithScriptsFromFileSystem(pathToSqlScripts)
-                .LogToConsole()
-                .Build();
-
-        var result = upgrader.PerformUpgrade();
-
-        if (!result.Successful)
+        Console.WriteLine($"Connection string: {connectionString}");
+        try
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(result.Error);
-            Console.ResetColor();
+            var upgrader =
+                DeployChanges.To
+                    .SqlDatabase(connectionString)
+                    .WithScriptsFromFileSystem(pathToSqlScripts)
+                    .LogToConsole()
+                    .Build();
+
+            var result = upgrader.PerformUpgrade();
+
+            if (!result.Successful)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(result.Error);
+                Console.ResetColor();
 #if DEBUG
-            Console.ReadLine();
+                Console.ReadLine();
 #endif
+                return -1;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Success!");
+            Console.ResetColor();
+            return 0;
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.InnerException);
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
             return -1;
         }
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Success!");
-        Console.ResetColor();
-        return 0;
     }
 
     private static string GetRootFolderPath()
     {
-        // By root folder we mean folder, that contains .gitignore file.
-        string currentDirectoryPath = Directory.GetCurrentDirectory();
-        var directory = new DirectoryInfo(currentDirectoryPath);
-        while (directory is not null && !directory.GetFiles(".gitignore").Any())
+        string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+        if (codeBase == null)
         {
-            directory = directory.Parent;
+            throw new NullReferenceException("Cannot find root folder");
         }
 
-        return directory?.FullName ?? throw new NullReferenceException("Cannot find root folder");
+        UriBuilder uri = new UriBuilder(codeBase);
+        string path = Uri.UnescapeDataString(uri.Path);
+        return Path.GetDirectoryName(path) !;
     }
 }

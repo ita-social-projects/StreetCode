@@ -9,9 +9,6 @@ using Microsoft.OpenApi.Models;
 using Streetcode.DAL.Persistence;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Streetcode.DAL.Repositories.Realizations.Base;
-using Streetcode.BLL.Interfaces.Email;
-using Streetcode.BLL.Services.Email;
-using Streetcode.DAL.Entities.AdditionalContent.Email;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Services.BlobStorageService;
 using Streetcode.BLL.Services.AudioService;
@@ -33,12 +30,17 @@ using Streetcode.BLL.Services.ImageService;
 using Streetcode.BLL.Services.Logging;
 using Streetcode.WebApi.Utils;
 using Microsoft.AspNetCore.Identity;
+using Streetcode.BLL.Factories.MessageDataFactory.Abstracts;
+using Streetcode.BLL.Factories.MessageDataFactory.Concretes;
+using Streetcode.BLL.Interfaces.Email;
 using Streetcode.BLL.MediatR.Newss.Create;
 using Streetcode.BLL.MediatR.Newss.Update;
+using Streetcode.BLL.Models.Email;
 using Streetcode.BLL.PipelineBehaviour;
 using Streetcode.BLL.Validators.SourceLinkCategory;
 using Streetcode.BLL.Validators.News;
 using Streetcode.DAL.Entities.Users;
+using Streetcode.BLL.Services.Email;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -66,23 +68,26 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IImageService, ImageService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICaptchaService, CaptchaService>();
+        services.AddScoped<IGoogleService, GoogleService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IInstagramService, InstagramService>();
         services.AddScoped<ITextService, AddTermsToTextService>();
+
+        services.AddScoped<IMessageDataAbstractFactory, MessageDataConcreteFactory>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+        var emailConfig = configuration.GetSection("EmailConfiguration");
 
         if (emailConfig is null)
         {
             throw new Exception("Email configuration is missing in the appsettings.");
         }
 
-        services.AddSingleton(emailConfig);
+        services.Configure<EmailConfiguration>(emailConfig);
 
         services.AddDbContext<StreetcodeDbContext>(options =>
         {
@@ -95,7 +100,15 @@ public static class ServiceCollectionExtensions
 
         services.AddIdentity<User, IdentityRole>()
             .AddEntityFrameworkStores<StreetcodeDbContext>()
-            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !);
+            .AddTokenProvider<DataProtectorTokenProvider<User>>(configuration["JWT:Issuer"] !)
+            .AddDefaultTokenProviders();
+
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'";
+        });
 
         services.AddHangfire(config =>
         {

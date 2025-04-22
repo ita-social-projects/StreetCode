@@ -1,6 +1,8 @@
 def CODE_VERSION = ''     
 def IS_IMAGE_BUILDED = false
+def IS_DBUPDATE_IMAGE_BUILDED = false
 def IS_IMAGE_PUSH = false
+def IS_DBUPDATE_IMAGE_PUSH = false
 def isSuccess
 def preDeployFrontStage
 def preDeployBackStage
@@ -85,10 +87,10 @@ pipeline {
           steps {
             parallel(
               Unit_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build'
               },
               Integration_test: {
-                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release'
+                sh 'dotnet test ./Streetcode/Streetcode.XIntegrationTest/Streetcode.XIntegrationTest.csproj --configuration Release --no-build'
               }
             )
           }
@@ -117,8 +119,8 @@ pipeline {
                                     /d:sonar.pullrequest.branch=$PR_BRANCH \
                                     /d:sonar.pullrequest.base=$PR_BASE
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         } else {
@@ -130,8 +132,8 @@ pipeline {
                                     /d:sonar.host.url="https://sonarcloud.io" \
                                     /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
 
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release" -f xml -o "coverage.xml"
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
                                     dotnet sonarscanner end /d:sonar.token=$SONAR
                             '''
                         }
@@ -139,7 +141,7 @@ pipeline {
                 }
             }
         }
-        stage('Build image') {
+        stage('Build images') {
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
                
@@ -147,38 +149,45 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh "docker build -t ${username}/streetcode:latest ."
+                        // Build the backend image
+                        sh "docker build -f Dockerfile -t ${username}/streetcode:${env.CODE_VERSION} ."
                         IS_IMAGE_BUILDED = true
+
+                        // Build the dbupdate image
+                        sh "docker build -f Dockerfile.dbupdate -t ${username}/dbupdate:${env.CODE_VERSION} ."
+                        IS_DBUPDATE_IMAGE_BUILDED = true
                     }
                 }
             }
         }
-        stage('Push image') {
+        stage('Push images') {
             when {
-                expression { IS_IMAGE_BUILDED == true }
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
             }   
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
                         sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                        sh "docker push ${username}/streetcode:latest"
-                        sh "docker tag  ${username}/streetcode:latest ${username}/streetcode:${env.CODE_VERSION}"
+
                         sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
                         IS_IMAGE_PUSH = true
-                
+
+                        sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
+                        IS_DBUPDATE_IMAGE_PUSH = true
+
                     }
                 }
             }
         }
     stage('Deploy Stage'){
         when {
-                expression { IS_IMAGE_PUSH == true }
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
             }  
         steps {
             input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
                 script {
                     checkout scmGit(
-                      branches: [[name: 'main']],
+                      branches: [[name: 'feature/add-init-container']],
                      userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode-DevOps.git']])
                    
                     preDeployBackStage = sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
@@ -196,7 +205,7 @@ pipeline {
                     sh 'docker system prune --force --filter "until=72h"'
                     sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
                     export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                    docker stop backend frontend nginx loki certbot
+                    docker stop backend frontend nginx loki certbot dbupdate
                     docker container prune -f                
                     docker volume prune -f
                     docker network prune -f
@@ -210,7 +219,7 @@ pipeline {
      }    
     stage('WHAT IS THE NEXT STEP') {
        when {
-                expression { IS_IMAGE_PUSH == true }
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
             }  
         steps {
              script {
@@ -231,7 +240,7 @@ pipeline {
                sh """
                export DOCKER_TAG_BACKEND=${preDeployBackStage}
                export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-               docker stop backend frontend nginx loki certbot
+               docker stop backend frontend nginx loki certbot dbupdate
                docker container prune -f
                docker volume prune -f
                docker network prune -f
@@ -250,7 +259,9 @@ pipeline {
             }
       }
     }
+
     /*
+
    stage('Deploy prod') {
          agent { 
            label 'production' 
@@ -291,7 +302,9 @@ pipeline {
             }
         }
     }
+
 */
+
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -345,7 +358,9 @@ pipeline {
                 }
             }    
         }
+
     */
+
     }
 
 post { 
@@ -393,3 +408,4 @@ def sendDiscordNotification(status, message) {
     """
     sh "curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' $DISCORD_WEBHOOK_URL"
 }
+

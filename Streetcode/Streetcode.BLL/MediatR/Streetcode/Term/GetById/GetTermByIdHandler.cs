@@ -16,7 +16,11 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
     private readonly ILoggerService _logger;
     private readonly IStringLocalizer<CannotFindSharedResource> _stringLocalizerCannotFind;
 
-    public GetTermByIdHandler(IRepositoryWrapper repositoryWrapper, IMapper mapper, ILoggerService logger, IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
+    public GetTermByIdHandler(
+        IRepositoryWrapper repositoryWrapper,
+        IMapper mapper,
+        ILoggerService logger,
+        IStringLocalizer<CannotFindSharedResource> stringLocalizerCannotFind)
     {
         _repositoryWrapper = repositoryWrapper;
         _mapper = mapper;
@@ -26,13 +30,13 @@ public class GetTermByIdHandler : IRequestHandler<GetTermByIdQuery, Result<TermD
 
     public async Task<Result<TermDTO>> Handle(GetTermByIdQuery request, CancellationToken cancellationToken)
     {
-        var term = await _repositoryWrapper.TermRepository.GetFirstOrDefaultAsync(f => f.Id == request.Id);
+        var term = await _repositoryWrapper.TermRepository.GetFirstOrDefaultAsync(x => x.Id == request.Id);
 
         if (term is null)
         {
-            string errorMsg = _stringLocalizerCannotFind["CannotFindAnyTermWithCorrespondingId", request.Id].Value;
-            _logger.LogError(request, errorMsg);
-            return Result.Fail(new Error(errorMsg));
+            var errorMessage = _stringLocalizerCannotFind["CannotFindAnyTermWithCorrespondingId", request.Id].Value;
+            _logger.LogError(request, errorMessage);
+            return Result.Fail(new Error(errorMessage));
         }
 
         return Result.Ok(_mapper.Map<TermDTO>(term));

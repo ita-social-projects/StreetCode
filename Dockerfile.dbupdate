@@ -23,6 +23,8 @@ RUN dotnet publish ./DbUpdate/DbUpdate.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/runtime:7.0 AS runtime
 WORKDIR /app
 
+COPY --from=publish /app/publish .
+
 # Copy the ScriptsMigration folder from the build stage to the runtime image
 COPY --from=build /tmp/ScriptsMigration /app/ScriptsMigration/
 

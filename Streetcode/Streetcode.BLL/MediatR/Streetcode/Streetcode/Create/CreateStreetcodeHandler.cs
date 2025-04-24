@@ -288,7 +288,7 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
 
         if (artUniqueIds.Count != artsList.Count)
         {
-            throw new ArgumentException(_stringLocalizerFailedToValidate["Індекс картинки має бути унікальним"], nameof(artSlides));
+            throw new ArgumentException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Index"]], nameof(artSlides));
         }
 
         var usedArtIds = new HashSet<int>(artSlidesList

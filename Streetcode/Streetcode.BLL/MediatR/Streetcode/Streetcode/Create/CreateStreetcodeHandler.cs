@@ -23,6 +23,7 @@ using Streetcode.DAL.Entities.Media.Images;
 using Streetcode.DAL.Entities.Partners;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using TransactionLinkEntity = Streetcode.DAL.Entities.Transactions.TransactionLink;
 
@@ -286,9 +287,15 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             .Distinct()
             .ToList();
 
-        if (artUniqueIds.Count != artsList.Count)
+        if (artUniqueIds.Count != artSlidesList.SelectMany(slide => slide.StreetcodeArts).Count())
         {
             throw new ArgumentException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Index"]], nameof(artSlides));
+        }
+
+        if (artSlidesList.Any(artSlide => artSlidesList.SelectMany(slide => slide.StreetcodeArts).Count() !=
+                                          StreetcodeArtSlideTemplateConsts.CountOfArtsInTemplateDictionary[artSlide.Template]))
+        {
+            throw new ArgumentException(_stringLocalizerFailedToValidate["SizeMustBeTheSameAsInTemplate", _stringLocalizerFieldNames["CountOfArts"]], nameof(artSlides));
         }
 
         var usedArtIds = new HashSet<int>(artSlidesList

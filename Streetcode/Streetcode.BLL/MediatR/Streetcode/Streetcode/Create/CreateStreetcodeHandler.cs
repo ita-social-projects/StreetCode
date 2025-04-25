@@ -280,6 +280,17 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             return;
         }
 
+        var artUniqueIds = artSlidesList
+            .SelectMany(slide => slide.StreetcodeArts)
+            .Select(art => art.Index)
+            .Distinct()
+            .ToList();
+
+        if (artUniqueIds.Count != artsList.Count)
+        {
+            throw new ArgumentException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Index"]], nameof(artSlides));
+        }
+
         var usedArtIds = new HashSet<int>(artSlidesList
             .SelectMany(slide => slide.StreetcodeArts)
             .Select(streetcodeArt => streetcodeArt.ArtId));

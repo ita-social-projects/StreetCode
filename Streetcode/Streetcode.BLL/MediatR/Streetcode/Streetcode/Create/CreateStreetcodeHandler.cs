@@ -292,7 +292,9 @@ public class CreateStreetcodeHandler : IRequestHandler<CreateStreetcodeCommand, 
             throw new ArgumentException(_stringLocalizerFailedToValidate["MustBeUnique", _stringLocalizerFieldNames["Index"]], nameof(artSlides));
         }
 
-        if (artSlidesList.Any(artSlide => artSlidesList.SelectMany(slide => slide.StreetcodeArts).Count() !=
+        int amountOfArts = artSlidesList.SelectMany(slide => slide.StreetcodeArts).Count();
+
+        if (artSlidesList.Any(artSlide => amountOfArts !=
                                           StreetcodeArtSlideTemplateConsts.CountOfArtsInTemplateDictionary[artSlide.Template]))
         {
             throw new ArgumentException(_stringLocalizerFailedToValidate["SizeMustBeTheSameAsInTemplate", _stringLocalizerFieldNames["CountOfArts"]], nameof(artSlides));

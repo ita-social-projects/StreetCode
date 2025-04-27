@@ -16,7 +16,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Client.Authenticatio
 
         public async Task<RestResponse> Login(LoginRequestDTO loginRequestDTO)
         {
-            return await SendCommand("/Login", Method.Post, loginRequestDTO);
+            return await SendCommand("/Login?captcha=true", Method.Post, loginRequestDTO);
         }
 
         public async Task<RestResponse> Register(RegisterRequestDTO registerRequestDTO)

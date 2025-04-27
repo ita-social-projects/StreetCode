@@ -47,7 +47,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             var handler = this.GetLoginHandler();
 
             // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials(), true), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsSuccess);
@@ -62,7 +62,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             var handler = this.GetLoginHandler();
 
             // Act.
-            var result = await handler.Handle(new LoginQuery(GetNonExistingCredentials()), CancellationToken.None);
+            var result = await handler.Handle(new LoginQuery(GetNonExistingCredentials(), true), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -77,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             var handler = this.GetLoginHandler();
 
             // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials(), true), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -92,7 +92,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             var handler = this.GetLoginHandler();
 
             // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials(), true), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);
@@ -109,7 +109,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
             var handler = this.GetLoginHandler();
 
             // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+            var result = await handler.Handle(new LoginQuery(GetExistingCredentials(), true), CancellationToken.None);
 
             // Assert.
             Assert.True(result.IsFailed);

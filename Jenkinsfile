@@ -177,10 +177,10 @@ pipeline {
         stage("Trivy Image Security Scan"){
 steps{
     script{
-        echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
+        
         sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/streetcode:${env.CODE_VERSION}"
   
-        echo "Running Trivy scan on ${username}/dbupdate:${env.CODE_VERSION}"
+        
         sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/dbupdate:${env.CODE_VERSION}"
   
     }

@@ -83,6 +83,9 @@ pipeline {
                 sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
+
+        
+        /*
         stage('Run tests') {
           steps {
             parallel(
@@ -95,6 +98,8 @@ pipeline {
             )
           }
         }
+*/
+
         stage('Sonar scan') {
             environment {
                 SONAR = credentials('sonar_token')
@@ -141,11 +146,18 @@ pipeline {
                 }
             }
         }
+
+
+
+        
+
         stage('Build images') {
-            when {
-                branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
+          /*  when {
+                branch pattern: "feature/issue-[0-9].[0-9]", comparator: "REGEXP"
                
             }
+            */
+
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){

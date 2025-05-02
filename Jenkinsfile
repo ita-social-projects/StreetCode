@@ -100,52 +100,7 @@ pipeline {
         }
 */
 
-        stage('Sonar scan') {
-            environment {
-                SONAR = credentials('sonar_token')
-            }
-            steps {
-                sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
-                script {
-                    withEnv([
-                        "PR_KEY=${env.CHANGE_ID}",
-                        "PR_BRANCH=${env.CHANGE_BRANCH}",
-                        "PR_BASE=${env.CHANGE_TARGET}",
-                    ]) {
-                        if (env.PR_KEY != "null") {                        
-                            sh  ''' echo "Sonar scan"
-                                    dotnet sonarscanner begin \
-                                    /k:"ita-social-projects_StreetCode" \
-                                    /o:"ita-social-projects" \
-                                    /d:sonar.token=$SONAR \
-                                    /d:sonar.host.url="https://sonarcloud.io" \
-                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
-                                    /d:sonar.pullrequest.key=$PR_KEY \
-                                    /d:sonar.pullrequest.branch=$PR_BRANCH \
-                                    /d:sonar.pullrequest.base=$PR_BASE
-
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
-                                    dotnet sonarscanner end /d:sonar.token=$SONAR
-                            '''
-                        } else {
-                            sh  ''' echo "Sonar scan"
-                                    dotnet sonarscanner begin \
-                                    /k:"ita-social-projects_StreetCode" \
-                                    /o:"ita-social-projects" \
-                                    /d:sonar.token=$SONAR \
-                                    /d:sonar.host.url="https://sonarcloud.io" \
-                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
-
-                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
-                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
-                                    dotnet sonarscanner end /d:sonar.token=$SONAR
-                            '''
-                        }
-                    }
-                }
-            }
-        }
+  
 
 
 
@@ -177,18 +132,12 @@ pipeline {
         stage("Trivy Image Security Scan"){
 steps{
     script{
-        
-       
- echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
-
-                    // Run Trivy scan and display the output in the console log
-                    sh """
-                        docker run --rm \
-                        -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy image --severity HIGH,CRITICAL --no-progress  ${username}/streetcode:${env.CODE_VERSION}
-                    """
-
-
+        echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
+        sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v  aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/streetcode:${env.CODE_VERSION}"
+  
+        echo "Running Trivy scan on ${username}/dbupdate:${env.CODE_VERSION}"
+        sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v  aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/dbupdate:${env.CODE_VERSION}"
+  
     }
 }
         }
@@ -426,34 +375,27 @@ steps{
 
     */
 
-    }
+             
+
+
 
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-    success {
-        script {
-            sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
-        }
-    }
-    failure {
-        script {
-            sendDiscordNotification('FAILED', 'Deployment pipeline failed.')
-        }
-    }
-    aborted {
-        script {
-            sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
-        }
-    }
+    
 
 }
-}
+
+
+
+
+
 
 
 /*
+
 def sendDiscordNotification(status, message) {
     withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
        def jsonMessage = """ 
@@ -477,5 +419,6 @@ def sendDiscordNotification(status, message) {
         sh """curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' "\$DISCORD_WEBHOOK_URL" """
     }
 }
+
 
 */

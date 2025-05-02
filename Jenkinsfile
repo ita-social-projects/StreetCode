@@ -95,9 +95,8 @@ pipeline {
             )
           }
         }
-        
+
         stage('Build images') {
-          
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
@@ -113,18 +112,22 @@ pipeline {
                 }
             }
         }
-       
          stage('Trivy Security Scan') {
             steps {
                 script {
-                    echo "Running Trivy scan on ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION}"
-
-                    // Run Trivy scan and display the output in the console log
-                    sh """
-                        docker run --rm \
-                        -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy image --no-progress --exit-code 1 ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} || true
-                    """
+                     def imagesToScan = [
+                "${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION}",
+                "${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION}"
+            ]
+             imagesToScan.each { image ->
+                echo "Running Trivy scan on ${image}"
+                // Run Trivy scan and display the output in the console log
+                sh """
+                    docker run --rm \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy image --no-progress --exit-code 1 ${image} || true
+                """
+            }
                 }
             }
         }

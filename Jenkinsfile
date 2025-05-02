@@ -178,11 +178,17 @@ pipeline {
 steps{
     script{
         
-        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/streetcode:${env.CODE_VERSION}"
-  
-        
-        sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/dbupdate:${env.CODE_VERSION}"
-  
+       
+ echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
+
+                    // Run Trivy scan and display the output in the console log
+                    sh """
+                        docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy image --severity HIGH,CRITICAL --no-progress  ${username}/streetcode:${env.CODE_VERSION}
+                    """
+
+
     }
 }
         }
@@ -446,6 +452,8 @@ post {
 }
 }
 
+
+/*
 def sendDiscordNotification(status, message) {
     withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
        def jsonMessage = """ 
@@ -470,3 +478,4 @@ def sendDiscordNotification(status, message) {
     }
 }
 
+*/

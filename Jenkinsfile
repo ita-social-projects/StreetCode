@@ -83,6 +83,9 @@ pipeline {
                 sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
+
+        
+        
         stage('Run tests') {
           steps {
             parallel(
@@ -96,11 +99,69 @@ pipeline {
           }
         }
 
+
+        stage('Sonar scan') {
+            environment {
+                SONAR = credentials('sonar_token')
+            }
+            steps {
+                sh 'sudo apt install openjdk-17-jdk openjdk-17-jre -y'
+                script {
+                    withEnv([
+                        "PR_KEY=${env.CHANGE_ID}",
+                        "PR_BRANCH=${env.CHANGE_BRANCH}",
+                        "PR_BASE=${env.CHANGE_TARGET}",
+                    ]) {
+                        if (env.PR_KEY != "null") {                        
+                            sh  ''' echo "Sonar scan"
+                                    dotnet sonarscanner begin \
+                                    /k:"ita-social-projects_StreetCode" \
+                                    /o:"ita-social-projects" \
+                                    /d:sonar.token=$SONAR \
+                                    /d:sonar.host.url="https://sonarcloud.io" \
+                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+                                    /d:sonar.pullrequest.key=$PR_KEY \
+                                    /d:sonar.pullrequest.branch=$PR_BRANCH \
+                                    /d:sonar.pullrequest.base=$PR_BASE
+
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
+                                    dotnet sonarscanner end /d:sonar.token=$SONAR
+                            '''
+                        } else {
+                            sh  ''' echo "Sonar scan"
+                                    dotnet sonarscanner begin \
+                                    /k:"ita-social-projects_StreetCode" \
+                                    /o:"ita-social-projects" \
+                                    /d:sonar.token=$SONAR \
+                                    /d:sonar.host.url="https://sonarcloud.io" \
+                                    /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" \
+
+                                    dotnet build ./Streetcode/Streetcode.sln --configuration Release -p:WarningLevel=0
+                                    dotnet-coverage collect "dotnet test ./Streetcode/Streetcode.sln --configuration Release --no-build" -f xml -o "coverage.xml"
+                                    dotnet sonarscanner end /d:sonar.token=$SONAR
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        
+
         stage('Build images') {
+          /*  when {
+                branch pattern: "feature/issue-[0-9].[0-9]", comparator: "REGEXP"
+               
+            }
+            */
+
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                      env.DOCKER_USERNAME = username
+                        env.DOCKER_USERNAME = username
                         // Build the backend image
                         sh "docker build -f Dockerfile -t ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} ."
                         IS_IMAGE_BUILDED = true
@@ -112,7 +173,9 @@ pipeline {
                 }
             }
         }
-         stage('Trivy Security Scan') {
+
+
+      stage('Trivy Image Security Scan') {
             steps {
                 script {
                      def imagesToScan = [
@@ -121,11 +184,11 @@ pipeline {
             ]
              imagesToScan.each { image ->
                 echo "Running Trivy scan on ${image}"
-                // Run Trivy scan and display the output in the console log
+                // Run Trivy scan and display the output in the console log ( || true: Ensures Jenkins doesn’t fail even if Trivy finds issues )
                 sh """
                     docker run --rm \
                     -v /var/run/docker.sock:/var/run/docker.sock \
-                    aquasec/trivy image --no-progress --exit-code 1 ${image} || true
+                    aquasec/trivy image --no-progress --severity HIGH,CRITICAL --exit-code 1 ${image} || true
                 """
             }
                 }
@@ -133,8 +196,125 @@ pipeline {
         }
 
 
-    
-    
+
+        stage('Push images') {
+            when {
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
+            }   
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                        sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+
+                        sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
+                        IS_IMAGE_PUSH = true
+
+                        sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
+                        IS_DBUPDATE_IMAGE_PUSH = true
+
+                    }
+                }
+            }
+        }
+
+
+
+
+
+    /*
+    stage('Deploy Stage'){
+        when {
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
+            }  
+        steps {
+            input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
+                script {
+                    checkout scmGit(
+                      branches: [[name: 'feature/add-init-container']],
+                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode-DevOps.git']])
+                   
+                    preDeployBackStage = sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
+                    echo "Last Tag Stage backend: ${preDeployBackStage}"
+                    preDeployFrontStage =  sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode_client:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
+                    
+                   echo "Last Tag Stage frontend: ${preDeployFrontStage}"
+                    
+ 
+                    
+                    echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
+                    echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
+
+                    sh 'docker image prune --force --filter "until=72h"'
+                    sh 'docker system prune --force --filter "until=72h"'
+                    sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
+                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
+                    docker stop backend frontend nginx loki certbot dbupdate
+                    docker container prune -f                
+                    docker volume prune -f
+                    docker network prune -f
+                    sleep 10
+                    docker compose --env-file /etc/environment up -d"""
+
+                    sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
+
+                }  
+            }
+     }    
+
+*/
+
+
+/*
+
+    stage('WHAT IS THE NEXT STEP') {
+       when {
+                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
+            }  
+        steps {
+             script {
+                    CHOICES = ["deployProd"];    
+                        env.yourChoice = input  message: 'Do you want to deploy to Production?', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
+                                        parameters: [choice(choices: CHOICES, description: 'Developer team can abort to switch next step as rollback stage', name: 'CHOICE')]
+            } 
+            
+        }
+        post {
+          aborted{
+              input message: 'Do you want to rollback Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
+            script{
+               echo "Rollback Tag Stage backend: ${preDeployBackStage}"
+               echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
+               sh 'docker image prune --force --filter "until=72h"'
+               sh 'docker system prune --force --filter "until=72h"'
+               sh """
+               export DOCKER_TAG_BACKEND=${preDeployBackStage}
+               export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
+               docker stop backend frontend nginx loki certbot dbupdate
+               docker container prune -f
+               docker volume prune -f
+               docker network prune -f
+               sleep 10
+               docker compose --env-file /etc/environment up -d"""
+
+               sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted and rolled back.')
+               
+            }
+            
+         }
+         success {
+                script {
+                    isSuccess = '1'
+                } 
+            }
+      }
+    }
+
+
+
+*/
+
+
+
     /*
 
    stage('Deploy prod') {
@@ -180,7 +360,43 @@ pipeline {
 
 */
 
-   
+
+/*
+    stage('Sync after release') {
+        when {
+           expression { isSuccess == '1' }
+        }   
+        steps {
+           
+            script {
+
+              git branch: 'master', credentialsId: 'test_git_user', url: 'git@github.com:ita-social-projects/Streetcode.git' 
+
+                sh 'echo ${BRANCH_NAME}'
+                sh "git checkout master" 
+                sh 'echo ${BRANCH_NAME}'
+                sh 'git merge ${BRANCH_NAME}'
+                sh "git push origin master" 
+                  
+            }
+        }
+        post {
+
+            success {
+
+                sh 'gh auth status'
+                sh "gh release create v${vers}  --generate-notes --draft"
+            }
+        }
+    }
+
+*/
+
+
+
+
+
+
 
 
     /*
@@ -214,18 +430,63 @@ pipeline {
 
     }
 
+
+
+/*
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-   
+    success {
+        script {
+            sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
+        }
+    }
+    failure {
+        script {
+            sendDiscordNotification('FAILED', 'Deployment pipeline failed.')
+        }
+    }
+    aborted {
+        script {
+            sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
+        }
+    }
 
+}
+*/
 }
 
 
+
+
+
+
+
+
+/*
+def sendDiscordNotification(status, message) {
+    withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
+       def jsonMessage = """ 
+       {
+            "content": "$status: $message",
+            "embeds": [
+                {
+                    "title": "Deployment Status",
+                    "fields": [
+                        {"name": "Environment", "value": "Stage", "inline": true},
+                        {"name": "Pipeline Name", "value": "$env.JOB_NAME", "inline": true},
+                        {"name": "Status", "value": "$status", "inline": true},
+                        {"name": "Deployment Tag", "value": "$env.CODE_VERSION", "inline": true},
+                        {"name": "Date and Time", "value": "${new Date().format('yyyy-MM-dd HH:mm:ss')}", "inline": true},
+                        {"name": "Pipeline Link", "value": "[Click here]($env.BUILD_URL)", "inline": true}
+                    ]
+                }
+            ]
+        }
+        """
+        sh """curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' "\$DISCORD_WEBHOOK_URL" """
+    }
 }
-
-
-
-
+*/

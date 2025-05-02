@@ -101,12 +101,13 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                      env.DOCKER_USERNAME = username
                         // Build the backend image
-                        sh "docker build -f Dockerfile -t ${username}/streetcode:${env.CODE_VERSION} ."
+                        sh "docker build -f Dockerfile -t ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} ."
                         IS_IMAGE_BUILDED = true
 
                         // Build the dbupdate image
-                        sh "docker build -f Dockerfile.dbupdate -t ${username}/dbupdate:${env.CODE_VERSION} ."
+                        sh "docker build -f Dockerfile.dbupdate -t ${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION} ."
                         IS_DBUPDATE_IMAGE_BUILDED = true
                     }
                 }
@@ -116,13 +117,13 @@ pipeline {
          stage('Trivy Security Scan') {
             steps {
                 script {
-                    echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
+                    echo "Running Trivy scan on ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION}"
 
                     // Run Trivy scan and display the output in the console log
                     sh """
                         docker run --rm \
                         -v /var/run/docker.sock:/var/run/docker.sock \
-                        aquasec/trivy image --no-progress --exit-code 1 ${username}/streetcode:${env.CODE_VERSION} || true
+                        aquasec/trivy image --no-progress --exit-code 1 ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} || true
                     """
                 }
             }

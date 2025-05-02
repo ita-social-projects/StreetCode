@@ -83,9 +83,6 @@ pipeline {
                 sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
-
-        
-        /*
         stage('Run tests') {
           steps {
             parallel(
@@ -98,21 +95,9 @@ pipeline {
             )
           }
         }
-*/
-
-  
-
-
-
         
-
         stage('Build images') {
-          /*  when {
-                branch pattern: "feature/issue-[0-9].[0-9]", comparator: "REGEXP"
-               
-            }
-            */
-
+          
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
@@ -127,141 +112,25 @@ pipeline {
                 }
             }
         }
-
-
-        stage("Trivy Image Security Scan"){
-steps{
-    script{
-        echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
-        sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v  aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/streetcode:${env.CODE_VERSION}"
-  
-        echo "Running Trivy scan on ${username}/dbupdate:${env.CODE_VERSION}"
-        sh "docker run -v /var/run/docker.sock:/var/run/docker.sock -v  aquasec/trivy:0.62.0 --severity HIGH,CRITICAL image ${username}/dbupdate:${env.CODE_VERSION}"
-  
-    }
-}
-        }
-
-
-/*
-        stage('Push images') {
-            when {
-                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
-            }   
+       
+         stage('Trivy Security Scan') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                    echo "Running Trivy scan on ${username}/streetcode:${env.CODE_VERSION}"
 
-                        sh "docker push ${username}/streetcode:${env.CODE_VERSION}"
-                        IS_IMAGE_PUSH = true
-
-                        sh "docker push ${username}/dbupdate:${env.CODE_VERSION}"
-                        IS_DBUPDATE_IMAGE_PUSH = true
-
-                    }
+                    // Run Trivy scan and display the output in the console log
+                    sh """
+                        docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy image --no-progress ${username}/streetcode:${env.CODE_VERSION}
+                    """
                 }
             }
         }
 
-*/
 
-
-
-    /*
-    stage('Deploy Stage'){
-        when {
-                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
-            }  
-        steps {
-            input message: 'Do you want to approve Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
-                script {
-                    checkout scmGit(
-                      branches: [[name: 'feature/add-init-container']],
-                     userRemoteConfigs: [[credentialsId: 'StreetcodeGithubCreds', url: 'git@github.com:ita-social-projects/Streetcode-DevOps.git']])
-                   
-                    preDeployBackStage = sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
-                    echo "Last Tag Stage backend: ${preDeployBackStage}"
-                    preDeployFrontStage =  sh(script: 'docker container inspect $(docker container ls -aq) --format "{{.Config.Image}}" | grep "streetcodeua/streetcode_client:" | perl -pe \'($_)=/([0-9]+([.][0-9]+)+)/\'', returnStdout: true).trim()
-                    
-                   echo "Last Tag Stage frontend: ${preDeployFrontStage}"
-                    
- 
-                    
-                    echo "DOCKER_TAG_BACKEND ${env.CODE_VERSION}"
-                    echo "DOCKER_TAG_FRONTEND  ${preDeployFrontStage}"
-
-                    sh 'docker image prune --force --filter "until=72h"'
-                    sh 'docker system prune --force --filter "until=72h"'
-                    sh """ export DOCKER_TAG_BACKEND=${env.CODE_VERSION}
-                    export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-                    docker stop backend frontend nginx loki certbot dbupdate
-                    docker container prune -f                
-                    docker volume prune -f
-                    docker network prune -f
-                    sleep 10
-                    docker compose --env-file /etc/environment up -d"""
-
-                    sendDiscordNotification('SUCCESS', 'Deployment to Stage completed successfully.')
-
-                }  
-            }
-     }    
-
-*/
-
-
-/*
-
-    stage('WHAT IS THE NEXT STEP') {
-       when {
-                expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
-            }  
-        steps {
-             script {
-                    CHOICES = ["deployProd"];    
-                        env.yourChoice = input  message: 'Do you want to deploy to Production?', ok : 'Proceed', submitter: 'admin_1, ira_zavushchak',id :'choice_id',
-                                        parameters: [choice(choices: CHOICES, description: 'Developer team can abort to switch next step as rollback stage', name: 'CHOICE')]
-            } 
-            
-        }
-        post {
-          aborted{
-              input message: 'Do you want to rollback Staging deployment?', ok: 'Yes', submitter: 'admin_1, ira_zavushchak , dev'
-            script{
-               echo "Rollback Tag Stage backend: ${preDeployBackStage}"
-               echo "Rollback Tag Stage frontend: ${preDeployFrontStage}"
-               sh 'docker image prune --force --filter "until=72h"'
-               sh 'docker system prune --force --filter "until=72h"'
-               sh """
-               export DOCKER_TAG_BACKEND=${preDeployBackStage}
-               export DOCKER_TAG_FRONTEND=${preDeployFrontStage}
-               docker stop backend frontend nginx loki certbot dbupdate
-               docker container prune -f
-               docker volume prune -f
-               docker network prune -f
-               sleep 10
-               docker compose --env-file /etc/environment up -d"""
-
-               sendDiscordNotification('ABORTED', 'Deployment to Stage was aborted and rolled back.')
-               
-            }
-            
-         }
-         success {
-                script {
-                    isSuccess = '1'
-                } 
-            }
-      }
-    }
-
-
-
-*/
-
-
-
+    
+    
     /*
 
    stage('Deploy prod') {
@@ -307,43 +176,7 @@ steps{
 
 */
 
-
-/*
-    stage('Sync after release') {
-        when {
-           expression { isSuccess == '1' }
-        }   
-        steps {
-           
-            script {
-
-              git branch: 'master', credentialsId: 'test_git_user', url: 'git@github.com:ita-social-projects/Streetcode.git' 
-
-                sh 'echo ${BRANCH_NAME}'
-                sh "git checkout master" 
-                sh 'echo ${BRANCH_NAME}'
-                sh 'git merge ${BRANCH_NAME}'
-                sh "git push origin master" 
-                  
-            }
-        }
-        post {
-
-            success {
-
-                sh 'gh auth status'
-                sh "gh release create v${vers}  --generate-notes --draft"
-            }
-        }
-    }
-
-*/
-
-
-
-
-
-
+   
 
 
     /*
@@ -375,50 +208,20 @@ steps{
 
     */
 
-             
-
-
+    }
 
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-    
+   
+
+}
+
 
 }
 
 
 
 
-
-
-
-/*
-
-def sendDiscordNotification(status, message) {
-    withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
-       def jsonMessage = """ 
-       {
-            "content": "$status: $message",
-            "embeds": [
-                {
-                    "title": "Deployment Status",
-                    "fields": [
-                        {"name": "Environment", "value": "Stage", "inline": true},
-                        {"name": "Pipeline Name", "value": "$env.JOB_NAME", "inline": true},
-                        {"name": "Status", "value": "$status", "inline": true},
-                        {"name": "Deployment Tag", "value": "$env.CODE_VERSION", "inline": true},
-                        {"name": "Date and Time", "value": "${new Date().format('yyyy-MM-dd HH:mm:ss')}", "inline": true},
-                        {"name": "Pipeline Link", "value": "[Click here]($env.BUILD_URL)", "inline": true}
-                    ]
-                }
-            ]
-        }
-        """
-        sh """curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' "\$DISCORD_WEBHOOK_URL" """
-    }
-}
-
-
-*/

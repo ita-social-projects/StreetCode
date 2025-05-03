@@ -184,7 +184,7 @@ pipeline {
             ]
              imagesToScan.each { image ->
                 echo "Running Trivy scan on ${image}"
-                // Run Trivy scan and display the output in the console log ( || true: Ensures Jenkins doesn’t fail even if Trivy finds issues )
+                // Run Trivy scan and display the output in the console log (  || true: Ensures Jenkins doesn’t fail even if Trivy finds issues )
                 sh """
                     docker run --rm \
                     -v /var/run/docker.sock:/var/run/docker.sock \

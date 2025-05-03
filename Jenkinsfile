@@ -98,6 +98,7 @@ pipeline {
             )
           }
         }
+        
 
 
         stage('Sonar scan') {
@@ -432,12 +433,14 @@ pipeline {
 
 
 
-/*
+
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
+
+    /*
     success {
         script {
             sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
@@ -453,9 +456,11 @@ post {
             sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
         }
     }
+    */
 
 }
-*/
+
+
 }
 
 

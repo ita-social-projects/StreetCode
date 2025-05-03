@@ -105,7 +105,7 @@ public class ChangeJobStatusHandlerTests
             .ReturnsAsync(job);
         _mockRepository.Setup(r => r.SaveChangesAsync()).ThrowsAsync(new Exception("Database error"));
         
-        var handler = new ChangeJobStatusHandler( _mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
+        var handler = new ChangeJobStatusHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizer.Object);
         
         // Act
         var result = await handler.Handle(request, CancellationToken.None);

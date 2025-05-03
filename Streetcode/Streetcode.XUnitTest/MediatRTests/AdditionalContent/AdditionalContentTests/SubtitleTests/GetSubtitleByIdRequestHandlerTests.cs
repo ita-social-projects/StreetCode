@@ -1,4 +1,3 @@
-﻿
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
@@ -14,7 +13,7 @@ using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
+namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.AdditionalContentTests.SubtitleTests
 {
     public class GetSubtitleByIdRequestHandlerTests
     {
@@ -29,20 +28,20 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         public GetSubtitleByIdRequestHandlerTests()
         {
-            this.mockRepo = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            mockRepo = new Mock<IRepositoryWrapper>();
+            mockMapper = new Mock<IMapper>();
+            mockLogger = new Mock<ILoggerService>();
+            mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Fact]
         public async Task Handler_Returns_Matching_Element()
         {
             // Arrange
-            this.SetupRepository(this.subtitle);
-            this.SetupMapper(this.subtitleDTO);
+            SetupRepository(subtitle);
+            SetupMapper(subtitleDTO);
 
-            var handler = new GetSubtitleByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetSubtitleByIdHandler(mockRepo.Object, mockMapper.Object, mockLogger.Object, mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetSubtitleByIdQuery(id, UserRole.User), CancellationToken.None);
@@ -57,10 +56,10 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
         public async Task Handler_Returns_NoMatching_Element()
         {
             // Arrange
-            this.SetupRepository(new Subtitle());
-            this.SetupMapper(new SubtitleDTO());
+            SetupRepository(new Subtitle());
+            SetupMapper(new SubtitleDTO());
 
-            var handler = new GetSubtitleByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetSubtitleByIdHandler(mockRepo.Object, mockMapper.Object, mockLogger.Object, mockLocalizer.Object);
 
             // Act
             var result = await handler.Handle(new GetSubtitleByIdQuery(id, UserRole.User), CancellationToken.None);
@@ -73,7 +72,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupRepository(Subtitle returnElement)
         {
-            this.mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
+            mockRepo.Setup(repo => repo.SubtitleRepository.GetFirstOrDefaultAsync(
                 It.IsAny<Expression<Func<Subtitle, bool>>>(),
                 It.IsAny<Func<IQueryable<Subtitle>,
                 IIncludableQueryable<Subtitle, object>>>()))
@@ -82,7 +81,7 @@ namespace Streetcode.XUnitTest.MediatRTests.AdditionalContent.SubtitleTests
 
         private void SetupMapper(SubtitleDTO returnElement)
         {
-            this.mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
+            mockMapper.Setup(x => x.Map<SubtitleDTO>(It.IsAny<object>()))
                 .Returns(returnElement);
         }
     }

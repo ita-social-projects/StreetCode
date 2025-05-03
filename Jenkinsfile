@@ -152,11 +152,11 @@ pipeline {
         
 
         stage('Build images') {
-          /*  when {
-                branch pattern: "feature/issue-[0-9].[0-9]", comparator: "REGEXP"
+            when {
+                branch pattern: "release/issue-[0-9].[0-9]", comparator: "REGEXP"
                
             }
-            */
+            
 
             steps {
                 script {
@@ -196,7 +196,7 @@ pipeline {
         }
 
 
-
+/*
         stage('Push images') {
             when {
                 expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
@@ -216,7 +216,7 @@ pipeline {
                 }
             }
         }
-
+*/
 
 
 

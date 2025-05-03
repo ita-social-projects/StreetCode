@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Toponyms.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Toponyms;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -41,7 +42,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetToponymByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetToponymByIdQuery(testToponym.Id), CancellationToken.None);
+            var result = await handler.Handle(new GetToponymByIdQuery(testToponym.Id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -64,7 +65,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Toponyms
             var handler = new GetToponymByIdHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetToponymByIdQuery(incorrectId), CancellationToken.None);
+            var result = await handler.Handle(new GetToponymByIdQuery(incorrectId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

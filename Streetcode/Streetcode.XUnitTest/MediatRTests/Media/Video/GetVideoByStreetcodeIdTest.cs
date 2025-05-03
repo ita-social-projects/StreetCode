@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Media.Video.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -50,7 +51,7 @@ public class GetVideoByStreetcodeIdTest
 
         // Act
         var result = await handler.Handle(
-            new GetVideoByStreetcodeIdQuery(streetcodeId),
+            new GetVideoByStreetcodeIdQuery(streetcodeId, UserRole.User),
             CancellationToken.None);
 
         // Assert
@@ -102,7 +103,7 @@ public class GetVideoByStreetcodeIdTest
 
         // Act
         var result = await handler.Handle(
-            new GetVideoByStreetcodeIdQuery(streetcodeId),
+            new GetVideoByStreetcodeIdQuery(streetcodeId, UserRole.User),
             CancellationToken.None);
 
         // Assert
@@ -132,7 +133,7 @@ public class GetVideoByStreetcodeIdTest
 
         // Act
         var result = await handler.Handle(
-            new GetVideoByStreetcodeIdQuery(streetcodeId),
+            new GetVideoByStreetcodeIdQuery(streetcodeId, UserRole.User),
             CancellationToken.None);
 
         // Assert

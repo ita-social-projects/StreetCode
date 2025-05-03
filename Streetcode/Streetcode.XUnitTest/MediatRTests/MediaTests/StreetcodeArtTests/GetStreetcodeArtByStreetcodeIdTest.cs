@@ -11,6 +11,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.StreetcodeArt.GetByStreetcodeId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
 using Xunit;
@@ -44,7 +45,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var handler = new GetStreetcodeArtByStreetcodeIdHandler(_repository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
-            var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             Assert.True(result.Value.All(a => GetStreetcodeArtDtoList()[a.Index - 1].Art!.Id == a.Art?.Id));
         }
@@ -59,7 +60,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 
             var handler = new GetStreetcodeArtByStreetcodeIdHandler(_repository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
-            var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             Assert.IsType<Result<IEnumerable<StreetcodeArtDTO>>>(result);
         }

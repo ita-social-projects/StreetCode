@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Audio.GetById;
 using Streetcode.BLL.SharedResource;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 using Model = Streetcode.DAL.Entities.Media.Audio;
@@ -45,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetAudioByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(id, result.Value.Id);
@@ -66,7 +67,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetAudioByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
@@ -87,7 +88,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Audio
             var handler = new GetAudioByIdHandler(_repository.Object, _mapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             // Act
-            var result = await handler.Handle(new GetAudioByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetAudioByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.IsAssignableFrom<AudioDTO>(result.Value);

@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Shared;
 using Streetcode.BLL.MediatR.ResultVariations;
+using Streetcode.DAL.Enums;
 
 namespace Streetcode.WebApi.Controllers;
 
@@ -33,5 +34,24 @@ public class BaseApiController : ControllerBase
         }
 
         return BadRequest(result.Errors.Select(x => new ErrorDto() { Message = x.Message }));
+    }
+
+    protected UserRole? GetUserRole()
+    {
+        var user = HttpContext?.User;
+        if (user == null)
+        {
+            return null;
+        }
+
+        foreach (UserRole role in Enum.GetValues(typeof(UserRole)))
+        {
+            if (user.IsInRole(role.ToString()))
+            {
+                return role;
+            }
+        }
+
+        return null;
     }
 }

@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetByTitle;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -15,7 +16,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests;
 
 public class GetByTitleHistoricalContextTest
 {
-    private const string Title = "test_title";
+    private const string title = "test_title";
     private readonly Mock<IRepositoryWrapper> _mockRepo;
     private readonly Mock<IMapper> _mockMapper;
     private readonly Mock<ILoggerService> _mockLogger;
@@ -24,13 +25,13 @@ public class GetByTitleHistoricalContextTest
     private readonly HistoricalContext _context = new ()
     {
         Id = 1,
-        Title = Title,
+        Title = title,
     };
 
     private readonly HistoricalContextDTO _contextDto = new ()
     {
         Id = 1,
-        Title = Title,
+        Title = title,
     };
 
     public GetByTitleHistoricalContextTest()
@@ -45,31 +46,31 @@ public class GetByTitleHistoricalContextTest
     public async Task Handler_Returns_Matching_Element()
     {
         // Arrange
-        SetupRepository(_context);
-        SetupMapper(_contextDto);
+        this.SetupRepository(_context);
+        this.SetupMapper(_contextDto);
 
         var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(Title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
             () => Assert.IsType<HistoricalContextDTO>(result.Value),
-            () => Assert.Equal(Title, result.Value.Title));
+            () => Assert.Equal(title, result.Value.Title));
     }
 
     [Fact]
     public async Task Handler_Returns_NoMatching_Element()
     {
         // Arrange
-        SetupRepository(new HistoricalContext());
-        SetupMapper(new HistoricalContextDTO());
+        this.SetupRepository(new HistoricalContext());
+        this.SetupMapper(new HistoricalContextDTO());
 
         var handler = new GetHistoricalContextByTitleHandler(_mockMapper.Object, _mockRepo.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(Title), CancellationToken.None);
+        var result = await handler.Handle(new GetHistoricalContextByTitleQuery(title, UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(

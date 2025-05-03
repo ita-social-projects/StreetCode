@@ -6,6 +6,7 @@ using Streetcode.BLL.MediatR.Jobs.Create;
 using Streetcode.BLL.MediatR.Jobs.Delete;
 using Streetcode.BLL.MediatR.Jobs.GetActiveJobs;
 using Streetcode.BLL.MediatR.Jobs.GetAll;
+using Streetcode.BLL.MediatR.Jobs.GetAllShort;
 using Streetcode.BLL.MediatR.Jobs.GetById;
 using Streetcode.BLL.MediatR.Jobs.Update;
 using Streetcode.DAL.Enums;
@@ -16,16 +17,16 @@ namespace Streetcode.WebApi.Controllers.Jobs
 	{
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAllJobsDTO))]
-		public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize)
+		public async Task<IActionResult> GetAll([FromQuery] ushort? page, [FromQuery] ushort? pageSize, [FromQuery] string? title)
 		{
-			return HandleResult(await Mediator.Send(new GetAllJobsQuery(page, pageSize)));
+			return HandleResult(await Mediator.Send(new GetAllJobsQuery(GetUserRole(), page, pageSize, title)));
 		}
 
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<JobShortDto>))]
 		public async Task<IActionResult> GetAllShort()
 		{
-			return HandleResult(await Mediator.Send(new GetAllShortJobsQuery()));
+			return HandleResult(await Mediator.Send(new GetAllShortJobsQuery(GetUserRole())));
 		}
 
 		[HttpGet]
@@ -39,8 +40,8 @@ namespace Streetcode.WebApi.Controllers.Jobs
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDto))]
 		public async Task<IActionResult> GetById(int id)
 		{
-            return HandleResult(await Mediator.Send(new GetJobByIdQuery(id)));
-        }
+			return HandleResult(await Mediator.Send(new GetJobByIdQuery(id, GetUserRole())));
+		}
 
 		[HttpPost]
 		[Authorize(Roles = nameof(UserRole.Admin))]
@@ -67,7 +68,7 @@ namespace Streetcode.WebApi.Controllers.Jobs
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(JobDto))]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
-		public async Task<IActionResult> Update([FromBody]JobUpdateDto jobDto)
+		public async Task<IActionResult> Update([FromBody] JobUpdateDto jobDto)
 		{
 			return HandleResult(await Mediator.Send(new UpdateJobCommand(jobDto)));
 		}

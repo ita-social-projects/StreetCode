@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.TimelineItem.GetByStreetcodeId;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -40,7 +41,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             int streetcodeId = 1;
 
             // Act
-            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -59,7 +60,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             int streetcodeId = 1;
 
             // Act
-            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId), CancellationToken.None);
+            var result = await handler.Handle(new GetTimelineItemsByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

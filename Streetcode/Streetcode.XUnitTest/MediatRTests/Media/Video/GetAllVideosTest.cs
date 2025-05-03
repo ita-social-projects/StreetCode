@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Video.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -40,7 +41,7 @@ public class GetAllVideosTest
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+        var result = await handler.Handle(new GetAllVideosQuery(UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -56,7 +57,7 @@ public class GetAllVideosTest
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+        var result = await handler.Handle(new GetAllVideosQuery(UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Multiple(
@@ -84,7 +85,7 @@ public class GetAllVideosTest
         var handler = new GetAllVideosHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizer.Object);
 
         // Act
-        var result = await handler.Handle(new GetAllVideosQuery(), CancellationToken.None);
+        var result = await handler.Handle(new GetAllVideosQuery(UserRole.User), CancellationToken.None);
 
         // Assert
         Assert.Equal(expectedError, result.Errors[0].Message);

@@ -171,23 +171,6 @@ public class CreateStreetcodeValidatorTests
     }
 
     [Fact]
-    public async Task ShouldReturnError_WhenImageIdsIsEmpty()
-    {
-        // Arrange
-        SetupRepositoryWrapperReturnsNull();
-        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["Images"]];
-        var command = GetValidCreateStreetcodeCommand();
-        command.Streetcode.ImagesIds = new List<int>();
-
-        // Act
-        var result = await _validator.TestValidateAsync(command);
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(x => x.Streetcode.ImagesIds)
-            .WithErrorMessage(expectedError);
-    }
-
-    [Fact]
     public async Task ShouldReturnValidationError_WhenImageDoesntExist()
     {
         // Arrange
@@ -195,19 +178,27 @@ public class CreateStreetcodeValidatorTests
         MockHelpers.SetupMockImageRepositoryGetFirstOrDefaultAsyncReturnsNull(_repositoryWrapper);
         var command = GetValidCreateStreetcodeCommand();
         var invalidImageIds = new List<int>() { 10, 20 };
-        command.Streetcode.ImagesIds = invalidImageIds;
+        var imagesDetailsList = command.Streetcode.ImagesDetails.ToList();
+
+        for (int i = 0; i < Math.Min(imagesDetailsList.Count, invalidImageIds.Count); i++)
+        {
+            imagesDetailsList[i].Id = invalidImageIds[i];
+        }
+
+        command.Streetcode.ImagesDetails = imagesDetailsList;
 
         // Act
         var result = await _validator.TestValidateAsync(command);
 
         // Assert
-        var imageIds = command.Streetcode.ImagesIds.ToList();
-        for (int i = 0; i < imageIds.Count; i++)
+        var imagesDetails = command.Streetcode.ImagesDetails.ToList();
+
+        for (int i = 0; i < imagesDetails.Count; i++)
         {
-            var imageId = imageIds[i];
+            var imageId = imagesDetails[i].ImageId;
             var expectedError = _mockValidationLocalizer["ImageDoesntExist", imageId];
 
-            result.ShouldHaveValidationErrorFor($"Streetcode.ImagesIds[{i}]")
+            result.ShouldHaveValidationErrorFor($"Streetcode.ImagesDetails.ImageId[{i}]")
                 .WithErrorMessage(expectedError);
         }
     }
@@ -293,10 +284,6 @@ public class CreateStreetcodeValidatorTests
             TimelineItems = new List<TimelineItemCreateUpdateDTO>()
             {
                 new (),
-            },
-            ImagesIds = new List<int>()
-            {
-                8,
             },
             ImagesDetails = new List<ImageDetailsDto>()
             {

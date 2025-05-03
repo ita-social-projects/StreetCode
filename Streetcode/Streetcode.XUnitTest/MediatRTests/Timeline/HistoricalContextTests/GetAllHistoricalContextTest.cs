@@ -8,6 +8,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Timeline.HistoricalContext.GetAll;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Timeline;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Helpers;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -39,7 +40,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllHistoricalContextQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -57,7 +58,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllHistoricalContextQuery(), CancellationToken.None);
+            var result = await handler.Handle(new GetAllHistoricalContextQuery(UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -76,7 +77,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.HistoricalContextTests
             var handler = new GetAllHistoricalContextHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetAllHistoricalContextQuery(page: 1, pageSize: pageSize), CancellationToken.None);
+            var result = await handler.Handle(new GetAllHistoricalContextQuery(UserRole.User, page: 1, pageSize: pageSize), CancellationToken.None);
 
             // Assert
             Assert.Multiple(

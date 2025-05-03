@@ -127,9 +127,9 @@ public class CreateStreetcodeHandlerTests
     public async Task Handle_WhenImageDetailsIsNull_ReturnsErrorResult()
     {
         var streetcodeCreateDto = CreateStreetcodeDto();
-        streetcodeCreateDto.ImagesDetails = null!;
+        streetcodeCreateDto.ImagesDetails = new List<ImageDetailsDto>();
         var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-        string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["ImagesDetails"]];
+        string expectedErrorValue = "AnErrorOccurredWhileCreating";
         SetupMocksForCreateStreetcode();
 
         // Act
@@ -199,47 +199,6 @@ public class CreateStreetcodeHandlerTests
         _repositoryMock.Verify(repo => repo.StreetcodeImageRepository.CreateRangeAsync(It.IsAny<IEnumerable<StreetcodeImage>>()), Times.Never);
     }
 
-    [Fact]
-    public async Task Handle_WhenImagesIdsIsNull_ReturnsErrorResult()
-    {
-        var streetcodeCreateDto = CreateStreetcodeDto();
-        streetcodeCreateDto.ImagesIds = null!;
-        var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-        string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["Images"]];
-        SetupMocksForCreateStreetcode();
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.True(result.IsFailed);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        });
-    }
-
-    [Fact]
-    public async Task Handle_WhenImagesIdsIsEmpty_ReturnsErrorResult()
-    {
-        var streetcodeCreateDto = CreateStreetcodeDto();
-        streetcodeCreateDto.ImagesIds = new List<int>();
-        var request = new CreateStreetcodeCommand(streetcodeCreateDto);
-        string expectedErrorValue = _localizerValidationMock["CannotBeEmpty", _localizerFieldMock["Images"]];
-        SetupMocksForCreateStreetcode();
-
-        // Act
-        var result = await _handler.Handle(request, CancellationToken.None);
-
-        // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.NotNull(result);
-            Assert.True(result.IsFailed);
-            Assert.Contains(expectedErrorValue, result.Errors.Single().Message);
-        });
-    }
     #endregion
 
     #region AddTimelineItems
@@ -1315,7 +1274,6 @@ public class CreateStreetcodeHandlerTests
             TransliterationUrl = "Url",
             ViewCount = 1,
             StreetcodeType = StreetcodeType.Person,
-            ImagesIds = new List<int>() { 1, 2 },
             ImagesDetails = new List<ImageDetailsDto>()
             {
                 new () { Alt = "1", Title = "TestImage", Id = 1 },

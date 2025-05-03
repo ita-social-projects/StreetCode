@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -35,10 +37,13 @@ public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, Resu
 
     public async Task<Result<SourceLinkCategoryDTO>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>? basePredicate = sl => sl.Id == request.Id;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), request.UserRole, sl => sl.Streetcodes);
+
         var srcCategories = await _repositoryWrapper
             .SourceCategoryRepository
             .GetFirstOrDefaultAsync(
-                predicate: sc => sc.Id == request.Id,
+                predicate: predicate,
                 include: scl => scl
                     .Include(sc => sc.StreetcodeCategoryContents)
                     .Include(sc => sc.Image) !);

@@ -9,6 +9,7 @@ using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Media.Art.GetById;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Media.Images;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -16,17 +17,17 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
 {
     public class GetArtByIdTest
     {
-        private readonly Mock<IRepositoryWrapper> _mockRepo;
-        private readonly Mock<IMapper> _mockMapper;
-        private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
+        private readonly Mock<IRepositoryWrapper> mockRepo;
+        private readonly Mock<IMapper> mockMapper;
+        private readonly Mock<ILoggerService> mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizerCannotFind;
 
         public GetArtByIdTest()
         {
-            _mockRepo = new Mock<IRepositoryWrapper>();
-            _mockMapper = new Mock<IMapper>();
-            _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            this.mockRepo = new Mock<IRepositoryWrapper>();
+            this.mockMapper = new Mock<IMapper>();
+            this.mockLogger = new Mock<ILoggerService>();
+            this.mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
@@ -34,11 +35,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_ReturnsArt(int id)
         {
             // Arrange
-            GetMockRepositoryAndMapper(GetArt(), GetArtDto());
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            this.GetMockRepositoryAndMapper(this.GetArt(), this.GetArtDTO());
+            var handler = new GetArtByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(id, result.Value.Id);
@@ -50,11 +51,11 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_ReturnsType(int id)
         {
             // Arrange
-            GetMockRepositoryAndMapper(GetArt(), GetArtDto());
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            this.GetMockRepositoryAndMapper(this.GetArt(), this.GetArtDTO());
+            var handler = new GetArtByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.IsType<Result<ArtDTO>>(result);
@@ -65,26 +66,26 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
         public async Task Handle_WithNonExistentId_ReturnsError(int id)
         {
             // Arrange
-            GetMockRepositoryAndMapper(null, null);
-            var handler = new GetArtByIdHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object, _mockLocalizerCannotFind.Object);
+            this.GetMockRepositoryAndMapper(null, null);
+            var handler = new GetArtByIdHandler(this.mockRepo.Object, this.mockMapper.Object, this.mockLogger.Object, this.mockLocalizerCannotFind.Object);
             var expectedError = $"Cannot find an art with corresponding id: {id}";
 
             // Act
-            var result = await handler.Handle(new GetArtByIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetArtByIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
         }
 
-        private static Art GetArt()
+        private DAL.Entities.Media.Images.Art GetArt()
         {
-            return new Art
+            return new DAL.Entities.Media.Images.Art
             {
                 Id = 1,
             };
         }
 
-        private static ArtDTO GetArtDto()
+        private ArtDTO GetArtDTO()
         {
             return new ArtDTO
             {
@@ -92,21 +93,21 @@ namespace Streetcode.XUnitTest.MediatRTests.Media.Arts
             };
         }
 
-        private void GetMockRepositoryAndMapper(Art? art, ArtDTO? artDto)
+        private void GetMockRepositoryAndMapper(DAL.Entities.Media.Images.Art? art, ArtDTO? artDTO)
         {
-            _mockRepo
+            this.mockRepo
                 .Setup(r => r.ArtRepository
                     .GetFirstOrDefaultAsync(
-                        It.IsAny<Expression<Func<Art, bool>>>(),
-                        It.IsAny<Func<IQueryable<Art>,
-                        IIncludableQueryable<Art, object>>>()))
+                        It.IsAny<Expression<Func<DAL.Entities.Media.Images.Art, bool>>>(),
+                        It.IsAny<Func<IQueryable<DAL.Entities.Media.Images.Art>,
+                        IIncludableQueryable<DAL.Entities.Media.Images.Art, object>>>()))
                 .ReturnsAsync(art);
 
-            _mockMapper
+            this.mockMapper
                 .Setup(x => x.Map<ArtDTO?>(It.IsAny<object>()))
-                .Returns(artDto);
+                .Returns(artDTO);
 
-            _mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
+            this.mockLocalizerCannotFind.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()])
             .Returns((string key, object[] args) =>
             {
                 if (args != null && args.Length > 0 && args[0] is int id)

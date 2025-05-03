@@ -7,6 +7,7 @@ using Streetcode.BLL.DTO.Streetcode;
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.SharedResource;
+using Streetcode.BLL.Services.EntityAccessManager;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 
@@ -37,9 +38,11 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
     public Task<Result<GetAllStreetcodesResponseDTO>> Handle(GetAllStreetcodesQuery query, CancellationToken cancellationToken)
     {
         var filterRequest = query.Request;
+        Expression<Func<StreetcodeContent, bool>>? basePredicate = null;
+        var predicate = basePredicate.ExtendWithAccessPredicate(new StreetcodeAccessManager(), query.UserRole);
 
         var streetcodes = _repositoryWrapper.StreetcodeRepository
-            .FindAll()
+            .FindAll(predicate: predicate)
             .Include(s => s.Tags)
             .AsQueryable();
 
@@ -76,9 +79,9 @@ public class GetAllStreetcodesHandler : IRequestHandler<GetAllStreetcodesQuery, 
         {
             if (filterRequest.Page <= 0 || filterRequest.Amount <= 0)
             {
-               var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
-               _logger.LogError(query, errorMsg);
-               return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
+                var errorMsg = _stringLocalizerFailedToValidate["InvalidPaginationParameters"].Value;
+                _logger.LogError(query, errorMsg);
+                return Task.FromResult<Result<GetAllStreetcodesResponseDTO>>(Result.Fail(new Error(errorMsg)));
             }
 
             ApplyPagination(ref streetcodes, filterRequest.Amount!.Value, filterRequest.Page!.Value);

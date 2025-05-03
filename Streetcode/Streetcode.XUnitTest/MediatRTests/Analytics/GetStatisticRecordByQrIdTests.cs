@@ -9,6 +9,7 @@ using Streetcode.BLL.MediatR.Analytics.StatisticRecord.GetByQrId;
 using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.AdditionalContent.Coordinates.Types;
 using Streetcode.DAL.Entities.Analytics;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
 using Xunit;
 
@@ -55,7 +56,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             _mapperMock.Setup(mapper => mapper.Map<StatisticRecordDTO>(statisticRecord))
                 .Returns(statisticRecordDto);
 
-            var request = new GetStatisticRecordByQrIdQuery(qrId);
+            var request = new GetStatisticRecordByQrIdQuery(qrId, UserRole.User);
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
@@ -84,7 +85,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             _stringLocalizerCannotFindMock.Setup(localizer => localizer["CannotFindRecordWithQrId"])
                 .Returns(new LocalizedString("CannotFindRecordWithQrId", "Cannot find record with this QR ID"));
 
-            var request = new GetStatisticRecordByQrIdQuery(qrId);
+            var request = new GetStatisticRecordByQrIdQuery(qrId, UserRole.User);
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);
@@ -113,7 +114,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             _stringLocalizerCannotMapMock.Setup(localizer => localizer["CannotMapRecord"])
                 .Returns(new LocalizedString("CannotMapRecord", "Cannot map the record"));
 
-            var request = new GetStatisticRecordByQrIdQuery(qrId);
+            var request = new GetStatisticRecordByQrIdQuery(qrId, UserRole.User);
 
             // Act
             var result = await _handler.Handle(request, CancellationToken.None);

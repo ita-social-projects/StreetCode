@@ -2,15 +2,17 @@
 using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
+using MockQueryable.Moq;
 using Moq;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
+using Streetcode.DAL.Entities.Streetcode;
+using Streetcode.DAL.Enums;
 using Streetcode.DAL.Repositories.Interfaces.Base;
+using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
 namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
@@ -21,8 +23,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
         private readonly Mock<IMapper> _mockMapper;
         private readonly Mock<IBlobService> _blobService;
         private readonly Mock<ILoggerService> _mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizerCannotFind;
-        private readonly GetCategoriesByStreetcodeIdHandler _handler;
+        private readonly MockCannotFindLocalizer _mockLocalizerCannotFind;
 
         public GetCategoriesByStreetcodeIdTest()
         {
@@ -30,31 +31,28 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             _mockMapper = new Mock<IMapper>();
             _blobService = new Mock<IBlobService>();
             _mockLogger = new Mock<ILoggerService>();
-            _mockLocalizerCannotFind = new Mock<IStringLocalizer<CannotFindSharedResource>>();
-            _handler = new GetCategoriesByStreetcodeIdHandler(
-                _mockRepository.Object,
-                _mockMapper.Object,
-                _blobService.Object,
-                _mockLogger.Object);
+            _mockLocalizerCannotFind = new MockCannotFindLocalizer();
         }
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnSuccesfully(int id)
+        public async Task Handler_CategoriesExistsAndUserHasAccess_ReturnSuccesfully(int id)
         {
             // Arrange
-            _mockRepository.Setup(x => x.SourceCategoryRepository
-            .GetAllAsync(
-                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkCategory>,
-                IIncludableQueryable<SourceLinkCategory, object>>>()))
-            .ReturnsAsync(GetSourceLinkCategories());
+            SetupRepositoryMock(GetSourceLinkCategories(), GetStreetcodeList());
 
             _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
-                .Returns(GetSourceDtOs());
+                .Returns(GetSourceDTOs());
+
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
 
             // Act
-            var result = await _handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -64,18 +62,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
         [Theory]
         [InlineData(1)]
-        public async Task ShouldReturnEmptyArray_NotExistingId(int id)
+        public async Task Handler_CategoriesNotExistsAndUserHasAccess_ReturnEmptyArray(int id)
         {
             // Arrange
-            _mockRepository.Setup(x => x.SourceCategoryRepository
-            .GetAllAsync(
-                It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
-                It.IsAny<Func<IQueryable<SourceLinkCategory>,
-                IIncludableQueryable<SourceLinkCategory, object>>>()))
-            .ReturnsAsync(GetSourceLinkCategoriesNotExists());
+            SetupRepositoryMock(GetSourceLinkCategoriesNotExists(), GetStreetcodeList());
+
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
 
             // Act
-            var result = await _handler.Handle(new GetCategoriesByStreetcodeIdQuery(id), CancellationToken.None);
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
 
             // Assert
             Assert.Multiple(
@@ -84,7 +84,50 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
                 () => Assert.Empty(result.Value));
         }
 
-        private static IEnumerable<SourceLinkCategory> GetSourceLinkCategories()
+        [Theory]
+        [InlineData(1)]
+        public async Task Handler_CategoriesExistsButUserDoesNotHaveAccess_ReturnSuccesfully(int id)
+        {
+            // Arrange
+            SetupRepositoryMock(GetSourceLinkCategories(), new List<StreetcodeContent>());
+
+            var expectedError = _mockLocalizerCannotFind["CannotFindAnyStreetcodeWithCorrespondingId", id].Value;
+
+            _mockMapper.Setup(x => x.Map<IEnumerable<SourceLinkCategoryDTO>>(It.IsAny<IEnumerable<SourceLinkCategory>>()))
+                .Returns(GetSourceDTOs());
+
+            var handler = new GetCategoriesByStreetcodeIdHandler(
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _blobService.Object,
+                _mockLogger.Object,
+                _mockLocalizerCannotFind);
+
+            // Act
+            var result = await handler.Handle(new GetCategoriesByStreetcodeIdQuery(id, UserRole.User), CancellationToken.None);
+
+            // Assert
+            Assert.Equal(expectedError, result.Errors.Single().Message);
+        }
+
+        private void SetupRepositoryMock(List<SourceLinkCategory> sourceLinkCategories, List<StreetcodeContent> streetcodeListUserCanAccess)
+        {
+            _mockRepository.Setup(x => x.SourceCategoryRepository
+                    .GetAllAsync(
+                        It.IsAny<Expression<Func<SourceLinkCategory, bool>>>(),
+                        It.IsAny<Func<IQueryable<SourceLinkCategory>,
+                            IIncludableQueryable<SourceLinkCategory, object>>>()))
+                .ReturnsAsync(sourceLinkCategories);
+
+            _mockRepository.Setup(repo => repo.StreetcodeRepository
+                    .FindAll(
+                        It.IsAny<Expression<Func<StreetcodeContent, bool>>>(),
+                        It.IsAny<Func<IQueryable<StreetcodeContent>,
+                            IIncludableQueryable<StreetcodeContent, object>>>()))
+                .Returns(streetcodeListUserCanAccess.AsQueryable().BuildMockDbSet().Object);
+        }
+
+        private static List<SourceLinkCategory> GetSourceLinkCategories()
         {
             return new List<SourceLinkCategory>()
             {
@@ -101,7 +144,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static List<SourceLinkCategoryDTO> GetSourceDtOs()
+        private static List<SourceLinkCategoryDTO> GetSourceDTOs()
         {
             return new List<SourceLinkCategoryDTO>()
             {
@@ -118,9 +161,20 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static IEnumerable<SourceLinkCategory> GetSourceLinkCategoriesNotExists()
+        private List<SourceLinkCategory> GetSourceLinkCategoriesNotExists()
         {
             return new List<SourceLinkCategory>();
+        }
+
+        private static List<StreetcodeContent> GetStreetcodeList()
+        {
+            return new List<StreetcodeContent>
+            {
+                new StreetcodeContent
+                {
+                    Id = 1,
+                },
+            };
         }
     }
 }

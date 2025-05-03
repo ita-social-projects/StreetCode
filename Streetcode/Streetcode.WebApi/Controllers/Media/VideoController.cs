@@ -13,7 +13,7 @@ public class VideoController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<VideoDTO>))]
     public async Task<IActionResult> GetAll()
     {
-        return HandleResult(await Mediator.Send(new GetAllVideosQuery()));
+        return HandleResult(await Mediator.Send(new GetAllVideosQuery(GetUserRole())));
     }
 
     [HttpGet("{streetcodeId:int}")]
@@ -21,13 +21,13 @@ public class VideoController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDTO))]
     public async Task<IActionResult> GetByStreetcodeId([FromRoute] int streetcodeId)
     {
-        return HandleResult(await Mediator.Send(new GetVideoByStreetcodeIdQuery(streetcodeId)));
+        return HandleResult(await Mediator.Send(new GetVideoByStreetcodeIdQuery(streetcodeId, GetUserRole())));
     }
 
     [HttpGet("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VideoDTO))]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        return HandleResult(await Mediator.Send(new GetVideoByIdQuery(id)));
+        return HandleResult(await Mediator.Send(new GetVideoByIdQuery(id, GetUserRole())));
     }
 }

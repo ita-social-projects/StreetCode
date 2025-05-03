@@ -317,7 +317,7 @@ public class BaseUserValidatorTests
                 },
             },
             PhoneNumber = null!,
-            Email = "testemail",
+            Id = "DF6D4FDF-EFED-4D3A-870C-39CC2C8D250A",
         };
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Streetcode.BLL.DTO.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.XIntegrationTest.Base;
@@ -29,7 +31,10 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
     {
         // Act
         var response = await this.Client.GetAllAsync();
-        var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<IEnumerable<TermDTO>>(response.Content);
+        var json = response.Content;
+        var jobject = JObject.Parse(json);
+        var termsJson = jobject["terms"]?.ToString();
+        var returnedValue = JsonConvert.DeserializeObject<IEnumerable<TermDTO>>(termsJson);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -102,7 +107,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var returnedValue = CaseIsensitiveJsonDeserializer.Deserialize<TermDTO>(response.Content);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
         Assert.Null(returnedValue);
     }
 
@@ -166,7 +171,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var response = await this.Client.Update(factUpdateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
     }
 
     [Fact]
@@ -182,7 +187,7 @@ public class TermControllerTests : BaseAuthorizationControllerTests<TermClient>
         var response = await this.Client.Update(factUpdateDto, this.TokenStorage.AdminAccessToken);
 
         // Assert
-        Assert.Equal(0, (int)response.StatusCode);
+        Assert.Equal(400, (int)response.StatusCode);
     }
 
     [Fact]

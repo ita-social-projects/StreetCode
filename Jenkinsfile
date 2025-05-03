@@ -142,12 +142,12 @@ pipeline {
             }
         }
         stage('Build images') {
-            /*
+            
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
                
             }
-            */
+            
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
@@ -166,6 +166,9 @@ pipeline {
 
 
          stage('Trivy Security Scan') {
+             when {
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
+            }   
             steps {
                 script {
                      def imagesToScan = [

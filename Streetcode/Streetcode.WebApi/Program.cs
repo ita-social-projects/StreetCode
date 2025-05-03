@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using AspNetCoreRateLimit;
 using Hangfire;
@@ -32,6 +33,31 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 builder.Services.AddRateLimiter(options =>
 {
+    options.AddPolicy("ForgotPasswordRateLimit", httpContext =>
+    {
+        httpContext.Request.EnableBuffering();
+        using var reader = new StreamReader(
+            httpContext.Request.Body,
+            encoding: System.Text.Encoding.UTF8,
+            detectEncodingFromByteOrderMarks: false,
+            leaveOpen: true);
+        var body = reader.ReadToEndAsync().Result;
+        httpContext.Request.Body.Position = 0;
+
+        var json = JsonDocument.Parse(body);
+        var email = json.RootElement.GetProperty("email").GetString();
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: email ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 1,
+                QueueLimit = 0,
+                Window = TimeSpan.FromSeconds(60)
+            });
+    });
+
     options.AddPolicy("EmailRateLimit", context => RateLimitPartition.GetFixedWindowLimiter(
         partitionKey: context.User.Identity?.Name ?? context.Request.Headers.Host.ToString(),
         factory: _ => new FixedWindowRateLimiterOptions

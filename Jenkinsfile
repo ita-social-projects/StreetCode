@@ -83,9 +83,6 @@ pipeline {
                 sh './Streetcode/build.sh SetupIntegrationTestsEnvironment'
             }
         }
-
-        
-        
         stage('Run tests') {
           steps {
             parallel(
@@ -98,9 +95,6 @@ pipeline {
             )
           }
         }
-        
-
-
         stage('Sonar scan') {
             environment {
                 SONAR = credentials('sonar_token')
@@ -147,18 +141,11 @@ pipeline {
                 }
             }
         }
-
-
-
-        
-
         stage('Build images') {
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
                
             }
-            
-
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
@@ -176,7 +163,7 @@ pipeline {
         }
 
 
-      stage('Trivy Image Security Scan') {
+         stage('Trivy Security Scan') {
             steps {
                 script {
                      def imagesToScan = [
@@ -185,7 +172,7 @@ pipeline {
             ]
              imagesToScan.each { image ->
                 echo "Running Trivy scan on ${image}"
-                // Run Trivy scan and display the output in the console log (  || true: Ensures Jenkins doesn’t fail even if Trivy finds issues )
+                // Run Trivy scan and display the output in the console log ( || true - don't fail on exit code)
                 sh """
                     docker run --rm \
                     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -217,12 +204,10 @@ pipeline {
                 }
             }
         }
+
+
 */
-
-
-
-
-    /*
+        /*
     stage('Deploy Stage'){
         when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -262,11 +247,11 @@ pipeline {
             }
      }    
 
+
 */
 
 
 /*
-
     stage('WHAT IS THE NEXT STEP') {
        when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -313,9 +298,6 @@ pipeline {
 
 
 */
-
-
-
     /*
 
    stage('Deploy prod') {
@@ -361,7 +343,6 @@ pipeline {
 
 */
 
-
 /*
     stage('Sync after release') {
         when {
@@ -392,12 +373,6 @@ pipeline {
     }
 
 */
-
-
-
-
-
-
 
 
     /*
@@ -431,16 +406,12 @@ pipeline {
 
     }
 
-
-
-
 post { 
     always { 
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-
-    /*
+/*
     success {
         script {
             sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
@@ -456,18 +427,11 @@ post {
             sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
         }
     }
-    */
-
-}
+*/
 
 
 }
-
-
-
-
-
-
+}
 
 
 /*
@@ -494,4 +458,5 @@ def sendDiscordNotification(status, message) {
         sh """curl -X POST -H 'Content-Type: application/json' -d '$jsonMessage' "\$DISCORD_WEBHOOK_URL" """
     }
 }
+
 */

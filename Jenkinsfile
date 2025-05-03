@@ -184,7 +184,7 @@ pipeline {
         }
 
 
-/*
+
         stage('Push images') {
             when {
                 expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
@@ -206,7 +206,7 @@ pipeline {
         }
 
 
-*/
+
         /*
     stage('Deploy Stage'){
         when {

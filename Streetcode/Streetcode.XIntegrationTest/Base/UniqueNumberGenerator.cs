@@ -1,31 +1,30 @@
-﻿namespace Streetcode.XIntegrationTest.Base
+﻿namespace Streetcode.XIntegrationTest.Base;
+
+public static class UniqueNumberGenerator
 {
-    public static class UniqueNumberGenerator
+    private static readonly object Lock = new object();
+
+    public static int GenerateInt()
     {
-        private static readonly object @lock = new object();
-
-        public static int GenerateInt()
+        lock (Lock)
         {
-            lock (@lock)
-            {
-                byte[] byte_arr = Guid.NewGuid().ToByteArray();
-                int uniqueNumber = BitConverter.ToInt32(byte_arr);
-                return uniqueNumber < 0 ? -uniqueNumber : uniqueNumber;
-            }
+            byte[] byteArr = Guid.NewGuid().ToByteArray();
+            int uniqueNumber = BitConverter.ToInt32(byteArr);
+            return uniqueNumber < 0 ? -uniqueNumber : uniqueNumber;
         }
+    }
 
-        public static int GenerateIntFromGuidInRange()
+    public static int GenerateIntFromGuidInRange()
+    {
+        lock (Lock)
         {
-            lock (@lock)
-            {
-                byte[] byteArray = Guid.NewGuid().ToByteArray();
+            byte[] byteArray = Guid.NewGuid().ToByteArray();
 
-                int generatedValue = BitConverter.ToInt32(byteArray, 0);
+            int generatedValue = BitConverter.ToInt32(byteArray, 0);
 
-                int result = Math.Abs(generatedValue % 9999) + 1;
+            int result = Math.Abs(generatedValue % 9999) + 1;
 
-                return result;
-            }
+            return result;
         }
     }
 }

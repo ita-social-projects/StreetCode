@@ -86,7 +86,7 @@ public class BlobService : IBlobService
         return hashBlobStorageName;
     }
 
-    private byte[] ConvertBase64ToBytes(string base64)
+    private static byte[] ConvertBase64ToBytes(string base64)
     {
         int byteCount = (base64.Length * 3) / 4;
         byte[] buffer = ArrayPool<byte>.Shared.Rent(byteCount);
@@ -105,7 +105,7 @@ public class BlobService : IBlobService
         }
     }
 
-    private string HashFunction(string createdFileName)
+    private static string HashFunction(string createdFileName)
     {
         using var hash = SHA256.Create();
         byte[] result = hash.ComputeHash(Encoding.UTF8.GetBytes(createdFileName));

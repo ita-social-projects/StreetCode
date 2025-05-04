@@ -44,7 +44,7 @@ public class GetAllStatisticRecordsTests
     {
         // Arrange
         var statisticRecords = GetStatisticRecords();
-        var statisticRecordDTOs = GetStatisticRecordDTOs();
+        var statisticRecordDtOs = GetStatisticRecordDtOs();
 
         _repositoryWrapperMock.Setup(repo => repo.StatisticRecordRepository.GetAllAsync(
                 It.IsAny<Expression<Func<StatisticRecord, bool>>>(),
@@ -52,7 +52,7 @@ public class GetAllStatisticRecordsTests
             .ReturnsAsync(statisticRecords);
 
         _mapperMock.Setup(mapper => mapper.Map<IEnumerable<StatisticRecordDTO>>(It.IsAny<IEnumerable<StatisticRecord>>()))
-            .Returns(statisticRecordDTOs);
+            .Returns(statisticRecordDtOs);
 
         var request = new GetAllStatisticRecordsQuery(UserRole.User);
 
@@ -123,7 +123,7 @@ public class GetAllStatisticRecordsTests
         _loggerMock.Verify(logger => logger.LogError(request, "Cannot map statistic records"), Times.Once);
     }
 
-    private List<StatisticRecord> GetStatisticRecords()
+    private static IEnumerable<StatisticRecord> GetStatisticRecords()
     {
         return new List<StatisticRecord>
         {
@@ -133,7 +133,7 @@ public class GetAllStatisticRecordsTests
         };
     }
 
-    private List<StatisticRecordDTO> GetStatisticRecordDTOs()
+    private static IEnumerable<StatisticRecordDTO> GetStatisticRecordDtOs()
     {
         return new List<StatisticRecordDTO>
         {

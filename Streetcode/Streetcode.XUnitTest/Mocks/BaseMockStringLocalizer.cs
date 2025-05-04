@@ -40,14 +40,14 @@ public abstract class BaseMockStringLocalizer<TResource> : IStringLocalizer<TRes
         }
     }
 
-    protected abstract Dictionary<int, List<string>> DefineGroupedErrors();
-
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
     {
         return _strings;
     }
 
-    private LocalizedString GetErrorMessage(string error, params object[] arguments)
+    protected abstract Dictionary<int, List<string>> DefineGroupedErrors();
+
+    private static LocalizedString GetErrorMessage(string error, params object[] arguments)
     {
         if (arguments.Length == 0)
         {

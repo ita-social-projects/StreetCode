@@ -16,43 +16,43 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 {
     public class CreateCategoryTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> mockLocalizerConvertNull;
-        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> mockLocalizerFailedToCreate;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotConvertNullSharedResource>> _mockLocalizerConvertNull;
+        private readonly Mock<IStringLocalizer<FailedToCreateSharedResource>> _mockLocalizerFailedToCreate;
 
         public CreateCategoryTest()
         {
-            this.mockRepository = new ();
-            this.mockMapper = new ();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
-            this.mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
-            this.mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateCategory"]).Returns(new LocalizedString("FailedToCreateCategory", "FailedToCreateCategory"));
+            _mockRepository = new ();
+            _mockMapper = new ();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerConvertNull = new Mock<IStringLocalizer<CannotConvertNullSharedResource>>();
+            _mockLocalizerFailedToCreate = new Mock<IStringLocalizer<FailedToCreateSharedResource>>();
+            _mockLocalizerFailedToCreate.Setup(x => x["FailedToCreateCategory"]).Returns(new LocalizedString("FailedToCreateCategory", "FailedToCreateCategory"));
         }
 
         [Fact]
         public async Task CreateCategoryHandler_SaveChangesFailed_ReturnsErrorMessage()
         {
             // Arrange
-            this.SetupCreateRepository(-1);
-            var categoryDto = GetCategoryDTO();
-            this.SetupMapper(GetCategory(1, "Title"), categoryDto);
+            SetupCreateRepository(-1);
+            var categoryDto = GetCategoryDto();
+            SetupMapper(GetCategory(1, "Title"), categoryDto);
 
             var handler = new CreateCategoryHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerConvertNull.Object,
-                this.mockLocalizerFailedToCreate.Object);
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerFailedToCreate.Object);
 
-            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+            _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Image, bool>>>(),
                     It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image());
 
-            this.mockRepository.Setup(p => p.SourceCategoryRepository
+            _mockRepository.Setup(p => p.SourceCategoryRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
@@ -75,25 +75,25 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             // Arrange
             string title = "NewTitle";
             var newCategory = GetCategory(1, title);
-            var newCategoryDto = GetCategoryDTO();
+            var newCategoryDto = GetCategoryDto();
             newCategoryDto.Title = title;
 
-            this.SetupCreateRepository(1); // Simulate successful SaveChangesAsync
-            this.SetupMapper(newCategory, newCategoryDto);
+            SetupCreateRepository(1); // Simulate successful SaveChangesAsync
+            SetupMapper(newCategory, newCategoryDto);
 
             var handler = new CreateCategoryHandler(
-                this.mockRepository.Object,
-                this.mockMapper.Object,
-                this.mockLogger.Object,
-                this.mockLocalizerConvertNull.Object,
-                this.mockLocalizerFailedToCreate.Object);
+                _mockRepository.Object,
+                _mockMapper.Object,
+                _mockLogger.Object,
+                _mockLocalizerConvertNull.Object,
+                _mockLocalizerFailedToCreate.Object);
 
-            this.mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
+            _mockRepository.Setup(x => x.ImageRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<Image, bool>>>(),
                     It.IsAny<Func<IQueryable<Image>, IIncludableQueryable<Image, object>>>()))
                 .ReturnsAsync(new Image());
 
-            this.mockRepository.Setup(p => p.SourceCategoryRepository
+            _mockRepository.Setup(p => p.SourceCategoryRepository
                 .GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<DAL.Entities.Sources.SourceLinkCategory, bool>>>(),
                     It.IsAny<Func<IQueryable<DAL.Entities.Sources.SourceLinkCategory>,
@@ -117,7 +117,7 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
             };
         }
 
-        private static SourceLinkCategoryCreateDTO GetCategoryDTO()
+        private static SourceLinkCategoryCreateDTO GetCategoryDto()
         {
             return new SourceLinkCategoryCreateDTO()
             {
@@ -128,16 +128,16 @@ namespace Streetcode.XUnitTest.MediatRTests.SourcesTests
 
         private void SetupCreateRepository(int returnNumber)
         {
-            this.mockRepository.Setup(x => x.SourceCategoryRepository.Create(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()));
-            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
+            _mockRepository.Setup(x => x.SourceCategoryRepository.Create(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()));
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(returnNumber);
         }
 
-        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryCreateDTO testCategoryDTO)
+        private void SetupMapper(DAL.Entities.Sources.SourceLinkCategory testCategory, SourceLinkCategoryCreateDTO testCategoryDto)
         {
-            this.mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryCreateDTO>()))
+            _mockMapper.Setup(x => x.Map<DAL.Entities.Sources.SourceLinkCategory>(It.IsAny<SourceLinkCategoryCreateDTO>()))
                 .Returns(testCategory);
-            this.mockMapper.Setup(x => x.Map<SourceLinkCategoryCreateDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
-                .Returns(testCategoryDTO);
+            _mockMapper.Setup(x => x.Map<SourceLinkCategoryCreateDTO>(It.IsAny<DAL.Entities.Sources.SourceLinkCategory>()))
+                .Returns(testCategoryDto);
         }
     }
 }

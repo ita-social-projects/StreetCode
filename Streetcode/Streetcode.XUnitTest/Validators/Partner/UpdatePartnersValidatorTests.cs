@@ -17,10 +17,10 @@ namespace Streetcode.XUnitTest.Validators.Partner;
 
 public class UpdatePartnersValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
-    private readonly Mock<PartnerSourceLinkValidator> mockPartnerSourceLinkValidator;
-    private readonly Mock<BasePartnersValidator> mockBasePartnerValidator;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
+    private readonly Mock<PartnerSourceLinkValidator> _mockPartnerSourceLinkValidator;
+    private readonly Mock<BasePartnersValidator> _mockBasePartnerValidator;
     private readonly Mock<IRepositoryWrapper> _mockRepositoryWrapper;
     private readonly MockNoSharedResourceLocalizer _mockNoSharedResourceLocalizer;
     private readonly MockAlreadyExistLocalizer _mockAlreadyExistLocalizer;
@@ -28,16 +28,16 @@ public class UpdatePartnersValidatorTests
     public UpdatePartnersValidatorTests()
     {
         _mockRepositoryWrapper = new Mock<IRepositoryWrapper>();
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
-        this.mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(this.mockNamesLocalizer, this.mockValidationLocalizer);
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockPartnerSourceLinkValidator = new Mock<PartnerSourceLinkValidator>(_mockNamesLocalizer, _mockValidationLocalizer);
         _mockNoSharedResourceLocalizer = new MockNoSharedResourceLocalizer();
         _mockAlreadyExistLocalizer = new MockAlreadyExistLocalizer();
-        this.mockBasePartnerValidator = new Mock<BasePartnersValidator>(this.mockPartnerSourceLinkValidator.Object, this.mockNamesLocalizer, this.mockValidationLocalizer, this._mockNoSharedResourceLocalizer, this._mockRepositoryWrapper.Object);
+        _mockBasePartnerValidator = new Mock<BasePartnersValidator>(_mockPartnerSourceLinkValidator.Object, _mockNamesLocalizer, _mockValidationLocalizer, _mockNoSharedResourceLocalizer, _mockRepositoryWrapper.Object);
 
-        this.mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
+        _mockPartnerSourceLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreatePartnerSourceLinkDTO>>()))
             .Returns(new ValidationResult());
-        this.mockBasePartnerValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>()))
+        _mockBasePartnerValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>()))
             .Returns(new ValidationResult());
     }
 
@@ -46,14 +46,14 @@ public class UpdatePartnersValidatorTests
     {
         // Arrange
         var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
-        var updateValidator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+        var updateValidator = new UpdatePartnerValidator(_mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, _mockNamesLocalizer);
         MockHelpers.SetupMockPartnersRepositoryGetFirstOrDefaultAsync(_mockRepositoryWrapper, query.Partner.LogoId);
 
         // Act
         updateValidator.ValidateAsync(query);
 
         // Assert
-        this.mockBasePartnerValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>(), CancellationToken.None), Times.Once);
+        _mockBasePartnerValidator.Verify(x => x.ValidateAsync(It.IsAny<ValidationContext<PartnerCreateUpdateDto>>(), CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -63,11 +63,11 @@ public class UpdatePartnersValidatorTests
         var query = new UpdatePartnerQuery(new UpdatePartnerDTO());
         query.Partner.LogoId = 2;
         query.Partner.Id = 1;
-        var expectedError = _mockAlreadyExistLocalizer["PartnerWithFieldAlreadyExist", mockNamesLocalizer["LogoId"], query.Partner.LogoId];
+        var expectedError = _mockAlreadyExistLocalizer["PartnerWithFieldAlreadyExist", _mockNamesLocalizer["LogoId"], query.Partner.LogoId];
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner() { LogoId = 2 });
 
-        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+        var validator = new UpdatePartnerValidator(_mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, _mockNamesLocalizer);
 
         // Assert
         var result = await validator.TestValidateAsync(query);
@@ -86,7 +86,7 @@ public class UpdatePartnersValidatorTests
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner());
 
-        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+        var validator = new UpdatePartnerValidator(_mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, _mockNamesLocalizer);
 
         // Assert
         var result = await validator.TestValidateAsync(query);
@@ -105,7 +105,7 @@ public class UpdatePartnersValidatorTests
         _mockRepositoryWrapper.Setup(x => x.PartnersRepository.GetSingleOrDefaultAsync(It.IsAny<Expression<Func<DAL.Entities.Partners.Partner, bool>>>(), null))
             .ReturnsAsync(new DAL.Entities.Partners.Partner() { Id = 2, LogoId = 2 });
 
-        var validator = new UpdatePartnerValidator(this.mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, mockNamesLocalizer);
+        var validator = new UpdatePartnerValidator(_mockBasePartnerValidator.Object, _mockRepositoryWrapper.Object, _mockAlreadyExistLocalizer, _mockNamesLocalizer);
 
         // Assert
         var result = await validator.TestValidateAsync(query);

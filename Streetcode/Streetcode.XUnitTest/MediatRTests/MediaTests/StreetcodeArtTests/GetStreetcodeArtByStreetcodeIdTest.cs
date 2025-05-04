@@ -20,63 +20,52 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
 {
     public class GetStreetcodeArtByStreetcodeIdTest
     {
-        private readonly Mock<IRepositoryWrapper> repository;
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<IBlobService> blobService;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> mockLocalizer;
+        private readonly Mock<IRepositoryWrapper> _repository;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IBlobService> _blobService;
+        private readonly Mock<ILoggerService> _mockLogger;
+        private readonly Mock<IStringLocalizer<CannotFindSharedResource>> _mockLocalizer;
 
         public GetStreetcodeArtByStreetcodeIdTest()
         {
-            this.repository = new Mock<IRepositoryWrapper>();
-            this.mockMapper = new Mock<IMapper>();
-            this.blobService = new Mock<IBlobService>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
+            _repository = new Mock<IRepositoryWrapper>();
+            _mockMapper = new Mock<IMapper>();
+            _blobService = new Mock<IBlobService>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizer = new Mock<IStringLocalizer<CannotFindSharedResource>>();
         }
 
         [Theory]
         [InlineData(1)]
         public async Task GetStreetcodeArtByStreetcodeId_ReturnsSuccesfullyStreetcodeArt(int streetcodeId)
         {
-            this.SetupRepository();
+            SetupRepository();
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
+            _mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDtoList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(_repository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
-            Assert.True(result.Value.All(a => this.GetStreetcodeArtDTOList()[a.Index - 1].Art!.Id == a.Art?.Id));
+            Assert.True(result.Value.All(a => GetStreetcodeArtDtoList()[a.Index - 1].Art!.Id == a.Art?.Id));
         }
 
         [Theory]
         [InlineData(1)]
         public async Task GetStreetcodeArtByStreetcodeId_ReturnCorrectTypeResult(int streetcodeId)
         {
-            this.SetupRepository();
+            SetupRepository();
 
-            this.mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(this.GetStreetcodeArtDTOList());
+            _mockMapper.Setup(x => x.Map<IEnumerable<StreetcodeArtDTO>>(It.IsAny<IEnumerable<object>>())).Returns(GetStreetcodeArtDtoList());
 
-            var handler = new GetStreetcodeArtByStreetcodeIdHandler(this.repository.Object, this.mockMapper.Object, this.blobService.Object, this.mockLogger.Object, this.mockLocalizer.Object);
+            var handler = new GetStreetcodeArtByStreetcodeIdHandler(_repository.Object, _mockMapper.Object, _blobService.Object, _mockLogger.Object, _mockLocalizer.Object);
 
             var result = await handler.Handle(new GetStreetcodeArtByStreetcodeIdQuery(streetcodeId, UserRole.User), CancellationToken.None);
 
             Assert.IsType<Result<IEnumerable<StreetcodeArtDTO>>>(result);
         }
 
-        private void SetupRepository()
-        {
-            this.repository.Setup(r => r.StreetcodeArtRepository.GetAllAsync(
-                It.IsAny<Expression<Func<StreetcodeArt, bool>>>(),
-                It.IsAny<Func<IQueryable<StreetcodeArt>, IIncludableQueryable<StreetcodeArt, object>>>()))
-                .ReturnsAsync(this.GetStreetcodeArtsList());
-            this.repository.Setup(r => r.StreetcodeRepository
-                .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, StreetcodeContent>>>(), null, null))
-                .ReturnsAsync(It.IsAny<StreetcodeContent>());
-        }
-
-        private List<StreetcodeArt> GetStreetcodeArtsList()
+        private static List<StreetcodeArt> GetStreetcodeArtsList()
         {
             return new List<StreetcodeArt>
             {
@@ -106,7 +95,7 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
             };
         }
 
-        private List<StreetcodeArtDTO> GetStreetcodeArtDTOList()
+        private static List<StreetcodeArtDTO> GetStreetcodeArtDtoList()
         {
             return new List<StreetcodeArtDTO>()
             {
@@ -128,6 +117,17 @@ namespace Streetcode.XUnitTest.MediaRTests.MediaTests.StreetcodeArtTest
                     },
                 },
             };
+        }
+
+        private void SetupRepository()
+        {
+            _repository.Setup(r => r.StreetcodeArtRepository.GetAllAsync(
+                It.IsAny<Expression<Func<StreetcodeArt, bool>>>(),
+                It.IsAny<Func<IQueryable<StreetcodeArt>, IIncludableQueryable<StreetcodeArt, object>>>()))
+                .ReturnsAsync(GetStreetcodeArtsList());
+            _repository.Setup(r => r.StreetcodeRepository
+                .GetFirstOrDefaultAsync(It.IsAny<Expression<Func<StreetcodeContent, StreetcodeContent>>>(), null, null))
+                .ReturnsAsync(It.IsAny<StreetcodeContent>());
         }
     }
 }

@@ -234,4 +234,7 @@
   <data name="PasswordConfirmationNotEqual" xml:space="preserve">
     <value>Password and confirmation password must be the same</value>
   </data>
+  <data name="MaxCountExceeded" xml:space="preserve">
+    <value>Field '{0}' must not exceed {1} items.</value>
+  </data>
 </root>

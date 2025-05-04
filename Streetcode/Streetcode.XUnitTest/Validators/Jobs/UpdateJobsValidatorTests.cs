@@ -3,7 +3,6 @@ using FluentValidation.Results;
 using FluentValidation.TestHelper;
 using Moq;
 using Streetcode.BLL.DTO.Jobs;
-using Streetcode.BLL.MediatR.Jobs.Create;
 using Streetcode.BLL.MediatR.Jobs.Update;
 using Streetcode.BLL.Validators.Jobs;
 using Streetcode.XUnitTest.Mocks;
@@ -13,13 +12,13 @@ namespace Streetcode.XUnitTest.Validators.Jobs;
 
 public class UpdateJobsValidatorTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
 
     public UpdateJobsValidatorTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
     }
 
     [Fact]
@@ -27,7 +26,7 @@ public class UpdateJobsValidatorTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseJobsValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseJobsValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<CreateUpdateJobDto>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateJobsValidator(baseValidator.Object);

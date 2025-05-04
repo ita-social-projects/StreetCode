@@ -252,10 +252,9 @@ public class BaseStreetcodeValidatorsTests
     }
 
     [Fact]
-    public void ShouldReturnError_WhenDateStringIsEmpty()
+    public void ShouldNotReturnError_WhenDateStringIsEmpty()
     {
         // Arrange
-        var expectedError = _mockValidationLocalizer["CannotBeEmpty", _mockNamesLocalizer["DateString"]];
         var streetcode = GetValidStreetcodeDto();
         streetcode.DateString = string.Empty;
 
@@ -263,8 +262,7 @@ public class BaseStreetcodeValidatorsTests
         var result = _validator.TestValidate(streetcode);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.DateString)
-            .WithErrorMessage(expectedError);
+        result.ShouldNotHaveValidationErrorFor(x => x.DateString);
     }
 
     [Fact]

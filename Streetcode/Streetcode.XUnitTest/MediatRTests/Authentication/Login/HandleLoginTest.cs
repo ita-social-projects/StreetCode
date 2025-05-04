@@ -10,213 +10,212 @@ using Streetcode.BLL.Interfaces.Authentication;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Authentication.Login;
 using Streetcode.BLL.SharedResource;
-using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Users;
 using Xunit;
 
-namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login
+namespace Streetcode.XUnitTest.MediatRTests.Authentication.Login;
+
+public class HandleLoginTest
 {
-    public class HandleLoginTest
+    private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<ITokenService> _mockTokenService;
+    private readonly Mock<ILoggerService> _mockLogger;
+    private readonly Mock<UserManager<User>> _mockUserManager;
+    private readonly Mock<ICaptchaService> _mockCaptchaService;
+    private readonly Mock<IStringLocalizer<UserSharedResource>> _mockLocalizer;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HandleLoginTest"/> class.
+    /// </summary>
+    public HandleLoginTest()
     {
-        private readonly Mock<IMapper> mockMapper;
-        private readonly Mock<ITokenService> mockTokenService;
-        private readonly Mock<ILoggerService> mockLogger;
-        private readonly Mock<UserManager<User>> mockUserManager;
-        private readonly Mock<ICaptchaService> mockCaptchaService;
-        private readonly Mock<IStringLocalizer<UserSharedResource>> mockLocalizer;
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HandleLoginTest"/> class.
-        /// </summary>
-        public HandleLoginTest()
+        _mockMapper = new Mock<IMapper>();
+        _mockLogger = new Mock<ILoggerService>();
+        _mockTokenService = new Mock<ITokenService>();
+        _mockCaptchaService = new Mock<ICaptchaService>();
+
+        var store = new Mock<IUserStore<User>>();
+        _mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
+        _mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
+    }
+
+    [Fact]
+    public async Task ShouldReturnSuccess_ValidInputData()
+    {
+        // Arrange.
+        SetupServicesForSuccessfulResult();
+        var handler = GetLoginHandler();
+
+        // Act.
+        var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+        // Assert.
+        Assert.True(result.IsSuccess);
+        Assert.IsType<LoginResponseDTO>(result.ValueOrDefault);
+    }
+
+    [Fact]
+    public async Task ShouldReturnFail_UserNotExistInDb()
+    {
+        // Arrange.
+        SetupMockCaptchaService(true);
+        var handler = GetLoginHandler();
+
+        // Act.
+        var result = await handler.Handle(new LoginQuery(GetNonExistingCredentials()), CancellationToken.None);
+
+        // Assert.
+        Assert.True(result.IsFailed);
+    }
+
+    [Fact]
+    public async Task ShouldReturnFail_InvalidPassword()
+    {
+        // Arrange.
+        SetupMockCaptchaService(true);
+        SetupMockUserManagerCheckPassword(false);
+        var handler = GetLoginHandler();
+
+        // Act.
+        var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+        // Assert.
+        Assert.True(result.IsFailed);
+    }
+
+    [Fact]
+    public async Task ShouldReturnFail_CaptchaValidationUnsuccessful()
+    {
+        // Arrange.
+        string errorMessage = "Captcha validation error";
+        SetupMockCaptchaService(isValidationSuccessful: false, errorMessage);
+        var handler = GetLoginHandler();
+
+        // Act.
+        var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+        // Assert.
+        Assert.True(result.IsFailed);
+        Assert.Equal(errorMessage, result.Errors[0].Message);
+    }
+
+    [Fact]
+    public async Task ShouldReturnFail_ExceptionThrown()
+    {
+        // Arrange.
+        string expectedErrorMessage = "Expected error message";
+        SetupMockUserManagerThrowException(expectedErrorMessage);
+        SetupMockCaptchaService(true);
+        var handler = GetLoginHandler();
+
+        // Act.
+        var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+
+        // Assert.
+        Assert.True(result.IsFailed);
+        Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
+    }
+
+    private static UserDTO GetUserDto()
+    {
+        return new ()
         {
-            this.mockMapper = new Mock<IMapper>();
-            this.mockLogger = new Mock<ILoggerService>();
-            this.mockTokenService = new Mock<ITokenService>();
-            this.mockCaptchaService = new Mock<ICaptchaService>();
+            Email = "one@gmail.com",
+            UserName = "One_one",
+        };
+    }
 
-            var store = new Mock<IUserStore<User>>();
-            this.mockUserManager = new Mock<UserManager<User>>(store.Object, null, null, null, null, null, null, null, null);
-            this.mockLocalizer = new Mock<IStringLocalizer<UserSharedResource>>();
-        }
-
-        [Fact]
-        public async Task ShouldReturnSuccess_ValidInputData()
+    private static LoginRequestDTO GetNonExistingCredentials()
+    {
+        return new LoginRequestDTO
         {
-            // Arrange.
-            this.SetupServicesForSuccessfulResult();
-            var handler = this.GetLoginHandler();
+            Login = "dummyLogin@gmail.com",
+            Password = "qwertyQWE123!@#",
+        };
+    }
 
-            // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
-
-            // Assert.
-            Assert.True(result.IsSuccess);
-            Assert.IsType<LoginResponseDTO>(result.ValueOrDefault);
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_UserNotExistInDb()
+    private static LoginRequestDTO GetExistingCredentials()
+    {
+        return new LoginRequestDTO
         {
-            // Arrange.
-            this.SetupMockCaptchaService(true);
-            var handler = this.GetLoginHandler();
+            Login = "one@gmail.com",
+            Password = "One111oneOne#@#",
+        };
+    }
 
-            // Act.
-            var result = await handler.Handle(new LoginQuery(GetNonExistingCredentials()), CancellationToken.None);
+    private void SetupServicesForSuccessfulResult()
+    {
+        SetupMockUserManagerCheckPassword(true);
+        SetupMockTokenService();
+        SetupMockMapper();
+        SetupMockUserManagerFindUserByEmailOrUsername(new User());
+        SetupMockUserManagerGetRolesAsync();
+        SetupMockUserManagerGetRolesAsync();
+        SetupMockCaptchaService(true);
+    }
 
-            // Assert.
-            Assert.True(result.IsFailed);
-        }
+    private void SetupMockUserManagerCheckPassword(bool checkReturn)
+    {
+        _mockUserManager
+            .Setup(manager => manager
+                .CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
+            .ReturnsAsync(checkReturn);
+    }
 
-        [Fact]
-        public async Task ShouldReturnFail_InvalidPassword()
-        {
-            // Arrange.
-            this.SetupMockCaptchaService(true);
-            this.SetupMockUserManagerCheckPassword(false);
-            var handler = this.GetLoginHandler();
+    private void SetupMockUserManagerThrowException(string errorMessage = "Default error message")
+    {
+        _mockUserManager
+            .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
+            .ThrowsAsync(new Exception(errorMessage));
+    }
 
-            // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+    private void SetupMockCaptchaService(bool isValidationSuccessful, string errorMessage = "Error")
+    {
+        var result = isValidationSuccessful ?
+            Result.Ok() : Result.Fail(errorMessage);
+        _mockCaptchaService
+            .Setup(service => service.ValidateReCaptchaAsync(It.IsAny<string>(), It.IsAny<CancellationToken?>()))
+            .ReturnsAsync(result);
+    }
 
-            // Assert.
-            Assert.True(result.IsFailed);
-        }
+    private void SetupMockUserManagerFindUserByEmailOrUsername(User? userToReturn = null)
+    {
+        _mockUserManager
+            .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(userToReturn);
+    }
 
-        [Fact]
-        public async Task ShouldReturnFail_CaptchaValidationUnsuccessful()
-        {
-            // Arrange.
-            string errorMessage = "Captcha validation error";
-            this.SetupMockCaptchaService(isValidationSuccessful: false, errorMessage);
-            var handler = this.GetLoginHandler();
+    private void SetupMockUserManagerGetRolesAsync()
+    {
+        _mockUserManager
+            .Setup(manager => manager.GetRolesAsync(It.IsAny<User>()))
+            .ReturnsAsync(new List<string> { "User" });
+    }
 
-            // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
+    private void SetupMockTokenService()
+    {
+        _mockTokenService
+            .Setup(service => service
+                .GenerateAccessTokenAsync(It.IsAny<User>()))
+            .ReturnsAsync(new JwtSecurityToken());
+    }
 
-            // Assert.
-            Assert.True(result.IsFailed);
-            Assert.Equal(errorMessage, result.Errors[0].Message);
-        }
-
-        [Fact]
-        public async Task ShouldReturnFail_ExceptionThrown()
-        {
-            // Arrange.
-            string expectedErrorMessage = "Expected error message";
-            this.SetupMockUserManagerThrowException(expectedErrorMessage);
-            this.SetupMockCaptchaService(true);
-            var handler = this.GetLoginHandler();
-
-            // Act.
-            var result = await handler.Handle(new LoginQuery(GetExistingCredentials()), CancellationToken.None);
-
-            // Assert.
-            Assert.True(result.IsFailed);
-            Assert.Equal(expectedErrorMessage, result.Errors[0].Message);
-        }
-
-        private static UserDTO GetUserDTO()
-        {
-            return new ()
-            {
-                Email = "one@gmail.com",
-                UserName = "One_one",
-            };
-        }
-
-        private static LoginRequestDTO GetNonExistingCredentials()
-        {
-            return new LoginRequestDTO
-            {
-                Login = "dummyLogin@gmail.com",
-                Password = "qwertyQWE123!@#",
-            };
-        }
-
-        private static LoginRequestDTO GetExistingCredentials()
-        {
-            return new LoginRequestDTO
-            {
-                Login = "one@gmail.com",
-                Password = "One111oneOne#@#",
-            };
-        }
-
-        private void SetupServicesForSuccessfulResult()
-        {
-            this.SetupMockUserManagerCheckPassword(true);
-            this.SetupMockTokenService();
-            this.SetupMockMapper();
-            this.SetupMockUserManagerFindUserByEmailOrUsername(new User());
-            this.SetupMockUserManagerGetRolesAsync();
-            this.SetupMockUserManagerGetRolesAsync();
-            this.SetupMockCaptchaService(true);
-        }
-
-        private void SetupMockUserManagerCheckPassword(bool checkReturn)
-        {
-            this.mockUserManager
-                .Setup(manager => manager
-                    .CheckPasswordAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(checkReturn);
-        }
-
-        private void SetupMockUserManagerThrowException(string errorMessage = "Default error message")
-        {
-            this.mockUserManager
-                .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
-                .ThrowsAsync(new Exception(errorMessage));
-        }
-
-        private void SetupMockCaptchaService(bool isValidationSuccessful, string errorMessage = "Error")
-        {
-            var result = isValidationSuccessful ?
-                Result.Ok() : Result.Fail(errorMessage);
-            this.mockCaptchaService
-                .Setup(service => service.ValidateReCaptchaAsync(It.IsAny<string>(), It.IsAny<CancellationToken?>()))
-                .ReturnsAsync(result);
-        }
-
-        private void SetupMockUserManagerFindUserByEmailOrUsername(User? userToReturn = null)
-        {
-            this.mockUserManager
-                .Setup(manager => manager.FindByEmailAsync(It.IsAny<string>()))
-                .ReturnsAsync(userToReturn);
-        }
-
-        private void SetupMockUserManagerGetRolesAsync()
-        {
-            this.mockUserManager
-                .Setup(manager => manager.GetRolesAsync(It.IsAny<User>()))
-                .ReturnsAsync(new List<string> { "User" });
-        }
-
-        private void SetupMockTokenService()
-        {
-            this.mockTokenService
-                .Setup(service => service
-                    .GenerateAccessTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync(new JwtSecurityToken());
-        }
-
-        private void SetupMockMapper()
-        {
-            this.mockMapper
-                .Setup(x => x
+    private void SetupMockMapper()
+    {
+        _mockMapper
+            .Setup(x => x
                 .Map<UserDTO>(It.IsAny<User>()))
-                .Returns(GetUserDTO());
-        }
+            .Returns(GetUserDto());
+    }
 
-        private LoginHandler GetLoginHandler()
-        {
-            return new LoginHandler(
-                this.mockMapper.Object,
-                this.mockTokenService.Object,
-                this.mockLogger.Object,
-                this.mockUserManager.Object,
-                this.mockCaptchaService.Object,
-                this.mockLocalizer.Object);
-        }
+    private LoginHandler GetLoginHandler()
+    {
+        return new LoginHandler(
+            _mockMapper.Object,
+            _mockTokenService.Object,
+            _mockLogger.Object,
+            _mockUserManager.Object,
+            _mockCaptchaService.Object,
+            _mockLocalizer.Object);
     }
 }

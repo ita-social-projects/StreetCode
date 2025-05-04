@@ -6,29 +6,29 @@ namespace Streetcode.XIntegrationTest.Base
 {
     public class TestDBFixture : IntegrationTestBase
     {
-        private static readonly object @lock = new ();
-        private static bool dbIsCreated;
-        private readonly string connectionString;
+        private static readonly object Lock = new ();
+        private static bool _dbIsCreated;
+        private readonly string _connectionString;
 
         public TestDBFixture()
         {
-            this.connectionString = this.Configuration.GetConnectionString("DefaultConnection") !;
-            lock (@lock)
+            this._connectionString = this.Configuration.GetConnectionString("DefaultConnection") !;
+            lock (Lock)
             {
-                if (!dbIsCreated)
+                if (!_dbIsCreated)
                 {
-                    using (var context = CreateContext(this.connectionString))
+                    using (var context = CreateContext(this._connectionString))
                     {
                         context.Database.EnsureDeleted();
                         context.Database.EnsureCreated();
                     }
 
-                    dbIsCreated = true;
+                    _dbIsCreated = true;
                 }
             }
         }
 
-        public static StreetcodeDbContext CreateContext(string connectionString)
+        private static StreetcodeDbContext CreateContext(string connectionString)
             => new StreetcodeDbContext(
                 new DbContextOptionsBuilder<StreetcodeDbContext>()
                     .UseSqlServer(connectionString)

@@ -9,18 +9,18 @@ namespace Streetcode.BLL.Services.Text
     public class AddTermsToTextService : ITextService
     {
         private readonly IRepositoryWrapper _repositoryWrapper;
-        private readonly StringBuilder _text = new StringBuilder();
+        private readonly StringBuilder _text = new();
 
-        private List<int> _buffer;
+        private readonly List<int> _buffer;
 
         public AddTermsToTextService(IRepositoryWrapper repositoryWrapper)
         {
             _repositoryWrapper = repositoryWrapper;
             _buffer = new List<int>();
-            Pattern = new("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
+            Pattern = new Regex("(\\s)|(<[^>]*>)", RegexOptions.None, TimeSpan.FromMilliseconds(1000));
         }
 
-        public Regex Pattern { get; private set; }
+        private Regex Pattern { get; set; }
 
         public async Task<string> AddTermsTag(string text)
         {
@@ -105,9 +105,9 @@ namespace Streetcode.BLL.Services.Text
             return MarkTermWithDescription(clearedWord, relatedTerm.Term.Description!);
         }
 
-        private (string _clearedWord, string _extras) CleanWord(string word)
+        private static (string _clearedWord, string _extras) CleanWord(string word)
         {
-            var clearedWord = word.Split('.', ',').First();
+            var clearedWord = word.Split('.', ',')[0];
 
             var extras = string.Empty;
 

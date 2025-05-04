@@ -327,4 +327,7 @@
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
+  <data name="TeamMemberLinks" xml:space="preserve">
+    <value>Посилання на членів команди</value>
+  </data>
 </root>

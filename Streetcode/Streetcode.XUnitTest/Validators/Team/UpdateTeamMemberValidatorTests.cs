@@ -13,19 +13,21 @@ namespace Streetcode.XUnitTest.Validators.Team;
 
 public class UpdateTeamMemberValidatorTests
 {
-    private readonly Mock<BaseTeamValidator> _mockBaseTeamMemberValidator;
-    private readonly Mock<BaseTeamMemberLinkValidator> _mockBaseTeamMemberLinkValidator;
+    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
+    private readonly Mock<BaseTeamValidator> mockBaseTeamMemberValidator;
+    private readonly Mock<BaseTeamMemberLinkValidator> mockBaseTeamMemberLinkValidator;
 
     public UpdateTeamMemberValidatorTests()
     {
-        MockFailedToValidateLocalizer mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        MockFieldNamesLocalizer mockNamesLocalizer = new MockFieldNamesLocalizer();
-        _mockBaseTeamMemberValidator = new Mock<BaseTeamValidator>(mockValidationLocalizer, mockNamesLocalizer);
-        _mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()))
+        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+        this.mockBaseTeamMemberValidator = new Mock<BaseTeamValidator>(mockValidationLocalizer, mockNamesLocalizer);
+        this.mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
 
-        _mockBaseTeamMemberLinkValidator = new Mock<BaseTeamMemberLinkValidator>(mockValidationLocalizer, mockNamesLocalizer);
-        _mockBaseTeamMemberLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()))
+        mockBaseTeamMemberLinkValidator = new Mock<BaseTeamMemberLinkValidator>(mockValidationLocalizer, mockNamesLocalizer);
+        mockBaseTeamMemberLinkValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
     }
 
@@ -40,13 +42,14 @@ public class UpdateTeamMemberValidatorTests
                 new TeamMemberLinkDTO(),
             },
         });
-        var updateTeamValidator = new UpdateTeamValidator(_mockBaseTeamMemberValidator.Object, _mockBaseTeamMemberLinkValidator.Object);
+
+        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         updateTeamValidator.Validate(query);
 
         // Assert
-        _mockBaseTeamMemberValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()), Times.Once);
+        mockBaseTeamMemberValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()), Times.Once);
     }
 
     [Fact]
@@ -60,12 +63,13 @@ public class UpdateTeamMemberValidatorTests
                 new TeamMemberLinkDTO(),
             },
         });
-        var updateTeamValidator = new UpdateTeamValidator(_mockBaseTeamMemberValidator.Object, _mockBaseTeamMemberLinkValidator.Object);
+
+        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         updateTeamValidator.Validate(query);
 
         // Assert
-        _mockBaseTeamMemberLinkValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()), Times.Once);
+        mockBaseTeamMemberLinkValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<TeamMemberLinkCreateUpdateDTO>>()), Times.Once);
     }
 }

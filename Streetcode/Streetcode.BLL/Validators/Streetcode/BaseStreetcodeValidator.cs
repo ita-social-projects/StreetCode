@@ -2,14 +2,12 @@
 using Microsoft.Extensions.Localization;
 using Streetcode.BLL.DTO.Streetcode;
 using Streetcode.BLL.SharedResource;
-using Streetcode.BLL.Validators.Common;
 using Streetcode.BLL.Validators.Streetcode.Art;
 using Streetcode.BLL.Validators.Streetcode.ImageDetails;
 using Streetcode.BLL.Validators.Streetcode.StreetcodeArtSlide;
 using Streetcode.BLL.Validators.Streetcode.TimelineItem;
 using Streetcode.BLL.Validators.Streetcode.Toponyms;
 using Streetcode.DAL.Enums;
-using Streetcode.DAL.Repositories.Interfaces.Base;
 
 namespace Streetcode.BLL.Validators.Streetcode;
 
@@ -24,7 +22,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
     public const int TransliterationUrlMaxLength = 100;
     public const int IndexMaxValue = 9999;
     public const int IndexMinValue = 1;
-    public const int NewLineLenght = 65;
+    private const int NewLineLenght = 65;
 
     public BaseStreetcodeValidator(
         StreetcodeToponymValidator streetcodeToponymValidator,
@@ -36,25 +34,25 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         IStringLocalizer<FieldNamesSharedResource> fieldLocalizer)
     {
         RuleFor(dto => dto.FirstName)
-            .MaximumLength(FirstNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["FirstName"], FirstNameMaxLength]);
+            .MaximumLength(FirstNameMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["FirstName"], FirstNameMaxLength]);
 
         RuleFor(dto => dto.LastName)
-            .MaximumLength(LastNameMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["LastName"], LastNameMaxLength]);
+            .MaximumLength(LastNameMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["LastName"], LastNameMaxLength]);
 
         RuleFor(dto => dto.Alias)
-            .MaximumLength(AliasMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Alias"], AliasMaxLength]);
+            .MaximumLength(AliasMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Alias"], AliasMaxLength]);
 
         RuleFor(dto => dto.Teaser)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Teaser"]])
-            .Must(AdjustedLengthIsValid).WithMessage(localizer["MaxLength", fieldLocalizer["Teaser"], TeaserMaxLength]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Teaser"]])
+            .Must(AdjustedLengthIsValid!).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Teaser"], TeaserMaxLength]);
 
         RuleFor(dto => dto.Title)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["Title"]])
-            .MaximumLength(TitleMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["Title"], TitleMaxLength]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["Title"]])
+            .MaximumLength(TitleMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["Title"], TitleMaxLength]);
 
         RuleFor(dto => dto.TransliterationUrl)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["TransliterationUrl"]])
-            .MaximumLength(TransliterationUrlMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["TransliterationUrl"], TransliterationUrlMaxLength])
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["TransliterationUrl"]])
+            .MaximumLength(TransliterationUrlMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["TransliterationUrl"], TransliterationUrlMaxLength])
             .Matches(@"^[a-z0-9-]*$")
             .WithMessage(localizer["TransliterationUrlFormat"]);
 
@@ -88,7 +86,7 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .SetValidator(timelineItemValidator);
 
         RuleFor(dto => dto.ImagesDetails)
-            .NotEmpty().WithMessage(localizer["CannotBeEmpty", fieldLocalizer["ImagesDetails"]]);
+            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["ImagesDetails"]]);
 
         RuleForEach(dto => dto.ImagesDetails)
             .SetValidator(imageDetailsValidator);
@@ -115,17 +113,12 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .SetValidator(artCreateUpdateDtoValidator);
     }
 
-    private int CountNewLines(string text)
+    private static int CountNewLines(string text)
     {
-        if (string.IsNullOrEmpty(text))
-        {
-            return 0;
-        }
-
-        return text.Count(c => c == '\n');
+        return string.IsNullOrEmpty(text) ? 0 : text.Count(c => c == '\n');
     }
 
-    private bool AdjustedLengthIsValid(string teaser)
+    private static bool AdjustedLengthIsValid(string teaser)
     {
         int newLineCount = CountNewLines(teaser);
 

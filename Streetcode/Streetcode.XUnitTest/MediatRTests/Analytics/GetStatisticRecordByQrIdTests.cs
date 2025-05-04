@@ -46,7 +46,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             // Arrange
             var qrId = 1;
             var statisticRecord = GetStatisticRecord(qrId);
-            var statisticRecordDTO = GetStatisticRecordDTOs(qrId);
+            var statisticRecordDto = GetStatisticRecordDtOs(qrId);
 
             _repositoryMock.Setup(repo => repo.StatisticRecordRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<StatisticRecord, bool>>>(),
@@ -54,7 +54,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
                 .ReturnsAsync(statisticRecord);
 
             _mapperMock.Setup(mapper => mapper.Map<StatisticRecordDTO>(statisticRecord))
-                .Returns(statisticRecordDTO);
+                .Returns(statisticRecordDto);
 
             var request = new GetStatisticRecordByQrIdQuery(qrId, UserRole.User);
 
@@ -125,7 +125,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             _loggerMock.Verify(logger => logger.LogError(request, "Cannot map the record"), Times.Once);
         }
 
-        private StatisticRecord GetStatisticRecord(int qrId)
+        private static StatisticRecord GetStatisticRecord(int qrId)
         {
             return new StatisticRecord
             {
@@ -136,7 +136,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Analytics
             };
         }
 
-        private StatisticRecordDTO GetStatisticRecordDTOs(int qrId)
+        private static StatisticRecordDTO GetStatisticRecordDtOs(int qrId)
         {
             return new StatisticRecordDTO
             {

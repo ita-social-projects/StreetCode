@@ -33,8 +33,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsSuccessfully_CorrectType()
         {
             // Arrange
-            this.SetupRepository(GetTimelinesList());
-            this.SetupMapper(GetTimelineDTOList());
+            SetupRepository(GetTimelinesList());
+            SetupMapper(GetTimelineDtoList());
 
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -51,8 +51,8 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsSuccessfully_AllTimelines()
         {
             // Arrange
-            this.SetupRepository(GetTimelinesList());
-            this.SetupMapper(GetTimelineDTOList());
+            SetupRepository(GetTimelinesList());
+            SetupMapper(GetTimelineDtoList());
 
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -69,10 +69,10 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
         public async Task ReturnsError_IsNull()
         {
             // Arrange
-            this.SetupRepository(null);
+            SetupRepository(null);
 
             var expectedError = $"Cannot find any timeline item";
-            this.SetupLocalizer(expectedError);
+            SetupLocalizer(expectedError);
 
             var handler = new GetAllTimelineItemsHandler(_mockRepository.Object, _mockMapper.Object, _mockLogger.Object, _mockStringLocalizer.Object);
 
@@ -97,7 +97,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Timeline.TimelineItemTests
             return timelines;
         }
 
-        private static IEnumerable<TimelineItemDTO> GetTimelineDTOList()
+        private static IEnumerable<TimelineItemDTO> GetTimelineDtoList()
         {
             var timelines = new List<TimelineItemDTO>
             {

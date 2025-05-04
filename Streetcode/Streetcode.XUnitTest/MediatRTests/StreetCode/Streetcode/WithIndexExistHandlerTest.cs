@@ -65,12 +65,12 @@ public class WithIndexExistHandlerTest
             () => Assert.False(result.Value));
     }
 
-    private StreetcodeContent GetStreetCodeContent(int id)
+    private static StreetcodeContent GetStreetCodeContent(int id)
     {
         return new StreetcodeContent() { Id = id };
     }
 
-    private StreetcodeContent? GetNull()
+    private static StreetcodeContent? GetNull()
     {
         return null;
     }

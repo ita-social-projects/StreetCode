@@ -44,8 +44,23 @@ builder.Services.AddRateLimiter(options =>
         var body = reader.ReadToEndAsync().Result;
         httpContext.Request.Body.Position = 0;
 
-        var json = JsonDocument.Parse(body);
-        var email = json.RootElement.GetProperty("email").GetString();
+        string? email = null;
+        try
+        {
+            var json = JsonDocument.Parse(body);
+            if (json.RootElement.TryGetProperty("email", out JsonElement emailElement))
+            {
+                email = emailElement.ToString();
+            }
+            else
+            {
+                Serilog.Log.Warning("Email field is missing in the request body for rate limiting in ForgotPasswordRateLimit policy.");
+            }
+        }
+        catch (JsonException ex)
+        {
+            Serilog.Log.Warning(ex, "Failed to parse email from request body for rate limiting in ForgotPasswordRateLimit policy.");
+        }
 
         return RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: email ?? httpContext.Connection.RemoteIpAddress?.ToString() ?? "anonymous",

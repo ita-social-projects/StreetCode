@@ -79,6 +79,10 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Status"]])
             .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["Status"]]);
 
+        RuleFor(dto => dto.EventStartOrPersonBirthDate)
+            .Must(date => date != DateTime.MinValue)
+            .WithMessage(localizer["IsRequired", fieldLocalizer["EventStartOrPersonBirthDate"]]);
+
         RuleForEach(dto => dto.Toponyms)
             .SetValidator(streetcodeToponymValidator);
 

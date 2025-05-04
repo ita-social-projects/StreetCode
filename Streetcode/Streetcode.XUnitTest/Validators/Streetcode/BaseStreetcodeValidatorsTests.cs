@@ -445,6 +445,7 @@ public class BaseStreetcodeValidatorsTests
             DateString = "25 лютого (9 березня) 1814 року – 26 лютого (10 березня) 1861 року",
             StreetcodeType = StreetcodeType.Person,
             Status = StreetcodeStatus.Published,
+            EventStartOrPersonBirthDate = new DateTime(2000, 4, 2, 0, 0, 0, DateTimeKind.Local),
             Toponyms = new List<StreetcodeToponymCreateUpdateDTO>()
             {
                 new (),

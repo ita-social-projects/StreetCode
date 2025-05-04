@@ -21,8 +21,8 @@ public class UpdateTeamMemberValidatorTests
 
     public UpdateTeamMemberValidatorTests()
     {
-        MockFailedToValidateLocalizer mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        MockFieldNamesLocalizer mockNamesLocalizer = new MockFieldNamesLocalizer();
+        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockBaseTeamMemberValidator = new Mock<BaseTeamValidator>(mockValidationLocalizer, mockNamesLocalizer);
         this.mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()))
             .Returns(new ValidationResult());

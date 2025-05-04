@@ -14,7 +14,7 @@ namespace Streetcode.XUnitTest.MediatRTests.Team;
 
 public class GetAllTeamsTest
 {
-    private const string _testBase64String = "rVhhWrnh72xHfKGHg6YTV2H4ywe7BorrYUdILaKz0lQ=";
+    private const string TestBase64String = "rVhhWrnh72xHfKGHg6YTV2H4ywe7BorrYUdILaKz0lQ=";
 
     private readonly Mock<IRepositoryWrapper> _mockRepository;
     private readonly Mock<IMapper> _mockMapper;
@@ -149,7 +149,7 @@ public class GetAllTeamsTest
     {
         _mockBlobService
             .Setup(x => x.FindFileInStorageAsBase64(It.IsAny<string>()))
-            .Returns(_testBase64String);
+            .Returns(TestBase64String);
     }
 
     private void SetupMapper(IEnumerable<TeamMemberDTO> teamMemberDtoList)

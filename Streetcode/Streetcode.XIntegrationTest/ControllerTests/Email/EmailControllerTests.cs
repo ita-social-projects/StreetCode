@@ -23,7 +23,7 @@ public class EmailControllerTests : BaseControllerTests<EmailClient>
     public async Task Send_ValidData_ReturnsSuccessStatusCode()
     {
         // Arrange
-        var emailDto = GetEmailDTO();
+        var emailDto = GetEmailDto();
         _factory.SetupMockEmailService();
 
         // Act
@@ -34,7 +34,7 @@ public class EmailControllerTests : BaseControllerTests<EmailClient>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    private EmailDTO GetEmailDTO()
+    private static EmailDTO GetEmailDto()
     {
         return new EmailDTO
         {

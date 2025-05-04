@@ -11,17 +11,17 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 {
     public class DeleteNewsTest
     {
-        private readonly Mock<IRepositoryWrapper> mockRepository;
+        private readonly Mock<IRepositoryWrapper> _mockRepository;
         private readonly Mock<ILoggerService> _mockLogger;
         private readonly Mock<IStringLocalizer<NoSharedResource>> _mockLocalizerNoShared;
         private readonly Mock<IStringLocalizer<FailedToDeleteSharedResource>> _mockLocalizerFailed;
 
         public DeleteNewsTest()
         {
-            this.mockRepository = new Mock<IRepositoryWrapper>();
-            this._mockLogger = new Mock<ILoggerService>();
-            this._mockLocalizerFailed = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
-            this._mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
+            _mockRepository = new Mock<IRepositoryWrapper>();
+            _mockLogger = new Mock<ILoggerService>();
+            _mockLocalizerFailed = new Mock<IStringLocalizer<FailedToDeleteSharedResource>>();
+            _mockLocalizerNoShared = new Mock<IStringLocalizer<NoSharedResource>>();
         }
 
         [Fact]
@@ -29,10 +29,10 @@ namespace Streetcode.XUnitTest.MediatRTests.News
         {
             // Arrange
             var testNews = GetNews();
-            this.SetupMockRepositoryGetFirstOrDefault(testNews);
-            this.SetupMockRepositorySaveChangesReturns(1);
+            SetupMockRepositoryGetFirstOrDefault(testNews);
+            SetupMockRepositorySaveChangesReturns(1);
 
-            var handler = new DeleteNewsHandler(this.mockRepository.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object, this._mockLocalizerFailed.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -42,8 +42,8 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                 () => Assert.NotNull(result),
                 () => Assert.True(result.IsSuccess));
 
-            this.mockRepository.Verify(x => x.NewsRepository.Delete(It.Is<DAL.Entities.News.News>(x => x.Id == testNews.Id)), Times.Once);
-            this.mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
+            _mockRepository.Verify(x => x.NewsRepository.Delete(It.Is<DAL.Entities.News.News>(x => x.Id == testNews.Id)), Times.Once);
+            _mockRepository.Verify(x => x.SaveChangesAsync(), Times.Once);
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Arrange
             var testNews = GetNews();
             var expectedError = $"No news found by entered Id - {testNews.Id}";
-            this._mockLocalizerNoShared.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
+            _mockLocalizerNoShared.Setup(x => x[It.IsAny<string>(), It.IsAny<object>()]).Returns((string key, object[] args) =>
            {
                if (args != null && args.Length > 0 && args[0] is int)
                {
@@ -62,16 +62,16 @@ namespace Streetcode.XUnitTest.MediatRTests.News
                return new LocalizedString(key, "Cannot find any news with unknown id");
            });
 
-            this.SetupMockRepositoryGetFirstOrDefault(null);
+            SetupMockRepositoryGetFirstOrDefault(null);
 
-            var handler = new DeleteNewsHandler(this.mockRepository.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object, this._mockLocalizerFailed.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
 
             // Assert
             Assert.Equal(expectedError, result.Errors[0].Message);
-            this.mockRepository.Verify(x => x.NewsRepository.Delete(It.IsAny<DAL.Entities.News.News>()), Times.Never);
+            _mockRepository.Verify(x => x.NewsRepository.Delete(It.IsAny<DAL.Entities.News.News>()), Times.Never);
         }
 
         [Fact]
@@ -80,12 +80,12 @@ namespace Streetcode.XUnitTest.MediatRTests.News
             // Arrange
             var testNews = GetNews();
             var expectedError = "Failed to delete news";
-            this._mockLocalizerFailed.Setup(x => x["FailedToDeleteNews"])
+            _mockLocalizerFailed.Setup(x => x["FailedToDeleteNews"])
             .Returns(new LocalizedString("FailedToDeleteNews", expectedError));
-            this.SetupMockRepositoryGetFirstOrDefault(testNews);
-            this.SetupMockRepositorySaveChangesException(expectedError);
+            SetupMockRepositoryGetFirstOrDefault(testNews);
+            SetupMockRepositorySaveChangesException(expectedError);
 
-            var handler = new DeleteNewsHandler(this.mockRepository.Object, this._mockLogger.Object, this._mockLocalizerNoShared.Object, this._mockLocalizerFailed.Object);
+            var handler = new DeleteNewsHandler(_mockRepository.Object, _mockLogger.Object, _mockLocalizerNoShared.Object, _mockLocalizerFailed.Object);
 
             // Act
             var result = await handler.Handle(new DeleteNewsCommand(testNews.Id), CancellationToken.None);
@@ -104,19 +104,19 @@ namespace Streetcode.XUnitTest.MediatRTests.News
 
         private void SetupMockRepositoryGetFirstOrDefault(DAL.Entities.News.News? news)
         {
-            this.mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
+            _mockRepository.Setup(x => x.NewsRepository.GetFirstOrDefaultAsync(
                     It.IsAny<Expression<Func<DAL.Entities.News.News, bool>>>(), null))
                 .ReturnsAsync(news);
         }
 
         private void SetupMockRepositorySaveChangesException(string expectedError)
         {
-            this.mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
+            _mockRepository.Setup(x => x.SaveChanges()).Throws(new Exception(expectedError));
         }
 
         private void SetupMockRepositorySaveChangesReturns(int number)
         {
-            this.mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
+            _mockRepository.Setup(x => x.SaveChangesAsync()).ReturnsAsync(number);
         }
     }
 }

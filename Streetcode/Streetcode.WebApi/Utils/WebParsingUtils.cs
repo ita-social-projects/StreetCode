@@ -81,6 +81,8 @@ public class WebParsingUtils
     {
         _ = Directory.GetParent(Environment.CurrentDirectory)?.FullName!;
         var zipPath = $"houses.zip";
+        
+        // Change the path of extractTo to your path, smth like "/Users/admin/Documents/GitHub/StreetCode/Streetcode/Streetcode.DAL";
         var extractTo = $"/root/build/StreetCode/Streetcode/Streetcode.DAL";
 
         var cancellationToken = new CancellationTokenSource().Token;
@@ -199,10 +201,9 @@ public class WebParsingUtils
         foreach (var t in existingToponyms)
         {
             var addressColumn = RestoreOriginalAddress(t.StreetName, t.StreetType);
-            var lat = t.Coordinate?.Latitude.ToString(CultureInfo.InvariantCulture) ?? "lol";
-            var lon = t.Coordinate?.Longtitude.ToString(CultureInfo.InvariantCulture) ?? "lol";
+            var lat = t.Coordinate?.Latitude.ToString(CultureInfo.InvariantCulture) ?? "";
+            var lon = t.Coordinate?.Longtitude.ToString(CultureInfo.InvariantCulture) ?? "";
             lines.Add($"{t.Oblast};{t.AdminRegionOld};{t.AdminRegionNew};{t.Gromada};{t.Community};;{addressColumn};{lat};{lon}");
-            System.Console.WriteLine("Added 1 line");
         }
 
         // 5. Записуємо у data.csv

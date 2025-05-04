@@ -4,41 +4,41 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
 {
     public static class BaseExtracter
     {
-        private static readonly object @lock = new object();
-        private static SqlDbHelper dbHelper = BaseControllerTests.GetSqlDbHelper();
+        private static readonly object Lock = new object();
+        private static SqlDbHelper _dbHelper = BaseControllerTests.GetSqlDbHelper();
 
         public static T Extract<T>(T entity, Func<T, bool> searchPredicate, bool hasIdentity = true)
             where T : class, new()
         {
-            lock (@lock)
+            lock (Lock)
             {
-                if (!dbHelper.Any<T>(searchPredicate))
+                if (!_dbHelper.Any<T>(searchPredicate))
                 {
                     if (hasIdentity)
                     {
-                        dbHelper.AddItemWithCustomId<T>(entity);
+                        _dbHelper.AddItemWithCustomId<T>(entity);
                     }
                     else
                     {
-                        dbHelper.AddNewItem<T>(entity);
-                        dbHelper.SaveChanges();
+                        _dbHelper.AddNewItem<T>(entity);
+                        _dbHelper.SaveChanges();
                     }
                 }
 
-                return dbHelper.GetExistItem<T>(searchPredicate) !;
+                return _dbHelper.GetExistItem<T>(searchPredicate) !;
             }
         }
 
         public static void RemoveByPredicate<T>(Func<T, bool> searchPredicate)
             where T : class, new()
         {
-            lock (@lock)
+            lock (Lock)
             {
-                var entityFromDb = dbHelper.GetExistItem<T>(searchPredicate);
+                var entityFromDb = _dbHelper.GetExistItem<T>(searchPredicate);
                 if (entityFromDb is not null)
                 {
-                    dbHelper.DeleteItem<T>(entityFromDb);
-                    dbHelper.SaveChanges();
+                    _dbHelper.DeleteItem<T>(entityFromDb);
+                    _dbHelper.SaveChanges();
                 }
             }
         }
@@ -46,13 +46,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Utils.Extracter
         public static void RemoveById<T>(int id)
             where T : class, new()
         {
-            lock (@lock)
+            lock (Lock)
             {
-                var entityFromDb = dbHelper.GetExistItemId<T>(id);
+                var entityFromDb = _dbHelper.GetExistItemId<T>(id);
                 if (entityFromDb is not null)
                 {
-                    dbHelper.DeleteItem<T>(entityFromDb);
-                    dbHelper.SaveChanges();
+                    _dbHelper.DeleteItem<T>(entityFromDb);
+                    _dbHelper.SaveChanges();
                 }
             }
         }

@@ -2,15 +2,12 @@
 using AutoMapper;
 using FluentResults;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Localization;
 using MockQueryable.Moq;
 using Moq;
-using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Sources;
 using Streetcode.BLL.Interfaces.BlobStorage;
 using Streetcode.BLL.Interfaces.Logging;
 using Streetcode.BLL.MediatR.Sources.SourceLink.GetCategoriesByStreetcodeId;
-using Streetcode.BLL.SharedResource;
 using Streetcode.DAL.Entities.Sources;
 using Streetcode.DAL.Entities.Streetcode;
 using Streetcode.DAL.Enums;

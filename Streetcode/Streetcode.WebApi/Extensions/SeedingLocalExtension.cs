@@ -17,12 +17,10 @@ using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Entities.Streetcode.Types;
 using Streetcode.DAL.Entities.Team;
 using Streetcode.DAL.Entities.Timeline;
-using Streetcode.DAL.Entities.Toponyms;
 using Streetcode.DAL.Entities.Transactions;
 using Streetcode.DAL.Entities.Users.Expertise;
 using Streetcode.DAL.Enums;
 using Streetcode.DAL.Persistence;
-using Streetcode.DAL.Repositories.Realizations.Base;
 using Streetcode.WebApi.Configuration;
 
 namespace Streetcode.WebApi.Extensions
@@ -35,10 +33,10 @@ namespace Streetcode.WebApi.Extensions
             using (var scope = app.Services.CreateScope())
             {
                 Console.WriteLine("Seeding data...");
-                Directory.CreateDirectory(app.Configuration.GetValue<string>("Blob:BlobStorePath"));
+                Directory.CreateDirectory(app.Configuration.GetValue<string>("Blob:BlobStorePath") !);
                 var dbContext = scope.ServiceProvider.GetRequiredService<StreetcodeDbContext>();
                 var blobOptions = app.Services.GetRequiredService<IOptions<BlobEnvironmentVariables>>();
-                string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath");
+                string blobPath = app.Configuration.GetValue<string>("Blob:BlobStorePath") !;
                 var blobService = new BlobService(blobOptions);
                 string initialDataImagePath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "images.json"));
                 string initialDataAudioPath = Path.GetFullPath(Path.Combine("..", "Streetcode.XIntegrationTest", "TestData", "InitialData", "audios.json"));
@@ -49,7 +47,7 @@ namespace Streetcode.WebApi.Extensions
                 {
                     if (!dbContext.Images.Any())
                     {
-                        string imageJson = File.ReadAllText(initialDataImagePath, Encoding.UTF8);
+                        string imageJson = await File.ReadAllTextAsync(initialDataImagePath, Encoding.UTF8);
                         var imgfromJson = JsonConvert.DeserializeObject<List<Image>>(imageJson);
 
                         if (imgfromJson != null)
@@ -487,8 +485,8 @@ namespace Streetcode.WebApi.Extensions
                         ViewCount = 0,
                         CreatedAt = DateTime.Now,
                         DateString = "9 березня 1814 – 10 березня 1861",
-                        EventStartOrPersonBirthDate = new DateTime(1814, 3, 9),
-                        EventEndOrPersonDeathDate = new DateTime(1861, 3, 10),
+                        EventStartOrPersonBirthDate = new DateTime(1814, 3, 9, 0, 0, 0, DateTimeKind.Utc),
+                        EventEndOrPersonDeathDate = new DateTime(1861, 3, 10, 0, 0, 0, DateTimeKind.Utc),
                         FirstName = "Тарас",
                         Rank = "Григорович",
                         LastName = "Шевченко",
@@ -506,8 +504,8 @@ namespace Streetcode.WebApi.Extensions
                         ViewCount = 1,
                         CreatedAt = DateTime.Now,
                         DateString = "5 липня 1997 – 9 червня 2022",
-                        EventStartOrPersonBirthDate = new DateTime(1997, 7, 5),
-                        EventEndOrPersonDeathDate = new DateTime(2022, 6, 9),
+                        EventStartOrPersonBirthDate = new DateTime(1997, 7, 5, 0, 0, 0, DateTimeKind.Utc),
+                        EventEndOrPersonDeathDate = new DateTime(2022, 6, 9, 0, 0, 0, DateTimeKind.Utc),
                         FirstName = "Роман",
                         LastName = "Ратушний",
                         Title = "Роман Ратушний (Сенека)",
@@ -755,7 +753,7 @@ namespace Streetcode.WebApi.Extensions
                         dbContext.TimelineItems.AddRange(
                             new TimelineItem
                             {
-                                Date = new DateTime(1831, 1, 1),
+                                Date = new DateTime(1831, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -765,7 +763,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1830, 1, 1),
+                                Date = new DateTime(1830, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Учень Петербурзької академії мистецтв",
                                 Description =
                                     "Засвідчивши свою відпускну в петербурзькій Палаті цивільного суду, Шевченко став учнем Академії мистецтв," +
@@ -775,7 +773,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1832, 1, 1),
+                                Date = new DateTime(1832, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -785,7 +783,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1833, 1, 1),
+                                Date = new DateTime(1833, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -795,7 +793,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1834, 1, 1),
+                                Date = new DateTime(1834, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -805,7 +803,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1835, 1, 1),
+                                Date = new DateTime(1835, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -815,7 +813,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1836, 1, 1),
+                                Date = new DateTime(1836, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Перші роки в Петербурзі",
                                 Description =
                                     "Переїхавши 1831 року з Вільна до Петербурга, поміщик П. Енгельгардт узяв із собою Шевченка, " +
@@ -825,7 +823,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(1997, 7, 5),
+                                Date = new DateTime(1997, 7, 5, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Народився",
                                 Description =
@@ -834,7 +832,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2012, 1, 1),
+                                Date = new DateTime(2012, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 Title = "Обирає фах",
                                 DateViewPattern = DateViewPattern.Year,
                                 Description =
@@ -843,7 +841,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2013, 11, 30),
+                                Date = new DateTime(2013, 11, 30, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Проти несправедливості",
                                 Description =
@@ -852,7 +850,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2013, 12, 30),
+                                Date = new DateTime(2013, 12, 30, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.MonthYear,
                                 Title = "«Знаю, що роблю»",
                                 Description =
@@ -861,7 +859,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2014, 1, 1),
+                                Date = new DateTime(2014, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.Year,
                                 Title = "Боротьба лише починається",
                                 Description =
@@ -870,7 +868,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2018, 1, 1),
+                                Date = new DateTime(2018, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.Year,
                                 Title = "Захистимо Протасів Яр",
                                 Description =
@@ -879,7 +877,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2019, 1, 1),
+                                Date = new DateTime(2019, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.Year,
                                 Title = "Погрози",
                                 Description =
@@ -888,7 +886,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2020, 6, 1),
+                                Date = new DateTime(2020, 6, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.SeasonYear,
                                 Title = "Перемога в суді",
                                 Description =
@@ -897,7 +895,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2020, 12, 30),
+                                Date = new DateTime(2020, 12, 30, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.SeasonYear,
                                 Title = "Досвід політика",
                                 Description =
@@ -906,7 +904,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2021, 1, 1),
+                                Date = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.Year,
                                 Title = "Домашній арешт",
                                 Description =
@@ -915,7 +913,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2021, 1, 1),
+                                Date = new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.Year,
                                 Title = "Сфабрикована справа",
                                 Description =
@@ -924,7 +922,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 2, 24),
+                                Date = new DateTime(2022, 2, 24, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Підрозділ Протасового",
                                 Description =
@@ -933,7 +931,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 3, 1),
+                                Date = new DateTime(2022, 3, 1, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.SeasonYear,
                                 Title = "Холодний Яр",
                                 Description =
@@ -942,7 +940,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 6, 9),
+                                Date = new DateTime(2022, 6, 9, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Завжди 24",
                                 Description =
@@ -951,7 +949,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 6, 18),
+                                Date = new DateTime(2022, 6, 18, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Байкове. Вічність",
                                 Description =
@@ -960,7 +958,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 9, 8),
+                                Date = new DateTime(2022, 9, 8, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "Вулиця Ратушного",
                                 Description =
@@ -969,7 +967,7 @@ namespace Streetcode.WebApi.Extensions
                             },
                             new TimelineItem
                             {
-                                Date = new DateTime(2022, 9, 13),
+                                Date = new DateTime(2022, 9, 13, 0, 0, 0, DateTimeKind.Utc),
                                 DateViewPattern = DateViewPattern.DateMonthYear,
                                 Title = "За мужність",
                                 Description =

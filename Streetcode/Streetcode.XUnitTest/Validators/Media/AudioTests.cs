@@ -1,15 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using FluentValidation.TestHelper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Localization;
 using Moq;
 using Streetcode.BLL.DTO.Media.Audio;
 using Streetcode.BLL.MediatR.Media.Audio.Create;
 using Streetcode.BLL.MediatR.Media.Audio.Update;
-using Streetcode.BLL.SharedResource;
 using Streetcode.BLL.Validators.Media.Audio;
-using Streetcode.BLL.Validators.Streetcode.Subtitles;
 using Streetcode.XUnitTest.Mocks;
 using Xunit;
 
@@ -17,21 +13,21 @@ namespace Streetcode.XUnitTest.Validators.Media;
 
 public class AudioTests
 {
-    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
-    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer _mockValidationLocalizer;
+    private readonly MockFieldNamesLocalizer _mockNamesLocalizer;
 
     public AudioTests()
     {
-        this.mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        this.mockNamesLocalizer = new MockFieldNamesLocalizer();
+        _mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        _mockNamesLocalizer = new MockFieldNamesLocalizer();
     }
 
     [Fact]
     public void ShouldReturnSuccesResult_WhenAudioIsValid()
     {
         // Arange
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
 
         // Act
         var result = validator.Validate(audio);
@@ -44,9 +40,9 @@ public class AudioTests
     public void ShouldReturnError_WhenTitleIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Title"]];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["Title"]];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.Title = string.Empty;
 
         // Act
@@ -61,9 +57,9 @@ public class AudioTests
     public void ShouldReturnError_WhenExtensionIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["Extension"]];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["Extension"]];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.Extension = string.Empty;
 
         // Act
@@ -78,9 +74,9 @@ public class AudioTests
     public void ShouldReturnError_WhenMimeTypeIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["MimeType"]];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["MimeType"]];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.MimeType = string.Empty;
 
         // Act
@@ -95,9 +91,9 @@ public class AudioTests
     public void ShouldReturnError_WhenBaseFormatIsEmpty()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["IsRequired", this.mockNamesLocalizer["BaseFormat"]];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["IsRequired", _mockNamesLocalizer["BaseFormat"]];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.BaseFormat = string.Empty;
 
         // Act
@@ -112,9 +108,9 @@ public class AudioTests
     public void ShouldReturnError_WhenTitleLengthIsOutOfRange()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["Title"], BaseAudioValidator.MaxTitleLength];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["Title"], BaseAudioValidator.MaxTitleLength];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.Title = new string('a', BaseAudioValidator.MaxTitleLength + 1);
 
         // Act
@@ -129,9 +125,9 @@ public class AudioTests
     public void ShouldReturnError_WhenMimeTypeLengthIsOutOfRange()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MaxLength", this.mockNamesLocalizer["MimeType"], BaseAudioValidator.MaxMimeTypeLength];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["MaxLength", _mockNamesLocalizer["MimeType"], BaseAudioValidator.MaxMimeTypeLength];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.MimeType = new string('a', BaseAudioValidator.MaxMimeTypeLength + 1);
 
         // Act
@@ -146,9 +142,9 @@ public class AudioTests
     public void ShouldReturnError_WhenExtensionIsNotMp3()
     {
         // Arange
-        var expectedError = this.mockValidationLocalizer["MustBeOneOf", this.mockNamesLocalizer["Extension"], $"'{BaseAudioValidator.Mp3Extension}'"];
-        var validator = new BaseAudioValidator(this.mockValidationLocalizer, this.mockNamesLocalizer);
-        var audio = this.GetValidAudioFile();
+        var expectedError = _mockValidationLocalizer["MustBeOneOf", _mockNamesLocalizer["Extension"], $"'{BaseAudioValidator.Mp3Extension}'"];
+        var validator = new BaseAudioValidator(_mockValidationLocalizer, _mockNamesLocalizer);
+        var audio = GetValidAudioFile();
         audio.Extension = "jpeg";
 
         // Act
@@ -164,11 +160,11 @@ public class AudioTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseAudioValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var createValidator = new CreateAudioValidator(baseValidator.Object);
-        var createCommand = new CreateAudioCommand(this.GetValidAudioFile());
+        var createCommand = new CreateAudioCommand(GetValidAudioFile());
 
         // Act
         createValidator.TestValidate(createCommand);
@@ -182,7 +178,7 @@ public class AudioTests
     {
         // Arrange
         var baseValidator =
-            new Mock<BaseAudioValidator>(this.mockValidationLocalizer, this.mockNamesLocalizer);
+            new Mock<BaseAudioValidator>(_mockValidationLocalizer, _mockNamesLocalizer);
         baseValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()))
             .Returns(new ValidationResult());
         var updateValidator = new UpdateAudioValidator(baseValidator.Object);
@@ -202,7 +198,7 @@ public class AudioTests
         baseValidator.Verify(x => x.Validate(It.IsAny<ValidationContext<AudioFileBaseCreateDTO>>()), Times.Once);
     }
 
-    private AudioFileBaseCreateDTO GetValidAudioFile()
+    private static AudioFileBaseCreateDTO GetValidAudioFile()
     {
         return new AudioFileBaseCreateDTO()
         {

@@ -86,7 +86,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task Login_ValidInput_ReturnsSuccessStatusCode()
         {
             // Arrange.
-            LoginRequestDTO loginRequest = GetLoginRequestDTO();
+            LoginRequestDTO loginRequest = GetLoginRequestDto();
 
             // Act.
             var response = await Client.Login(loginRequest);
@@ -99,7 +99,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task Login_InvalidInputData_ReturnsBadRequest()
         {
             // Arrange.
-            LoginRequestDTO loginRequest = GetLoginRequestDTO();
+            LoginRequestDTO loginRequest = GetLoginRequestDto();
             loginRequest.Login = string.Empty;
 
             // Act.
@@ -113,14 +113,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task RefreshToken_ValidTokens_ReturnsSuccess()
         {
             // Arrange.
-            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            RefreshTokenRequestDTO refreshTokenRequestDto = new RefreshTokenRequestDTO()
             {
                 AccessToken = TokenStorage.UserAccessToken,
                 RefreshToken = TokenStorage.UserRefreshToken,
             };
 
             // Act.
-            var response = await Client.RefreshToken(refreshTokenRequestDTO);
+            var response = await Client.RefreshToken(refreshTokenRequestDto);
 
             // Assert.
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -130,13 +130,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task RefreshToken_InvalidAccessToken_ReturnsBadRequest()
         {
             // Arrange.
-            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            RefreshTokenRequestDTO refreshTokenRequestDto = new RefreshTokenRequestDTO()
             {
                 AccessToken = "invalid_Token",
             };
 
             // Act.
-            var response = await Client.RefreshToken(refreshTokenRequestDTO);
+            var response = await Client.RefreshToken(refreshTokenRequestDto);
 
             // Assert.
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -146,14 +146,14 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
         public async Task RefreshToken_InvalidRefreshToken_ReturnsUnauthorized()
         {
             // Arrange.
-            RefreshTokenRequestDTO refreshTokenRequestDTO = new RefreshTokenRequestDTO()
+            RefreshTokenRequestDTO refreshTokenRequestDto = new RefreshTokenRequestDTO()
             {
                 AccessToken = TokenStorage.UserAccessToken,
                 RefreshToken = "invalid_token",
             };
 
             // Act.
-            var response = await Client.RefreshToken(refreshTokenRequestDTO);
+            var response = await Client.RefreshToken(refreshTokenRequestDto);
 
             // Assert.
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -275,7 +275,13 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
             base.Dispose(disposing);
         }
 
-        private LoginRequestDTO GetLoginRequestDTO()
+        private static string GenerateTestPassword()
+        {
+            var guid = Guid.NewGuid().ToString();
+            return $"TestPass123_{guid.Substring(0, 10)}";
+        }
+
+        private LoginRequestDTO GetLoginRequestDto()
         {
             return new LoginRequestDTO()
             {
@@ -283,12 +289,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Authentication
                 Password = _testPassword,
                 CaptchaToken = "test_captcha_token",
             };
-        }
-
-        private string GenerateTestPassword()
-        {
-            string guid = Guid.NewGuid().ToString();
-            return $"TestPass123_{guid.Substring(0, 10)}";
         }
     }
 }

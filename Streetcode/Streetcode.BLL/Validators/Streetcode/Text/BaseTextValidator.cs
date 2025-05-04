@@ -25,7 +25,7 @@ public class BaseTextValidator : AbstractValidator<BaseTextDTO>
             .WithMessage(localizer["CannotBeEmptyWithCondition", fieldLocalizer["TextContent"], fieldLocalizer["AdditionalText"]]);
     }
 
-    private bool HaveTextWithTitle(BaseTextDTO dto)
+    private static bool HaveTextWithTitle(BaseTextDTO dto)
     {
         if (!string.IsNullOrWhiteSpace(dto.TextContent))
         {
@@ -35,7 +35,7 @@ public class BaseTextValidator : AbstractValidator<BaseTextDTO>
         return true;
     }
 
-    private bool HaveAdditionalTextWithMainText(BaseTextDTO dto)
+    private static bool HaveAdditionalTextWithMainText(BaseTextDTO dto)
     {
         if(!string.IsNullOrWhiteSpace(dto.AdditionalText))
         {

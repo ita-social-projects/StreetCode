@@ -14,13 +14,15 @@ namespace Streetcode.XUnitTest.Validators.Team;
 
 public class CreateTeamMemberValidatorTests
 {
+    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
     private readonly Mock<BaseTeamValidator> mockBaseTeamMemberValidator;
     private readonly Mock<BaseTeamMemberLinkValidator> mockBaseTeamMemberLinkValidator;
 
     public CreateTeamMemberValidatorTests()
     {
-        MockFailedToValidateLocalizer mockValidationLocalizer = new MockFailedToValidateLocalizer();
-        MockFieldNamesLocalizer mockNamesLocalizer = new MockFieldNamesLocalizer();
+        mockValidationLocalizer = new MockFailedToValidateLocalizer();
+        mockNamesLocalizer = new MockFieldNamesLocalizer();
         this.mockBaseTeamMemberValidator = new Mock<BaseTeamValidator>(mockValidationLocalizer, mockNamesLocalizer);
         this.mockBaseTeamMemberValidator.Setup(x => x.Validate(It.IsAny<ValidationContext<TeamMemberCreateUpdateDTO>>()))
             .Returns(new ValidationResult());
@@ -41,7 +43,7 @@ public class CreateTeamMemberValidatorTests
                 new TeamMemberLinkCreateDTO(),
             },
         });
-        var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
+        var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         createValidator.Validate(query);
@@ -61,7 +63,7 @@ public class CreateTeamMemberValidatorTests
                 new TeamMemberLinkCreateDTO(),
             },
         });
-        var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
+        var createValidator = new CreateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         createValidator.Validate(query);

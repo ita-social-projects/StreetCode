@@ -14,6 +14,8 @@ namespace Streetcode.XUnitTest.Validators.Team;
 
 public class UpdateTeamMemberValidatorTests
 {
+    private readonly MockFieldNamesLocalizer mockNamesLocalizer;
+    private readonly MockFailedToValidateLocalizer mockValidationLocalizer;
     private readonly Mock<BaseTeamValidator> mockBaseTeamMemberValidator;
     private readonly Mock<BaseTeamMemberLinkValidator> mockBaseTeamMemberLinkValidator;
 
@@ -41,7 +43,7 @@ public class UpdateTeamMemberValidatorTests
                 new TeamMemberLinkDTO(),
             },
         });
-        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
+        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         updateTeamValidator.Validate(query);
@@ -61,7 +63,7 @@ public class UpdateTeamMemberValidatorTests
                 new TeamMemberLinkDTO(),
             },
         });
-        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object);
+        var updateTeamValidator = new UpdateTeamValidator(this.mockBaseTeamMemberValidator.Object, this.mockBaseTeamMemberLinkValidator.Object, this.mockValidationLocalizer, this.mockNamesLocalizer);
 
         // Act
         updateTeamValidator.Validate(query);

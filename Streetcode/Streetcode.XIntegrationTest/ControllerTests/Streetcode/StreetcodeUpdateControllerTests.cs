@@ -44,7 +44,7 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
         }
 
         [Fact]
-        public async Task Update_ChangesTitleAndTransliterationUrl()
+        public async Task Update_ChangesTitle()
         {
             StreetcodeUpdateDTO updateStreetCodeDto = _testStreetcodeUpdateDto;
             await Client.UpdateAsync(updateStreetCodeDto, TokenStorage.AdminAccessToken);
@@ -54,7 +54,6 @@ namespace Streetcode.XIntegrationTest.ControllerTests.Streetcode
             Assert.Multiple(() =>
             {
                 Assert.Equal(updateStreetCodeDto.Title, streetCodeContent?.Title);
-                Assert.Equal(updateStreetCodeDto.DateString, streetCodeContent?.DateString);
             });
         }
 

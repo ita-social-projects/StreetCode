@@ -61,10 +61,10 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
             .InclusiveBetween(IndexMinValue, IndexMaxValue).WithMessage(localizer["MustBeBetween", fieldLocalizer["Index"], IndexMinValue, IndexMaxValue]);
 
         RuleFor(dto => dto.DateString)
-            .NotEmpty().WithMessage(localizer[ValidationMessageConstants.CannotBeEmpty, fieldLocalizer["DateString"]])
-            .MaximumLength(DateStringMaxLength).WithMessage(localizer[ValidationMessageConstants.MaxLength, fieldLocalizer["DateString"], DateStringMaxLength])
+            .MaximumLength(DateStringMaxLength).WithMessage(localizer["MaxLength", fieldLocalizer["DateString"], DateStringMaxLength])
             .Matches(@"^[А-Яа-яЁёЇїІіЄєҐґ0-9\s\(\)\-\–]+$") // Cyrillic letters, digits, parentheses, hyphen
-            .WithMessage(localizer["DateStringFormat"]);
+            .WithMessage(localizer["DateStringFormat"])
+            .When(dto => !string.IsNullOrEmpty(dto.DateString), ApplyConditionTo.CurrentValidator);
 
         RuleFor(dto => dto.StreetcodeType)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["StreetcodeType"]])
@@ -78,6 +78,10 @@ public class BaseStreetcodeValidator : AbstractValidator<StreetcodeCreateUpdateD
         RuleFor(dto => dto.Status)
             .NotNull().WithMessage(localizer["IsRequired", fieldLocalizer["Status"]])
             .IsInEnum().WithMessage(localizer["Invalid", fieldLocalizer["Status"]]);
+
+        RuleFor(dto => dto.EventStartOrPersonBirthDate)
+            .Must(date => date != DateTime.MinValue)
+            .WithMessage(localizer["IsRequired", fieldLocalizer["EventStartOrPersonBirthDate"]]);
 
         RuleForEach(dto => dto.Toponyms)
             .SetValidator(streetcodeToponymValidator);

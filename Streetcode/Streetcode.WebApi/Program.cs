@@ -50,7 +50,7 @@ builder.Services.AddRateLimiter(options =>
             var json = JsonDocument.Parse(body);
             if (json.RootElement.TryGetProperty("email", out JsonElement emailElement))
             {
-                email = emailElement.ToString();
+                email = emailElement.GetString();
             }
             else
             {

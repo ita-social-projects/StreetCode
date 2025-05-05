@@ -212,7 +212,7 @@ pipeline {
 
 
 
-        /*
+        
     stage('Deploy Stage'){
         when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -253,10 +253,10 @@ pipeline {
      }    
 
 
-*/
 
 
-/*
+
+
     stage('WHAT IS THE NEXT STEP') {
        when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -302,7 +302,9 @@ pipeline {
 
 
 
-*/
+
+
+
     /*
 
    stage('Deploy prod') {
@@ -348,7 +350,7 @@ pipeline {
 
 */
 
-/*
+
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -377,7 +379,7 @@ pipeline {
         }
     }
 
-*/
+
 
 
     /*
@@ -416,7 +418,7 @@ post {
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
-/*
+
     success {
         script {
             sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
@@ -432,14 +434,14 @@ post {
             sendDiscordNotification('ABORTED', 'Deployment pipeline was aborted.')
         }
     }
-*/
+
 
 
 }
 }
 
 
-/*
+
 def sendDiscordNotification(status, message) {
     withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
        def jsonMessage = """ 
@@ -464,4 +466,3 @@ def sendDiscordNotification(status, message) {
     }
 }
 
-*/

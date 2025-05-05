@@ -142,24 +142,54 @@ pipeline {
             }
         }
         stage('Build images') {
+            
             when {
                 branch pattern: "release/[0-9].[0-9].[0-9]", comparator: "REGEXP"
                
             }
+            
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                        env.DOCKER_USERNAME = username
                         // Build the backend image
-                        sh "docker build -f Dockerfile -t ${username}/streetcode:${env.CODE_VERSION} ."
+                        sh "docker build -f Dockerfile -t ${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION} ."
                         IS_IMAGE_BUILDED = true
 
                         // Build the dbupdate image
-                        sh "docker build -f Dockerfile.dbupdate -t ${username}/dbupdate:${env.CODE_VERSION} ."
+                        sh "docker build -f Dockerfile.dbupdate -t ${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION} ."
                         IS_DBUPDATE_IMAGE_BUILDED = true
                     }
                 }
             }
         }
+
+
+         stage('Trivy Security Scan') {
+             when {
+                expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
+            }   
+            steps {
+                script {
+                     def imagesToScan = [
+                "${env.DOCKER_USERNAME}/streetcode:${env.CODE_VERSION}",
+                "${env.DOCKER_USERNAME}/dbupdate:${env.CODE_VERSION}"
+            ]
+             imagesToScan.each { image ->
+                echo "Running Trivy scan on ${image}"
+                // Run Trivy scan and display the output in the console log ( || true - don't fail on exit code)
+                sh """
+                    docker run --rm \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    aquasec/trivy image --no-progress --severity HIGH,CRITICAL --exit-code 1 ${image} || true
+                """
+            }
+                }
+            }
+        }
+
+
+
         stage('Push images') {
             when {
                 expression { IS_IMAGE_BUILDED == true && IS_DBUPDATE_IMAGE_BUILDED == true }
@@ -179,6 +209,10 @@ pipeline {
                 }
             }
         }
+
+
+
+        
     stage('Deploy Stage'){
         when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -217,6 +251,12 @@ pipeline {
                 }  
             }
      }    
+
+
+
+
+
+
     stage('WHAT IS THE NEXT STEP') {
        when {
                 expression { IS_IMAGE_PUSH == true && IS_DBUPDATE_IMAGE_PUSH == true }
@@ -259,6 +299,11 @@ pipeline {
             }
       }
     }
+
+
+
+
+
 
     /*
 
@@ -305,6 +350,7 @@ pipeline {
 
 */
 
+
     stage('Sync after release') {
         when {
            expression { isSuccess == '1' }
@@ -332,6 +378,10 @@ pipeline {
             }
         }
     }
+
+
+
+
     /*
     stage('Rollback Prod') {  
         agent { 
@@ -368,6 +418,7 @@ post {
         sh 'docker stop local_sql_server'
         sh 'docker rm local_sql_server'
     }
+
     success {
         script {
             sendDiscordNotification('SUCCESS', 'Deployment pipeline completed successfully.')
@@ -384,8 +435,12 @@ post {
         }
     }
 
+
+
 }
 }
+
+
 
 def sendDiscordNotification(status, message) {
     withCredentials([string(credentialsId: 'WEBHOOK_URL', variable: 'DISCORD_WEBHOOK_URL')]) {
